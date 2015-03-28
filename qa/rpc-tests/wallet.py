@@ -53,7 +53,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[1].getbalance(), 50)
         assert_equal(self.nodes[2].getbalance(), 0)
 
-        # Send 21 BTC from 0 to 2 using sendtoaddress call.
+        # Send 21 NLG from 0 to 2 using sendtoaddress call.
         # Second transaction will be child of first, and will require a fee
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 11)
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 10)
@@ -102,7 +102,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), 100)
         assert_equal(self.nodes[2].getbalance("from1"), 100-21)
 
-        # Send 10 BTC normal
+        # Send 10 NLG normal
         address = self.nodes[0].getnewaddress("test")
         self.nodes[2].settxfee(Decimal('0.001'))
         txid = self.nodes[2].sendtoaddress(address, 10, "", "", False)
@@ -111,21 +111,21 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), Decimal('89.99900000'))
         assert_equal(self.nodes[0].getbalance(), Decimal('10.00000000'))
 
-        # Send 10 BTC with subtract fee from amount
+        # Send 10 NLG with subtract fee from amount
         txid = self.nodes[2].sendtoaddress(address, 10, "", "", True)
         self.nodes[2].setgenerate(True, 1)
         self.sync_all()
         assert_equal(self.nodes[2].getbalance(), Decimal('79.99900000'))
         assert_equal(self.nodes[0].getbalance(), Decimal('19.99900000'))
 
-        # Sendmany 10 BTC
+        # Sendmany 10 NLG
         txid = self.nodes[2].sendmany('from1', {address: 10}, 0, "", [])
         self.nodes[2].setgenerate(True, 1)
         self.sync_all()
         assert_equal(self.nodes[2].getbalance(), Decimal('69.99800000'))
         assert_equal(self.nodes[0].getbalance(), Decimal('29.99900000'))
 
-        # Sendmany 10 BTC with subtract fee from amount
+        # Sendmany 10 NLG with subtract fee from amount
         txid = self.nodes[2].sendmany('from1', {address: 10}, 0, "", [address])
         self.nodes[2].setgenerate(True, 1)
         self.sync_all()

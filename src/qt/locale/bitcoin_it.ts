@@ -3002,11 +3002,11 @@ ad esempio: alertnotify=echo %%s | mail -s "Allarme Bitcoin" admin@foo.com
         <translation>Esegue un comando quando viene ricevuto un allarme rilevante o quando vediamo un fork veramente lungo (%s in cmd è sostituito dal messaggio)</translation>
     </message>
     <message>
-        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
-        <translation>Le commissioni (in BTC/kb) minori di questa saranno considerate nulle per la trasmissione (predefinito: %s)</translation>
+        <source>Fees (in NLG/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
+        <translation>Le commissioni (in NLG/kb) minori di questa saranno considerate nulle per la trasmissione (predefinito: %s)</translation>
     </message>
     <message>
-        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <source>Fees (in NLG/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
         <translation>Le commissioni inferiori a questo valore saranno considerate nulle per la creazione della transazione (predefinito: %s)</translation>
     </message>
     <message>
@@ -3026,8 +3026,8 @@ ad esempio: alertnotify=echo %%s | mail -s "Allarme Bitcoin" admin@foo.com
         <translation>Errore caricamento wallet.dat: il wallet richiede una versione nuova di Bitcoin Core</translation>
     </message>
     <message>
-        <source>Fee (in BTC/kB) to add to transactions you send (default: %s)</source>
-        <translation>Commissione (in BTC/kB) da aggiungere alla transazione che invii (default: %s)</translation>
+        <source>Fee (in NLG/kB) to add to transactions you send (default: %s)</source>
+        <translation>Commissione (in NLG/kB) da aggiungere alla transazione che invii (default: %s)</translation>
     </message>
     <message>
         <source>Information</source>
