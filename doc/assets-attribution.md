@@ -1,4 +1,4 @@
-The following is a list of assets used in the bitcoin source and their proper attribution.
+The following is a list of assets used in the guldencoin source and their proper attribution.
 
 [Typicons/Stephen Hutchings](http://typicons.com)
 -----------------------
