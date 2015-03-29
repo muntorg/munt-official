@@ -1,27 +1,27 @@
-# /etc/conf.d/bitcoind: config file for /etc/init.d/bitcoind
+# /etc/conf.d/guldencoind: config file for /etc/init.d/guldencoind
 
 # Config file location
-#BITCOIND_CONFIGFILE="/etc/bitcoin/bitcoin.conf"
+#GULDENCOIND_CONFIGFILE="/etc/guldencoin/guldencoin.conf"
 
-# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
-#BITCOIND_PIDDIR="/var/run/bitcoind"
+# What directory to write pidfile to?  (created and owned by $GULDENCOIND_USER)
+#GULDENCOIND_PIDDIR="/var/run/guldencoind"
 
 # What filename to give the pidfile
-#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/bitcoind.pid"
+#GULDENCOIND_PIDFILE="${GULDENCOIND_PIDDIR}/guldencoind.pid"
 
-# Where to write bitcoind data (be mindful that the blockchain is large)
-#BITCOIND_DATADIR="/var/lib/bitcoind"
+# Where to write guldencoind data (be mindful that the blockchain is large)
+#GULDENCOIND_DATADIR="/var/lib/guldencoind"
 
-# User and group to own bitcoind process
-#BITCOIND_USER="bitcoin"
-#BITCOIND_GROUP="bitcoin"
+# User and group to own guldencoind process
+#GULDENCOIND_USER="guldencoin"
+#GULDENCOIND_GROUP="guldencoin"
 
-# Path to bitcoind executable
-#BITCOIND_BIN="/usr/bin/bitcoind"
+# Path to guldencoind executable
+#GULDENCOIND_BIN="/usr/bin/guldencoind"
 
-# Nice value to run bitcoind under
-#BITCOIND_NICE=0
+# Nice value to run guldencoind under
+#GULDENCOIND_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)
-BITCOIND_OPTS="-disablewallet"
+GULDENCOIND_OPTS="-disablewallet"
 

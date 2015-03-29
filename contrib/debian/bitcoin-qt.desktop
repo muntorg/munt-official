@@ -1,12 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Bitcoin
-Comment=Bitcoin P2P Cryptocurrency
-Comment[fr]=Bitcoin, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=Bitcoin, eşten eşe kriptografik sanal para birimi
-Exec=bitcoin-qt %u
+Name=Guldencoin
+Comment=Guldencoin P2P Cryptocurrency
+Comment[fr]=Guldencoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Guldencoin, eşten eşe kriptografik sanal para birimi
+Exec=guldencoin-qt %u
 Terminal=false
 Type=Application
-Icon=bitcoin128
-MimeType=x-scheme-handler/bitcoin;
+Icon=guldencoin128
+MimeType=x-scheme-handler/guldencoin;
 Categories=Office;Finance;

@@ -14,7 +14,7 @@ function clean_up {
    done
 }
 
-WORKINGDIR="/tmp/bitcoin"
+WORKINGDIR="/tmp/guldencoin"
 TMPFILE="hashes.tmp"
 
 #this URL is used if a version number is not specified as an argument to the script
@@ -23,7 +23,7 @@ SIGNATUREFILE="https://bitcoin.org/bin/0.9.2.1/SHA256SUMS.asc"
 SIGNATUREFILENAME="SHA256SUMS.asc"
 RCSUBDIR="test/"
 BASEDIR="https://bitcoin.org/bin/"
-VERSIONPREFIX="bitcoin-"
+VERSIONPREFIX="guldencoin-"
 RCVERSIONSTRING="rc"
 
 if [ ! -d "$WORKINGDIR" ]; then
@@ -34,7 +34,7 @@ cd "$WORKINGDIR"
 
 #test if a version number has been passed as an argument
 if [ -n "$1" ]; then
-   #let's also check if the version number includes the prefix 'bitcoin-',
+   #let's also check if the version number includes the prefix 'guldencoin-',
    #  and add this prefix if it doesn't
    if [[ $1 == "$VERSIONPREFIX"* ]]; then
       VERSION="$1"
@@ -62,7 +62,7 @@ WGETOUT=$(wget -N "$BASEDIR$SIGNATUREFILENAME" 2>&1)
 #and then see if wget completed successfully
 if [ $? -ne 0 ]; then
    echo "Error: couldn't fetch signature file. Have you specified the version number in the following format?"
-   echo "[bitcoin-]<version>-[rc[0-9]] (example: bitcoin-0.9.2-rc1)"
+   echo "[guldencoin-]<version>-[rc[0-9]] (example: guldencoin-0.9.2-rc1)"
    echo "wget output:"
    echo "$WGETOUT"|sed 's/^/\t/g'
    exit 2

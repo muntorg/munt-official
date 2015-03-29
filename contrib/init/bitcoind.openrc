@@ -2,36 +2,36 @@
 
 # backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/bitcoin/.bitcoin" ]; then
-	BITCOIND_DEFAULT_DATADIR="/var/lib/bitcoin/.bitcoin"
+if [ -d "/var/lib/guldencoin/.guldencoin" ]; then
+	GULDENCOIND_DEFAULT_DATADIR="/var/lib/guldencoin/.guldencoin"
 else
-	BITCOIND_DEFAULT_DATADIR="/var/lib/bitcoind"
+	GULDENCOIND_DEFAULT_DATADIR="/var/lib/guldencoind"
 fi
 
-BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/bitcoin/bitcoin.conf}
-BITCOIND_PIDDIR=${BITCOIND_PIDDIR:-/var/run/bitcoind}
-BITCOIND_PIDFILE=${BITCOIND_PIDFILE:-${BITCOIND_PIDDIR}/bitcoind.pid}
-BITCOIND_DATADIR=${BITCOIND_DATADIR:-${BITCOIND_DEFAULT_DATADIR}}
-BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-bitcoin}}
-BITCOIND_GROUP=${BITCOIND_GROUP:-bitcoin}
-BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/bitcoind}
-BITCOIND_NICE=${BITCOIND_NICE:-${NICELEVEL:-0}}
-BITCOIND_OPTS="${BITCOIND_OPTS:-${BITCOIN_OPTS}}"
+GULDENCOIND_CONFIGFILE=${GULDENCOIND_CONFIGFILE:-/etc/guldencoin/guldencoin.conf}
+GULDENCOIND_PIDDIR=${GULDENCOIND_PIDDIR:-/var/run/guldencoind}
+GULDENCOIND_PIDFILE=${GULDENCOIND_PIDFILE:-${GULDENCOIND_PIDDIR}/guldencoind.pid}
+GULDENCOIND_DATADIR=${GULDENCOIND_DATADIR:-${GULDENCOIND_DEFAULT_DATADIR}}
+GULDENCOIND_USER=${GULDENCOIND_USER:-${GULDENCOIN_USER:-guldencoin}}
+GULDENCOIND_GROUP=${GULDENCOIND_GROUP:-guldencoin}
+GULDENCOIND_BIN=${GULDENCOIND_BIN:-/usr/bin/guldencoind}
+GULDENCOIND_NICE=${GULDENCOIND_NICE:-${NICELEVEL:-0}}
+GULDENCOIND_OPTS="${GULDENCOIND_OPTS:-${GULDENCOIN_OPTS}}"
 
-name="Bitcoin Core Daemon"
-description="Bitcoin crypto-currency p2p network daemon"
+name="Guldencoin Core Daemon"
+description="Guldencoin crypto-currency p2p network daemon"
 
-command="/usr/bin/bitcoind"
-command_args="-pid=\"${BITCOIND_PIDFILE}\" \
-		-conf=\"${BITCOIND_CONFIGFILE}\" \
-		-datadir=\"${BITCOIND_DATADIR}\" \
+command="/usr/bin/guldencoind"
+command_args="-pid=\"${GULDENCOIND_PIDFILE}\" \
+		-conf=\"${GULDENCOIND_CONFIGFILE}\" \
+		-datadir=\"${GULDENCOIND_DATADIR}\" \
 		-daemon \
-		${BITCOIND_OPTS}"
+		${GULDENCOIND_OPTS}"
 
-required_files="${BITCOIND_CONFIGFILE}"
-start_stop_daemon_args="-u ${BITCOIND_USER} \
-			-N ${BITCOIND_NICE} -w 2000"
-pidfile="${BITCOIND_PIDFILE}"
+required_files="${GULDENCOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${GULDENCOIND_USER} \
+			-N ${GULDENCOIND_NICE} -w 2000"
+pidfile="${GULDENCOIND_PIDFILE}"
 retry=60
 
 depend() {
@@ -46,29 +46,29 @@ start_pre() {
 	checkpath \
 	-d \
 	--mode 0750 \
-	--owner "${BITCOIND_USER}:${BITCOIND_GROUP}" \
-	"${BITCOIND_DATADIR}"
+	--owner "${GULDENCOIND_USER}:${GULDENCOIND_GROUP}" \
+	"${GULDENCOIND_DATADIR}"
 
 	checkpath \
 	-d \
 	--mode 0755 \
-	--owner "${BITCOIND_USER}:${BITCOIND_GROUP}" \
-	"${BITCOIND_PIDDIR}"
+	--owner "${GULDENCOIND_USER}:${GULDENCOIND_GROUP}" \
+	"${GULDENCOIND_PIDDIR}"
 
 	checkpath -f \
-	-o ${BITCOIND_USER}:${BITCOIND_GROUP} \
+	-o ${GULDENCOIND_USER}:${GULDENCOIND_GROUP} \
 	-m 0660 \
-	${BITCOIND_CONFIGFILE}
+	${GULDENCOIND_CONFIGFILE}
 
 	checkconfig || return 1
 }
 
 checkconfig()
 {
-	if ! grep -qs '^rpcpassword=' "${BITCOIND_CONFIGFILE}" ; then
+	if ! grep -qs '^rpcpassword=' "${GULDENCOIND_CONFIGFILE}" ; then
 		eerror ""
-		eerror "ERROR: You must set a secure rpcpassword to run bitcoind."
-		eerror "The setting must appear in ${BITCOIND_CONFIGFILE}"
+		eerror "ERROR: You must set a secure rpcpassword to run guldencoind."
+		eerror "The setting must appear in ${GULDENCOIND_CONFIGFILE}"
 		eerror ""
 		eerror "This password is security critical to securing wallets "
 		eerror "and must not be the same as the rpcuser setting."
@@ -80,7 +80,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"Bitcoin Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Guldencoin Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1
