@@ -18,14 +18,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Bitcoin"
-            VALUE "FileDescription",    "Bitcoin Core (OSS GUI client for Bitcoin)"
+            VALUE "CompanyName",        "Guldencoin"
+            VALUE "FileDescription",    "Guldencoin Core (OSS GUI client for Guldencoin)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "bitcoin-qt"
+            VALUE "InternalName",       "guldencoin-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "bitcoin-qt.exe"
-            VALUE "ProductName",        "Bitcoin Core"
+            VALUE "OriginalFilename",   "guldencoin-qt.exe"
+            VALUE "ProductName",        "Guldencoin Core"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

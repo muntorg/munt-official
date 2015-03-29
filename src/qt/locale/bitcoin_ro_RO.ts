@@ -66,12 +66,12 @@
         <translation>Adresa pe care primiti</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Acestea sunt adresele dumneavoastra Bitcoin care pot fi folosite la trimiterea platilor. Verificati totdeauna cantitatea si adresa de primire inainte de a trimite monezi.</translation>
+        <source>These are your Guldencoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Acestea sunt adresele dumneavoastra Guldencoin care pot fi folosite la trimiterea platilor. Verificati totdeauna cantitatea si adresa de primire inainte de a trimite monezi.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Acestea sunt adresele dumneavoastra Bitcoin folosite pentru a primi plati. Este recomandat sa folositi cate o adresa noua de primire pentru fiecare tranzactie in parte.</translation>
+        <source>These are your Guldencoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Acestea sunt adresele dumneavoastra Guldencoin folosite pentru a primi plati. Este recomandat sa folositi cate o adresa noua de primire pentru fiecare tranzactie in parte.</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -160,8 +160,8 @@
         <translation>Confirmă criptarea portofelului</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation>Atenție: Dacă pierdeţi parola portofelului electronic dupa criptare, &lt;b&gt;VEŢI PIERDE ÎNTREAGA SUMĂ DE BITCOIN ACUMULATĂ&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDENCOINS&lt;/b&gt;!</source>
+        <translation>Atenție: Dacă pierdeţi parola portofelului electronic dupa criptare, &lt;b&gt;VEŢI PIERDE ÎNTREAGA SUMĂ DE GULDENCOIN ACUMULATĂ&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -180,8 +180,8 @@
         <translation>Portofel criptat</translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin se va închide acum pentru a termina procesul de criptare. Ține minte că criptarea portofelului nu te poate proteja în totalitate de furtul monedelor de către programe dăunătoare care îți infectează calculatorul.</translation>
+        <source>Guldencoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your guldencoins from being stolen by malware infecting your computer.</source>
+        <translation>Guldencoin se va închide acum pentru a termina procesul de criptare. Ține minte că criptarea portofelului nu te poate proteja în totalitate de furtul monedelor de către programe dăunătoare care îți infectează calculatorul.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -213,7 +213,7 @@
     </message>
 </context>
 <context>
-    <name>BitcoinGUI</name>
+    <name>GuldencoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Semnează &amp;mesaj...</translation>
@@ -295,12 +295,12 @@
         <translation>Se reindexează blocurile pe disc...</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation>Trimite monede către o adresă Bitcoin</translation>
+        <source>Send coins to a Guldencoin address</source>
+        <translation>Trimite monede către o adresă Guldencoin</translation>
     </message>
     <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>Modifică opțiunile de configurare pentru Bitcoin</translation>
+        <source>Modify configuration options for Guldencoin</source>
+        <translation>Modifică opțiunile de configurare pentru Guldencoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -323,8 +323,8 @@
         <translation>&amp;Verifică mesajul...</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
+        <source>Guldencoin</source>
+        <translation>Guldencoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -351,12 +351,12 @@
         <translation>Criptează cheile private ale portofelului tău</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation>Semnează mesaje cu adresa ta Bitcoin pentru a dovedi că îți aparțin</translation>
+        <source>Sign messages with your Guldencoin addresses to prove you own them</source>
+        <translation>Semnează mesaje cu adresa ta Guldencoin pentru a dovedi că îți aparțin</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation>Verifică mesaje pentru a te asigura că au fost semnate cu adresa Bitcoin specificată</translation>
+        <source>Verify messages to ensure they were signed with specified Guldencoin addresses</source>
+        <translation>Verifică mesaje pentru a te asigura că au fost semnate cu adresa Guldencoin specificată</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -375,16 +375,16 @@
         <translation>Bara de file</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
+        <source>Guldencoin Core</source>
+        <translation>Guldencoin Core</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Cereti plati (genereaza coduri QR si bitcoin-uri: URls)</translation>
+        <source>Request payments (generates QR codes and guldencoin: URIs)</source>
+        <translation>Cereti plati (genereaza coduri QR si guldencoin-uri: URls)</translation>
     </message>
     <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Despre Nucleul Bitcoin</translation>
+        <source>&amp;About Guldencoin Core</source>
+        <translation>&amp;Despre Nucleul Guldencoin</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -395,20 +395,20 @@
         <translation>Aratati lista de adrese pentru primire si etichete </translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI or payment request</source>
-        <translation>Deschideti un bitcoin: o adresa URI sau o cerere de plata</translation>
+        <source>Open a guldencoin: URI or payment request</source>
+        <translation>Deschideti un guldencoin: o adresa URI sau o cerere de plata</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Command-line setări</translation>
     </message>
     <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Arată mesajul de ajutor Bitcoin Core pentru a obține o listă cu opțiunile posibile de linii de comandă Bitcoin</translation>
+        <source>Show the Guldencoin Core help message to get a list with possible Guldencoin command-line options</source>
+        <translation>Arată mesajul de ajutor Guldencoin Core pentru a obține o listă cu opțiunile posibile de linii de comandă Guldencoin</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n conexiune activă către rețeaua Bitcoin</numerusform><numerusform>%n conexiuni active către rețeaua Bitcoin</numerusform><numerusform>%n de conexiuni active către rețeaua Bitcoin</numerusform></translation>
+        <source>%n active connection(s) to Guldencoin network</source>
+        <translation><numerusform>%n conexiune activă către rețeaua Guldencoin</numerusform><numerusform>%n conexiuni active către rețeaua Guldencoin</numerusform><numerusform>%n de conexiuni active către rețeaua Guldencoin</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -728,8 +728,8 @@ Adresa: %4
         <translation>Adresa introdusă "%1" se află deja în lista de adrese.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Adresa introdusă "%1" nu este o adresă bitcoin validă.</translation>
+        <source>The entered address "%1" is not a valid Guldencoin address.</source>
+        <translation>Adresa introdusă "%1" nu este o adresă guldencoin validă.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -766,8 +766,8 @@ Adresa: %4
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
+        <source>Guldencoin Core</source>
+        <translation>Guldencoin Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -778,8 +778,8 @@ Adresa: %4
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Despre Nucleul Bitcoin</translation>
+        <source>About Guldencoin Core</source>
+        <translation>Despre Nucleul Guldencoin</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -821,12 +821,12 @@ Adresa: %4
         <translation>Bun venit</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bine Aţi Venit la Nucleul Bitcoin.</translation>
+        <source>Welcome to Guldencoin Core.</source>
+        <translation>Bine Aţi Venit la Nucleul Guldencoin.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Dacă aceasta este prima dată când programul este lansat, puteţi alege unde Nucleul Bitcoin va stoca datele. </translation>
+        <source>As this is the first time the program is launched, you can choose where Guldencoin Core will store its data.</source>
+        <translation>Dacă aceasta este prima dată când programul este lansat, puteţi alege unde Nucleul Guldencoin va stoca datele. </translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -837,8 +837,8 @@ Adresa: %4
         <translation>Folosește un dosar de date personalizat:</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
+        <source>Guldencoin Core</source>
+        <translation>Guldencoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -879,12 +879,12 @@ Adresa: %4
         <translation>&amp;Principal</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Porneşte automat programul Bitcoin la pornirea computerului.</translation>
+        <source>Automatically start Guldencoin after logging in to the system.</source>
+        <translation>Porneşte automat programul Guldencoin la pornirea computerului.</translation>
     </message>
     <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>&amp;S Porneşte Bitcoin la pornirea sistemului</translation>
+        <source>&amp;Start Guldencoin on system login</source>
+        <translation>&amp;S Porneşte Guldencoin la pornirea sistemului</translation>
     </message>
     <message>
         <source>MB</source>
@@ -907,8 +907,8 @@ Adresa: %4
         <translation>expert</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Deschide automat în router portul aferent clientului Bitcoin. Funcţionează doar în cazul în care routerul e compatibil UPnP şi opţiunea e activată.</translation>
+        <source>Automatically open the Guldencoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Deschide automat în router portul aferent clientului Guldencoin. Funcţionează doar în cazul în care routerul e compatibil UPnP şi opţiunea e activată.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -955,8 +955,8 @@ Adresa: %4
         <translation>Interfata &amp; limba userului</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>Limba interfeței utilizatorului poate fi setat aici. Această setare va avea efect după repornirea Bitcoin.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Guldencoin.</source>
+        <translation>Limba interfeței utilizatorului poate fi setat aici. Această setare va avea efect după repornirea Guldencoin.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -964,7 +964,7 @@ Adresa: %4
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation>Alege subdiviziunea folosită la afişarea interfeţei şi la trimiterea de bitcoin.</translation>
+        <translation>Alege subdiviziunea folosită la afişarea interfeţei şi la trimiterea de guldencoin.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1004,7 +1004,7 @@ Adresa: %4
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
-        <translation>Adresa bitcoin pe care a-ti specificat-o este invalida</translation>
+        <translation>Adresa guldencoin pe care a-ti specificat-o este invalida</translation>
     </message>
 </context>
 <context>
@@ -1014,8 +1014,8 @@ Adresa: %4
         <translation>Form</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Informațiile afișate pot neactualizate. Portofelul tău se sincronizează automat cu rețeaua Bitcoin după ce o conexiune este stabilită, dar acest proces nu a fost finalizat încă.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Guldencoin network after a connection is established, but this process has not completed yet.</source>
+        <translation>Informațiile afișate pot neactualizate. Portofelul tău se sincronizează automat cu rețeaua Guldencoin după ce o conexiune este stabilită, dar acest proces nu a fost finalizat încă.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1073,8 +1073,8 @@ Adresa: %4
         <translation>Eroare la cererea de plată</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Nu poate porni bitcoin: regula clic-pentru-plata</translation>
+        <source>Cannot start guldencoin: click-to-pay handler</source>
+        <translation>Nu poate porni guldencoin: regula clic-pentru-plata</translation>
     </message>
     <message>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
@@ -1237,7 +1237,7 @@ Adresa: %4
         <translation>Loguri debug</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Guldencoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Deschide logurile debug din directorul curent. Aceasta poate dura cateva secunde pentru fisierele mai mari</translation>
     </message>
     <message>
@@ -1245,8 +1245,8 @@ Adresa: %4
         <translation>Curăță consola</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Bun venit la consola bitcoin RPC</translation>
+        <source>Welcome to the Guldencoin RPC console.</source>
+        <translation>Bun venit la consola guldencoin RPC</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1573,8 +1573,8 @@ Adresa: %4
         <translation>Tranzactia a fost respinsa! Acest lucru se poate intampla daca o parte din monedele tale din portofel au fost deja cheltuite, la fel ca si cum ai fi folosit o copie a wallet.dat si monedele au fost cheltuite in copie, dar nu au fost marcate si si cheltuite si aici.</translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation>Atentie: Adresa Bitcoin invalida!</translation>
+        <source>Warning: Invalid Guldencoin address</source>
+        <translation>Atentie: Adresa Guldencoin invalida!</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1663,8 +1663,8 @@ Adresa: %4
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core se închide...</translation>
+        <source>Guldencoin Core is shutting down...</source>
+        <translation>Guldencoin Core se închide...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -1714,8 +1714,8 @@ Adresa: %4
         <translation>Copiaza semnatura curenta in clipboard-ul sistemului</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation>Semneaza mesajul pentru a dovedi ca detii acesta adresa Bitcoin</translation>
+        <source>Sign the message to prove you own this Guldencoin address</source>
+        <translation>Semneaza mesajul pentru a dovedi ca detii acesta adresa Guldencoin</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -1738,8 +1738,8 @@ Adresa: %4
         <translation>Introduceti adresa de semnatura, mesajul (asigurati-va ca ati copiat spatiile, taburile etc. exact) si semnatura dedesubt pentru a verifica mesajul. Aveti grija sa nu cititi mai mult in semnatura decat mesajul in sine, pentru a evita sa fiti pacaliti de un atac de tip man-in-the-middle.</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation>Verifica mesajul pentru a fi sigur ca a fost semnat cu adresa Bitcoin specifica</translation>
+        <source>Verify the message to ensure it was signed with the specified Guldencoin address</source>
+        <translation>Verifica mesajul pentru a fi sigur ca a fost semnat cu adresa Guldencoin specifica</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1805,12 +1805,12 @@ Adresa: %4
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
+        <source>Guldencoin Core</source>
+        <translation>Guldencoin Core</translation>
     </message>
     <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Dezvoltatorii Bitcoin Core</translation>
+        <source>The Guldencoin Core developers</source>
+        <translation>Dezvoltatorii Guldencoin Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2206,7 +2206,7 @@ Adresa: %4
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
-        <translation>Trimite Bitcoin</translation>
+        <translation>Trimite Guldencoin</translation>
     </message>
 </context>
 <context>
@@ -2245,7 +2245,7 @@ Adresa: %4
     </message>
 </context>
 <context>
-    <name>bitcoin-core</name>
+    <name>guldencoin-core</name>
     <message>
         <source>Options:</source>
         <translation>Setări:</translation>
@@ -2282,24 +2282,24 @@ Adresa: %4
         <source>%s, you must set a rpcpassword in the configuration file:
 %s
 It is recommended you use the following random password:
-rpcuser=bitcoinrpc
+rpcuser=guldencoinrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
+for example: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
 </source>
         <translation>%s trebuie sa setezi o parola rpc in fisierul de configurare
 %s
 Este recomandat sa folosesti aceasta parola aleatorie:
-rpcuser=bitcoinrpc
+rpcuser=guldencoinrpc
 parola rpc=%s
 (nu este necesar ca sa iti amintesti aceasta parola)
 Numele de utilizator si parola NU trebuie sa fie la fel.
 Daca fisierul nu exista, creaza-l cu fisier de citit permis doar proprietarului.
 Este de asemenea recomandat sa setezi alerta de notificare ca sa primesti notificari ale problemelor;
-spre exemplu: alertnotify=echo %%s | mail -s "Alerta Bitcoin" admin@foo.com
+spre exemplu: alertnotify=echo %%s | mail -s "Alerta Guldencoin" admin@foo.com
 
 </translation>
     </message>

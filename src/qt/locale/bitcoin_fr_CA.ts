@@ -69,7 +69,7 @@
     </message>
     </context>
 <context>
-    <name>BitcoinGUI</name>
+    <name>GuldencoinGUI</name>
     </context>
 <context>
     <name>ClientModel</name>
@@ -205,6 +205,6 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>bitcoin-core</name>
+    <name>guldencoin-core</name>
     </context>
 </TS>
