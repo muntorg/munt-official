@@ -78,6 +78,8 @@ static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned 
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
+int64_t nMinimumInputValue = DUST_HARD_LIMIT;
+
 const string strMessageMagic = "Guldencoin Signed Message:\n";
 
 // Internal stuff

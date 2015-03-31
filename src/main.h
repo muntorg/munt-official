@@ -67,6 +67,10 @@ static const unsigned int MAX_BLOCKFILE_SIZE = 0x8000000; // 128 MiB
 static const unsigned int BLOCKFILE_CHUNK_SIZE = 0x1000000; // 16 MiB
 /** The pre-allocation chunk size for rev?????.dat files (since 0.8) */
 static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
+/** Dust Soft Limit, allowed with additional fee per output */
+static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 NLG
+/** Dust Hard Limit, ignored as wallet inputs (mininput default) */
+static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 NLG mininput
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 static const int COINBASE_MATURITY = 100;
 /** Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp. */
@@ -128,6 +132,8 @@ extern CFeeRate minRelayTxFee;
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex *pindexBestHeader;
+
+extern int64_t nMinimumInputValue;
 
 /** Minimum disk space required - used in CheckDiskSpace() */
 static const uint64_t nMinDiskSpace = 52428800;
