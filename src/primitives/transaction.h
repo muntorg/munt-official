@@ -145,8 +145,11 @@ public:
         // need a CTxIn of at least 148 bytes to spend:
         // so dust is a txout less than 546 satoshis 
         // with default minRelayTxFee.
-        size_t nSize = GetSerializeSize(SER_DISK,0)+148u;
-        return 3*minRelayTxFee.GetFee(nSize);
+        //size_t nSize = GetSerializeSize(SER_DISK,0)+148u;
+        //return 3*minRelayTxFee.GetFee(nSize);
+        // Guldencoin: IsDust() detection disabled, allows any valid dust to be relayed.
+        // The fees imposed on each dust txo is considered sufficient spam deterrant. 
+        return 0;
     }
 
     bool IsDust(const CFeeRate &minRelayTxFee) const

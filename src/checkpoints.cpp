@@ -7,6 +7,7 @@
 #include "chainparams.h"
 #include "main.h"
 #include "uint256.h"
+#include "util.h"
 
 #include <stdint.h>
 
@@ -27,7 +28,7 @@ namespace Checkpoints {
 
     bool CheckBlock(int nHeight, const uint256& hash)
     {
-        if (fTestNet) return true; // Testnet has no checkpoints
+		if (GetBoolArg("-testnet", false)) return true; // Testnet has no checkpoints
         if (!fEnabled)
             return true;
 
@@ -72,7 +73,7 @@ namespace Checkpoints {
 
     int GetTotalBlocksEstimate()
     {
-        if (fTestNet) return true; // Testnet has no checkpoints
+        if (GetBoolArg("-testnet", false)) return true; // Testnet has no checkpoints
         if (!fEnabled)
             return 0;
 
@@ -83,7 +84,7 @@ namespace Checkpoints {
 
     CBlockIndex* GetLastCheckpoint()
     {
-        if (fTestNet) return true; // Testnet has no checkpoints
+        if (GetBoolArg("-testnet", false)) return NULL; // Testnet has no checkpoints
         if (!fEnabled)
             return NULL;
 

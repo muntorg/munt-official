@@ -261,7 +261,13 @@ libguldencoin_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   script/script_error.cpp \
+  guldencoin/scrypt.cpp \
   $(BITCOIN_CORE_H)
+
+if USE_SSE2
+  libguldencoin_common_a_SOURCES += guldencoin/scrypt-sse2.cpp
+endif
+
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc

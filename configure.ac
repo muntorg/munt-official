@@ -903,3 +903,12 @@ case $host in
      chmod 755 libtool
    ;;
 esac
+
+
+
+AC_ARG_ENABLE(sse2, [AC_HELP_STRING([--enable-sse2],[enable SSE/SSE2 optimizations])], use_sse2=$enableval, use_sse2=yes)
+if test "$use_sse" = "yes"; then use_sse2=yes; fi
+if test "$use_sse2" = "yes"; then
+	AC_DEFINE(USE_SSE2,1,[Define to enable SSE/SSE2 optimizations.])
+fi
+AM_CONDITIONAL(USE_SSE2, test "$use_sse2" = "yes")

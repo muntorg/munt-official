@@ -15,6 +15,7 @@
 #include "merkleblock.h"
 #include "net.h"
 #include "pow.h"
+#include "guldencoin/pow.h"
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
@@ -22,6 +23,8 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validationinterface.h"
+#include "wallet/wallet.h"
+#include "primitives/block.h"
 
 #include <sstream>
 
@@ -56,7 +59,7 @@ bool fIsBareMultisigStd = true;
 unsigned int nCoinCacheSize = 5000;
 
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying and mining) */
-CFeeRate minRelayTxFee = CFeeRate(1000);
+CFeeRate minRelayTxFee = CFeeRate(100000);
 
 CTxMemPool mempool(::minRelayTxFee);
 
@@ -81,6 +84,10 @@ CScript COINBASE_FLAGS;
 int64_t nMinimumInputValue = DUST_HARD_LIMIT;
 
 const string strMessageMagic = "Guldencoin Signed Message:\n";
+
+double dHashesPerSec = 0.0;
+int64_t nHPSTimerStart = 0;
+
 
 // Internal stuff
 namespace {
@@ -847,6 +854,13 @@ CAmount GetMinRelayFee(const CTransaction& tx, unsigned int nBytes, bool fAllowF
             nMinFee = 0;
     }
 
+    // Guldencoin
+    // To limit dust spam, add nBaseFee for each output less than DUST_SOFT_LIMIT
+    int64_t nBaseFee = 100000;
+    BOOST_FOREACH(const CTxOut& txout, tx.vout)
+        if (txout.nValue < DUST_SOFT_LIMIT)
+            nMinFee += nBaseFee;
+
     if (!MoneyRange(nMinFee))
         nMinFee = MAX_MONEY;
     return nMinFee;
@@ -1178,15 +1192,15 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex)
 
 CAmount GetBlockValue(int nHeight, const CAmount& nFees)
 {
-    CAmount nSubsidy = 50 * COIN;
-    int halvings = nHeight / Params().SubsidyHalvingInterval();
+    CAmount nSubsidy = 1000 * COIN; // 1000 Gulden for each block
 
-    // Force block reward to zero when right shift is undefined.
-    if (halvings >= 64)
-        return nFees;
+    if(nHeight == 1)
+    {
+        nSubsidy = 170000000 * COIN; // First block will be premined
+    }
 
-    // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
-    nSubsidy >>= halvings;
+    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
+    nSubsidy >>= (nHeight / 840000); // Guldencoin: 840k blocks in ~4 years
 
     return nSubsidy + nFees;
 }
@@ -1711,9 +1725,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes in their
     // initial block download.
-    bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
-                          !((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
-                           (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
+    //Guldencoin: BIP30 always true for Guldencoin.
+    bool fEnforceBIP30 = true;
     if (fEnforceBIP30) {
         BOOST_FOREACH(const CTransaction& tx, block.vtx) {
             const CCoins* coins = view.AccessCoins(tx.GetHash());
@@ -1723,8 +1736,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         }
     }
 
-    // BIP16 didn't become active until Apr 1 2012
-    int64_t nBIP16SwitchTime = 1333238400;
+    // BIP16 didn't become active until Oct 1 2012
+    int64_t nBIP16SwitchTime = 1349049600;
     bool fStrictPayToScriptHash = (pindex->GetBlockTime() >= nBIP16SwitchTime);
 
     unsigned int flags = fStrictPayToScriptHash ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE;
@@ -2461,10 +2474,10 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
     return true;
 }
 
-bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
+bool CheckBlockHeader(const CBlock& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(), block.nBits, Params().GetConsensus()))
         return state.DoS(50, error("CheckBlockHeader(): proof of work failed"),
                          REJECT_INVALID, "high-hash");
 
@@ -2697,6 +2710,8 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
 
 static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired)
 {
+    // Guldencoin: temporarily disable v2 block lockin until we are ready for v2 transition
+    return false;
     unsigned int nToCheck = Params().ToCheckBlockUpgradeMajority();
     unsigned int nFound = 0;
     for (unsigned int i = 0; i < nToCheck && nFound < nRequired && pstart != NULL; i++)
@@ -4148,6 +4163,15 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         }
     }
 
+    else if (!fBloomFilters &&
+             (strCommand == "filterload" ||
+              strCommand == "filteradd" ||
+              strCommand == "filterclear"))
+    {
+        pfrom->CloseSocketDisconnect();
+        return error("peer %s attempted to set a bloom filter even though we do not advertise that service",
+                     pfrom->addr.ToString().c_str());
+    }
 
     else if (strCommand == "filterload")
     {

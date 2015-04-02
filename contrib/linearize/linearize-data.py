@@ -291,7 +291,7 @@ if __name__ == '__main__':
 	blkindex = get_block_hashes(settings)
 	blkmap = mkblockmap(blkindex)
 
-	if not "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f" in blkmap:
+	if not "6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92" in blkmap:
 		print("Genesis block not found in hashlist")
 	else:
 		BlockDataCopier(settings, blkindex, blkmap).run()

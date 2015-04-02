@@ -37,6 +37,7 @@ extern std::string strMiscWarning;
 extern bool fLogTimestamps;
 extern bool fLogIPs;
 extern volatile bool fReopenDebugLog;
+extern bool fBloomFilters;
 
 void SetupEnvironment();
 
