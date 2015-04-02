@@ -27,6 +27,7 @@ namespace Checkpoints {
 
     bool CheckBlock(int nHeight, const uint256& hash)
     {
+        if (fTestNet) return true; // Testnet has no checkpoints
         if (!fEnabled)
             return true;
 
@@ -71,6 +72,7 @@ namespace Checkpoints {
 
     int GetTotalBlocksEstimate()
     {
+        if (fTestNet) return true; // Testnet has no checkpoints
         if (!fEnabled)
             return 0;
 
@@ -81,6 +83,7 @@ namespace Checkpoints {
 
     CBlockIndex* GetLastCheckpoint()
     {
+        if (fTestNet) return true; // Testnet has no checkpoints
         if (!fEnabled)
             return NULL;
 
