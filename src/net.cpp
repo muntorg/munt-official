@@ -480,6 +480,7 @@ void CNode::copyStats(CNodeStats &stats)
     X(nStartingHeight);
     X(nSendBytes);
     X(nRecvBytes);
+    X(nBlocksRequested);
     X(fWhitelisted);
 
     // It is common for nodes with good ping times to suddenly become lagged,
@@ -713,7 +714,7 @@ void ThreadSocketHandler()
         //
         struct timeval timeout;
         timeout.tv_sec  = 0;
-        timeout.tv_usec = 50000; // frequency to poll pnode->vSend
+        timeout.tv_usec = 9924; // frequency to poll pnode->vSend
 
         fd_set fdsetRecv;
         fd_set fdsetSend;
@@ -1889,6 +1890,7 @@ CNode::CNode(SOCKET hSocketIn, CAddress addrIn, std::string addrNameIn, bool fIn
     nSendBytes = 0;
     nRecvBytes = 0;
     nTimeConnected = GetTime();
+    nBlocksRequested = 0;
     nTimeOffset = 0;
     addr = addrIn;
     addrName = addrNameIn == "" ? addr.ToStringIPPort() : addrNameIn;

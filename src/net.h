@@ -178,6 +178,7 @@ public:
     int nStartingHeight;
     uint64_t nSendBytes;
     uint64_t nRecvBytes;
+    uint64_t nBlocksRequested;
     bool fWhitelisted;
     double dPingTime;
     double dPingWait;
@@ -252,6 +253,7 @@ public:
     int64_t nLastSend;
     int64_t nLastRecv;
     int64_t nTimeConnected;
+    uint64_t nBlocksRequested;
     int64_t nTimeOffset;
     CAddress addr;
     std::string addrName;
