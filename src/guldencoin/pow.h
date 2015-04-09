@@ -289,6 +289,8 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
             DiffMode = 3;
         else if (pindexLast->nHeight+1 >= 5)
             DiffMode = 2;
+	else
+	    return GetNextWorkRequired_original(pindexLast, pblock, params);
     }
     else
     {
@@ -303,7 +305,7 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
     switch(DiffMode)
     {
         // Original 'bitcoin' targetting algo - because diff never changed before this was switched out we can just return a hardcoded diff instead.
-        case 1: return 504365040;;
+        case 1: return 504365040;
         case 2: return GetNextWorkRequired_KGW(pindexLast, pblock, params);
         case 3: return GetNextWorkRequired_DGW3(pindexLast, pblock, params);
         case 4: return GetNextWorkRequired_DIGI(pindexLast, pblock, params);
