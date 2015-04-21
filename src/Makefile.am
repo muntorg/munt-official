@@ -114,6 +114,7 @@ BITCOIN_CORE_H = \
   rpcclient.h \
   rpcprotocol.h \
   rpcserver.h \
+  guldencoin/rpcgulden.h \
   script/interpreter.h \
   script/script_error.h \
   script/script.h \
@@ -189,6 +190,7 @@ libguldencoin_server_a_SOURCES = \
   rpcnet.cpp \
   rpcrawtransaction.cpp \
   rpcserver.cpp \
+  guldencoin/rpcgulden.cpp \
   script/sigcache.cpp \
   timedata.cpp \
   txdb.cpp \
@@ -262,6 +264,7 @@ libguldencoin_common_a_SOURCES = \
   script/standard.cpp \
   script/script_error.cpp \
   guldencoin/scrypt.cpp \
+  guldencoin/hash/city.cpp \
   $(BITCOIN_CORE_H)
 
 if USE_SSE2

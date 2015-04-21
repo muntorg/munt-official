@@ -18,6 +18,7 @@ public:
     enum Network {
         MAIN,
         TESTNET,
+        TESTNET_ACCELERATED,
         REGTEST,
 
         MAX_NETWORK_TYPES

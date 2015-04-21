@@ -16,6 +16,10 @@ class CReserveKey;
 class CScript;
 class CWallet;
 
+extern double dHashesPerSec;
+extern int64_t nHPSTimerStart;
+extern int64_t nHashThrottle;
+
 struct CBlockTemplate
 {
     CBlock block;

@@ -29,6 +29,8 @@
 #include <boost/thread.hpp>
 #include "json/json_spirit_writer_template.h"
 
+#include "guldencoin/rpcgulden.h"
+
 using namespace boost::asio;
 using namespace json_spirit;
 using namespace RPCServer;
@@ -307,9 +309,12 @@ static const CRPCCommand vRPCCommands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,      false },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,      false },
     { "mining",             "submitblock",            &submitblock,            true,      false },
-	{ "mining",             "setmininput",            &setmininput,            false,     false },
-	{ "mining",             "getwork",                &getwork,                true,      false },
+    { "mining",             "setmininput",            &setmininput,            false,     false },
+    { "mining",             "getwork",                &getwork,                true,      false },
     { "mining",             "getworkex",              &getworkex,              true,      false },
+    //Guldencoin only
+    { "mining",             "gethashps",              &gethashps,              true,      false },
+    { "mining",             "sethashlimit",             &sethashlimit,              true,      false },
 
 #ifdef ENABLE_WALLET
     /* Coin generation */

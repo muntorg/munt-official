@@ -36,6 +36,20 @@ public:
 };
 static CBaseTestNetParams testNetParams;
 
+/**
+ * Testnet accelerated
+ */
+class CBaseTestNetAcceleratedParams : public CBaseMainParams
+{
+public:
+    CBaseTestNetAcceleratedParams()
+    {
+        nRPCPort = 9929;
+        strDataDir = "testnetaccel";
+    }
+};
+static CBaseTestNetAcceleratedParams testNetAcceleratedtParams;;
+
 /*
  * Regression test
  */
@@ -79,6 +93,9 @@ void SelectBaseParams(CBaseChainParams::Network network)
     case CBaseChainParams::TESTNET:
         pCurrentBaseParams = &testNetParams;
         break;
+    case CBaseChainParams::TESTNET_ACCELERATED:
+        pCurrentBaseParams = &testNetAcceleratedtParams;
+        break;
     case CBaseChainParams::REGTEST:
         pCurrentBaseParams = &regTestParams;
         break;
@@ -92,11 +109,14 @@ CBaseChainParams::Network NetworkIdFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
     bool fTestNet = GetBoolArg("-testnet", false);
+    bool fTestNetAccelerated = GetBoolArg("-testnetaccel", false);
 
     if (fTestNet && fRegTest)
         return CBaseChainParams::MAX_NETWORK_TYPES;
     if (fRegTest)
         return CBaseChainParams::REGTEST;
+    if (fTestNetAccelerated)
+        return CBaseChainParams::TESTNET_ACCELERATED;
     if (fTestNet)
         return CBaseChainParams::TESTNET;
     return CBaseChainParams::MAIN;
