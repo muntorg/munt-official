@@ -11,13 +11,14 @@
 #include "main.h"
 #include "net.h"
 #include "pow.h"
-#include "guldencoin/pow.h"
+#include "guldencoin/diff.h"
 #include "timedata.h"
 #include "util.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "guldencoin/hash/hash.h"
 
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -519,6 +520,12 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     return true;
 }
 
+double dHashesPerSec = 0.0;
+int64_t nHPSTimerStart = 0;
+int64_t nHashCounter=0;
+int64_t nHashThrottle=-1;
+static CCriticalSection timerCS;
+
 void static BitcoinMiner(CWallet *pwallet)
 {
     LogPrintf("GuldencoinMiner started\n");
@@ -530,8 +537,10 @@ void static BitcoinMiner(CWallet *pwallet)
     unsigned int nExtraNonce = 0;
 
     try {
-        while (true) {
-            if (Params().MiningRequiresPeers()) {
+        while (true)
+        {
+            if (Params().MiningRequiresPeers())
+            {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 while (vNodes.empty())
@@ -556,6 +565,17 @@ void static BitcoinMiner(CWallet *pwallet)
             LogPrintf("Running GuldencoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                 ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
+            // Meter hashes/sec	
+            if (nHPSTimerStart == 0)
+            {
+                LOCK(timerCS);
+                if (nHPSTimerStart == 0)
+                {
+                    nHPSTimerStart = GetTimeMillis();
+                    nHashCounter = 0;
+                }
+            }
+    
             //
             // Search
             //
@@ -563,20 +583,41 @@ void static BitcoinMiner(CWallet *pwallet)
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             uint256 hash;
             uint32_t nNonce = 0;
-            while (true) {
-                unsigned int nHashesDone = 0;
-                uint256 thash;
-                char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+            while (true)
+            {
+                arith_uint256 thash;
                 while (true)
                 {
-                    scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
+                    if (GetTimeMillis() - nHPSTimerStart > 1000)
+                    {
+                        LOCK(timerCS);
+                        if (GetTimeMillis() - nHPSTimerStart > 1000)
+                        {
+                            int64_t nTemp = nHashCounter;
+                            nHashCounter = 0;
+                            dHashesPerSec =  (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                            nHPSTimerStart = GetTimeMillis();
+                        }
+                    }
 
-                    if (UintToArith256(thash) <= hashTarget)
+                    if (GetBoolArg("-testnetaccel", false))
+                    {
+                        //hash_sha256(BEGIN(pblock->nVersion));
+                        hash_city(BEGIN(pblock->nVersion), thash);
+                    }
+                    else
+                    {
+                        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+                        scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
+                    }
+
+		    //LogPrintf("proof-of-work \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
+                    if (thash <= hashTarget)
                     {
                         // Found a solution
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         LogPrintf("GuldencoinMiner:\n");
-                        LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
+                        LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, *pwallet, reservekey);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
 
@@ -587,42 +628,26 @@ void static BitcoinMiner(CWallet *pwallet)
                         break;
                     }
                     pblock->nNonce += 1;
-                    nHashesDone += 1;
+                    nHashCounter++;
+                    while(nHashThrottle != -1 && nHashCounter >= nHashThrottle)
+                    {
+                        if (GetTimeMillis() - nHPSTimerStart > 1000)
+                        {
+                                LOCK(timerCS);
+                                if (GetTimeMillis() - nHPSTimerStart > 1000)
+                                {
+                                        int64_t nTemp = nHashCounter;
+                                        nHashCounter = 0;
+                                        dHashesPerSec =   (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                                        nHPSTimerStart = GetTimeMillis();
+                                }
+                        }
+                        MilliSleep(1);
+                    }
+
                     if ((pblock->nNonce & 0xFF) == 0)
                         break;
-                }
-
-            // Meter hashes/sec
-            static int64_t nHashCounter;
-            if (nHPSTimerStart == 0)
-            {
-                nHPSTimerStart = GetTimeMillis();
-                nHashCounter = 0;
-            }
-            else
-                nHashCounter += nHashesDone;
-            if (GetTimeMillis() - nHPSTimerStart > 4000)
-            {
-                static CCriticalSection cs;
-                {
-                    LOCK(cs);
-                    if (GetTimeMillis() - nHPSTimerStart > 4000)
-                    {
-                        dHashesPerSec = 1000.0 * nHashCounter / (GetTimeMillis() - nHPSTimerStart);
-                        nHPSTimerStart = GetTimeMillis();
-                        nHashCounter = 0;
-                        static int64_t nLogTime;
-                        if (GetTime() - nLogTime > 30 * 60)
-                        {
-                            nLogTime = GetTime();
-                            printf("hashmeter %6.0f khash/s\n", dHashesPerSec/1000.0);
-                        }
-                    }
-                }
-            }
-
-                
-               
+                }               
 
                 // Check for stop or if block needs to be rebuilt
                 boost::this_thread::interruption_point();

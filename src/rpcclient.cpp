@@ -31,6 +31,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setgenerate", 1 },
     { "getnetworkhashps", 0 },
     { "getnetworkhashps", 1 },
+    { "sethashlimit", 0 },
     { "sendtoaddress", 1 },
     { "sendtoaddress", 4 },
     { "settxfee", 0 },

@@ -15,7 +15,7 @@
 #include "merkleblock.h"
 #include "net.h"
 #include "pow.h"
-#include "guldencoin/pow.h"
+#include "guldencoin/diff.h"
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
@@ -85,8 +85,6 @@ int64_t nMinimumInputValue = DUST_HARD_LIMIT;
 
 const string strMessageMagic = "Guldencoin Signed Message:\n";
 
-double dHashesPerSec = 0.0;
-int64_t nHPSTimerStart = 0;
 
 
 // Internal stuff

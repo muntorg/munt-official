@@ -27,6 +27,8 @@
 #include "json/json_spirit_utils.h"
 #include "json/json_spirit_value.h"
 
+#include "guldencoin/rpcgulden.h"
+
 using namespace json_spirit;
 using namespace std;
 

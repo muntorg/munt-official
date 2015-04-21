@@ -9,8 +9,10 @@
 #include "primitives/transaction.h"
 #include "serialize.h"
 #include "uint256.h"
+#include "arith_uint256.h"
 #include "utilstrencodings.h"
-#include "guldencoin/scrypt.h"
+#include "util.h"
+#include "guldencoin/hash/hash.h"
 
 /** The maximum allowed size for a serialized block, in bytes (network rule) */
 static const unsigned int MAX_BLOCK_SIZE = 1000000; // 1000KB block
@@ -113,9 +115,18 @@ public:
 
     uint256 GetPoWHash() const
     {
-        uint256 thash;
-        scrypt_1024_1_1_256(BEGIN(nVersion), BEGIN(thash));
-        return thash;
+        arith_uint256 thash;
+        if (GetBoolArg("-testnetaccel", false))
+        {
+            //hash_sha256(BEGIN(nVersion));
+            hash_city(BEGIN(nVersion), thash);
+        }
+        else
+        {
+            char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+            scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
+        }
+        return ArithToUint256(thash);
     }
 
     CBlockHeader GetBlockHeader() const

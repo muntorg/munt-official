@@ -76,7 +76,7 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
         boost::assign::map_list_of
-        ( 546, uint256S("000000002a936ca763904c3c35fce2f3556c559c0214345d31b1bcebf76acb70"))
+        ( 0, uint256S("0x"))
         ;
 static const Checkpoints::CCheckpointData dataTestnet = {
         &mapCheckpointsTestnet,
@@ -244,6 +244,85 @@ public:
 };
 static CTestNetParams testNetParams;
 
+
+/**
+ * Testnet - accelerated
+ */
+#include <cstdio>
+#include "arith_uint256.h"
+class CTestNetAcceleratedParams : public CMainParams {
+public:
+    CTestNetAcceleratedParams() {
+        strNetworkID = "testnetaccel";
+        consensus.nMajorityEnforceBlockUpgrade = 51;
+        consensus.nMajorityRejectBlockOutdated = 75;
+        consensus.nMajorityWindow = 100;
+        consensus.powLimit = ~arith_uint256(0) >> 10;
+        consensus.nPowTargetSpacing = 50; 
+        consensus.fPowAllowMinDifficultyBlocks = true;
+        pchMessageStart[0] = 0xfc; // 'N' + 0xb0
+        pchMessageStart[1] = 0xfe; // 'L' + 0xb0
+        pchMessageStart[2] = 0xf7; // 'G' + 0xb0
+        pchMessageStart[3] = 0x01; // 0x01
+        vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
+        nDefaultPort = 9928;
+        nMinerThreads = 0;
+
+        //! Modify the testnet genesis block so the timestamp is valid for a later start.
+        genesis.nTime = 1399759400;
+        genesis.nNonce = 458227;
+        genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+        consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0xd011f199430dc2bceba78de3a9762b474beb813957597eb006c8ed76249a0791"));
+
+	/*arith_uint256 thash;
+	hash_city(BEGIN(genesis.nVersion), thash);
+	arith_uint256 foo;
+	while(thash > consensus.powLimit)
+	{
+	    if(genesis.nNonce % 20000 == 0)
+	    {
+		printf("%s  %s\n",thash.ToString().c_str(), consensus.powLimit.ToString().c_str());
+		printf("%ld\n",genesis.nNonce);
+	    }
+	
+	    genesis.nNonce++;
+            hash_city(BEGIN(genesis.nVersion), thash);
+	    if(genesis.nNonce == 0)
+	      genesis.nTime++;
+	}
+	printf("%ld\n",genesis.nNonce);
+	printf("%ld\n",genesis.nTime);
+	consensus.hashGenesisBlock = genesis.GetHash();
+	printf("%s\n", consensus.hashGenesisBlock.ToString().c_str());
+	exit(1);*/	
+
+        vFixedSeeds.clear();
+        vSeeds.clear();
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,111+128);
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
+
+
+        convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
+
+        fRequireRPCPassword = true;
+        fMiningRequiresPeers = false;
+        fDefaultCheckMemPool = false;
+        fRequireStandard = false;
+        fMineBlocksOnDemand = false;
+        fTestnetToBeDeprecatedFieldRPC = true;
+    }
+    const Checkpoints::CCheckpointData& Checkpoints() const 
+    {
+        return dataTestnet;
+    }
+};
+static CTestNetAcceleratedParams testNetAcceletaredParams;
+
 /**
  * Regression test
  */
@@ -298,6 +377,8 @@ CChainParams &Params(CBaseChainParams::Network network) {
             return mainParams;
         case CBaseChainParams::TESTNET:
             return testNetParams;
+        case CBaseChainParams::TESTNET_ACCELERATED:
+            return testNetAcceletaredParams;
         case CBaseChainParams::REGTEST:
             return regTestParams;
         default:
