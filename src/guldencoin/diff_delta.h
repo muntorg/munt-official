@@ -60,7 +60,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         // then allow mining of a min-difficulty block.
         if (pblock->nTime > pindexLast->nTime + (20 * nRetargetTimespan))
         {
-            printf("Testnet 20 * default time hit: nTargetTimespan = %"PRI64d" nActualTimespan = %"PRI64d"\n" , nRetargetTimespan, nLBTimespan);
+            printf("Testnet 20 * default time hit: nTargetTimespan = %ld nActualTimespan = %ld\n" , nRetargetTimespan, nLBTimespan);
             return nProofOfWorkLimit;
         }
         else

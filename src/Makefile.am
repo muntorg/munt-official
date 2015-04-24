@@ -313,7 +313,7 @@ guldencoind_CPPFLAGS = $(BITCOIN_INCLUDES)
 guldencoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-guldencoind_SOURCES += bitcoind-res.rc
+guldencoind_SOURCES += guldencoind-res.rc
 endif
 
 guldencoind_LDADD = \
@@ -339,7 +339,7 @@ guldencoin_cli_CPPFLAGS = $(BITCOIN_INCLUDES)
 guldencoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-guldencoin_cli_SOURCES += bitcoin-cli-res.rc
+guldencoin_cli_SOURCES += guldencoin-cli-res.rc
 endif
 
 guldencoin_cli_LDADD = \

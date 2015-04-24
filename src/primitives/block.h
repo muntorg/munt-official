@@ -12,7 +12,7 @@
 #include "arith_uint256.h"
 #include "utilstrencodings.h"
 #include "util.h"
-#include "guldencoin/hash/hash.h"
+#include "../guldencoin/hash/hash.h"
 
 /** The maximum allowed size for a serialized block, in bytes (network rule) */
 static const unsigned int MAX_BLOCK_SIZE = 1000000; // 1000KB block
