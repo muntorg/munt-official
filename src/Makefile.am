@@ -115,6 +115,16 @@ BITCOIN_CORE_H = \
   rpcprotocol.h \
   rpcserver.h \
   guldencoin/rpcgulden.h \
+  guldencoin/diff.h \
+  guldencoin/diff_DGW.h \
+  guldencoin/diff_DIGI.h \
+  guldencoin/diff_delta.h \
+  guldencoin/diff_kimoto.h \
+  guldencoin/hash/hash.h \
+  guldencoin/hash/city.h \
+  guldencoin/hash/citycrc.h \
+  guldencoin/hash/cityconfig.h \
+  guldencoin/scrypt.h \
   script/interpreter.h \
   script/script_error.h \
   script/script.h \
@@ -267,9 +277,6 @@ libguldencoin_common_a_SOURCES = \
   guldencoin/hash/city.cpp \
   $(BITCOIN_CORE_H)
 
-if USE_SSE2
-  libguldencoin_common_a_SOURCES += guldencoin/scrypt-sse2.cpp
-endif
 
 
 # util: shared between all executables.

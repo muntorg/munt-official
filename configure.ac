@@ -1,8 +1,8 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
-define(_CLIENT_VERSION_MAJOR, 0)
-define(_CLIENT_VERSION_MINOR, 10)
-define(_CLIENT_VERSION_REVISION, 99)
+define(_CLIENT_VERSION_MAJOR, 1)
+define(_CLIENT_VERSION_MINOR, 3)
+define(_CLIENT_VERSION_REVISION, 1)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2015)
@@ -906,9 +906,3 @@ esac
 
 
 
-AC_ARG_ENABLE(sse2, [AC_HELP_STRING([--enable-sse2],[enable SSE/SSE2 optimizations])], use_sse2=$enableval, use_sse2=yes)
-if test "$use_sse" = "yes"; then use_sse2=yes; fi
-if test "$use_sse2" = "yes"; then
-	AC_DEFINE(USE_SSE2,1,[Define to enable SSE/SSE2 optimizations.])
-fi
-AM_CONDITIONAL(USE_SSE2, test "$use_sse2" = "yes")
