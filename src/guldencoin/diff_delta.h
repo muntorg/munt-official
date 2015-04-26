@@ -134,7 +134,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     }
 
 
-    // -- long intervall (algo specific)
+    // -- long interval (algo specific)
     if (pindexLast->nHeight <= nLongFrame)
     {
         nLongWeight = 0;
@@ -166,7 +166,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         nWeightedTimespan = (nRetargetTimespan + (nRetargetTimespan/2));
 
 
-    // -- day intervall (1 day; general over all algos)
+    // -- day interval (1 day; general over all algos)
     // so other algos can take blocks that 1 algo does not use
     // in case there are still longer gaps (high spikes)
     if (pindexLast->nHeight <= nDayFrame)
@@ -202,8 +202,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     bnNew /= arith_uint256(nRetargetTimespan);
 
     // difficulty should never go below (human view) the starting difficulty
-    if (bnNew > arith_uint256(nProofOfWorkLimit))
-        bnNew = arith_uint256(nProofOfWorkLimit);
+    if (bnNew > arith_uint256().SetCompact(nProofOfWorkLimit))
+        bnNew = arith_uint256().SetCompact(nProofOfWorkLimit);
 
     if(fDebug)
     {
