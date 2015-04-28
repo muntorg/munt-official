@@ -3,30 +3,34 @@
 
 
 // Delta, the Guldencoin Difficulty Re-adjustment
-// unsigned int static GetNextWorkRequired_Delta (const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, int algo)
 unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    int64_t nRetargetTimespan = params.nPowTargetSpacing;         // algo: actual default block time
+    static int64_t nPrevHeight = 0; // only for debug purposes - prevent unncessary log spamming
+    static int64_t nPrevDifficulty = 0; // only for debug purposes - prevent unncessary log spamming
+
+    int64_t nRetargetTimespan = params.nPowTargetSpacing;               // algo: actual default block time
 
     unsigned int nProofOfWorkLimit = params.powLimit.GetCompact();      // algo specific
 
-    int nLastBlock   =   1;                             // algo: use last  1 blocks
-    int nShortFrame  =   3;                             // algo: use last  3 blocks
-    int nMiddleFrame =  24;                             // algo: use last 24 blocks
-    int nLongFrame   = 576;                             // algo: use default blocks per day
+    int nLastBlock   =   1;                                             // algo: use last  1 blocks
+    int nShortFrame  =   3;                                             // algo: use last  3 blocks
+    int nMiddleFrame =  24;                                             // algo: use last 24 blocks
+    int nLongFrame   = 576;                                             // algo: use default blocks per day
 
-    int nDayFrame    = 576;                             // all:  use default blocks per day
+    int nDayFrame    = 576;                                             // all:  use default blocks per day
 
-    int64_t nLBWeight     = 16;                         // tweak: weight of last block
-    int64_t nShortWeight  =  4;                         // tweak: weight of short frame
+    int64_t nLBWeight     = 16;                                         // tweak: weight of last block
+    int64_t nShortWeight  =  4;                                         // tweak: weight of short frame
     int64_t nMiddleWeight =  2;
     int64_t nLongWeight   =  1;
 
-    int64_t nShortMinGap    = nRetargetTimespan / 6;    // default time / 6
-    int64_t nShortMaxGap    = nRetargetTimespan * 6;    // default time * 6
+    int64_t nShortMinGap    = nRetargetTimespan / 6;                    // default time / 6
+    int64_t nShortMaxGap    = nRetargetTimespan * 6;                    // default time * 6
 
-    int64_t nBadTimeLimit   = 0;                        // replace times <= limit
-    int64_t nBadTimeReplace = nRetargetTimespan / 10;   // default time / 10
+    int64_t nLongTimeLimit  = 2 * 15 * 60;                              // if block is taking longer than (double the maximum drift) to generate - halve the difficulty
+    int64_t nLowTimeLimit = nRetargetTimespan * 9 / 10;                 // don't adjust time downwards if last block came in at target rate (50 seconds)
+    int64_t nBadTimeLimit   = 0;                                        // replace times <= limit
+    int64_t nBadTimeReplace = nRetargetTimespan / 10;                   // default time / 10
 
     int64_t nPercentFactor = 100;
 
@@ -42,47 +46,23 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     int64_t nWeightedTimespan  = 0;
     int64_t nDailyPercentage   = 0;
 
-    const CBlockIndex* pindexFirst = pindexLast;        // needs algo check
-    const CBlockIndex* pindexPrev  = pindexLast;        // needs algo check
+    const CBlockIndex* pindexFirst = pindexLast;                        // needs algo check
+    const CBlockIndex* pindexPrev  = pindexLast;                        // needs algo check
 
 
     // Genesis block
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
 
-    // Testnet rule, a simple copy and paste
-    // no change beside nIntervall replaced by nShortFrame
-    //fixme: disable for now
-    if (GetBoolArg("-testnet", false))                                       // algo specific
-    {
-        // Special difficulty rule for testnet:
-        // If the new block's timestamp is more than 20 * default block time
-        // then allow mining of a min-difficulty block.
-        if (pblock->nTime > pindexLast->nTime + (20 * nRetargetTimespan))
-        {
-            printf("Testnet 20 * default time hit: nTargetTimespan = %ld nActualTimespan = %ld\n" , nRetargetTimespan, nLBTimespan);
-            return nProofOfWorkLimit;
-        }
-        else
-        {
-            // Return the last non-special-min-difficulty-rules-block
-            const CBlockIndex* pindex = pindexLast;
-            while (pindex->pprev && pindex->nHeight % nShortFrame != 0 && pindex->nBits == nProofOfWorkLimit)
-                pindex = pindex->pprev;
-            return pindex->nBits;
-        }
-    }
-
 
     // -- return early if not enough blocks (algo specific)
     if (pindexLast->nHeight <= nShortFrame)
         return nProofOfWorkLimit;
 
-
     // -- last block interval (algo specific)
     pindexFirst = pindexLast->pprev;
     nLBTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
-
+   
     // check for very short and long blocks (algo specific)
     // if last block was far too short, let diff raise faster
     // by cutting 50% of last block time
@@ -201,16 +181,41 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     bnNew *= arith_uint256(nWeightedTimespan);
     bnNew /= arith_uint256(nRetargetTimespan);
 
+    // Never adjust downward if previous block generation faster than what we wanted
+    nLBTimespan = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
+    if (nLBTimespan > 0 && nLBTimespan < nLowTimeLimit && bnNew > arith_uint256().SetCompact(pindexLast->nBits))
+    {
+        bnNew.SetCompact(pindexLast->nBits);
+        if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
+            LogPrintf("<DELTA> floor %ld\n", nLBTimespan);
+    }
+    
+    // reduce difficulty if current block generation time has already exceeded maximum time limit (NB! nLongTimeLimit must exceed maximum possible drift)
+    if ((pblock->nTime - pindexLast->GetBlockTime()) > nLongTimeLimit)
+    {
+        bnNew *= arith_uint256(1 + ((pblock->nTime - pindexLast->GetBlockTime()) / nLongTimeLimit) );
+        if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
+            LogPrintf("<DELTA> reduced %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+    }
+
+    
     // difficulty should never go below (human view) the starting difficulty
     if (bnNew > arith_uint256().SetCompact(nProofOfWorkLimit))
-        bnNew = arith_uint256().SetCompact(nProofOfWorkLimit);
+        bnNew.SetCompact(nProofOfWorkLimit);
 
+    
     if(fDebug)
     {
-        printf("nWeightedTimespan = %ld nRetargetTimespan = %ld\n" , nWeightedTimespan, nRetargetTimespan);
-        printf("nTargetTimespan = %ld nActualTimespan = %ld\n" , nRetargetTimespan, nLBTimespan);
-        printf("Before: %08x %s\n", pindexLast->nBits, arith_uint256().SetCompact(pindexLast->nBits).ToString().c_str());
-        printf("After: %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+        if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
+        {
+            LogPrintf("<DELTA> height= %d\n" , pindexLast->nHeight);
+            LogPrintf("<DELTA> nWeightedTimespan = %ld nRetargetTimespan = %ld\n" , nWeightedTimespan, nRetargetTimespan);
+            LogPrintf("<DELTA> nTargetTimespan = %ld nActualTimespan = %ld\n" , nRetargetTimespan, nLBTimespan);
+            LogPrintf("<DELTA> Before: %08x %s\n", pindexLast->nBits, arith_uint256().SetCompact(pindexLast->nBits).ToString().c_str());
+            LogPrintf("<DELTA> After:  %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+        }
+        nPrevHeight = pindexLast->nHeight;
+        nPrevDifficulty = bnNew.GetCompact();
     }
 
     // return compact (uint) difficulty
