@@ -520,6 +520,7 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     return true;
 }
 
+double dBestHashesPerSec = 0.0;
 double dHashesPerSec = 0.0;
 int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
@@ -529,17 +530,38 @@ static CCriticalSection timerCS;
 void static BitcoinMiner(CWallet *pwallet)
 {
     LogPrintf("GuldencoinMiner started\n");
-    SetThreadPriority(THREAD_PRIORITY_LOWEST);
+    bool bTestnetAccel = GetBoolArg("-testnetaccel", false);
+    bool bAllowMinDifficultyBlocks = Params().AllowMinDifficultyBlocks();
+    bool bMiningRequiresPeers = Params().MiningRequiresPeers();
+    
+    int nThreadPriority = THREAD_PRIORITY_LOWEST;
+    if(bTestnetAccel)
+        nThreadPriority = THREAD_PRIORITY_ABOVE_NORMAL;
+    SetThreadPriority(nThreadPriority);
+    
     RenameThread("guldencoin-miner");
-
+    
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
 
-    try {
+    // Meter hashes/sec	
+    if (nHPSTimerStart == 0)
+    {
+        LOCK(timerCS);
+        if (nHPSTimerStart == 0)
+        {
+            nHPSTimerStart = GetTimeMillis();
+            nHashCounter = 0;
+	    dHashesPerSec = 0;
+        }
+    }
+            
+    try
+    {
         while (true)
         {
-            if (Params().MiningRequiresPeers())
+            if (bMiningRequiresPeers)
             {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
@@ -562,19 +584,7 @@ void static BitcoinMiner(CWallet *pwallet)
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running GuldencoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
-                ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
-
-            // Meter hashes/sec	
-            if (nHPSTimerStart == 0)
-            {
-                LOCK(timerCS);
-                if (nHPSTimerStart == 0)
-                {
-                    nHPSTimerStart = GetTimeMillis();
-                    nHashCounter = 0;
-                }
-            }
+            LogPrintf("Running GuldencoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
     
             //
             // Search
@@ -590,19 +600,19 @@ void static BitcoinMiner(CWallet *pwallet)
                 {
                     if (GetTimeMillis() - nHPSTimerStart > 1000)
                     {
-                        LOCK(timerCS);
-                        if (GetTimeMillis() - nHPSTimerStart > 1000)
+                        TRY_LOCK(timerCS, lockhc);
+                        if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
                         {
                             int64_t nTemp = nHashCounter;
                             nHashCounter = 0;
-                            dHashesPerSec =  (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                            dHashesPerSec =   1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                            dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
                             nHPSTimerStart = GetTimeMillis();
                         }
                     }
 
-                    if (GetBoolArg("-testnetaccel", false))
+                    if (bTestnetAccel)
                     {
-                        //hash_sha256(BEGIN(pblock->nVersion));
                         hash_city(BEGIN(pblock->nVersion), thash);
                     }
                     else
@@ -611,15 +621,13 @@ void static BitcoinMiner(CWallet *pwallet)
                         scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
                     }
 
-		    //LogPrintf("proof-of-work \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
                     if (thash <= hashTarget)
                     {
                         // Found a solution
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("GuldencoinMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, *pwallet, reservekey);
-                        SetThreadPriority(THREAD_PRIORITY_LOWEST);
+                        SetThreadPriority(nThreadPriority);
 
                         // In regression test mode, stop mining after a block is found.
                         if (Params().MineBlocksOnDemand())
@@ -633,12 +641,13 @@ void static BitcoinMiner(CWallet *pwallet)
                     {
                         if (GetTimeMillis() - nHPSTimerStart > 1000)
                         {
-                                LOCK(timerCS);
-                                if (GetTimeMillis() - nHPSTimerStart > 1000)
+                                TRY_LOCK(timerCS, lockhc);
+                                if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
                                 {
                                         int64_t nTemp = nHashCounter;
                                         nHashCounter = 0;
-                                        dHashesPerSec =   (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                                        dHashesPerSec =  1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                                        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
                                         nHPSTimerStart = GetTimeMillis();
                                 }
                         }
@@ -652,7 +661,7 @@ void static BitcoinMiner(CWallet *pwallet)
                 // Check for stop or if block needs to be rebuilt
                 boost::this_thread::interruption_point();
                 // Regtest mode doesn't require peers
-                if (vNodes.empty() && Params().MiningRequiresPeers())
+                if (vNodes.empty() && bMiningRequiresPeers)
                     break;
                 if (nNonce >= 0xffff0000)
                     break;
@@ -663,7 +672,7 @@ void static BitcoinMiner(CWallet *pwallet)
 
                 // Update nTime every few seconds
                 UpdateTime(pblock, pindexPrev);
-                if (Params().AllowMinDifficultyBlocks())
+                if (bAllowMinDifficultyBlocks)
                 {
                     // Changing pblock->nTime can change work required on testnet:
                     hashTarget.SetCompact(pblock->nBits);

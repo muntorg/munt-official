@@ -29,7 +29,7 @@
 #include <boost/thread.hpp>
 #include "json/json_spirit_writer_template.h"
 
-#include "guldencoin/rpcgulden.h"
+#include <guldencoin/rpcgulden.h>
 
 using namespace boost::asio;
 using namespace json_spirit;

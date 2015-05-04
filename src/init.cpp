@@ -387,7 +387,7 @@ std::string HelpMessage(HelpMessageMode mode)
     }
     strUsage += HelpMessageOpt("-shrinkdebugfile", _("Shrink debug.log file on client startup (default: 1 when no -debug)"));
     strUsage += HelpMessageOpt("-testnet", _("Use the test network"));
-    strUsage += HelpMessageOpt("-testnetaccel", _("Use the accelerated test network"));
+    strUsage += HelpMessageOpt("-testnetaccel", _("Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet."));
 
 
     strUsage += HelpMessageGroup(_("Node relay options:"));
@@ -682,7 +682,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (nFD < MIN_CORE_FILEDESCRIPTORS)
         return InitError(_("Not enough file descriptors available."));
     if (nFD - MIN_CORE_FILEDESCRIPTORS < nMaxConnections)
-        nMaxConnections = nFD - MIN_CORE_FILEDESCRIPTORS;
+        nMaxConnections = nFD - MIN_CORE_FILEDESCRIPTORS;    
 
     // ********************************************************* Step 3: parameter-to-internal-flags
 

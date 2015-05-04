@@ -76,6 +76,8 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<CAddress>& FixedSeeds() const { return vFixedSeeds; }
     virtual const Checkpoints::CCheckpointData& Checkpoints() const = 0;
+    // Only used by testnets.
+    virtual void ParseCommandLine(){};
 protected:
     CChainParams() {}
 

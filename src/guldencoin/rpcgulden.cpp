@@ -13,7 +13,12 @@ Value gethashps(const Array& params, bool fHelp)
             "gethashps\n"
             "\nReturns the estimated hashes per second that this computer is mining at.\n");
 
-    return dHashesPerSec;
+    if (dHashesPerSec > 1000000)
+        return strprintf("%lf mh/s (%lf)", dHashesPerSec/1000000, dBestHashesPerSec/1000000);
+    else if (dHashesPerSec > 1000)
+        return strprintf("%lf kh/s (%ls)", dHashesPerSec/1000, dBestHashesPerSec/1000);
+    else
+        return strprintf("%lf h/s (%lf)", dHashesPerSec, dBestHashesPerSec);
 }
 
 Value sethashlimit(const Array& params, bool fHelp)
@@ -32,6 +37,9 @@ Value sethashlimit(const Array& params, bool fHelp)
     RPCTypeCheck(params, boost::assign::list_of(int_type));
 
     nHashThrottle = params[0].get_int();
+    
+    LogPrintf("<DELTA> hash throttle %ld\n", nHashThrottle);
+    
     return nHashThrottle;
 }
 

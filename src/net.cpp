@@ -1233,7 +1233,7 @@ void ThreadOpenConnections()
             // stop this loop, and let the outer loop run again (which sleeps, adds seed nodes, recalculates
             // already-connected network ranges, ...) before trying new addrman addresses.
             nTries++;
-            if (nTries > 100)
+            if (nTries > 100 || GetBoolArg("-testnetaccel", false)==true )
                 break;
 
             if (IsLimited(addr))

@@ -252,13 +252,17 @@ static CTestNetParams testNetParams;
 #include "arith_uint256.h"
 class CTestNetAcceleratedParams : public CMainParams {
 public:
+    virtual void ParseCommandLine()
+    {
+        consensus.nPowTargetSpacing = GetArg("-targetspeed", 50);
+    }
     CTestNetAcceleratedParams() {
         strNetworkID = "testnetaccel";
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
         consensus.powLimit = ~arith_uint256(0) >> 10;
-        consensus.nPowTargetSpacing = 50; 
+        consensus.nPowTargetSpacing = 50;
         consensus.fPowAllowMinDifficultyBlocks = true;
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
@@ -269,33 +273,35 @@ public:
         nMinerThreads = 0;
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime = 1399759400;
-        genesis.nNonce = 458227;
+        genesis.nTime = 1430359579;
+        genesis.nNonce = 459947;
         genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0xd011f199430dc2bceba78de3a9762b474beb813957597eb006c8ed76249a0791"));
+        assert(consensus.hashGenesisBlock == uint256S("0xf7267879afd686e99305dfa008906837d7804b530ed6ba130a8362581f107dc5"));
 
-	/*arith_uint256 thash;
-	hash_city(BEGIN(genesis.nVersion), thash);
-	arith_uint256 foo;
-	while(thash > consensus.powLimit)
-	{
-	    if(genesis.nNonce % 20000 == 0)
-	    {
-		printf("%s  %s\n",thash.ToString().c_str(), consensus.powLimit.ToString().c_str());
-		printf("%ld\n",genesis.nNonce);
-	    }
-	
-	    genesis.nNonce++;
+        #if 0
+        arith_uint256 thash;
+        hash_city(BEGIN(genesis.nVersion), thash);
+        arith_uint256 foo;
+        while(thash > consensus.powLimit)
+        {
+            if(genesis.nNonce % 20000 == 0)
+            {
+                printf("%s  %s\n",thash.ToString().c_str(), consensus.powLimit.ToString().c_str());
+                printf("%ld\n",genesis.nNonce);
+            }
+
+            genesis.nNonce++;
             hash_city(BEGIN(genesis.nVersion), thash);
-	    if(genesis.nNonce == 0)
-	      genesis.nTime++;
-	}
-	printf("%ld\n",genesis.nNonce);
-	printf("%ld\n",genesis.nTime);
-	consensus.hashGenesisBlock = genesis.GetHash();
-	printf("%s\n", consensus.hashGenesisBlock.ToString().c_str());
-	exit(1);*/	
+            if(genesis.nNonce == 0)
+                genesis.nTime++;
+        }
+        printf("%ld\n",genesis.nNonce);
+        printf("%ld\n",genesis.nTime);
+        consensus.hashGenesisBlock = genesis.GetHash();
+        printf("%s\n", consensus.hashGenesisBlock.ToString().c_str());
+        exit(1);
+        #endif
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -399,5 +405,6 @@ bool SelectParamsFromCommandLine()
         return false;
 
     SelectParams(network);
+    pCurrentParams->ParseCommandLine();
     return true;
 }
