@@ -33,8 +33,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     #endif
 
     // Weighting to use for each of the four algo specific time windows.
-    const int64_t nLBWeight        =  64;
-    const int64_t nShortWeight     =  8;
+    const int64_t nLBWeight        =  8;
+    const int64_t nShortWeight     =  4;
     int64_t nMiddleWeight          =  2;
     int64_t nLongWeight            =  1;
 
@@ -158,11 +158,10 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
 
     // -- Combine all the timespans and weights to get a weighted timespan
-    nWeightedSum      = (nLBTimespan * nLBWeight) + (nShortTimespan * nShortWeight);
-    nWeightedSum     += (nMiddleTimespan * nMiddleWeight) + (nLongTimespan * nLongWeight);
-    nWeightedDiv      = (nLastBlock * nLBWeight) + (nShortFrame * nShortWeight);
-    nWeightedDiv     += (nMiddleFrame * nMiddleWeight) + (nLongFrame * nLongWeight);
-    nWeightedTimespan = nWeightedSum / nWeightedDiv;
+    nWeightedSum  = (nLBTimespan * 100) * nLBWeight + (nShortTimespan * 100 / nShortFrame) * nShortWeight;
+    nWeightedSum += (nMiddleTimespan * 100 / nMiddleFrame) * nMiddleWeight + (nLongTimespan * 100 / nLongFrame) * nLongWeight;
+    nWeightedDiv  = nLBWeight + nShortWeight + nMiddleWeight + nLongWeight;
+    nWeightedTimespan = nWeightedSum / nWeightedDiv / 100;
 
     // Check for multiple very short blocks (algo specific)
     // If last few blocks were far too short, then calculate difficulty based on short blocks alone.

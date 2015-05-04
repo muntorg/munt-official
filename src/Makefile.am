@@ -122,7 +122,6 @@ BITCOIN_CORE_H = \
   guldencoin/diff_kimoto.h \
   guldencoin/hash/hash.h \
   guldencoin/hash/city.h \
-  guldencoin/hash/citycrc.h \
   guldencoin/hash/cityconfig.h \
   guldencoin/scrypt.h \
   script/interpreter.h \
