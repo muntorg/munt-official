@@ -33,8 +33,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     #endif
 
     // Weighting to use for each of the four algo specific time windows.
-    const int64_t nLBWeight        =  8;
-    const int64_t nShortWeight     =  4;
+    const int64_t nLBWeight        =  64;
+    const int64_t nShortWeight     =  8;
     int64_t nMiddleWeight          =  2;
     int64_t nLongWeight            =  1;
 
