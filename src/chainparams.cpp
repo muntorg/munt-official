@@ -254,7 +254,7 @@ class CTestNetAcceleratedParams : public CMainParams {
 public:
     virtual void ParseCommandLine()
     {
-        consensus.nPowTargetSpacing = GetArg("-targetspeed", 50);
+        consensus.nPowTargetSpacing = GetArg("-targetspeed", consensus.nPowTargetSpacing);
     }
     CTestNetAcceleratedParams() {
         strNetworkID = "testnetaccel";
@@ -262,7 +262,7 @@ public:
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
         consensus.powLimit = ~arith_uint256(0) >> 10;
-        consensus.nPowTargetSpacing = 50;
+        consensus.nPowTargetSpacing = 150;
         consensus.fPowAllowMinDifficultyBlocks = true;
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
@@ -274,10 +274,10 @@ public:
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1430359579;
-        genesis.nNonce = 459947;
+        genesis.nNonce = 821434;
         genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0xf7267879afd686e99305dfa008906837d7804b530ed6ba130a8362581f107dc5"));
+        assert(consensus.hashGenesisBlock == uint256S("0x6366b541deb79f066c65dfe451f676f07e3179e4cf91ae5dd055e230543eb5a3"));
 
         #if 0
         arith_uint256 thash;
@@ -288,7 +288,7 @@ public:
             if(genesis.nNonce % 20000 == 0)
             {
                 printf("%s  %s\n",thash.ToString().c_str(), consensus.powLimit.ToString().c_str());
-                printf("%ld\n",genesis.nNonce);
+                printf("%d\n", genesis.nNonce);
             }
 
             genesis.nNonce++;
@@ -296,8 +296,8 @@ public:
             if(genesis.nNonce == 0)
                 genesis.nTime++;
         }
-        printf("%ld\n",genesis.nNonce);
-        printf("%ld\n",genesis.nTime);
+        printf("%d\n",genesis.nNonce);
+        printf("%d\n",genesis.nTime);
         consensus.hashGenesisBlock = genesis.GetHash();
         printf("%s\n", consensus.hashGenesisBlock.ToString().c_str());
         exit(1);

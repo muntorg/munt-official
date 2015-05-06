@@ -6,6 +6,7 @@
 #define GULDENCOIN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
+static int nDeltaSwitchoverBlock = 1;
 
 // Delta, the Guldencoin Difficulty Re-adjustment
 //
@@ -14,6 +15,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
+    
+    std::string sLogInfo;
 
     // The spacing we want our blocks to come in at.
     int64_t nRetargetTimespan      = params.nPowTargetSpacing;
@@ -43,7 +46,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     const int64_t nLBMaxGap        = nRetargetTimespan * 6;
     
     // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficult.
-    const int64_t nSFMinGap        = nRetargetTimespan / 1.5 * nShortFrame;
+    const int64_t nSFMinGap        = (nRetargetTimespan / 1.2) * nShortFrame;
 
     // Any block with a time lower than nBadTimeLimit is considered to have a 'bad' time, the time is replaced with the value of nBadTimeReplace.
     const int64_t nBadTimeLimit    = 0;
@@ -52,8 +55,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // Used for 'exception 1' (see code below), if block is lower than 'nLowTimeLimit' then prevent the algorithm from decreasing difficulty any further.
     // If block is lower than 'nFloorTimeLimit' then impose a minor increase in difficulty.
     // This helps to prevent the algorithm from generating and giving away too many sudden/easy 'quick blocks' after a long block or two have occured, and instead forces things to be recovered more gently over time without intefering with other desirable properties of the algorithm.
-    const int64_t nLowTimeLimit    = nRetargetTimespan * 95 / PERCENT_FACTOR;
-    const int64_t nFloorTimeLimit  = nRetargetTimespan * 80 / PERCENT_FACTOR;
+    const int64_t nLowTimeLimit    = nRetargetTimespan * 0.95;
+    const int64_t nFloorTimeLimit  = nRetargetTimespan * 0.8;
     
     // Used for 'exception 2' (see code below), if a block has taken longer than nLongTimeLimit we perform a difficulty reduction by taking the original difficulty and dividing by nLongTimeStep
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
@@ -121,9 +124,9 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     }
        
     // -- Calculate time interval for middle window (multi algo - this is calculated on a per algo basis)
-    if (pindexLast->nHeight <= nMiddleFrame)
+    if (pindexLast->nHeight - nDeltaSwitchoverBlock <= nMiddleFrame)
     {
-        nMiddleWeight = 0;
+        nMiddleWeight = nMiddleTimespan = 0;
     }
     else
     {
@@ -143,9 +146,9 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
     // -- Calculate timespan for long window (multi algo - this is calculated on a per algo basis)
     // NB! No need to worry about single negative block times as it has no significant influence over this many blocks.
-    if (pindexLast->nHeight <= nLongFrame)
+    if (pindexLast->nHeight - nDeltaSwitchoverBlock <= nLongFrame)
     {
-        nLongWeight = 0;
+        nLongWeight = nLongTimespan = 0;
     }
     else
     {
@@ -157,33 +160,50 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     }
 
 
-    // -- Combine all the timespans and weights to get a weighted timespan
-    nWeightedSum  = (nLBTimespan * 100) * nLBWeight + (nShortTimespan * 100 / nShortFrame) * nShortWeight;
-    nWeightedSum += (nMiddleTimespan * 100 / nMiddleFrame) * nMiddleWeight + (nLongTimespan * 100 / nLongFrame) * nLongWeight;
-    nWeightedDiv  = nLBWeight + nShortWeight + nMiddleWeight + nLongWeight;
-    nWeightedTimespan = nWeightedSum / nWeightedDiv / 100;
-
     // Check for multiple very short blocks (algo specific)
     // If last few blocks were far too short, then calculate difficulty based on short blocks alone.
     if (nShortTimespan > nBadTimeLimit && nShortTimespan < nSFMinGap )
     {
         if (fDebug && (nPrevHeight != pindexLast->nHeight) )
-            LogPrintf("<DELTA> Multiple fast blocks - bypassing \n");
-        nWeightedSum      = (nLBTimespan * nLBWeight) + (nShortTimespan * nShortWeight);
-        nWeightedDiv      = (nLastBlock * nLBWeight) + (nShortFrame * nShortWeight);
-        nWeightedTimespan = nWeightedSum / nWeightedDiv;
+            sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
+        nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
+    
+    // -- Combine all the timespans and weights to get a weighted timespan
+    nWeightedSum      = (nLBTimespan * nLBWeight) + (nShortTimespan * nShortWeight);
+    nWeightedSum     += (nMiddleTimespan * nMiddleWeight) + (nLongTimespan * nLongWeight);
+    nWeightedDiv      = (nLastBlock * nLBWeight) + (nShortFrame * nShortWeight);
+    nWeightedDiv     += (nMiddleFrame * nMiddleWeight) + (nLongFrame * nLongWeight);
+    nWeightedTimespan = nWeightedSum / nWeightedDiv;
+    
 
     // Limit adjustment amount to try prevent jumping too far in either direction.
     // The same limits as DIGI difficulty algorithm are used.
-    // min 75% of default time; diff up to 133.3% of previous
-    // max 150% of default time; diff down to 66.7% of previous
+    // min 75% of default time; 33.3% difficulty increase
+    unsigned int nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/4));
+    // max 150% of default time; 33.3% difficuly decrease
+    unsigned int nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/2));
+    // However if we are close to target time then limit this further to smooth things off a little bit.
+    if (std::abs(nLBTimespan - nRetargetTimespan) < (nRetargetTimespan * 0.8))
+    {
+        // 80% of target - 25% difficulty increase/decrease maximum.
+        nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/5));
+        nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/4));
+    }
+    else if (std::abs(nLBTimespan - nRetargetTimespan) < (nRetargetTimespan * 0.9))
+    {
+        // 90% of target
+        // 11.11111111111111% difficulty increase
+        // 10% difficulty decrease.
+        nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/10));
+        nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/10));
+    }
     // min
-    if (nWeightedTimespan < (nRetargetTimespan - (nRetargetTimespan/4)))
-        nWeightedTimespan = (nRetargetTimespan - (nRetargetTimespan/4));
+    if (nWeightedTimespan < nMinimumAdjustLimit)
+        nWeightedTimespan = nMinimumAdjustLimit;
     // max
-    if (nWeightedTimespan > (nRetargetTimespan + (nRetargetTimespan/2)))
-        nWeightedTimespan = (nRetargetTimespan + (nRetargetTimespan/2));
+    if (nWeightedTimespan > nMaximumAdjustLimit)
+        nWeightedTimespan = nMaximumAdjustLimit;
 
 
     #ifdef MULTI_ALGO
@@ -236,13 +256,13 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
             bnNew *= arith_uint256(95);
             bnNew /= arith_uint256(PERCENT_FACTOR);
             if (fDebug && (nPrevHeight != pindexLast->nHeight) )
-                LogPrintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
+                sLogInfo +=  strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
         }
         else
         {
             bnNew.SetCompact(pindexLast->nBits);
             if (fDebug && (nPrevHeight != pindexLast->nHeight) )
-                LogPrintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
+                sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
         }
     }
 
@@ -252,7 +272,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     {
         bnNew *= arith_uint256( (pblock->nTime - pindexLast->GetBlockTime()) / nLongTimeStep );
         if (fDebug && (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty) )
-            LogPrintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+            sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
     }
 
     
@@ -265,12 +285,15 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     {
         if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
         {
+            static CCriticalSection logCS;
+	    LOCK(logCS);
             LogPrintf("<DELTA> Height= %d\n" , pindexLast->nHeight);
+	    LogPrintf("%s" , sLogInfo.c_str());
             LogPrintf("<DELTA> nTargetTimespan = %ld nActualTimespan = %ld nWeightedTimespan = %ld \n", nRetargetTimespan, nLBTimespan, nWeightedTimespan);
             LogPrintf("<DELTA> nShortTimespan/nShortFrame = %ld nMiddleTimespan/nMiddleFrame = %ld nLongTimespan/nLongFrame = %ld \n", nShortTimespan/nShortFrame, nMiddleTimespan/nMiddleFrame, nLongTimespan/nLongFrame);
             LogPrintf("<DELTA> Before: %08x %s\n", pindexLast->nBits, arith_uint256().SetCompact(pindexLast->nBits).ToString().c_str());
             LogPrintf("<DELTA> After:  %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
-            LogPrintf("<DELTA> Percentage of previous= %lf\n", (arith_uint256().SetCompact(pindexLast->nBits).getdouble() / bnNew.getdouble()) * 100);
+            LogPrintf("<DELTA> Rough change percentage (human view): %lf%%\n", -( ( (bnNew.getdouble() - arith_uint256().SetCompact(pindexLast->nBits).getdouble()) / arith_uint256().SetCompact(pindexLast->nBits).getdouble()) * 100) );
         }
         nPrevHeight = pindexLast->nHeight;
         nPrevDifficulty = bnNew.GetCompact();

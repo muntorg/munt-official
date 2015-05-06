@@ -32,17 +32,12 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
             DiffMode = 3;
         else if (pindexLast->nHeight+1 >= 5)
             DiffMode = 2;
-	    else
-	        return GetNextWorkRequired_original(pindexLast, pblock, params);
+        else
+            return GetNextWorkRequired_original(pindexLast, pblock, params);
     }
     else if (GetBoolArg("-testnetaccel", false))
     {
-        if (pindexLast->nHeight+1 >= 60)
-            DiffMode = 5;
-        else if (pindexLast->nHeight+1 >= 2)
-            DiffMode = 3;
-        else
-            return GetNextWorkRequired_original(pindexLast, pblock, params);
+        DiffMode = 5;
     }
     else
     {

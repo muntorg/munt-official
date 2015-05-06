@@ -19,14 +19,16 @@ inline void hash_sha256(const void* pData, arith_uint256& thash)
 
 inline void hash_city(const void* pData, arith_uint256& thash)
 {
-    // For testing purposes only - i.e. designed to be fast not secure/good.
-    // Difficulty will never be high enough on testnet that the last 128 its become significant so we cheat and don't generate them at all.
-    uint64_t temphash =  CityHash64((char*)pData, 80);
-    thash |= temphash;
+    //For testing purposes
+    uint128 temphash =  CityHash128((char*)pData, 80);
+    thash |= temphash.first;
     thash <<= 64;
-    thash |= temphash;
+    thash |= temphash.second;
     thash <<= 64;
+    temphash = CityHash128((char*)&thash, 80);
+    thash |= temphash.first;
     thash <<= 64;
+    thash |= temphash.second;
 }
 
 
