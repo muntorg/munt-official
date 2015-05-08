@@ -1,16 +1,19 @@
 // Copyright (c) 2015 The Guldencoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// This file contains Delta, the Guldencoin Difficulty Re-adjustment algorithm developed by Frank with various enhancements by Malcolm MacLeod (mmacleod@webmail.co.za)
+// The core algorithm works by taking time measurements of four periods (last block; short window; medium window; long window) and then apply a weighting to them.
+// This allows the algorithm to react to short term fluctuations while still taking long term block targets into account, which helps prevent it from overreacting.
+//
+// In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
+
 
 #ifndef GULDENCOIN_DIFF_DELTA_H
 #define GULDENCOIN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
-static int nDeltaSwitchoverBlock = 1;
-
-// Delta, the Guldencoin Difficulty Re-adjustment
-//
-unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
@@ -46,7 +49,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     const int64_t nLBMaxGap        = nRetargetTimespan * 6;
     
     // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficult.
-    const int64_t nSFMinGap        = (nRetargetTimespan / 1.2) * nShortFrame;
+    const int64_t nQBFrame         = nShortFrame + 1;
+    const int64_t nQBMinGap        = (nRetargetTimespan / 1.2) * nQBFrame;
 
     // Any block with a time lower than nBadTimeLimit is considered to have a 'bad' time, the time is replaced with the value of nBadTimeReplace.
     const int64_t nBadTimeLimit    = 0;
@@ -55,8 +59,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // Used for 'exception 1' (see code below), if block is lower than 'nLowTimeLimit' then prevent the algorithm from decreasing difficulty any further.
     // If block is lower than 'nFloorTimeLimit' then impose a minor increase in difficulty.
     // This helps to prevent the algorithm from generating and giving away too many sudden/easy 'quick blocks' after a long block or two have occured, and instead forces things to be recovered more gently over time without intefering with other desirable properties of the algorithm.
-    const int64_t nLowTimeLimit    = nRetargetTimespan * 0.95;
-    const int64_t nFloorTimeLimit  = nRetargetTimespan * 0.8;
+    const int64_t nLowTimeLimit    = nRetargetTimespan * 0.9;
+    const int64_t nFloorTimeLimit  = nRetargetTimespan * 0.65;
     
     // Used for 'exception 2' (see code below), if a block has taken longer than nLongTimeLimit we perform a difficulty reduction by taking the original difficulty and dividing by nLongTimeStep
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
@@ -64,6 +68,12 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     const int64_t nLongTimeLimit   = 2 * 16 * 60;
     const int64_t nLongTimeStep    = 15 * 60;
 
+    // Limit adjustment amount to try prevent jumping too far in either direction.
+    // The same limits as DIGI difficulty algorithm are used.
+    // min 75% of default time; 33.3% difficulty increase
+    unsigned int nMinimumAdjustLimit = nRetargetTimespan * 0.75;
+    // max 150% of default time; 33.3% difficuly decrease
+    unsigned int nMaximumAdjustLimit = nRetargetTimespan * 1.5;
     
     // Variables used in calculation
     int64_t nDeltaTimespan         = 0;
@@ -71,6 +81,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     int64_t nShortTimespan         = 0;
     int64_t nMiddleTimespan        = 0;
     int64_t nLongTimespan          = 0;
+    int64_t nQBTimespan            = 0;
     #ifdef MULTI_ALGO
     int64_t nDayTimespan           = 0;
     #endif
@@ -89,7 +100,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         return nProofOfWorkLimit;
 
     // -- Use a fixed difficuly until we have enough blocks to work with (multi algo - this is calculated on a per algo basis)
-    if (pindexLast->nHeight <= nShortFrame)
+    if (pindexLast->nHeight <= nQBFrame)
         return nProofOfWorkLimit;
 
     // -- Calculate timespan for last block window (multi algo - this is calculated on a per algo basis)
@@ -100,31 +111,33 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // If last block was far too short, let difficulty raise faster
     // by cutting 50% of last block time
     if (nLBTimespan > nBadTimeLimit && nLBTimespan < nLBMinGap)
-        nLBTimespan = nLBTimespan - (nLBTimespan / 2);
+        nLBTimespan *= 0.5;
     // Prevent bad/negative block times - switch them for a fixed time.
     if (nLBTimespan <= nBadTimeLimit)
         nLBTimespan = nBadTimeReplace;
     // If last block took far too long, let difficulty drop faster
     // by adding 50% of last block time
     if (nLBTimespan > nLBMaxGap)
-        nLBTimespan = nLBTimespan + (nLBTimespan / 2);
+        nLBTimespan *= 1.5;
 
 
     // -- Calculate timespan for short window (multi algo - this is calculated on a per algo basis)
     pindexFirst = pindexLast;
-    for (int i = 1; pindexFirst && i <= nShortFrame; i++)
+    for (int i = 1; pindexFirst && i <= nQBFrame; i++)
     {
         nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
         // Prevent bad/negative block times - switch them for a fixed time.
         if (nDeltaTimespan <= nBadTimeLimit)
             nDeltaTimespan = nBadTimeReplace;
 
-        nShortTimespan += nDeltaTimespan;
+        if (i<= nShortFrame)
+            nShortTimespan += nDeltaTimespan;
+        nQBTimespan += nDeltaTimespan;
         pindexFirst = pindexFirst->pprev;
     }
        
     // -- Calculate time interval for middle window (multi algo - this is calculated on a per algo basis)
-    if (pindexLast->nHeight - nDeltaSwitchoverBlock <= nMiddleFrame)
+    if (pindexLast->nHeight - nFirstDeltaBlock <= nMiddleFrame)
     {
         nMiddleWeight = nMiddleTimespan = 0;
     }
@@ -146,7 +159,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
     // -- Calculate timespan for long window (multi algo - this is calculated on a per algo basis)
     // NB! No need to worry about single negative block times as it has no significant influence over this many blocks.
-    if (pindexLast->nHeight - nDeltaSwitchoverBlock <= nLongFrame)
+    if (pindexLast->nHeight - nFirstDeltaBlock <= nLongFrame)
     {
         nLongWeight = nLongTimespan = 0;
     }
@@ -161,8 +174,8 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
 
     // Check for multiple very short blocks (algo specific)
-    // If last few blocks were far too short, then calculate difficulty based on short blocks alone.
-    if (nShortTimespan > nBadTimeLimit && nShortTimespan < nSFMinGap )
+    // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
+    if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 0.8) )
     {
         if (fDebug && (nPrevHeight != pindexLast->nHeight) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
@@ -177,26 +190,21 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     nWeightedTimespan = nWeightedSum / nWeightedDiv;
     
 
-    // Limit adjustment amount to try prevent jumping too far in either direction.
-    // The same limits as DIGI difficulty algorithm are used.
-    // min 75% of default time; 33.3% difficulty increase
-    unsigned int nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/4));
-    // max 150% of default time; 33.3% difficuly decrease
-    unsigned int nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/2));
-    // However if we are close to target time then limit this further to smooth things off a little bit.
-    if (std::abs(nLBTimespan - nRetargetTimespan) < (nRetargetTimespan * 0.8))
+    // Apply the adjustment limits
+    // However if we are close to target time then we use smaller limits to smooth things off a little bit more.
+    if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.2)
     {
         // 80% of target - 25% difficulty increase/decrease maximum.
-        nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/5));
-        nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/4));
+        nMinimumAdjustLimit = nRetargetTimespan * 0.8;
+        nMaximumAdjustLimit = nRetargetTimespan * 1.2;
     }
-    else if (std::abs(nLBTimespan - nRetargetTimespan) < (nRetargetTimespan * 0.9))
+    else if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.1)
     {
         // 90% of target
         // 11.11111111111111% difficulty increase
         // 10% difficulty decrease.
-        nMinimumAdjustLimit = (nRetargetTimespan - (nRetargetTimespan/10));
-        nMaximumAdjustLimit = (nRetargetTimespan + (nRetargetTimespan/10));
+        nMinimumAdjustLimit = nRetargetTimespan * 0.9;
+        nMaximumAdjustLimit = nRetargetTimespan * 1.1;
     }
     // min
     if (nWeightedTimespan < nMinimumAdjustLimit)

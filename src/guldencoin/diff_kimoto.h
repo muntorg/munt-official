@@ -1,7 +1,8 @@
+//Kimoto gravity well Thanks Dr Kimoto Chan
+
 #ifndef GULDENCOIN_DIFF_KIMOTO_H
 #define GULDENCOIN_DIFF_KIMOTO_H
 
-//ADD kimoto gravity well Thanks Dr Kimoto Chan
 unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBlockHeader *pblock, uint64_t TargetBlocksSpacingSeconds, uint64_t PastBlocksMin, uint64_t PastBlocksMax, const Consensus::Params& params)
 {
     /* current difficulty formula, megacoin - kimoto gravity well */

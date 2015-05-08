@@ -1,9 +1,10 @@
-#ifndef GULDENCOIN_DIFF_DIGI_H
-#define GULDENCOIN_DIFF_DIGI_H
-
 // Digi algorithm should never be used until at least 2 blocks are mined.
 // Contains code by RealSolid & WDC
 // Cleaned up for use in Guldencoin by GeertJohan (dead code removal since Guldencoin retargets every block)
+
+#ifndef GULDENCOIN_DIFF_DIGI_H
+#define GULDENCOIN_DIFF_DIGI_H
+
 unsigned int static GetNextWorkRequired_DIGI(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // retarget timespan is set to a single block spacing because there is a retarget every block
