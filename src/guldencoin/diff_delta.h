@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
-// This file contains Delta, the Guldencoin Difficulty Re-adjustment algorithm developed by Frank with various enhancements by Malcolm MacLeod (mmacleod@webmail.co.za)
+// This file contains Delta, the Guldencoin Difficulty Re-adjustment algorithm developed by Frank (dt_cdog@yahoo.com) with various enhancements by Malcolm MacLeod (mmacleod@webmail.co.za)
 // The core algorithm works by taking time measurements of four periods (last block; short window; medium window; long window) and then apply a weighting to them.
 // This allows the algorithm to react to short term fluctuations while still taking long term block targets into account, which helps prevent it from overreacting.
 //
