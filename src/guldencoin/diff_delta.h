@@ -35,7 +35,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
     // How many blocks to use for the fifth window, fifth window is across all algorithms.
     #ifdef MULTI_ALGO
-    const int nDayFrame            = nLongFrame;
+    const int nDayFrame            = 576;
     #endif
 
     // Weighting to use for each of the four algo specific time windows.
@@ -48,7 +48,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     const int64_t nLBMinGap        = nRetargetTimespan / 6;
     const int64_t nLBMaxGap        = nRetargetTimespan * 6;
     
-    // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficult.
+    // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficulty.
     const int64_t nQBFrame         = nShortFrame + 1;
     const int64_t nQBMinGap        = (nRetargetTimespan / 1.2) * nQBFrame;
 
@@ -192,13 +192,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
     // Apply the adjustment limits
     // However if we are close to target time then we use smaller limits to smooth things off a little bit more.
-    if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.2)
-    {
-        // 80% of target - 25% difficulty increase/decrease maximum.
-        nMinimumAdjustLimit = nRetargetTimespan * 0.8;
-        nMaximumAdjustLimit = nRetargetTimespan * 1.2;
-    }
-    else if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.1)
+    if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.1)
     {
         // 90% of target
         // 11.11111111111111% difficulty increase
@@ -206,6 +200,13 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         nMinimumAdjustLimit = nRetargetTimespan * 0.9;
         nMaximumAdjustLimit = nRetargetTimespan * 1.1;
     }
+    else if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 0.2)
+    {
+        // 80% of target - 25% difficulty increase/decrease maximum.
+        nMinimumAdjustLimit = nRetargetTimespan * 0.8;
+        nMaximumAdjustLimit = nRetargetTimespan * 1.2;
+    }
+    
     // min
     if (nWeightedTimespan < nMinimumAdjustLimit)
         nWeightedTimespan = nMinimumAdjustLimit;
