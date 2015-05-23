@@ -21,7 +21,7 @@ unsigned int GetNextWorkRequired_original(const CBlockIndex* pindexLast, const C
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    static int nDeltaSwitchoverBlock = GetBoolArg("-testnet", false) ? 500 : (GetBoolArg("-testnetaccel", false) ? 1 : 215000) ;
+    static int nDeltaSwitchoverBlock = GetBoolArg("-testnet", false) ? 500 : (GetBoolArg("-testnetaccel", false) ? 1 : 213500) ;
     
     int DiffMode = 1;
     if (pindexLast->nHeight+1 >= nDeltaSwitchoverBlock)

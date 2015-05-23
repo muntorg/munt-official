@@ -28,14 +28,14 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     const unsigned int nProofOfWorkLimit = params.powLimit.GetCompact();
 
     // How many blocks to use to calculate each of the four algo specific time windows (last block; short window; middle window; long window)
-    const int nLastBlock           =   1;
-    const int nShortFrame          =   3;
-    const int nMiddleFrame         =  24;
-    const int nLongFrame           = 576;
+    const unsigned int nLastBlock           =   1;
+    const unsigned int nShortFrame          =   3;
+    const unsigned int nMiddleFrame         =  24;
+    const unsigned int nLongFrame           = 576;
 
     // How many blocks to use for the fifth window, fifth window is across all algorithms.
     #ifdef MULTI_ALGO
-    const int nDayFrame            = 576;
+    const unsigned int nDayFrame            = 576;
     #endif
 
     // Weighting to use for each of the four algo specific time windows.
@@ -123,7 +123,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
 
     // -- Calculate timespan for short window (multi algo - this is calculated on a per algo basis)
     pindexFirst = pindexLast;
-    for (int i = 1; pindexFirst && i <= nQBFrame; i++)
+    for (unsigned int i = 1; pindexFirst && i <= nQBFrame; i++)
     {
         nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
         // Prevent bad/negative block times - switch them for a fixed time.
@@ -144,7 +144,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     else
     {
         pindexFirst = pindexLast;
-        for (int i = 1; pindexFirst && i <= nMiddleFrame; i++)
+        for (unsigned int i = 1; pindexFirst && i <= nMiddleFrame; i++)
         {
             nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
             // Prevent bad/negative block times - switch them for a fixed time.
@@ -166,7 +166,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     else
     {
         pindexFirst = pindexLast;
-        for (int i = 1; pindexFirst && i <= nLongFrame; i++)
+        for (unsigned int i = 1; pindexFirst && i <= nLongFrame; i++)
             pindexFirst = pindexFirst->pprev;
 
         nLongTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
@@ -284,7 +284,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         if (nNumMissedSteps <= 12)
             bnNew *=  nNumMissedSteps;
         else
-            bnNew *=  12 + (int64_t)std::floor(std::pow(1.14, nNumMissedSteps - 12) + 0.5);
+            bnNew *=  12 + (int64_t)std::floor(std::pow(1.14, (float)nNumMissedSteps - 12) + 0.5);
 
         if (fDebug && (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty) )
             sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
