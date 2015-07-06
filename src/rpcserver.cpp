@@ -309,7 +309,6 @@ static const CRPCCommand vRPCCommands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,      false },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,      false },
     { "mining",             "submitblock",            &submitblock,            true,      false },
-    { "mining",             "setmininput",            &setmininput,            false,     false },
     { "mining",             "getwork",                &getwork,                true,      false },
     { "mining",             "getworkex",              &getworkex,              true,      false },
     //Guldencoin only
