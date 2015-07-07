@@ -845,7 +845,7 @@ bool AppInit2(boost::thread_group& threadGroup)
             threadGroup.create_thread(&ThreadScriptCheck);
     }
 
-    // InitRPCMining is needed here so getwork/getblocktemplate in the GUI debug console works properly.
+    // InitRPCMining is needed here so getblocktemplate in the GUI debug console works properly.
     InitRPCMining();
 
     /* Start the RPC server already.  It will be started in "warmup" mode

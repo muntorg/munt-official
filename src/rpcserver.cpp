@@ -309,8 +309,6 @@ static const CRPCCommand vRPCCommands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,      false },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,      false },
     { "mining",             "submitblock",            &submitblock,            true,      false },
-    { "mining",             "getwork",                &getwork,                true,      false },
-    { "mining",             "getworkex",              &getworkex,              true,      false },
     //Guldencoin only
     { "mining",             "gethashps",              &gethashps,              true,      false },
     { "mining",             "sethashlimit",             &sethashlimit,              true,      false },
@@ -855,7 +853,7 @@ void JSONRequest::parse(const Value& valRequest)
     if (valMethod.type() != str_type)
         throw JSONRPCError(RPC_INVALID_REQUEST, "Method must be a string");
     strMethod = valMethod.get_str();
-    if (strMethod != "getwork" && strMethod != "getworkex" && strMethod != "getblocktemplate")
+    if (strMethod != "getblocktemplate")
         LogPrint("rpc", "ThreadRPCServer method=%s\n", SanitizeString(strMethod));
 
     // Parse params
