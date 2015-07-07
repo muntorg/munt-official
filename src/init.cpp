@@ -617,8 +617,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     fLogIPs = GetBoolArg("-logips", false);
 
     fBloomFilters = GetBoolArg("-bloomfilters", true);
-    if (fBloomFilters)
-        nLocalServices |= NODE_BLOOM;
 
     // when specifying an explicit binding address, you want to listen on it
     // even when -connect or -proxy is specified
