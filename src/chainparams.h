@@ -34,8 +34,9 @@ public:
         PUBKEY_ADDRESS,
         SCRIPT_ADDRESS,
         SECRET_KEY,
-        EXT_PUBLIC_KEY,
-        EXT_SECRET_KEY,
+        //Guldencoin: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/guldencoin2/issues/17
+        //EXT_PUBLIC_KEY,
+        //EXT_SECRET_KEY,
 
         MAX_BASE58_TYPES
     };
