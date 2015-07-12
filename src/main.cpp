@@ -59,7 +59,7 @@ bool fIsBareMultisigStd = true;
 unsigned int nCoinCacheSize = 5000;
 
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying and mining) */
-CFeeRate minRelayTxFee = CFeeRate(100000);
+CFeeRate minRelayTxFee = CFeeRate(1000000);
 
 CTxMemPool mempool(::minRelayTxFee);
 
@@ -853,11 +853,16 @@ CAmount GetMinRelayFee(const CTransaction& tx, unsigned int nBytes, bool fAllowF
     }
 
     // Guldencoin
-    // To limit dust spam, add nBaseFee for each output less than DUST_SOFT_LIMIT
+    // To limit transaction spam, add nBaseFee for each output less than DUST_SOFT_LIMIT, onlt if number of transactions exceeds 10
     int64_t nBaseFee = 100000;
+    int nNumOutputs=0;;
     BOOST_FOREACH(const CTxOut& txout, tx.vout)
+    {
         if (txout.nValue < DUST_SOFT_LIMIT)
-            nMinFee += nBaseFee;
+            ++nNumOutputs;
+    }
+    if(nNumOutputs>=10)
+        nMinFee += nBaseFee*nNumOutputs;
 
     if (!MoneyRange(nMinFee))
         nMinFee = MAX_MONEY;
