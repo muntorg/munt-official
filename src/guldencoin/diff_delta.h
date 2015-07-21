@@ -284,7 +284,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         if (nNumMissedSteps <= 12)
             bnNew *=  nNumMissedSteps;
         else
-            bnNew *=  12 + (int64_t)std::floor(std::pow(1.14, (float)nNumMissedSteps - 12) + 0.5);
+            bnNew *=  12 + (int64_t)std::floor(std::pow((float)1.14, (float)nNumMissedSteps - 12) + 0.5);
 
         if (fDebug && (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty) )
             sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
