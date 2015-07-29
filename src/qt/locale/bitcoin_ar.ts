@@ -66,12 +66,12 @@
         <translation>استقبال العناوين</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>هذه هي عناوين Bitcion التابعة لك من أجل إرسال الدفعات. تحقق دائما من المبلغ و عنوان المرسل المستقبل قبل إرسال العملات</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>هذه هي عناوين Guldencion التابعة لك من أجل إستقبال الدفعات. ينصح استخدام عنوان جديد من أجل كل صفقة</translation>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>هذه هي عناوين Bitcion التابعة لك من أجل إستقبال الدفعات. ينصح استخدام عنوان جديد من أجل كل صفقة</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -160,8 +160,8 @@
         <translation>تأكيد تشفير المحفظة</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDENCOINS&lt;/b&gt;!</source>
-        <translation>تحذير: إذا قمت بتشفير محفظتك وفقدت كلمة المرور الخاص بك, ستفقد كل عملات GULDENCOINS الخاصة بك.</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>تحذير: إذا قمت بتشفير محفظتك وفقدت كلمة المرور الخاص بك, ستفقد كل عملات BITCOINS الخاصة بك.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -184,7 +184,7 @@
         <translation>أدخل عبارة مرور جديدة إلى المحفظة. الرجاء استخدام عبارة مرور تتكون من10 حروف عشوائية على الاقل, أو أكثر من 7 كلمات</translation>
     </message>
     <message>
-        <source>Guldencoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your guldencoins from being stolen by malware infecting your computer.</source>
+        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
         <translation>بتكوين سوف يغلق الآن لإنهاء عملية التشفير. تذكر أن التشفير لا يستطيع حماية محفظتك تمامًا من السرقة من خلال البرمجيات الخبيثة التي تصيب جهازك </translation>
     </message>
     <message>
@@ -217,7 +217,7 @@
     </message>
 </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>التوقيع و الرسائل</translation>
@@ -291,16 +291,16 @@
         <translation>افتح &amp;URI...</translation>
     </message>
     <message>
-        <source>Guldencoin Core client</source>
+        <source>Bitcoin Core client</source>
         <translation>عميل bitcion core</translation>
     </message>
     <message>
-        <source>Send coins to a Guldencoin address</source>
+        <source>Send coins to a Bitcoin address</source>
         <translation>ارسل عملات الى عنوان بيتكوين</translation>
     </message>
     <message>
-        <source>Modify configuration options for Guldencoin</source>
-        <translation>تعديل إعدادات guldencoin</translation>
+        <source>Modify configuration options for Bitcoin</source>
+        <translation>تعديل إعدادات bitcoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -319,7 +319,7 @@
         <translation>&amp;التحقق من الرسالة...</translation>
     </message>
     <message>
-        <source>Guldencoin</source>
+        <source>Bitcoin</source>
         <translation>بت كوين</translation>
     </message>
     <message>
@@ -331,7 +331,7 @@
         <translation>&amp;استقبل</translation>
     </message>
     <message>
-        <source>Show information about Guldencoin Core</source>
+        <source>Show information about Bitcoin Core</source>
         <translation>  اظهار معلومات حول bitcion core</translation>
     </message>
     <message>
@@ -363,12 +363,12 @@
         <translation>شريط أدوات علامات التبويب</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
+        <source>Bitcoin Core</source>
         <translation>جوهر البيت كوين</translation>
     </message>
     <message>
-        <source>&amp;About Guldencoin Core</source>
-        <translation>حول guldencoin core</translation>
+        <source>&amp;About Bitcoin Core</source>
+        <translation>حول bitcoin core</translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
@@ -618,7 +618,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Guldencoin Core</source>
+        <source>Bitcoin Core</source>
         <translation>جوهر البيت كوين</translation>
     </message>
     <message>
@@ -626,7 +626,7 @@
         <translation>النسخة</translation>
     </message>
     <message>
-        <source>About Guldencoin Core</source>
+        <source>About Bitcoin Core</source>
         <translation>عن جوهر البيت كوين</translation>
     </message>
     <message>
@@ -653,7 +653,7 @@
         <translation>استخدام دليل بيانات مخصص:</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
+        <source>Bitcoin Core</source>
         <translation>جوهر البيت كوين</translation>
     </message>
     <message>
@@ -1230,7 +1230,7 @@
         <translation>التوقيع</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Guldencoin address</source>
+        <source>Sign the message to prove you own this Bitcoin address</source>
         <translation>وقع الرسالة لتثبت انك تمتلك عنوان البت كوين هذا</translation>
     </message>
     <message>
@@ -1297,11 +1297,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Guldencoin Core</source>
+        <source>Bitcoin Core</source>
         <translation>جوهر البيت كوين</translation>
     </message>
     <message>
-        <source>The Guldencoin Core developers</source>
+        <source>The Bitcoin Core developers</source>
         <translation>مطوري جوهر البيت كوين</translation>
     </message>
     <message>
@@ -1653,7 +1653,7 @@
     </message>
 </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Options:</source>
         <translation>خيارات: </translation>

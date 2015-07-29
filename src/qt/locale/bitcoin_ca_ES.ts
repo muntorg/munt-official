@@ -66,12 +66,12 @@
         <translation>S'estan rebent les adreces</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Aquestes són les vostres adreces de Guldencoin per enviar els pagaments. Sempre reviseu l'import i l'adreça del destinatari abans de transferir monedes.</translation>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Aquestes són les vostres adreces de Bitcoin per enviar els pagaments. Sempre reviseu l'import i l'adreça del destinatari abans de transferir monedes.</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Aquestes són les vostres adreces Guldencoin per rebre pagaments. Es recomana utilitzar una adreça nova de recepció per a cada transacció.</translation>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Aquestes són les vostres adreces Bitcoin per rebre pagaments. Es recomana utilitzar una adreça nova de recepció per a cada transacció.</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -164,8 +164,8 @@
         <translation>Confirma l'encriptació del moneder</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDENCOINS&lt;/b&gt;!</source>
-        <translation>Avís: si encripteu el vostre moneder i perdeu la contrasenya, &lt;b&gt;PERDREU TOTS ELS VOSTRES GULDENCOINS&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Avís: si encripteu el vostre moneder i perdeu la contrasenya, &lt;b&gt;PERDREU TOTS ELS VOSTRES BITCOINS&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -188,8 +188,8 @@
         <translation>Introduïu la contrasenya nova al moneder.&lt;br/&gt;Utilitzeu una contrasenya de &lt;b&gt;deu o més caràcters aleatoris&lt;/b&gt;, o &lt;b&gt;vuit o més paraules&lt;/b&gt;.</translation>
     </message>
     <message>
-        <source>Guldencoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your guldencoins from being stolen by malware infecting your computer.</source>
-        <translation>Guldencoin es tancarà ara per acabar el procés d'encriptació. Recordeu que encriptar el moneder no protegeix completament els guldencoins de ser robats per programari maliciós instal·lat a l'ordinador.</translation>
+        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Bitcoin es tancarà ara per acabar el procés d'encriptació. Recordeu que encriptar el moneder no protegeix completament els bitcoins de ser robats per programari maliciós instal·lat a l'ordinador.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -221,7 +221,7 @@
     </message>
 </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Signa el &amp;missatge...</translation>
@@ -295,8 +295,8 @@
         <translation>Obre un &amp;URI...</translation>
     </message>
     <message>
-        <source>Guldencoin Core client</source>
-        <translation>Client del Guldencoin Core</translation>
+        <source>Bitcoin Core client</source>
+        <translation>Client del Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -307,12 +307,12 @@
         <translation>S'estan reindexant els blocs al disc...</translation>
     </message>
     <message>
-        <source>Send coins to a Guldencoin address</source>
-        <translation>Envia monedes a una adreça Guldencoin</translation>
+        <source>Send coins to a Bitcoin address</source>
+        <translation>Envia monedes a una adreça Bitcoin</translation>
     </message>
     <message>
-        <source>Modify configuration options for Guldencoin</source>
-        <translation>Modifica les opcions de configuració per guldencoin</translation>
+        <source>Modify configuration options for Bitcoin</source>
+        <translation>Modifica les opcions de configuració per bitcoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -335,8 +335,8 @@
         <translation>&amp;Verifica el missatge...</translation>
     </message>
     <message>
-        <source>Guldencoin</source>
-        <translation>Guldencoin</translation>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -351,8 +351,8 @@
         <translation>&amp;Rep</translation>
     </message>
     <message>
-        <source>Show information about Guldencoin Core</source>
-        <translation>Mostra informació del Guldencoin Core</translation>
+        <source>Show information about Bitcoin Core</source>
+        <translation>Mostra informació del Bitcoin Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -367,12 +367,12 @@
         <translation>Encripta les claus privades pertanyents al moneder</translation>
     </message>
     <message>
-        <source>Sign messages with your Guldencoin addresses to prove you own them</source>
-        <translation>Signa el missatges amb la seva adreça de Guldencoin per provar que les poseeixes</translation>
+        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <translation>Signa el missatges amb la seva adreça de Bitcoin per provar que les poseeixes</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Guldencoin addresses</source>
-        <translation>Verifiqueu els missatges per assegurar-vos que han estat signats amb una adreça Guldencoin específica.</translation>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>Verifiqueu els missatges per assegurar-vos que han estat signats amb una adreça Bitcoin específica.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -391,16 +391,16 @@
         <translation>Barra d'eines de les pestanyes</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Nucli de Guldencoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and guldencoin: URIs)</source>
-        <translation>Sol·licita pagaments (genera codis QR i guldencoin: URI)</translation>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Sol·licita pagaments (genera codis QR i bitcoin: URI)</translation>
     </message>
     <message>
-        <source>&amp;About Guldencoin Core</source>
-        <translation>&amp;Quant al Guldencoin Core</translation>
+        <source>&amp;About Bitcoin Core</source>
+        <translation>&amp;Quant al Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -411,20 +411,20 @@
         <translation>Mostra la llista d'adreces de recepció i etiquetes utilitzades</translation>
     </message>
     <message>
-        <source>Open a guldencoin: URI or payment request</source>
-        <translation>Obre una guldencoin: sol·licitud d'URI o pagament</translation>
+        <source>Open a bitcoin: URI or payment request</source>
+        <translation>Obre una bitcoin: sol·licitud d'URI o pagament</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opcions de la &amp;línia d'ordres</translation>
     </message>
     <message>
-        <source>Show the Guldencoin Core help message to get a list with possible Guldencoin command-line options</source>
-        <translation>Mostra el missatge d'ajuda del Guldencoin Core per obtenir una llista amb les possibles opcions de línia d'ordres de Guldencoin</translation>
+        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Mostra el missatge d'ajuda del Bitcoin Core per obtenir una llista amb les possibles opcions de línia d'ordres de Bitcoin</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Guldencoin network</source>
-        <translation><numerusform>%n connexió activa a la xarxa Guldencoin</numerusform><numerusform>%n connexions actives a la xarxa Guldencoin</numerusform></translation>
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n connexió activa a la xarxa Bitcoin</numerusform><numerusform>%n connexions actives a la xarxa Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -768,8 +768,8 @@ Address: %4
         <translation>L'adreça introduïda «%1» ja és present a la llibreta d'adreces.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Guldencoin address.</source>
-        <translation>L'adreça introduïda «%1» no és una adreça de Guldencoin vàlida.</translation>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>L'adreça introduïda «%1» no és una adreça de Bitcoin vàlida.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -806,8 +806,8 @@ Address: %4
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Nucli de Guldencoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>version</source>
@@ -818,8 +818,8 @@ Address: %4
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Guldencoin Core</source>
-        <translation>Quant al Guldencoin Core</translation>
+        <source>About Bitcoin Core</source>
+        <translation>Quant al Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -865,16 +865,16 @@ Address: %4
         <translation>Us donem la benviguda</translation>
     </message>
     <message>
-        <source>Welcome to Guldencoin Core.</source>
-        <translation>Us donem la benvinguda al Guldencoin Core.</translation>
+        <source>Welcome to Bitcoin Core.</source>
+        <translation>Us donem la benvinguda al Bitcoin Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Guldencoin Core will store its data.</source>
-        <translation>Atès que és la primera vegada que executeu el programa, podeu triar on emmagatzemarà el Guldencoin Core les dades.</translation>
+        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
+        <translation>Atès que és la primera vegada que executeu el programa, podeu triar on emmagatzemarà el Bitcoin Core les dades.</translation>
     </message>
     <message>
-        <source>Guldencoin Core will download and store a copy of the Guldencoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>El Guldencoin Core descarregarà i emmagatzemarà una còpia de la cadena de blocs de Guldencoin. Com a mínim s'emmagatzemaran %1 GB de dades en aquest directori, que seguiran creixent gradualment. També s'hi emmagatzemarà el moneder.</translation>
+        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>El Bitcoin Core descarregarà i emmagatzemarà una còpia de la cadena de blocs de Bitcoin. Com a mínim s'emmagatzemaran %1 GB de dades en aquest directori, que seguiran creixent gradualment. També s'hi emmagatzemarà el moneder.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -885,8 +885,8 @@ Address: %4
         <translation>Utilitza un directori de dades personalitzat:</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Nucli de Guldencoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -931,12 +931,12 @@ Address: %4
         <translation>&amp;Principal</translation>
     </message>
     <message>
-        <source>Automatically start Guldencoin after logging in to the system.</source>
-        <translation>Inicia automàticament el Guldencoin després de l'inici de sessió del sistema.</translation>
+        <source>Automatically start Bitcoin after logging in to the system.</source>
+        <translation>Inicia automàticament el Bitcoin després de l'inici de sessió del sistema.</translation>
     </message>
     <message>
-        <source>&amp;Start Guldencoin on system login</source>
-        <translation>&amp;Inicia el Guldencoin a l'inici de sessió del sistema.</translation>
+        <source>&amp;Start Bitcoin on system login</source>
+        <translation>&amp;Inicia el Bitcoin a l'inici de sessió del sistema.</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1011,8 +1011,8 @@ Address: %4
         <translation>&amp;Gasta el canvi sense confirmar</translation>
     </message>
     <message>
-        <source>Automatically open the Guldencoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Obre el port del client de Guldencoin al router de forma automàtica. Això només funciona quan el router implementa UPnP i l'opció està activada.</translation>
+        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Obre el port del client de Bitcoin al router de forma automàtica. Això només funciona quan el router implementa UPnP i l'opció està activada.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1059,8 +1059,8 @@ Address: %4
         <translation>&amp;Llengua de la interfície d'usuari:</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Guldencoin.</source>
-        <translation>Aquí podeu definir la llengua de l'aplicació. Aquesta configuració tindrà efecte una vegada es reiniciï Guldencoin.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
+        <translation>Aquí podeu definir la llengua de l'aplicació. Aquesta configuració tindrà efecte una vegada es reiniciï Bitcoin.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1118,8 +1118,8 @@ Address: %4
         <translation>Formulari</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Guldencoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>La informació mostrada pot no estar al día. El teu moneder es sincronitza automàticament amb la xarxa Guldencoin un cop s'ha establert connexió, però aquest proces no s'ha completat encara.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation>La informació mostrada pot no estar al día. El teu moneder es sincronitza automàticament amb la xarxa Bitcoin un cop s'ha establert connexió, però aquest proces no s'ha completat encara.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -1213,16 +1213,16 @@ Address: %4
         <translation>Error en la sol·licitud de pagament</translation>
     </message>
     <message>
-        <source>Cannot start guldencoin: click-to-pay handler</source>
-        <translation>No es pot iniciar guldencoin: gestor clica-per-pagar</translation>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>No es pot iniciar bitcoin: gestor clica-per-pagar</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
         <translation>L'URL de recuperació de la sol·licitud de pagament no és vàlida: %1</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Guldencoin address or malformed URI parameters.</source>
-        <translation>L'URI no pot ser analitzat! Això pot ser a causa d'una adreça de Guldencoin no vàlida o per paràmetres URI amb mal format.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
+        <translation>L'URI no pot ser analitzat! Això pot ser a causa d'una adreça de Bitcoin no vàlida o per paràmetres URI amb mal format.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1283,8 +1283,8 @@ Address: %4
         <translation>Quantitat</translation>
     </message>
     <message>
-        <source>Enter a Guldencoin address (e.g. %1)</source>
-        <translation>Introduïu una adreça de Guldencoin (p. ex. %1)</translation>
+        <source>Enter a Bitcoin address (e.g. %1)</source>
+        <translation>Introduïu una adreça de Bitcoin (p. ex. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1509,16 +1509,16 @@ Address: %4
         <translation>Fitxer de registre de depuració</translation>
     </message>
     <message>
-        <source>Open the Guldencoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Obre el fitxer de registre de depuració de Guldencoin del directori de dades actual. Això pot trigar uns quants segons per a fitxers de registre grans.</translation>
+        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Obre el fitxer de registre de depuració de Bitcoin del directori de dades actual. Això pot trigar uns quants segons per a fitxers de registre grans.</translation>
     </message>
     <message>
         <source>Clear console</source>
         <translation>Neteja la consola</translation>
     </message>
     <message>
-        <source>Welcome to the Guldencoin RPC console.</source>
-        <translation>Us donem la benvinguda a la consola RPC de Guldencoin</translation>
+        <source>Welcome to the Bitcoin RPC console.</source>
+        <translation>Us donem la benvinguda a la consola RPC de Bitcoin</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1592,8 +1592,8 @@ Address: %4
         <translation>R&amp;eutilitza una adreça de recepció anterior (no recomanat)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Guldencoin network.</source>
-        <translation>Un missatge opcional que s'adjuntarà a la sol·licitud de pagament, que es mostrarà quan s'obri la sol·licitud. Nota: El missatge no s'enviarà amb el pagament per la xarxa Guldencoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
+        <translation>Un missatge opcional que s'adjuntarà a la sol·licitud de pagament, que es mostrarà quan s'obri la sol·licitud. Nota: El missatge no s'enviarà amb el pagament per la xarxa Bitcoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1901,8 +1901,8 @@ Address: %4
         <translation>S'ha rebutjat la transacció! Això pot passar si alguna de les monedes del vostre moneder ja s'han gastat; per exemple, si heu fet servir una còpia de seguretat del fitxer wallet.dat i s'haguessin gastat monedes de la còpia però sense marcar-les-hi com a gastades.</translation>
     </message>
     <message>
-        <source>Warning: Invalid Guldencoin address</source>
-        <translation>Avís: adreça Guldencoin no vàlida</translation>
+        <source>Warning: Invalid Bitcoin address</source>
+        <translation>Avís: adreça Bitcoin no vàlida</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1952,8 +1952,8 @@ Address: %4
         <translation>Això és un pagament normal.</translation>
     </message>
     <message>
-        <source>The Guldencoin address to send the payment to</source>
-        <translation>L'adreça Guldencoin on enviar el pagament</translation>
+        <source>The Bitcoin address to send the payment to</source>
+        <translation>L'adreça Bitcoin on enviar el pagament</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -1984,8 +1984,8 @@ Address: %4
         <translation>Introduïu una etiqueta per a aquesta adreça per afegir-la a la llista d'adreces utilitzades</translation>
     </message>
     <message>
-        <source>A message that was attached to the guldencoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Guldencoin network.</source>
-        <translation>Un missatge que s'ha adjuntat al guldencoin: URI que s'emmagatzemarà amb la transacció per a la vostra referència. Nota: el missatge no s'enviarà a través de la xarxa Guldencoin.</translation>
+        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
+        <translation>Un missatge que s'ha adjuntat al bitcoin: URI que s'emmagatzemarà amb la transacció per a la vostra referència. Nota: el missatge no s'enviarà a través de la xarxa Bitcoin.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -2003,8 +2003,8 @@ Address: %4
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Guldencoin Core is shutting down...</source>
-        <translation>S'està aturant el Guldencoin Core...</translation>
+        <source>Bitcoin Core is shutting down...</source>
+        <translation>S'està aturant el Bitcoin Core...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2026,8 +2026,8 @@ Address: %4
         <translation>Podeu signar missatges amb la vostra adreça per provar que són vostres. Aneu amb compte no signar qualsevol cosa, ja que els atacs de pesca electrònica (phishing) poden provar de confondre-us perquè els signeu amb la vostra identitat. Només signeu als documents completament detallats amb què hi esteu d'acord.</translation>
     </message>
     <message>
-        <source>The Guldencoin address to sign the message with</source>
-        <translation>L'adreça Guldencoin amb què signar el missatge</translation>
+        <source>The Bitcoin address to sign the message with</source>
+        <translation>L'adreça Bitcoin amb què signar el missatge</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2058,8 +2058,8 @@ Address: %4
         <translation>Copia la signatura actual al porta-retalls del sistema</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Guldencoin address</source>
-        <translation>Signa el missatge per provar que ets propietari d'aquesta adreça Guldencoin</translation>
+        <source>Sign the message to prove you own this Bitcoin address</source>
+        <translation>Signa el missatge per provar que ets propietari d'aquesta adreça Bitcoin</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2082,12 +2082,12 @@ Address: %4
         <translation>Introdueixi l'adreça signant, missatge (assegura't que copies salts de línia, espais, tabuladors, etc excactament tot el text) i la signatura a sota per verificar el missatge. Per evitar ser enganyat per un atac home-entre-mig, vés amb compte de no llegir més en la signatura del que hi ha al missatge signat mateix.</translation>
     </message>
     <message>
-        <source>The Guldencoin address the message was signed with</source>
-        <translation>L'adreça Guldencoin amb què va ser signat el missatge</translation>
+        <source>The Bitcoin address the message was signed with</source>
+        <translation>L'adreça Bitcoin amb què va ser signat el missatge</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Guldencoin address</source>
-        <translation>Verificar el missatge per assegurar-se que ha estat signat amb una adreça Guldencoin específica</translation>
+        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
+        <translation>Verificar el missatge per assegurar-se que ha estat signat amb una adreça Bitcoin específica</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2153,12 +2153,12 @@ Address: %4
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Guldencoin Core</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
-        <source>The Guldencoin Core developers</source>
-        <translation>Els desenvolupadors del Guldencoin Core</translation>
+        <source>The Bitcoin Core developers</source>
+        <translation>Els desenvolupadors del Bitcoin Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2633,7 +2633,7 @@ Address: %4
     </message>
 </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Options:</source>
         <translation>Opcions:</translation>
@@ -2670,23 +2670,23 @@ Address: %4
         <source>%s, you must set a rpcpassword in the configuration file:
 %s
 It is recommended you use the following random password:
-rpcuser=guldencoinrpc
+rpcuser=bitcoinrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
+for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
 </source>
         <translation>%s, heu de establir una contrasenya RPC al fitxer de configuració: %s
 Es recomana que useu la següent contrasenya aleatòria:
-rpcuser=guldencoinrpc
+rpcuser=bitcoinrpc
 rpcpassword=%s
 (no necesiteu recordar aquesta contrasenya)
 El nom d'usuari i la contrasenya NO HAN de ser els mateixos.
 Si el fitxer no existeix, crea'l amb els permisos de fitxer de només lectura per al propietari.
 També es recomana establir la notificació d'alertes i així sereu notificat de les incidències;
-per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
+per exemple: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
 </translation>
     </message>
     <message>
@@ -2726,8 +2726,8 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Aquesta és una versió de pre-llançament - utilitza-la sota la teva responsabilitat - No usar per a minería o aplicacions de compra-venda</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. Guldencoin Core is probably already running.</source>
-        <translation>No es pot enllaçar %s a aquest ordinador. El Guldencoin Core probablement ja estigui executant-s'hi.</translation>
+        <source>Unable to bind to %s on this computer. Bitcoin Core is probably already running.</source>
+        <translation>No es pot enllaçar %s a aquest ordinador. El Bitcoin Core probablement ja estigui executant-s'hi.</translation>
     </message>
     <message>
         <source>Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
@@ -2898,8 +2898,8 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Vincula a l'adreça donada per a escoltar les connexions JSON-RPC. Feu servir la notació [host]:port per a IPv6. Aquesta opció pot ser especificada moltes vegades (per defecte: vincula a totes les interfícies)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. Guldencoin Core is probably already running.</source>
-        <translation>No es pot obtenir un bloqueig del directori de dades %s. El Guldencoin Core probablement ja s'estigui executant.</translation>
+        <source>Cannot obtain a lock on data directory %s. Bitcoin Core is probably already running.</source>
+        <translation>No es pot obtenir un bloqueig del directori de dades %s. El Bitcoin Core probablement ja s'estigui executant.</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -2918,12 +2918,12 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Executa l'ordre quan es rebi un avís rellevant o veiem una forquilla molt llarga (%s en cmd és reemplaçat per un missatge)</translation>
     </message>
     <message>
-        <source>Fees (in NLG/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
-        <translation>Comissions (en NLG/Kb) inferiors a això es consideren de comissió zero per a la transmissió (per defecte: %s)</translation>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
+        <translation>Comissions (en BTC/Kb) inferiors a això es consideren de comissió zero per a la transmissió (per defecte: %s)</translation>
     </message>
     <message>
-        <source>Fees (in NLG/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
-        <translation>Comissions (en NLG/Kb) inferiors a això es consideren de comissió zero per a la creació de la transacció (per defecte: %s)</translation>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <translation>Comissions (en BTC/Kb) inferiors a això es consideren de comissió zero per a la creació de la transacció (per defecte: %s)</translation>
     </message>
     <message>
         <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect)</source>
@@ -2938,8 +2938,8 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Aquest producte inclou programari desenvolupat pel projecte OpenSSL per a ús a l'OpenSSL Toolkit &lt;https://www.openssl.org/&gt; i programari criptogràfic escrit per Eric Young i programari UPnP escrit per Thomas Bernard.</translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Guldencoin Core will not work properly.</source>
-        <translation>Avís: comproveu que la data i hora del vostre ordinador siguin correctes! Si el vostre rellotge no és correcte, el Guldencoin Core no funcionarà correctament.</translation>
+        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation>Avís: comproveu que la data i hora del vostre ordinador siguin correctes! Si el vostre rellotge no és correcte, el Bitcoin Core no funcionarà correctament.</translation>
     </message>
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
@@ -2954,32 +2954,32 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Connecta a través del proxy SOCKS5</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The Guldencoin Core Developers</source>
-        <translation>Copyright (C) 2009-%i Els desenvolupadors del Guldencoin Core</translation>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation>Copyright (C) 2009-%i Els desenvolupadors del Bitcoin Core</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
         <translation>No s'ha pogut analitzar el valor -rpcbind %s com una adreça de xarxa</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of Guldencoin Core</source>
-        <translation>Error en carregar wallet.dat: el moneder requereix una versió més nova del Guldencoin core</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Bitcoin Core</source>
+        <translation>Error en carregar wallet.dat: el moneder requereix una versió més nova del Bitcoin core</translation>
     </message>
     <message>
         <source>Error: Unsupported argument -tor found, use -onion.</source>
         <translation>Error: s'ha trobat un argument -tor no acceptat. Feu servir -onion.</translation>
     </message>
     <message>
-        <source>Fee (in NLG/kB) to add to transactions you send (default: %s)</source>
-        <translation>Comissió en (NLG/kB) per afegir a les transaccions que envieu (per defecte: %s)</translation>
+        <source>Fee (in BTC/kB) to add to transactions you send (default: %s)</source>
+        <translation>Comissió en (BTC/kB) per afegir a les transaccions que envieu (per defecte: %s)</translation>
     </message>
     <message>
         <source>Information</source>
         <translation>&amp;Informació</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. Guldencoin Core is shutting down.</source>
-        <translation>Ha fallat la inicialització de la comprovació de validesa. El Guldencoin Core s'està aturant.</translation>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation>Ha fallat la inicialització de la comprovació de validesa. El Bitcoin Core s'està aturant.</translation>
     </message>
     <message>
         <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
@@ -3014,8 +3014,8 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Imprimeix el block a l'inici, si es troba l'índex de blocs</translation>
     </message>
     <message>
-        <source>RPC SSL options: (see the Guldencoin Wiki for SSL setup instructions)</source>
-        <translation>Opcions RPC SSL: (veieu el wiki del Guldencoin per a instruccions de configuració de l'SSL)</translation>
+        <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
+        <translation>Opcions RPC SSL: (veieu el wiki del Bitcoin per a instruccions de configuració de l'SSL)</translation>
     </message>
     <message>
         <source>RPC server options:</source>
@@ -3074,8 +3074,8 @@ per exemple: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
         <translation>Nom d'usuari per a connexions JSON-RPC</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart Guldencoin Core to complete</source>
-        <translation>Cal reescriure el moneder: reiniceu el Guldencoin Core per completar-ho.</translation>
+        <source>Wallet needed to be rewritten: restart Bitcoin Core to complete</source>
+        <translation>Cal reescriure el moneder: reiniceu el Bitcoin Core per completar-ho.</translation>
     </message>
     <message>
         <source>Warning</source>
