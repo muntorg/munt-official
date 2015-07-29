@@ -1195,15 +1195,19 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex)
 
 CAmount GetBlockValue(int nHeight, const CAmount& nFees)
 {
-    CAmount nSubsidy = 1000 * COIN; // 1000 Gulden for each block
-
-    if(nHeight == 1)
+    CAmount nSubsidy = 0;
+    if(nHeight == 1) //First block premine
     {
-        nSubsidy = 170000000 * COIN; // First block will be premined
+        nSubsidy = 170000000 * COIN;
     }
-
-    // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 840000); // Guldencoin: 840k blocks in ~4 years
+    else if(nHeight < 250000) // 1000 Gulden per block for first 250k blocks
+    {
+        nSubsidy = 1000 * COIN; 
+    }
+    else if(nHeight <  12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
+    {
+        nSubsidy = 100 * COIN; 
+    }
 
     return nSubsidy + nFees;
 }
