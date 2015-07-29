@@ -109,7 +109,7 @@
     </message>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Sinchroniseer met die netwerk ...</translation>
@@ -147,8 +147,8 @@
         <translation>&amp;Opsies</translation>
     </message>
     <message>
-        <source>Guldencoin</source>
-        <translation>Guldencoin</translation>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -633,7 +633,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Options:</source>
         <translation>Opsies:</translation>

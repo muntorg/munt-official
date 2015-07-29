@@ -9,7 +9,7 @@
     <name>AskPassphraseDialog</name>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     </context>
 <context>
     <name>ClientModel</name>
@@ -105,6 +105,6 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     </context>
 </TS>

@@ -113,7 +113,7 @@
     </message>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Sarearekin sinkronizatzen...</translation>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Show information about Qt</source>
-        <translation>Erakutsi Guldencoin-i buruzko informazioa</translation>
+        <translation>Erakutsi Bitcoin-i buruzko informazioa</translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -677,7 +677,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Options:</source>
         <translation>Aukerak</translation>

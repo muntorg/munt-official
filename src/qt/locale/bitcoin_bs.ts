@@ -9,14 +9,14 @@
     <name>AskPassphraseDialog</name>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
-        <source>Guldencoin</source>
-        <translation>Guldencoin</translation>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Guldencoin Jezrga</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
     </message>
     </context>
 <context>
@@ -34,15 +34,15 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Guldencoin Jezrga</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Guldencoin Jezrga</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
     </message>
     </context>
 <context>
@@ -109,8 +109,8 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Guldencoin Jezrga</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
     </message>
     </context>
 <context>
@@ -161,6 +161,6 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     </context>
 </TS>

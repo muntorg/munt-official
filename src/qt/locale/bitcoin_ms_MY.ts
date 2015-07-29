@@ -61,7 +61,7 @@
     <name>AskPassphraseDialog</name>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>&amp;Options...</source>
         <translation>Pilihan</translation>
@@ -193,6 +193,6 @@
     </message>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     </context>
 </TS>

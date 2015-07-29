@@ -105,7 +105,7 @@
     </message>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Cysoni â'r rhwydwaith...</translation>
@@ -497,7 +497,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Information</source>
         <translation>Gwybodaeth</translation>

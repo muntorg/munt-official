@@ -47,7 +47,7 @@
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Wybierz adres żeby wysłać guldencoins</translation>
+        <translation>Wybierz adres żeby wysłać bitcoins</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
@@ -66,12 +66,12 @@
         <translation>Adres odbiorczy</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Tutaj znajdują się Twoje adresy Guldencoin do wysyłania płatności. Zawsze sprawdzaj ilość i adres odbiorcy przed wysyłką monet.</translation>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Tutaj znajdują się Twoje adresy Bitcoin do wysyłania płatności. Zawsze sprawdzaj ilość i adres odbiorcy przed wysyłką monet.</translation>
     </message>
     <message>
-        <source>These are your Guldencoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>To twoje adresy guldencoin do odbierania płatności. Zaleca się używanie nowych adresów odbiorczych dla każdej tranzakcji.</translation>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>To twoje adresy bitcoin do odbierania płatności. Zaleca się używanie nowych adresów odbiorczych dla każdej tranzakcji.</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -164,8 +164,8 @@
         <translation>Potwierdź szyfrowanie portfela</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDENCOINS&lt;/b&gt;!</source>
-        <translation>Uwaga: Jeśli zaszyfrujesz swój portfel i zgubisz hasło to &lt;b&gt;STRACISZ WSZYSTKIE SWOJE GULDENCOIN'Y&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Uwaga: Jeśli zaszyfrujesz swój portfel i zgubisz hasło to &lt;b&gt;STRACISZ WSZYSTKIE SWOJE BITCOIN'Y&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -184,8 +184,8 @@
         <translation>Portfel zaszyfrowany</translation>
     </message>
     <message>
-        <source>Guldencoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your guldencoins from being stolen by malware infecting your computer.</source>
-        <translation>Program Guldencoin zamknie się aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni Twoich guldencoinów przed kradzieżą przez wirusy lub trojany mogące zainfekować Twój komputer.</translation>
+        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Program Bitcoin zamknie się aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni Twoich bitcoinów przed kradzieżą przez wirusy lub trojany mogące zainfekować Twój komputer.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -217,7 +217,7 @@
     </message>
 </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Podpisz wiado&amp;mość...</translation>
@@ -291,8 +291,8 @@
         <translation>Otwórz URI...</translation>
     </message>
     <message>
-        <source>Guldencoin Core client</source>
-        <translation>Rdzeń klienta Guldencoin</translation>
+        <source>Bitcoin Core client</source>
+        <translation>Rdzeń klienta Bitcoin</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -303,12 +303,12 @@
         <translation>Ponowne indeksowanie bloków na dysku...</translation>
     </message>
     <message>
-        <source>Send coins to a Guldencoin address</source>
-        <translation>Wyślij monety na adres Guldencoin</translation>
+        <source>Send coins to a Bitcoin address</source>
+        <translation>Wyślij monety na adres Bitcoin</translation>
     </message>
     <message>
-        <source>Modify configuration options for Guldencoin</source>
-        <translation>Zmienia opcje konfiguracji guldencoina</translation>
+        <source>Modify configuration options for Bitcoin</source>
+        <translation>Zmienia opcje konfiguracji bitcoina</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -331,8 +331,8 @@
         <translation>&amp;Zweryfikuj wiadomość...</translation>
     </message>
     <message>
-        <source>Guldencoin</source>
-        <translation>Guldencoin</translation>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -347,8 +347,8 @@
         <translation>Odbie&amp;rz</translation>
     </message>
     <message>
-        <source>Show information about Guldencoin Core</source>
-        <translation>Pokaż informacje o Rdzeniu Guldencoin</translation>
+        <source>Show information about Bitcoin Core</source>
+        <translation>Pokaż informacje o Rdzeniu Bitcoin</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -363,12 +363,12 @@
         <translation>Szyfruj klucze prywatne, które są powiązane z twoim portfelem</translation>
     </message>
     <message>
-        <source>Sign messages with your Guldencoin addresses to prove you own them</source>
+        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
         <translation>Podpisz wiadomości swoim adresem aby udowodnić jego posiadanie</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Guldencoin addresses</source>
-        <translation>Zweryfikuj wiadomość,  aby upewnić się, że została podpisana odpowiednim adresem Guldencoin.</translation>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>Zweryfikuj wiadomość,  aby upewnić się, że została podpisana odpowiednim adresem Bitcoin.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -387,16 +387,16 @@
         <translation>Pasek zakładek</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Rdzeń GuldenCoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń BitCoin</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and guldencoin: URIs)</source>
-        <translation>Żądaj płatności (generuje kod QR oraz guldencoin URI)</translation>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Żądaj płatności (generuje kod QR oraz bitcoin URI)</translation>
     </message>
     <message>
-        <source>&amp;About Guldencoin Core</source>
-        <translation>&amp;O Guldencoin Core</translation>
+        <source>&amp;About Bitcoin Core</source>
+        <translation>&amp;O Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -411,12 +411,12 @@
         <translation>&amp;Opcje konsoli</translation>
     </message>
     <message>
-        <source>Show the Guldencoin Core help message to get a list with possible Guldencoin command-line options</source>
-        <translation>Pokaż pomoc Rdzenia Guldencoin, aby zobaczyć listę wszystkich opcji linii poleceń</translation>
+        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Pokaż pomoc Rdzenia Bitcoin, aby zobaczyć listę wszystkich opcji linii poleceń</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Guldencoin network</source>
-        <translation><numerusform>%n aktywne połączenie do sieci Guldencoin</numerusform><numerusform>%n aktywne połączenia do sieci Guldencoin</numerusform><numerusform>%n aktywnych połączeń do sieci Guldencoin</numerusform></translation>
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n aktywne połączenie do sieci Bitcoin</numerusform><numerusform>%n aktywne połączenia do sieci Bitcoin</numerusform><numerusform>%n aktywnych połączeń do sieci Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -752,8 +752,8 @@ Adres: %4
         <translation>Wprowadzony adres "%1" już istnieje w książce adresowej.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Guldencoin address.</source>
-        <translation>Wprowadzony adres "%1" nie jest poprawnym adresem Guldencoin.</translation>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>Wprowadzony adres "%1" nie jest poprawnym adresem Bitcoin.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -790,8 +790,8 @@ Adres: %4
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Rdzeń GuldenCoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń BitCoin</translation>
     </message>
     <message>
         <source>version</source>
@@ -802,8 +802,8 @@ Adres: %4
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Guldencoin Core</source>
-        <translation>O Guldencoin Core</translation>
+        <source>About Bitcoin Core</source>
+        <translation>O Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -845,16 +845,16 @@ Adres: %4
         <translation>Witaj</translation>
     </message>
     <message>
-        <source>Welcome to Guldencoin Core.</source>
-        <translation>Witam w Guldencoin Core</translation>
+        <source>Welcome to Bitcoin Core.</source>
+        <translation>Witam w Bitcoin Core</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Guldencoin Core will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
         <translation>Ponieważ jest to pierwsze uruchomienie programu, możesz wybrać gdzie będą przechowywane informacje.</translation>
     </message>
     <message>
-        <source>Guldencoin Core will download and store a copy of the Guldencoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Program pobierze i będzie przechowywał kopię łańcucha bloków Guldencoin. W wybranym katalogu musi być przynajmniej %1GB miejsca, a z czasem wielkość danych będzie rosła. Portfel będzie przechowywany w tym samym katalogu.</translation>
+        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Program pobierze i będzie przechowywał kopię łańcucha bloków Bitcoin. W wybranym katalogu musi być przynajmniej %1GB miejsca, a z czasem wielkość danych będzie rosła. Portfel będzie przechowywany w tym samym katalogu.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -865,8 +865,8 @@ Adres: %4
         <translation>Użyj wybranego folderu dla danych</translation>
     </message>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Rdzeń GuldenCoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń BitCoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -911,12 +911,12 @@ Adres: %4
         <translation>Główne</translation>
     </message>
     <message>
-        <source>Automatically start Guldencoin after logging in to the system.</source>
-        <translation>Automatycznie uruchamia Guldencoin po zalogowaniu do systemu.</translation>
+        <source>Automatically start Bitcoin after logging in to the system.</source>
+        <translation>Automatycznie uruchamia Bitcoin po zalogowaniu do systemu.</translation>
     </message>
     <message>
-        <source>&amp;Start Guldencoin on system login</source>
-        <translation>Uruchamiaj Guldencoin wraz z zalogowaniem do &amp;systemu</translation>
+        <source>&amp;Start Bitcoin on system login</source>
+        <translation>Uruchamiaj Bitcoin wraz z zalogowaniem do &amp;systemu</translation>
     </message>
     <message>
         <source>MB</source>
@@ -963,8 +963,8 @@ Adres: %4
         <translation>Ekspert</translation>
     </message>
     <message>
-        <source>Automatically open the Guldencoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatycznie otwiera port klienta Guldencoin na routerze. Ta opcja dzieła tylko jeśli twój router wspiera UPnP i jest ono włączone.</translation>
+        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatycznie otwiera port klienta Bitcoin na routerze. Ta opcja dzieła tylko jeśli twój router wspiera UPnP i jest ono włączone.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1011,8 +1011,8 @@ Adres: %4
         <translation>Język &amp;Użytkownika:</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Guldencoin.</source>
-        <translation>Można tu ustawić język interfejsu uzytkownika. Żeby ustawienie przyniosło skutek trzeba uruchomić ponownie Guldencoin.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
+        <translation>Można tu ustawić język interfejsu uzytkownika. Żeby ustawienie przyniosło skutek trzeba uruchomić ponownie Bitcoin.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1066,8 +1066,8 @@ Adres: %4
         <translation>Formularz</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Guldencoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Wyświetlana informacja może być nieaktualna. Twój portfel synchronizuje się automatycznie z siecią guldencoin, zaraz po tym jak uzyskano połączenie, ale proces ten nie został jeszcze ukończony.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation>Wyświetlana informacja może być nieaktualna. Twój portfel synchronizuje się automatycznie z siecią bitcoin, zaraz po tym jak uzyskano połączenie, ale proces ten nie został jeszcze ukończony.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1125,8 +1125,8 @@ Adres: %4
         <translation>Błąd żądania płatności</translation>
     </message>
     <message>
-        <source>Cannot start guldencoin: click-to-pay handler</source>
-        <translation>Nie można rozpocząć guldencoin: kliknij-by-zapłacić opiekunowi</translation>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Nie można rozpocząć bitcoin: kliknij-by-zapłacić opiekunowi</translation>
     </message>
     <message>
         <source>Refund from %1</source>
@@ -1285,16 +1285,16 @@ Adres: %4
         <translation>Plik logowania debugowania</translation>
     </message>
     <message>
-        <source>Open the Guldencoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otwórz plik logowania debugowania Guldencoin z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
+        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otwórz plik logowania debugowania Bitcoin z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
     </message>
     <message>
         <source>Clear console</source>
         <translation>Wyczyść konsolę</translation>
     </message>
     <message>
-        <source>Welcome to the Guldencoin RPC console.</source>
-        <translation>Witam w konsoli Guldencoin RPC</translation>
+        <source>Welcome to the Bitcoin RPC console.</source>
+        <translation>Witam w konsoli Bitcoin RPC</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1625,8 +1625,8 @@ Adres: %4
         <translation>Transakcja została odrzucona! Może się to zdarzyć jeśli część monet z portfela została już wydana używając kopii pliku wallet.dat i nie zostało to tutaj uwzględnione.</translation>
     </message>
     <message>
-        <source>Warning: Invalid Guldencoin address</source>
-        <translation>Ostrzeżenie: nieprawidłowy adres Guldencoin</translation>
+        <source>Warning: Invalid Bitcoin address</source>
+        <translation>Ostrzeżenie: nieprawidłowy adres Bitcoin</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1715,8 +1715,8 @@ Adres: %4
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Guldencoin Core is shutting down...</source>
-        <translation>Guldencoin Core się zamyka...</translation>
+        <source>Bitcoin Core is shutting down...</source>
+        <translation>Bitcoin Core się zamyka...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -1766,7 +1766,7 @@ Adres: %4
         <translation>Kopiuje aktualny podpis do schowka systemowego</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Guldencoin address</source>
+        <source>Sign the message to prove you own this Bitcoin address</source>
         <translation>Podpisz wiadomość aby dowieść, że ten adres jest twój</translation>
     </message>
     <message>
@@ -1790,8 +1790,8 @@ Adres: %4
         <translation>Wpisz adres podpisu, wiadomość (upewnij się, że dokładnie skopiujesz wszystkie zakończenia linii, spacje, tabulacje itp.) oraz podpis poniżej by sprawdzić wiadomość. Uważaj by nie dodać więcej do podpisu niż do samej podpisywanej wiadomości by uniknąć ataku man-in-the-middle (człowiek pośrodku)</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Guldencoin address</source>
-        <translation>Zweryfikuj wiadomość,  aby upewnić się, że została podpisana odpowiednim adresem Guldencoin.</translation>
+        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
+        <translation>Zweryfikuj wiadomość,  aby upewnić się, że została podpisana odpowiednim adresem Bitcoin.</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1857,12 +1857,12 @@ Adres: %4
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Guldencoin Core</source>
-        <translation>Rdzeń GuldenCoin</translation>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń BitCoin</translation>
     </message>
     <message>
-        <source>The Guldencoin Core developers</source>
-        <translation>Deweloperzy Guldencoin Core</translation>
+        <source>The Bitcoin Core developers</source>
+        <translation>Deweloperzy Bitcoin Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2301,7 +2301,7 @@ Adres: %4
     </message>
 </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Options:</source>
         <translation>Opcje:</translation>
@@ -2338,24 +2338,24 @@ Adres: %4
         <source>%s, you must set a rpcpassword in the configuration file:
 %s
 It is recommended you use the following random password:
-rpcuser=guldencoinrpc
+rpcuser=bitcoinrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Guldencoin Alert" admin@foo.com
+for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
 </source>
         <translation>%s, musisz ustawić rpcpassword w pliku konfiguracyjnym:⏎
 %s⏎
 Zalecane jest użycie losowego hasła:⏎
-rpcuser=guldencoinrpc⏎
+rpcuser=bitcoinrpc⏎
 rpcpassword=%s⏎
 (nie musisz pamiętać tego hasła)⏎
 Użytkownik i hasło nie mogą być takie same.⏎
 Jeśli plik nie istnieje, utwórz go z uprawnieniami tylko-do-odczytu dla właściciela.⏎
 Zalecane jest ustawienie alertnotify aby poinformować o problemach:⏎
-na przykład: alertnotify=echo %%s | mail -s "Alarm Guldencoin" admin@foo.com⏎</translation>
+na przykład: alertnotify=echo %%s | mail -s "Alarm Bitcoin" admin@foo.com⏎</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
@@ -2363,11 +2363,11 @@ na przykład: alertnotify=echo %%s | mail -s "Alarm Guldencoin" admin@foo.com⏎
     </message>
     <message>
         <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Błąd: transakcja została odrzucona. Może się to zdarzyć, gdy monety z Twojego portfela zostały już wydane, na przykład gdy używałeś kopii wallet.dat i guldencoiny które tam wydałeś nie zostały jeszcze odjęte z portfela z którego teraz korzystasz.</translation>
+        <translation>Błąd: transakcja została odrzucona. Może się to zdarzyć, gdy monety z Twojego portfela zostały już wydane, na przykład gdy używałeś kopii wallet.dat i bitcoiny które tam wydałeś nie zostały jeszcze odjęte z portfela z którego teraz korzystasz.</translation>
     </message>
     <message>
         <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>Transakcja przekracza limit. Możesz wysłać ją płacąc prowizję %s, która zostaje przekazana do węzłów, które ją prześlą i pomoże wspierać sieć Guldencoin. Czy chcesz zapłacić prowizję?</translation>
+        <translation>Transakcja przekracza limit. Możesz wysłać ją płacąc prowizję %s, która zostaje przekazana do węzłów, które ją prześlą i pomoże wspierać sieć Bitcoin. Czy chcesz zapłacić prowizję?</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2522,8 +2522,8 @@ na przykład: alertnotify=echo %%s | mail -s "Alarm Guldencoin" admin@foo.com⏎
         <translation>Importuj bloki z zewnętrznego pliku blk000??.dat</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. Guldencoin Core is probably already running.</source>
-        <translation>Nie można uzyskać blokady na katalogu z danymi %s. Rdzeń Guldencoin najprawdopodobniej jest już uruchomiony.</translation>
+        <source>Cannot obtain a lock on data directory %s. Bitcoin Core is probably already running.</source>
+        <translation>Nie można uzyskać blokady na katalogu z danymi %s. Rdzeń Bitcoin najprawdopodobniej jest już uruchomiony.</translation>
     </message>
     <message>
         <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
@@ -2550,8 +2550,8 @@ na przykład: alertnotify=echo %%s | mail -s "Alarm Guldencoin" admin@foo.com⏎
         <translation>Wyświetlaj blok podczas uruchamiania, jeżeli znaleziono indeks bloków</translation>
     </message>
     <message>
-        <source>RPC SSL options: (see the Guldencoin Wiki for SSL setup instructions)</source>
-        <translation>Opcje RPC SSL: (odwiedź Guldencoin Wiki w celu uzyskania instrukcji)</translation>
+        <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
+        <translation>Opcje RPC SSL: (odwiedź Bitcoin Wiki w celu uzyskania instrukcji)</translation>
     </message>
     <message>
         <source>RPC server options:</source>
@@ -2606,8 +2606,8 @@ na przykład: alertnotify=echo %%s | mail -s "Alarm Guldencoin" admin@foo.com⏎
         <translation>Nazwa użytkownika dla połączeń JSON-RPC</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart Guldencoin Core to complete</source>
-        <translation>Portfel wymaga przepisania: zresetuj Guldencoina aby ukończyć</translation>
+        <source>Wallet needed to be rewritten: restart Bitcoin Core to complete</source>
+        <translation>Portfel wymaga przepisania: zresetuj Bitcoina aby ukończyć</translation>
     </message>
     <message>
         <source>Warning</source>

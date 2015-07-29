@@ -89,7 +89,7 @@
     </message>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>&amp;Transactions</source>
         <translation>&amp;Транзакциялар</translation>
@@ -111,7 +111,7 @@
         <translation>Құпия сөзді өзгерту</translation>
     </message>
     <message>
-        <source>Guldencoin</source>
+        <source>Bitcoin</source>
         <translation>Биткоин</translation>
     </message>
     <message>
@@ -421,7 +421,7 @@
     </message>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>Information</source>
         <translation>Информация</translation>

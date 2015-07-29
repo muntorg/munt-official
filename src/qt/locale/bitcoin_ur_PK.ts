@@ -85,7 +85,7 @@
     </message>
     </context>
 <context>
-    <name>GuldencoinGUI</name>
+    <name>BitcoinGUI</name>
     <message>
         <source>Error</source>
         <translation>نقص</translation>
@@ -321,7 +321,7 @@
     </message>
     </context>
 <context>
-    <name>guldencoin-core</name>
+    <name>bitcoin-core</name>
     <message>
         <source>This help message</source>
         <translation>یہ مدد کا پیغام</translation>
