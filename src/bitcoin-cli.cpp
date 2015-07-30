@@ -12,7 +12,9 @@
 
 #include <boost/filesystem/operations.hpp>
 
-#define _(x) std::string(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
+#include "guldencoin/translate.h"
+
+#define _(x) guldencoin_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
 
 using namespace std;
 using namespace json_spirit;
@@ -35,7 +37,7 @@ std::string HelpMessageCli()
     strUsage += HelpMessageOpt("-rpcuser=<user>", _("Username for JSON-RPC connections"));
     strUsage += HelpMessageOpt("-rpcpassword=<pw>", _("Password for JSON-RPC connections"));
 
-    strUsage += HelpMessageGroup(_("SSL options: (see the Guldencoin Wiki for SSL setup instructions)"));
+    strUsage += HelpMessageGroup(_("SSL options: (see the Bitcoin Wiki for SSL setup instructions)"));
     strUsage += HelpMessageOpt("-rpcssl", _("Use OpenSSL (https) for JSON-RPC connections"));
 
     return strUsage;
@@ -67,10 +69,10 @@ static bool AppInitRPC(int argc, char* argv[])
     //
     ParseParameters(argc, argv);
     if (argc<2 || mapArgs.count("-?") || mapArgs.count("-help") || mapArgs.count("-version")) {
-        std::string strUsage = _("Guldencoin Core RPC client version") + " " + FormatFullVersion() + "\n";
+        std::string strUsage = _("Bitcoin Core RPC client version") + " " + FormatFullVersion() + "\n";
         if (!mapArgs.count("-version")) {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  guldencoin-cli [options] <command> [params]  " + _("Send command to Guldencoin Core") + "\n" +
+                  "  guldencoin-cli [options] <command> [params]  " + _("Send command to Bitcoin Core") + "\n" +
                   "  guldencoin-cli [options] help                " + _("List commands") + "\n" +
                   "  guldencoin-cli [options] help <command>      " + _("Get help for a command") + "\n";
 
