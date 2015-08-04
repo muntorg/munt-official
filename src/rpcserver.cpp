@@ -30,7 +30,7 @@
 #include "json/json_spirit_writer_template.h"
 
 #include <guldencoin/rpcgulden.h>
-#include "guldencoin/translate.h"
+#include <guldencoin/translate.h>
 
 
 using namespace boost::asio;

@@ -22,7 +22,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/assign/list_of.hpp>
 
-#include "guldencoin/translate.h"
+#include <guldencoin/translate.h>
 
 #define _(x) guldencoin_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
 

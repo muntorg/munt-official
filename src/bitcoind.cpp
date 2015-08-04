@@ -15,7 +15,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
-#include "guldencoin/translate.h"
+#include <guldencoin/translate.h>
 
 #define _(x) guldencoin_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
 
