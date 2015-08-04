@@ -124,6 +124,7 @@ BITCOIN_CORE_H = \
   guldencoin/hash/city.h \
   guldencoin/hash/cityconfig.h \
   guldencoin/scrypt.h \
+  guldencoin/translate.h \
   script/interpreter.h \
   script/script_error.h \
   script/script.h \
