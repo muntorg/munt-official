@@ -106,7 +106,7 @@ static QString GetLangTerritory()
 }
 
 /** Set up translations */
-static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator)
+static void initTranslations(QGuldencoinTranslator &qtTranslatorBase, QGuldencoinTranslator &qtTranslator, QGuldencoinTranslator &translatorBase, QGuldencoinTranslator &translator)
 {
 
     // Remove old translators

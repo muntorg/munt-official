@@ -13,6 +13,8 @@
 
 #include "json/json_spirit_value.h"
 
+#include "guldencoin/translate.h"
+
 using namespace json_spirit;
 using namespace std;
 
@@ -161,7 +163,7 @@ Value getrawmempool(const Array& params, bool fHelp)
             "{                           (json object)\n"
             "  \"transactionid\" : {       (json object)\n"
             "    \"size\" : n,             (numeric) transaction size in bytes\n"
-            "    \"fee\" : n,              (numeric) transaction fee in guldencoins\n"
+            "    \"fee\" : n,              (numeric) transaction fee in bitcoins\n"
             "    \"time\" : n,             (numeric) local time transaction entered pool in seconds since 1 Jan 1970 GMT\n"
             "    \"height\" : n,           (numeric) block height when transaction entered pool\n"
             "    \"startingpriority\" : n, (numeric) priority when transaction entered pool\n"
@@ -373,8 +375,8 @@ Value gettxout(const Array& params, bool fHelp)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of guldencoin addresses\n"
-            "        \"guldencoinaddress\"     (string) guldencoin address\n"
+            "     \"addresses\" : [          (array of string) array of bitcoin addresses\n"
+            "        \"bitcoinaddress\"     (string) bitcoin address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"
