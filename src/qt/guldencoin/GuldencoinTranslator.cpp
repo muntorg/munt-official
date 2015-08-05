@@ -31,6 +31,7 @@ QString QGuldencoinTranslator::translate(const char * context, const char * sour
         translatedString = sourceText;
 
     // Make some application specific replacements.
+    translatedString.replace("bitcoin.com","guldencoin.com");
     translatedString.replace("Bitcoin","Gulden");
     translatedString.replace("bitcoin:","guldencoin:");
     translatedString.replace("bitcoin","gulden");
@@ -40,6 +41,7 @@ QString QGuldencoinTranslator::translate(const char * context, const char * sour
     translatedString.replace("bitcoin.conf","guldencoin.conf");
     translatedString.replace("bitcoin-cli","guldencoin-cli");
     translatedString.replace("bitcoin-tx","guldencoin-tx");
+    translatedString.replace("bitcoin-qt","guldencoin-qt");
     translatedString.replace("bitcoind","guldencoind");
     translatedString.replace("bitcoin","gulden");
     translatedString.replace("Bitcoin","Gulden");

@@ -24,10 +24,12 @@ inline void str_replace(std::string& str, const std::string& from, const std::st
 // NB!! Changes here must also be made in src/qt/guldencoin/QGuldencoinTranslator.cpp
 inline std::string guldencoin_translate(std::string source)
 {
+    str_replace(source,"bitcoin.com","guldencoin.com");
     str_replace(source,"bitcoin:","guldencoin:");
     str_replace(source,"bitcoin.conf","guldencoin.conf");
     str_replace(source,"bitcoin-cli","guldencoin-cli");
     str_replace(source,"bitcoin-tx","guldencoin-tx");
+    str_replace(source,"bitcoin-qt","guldencoin-qt");
     str_replace(source,"bitcoind","guldencoind");
     str_replace(source,"bitcoin","gulden");
     str_replace(source,"Bitcoin","Gulden");
