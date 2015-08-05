@@ -1200,11 +1200,11 @@ CAmount GetBlockValue(int nHeight, const CAmount& nFees)
     {
         nSubsidy = 170000000 * COIN;
     }
-    else if(nHeight < 250000) // 1000 Gulden per block for first 250k blocks
+    else if(nHeight <= 250000) // 1000 Gulden per block for first 250k blocks
     {
         nSubsidy = 1000 * COIN; 
     }
-    else if(nHeight <  12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
+    else if(nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
     {
         nSubsidy = 100 * COIN; 
     }
