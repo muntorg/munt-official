@@ -11,7 +11,7 @@
 #include <QPalette>
 #include <QPixmap>
 
-static void MakeSingleColorImage(QImage& img, const QColor& colorbase)
+/*static void MakeSingleColorImage(QImage& img, const QColor& colorbase)
 {
     img = img.convertToFormat(QImage::Format_ARGB32);
     for (int x = img.width(); x--; )
@@ -22,12 +22,12 @@ static void MakeSingleColorImage(QImage& img, const QColor& colorbase)
             img.setPixel(x, y, qRgba(colorbase.red(), colorbase.green(), colorbase.blue(), qAlpha(rgb)));
         }
     }
-}
+}*/
 
 QImage SingleColorImage(const QString& filename, const QColor& colorbase)
 {
     QImage img(filename);
-    MakeSingleColorImage(img, colorbase);
+    //MakeSingleColorImage(img, colorbase);
     return img;
 }
 
@@ -38,7 +38,7 @@ QIcon SingleColorIcon(const QIcon& ico, const QColor& colorbase)
     Q_FOREACH(sz, ico.availableSizes())
     {
         QImage img(ico.pixmap(sz).toImage());
-        MakeSingleColorImage(img, colorbase);
+        //MakeSingleColorImage(img, colorbase);
         new_ico.addPixmap(QPixmap::fromImage(img));
     }
     return new_ico;

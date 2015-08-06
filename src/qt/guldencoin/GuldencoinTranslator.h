@@ -14,7 +14,7 @@ public:
     QGuldencoinTranslator(QObject * parent = 0);
     QGuldencoinTranslator(bool isFallback);
     ~QGuldencoinTranslator();
-    virtual QString translate(const char * context, const char * sourceText, const char * disambiguation = 0, int n=-1) const;
+    virtual QString translate(const char * context, const char * sourceText, const char * disambiguation = 0) const;
     bool isEmpty() const { return false; }
 private:
     bool isFallback;

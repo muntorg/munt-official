@@ -22,10 +22,10 @@ QGuldencoinTranslator::~QGuldencoinTranslator()
 {
 }
 
-QString QGuldencoinTranslator::translate(const char * context, const char * sourceText, const char * disambiguation, int n ) const
+QString QGuldencoinTranslator::translate(const char * context, const char * sourceText, const char * disambiguation) const
 {
     // Load original translated string.
-    QString translatedString = QTranslator::translate(context, sourceText, disambiguation, n);
+    QString translatedString = QTranslator::translate(context, sourceText, disambiguation);
 
     if (isFallback)
         translatedString = sourceText;
