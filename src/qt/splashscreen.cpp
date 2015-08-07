@@ -81,7 +81,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     }
 
     pixPaint.setFont(QFont(font, 33*fontFactor));
-    fm = pixPaint.fontMetrics();
+    /*fm = pixPaint.fontMetrics();
     titleTextWidth  = fm.width(titleText);
     pixPaint.drawText(((pixmap.width()/devicePixelRatio)/2)-(titleTextWidth/2),paddingTop,titleText);
 
@@ -109,7 +109,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
         fm = pixPaint.fontMetrics();
         int titleAddTextWidth  = fm.width(titleAddText);
         pixPaint.drawText(((pixmap.width()/devicePixelRatio)/2)-titleAddTextWidth/2,15,titleAddText);
-    }
+    }*/
 
     pixPaint.end();
 
