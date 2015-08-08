@@ -14,7 +14,11 @@ public:
     QGuldencoinTranslator(QObject * parent = 0);
     QGuldencoinTranslator(bool isFallback);
     ~QGuldencoinTranslator();
+#if QT_VERSION >= 0x050000
+    virtual QString translate(const char * context, const char * sourceText, const char * disambiguation = 0, int n=-1) const;
+#else
     virtual QString translate(const char * context, const char * sourceText, const char * disambiguation = 0) const;
+#endif
     bool isEmpty() const { return false; }
 private:
     bool isFallback;

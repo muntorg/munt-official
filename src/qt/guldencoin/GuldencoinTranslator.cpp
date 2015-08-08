@@ -22,10 +22,18 @@ QGuldencoinTranslator::~QGuldencoinTranslator()
 {
 }
 
+#if QT_VERSION >= 0x050000
+QString QGuldencoinTranslator::translate(const char * context, const char * sourceText, const char * disambiguation, int n ) const
+#else
 QString QGuldencoinTranslator::translate(const char * context, const char * sourceText, const char * disambiguation) const
+#endif
 {
     // Load original translated string.
+    #if QT_VERSION >= 0x050000
     QString translatedString = QTranslator::translate(context, sourceText, disambiguation);
+    #else
+    QString translatedString = QTranslator::translate(context, sourceText, disambiguation, n);
+    #endif
 
     if (isFallback)
         translatedString = sourceText;
