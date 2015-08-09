@@ -56,6 +56,8 @@ QString QGuldencoinTranslator::translate(const char * context, const char * sour
     translatedString.replace("BITCOIN","GULDEN");
     translatedString.replace("BTC","NLG");
     translatedString.replace("btc","nlg");
+    translatedString.replace("guldens","gulden");
+    translatedString.replace("Guldens","Gulden");
 
 
     // Use result instead of original - this allows us to easily track upstream translations without having to constantly merge translation files.

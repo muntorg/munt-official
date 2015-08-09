@@ -36,6 +36,8 @@ inline std::string guldencoin_translate(std::string source)
     str_replace(source,"BITCOIN","GULDEN");
     str_replace(source,"BTC","NLG");
     str_replace(source,"btc","nlg");
+    str_replace(source,"guldens","gulden");
+    str_replace(source,"Guldens","Gulden");
 
     return source;
 }
