@@ -30,9 +30,9 @@ QString QGuldencoinTranslator::translate(const char * context, const char * sour
 {
     // Load original translated string.
     #if QT_VERSION >= 0x050000
-    QString translatedString = QTranslator::translate(context, sourceText, disambiguation);
-    #else
     QString translatedString = QTranslator::translate(context, sourceText, disambiguation, n);
+    #else
+    QString translatedString = QTranslator::translate(context, sourceText, disambiguation);
     #endif
 
     if (isFallback)
