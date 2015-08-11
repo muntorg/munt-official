@@ -252,6 +252,8 @@ RES_ICONS = \
   qt/res/icons/send.png \
   qt/res/icons/splash.png \
   qt/res/icons/splash_testnet.png \
+  qt/res/icons/splash@2x.png \
+  qt/res/icons/splash_testnet@2x.png \
   qt/res/icons/synced.png \
   qt/res/icons/transaction0.png \
   qt/res/icons/transaction2.png \

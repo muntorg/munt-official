@@ -6,6 +6,8 @@
         <file alias="send">res/icons/send.png</file>
         <file alias="splash">res/icons/splash.png</file>
         <file alias="splash_testnet">res/icons/splash_testnet.png</file>
+        <file alias="splash_x2">res/icons/splash@2x.png</file>
+        <file alias="splash_testnet_x2">res/icons/splash_testnet@2x.png</file>
         <file alias="connect_0">res/icons/connect0.png</file>
         <file alias="connect_1">res/icons/connect1.png</file>
         <file alias="connect_2">res/icons/connect2.png</file>

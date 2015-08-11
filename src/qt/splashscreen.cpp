@@ -67,7 +67,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     QRect rectIcon(QPoint(0,0), QSize(splashSize.width()/devicePixelRatio, splashSize.height()/devicePixelRatio));
 
     const QSize requiredSize(splashSize);
-    QPixmap icon(GetBoolArg("-testnet", false)?QPixmap(":/icons/splash_testnet").scaled(splashSize.width()/devicePixelRatio, splashSize.height()/devicePixelRatio):QPixmap(":/icons/splash").scaled(splashSize.height()/devicePixelRatio, splashSize.height()/devicePixelRatio));
+    QPixmap icon((devicePixelRatio<=1.1)?(GetBoolArg("-testnet", false)?QPixmap(":/icons/splash_testnet"):QPixmap(":/icons/splash")):(GetBoolArg("-testnet", false)?QPixmap(":/icons/splash_testnet_x2"):QPixmap(":/icons/splash_x2")));
 
     pixPaint.drawPixmap(rectIcon, icon);
 
