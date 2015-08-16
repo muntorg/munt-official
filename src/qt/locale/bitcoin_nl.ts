@@ -6,7 +6,7 @@
     <message>
         <location filename="../forms/addressbookpage.ui" line="+30"/>
         <source>Right-click to edit address or label</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechtsklik om een adres of label te bewerken.</translation>
     </message>
     <message>
         <location line="+27"/>
@@ -26,7 +26,7 @@
     <message>
         <location line="+3"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Kopieer</translation>
+        <translation>&amp;Kopiëren</translation>
     </message>
     <message>
         <location line="+67"/>
@@ -36,7 +36,7 @@
     <message>
         <location filename="../addressbookpage.cpp" line="+80"/>
         <source>&amp;Copy Address</source>
-        <translation>&amp;Kopiëer adres</translation>
+        <translation>Adres &amp;kopiëren</translation>
     </message>
     <message>
         <location filename="../forms/addressbookpage.ui" line="-53"/>
@@ -288,7 +288,7 @@
     <message>
         <location filename="../bitcoingui.cpp" line="+326"/>
         <source>Sign &amp;message...</source>
-        <translation>Bericht &amp;ondertekenen...</translation>
+        <translation>Bericht o&amp;ndertekenen...</translation>
     </message>
     <message>
         <location line="+342"/>
@@ -353,7 +353,7 @@
     <message>
         <location line="+3"/>
         <source>&amp;Backup Wallet...</source>
-        <translation>Portemonnee &amp;backuppen...</translation>
+        <translation>&amp;Backup van portemonnee maken...</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -363,12 +363,12 @@
     <message>
         <location line="+10"/>
         <source>&amp;Sending addresses...</source>
-        <translation>&amp;Adressen versturen....</translation>
+        <translation>Adressen &amp;versturen....</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adressen ontvangen...</translation>
+        <translation>Adressen &amp;ontvangen...</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -418,7 +418,7 @@
     <message>
         <location line="-4"/>
         <source>&amp;Verify message...</source>
-        <translation>Bericht &amp;Verifiëren...</translation>
+        <translation>Bericht v&amp;erifiëren...</translation>
     </message>
     <message>
         <location line="+439"/>
@@ -1209,7 +1209,7 @@ Adres: %4
     <message>
         <location line="+27"/>
         <source>Number of script &amp;verification threads</source>
-        <translation>Aantal threads voor &amp;scriptverificatie</translation>
+        <translation>Aantal &amp;threads voor scriptverificatie</translation>
     </message>
     <message>
         <location line="+114"/>
@@ -1229,12 +1229,12 @@ Adres: %4
     <message>
         <location line="+84"/>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door in het menu "Afsluiten" te kiezen.</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation type="unfinished"></translation>
+        <translation>De taal van de gebruikersinterface kan hier ingesteld worden. Deze instelling zal pas van kracht worden nadat de Officiële Guldencoin portemonnee herstart wordt.</translation>
     </message>
     <message>
         <location line="+35"/>
@@ -1260,7 +1260,7 @@ Adres: %4
     <message>
         <location line="+3"/>
         <source>&amp;Reset Options</source>
-        <translation>He&amp;rinitialiseer opties</translation>
+        <translation>&amp;Herinitialiseer opties</translation>
     </message>
     <message>
         <location line="-317"/>
@@ -1270,12 +1270,12 @@ Adres: %4
     <message>
         <location line="-153"/>
         <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation type="unfinished"></translation>
+        <translation>Start de Officiële Guldencoin portemonnee automatisch na inloggen op het systeem.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>&amp;Start Bitcoin Core on system login</source>
-        <translation type="unfinished"></translation>
+        <translation>Start de Officiële &amp;Guldencoin portemonnee tijdens het inloggen op het systeem.</translation>
     </message>
     <message>
         <location line="+65"/>
@@ -1285,7 +1285,7 @@ Adres: %4
     <message>
         <location line="+36"/>
         <source>W&amp;allet</source>
-        <translation>W&amp;allet</translation>
+        <translation>&amp;Portemonnee</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1295,7 +1295,7 @@ Adres: %4
     <message>
         <location line="+9"/>
         <source>Enable coin &amp;control features</source>
-        <translation>Coin &amp;control activeren</translation>
+        <translation>&amp;Coin control activeren</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1305,7 +1305,7 @@ Adres: %4
     <message>
         <location line="+3"/>
         <source>&amp;Spend unconfirmed change</source>
-        <translation>&amp;Onbevestigd wisselgeld uitgeven</translation>
+        <translation>Onbevestigd &amp;wisselgeld uitgeven</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -1315,7 +1315,7 @@ Adres: %4
     <message>
         <location line="+3"/>
         <source>Map port using &amp;UPnP</source>
-        <translation>Portmapping via &amp;UPnP</translation>
+        <translation>P&amp;ortmapping via UPnP</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -1330,12 +1330,12 @@ Adres: %4
     <message>
         <location line="+9"/>
         <source>Proxy &amp;IP:</source>
-        <translation>Proxy &amp;IP:</translation>
+        <translation>Pro&amp;xy IP:</translation>
     </message>
     <message>
         <location line="+32"/>
         <source>&amp;Port:</source>
-        <translation>&amp;Poort:</translation>
+        <translation>Poo&amp;rt:</translation>
     </message>
     <message>
         <location line="+25"/>
@@ -1465,7 +1465,7 @@ Adres: %4
     <message>
         <location line="+41"/>
         <source>Pending:</source>
-        <translation>Afwachtend:</translation>
+        <translation>In behandeling:</translation>
     </message>
     <message>
         <location line="-236"/>
@@ -1585,7 +1585,7 @@ Adres: %4
     <message>
         <location line="-409"/>
         <source>Cannot start guldencoin: click-to-pay handler</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan guldencoin: click-to-pay verwerker niet starten</translation>
     </message>
     <message>
         <location line="+105"/>
@@ -1610,7 +1610,7 @@ Adres: %4
     <message>
         <location line="+75"/>
         <source>Payment request expired.</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalingsverzoek verlopen.</translation>
     </message>
     <message>
         <location line="+32"/>
@@ -1621,7 +1621,7 @@ Adres: %4
         <location line="+9"/>
         <location line="+17"/>
         <source>Invalid payment request.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ongeldig betalingsverzoek.</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -1631,12 +1631,12 @@ Adres: %4
     <message>
         <location line="+43"/>
         <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalingsverzoek %1 is te groot (%2 bytes, maar %3 bytes toegestaan).</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Payment request DoS protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalingsverzoek DoS bescherming</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -1669,7 +1669,7 @@ Adres: %4
     <message>
         <location filename="../peertablemodel.cpp" line="+118"/>
         <source>User Agent</source>
-        <translation>User Agent</translation>
+        <translation>Useragent</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -1852,7 +1852,7 @@ Adres: %4
     <message>
         <location line="+72"/>
         <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation type="unfinished"></translation>
+        <translation>Open het Officiële Guldencoin portemonnee debuglogbestand van de huidige gegevensdirectory. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <location line="+231"/>
@@ -1889,7 +1889,7 @@ Adres: %4
     <message>
         <location line="+23"/>
         <source>User Agent</source>
-        <translation>User Agent</translation>
+        <translation>Useragent</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -1939,12 +1939,12 @@ Adres: %4
     <message>
         <location line="+23"/>
         <source>Ping Time</source>
-        <translation>Ping Tijd</translation>
+        <translation>Pingtijd</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Time Offset</source>
-        <translation type="unfinished"></translation>
+        <translation>Tijdsverschuiving</translation>
     </message>
     <message>
         <location line="-764"/>
@@ -2004,7 +2004,7 @@ Adres: %4
     <message>
         <location filename="../rpcconsole.cpp" line="-36"/>
         <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation type="unfinished"></translation>
+        <translation>Welkom bij de Guldencoin RPC-console.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2074,7 +2074,7 @@ Adres: %4
     <message>
         <location filename="../forms/receivecoinsdialog.ui" line="+107"/>
         <source>&amp;Amount:</source>
-        <translation>&amp;Bedrag</translation>
+        <translation>Bedra&amp;g</translation>
     </message>
     <message>
         <location line="-16"/>
@@ -2084,7 +2084,7 @@ Adres: %4
     <message>
         <location line="-37"/>
         <source>&amp;Message:</source>
-        <translation>&amp;Bericht</translation>
+        <translation>Be&amp;richt</translation>
     </message>
     <message>
         <location line="-20"/>
@@ -2137,7 +2137,7 @@ Adres: %4
     <message>
         <location line="-95"/>
         <source>&amp;Request payment</source>
-        <translation>&amp;Betalingsverzoek</translation>
+        <translation>Betalings&amp;verzoek</translation>
     </message>
     <message>
         <location line="+120"/>
@@ -2367,7 +2367,7 @@ Adres: %4
     <message>
         <location line="+37"/>
         <source>collapse fee-settings</source>
-        <translation type="unfinished"></translation>
+        <translation>vergoedingsinstellingen inklappen</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2378,7 +2378,7 @@ Adres: %4
         <location line="+48"/>
         <location line="+16"/>
         <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation type="unfinished"></translation>
+        <translation>Als de aangepaste vergoeding op 1000 satoshies is gezet en de transactie maar 250 bytes is, dan wordt &quot;per kilobyte&quot; maar 250 satoshies in vergoeding betaald, terwijl &quot;totaal ten minste&quot; 1000 satoshies betaald. Voor transacties groter dan een kilobyte betalen beide per kilobyte.</translation>
     </message>
     <message>
         <location line="-13"/>
@@ -2394,12 +2394,12 @@ Adres: %4
         <location line="+30"/>
         <location line="+13"/>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalen van het minimum vergoeding is geen probleem zolang het transactievolume minder is dan de ruimte in blokken. Maar wees ervan bewust dat dit ervoor kan zorgen dat een transactie nooit bevestigd wordt zodra er meer vraag naar guldencointransacties is, dan het netwerk kan verwerken.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>(read the tooltip)</source>
-        <translation type="unfinished"></translation>
+        <translation>(lees de tooltip)</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -2414,7 +2414,7 @@ Adres: %4
     <message>
         <location line="+52"/>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Optimale vergoeding nog niet geinitializeerd. Dit duurt normaal enkele blokken...)</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -2434,7 +2434,7 @@ Adres: %4
     <message>
         <location line="+38"/>
         <source>Send as zero-fee transaction if possible</source>
-        <translation type="unfinished"></translation>
+        <translation>Indien mogelijk, verstuur zonder vergoeding.</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -2464,7 +2464,7 @@ Adres: %4
     <message>
         <location line="+861"/>
         <source>Clear &amp;All</source>
-        <translation>&amp;Alles wissen</translation>
+        <translation>Alles &amp;wissen</translation>
     </message>
     <message>
         <location line="+55"/>
@@ -2577,19 +2577,19 @@ Adres: %4
     <message>
         <location line="+4"/>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
-        <translation type="unfinished"></translation>
+        <translation>Een vergoeding hoger dan %1 wordt als een absurd hoge vergoeding gezien.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Payment request expired!</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalingsverzoek verlopen!</translation>
     </message>
     <message numerus="yes">
         <location line="+110"/>
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Begin van bevestiging verwacht binnen %n blok.</numerusform>
+            <numerusform>Begin van bevestiging verwacht binnen %n blokken.</numerusform>
         </translation>
     </message>
     <message>
@@ -2640,12 +2640,12 @@ Adres: %4
     <message>
         <location line="-1184"/>
         <source>Pay &amp;To:</source>
-        <translation>Betaal &amp;Aan:</translation>
+        <translation>Betalen &amp;aan:</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+37"/>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation>Vul een label in voor dit adres om het toe te voegen aan uw adresboek</translation>
+        <translation>Vul een label in voor dit adres om het toe te voegen aan uw adresboek.</translation>
     </message>
     <message>
         <location filename="../forms/sendcoinsentry.ui" line="+93"/>
@@ -2655,7 +2655,7 @@ Adres: %4
     <message>
         <location line="-68"/>
         <source>Choose previously used address</source>
-        <translation>Kies een eerder gebruikt adres</translation>
+        <translation>Kies een eerder gebruikt adres.</translation>
     </message>
     <message>
         <location line="-40"/>
@@ -2665,7 +2665,7 @@ Adres: %4
     <message>
         <location line="+33"/>
         <source>The Bitcoin address to send the payment to</source>
-        <translation>Het Bitcoin adres om betaling aan te voldoen</translation>
+        <translation>Het Guldencoinadres om de betaling aan te voldoen.</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -2675,7 +2675,7 @@ Adres: %4
     <message>
         <location line="+7"/>
         <source>Paste address from clipboard</source>
-        <translation>Plak adres vanuit klembord</translation>
+        <translation>Plak adres vanuit klembord.</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -2692,12 +2692,12 @@ Adres: %4
     <message>
         <location line="-1020"/>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished"></translation>
+        <translation>De vergoeding wordt van het verzonden bedrag afgetrokken. De ontvanger zal dus minder Guldencoins ontvangen dan aangegeven in het bedrag veld. Als meerdere ontvangers opgegeven zijn, zal de vergoeding gelijkmatig verdeeld worden.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished"></translation>
+        <translation>Vergoeding aftre&amp;kken van bedrag.</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -2765,7 +2765,7 @@ Adres: %4
     <message>
         <location line="+6"/>
         <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
+        <translation>U kan berichten/overeenkomsten met uw adres ondertekenen om te bewijzen dat u guldencoins die erheen gestuurd worden kan ontvangen. Kijk uit dat u niets vaags of willekeurigs ondertekent, omdat phishing aanvallen u kunnen overhalen om uw identiteit eraan te koppelen. Onderteken alleen volledig beschreven verklaringen waar u het mee eens bent.</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -2838,7 +2838,7 @@ Adres: %4
     <message>
         <location line="+6"/>
         <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer het adres van de ontvanger, bericht (let erop dat u nieuwe regels, spaties, tabs, etc. exact kopieert) en de ondertekening beneden in om het bericht te verifiëren. Let op dat u niet verder leest dan wat in het ondertekende bericht zelf staat, om een man-in-the-middle aanval te voorkomen. Dit bewijst alleen dat de ondertekende partij kan ontvangen met het adres, het kan niet het verzenden van enige transactie bewijzen!</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -2853,7 +2853,7 @@ Adres: %4
     <message>
         <location line="+3"/>
         <source>Verify &amp;Message</source>
-        <translation>&amp;Bericht Verifiëren</translation>
+        <translation>Bericht &amp;verifiëren</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -2952,7 +2952,7 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>[testnet accel]</source>
-        <translation type="unfinished"></translation>
+        <translation>[versneld testnetwerk]</translation>
     </message>
 </context>
 <context>
@@ -3310,7 +3310,7 @@ Adres: %4
     <message>
         <location line="+2"/>
         <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation>Al dan niet een alleen-bekijkbaar adres betrokken is in deze transactie.</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -3894,7 +3894,7 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>RPC support for HTTP persistent connections (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>RPC ondersteuning voor persistente HTTP verbindingen (standaard: %d)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3909,12 +3909,12 @@ Adres: %4
     <message>
         <location line="+2"/>
         <source>Relay and mine data carrier transactions (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gegevensoverdrachttransacties doorsturen en delven (standaard: %u)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Relay non-P2SH multisig (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet-P2SH multisig doorsturen (standaard: %u)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -3924,17 +3924,17 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verstuur transacties als transacties zonder vergoeding indien mogelijk (standaard: %u)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation type="unfinished">Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
+        <translation>Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation type="unfinished">Stel taal in, bijvoorbeeld &quot;de_DE&quot; (standaard: systeeminstellingen)</translation>
+        <translation>Stel taal in, bijvoorbeeld &quot;de_DE&quot; (standaard: systeeminstelling)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -3944,7 +3944,7 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>Show splash screen on startup (default: 1)</source>
-        <translation type="unfinished">Laadscherm bij het opstarten weergeven. (standaard: 1)</translation>
+        <translation>Laadscherm bij het opstarten weergeven. (standaard: 1)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3959,17 +3959,17 @@ Adres: %4
     <message>
         <location line="+8"/>
         <source>Start minimized</source>
-        <translation type="unfinished">Geminimaliseerd starten</translation>
+        <translation>Geminimaliseerd starten</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Stop running after importing blocks from disk (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Afsluiten na importeren van blokken vanaf de schijf (standaard: %u)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>The transaction amount is too small to pay the fee</source>
-        <translation type="unfinished"></translation>
+        <translation>Het transactiebedrag is te klein om de vergoeding te betalen</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -3989,7 +3989,7 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>Transaction too large for fee policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Transactie is te groot voor vergoedingsbeleid.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3999,12 +3999,12 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>UI Options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruikersinterfaceopties:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Unable to bind to %s on this computer (bind returned error %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan niet binden aan %s op deze computer (bindingspoging gaf fout %s)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -4019,7 +4019,7 @@ Adres: %4
     <message>
         <location line="+4"/>
         <source>Wallet needed to be rewritten: restart Bitcoin Core to complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Portemonnee moet herschreven worden: herstart de Officiële Guldencoin portemonnee om deze actie te voltooien.</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4034,12 +4034,12 @@ Adres: %4
     <message>
         <location line="+1"/>
         <source>Warning: Unsupported argument -benchmark ignored, use -debug=bench.</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwing: Niet-ondersteund argument -benchmark genegeerd, gebruik -debug=bench.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Warning: Unsupported argument -debugnet ignored, use -debug=net.</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwing: Niet-ondersteund argument -debugnet genegeerd, gebruik -debug=net.</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4104,22 +4104,22 @@ Adres: %4
     <message>
         <location line="-201"/>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
-        <translation type="unfinished"></translation>
+        <translation>(1 = behoud tx metagegevens bijv. rekeninghouder en betalingsverzoekinformatie, 2 = verwijder tx metagegevens)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Allow JSON-RPC connections from specified source. Valid for &lt;ip&gt; are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times</source>
-        <translation type="unfinished"></translation>
+        <translation>Sta JSON-RPC verbindingen van een gespecificeerde bron toe. Geldig voor &lt;ip&gt; zijn een enkele IP (bijv. 1.2.3.4), een netwerk/netmask (bijv. 1.2.3.4/255.255.255.0) of een netwerk/CIDR (bijv. 1.2.3.4/24). Deze optie mag meerdere keren gespecificeerd worden.</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>An error occurred while setting up the RPC address %s port %u for listening: %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Fout tijdens het opzetten van RPC adres %s met poort %u om aan te luisteren: %s</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
-        <translation type="unfinished"></translation>
+        <translation>Bind aan opgegeven adres en whitelist peers die ermee verbinden. Gebruik [host]:poort notatie voor IPv6.</translation>
     </message>
     <message>
         <location line="+3"/>
