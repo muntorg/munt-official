@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>&amp;Kopiëer Adres</translation>
+        <translation>&amp;Kopiëer adres</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -67,23 +67,23 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dit zijn uw Bitcoinadressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangende adres voordat u uw bitcoins verzendt.</translation>
+        <translation>Dit zijn uw Guldencoinadressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangende adres voordat u uw guldencoins verzendt.</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Dit zijn uw Bitcoin-adressen waarmee u kunt betalen. We raden u aan om een nieuw ontvangstadres voor elke transactie te gebruiken.</translation>
+        <translation>Dit zijn uw Guldencoinadressen waarmee u kunt betalen. We raden u aan om een nieuw ontvangstadres voor elke transactie te gebruiken.</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Kopiëer &amp;Label</translation>
+        <translation>Kopiëer &amp;label</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Bewerk</translation>
+        <translation>&amp;Bewerken</translation>
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Exporteer adreslijst</translation>
+        <translation>Exporteer adressenlijst</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -91,11 +91,11 @@
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>Export Mislukt</translation>
+        <translation>Fout tijdens exporteren</translation>
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation>Een fout is opgetreden tijdens het opslaan van deze adreslijst naar %1. Probeer het nogmaals.</translation>
+        <translation>Een fout is opgetreden tijdens het opslaan van de adressenlijst naar %1. Probeer het nogmaals.</translation>
     </message>
 </context>
 <context>
@@ -137,7 +137,7 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Deze operatie vereist uw portemonneewachtwoord om de portemonnee te openen.</translation>
+        <translation>Deze handeling vereist uw portemonneewachtwoord om de portemonnee te openen.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Deze operatie vereist uw portemonneewachtwoord om de portemonnee te ontsleutelen</translation>
+        <translation>Deze handeling vereist uw portemonneewachtwoord om de portemonnee te ontsleutelen.</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
@@ -165,7 +165,7 @@
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation>Waarschuwing: Als u uw portemonnee versleutelt en uw wachtwoord vergeet, zult u &lt;b&gt;AL UW BITCOINS VERLIEZEN&lt;/b&gt;!</translation>
+        <translation>Waarschuwing: Als u uw portemonnee versleutelt en uw wachtwoord vergeet, zult u &lt;b&gt;AL UW GULDENCOINS VERLIEZEN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -173,11 +173,11 @@
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation>BELANGRIJK: Elke eerder gemaakte backup van uw portemonneebestand dient u te vervangen door het nieuw gegenereerde, versleutelde portemonneebestand. Om veiligheidsredenen zullen eerdere backups van het niet-versleutelde portemonneebestand onbruikbaar worden zodra u uw nieuwe, versleutelde, portemonnee begint te gebruiken.</translation>
+        <translation>BELANGRIJK: ieder eerder gemaakte backup van uw portemonneebestand dient u te vervangen door het nieuw gegenereerde, versleutelde portemonneebestand. Om veiligheidsredenen zullen eerdere backups van het niet-versleutelde portemonneebestand onbruikbaar worden zodra u uw nieuwe, versleutelde, portemonnee begint te gebruiken.</translation>
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
-        <translation>Waarschuwing: De Caps-Lock-toets staat aan!</translation>
+        <translation>Waarschuwing: De Caps Lock-toets staat aan!</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -185,15 +185,15 @@
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Vul een nieuw </translation>
+        <translation>Vul het nieuwe wachtwoord voor de portemonnee in.&lt;br/&gt;Gebruik a.u.b. een wachtwoord met &lt;b&gt;tien of meer willekeurige tekens&lt;/b&gt;, of &lt;b&gt;acht of meer woorden&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin zal nu afsluiten om het versleutelingsproces te voltooien. Onthoud dat het versleutelen van uw portemonnee u niet volledig kan beschermen: Malware kan uw computer infecteren en uw bitcoins stelen.</translation>
+        <translation>Guldencoin zal nu afsluiten om het versleutelingsproces te voltooien. Onthoud dat het versleutelen van uw portemonnee u niet volledig kan beschermen: Malware kan uw computer infecteren en uw guldencoins stelen.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
-        <translation>Portemonneeversleuteling mislukt</translation>
+        <translation>Fout tijdens portemonneeversleuteling</translation>
     </message>
     <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
@@ -201,11 +201,11 @@
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
-        <translation>De opgegeven wachtwoorden komen niet overeen</translation>
+        <translation>De opgegeven wachtwoorden komen niet overeen.</translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
-        <translation>Portemonnee openen mislukt</translation>
+        <translation>Fout tijdens het openen van de portemonnee.</translation>
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
@@ -213,7 +213,7 @@
     </message>
     <message>
         <source>Wallet decryption failed</source>
-        <translation>Portemonnee-ontsleuteling mislukt</translation>
+        <translation>Fout tijdens portemonnee-ontsleuteling</translation>
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
@@ -224,7 +224,7 @@
     <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
-        <translation>&amp;Onderteken bericht...</translation>
+        <translation>Bericht &amp;ondertekenen...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -236,11 +236,11 @@
     </message>
     <message>
         <source>Node</source>
-        <translation>Node</translation>
+        <translation>Knooppunt</translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
-        <translation>Toon algemeen overzicht van de portemonnee</translation>
+        <translation>Algemeen overzicht van de portemonnee weergeven</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -264,7 +264,7 @@
     </message>
     <message>
         <source>Show information about Qt</source>
-        <translation>Toon informatie over Qt</translation>
+        <translation>Informatie over Qt weergeven</translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -272,51 +272,51 @@
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Versleutel Portemonnee...</translation>
+        <translation>Portemonnee &amp;versleutelen...</translation>
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup Portemonnee...</translation>
+        <translation>Portemonnee &amp;backuppen...</translation>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Wijzig Wachtwoord</translation>
+        <translation>Wachtwoord &amp;wijzigen...</translation>
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation>&amp;Adressen aan het versturen.</translation>
+        <translation>&amp;Adressen versturen....</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adressen aan het ontvangen...</translation>
+        <translation>&amp;Adressen ontvangen...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation>Open &amp;URI...</translation>
+        <translation>&amp;URI openen...</translation>
     </message>
     <message>
         <source>Bitcoin Core client</source>
-        <translation>Bitcoin kern applicatie</translation>
+        <translation>Officiële Guldencoin portemonee</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
-        <translation>Blokken aan het importeren vanaf harde schijf...</translation>
+        <translation>Blokken vanaf harde schijf importeren...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
-        <translation>Bezig met herindexeren van blokken op harde schijf...</translation>
+        <translation>Blokken op harde schijf herindexeren...</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
-        <translation>Verstuur munten naar een Bitcoinadres</translation>
+        <translation>Verstuur munten naar een Guldencoinadres</translation>
     </message>
     <message>
         <source>Modify configuration options for Bitcoin</source>
-        <translation>Wijzig instellingen van Bitcoin</translation>
+        <translation>Wijzig Guldencoin instellingen</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
-        <translation>Backup portemonnee naar een andere locatie</translation>
+        <translation>Portemonnee naar een andere locatie backuppen</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -328,15 +328,15 @@
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
-        <translation>Open debugging en diagnostische console</translation>
+        <translation>Debugg en diagnostische console openen</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
-        <translation>&amp;Verifiëer bericht...</translation>
+        <translation>Bericht &amp;Verifiëren...</translation>
     </message>
     <message>
         <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
+        <translation>Guldencoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -352,27 +352,27 @@
     </message>
     <message>
         <source>Show information about Bitcoin Core</source>
-        <translation>Toon informatie over bitcoin kern</translation>
+        <translation>Informatie over de Officiële Guldencoin portemonnee weergeven.</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation>&amp;Toon / Verberg</translation>
+        <translation>&amp;Weergeven / Verbergen</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
-        <translation>Toon of verberg het hoofdvenster</translation>
+        <translation>Het hoofdvenster weergeven of verbergen.</translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Versleutel de geheime sleutels die bij uw portemonnee horen</translation>
+        <translation>Versleutel de privésleutels die bij uw portemonnee horen.</translation>
     </message>
     <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation>Onderteken berichten met uw Bitcoinadressen om te bewijzen dat u deze adressen bezit</translation>
+        <translation>Onderteken berichten met uw Guldencoinadressen om te bewijzen dat u deze adressen bezit.</translation>
     </message>
     <message>
         <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation>Verifiëer handtekeningen om zeker te zijn dat de berichten zijn ondertekend met de gespecificeerde Bitcoinadressen</translation>
+        <translation>Verifiëer handtekeningen om zeker te zijn dat de berichten zijn ondertekend met de gespecificeerde Guldencoinadressen.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -388,43 +388,43 @@
     </message>
     <message>
         <source>Tabs toolbar</source>
-        <translation>Tab-werkbalk</translation>
+        <translation>Tabwerkbalk</translation>
     </message>
     <message>
         <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
+        <translation>Officiële Guldencoin portemonnee</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Vraag betaling aan (genereert QR codes en bitcoin: URIs)</translation>
+        <translation>Betaling aanvragen (genereert QR codes en guldencoin: URIs)</translation>
     </message>
     <message>
         <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Over Bitcoin Core</translation>
+        <translation>&amp;Over de Officiële Guldencoin portemonnee</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
-        <translation>Toon de lijst met gebruikt verzend adressen en labels</translation>
+        <translation>Lijst met gebruikt verzendadressen en labels weergeven</translation>
     </message>
     <message>
         <source>Show the list of used receiving addresses and labels</source>
-        <translation>Toon de lijst met gebruikte ontvangst adressen en labels</translation>
+        <translation>Lijst met gebruikte ontvangstadressen en labels weergeven</translation>
     </message>
     <message>
         <source>Open a bitcoin: URI or payment request</source>
-        <translation>Open een bitcoin: URI of betalingsverzoek</translation>
+        <translation>Open een guldencoin: URI of betalingsverzoek</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
-        <translation>&amp;Commandoregel-opties</translation>
+        <translation>&amp;Commandoregelopties</translation>
     </message>
     <message>
         <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Toon het Bitcoin Core hulpbericht om een lijst te krijgen met mogelijke Bitcoin commandoregelopties</translation>
+        <translation>Het Officiële Guldencoin portemonnee hulpbericht weergeven om een lijst te krijgen met beschikbare guldencoin commandoregelopties</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n actieve connectie naar Bitcoinnetwerk</numerusform><numerusform>%n actieve connecties naar Bitcoinnetwerk</numerusform></translation>
+        <translation><numerusform>%n actieve verbindingen met het Guldencoinnetwerk</numerusform><numerusform>%n actieve verbindingen met het  Guldencoinnetwerk</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -460,7 +460,7 @@
     </message>
     <message>
         <source>Transactions after this will not yet be visible.</source>
-        <translation>Transacties na dit moment zullen nu nog niet zichtbaar zijn.</translation>
+        <translation>Transacties na dit moment zijn nog niet zichtbaar.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -480,7 +480,7 @@
     </message>
     <message numerus="yes">
         <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>%n Blok verwerkt van transactie geschiedenis.</numerusform><numerusform>%n Blokken verwerkt van transactie geschiedenis.</numerusform></translation>
+        <translation><numerusform>%n blok van de transactiegeschiedenis verwerkt.</numerusform><numerusform>%n blokken van de transactiegeschiedenis verwerkt.</numerusform></translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -526,11 +526,11 @@ Adres: %4
     <name>CoinControlDialog</name>
     <message>
         <source>Coin Selection</source>
-        <translation>Munt Selectie</translation>
+        <translation>Muntselectie</translation>
     </message>
     <message>
         <source>Quantity:</source>
-        <translation>Kwantiteit</translation>
+        <translation>Kwantiteit:</translation>
     </message>
     <message>
         <source>Bytes:</source>
@@ -566,11 +566,11 @@ Adres: %4
     </message>
     <message>
         <source>Tree mode</source>
-        <translation>Boom modus</translation>
+        <translation>Boommodus</translation>
     </message>
     <message>
         <source>List mode</source>
-        <translation>Lijst modus</translation>
+        <translation>Lijstmodus</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -618,7 +618,7 @@ Adres: %4
     </message>
     <message>
         <source>Lock unspent</source>
-        <translation>Blokeer niet gebruikte</translation>
+        <translation>Blokeer ongebruikte</translation>
     </message>
     <message>
         <source>Unlock unspent</source>
@@ -646,7 +646,7 @@ Adres: %4
     </message>
     <message>
         <source>Copy dust</source>
-        <translation>Kopieër stof</translation>
+        <translation>Kopieer stof</translation>
     </message>
     <message>
         <source>Copy change</source>
@@ -698,7 +698,7 @@ Adres: %4
     </message>
     <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Kan per input +/- %1 satoshi(s)  variëren.</translation>
+        <translation>Kan per input +/- %1 satoshi(s) variëren.</translation>
     </message>
     <message>
         <source>yes</source>
@@ -718,11 +718,11 @@ Adres: %4
     </message>
     <message>
         <source>Can vary +/- 1 byte per input.</source>
-        <translation>Kan +/- byte per invoer variëren.</translation>
+        <translation>Kan +/- 1 byte per invoer variëren.</translation>
     </message>
     <message>
         <source>Transactions with higher priority are more likely to get included into a block.</source>
-        <translation>Transacties met een hogere prioriteit zullen eerder in een block gezet worden.</translation>
+        <translation>Transacties met een hogere prioriteit zullen eerder in een block vastgelegd worden.</translation>
     </message>
     <message>
         <source>This label turns red, if the priority is smaller than "medium".</source>
@@ -749,7 +749,7 @@ Adres: %4
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
-        <translation>Bewerk Adres</translation>
+        <translation>Adres bewerken</translation>
     </message>
     <message>
         <source>&amp;Label</source>
@@ -761,7 +761,7 @@ Adres: %4
     </message>
     <message>
         <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>Het adres dat bij dit adres item hoort. Dit kan alleen bewerkt worden voor verstuur adressen.</translation>
+        <translation>Het adres dat bij dit adres item hoort. Dit kan alleen bewerkt worden voor verstuuradressen.</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -777,7 +777,7 @@ Adres: %4
     </message>
     <message>
         <source>Edit receiving address</source>
-        <translation>Bewerk ontvangstadres</translation>
+        <translation>Ontvangstadres bewerken</translation>
     </message>
     <message>
         <source>Edit sending address</source>
@@ -789,7 +789,7 @@ Adres: %4
     </message>
     <message>
         <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Het opgegeven adres "%1" is een ongeldig Bitcoinadres</translation>
+        <translation>Het opgegeven adres "%1" is een ongeldig Guldencoinadres</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -804,7 +804,7 @@ Adres: %4
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
-        <translation>Een nieuwe gegevensmap wordt aangemaakt.</translation>
+        <translation>Een nieuwe gegevensdirectory wordt aangemaakt.</translation>
     </message>
     <message>
         <source>name</source>
@@ -812,22 +812,22 @@ Adres: %4
     </message>
     <message>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <translation>Map bestaat al. Voeg %1 toe als u van plan bent hier een nieuwe map aan te maken.</translation>
+        <translation>Directory bestaat al. Voeg %1 toe als u van plan bent hier een nieuwe directory aan te maken.</translation>
     </message>
     <message>
         <source>Path already exists, and is not a directory.</source>
-        <translation>Communicatiepad bestaat al, en is geen folder.</translation>
+        <translation>Pad bestaat al, en is geen directory.</translation>
     </message>
     <message>
         <source>Cannot create data directory here.</source>
-        <translation>Kan hier geen gegevensmap aanmaken.</translation>
+        <translation>Kan hier geen gegevensdirectory aanmaken.</translation>
     </message>
 </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
         <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
+        <translation>Officiële Guldencoin portemonee</translation>
     </message>
     <message>
         <source>version</source>
@@ -839,11 +839,11 @@ Adres: %4
     </message>
     <message>
         <source>About Bitcoin Core</source>
-        <translation>Over Bitcoin Core</translation>
+        <translation>Over de Officiële Guldencoin portemonee</translation>
     </message>
     <message>
         <source>Command-line options</source>
-        <translation>Commandoregel-opties</translation>
+        <translation>Commandoregelopties</translation>
     </message>
     <message>
         <source>Usage:</source>
@@ -851,7 +851,7 @@ Adres: %4
     </message>
     <message>
         <source>command-line options</source>
-        <translation>commandoregel-opties</translation>
+        <translation>commandoregelopties</translation>
     </message>
     <message>
         <source>UI options</source>
@@ -859,7 +859,7 @@ Adres: %4
     </message>
     <message>
         <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Stel taal in, bijvoorbeeld ''de_DE" (standaard: systeeminstellingen)</translation>
+        <translation>Stel taal in, bijvoorbeeld "de_DE" (standaard: systeeminstellingen)</translation>
     </message>
     <message>
         <source>Start minimized</source>
@@ -871,11 +871,11 @@ Adres: %4
     </message>
     <message>
         <source>Show splash screen on startup (default: 1)</source>
-        <translation>Laat laadscherm zien bij het opstarten. (standaard: 1)</translation>
+        <translation>Laadscherm bij het opstarten weergeven. (standaard: 1)</translation>
     </message>
     <message>
         <source>Choose data directory on startup (default: 0)</source>
-        <translation>Kies de gegevensmap tijdens het opstarten (standaard: 0)</translation>
+        <translation>Kies de gegevensdirectory tijdens het opstarten (standaard: 0)</translation>
     </message>
 </context>
 <context>
@@ -886,31 +886,31 @@ Adres: %4
     </message>
     <message>
         <source>Welcome to Bitcoin Core.</source>
-        <translation>Welkom bij Bitcoin Core</translation>
+        <translation>Welkom bij de Officiële Guldencoin portemonnee.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar Bitcoin Core de data moet opslaan.</translation>
+        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar de Officiële Guldencoin portemonnee zijn gegevens moet opslaan.</translation>
     </message>
     <message>
         <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core zal een kopie van de Bitcoin blokketen downloaden en opslaan. Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
+        <translation>De Officiële Guldencoin portemonnee zal een kopie van de Guldencoin blokketen downloaden en opslaan. Tenminste %1 GB aan gegevens wordt opgeslagen in deze map en het zal over de tijd groeien. De portemonnee wordt ook in deze directory opgeslagen.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
-        <translation>Gebruik de standaard gegevensmap</translation>
+        <translation>Gebruik de standaard gegevensdirectory</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
-        <translation>Gebruik een persoonlijke gegevensmap:</translation>
+        <translation>Gebruik een persoonlijke gegevensdirectory:</translation>
     </message>
     <message>
         <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
+        <translation>Officiële Guldencoin portemonnee</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Fout: De gespecificeerde directory "%1" kan niet worden gecreëerd.</translation>
+        <translation>Fout: De gespecificeerde directory "%1" kan niet worden aangemaakt.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -918,7 +918,7 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform><numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform></translation>
+        <translation><numerusform>%n GB aan vrije opslagruimte beschikbaar</numerusform><numerusform>%n GB aan vrije opslagruimte beschikbaar</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
@@ -941,11 +941,11 @@ Adres: %4
     </message>
     <message>
         <source>Select payment request file</source>
-        <translation>Selecteer betalingsverzoek bestand</translation>
+        <translation>Selecteer betalingsverzoekbestand</translation>
     </message>
     <message>
         <source>Select payment request file to open</source>
-        <translation>Selecteer betalingsverzoek bestand om te openen</translation>
+        <translation>Selecteer betalingsverzoekbestand om te openen</translation>
     </message>
 </context>
 <context>
@@ -960,11 +960,11 @@ Adres: %4
     </message>
     <message>
         <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Start Bitcoin automatisch na inloggen in het systeem</translation>
+        <translation>Start de Guldencoin portemonnee automatisch na inloggen op het systeem</translation>
     </message>
     <message>
         <source>&amp;Start Bitcoin on system login</source>
-        <translation>Start &amp;Bitcoin bij het inloggen in het systeem</translation>
+        <translation>Start de &amp;Guldencoin portemonnee bij het inloggen op het systeem</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -992,7 +992,7 @@ Adres: %4
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>Derde partijen URL's (bijvoorbeeld block explorer) dat in de transacties tab verschijnen als contextmenu elementen. %s in de URL is vervangen door transactie hash. Verscheidene URL's zijn gescheiden door een verticale streep |.  </translation>
+        <translation>URL's van anderen (bijvoorbeeld een block explorer) dat in de transacties tab verschijnen als contextmenu elementen. %s in de URL is vervangen door transactie hash. Meerdere URL's zijn gescheiden door een verticale streep |.  </translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
@@ -1004,11 +1004,11 @@ Adres: %4
     </message>
     <message>
         <source>Reset all client options to default.</source>
-        <translation>Reset alle clientopties naar de standaardinstellingen.</translation>
+        <translation>Herinitialiseer alle portemoneeopties naar de standaardinstellingen.</translation>
     </message>
     <message>
         <source>&amp;Reset Options</source>
-        <translation>&amp;Reset Opties</translation>
+        <translation>He&amp;rinitialiseer opties</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1028,7 +1028,7 @@ Adres: %4
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
-        <translation>Coin &amp;Control activeren</translation>
+        <translation>Coin &amp;control activeren</translation>
     </message>
     <message>
         <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
@@ -1036,11 +1036,11 @@ Adres: %4
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
-        <translation>&amp;Spendeer onbevestigd wisselgeld</translation>
+        <translation>&amp;Onbevestigd wisselgeld uitgeven</translation>
     </message>
     <message>
         <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Open de Bitcoin-poort automatisch op de router. Dit werkt alleen als de router UPnP ondersteunt en het aanstaat.</translation>
+        <translation>Open de Guldencoinpoort automatisch op de router. Dit werkt alleen als de router UPnP ondersteunt en het aanstaat.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1048,7 +1048,7 @@ Adres: %4
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation>Verbind met het Bitcoin netwerk via een SOCKS5 proxy.</translation>
+        <translation>Verbind met het Guldencoinnetwerk via een SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1072,7 +1072,7 @@ Adres: %4
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
-        <translation>Laat alleen een systeemvak-icoon zien wanneer het venster geminimaliseerd is</translation>
+        <translation>Laat alleen een systeemvakicoon zien wanneer het venster geminimaliseerd is</translation>
     </message>
     <message>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
@@ -1080,7 +1080,7 @@ Adres: %4
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door Afsluiten te kiezen in het menu.</translation>
+        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door in het menu "Afsluiten" te kiezen.</translation>
     </message>
     <message>
         <source>M&amp;inimize on close</source>
@@ -1096,11 +1096,11 @@ Adres: %4
     </message>
     <message>
         <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>De taal van de gebruikersinterface kan hier ingesteld worden. Deze instelling zal pas van kracht worden nadat Bitcoin herstart wordt.</translation>
+        <translation>De taal van de gebruikersinterface kan hier ingesteld worden. Deze instelling zal pas van kracht worden nadat Guldencoin herstart wordt.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>&amp;Eenheid om bedrag in te tonen:</translation>
+        <translation>&amp;Eenheid om bedragen in te tonen:</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
@@ -1128,11 +1128,11 @@ Adres: %4
     </message>
     <message>
         <source>Confirm options reset</source>
-        <translation>Bevestig reset opties</translation>
+        <translation>Bevestig herinitialisatie van opties</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
-        <translation>Herstart van de client is vereist om veranderingen door te voeren.</translation>
+        <translation>Herstarten van de client is vereist om veranderingen door te voeren.</translation>
     </message>
     <message>
         <source>Client will be shutdown, do you want to proceed?</source>
@@ -1151,11 +1151,11 @@ Adres: %4
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
-        <translation>Vorm</translation>
+        <translation>Formulier</translation>
     </message>
     <message>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>De weergegeven informatie kan verouderd zijn. Uw portemonnee synchroniseert automaticsh met het Bitcoinnetwerk nadat een verbinding is gelegd, maar dit proces is nog niet voltooid.</translation>
+        <translation>De weergegeven informatie kan verouderd zijn. Uw portemonnee synchroniseert automaticsh met het Guldencoinnetwerk nadat verbinding is gemaakt, maar dit proces is nog niet voltooid.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -1187,7 +1187,7 @@ Adres: %4
     </message>
     <message>
         <source>Balances</source>
-        <translation>Saldi</translation>
+        <translation>Balans</translation>
     </message>
     <message>
         <source>Total:</source>
@@ -1215,7 +1215,7 @@ Adres: %4
     </message>
     <message>
         <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Ontgonnen saldo dat nog niet tot wasdom is gekomen</translation>
+        <translation>Gedolven saldo dat nog niet tot wasdom is gekomen</translation>
     </message>
     <message>
         <source>Current total balance in watch-only addresses</source>
@@ -1262,7 +1262,7 @@ Adres: %4
     </message>
     <message>
         <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Kan bitcoin niet starten: click-to-pay handler</translation>
+        <translation>Kan guldencoin: click-to-pay verwerker niet starten</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1270,7 +1270,7 @@ Adres: %4
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation>URI kan niet verwerkt worden! Dit kan het gevolg zijn van een ongeldig Bitcoin adres of misvormde URI parameters.</translation>
+        <translation>URI kan niet verwerkt worden! Dit kan het gevolg zijn van een ongeldig Guldencoin adres of misvormde URI parameters.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1278,7 +1278,7 @@ Adres: %4
     </message>
     <message>
         <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
-        <translation>Betalingsverzoek-bestand kan niet gelezen of verwerkt worden! Dit kan veroorzaakt worden door een ongeldig betalingsverzoek-bestand.</translation>
+        <translation>Betalingsverzoek-bestand kan niet gelezen of verwerkt worden! Dit kan veroorzaakt worden door een ongeldig betalingsverzoekbestand.</translation>
     </message>
     <message>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
@@ -1332,7 +1332,7 @@ Adres: %4
     </message>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation>Voer een Bitcoin-adres in (bijv. %1)</translation>
+        <translation>Voer een Guldencoinadres in (bijv. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1356,7 +1356,7 @@ Adres: %4
     </message>
     <message>
         <source>UNKNOWN</source>
-        <translation>ONBEKEND</translation>
+        <translation>Onbekend</translation>
     </message>
     <message>
         <source>None</source>
@@ -1383,7 +1383,7 @@ Adres: %4
     </message>
     <message>
         <source>Save QR Code</source>
-        <translation>Sla QR-code op</translation>
+        <translation>QR-code opslaan</translation>
     </message>
     <message>
         <source>PNG Image (*.png)</source>
@@ -1410,7 +1410,7 @@ Adres: %4
     </message>
     <message>
         <source>Debug window</source>
-        <translation>Debug venster</translation>
+        <translation>Debugvenster</translation>
     </message>
     <message>
         <source>General</source>
@@ -1438,7 +1438,7 @@ Adres: %4
     </message>
     <message>
         <source>Number of connections</source>
-        <translation>Aantal connecties</translation>
+        <translation>Aantal verbindingen</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -1466,7 +1466,7 @@ Adres: %4
     </message>
     <message>
         <source>Direction</source>
-        <translation>Directie</translation>
+        <translation>Richting</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1494,7 +1494,7 @@ Adres: %4
     </message>
     <message>
         <source>Connection Time</source>
-        <translation>Connectie tijd</translation>
+        <translation>Verbindingsduur</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -1506,11 +1506,11 @@ Adres: %4
     </message>
     <message>
         <source>Bytes Sent</source>
-        <translation>Bytes Verzonden</translation>
+        <translation>Bytes verzonden</translation>
     </message>
     <message>
         <source>Bytes Received</source>
-        <translation>Bytes Ontvangen</translation>
+        <translation>Bytes ontvangen</translation>
     </message>
     <message>
         <source>Ping Time</source>
@@ -1522,7 +1522,7 @@ Adres: %4
     </message>
     <message>
         <source>&amp;Open</source>
-        <translation>&amp;Open</translation>
+        <translation>&amp;Openen</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -1542,7 +1542,7 @@ Adres: %4
     </message>
     <message>
         <source>In:</source>
-        <translation>In;</translation>
+        <translation>In:</translation>
     </message>
     <message>
         <source>Out:</source>
@@ -1554,27 +1554,27 @@ Adres: %4
     </message>
     <message>
         <source>Debug log file</source>
-        <translation>Debug-logbestand</translation>
+        <translation>Debuglogbestand</translation>
     </message>
     <message>
         <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het Bitcoindebug-logbestand van de huidige datamap. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
+        <translation>Open het Guldencoin debuglogbestand van de huidige gegevensdirectory. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>Clear console</source>
-        <translation>Maak console leeg</translation>
+        <translation>Console wissen</translation>
     </message>
     <message>
         <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Welkom bij de Bitcoin RPC-console.</translation>
+        <translation>Welkom bij de Guldencoin RPC-console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Gebruik de pijltjestoetsen om door de geschiedenis te navigeren, en &lt;b&gt;Ctrl-L&lt;/b&gt; om het scherm leeg te maken.</translation>
+        <translation>Gebruik de pijltjestoetsen om door de geschiedenis te navigeren, en &lt;b&gt;Ctrl-L&lt;/b&gt; om het scherm te wissen.</translation>
     </message>
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Typ &lt;b&gt;help&lt;/b&gt; voor een overzicht van de beschikbare commando's.</translation>
+        <translation>Voer &lt;b&gt;help&lt;/b&gt; in voor een overzicht van de beschikbare commando's.</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1586,7 +1586,7 @@ Adres: %4
     </message>
     <message>
         <source>%1 MB</source>
-        <translation>%1 MB</translation>
+        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 GB</source>
@@ -1633,19 +1633,19 @@ Adres: %4
     </message>
     <message>
         <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Gebruik een van de eerder gebruikte ontvangstadressen opnieuw. Het opnieuw gebruiken van adressen heeft beveiliging- en privacy problemen. Gebruik dit niet, behalve als er eerder een betalingsverzoek opnieuw gegenereerd is.</translation>
+        <translation>Gebruik een van de eerder gebruikte ontvangstadressen opnieuw. Het opnieuw gebruiken van adressen heeft gevolgen voor de beveiliging en uw privacy. Gebruik dit niet, behalve als er eerder een betalingsverzoek opnieuw gegenereerd is.</translation>
     </message>
     <message>
         <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>H&amp;ergebruik en bestaand ontvangstadres (niet aanbevolen)</translation>
+        <translation>H&amp;ergebruik een bestaand ontvangstadres (niet aanbevolen)</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation>Een optioneel bericht om bij te voegen aan het betalingsverzoek, dewelke zal getoond worden wanneer het verzoek is geopend. Opermerking: Het bericht zal niet worden verzonden met de betaling over het Bitcoin netwerk.</translation>
+        <translation>Een optioneel bericht om bij te voegen aan het betalingsverzoek, welke zal getoond worden wanneer het verzoek is geopend. Opmerking: Het bericht zal niet met de betaling over het Guldencoinnetwerk verzonden worden.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
-        <translation>Een optioneel label om te associëren met het nieuwe ontvangende adres</translation>
+        <translation>Een optioneel label om te associëren met het nieuwe ontvangende adres.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
@@ -1673,11 +1673,11 @@ Adres: %4
     </message>
     <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Toon het geselecteerde verzoek (doet hetzelfde als dubbelklikken)</translation>
+        <translation>Het geselecteerde verzoek weergeven (doet hetzelfde als dubbelklikken)</translation>
     </message>
     <message>
         <source>Show</source>
-        <translation>Toon</translation>
+        <translation>Weergeven</translation>
     </message>
     <message>
         <source>Remove the selected entries from the list</source>
@@ -1685,7 +1685,7 @@ Adres: %4
     </message>
     <message>
         <source>Remove</source>
-        <translation>Verwijder</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1716,11 +1716,11 @@ Adres: %4
     </message>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>&amp;Sla afbeelding op...</translation>
+        <translation>Afbeelding op&amp;slaan...</translation>
     </message>
     <message>
         <source>Request payment to %1</source>
-        <translation>Betalingsverzoek tot %1</translation>
+        <translation>Betalingsverzoek aan %1</translation>
     </message>
     <message>
         <source>Payment information</source>
@@ -1806,7 +1806,7 @@ Adres: %4
     </message>
     <message>
         <source>Insufficient funds!</source>
-        <translation>Onvoldoende fonds!</translation>
+        <translation>Onvoldoende saldo!</translation>
     </message>
     <message>
         <source>Quantity:</source>
@@ -1874,7 +1874,7 @@ Adres: %4
     </message>
     <message>
         <source>Confirmation time:</source>
-        <translation>Bevestigings tijd:</translation>
+        <translation>Bevestigingstijd:</translation>
     </message>
     <message>
         <source>normal</source>
@@ -1890,11 +1890,11 @@ Adres: %4
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
-        <translation>Verstuur aan verschillende ontvangers ineens</translation>
+        <translation>Verstuur aan meerdere ontvangers ineens.</translation>
     </message>
     <message>
         <source>Add &amp;Recipient</source>
-        <translation>Voeg &amp;Ontvanger Toe</translation>
+        <translation>&amp;Ontvanger toevoegen</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1906,11 +1906,11 @@ Adres: %4
     </message>
     <message>
         <source>Clear &amp;All</source>
-        <translation>Verwijder &amp;Alles</translation>
+        <translation>&amp;Alles wissen</translation>
     </message>
     <message>
         <source>Balance:</source>
-        <translation>Saldo:</translation>
+        <translation>Balans:</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -1918,11 +1918,11 @@ Adres: %4
     </message>
     <message>
         <source>S&amp;end</source>
-        <translation>&amp;Verstuur</translation>
+        <translation>&amp;Versturen</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
-        <translation>Bevestig versturen munten</translation>
+        <translation>Bevestig versturen van munten</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -1986,7 +1986,7 @@ Adres: %4
     </message>
     <message>
         <source>Transaction creation failed!</source>
-        <translation>Transactie creatie niet gelukt!</translation>
+        <translation>Fout tijdens aanmaken van transactie!</translation>
     </message>
     <message>
         <source>The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
@@ -2006,7 +2006,7 @@ Adres: %4
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
-        <translation>Waarschuwing: Ongeldig Bitcoin adres</translation>
+        <translation>Waarschuwing: Ongeldig Guldencoin adres</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2014,7 +2014,7 @@ Adres: %4
     </message>
     <message>
         <source>Warning: Unknown change address</source>
-        <translation>Waarschuwing: Onbekend wisselgeldadres</translation>
+        <translation>Waarschuwing: onbekend wisselgeldadres</translation>
     </message>
     <message>
         <source>Copy dust</source>
@@ -2089,7 +2089,7 @@ Adres: %4
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation>Een bericht dat werd toegevoegd aan de bitcoin: URI dewelke wordt opgeslagen met de transactie ter referentie. Opmerking: Dit bericht zal niet worden verzonden over het Bitcoin netwerk.</translation>
+        <translation>Een bericht dat werd toegevoegd aan de guldencoin: URI dewelke wordt opgeslagen met de transactie ter referentie. Opmerking: Dit bericht zal niet worden verzonden over het Guldencoinnetwerk.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -2097,7 +2097,7 @@ Adres: %4
     </message>
     <message>
         <source>Pay To:</source>
-        <translation>Betaal Aan:</translation>
+        <translation>Betaal aan:</translation>
     </message>
     <message>
         <source>Memo:</source>
@@ -2108,7 +2108,7 @@ Adres: %4
     <name>ShutdownWindow</name>
     <message>
         <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core is aan het afsluiten...</translation>
+        <translation>De Officiële Guldencoin portemonnee is aan het afsluiten...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2131,7 +2131,7 @@ Adres: %4
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
-        <translation>Het Bitcoin adres om bericht mee te ondertekenen</translation>
+        <translation>Het Guldencoinadres om bericht mee te ondertekenen</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2159,11 +2159,11 @@ Adres: %4
     </message>
     <message>
         <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopieer de huidige handtekening naar het systeemklembord</translation>
+        <translation>Kopieer de huidige handtekening naar het systeemklembord.</translation>
     </message>
     <message>
         <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation>Onderteken een bericht om te bewijzen dat u een bepaald Bitcoinadres bezit</translation>
+        <translation>Onderteken een bericht om te bewijzen dat u een bepaald Guldencoinadres bezit.</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2175,11 +2175,11 @@ Adres: %4
     </message>
     <message>
         <source>Clear &amp;All</source>
-        <translation>Verwijder &amp;Alles</translation>
+        <translation>&amp;Alles wissen</translation>
     </message>
     <message>
         <source>&amp;Verify Message</source>
-        <translation>&amp;Verifiëer Bericht</translation>
+        <translation>Bericht &amp;verifiëren</translation>
     </message>
     <message>
         <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
@@ -2187,15 +2187,15 @@ Adres: %4
     </message>
     <message>
         <source>The Bitcoin address the message was signed with</source>
-        <translation>Het Bitcoin adres waarmee het bericht ondertekend is</translation>
+        <translation>Het Guldencoinadres waarmee het bericht ondertekend is</translation>
     </message>
     <message>
         <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation>Controleer een bericht om te verifiëren dat het gespecificeerde Bitcoinadres het bericht heeft ondertekend.</translation>
+        <translation>Controleer een bericht om te verifiëren dat het gespecificeerde Guldencoinadres het bericht heeft ondertekend.</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
-        <translation>Verifiëer &amp;Bericht</translation>
+        <translation>&amp;Bericht Verifiëren</translation>
     </message>
     <message>
         <source>Reset all verify message fields</source>
@@ -2219,11 +2219,11 @@ Adres: %4
     </message>
     <message>
         <source>Wallet unlock was cancelled.</source>
-        <translation>Portemonnee-ontsleuteling is geannuleerd</translation>
+        <translation>Portemonneeontsleuteling is geannuleerd</translation>
     </message>
     <message>
         <source>Private key for the entered address is not available.</source>
-        <translation>Geheime sleutel voor het ingevoerde adres is niet beschikbaar.</translation>
+        <translation>Privésleutel voor het ingevoerde adres is niet beschikbaar.</translation>
     </message>
     <message>
         <source>Message signing failed.</source>
@@ -2258,11 +2258,11 @@ Adres: %4
     <name>SplashScreen</name>
     <message>
         <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
+        <translation>Officiële Guldencoin portemonnee</translation>
     </message>
     <message>
         <source>The Bitcoin Core developers</source>
-        <translation>De Bitcoin Core ontwikkelaars</translation>
+        <translation>De Guldencoin ontwikkelaars</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2304,7 +2304,7 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, uitgezonden naar %n node</numerusform><numerusform>, uitgezonden naar %n nodes</numerusform></translation>
+        <translation><numerusform>, uitgezonden naar %n knooppunt</numerusform><numerusform>, uitgezonden naar %n knooppunten</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2356,7 +2356,7 @@ Adres: %4
     </message>
     <message>
         <source>Total debit</source>
-        <translation>Totaal debit</translation>
+        <translation>Totaal debet</translation>
     </message>
     <message>
         <source>Total credit</source>
@@ -2392,7 +2392,7 @@ Adres: %4
     </message>
     <message>
         <source>Debug information</source>
-        <translation>Debug-informatie</translation>
+        <translation>Debuginformatie</translation>
     </message>
     <message>
         <source>Transaction</source>
@@ -2412,7 +2412,7 @@ Adres: %4
     </message>
     <message>
         <source>false</source>
-        <translation>onwaar</translation>
+        <translation>onjuist</translation>
     </message>
     <message>
         <source>, has not been successfully broadcast yet</source>
@@ -2530,7 +2530,7 @@ Adres: %4
     </message>
     <message>
         <source>Type of transaction.</source>
-        <translation>Type transactie.</translation>
+        <translation>Transactietype</translation>
     </message>
     <message>
         <source>Destination address of transaction.</source>
@@ -2748,11 +2748,11 @@ Adres: %4
     </message>
     <message>
         <source>Specify data directory</source>
-        <translation>Stel datamap in</translation>
+        <translation>Stel gegevensdirectory in</translation>
     </message>
     <message>
         <source>Connect to a node to retrieve peer addresses, and disconnect</source>
-        <translation>Verbind naar een node om adressen van anderen op te halen, en verbreek vervolgens de verbinding</translation>
+        <translation>Verbind naar een knooppunt om adressen van anderen op te halen, en verbreek vervolgens de verbinding</translation>
     </message>
     <message>
         <source>Specify your own public address</source>
@@ -2830,7 +2830,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Unable to bind to %s on this computer. Bitcoin Core is probably already running.</source>
-        <translation>Niet in staat om %s te verbinden op deze computer. Bitcoin Core draait waarschijnlijk al.</translation>
+        <translation>Niet in staat om %s te verbinden op deze computer. De Officiële Guldencoin portemonnee draait waarschijnlijk al.</translation>
     </message>
     <message>
         <source>Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
@@ -2862,15 +2862,15 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat</source>
-        <translation>Poog de geheime sleutels uit een corrupt wallet.dat bestand terug te halen</translation>
+        <translation>Proberen de geheime sleutels uit een corrupt wallet.dat bestand terug te halen</translation>
     </message>
     <message>
         <source>Block creation options:</source>
-        <translation>Blokcreatie-opties:</translation>
+        <translation>Blokcreatieopties:</translation>
     </message>
     <message>
         <source>Connect only to the specified node(s)</source>
-        <translation>Verbind alleen naar de gespecificeerde node(s)</translation>
+        <translation>Verbind alleen naar de gespecificeerde knooppunt(en)</translation>
     </message>
     <message>
         <source>Connection options:</source>
@@ -2914,7 +2914,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Error: Disk space is low!</source>
-        <translation>Fout: Weinig vrije diskruimte!</translation>
+        <translation>Fout: weinig vrije schijfruimte!</translation>
     </message>
     <message>
         <source>Error: Wallet locked, unable to create transaction!</source>
@@ -2934,7 +2934,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Incorrect of geen genesis-blok gevonden. Verkeerde datamap voor het netwerk?</translation>
+        <translation>Incorrect of geen genesisblok gevonden. Verkeerde gegevensdirectory voor het netwerk?</translation>
     </message>
     <message>
         <source>Invalid -onion address: '%s'</source>
@@ -2958,7 +2958,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
-        <translation>Specificeer het portemonnee bestand (vanuit de gegevensmap)</translation>
+        <translation>Specificeer het portemonneebestand (vanuit de gegevensdirectory)</translation>
     </message>
     <message>
         <source>This is intended for regression testing tools and app development.</source>
@@ -2978,7 +2978,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Wallet %s resides outside data directory %s</source>
-        <translation>Portemonnee %s bevindt zich buiten de gegevensmap %s</translation>
+        <translation>Portemonnee %s bevindt zich buiten de gegevensdirectory %s</translation>
     </message>
     <message>
         <source>Wallet options:</source>
@@ -2994,7 +2994,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. Bitcoin Core is probably already running.</source>
-        <translation>Kan geen lock verkrijgen op gegevensmap %s. Bitcoin Core draait waarschijnlijk al.</translation>
+        <translation>Kan geen lock verkrijgen op gegevensdirectory %s. De Officiële Guldencoin portemonnee draait waarschijnlijk al.</translation>
     </message>
     <message>
         <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
@@ -3006,7 +3006,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Error loading wallet.dat: Wallet requires newer version of Bitcoin Core</source>
-        <translation>Fout bij laden wallet.dat: Portemonnee vereist een nieuwere versie van Bitcoin Core</translation>
+        <translation>Fout bij laden wallet.dat: Portemonnee vereist een nieuwere versie van de Officiële Guldencoin portemonnee</translation>
     </message>
     <message>
         <source>Information</source>
