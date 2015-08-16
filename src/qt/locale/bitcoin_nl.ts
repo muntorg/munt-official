@@ -1229,7 +1229,7 @@ Adres: %4
     <message>
         <location line="+84"/>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door in het menu "Afsluiten" te kiezen.</translation>
+        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door in het menu &quot;Afsluiten&quot; te kiezen.</translation>
     </message>
     <message>
         <location line="+45"/>
