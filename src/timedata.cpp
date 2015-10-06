@@ -76,7 +76,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
         std::vector<int64_t> vSorted = vTimeOffsets.sorted();
         // Only let other nodes change our time by so much
         //if (abs64(nMedian) < 70 * 60)
-        if (abs64(nMedian) < 14 * 60) // Guldencoin: changed maximum adjust to 35 mins to avoid letting peers change our time too much in case of an attack.
+        if (abs64(nMedian) < 4 * 60) // Gulden: changed maximum adjust to 8 mins to avoid letting peers change our time too much in case of an attack.
         {
             nTimeOffset = nMedian;
         }
@@ -96,7 +96,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Guldencoin Core will not work properly.");
+                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.");
                     strMiscWarning = strMessage;
                     LogPrintf("*** %s\n", strMessage);
                     uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);

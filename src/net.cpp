@@ -971,10 +971,14 @@ void ThreadMapPort()
 #ifndef UPNPDISCOVER_SUCCESS
     /* miniupnpc 1.5 */
     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0);
-#else
+#elif !defined(MINIUPNPC_API_VERSION) || MINIUPNPC_API_VERSION < 14
     /* miniupnpc 1.6 */
     int error = 0;
     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, &error);
+#else
+    int error = 0;
+    char ttl = 2;
+    devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, ttl, &error);
 #endif
 
     struct UPNPUrls urls;
@@ -1001,7 +1005,7 @@ void ThreadMapPort()
             }
         }
 
-        string strDesc = "Guldencoin " + FormatFullVersion();
+        string strDesc = "Gulden " + FormatFullVersion();
 
         try {
             while (true) {

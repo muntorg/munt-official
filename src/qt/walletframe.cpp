@@ -49,7 +49,7 @@ bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
     walletView->showOutOfSyncWarning(bOutOfSync);
 
      /* TODO we should goto the currently selected page once dynamically adding wallets is supported */
-    walletView->gotoOverviewPage();
+    walletView->gotoHistoryPage();
     walletStack->addWidget(walletView);
     mapWalletViews[name] = walletView;
 

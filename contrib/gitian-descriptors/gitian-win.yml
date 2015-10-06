@@ -1,5 +1,5 @@
 ---
-name: "guldencoin-win-1.5.0"
+name: "Gulden-win-1.5.1"
 enable_cache: true
 suites:
 - "precise"
@@ -21,8 +21,8 @@ packages:
 - "zip"
 reference_datetime: "2013-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/nlgcoin/guldencoin2.git"
-  "dir": "guldencoin"
+- "url": /home/guldencoin/guldencoin-build-manager/Gulden-dev
+  "dir": "Gulden"
 files: []
 script: |
   WRAP_DIR=$HOME/wrapped
@@ -66,7 +66,7 @@ script: |
   done
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd guldencoin
+  cd Gulden
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -77,14 +77,14 @@ script: |
   ./autogen.sh
   ./configure --prefix=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`
   make dist
-  SOURCEDIST=`echo guldencoin-*.tar.gz`
+  SOURCEDIST=`echo Gulden-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find guldencoin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Gulden-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   ORIGPATH="$PATH"
@@ -101,7 +101,7 @@ script: |
     make ${MAKEOPTS}
     make deploy
     make install-strip
-    cp -f guldencoin-*setup*.exe $OUTDIR/
+    cp -f Gulden-*setup*.exe $OUTDIR/
     cd installed
     mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/
     find . -name "lib*.la" -delete

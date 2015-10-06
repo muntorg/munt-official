@@ -1,10 +1,8 @@
-<TS language="zh_TW" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="zh_TW">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>按兩下來編輯位址或標記</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>新增新的位址</translation>
@@ -97,6 +95,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>儲存位址列表到 %1 時發生錯誤。請重試一次。</translation>
     </message>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -188,10 +190,6 @@
         <translation>輸入錢包的新密碼。&lt;br/&gt;密碼請用&lt;b&gt;10 個以上的字元&lt;/b&gt;，或是&lt;b&gt;8 個以上的字詞&lt;/b&gt;。</translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>位元幣軟體現在要關閉，好完成加密程序。請注意，加密錢包不能完全防止入侵你的電腦的惡意程式偷取位元幣。</translation>
-    </message>
-    <message>
         <source>Wallet encryption failed</source>
         <translation>錢包加密失敗</translation>
     </message>
@@ -218,6 +216,10 @@
     <message>
         <source>Wallet passphrase was successfully changed.</source>
         <translation>錢包密碼改成功了。</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -309,10 +311,6 @@
     <message>
         <source>Send coins to a Bitcoin address</source>
         <translation>付錢給一個位元幣位址</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>修改位元幣軟體的設定選項</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -424,7 +422,9 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n 個運作中的位元幣網路連線</numerusform></translation>
+        <translation>
+            <numerusform>%n 個運作中的位元幣網路連線</numerusform>
+        </translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -432,15 +432,21 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n 個小時</numerusform></translation>
+        <translation>
+            <numerusform>%n 個小時</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n 天</numerusform></translation>
+        <translation>
+            <numerusform>%n 天</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n 個星期</numerusform></translation>
+        <translation>
+            <numerusform>%n 個星期</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -448,7 +454,9 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n 年</numerusform></translation>
+        <translation>
+            <numerusform>%n 年</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -480,7 +488,9 @@
     </message>
     <message numerus="yes">
         <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>已經處理了 %n 個區塊的交易紀錄。</numerusform></translation>
+        <translation>
+            <numerusform>已經處理了 %n 個區塊的交易紀錄。</numerusform>
+        </translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -513,6 +523,10 @@ Address: %4
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>錢包&lt;b&gt;已加密&lt;/b&gt;並且&lt;b&gt;上鎖中&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for Bitcoin Core</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -717,7 +731,7 @@ Address: %4
         <translation>優先度較高的交易比較有可能被接受放進區塊中。</translation>
     </message>
     <message>
-        <source>This label turns red, if the priority is smaller than "medium".</source>
+        <source>This label turns red, if the priority is smaller than &quot;medium&quot;.</source>
         <translation>當優先度低於「中等」時，文字會變紅色。</translation>
     </message>
     <message>
@@ -735,6 +749,14 @@ Address: %4
     <message>
         <source>(change)</source>
         <translation>(找零)</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -776,11 +798,11 @@ Address: %4
         <translation>編輯付款位址</translation>
     </message>
     <message>
-        <source>The entered address "%1" is already in the address book.</source>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
         <translation>輸入的位址 %1 在位址簿中已經有了。</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address &quot;%1&quot; is not a valid Bitcoin address.</source>
         <translation>輸入的位址 %1 並不是有效的位元幣位址。</translation>
     </message>
     <message>
@@ -845,30 +867,6 @@ Address: %4
         <source>command-line options</source>
         <translation>命令列選項</translation>
     </message>
-    <message>
-        <source>UI options</source>
-        <translation>使用界面選項</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>設定語言，比如說 de_DE (預設值: 系統語系)</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>啓動時縮到最小</translation>
-    </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>設定付款請求時所使用的 SSL 根憑證 (預設值: 系統憑證庫)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: 1)</source>
-        <translation>顯示啓動畫面(預設值: 1)</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: 0)</source>
-        <translation>啓動時選擇資料目錄(預設值: 0)</translation>
-    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -901,7 +899,7 @@ Address: %4
         <translation>位元幣核心</translation>
     </message>
     <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
         <translation>錯誤: 無法新增指定的資料目錄: %1</translation>
     </message>
     <message>
@@ -910,11 +908,15 @@ Address: %4
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>可用空間尚存 %n GB</numerusform></translation>
+        <translation>
+            <numerusform>可用空間尚存 %n GB</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(需要 %n GB)</numerusform></translation>
+        <translation>
+            <numerusform>(需要 %n GB)</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -949,14 +951,6 @@ Address: %4
     <message>
         <source>&amp;Main</source>
         <translation>主要</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>在登入系統後自動啓動位元幣軟體。</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>系統登入時啟動位元幣</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1071,10 +1065,6 @@ Address: %4
         <translation>縮到最小到通知區域而不是工作列</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>當視窗關閉時，把應用程式縮到最小，而不是結束。當勾選這個選項時，只能夠用選單中的結束來關掉應用程式。</translation>
-    </message>
-    <message>
         <source>M&amp;inimize on close</source>
         <translation>關閉時縮到最小</translation>
     </message>
@@ -1085,10 +1075,6 @@ Address: %4
     <message>
         <source>User Interface &amp;language:</source>
         <translation>使用界面語言:</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>可以在這裡設定使用者介面的語言。這個設定在重啓位元幣軟體後才會生效。</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1137,6 +1123,22 @@ Address: %4
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>提供的代理伺服器位址無效。</translation>
+    </message>
+    <message>
+        <source>Automatically start Bitcoin Core after logging in to the system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Start Bitcoin Core on system login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1233,12 +1235,8 @@ Address: %4
         <translation>付款的要求被拒絕了</translation>
     </message>
     <message>
-        <source>Payment request network doesn't match client network.</source>
+        <source>Payment request network doesn&apos;t match client network.</source>
         <translation>付款要求的網路類型跟客戶端不符。</translation>
-    </message>
-    <message>
-        <source>Payment request has expired.</source>
-        <translation>付款的要求已經過期了。</translation>
     </message>
     <message>
         <source>Payment request is not initialized.</source>
@@ -1251,10 +1249,6 @@ Address: %4
     <message>
         <source>Payment request error</source>
         <translation>要求付款時發生錯誤</translation>
-    </message>
-    <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>沒辦法啟動 bitcoin 協議的按就付處理器</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1300,6 +1294,26 @@ Address: %4
         <source>Network request error</source>
         <translation>發出要求時發生網路錯誤</translation>
     </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request DoS protection</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PeerTableModel</name>
@@ -1341,14 +1355,6 @@ Address: %4
     <message>
         <source>%1 s</source>
         <translation>%1 秒</translation>
-    </message>
-    <message>
-        <source>NETWORK</source>
-        <translation>網路</translation>
-    </message>
-    <message>
-        <source>UNKNOWN</source>
-        <translation>不明</translation>
     </message>
     <message>
         <source>None</source>
@@ -1549,16 +1555,8 @@ Address: %4
         <translation>除錯紀錄檔</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>從目前的資料目錄下開啓位元幣軟體的除錯紀錄檔。當紀錄檔很大時，可能會花好幾秒的時間。</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>清主控台</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>歡迎使用位元幣 RPC 主控台。</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1607,6 +1605,18 @@ Address: %4
     <message>
         <source>Fetching...</source>
         <translation>正在擷取中...</translation>
+    </message>
+    <message>
+        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Welcome to the Bitcoin Core RPC console.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1996,6 +2006,60 @@ Address: %4
         <source>added as transaction fee</source>
         <translation>加做交易手續費</translation>
     </message>
+    <message>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>total at least</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(confirmation may take longer)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pay only the minimum fee of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -2071,6 +2135,14 @@ Address: %4
         <source>Memo:</source>
         <translation>備註:</translation>
     </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShutdownWindow</name>
@@ -2092,10 +2164,6 @@ Address: %4
     <message>
         <source>&amp;Sign Message</source>
         <translation>簽署訊息</translation>
-    </message>
-    <message>
-        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>你可以用自己的位址簽署訊息，來證明你對位址的所有權。但是請小心，不要簽署語意含糊不清的內容，因為釣魚式詐騙可能會用騙你簽署的手法來冒充是你。只有在語句中的細節你都同意時才簽署。</translation>
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
@@ -2150,10 +2218,6 @@ Address: %4
         <translation>驗證訊息</translation>
     </message>
     <message>
-        <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
-        <translation>請在下面輸入簽署的位址，訊息(請確定完整複製了所包含的換行，空格，跳位符號等等)，以及簽章，來驗證這個訊息。請小心，除了訊息內容以外，不要對簽章本身過度解讀，以避免被用「中間人攻擊法」詐騙。</translation>
-    </message>
-    <message>
         <source>The Bitcoin address the message was signed with</source>
         <translation>簽署這個訊息的位元幣位址</translation>
     </message>
@@ -2170,7 +2234,7 @@ Address: %4
         <translation>重設所有訊息驗證欄位</translation>
     </message>
     <message>
-        <source>Click "Sign Message" to generate signature</source>
+        <source>Click &quot;Sign Message&quot; to generate signature</source>
         <translation>請按一下「簽署訊息」來產生簽章</translation>
     </message>
     <message>
@@ -2221,6 +2285,14 @@ Address: %4
         <source>Message verified.</source>
         <translation>訊息驗證沒錯。</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -2235,6 +2307,10 @@ Address: %4
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
+    </message>
+    <message>
+        <source>[testnet accel]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2272,7 +2348,9 @@ Address: %4
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>，已公告給 %n 個節點</numerusform></translation>
+        <translation>
+            <numerusform>，已公告給 %n 個節點</numerusform>
+        </translation>
     </message>
     <message>
         <source>Date</source>
@@ -2312,7 +2390,9 @@ Address: %4
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>再等 %n 個區塊生出來後成熟</numerusform></translation>
+        <translation>
+            <numerusform>再等 %n 個區塊生出來後成熟</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2355,7 +2435,7 @@ Address: %4
         <translation>商家</translation>
     </message>
     <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
         <translation>生產出來的錢要再等 %1 個區塊生出來後才成熟可以用。當區塊生產出來時會公布到網路上，來被加進區塊鏈。如果加失敗了，狀態就會變成「不被接受」，而且不能夠花。如果在你生產出區塊的幾秒鐘內，也有其他節點生產出來的話，就有可能會發生這種情形。</translation>
     </message>
     <message>
@@ -2388,7 +2468,9 @@ Address: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>到下 %n 個區塊生出來前可修改</numerusform></translation>
+        <translation>
+            <numerusform>到下 %n 個區塊生出來前可修改</numerusform>
+        </translation>
     </message>
     <message>
         <source>unknown</source>
@@ -2426,7 +2508,9 @@ Address: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>到下 %n 個區塊生出來前可修改</numerusform></translation>
+        <translation>
+            <numerusform>到下 %n 個區塊生出來前可修改</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2748,30 +2832,6 @@ Address: %4
         <translation>是否接受外來連線(預設值: 當沒有 -proxy 或 -connect 時為 1)</translation>
     </message>
     <message>
-        <source>%s, you must set a rpcpassword in the configuration file:
-%s
-It is recommended you use the following random password:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-The username and password MUST NOT be the same.
-If the file does not exist, create it with owner-readable-only file permissions.
-It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</source>
-        <translation>%s, 你必須要在以下設定檔中設定 RPC 密碼(rpcpassword):
-%s
-建議你使用以下隨機產生的密碼:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(你不用記住這個密碼)
-使用者名稱(rpcuser)和密碼(rpcpassword)不可以相同！
-如果還沒有這個設定檔，請在造出來的時候，設定檔案權限成「只有主人才能讀取」。
-也建議你設定警示通知，發生問題時你才會被通知到；
-比如說設定成:
-alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
-    </message>
-    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>和指定的位址繫結，並且一直在指定位址聽候連線。IPv6 請用 [主機]:通訊埠 這種格式</translation>
     </message>
@@ -2786,14 +2846,6 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
     <message>
         <source>Enter regression test mode, which uses a special chain in which blocks can be solved instantly.</source>
         <translation>進入回歸測試模式，使用可以立即解出區塊的特殊區塊鏈。</translation>
-    </message>
-    <message>
-        <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>錯誤: 交易被拒絕了！有時候會發生這種錯誤，是因為你錢包中的一些錢已經被花掉了。比如說你複製了錢包檔 wallet.dat, 然後用複製的錢包花掉了錢，你現在所用的原來的錢包中，卻沒有那筆錢已經花掉的紀錄。</translation>
-    </message>
-    <message>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>錯誤: 這筆交易需要至少 %s 的手續費！因為它的金額太大，或複雜度太高，或是使用了最近才剛收到的款項。</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2872,10 +2924,6 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>除錯與測試選項</translation>
     </message>
     <message>
-        <source>Discover own IP address (default: 1 when listening and no -externalip)</source>
-        <translation>找出自己的網際網路位址(預設值: 當有聽候連線且沒有 -externalip 時為 1)</translation>
-    </message>
-    <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
         <translation>不要載入錢包，並且拿掉錢包相關的 RPC 功能請求。</translation>
     </message>
@@ -2908,10 +2956,6 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>錯誤: 磁碟空間很少！</translation>
     </message>
     <message>
-        <source>Error: Wallet locked, unable to create transaction!</source>
-        <translation>錯誤: 錢包被上鎖了，沒辦法製造新的交易！</translation>
-    </message>
-    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>在任意的通訊埠聽候失敗。如果你希望這樣的話，可以設定 -listen=0.</translation>
     </message>
@@ -2928,8 +2972,8 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>創世區塊不正確或找不到。資料目錄錯了嗎？</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>無效的 -onion 位址: '%s'</translation>
+        <source>Invalid -onion address: &apos;%s&apos;</source>
+        <translation>無效的 -onion 位址: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3016,7 +3060,7 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>錯誤: 聽候外來連線失敗(回傳錯誤 %s)</translation>
     </message>
     <message>
-        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</source>
+        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
         <translation>錯誤: 找到不再支援的 -socks 參數。現在只支援 SOCKS5 協定的代理伺服器了，因為不再能夠指定 SOCKS 協定版本。</translation>
     </message>
     <message>
@@ -3052,24 +3096,16 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>此產品也包含了由 OpenSSL Project 所開發的 OpenSSL Toolkit 軟體 &lt;https://www.openssl.org/&gt;, 和由 Eric Young 撰寫的加解密軟體，以及由 Thomas Bernard 所撰寫的 UPnP 軟體。</translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
-        <translation>警告: 請檢查電腦日期和時間是否正確！位元幣核心沒辦法在時鐘不準的情況下正常運作。</translation>
-    </message>
-    <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
         <translation>在白名單中的節點不會因為偵測到阻斷服務攻擊而被停用。來自這些節點的交易也一定會被轉發，即使說交易本來就在記憶池裡了也一樣。適用於像是閘道伺服器。</translation>
     </message>
     <message>
-        <source>Cannot resolve -whitebind address: '%s'</source>
-        <translation>沒辦法解析 -whitebind 指定的位址: '%s'</translation>
+        <source>Cannot resolve -whitebind address: &apos;%s&apos;</source>
+        <translation>沒辦法解析 -whitebind 指定的位址: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Connect through SOCKS5 proxy</source>
         <translation>透過 SOCKS5 代理伺服器連線</translation>
-    </message>
-    <message>
-        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
-        <translation>版權為位元幣核心開發人員自西元 2009 至 %i 年起所有</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
@@ -3092,44 +3128,32 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>資訊</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
-        <translation>初始化時的基本檢查失敗了。位元幣核心將會關閉。</translation>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>設定最低轉發手續費 -minrelaytxfee=&lt;金額&gt; 的金額無效: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>設定最低轉發手續費 -minrelaytxfee=&lt;金額&gt; 的金額無效: '%s'</translation>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>設定 -mintxfee=&lt;金額&gt; 的金額無效: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>設定 -mintxfee=&lt;金額&gt; 的金額無效: '%s'</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least %s)</source>
+        <translation>設定 -paytxfee=&lt;金額&gt; 的金額無效: &apos;%s&apos; (至少要有 %s)</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
-        <translation>設定 -paytxfee=&lt;金額&gt; 的金額無效: '%s' (至少要有 %s)</translation>
-    </message>
-    <message>
-        <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation>指定在 -whitelist 的網段無效: '%s'</translation>
-    </message>
-    <message>
-        <source>Keep at most &lt;n&gt; unconnectable blocks in memory (default: %u)</source>
-        <translation>在記憶體中保存最多 &lt;n&gt; 個不和其他區塊相連結的區塊(預設值 : %u)</translation>
+        <source>Invalid netmask specified in -whitelist: &apos;%s&apos;</source>
+        <translation>指定在 -whitelist 的網段無效: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
         <translation>保持最多 &lt;n&gt; 無法連結的交易在記憶體 (預設: %u)</translation>
     </message>
     <message>
-        <source>Need to specify a port with -whitebind: '%s'</source>
-        <translation>指定 -whitebind 時必須包含通訊埠: '%s'</translation>
+        <source>Need to specify a port with -whitebind: &apos;%s&apos;</source>
+        <translation>指定 -whitebind 時必須包含通訊埠: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Node relay options:</source>
         <translation>節點轉發選項:</translation>
-    </message>
-    <message>
-        <source>Print block on startup, if found in block index</source>
-        <translation>啟動時輸出指定的區塊內容，如果有在區塊索引中找到的話</translation>
     </message>
     <message>
         <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
@@ -3276,10 +3300,6 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>使用 -checkblocks 檢查區塊的仔細程度(0 到 4，預設值: %u)</translation>
     </message>
     <message>
-        <source>If paytxfee is not set, include enough fee so transactions are confirmed on average within n blocks (default: %u)</source>
-        <translation>當沒有設定 paytxfee 時，自動包含可以讓交易能在平均 n 個區塊內確認的手續費(預設值: %u)</translation>
-    </message>
-    <message>
         <source>Log transaction priority and fee per kB when mining blocks (default: %u)</source>
         <translation>開採區塊的時候，紀錄交易的優先度以及每千位元組(kB)的手續費(預設值: %u)</translation>
     </message>
@@ -3336,8 +3356,8 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>在除錯輸出內容中包含網際網路位址(預設值: %u)</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>無效的 -proxy 位址: '%s'</translation>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>無效的 -proxy 位址: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Limit size of signature cache to &lt;n&gt; entries (default: %u)</source>
@@ -3370,10 +3390,6 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
         <translation>在除錯輸出內容前附加時間(預設值: %u)</translation>
-    </message>
-    <message>
-        <source>Print block tree on startup (default: %u)</source>
-        <translation>啟動時輸出區塊樹(預設值: %u)</translation>
     </message>
     <message>
         <source>Relay and mine data carrier transactions (default: %u)</source>
@@ -3436,24 +3452,20 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>與亂搞的節點斷線的臨界值 (預設: %u)</translation>
     </message>
     <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>在 -onlynet 指定了不明的網路別: '%s'</translation>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>在 -onlynet 指定了不明的網路別: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>沒辦法解析 -bind 位址: '%s'</translation>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>沒辦法解析 -bind 位址: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>沒辦法解析 -externalip 位址: '%s'</translation>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>沒辦法解析 -externalip 位址: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>設定 -paytxfee=&lt;金額&gt; 的金額無效: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid amount</source>
-        <translation>無效的金額</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>設定 -paytxfee=&lt;金額&gt; 的金額無效: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
@@ -3488,12 +3500,145 @@ alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
         <translation>載入完成</translation>
     </message>
     <message>
-        <source>To use the %s option</source>
-        <translation>為了要使用 %s 選項</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>錯誤</translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum total fees to use in a single wallet transaction, setting too low may abort large transactions (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Require high priority for relaying free or low-fee transactions (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To use bitcoind, or the -server option to bitcoin-qt, you must set an rpcpassword in the configuration file:
+%s
+It is recommended you use the following random password:
+rpcuser=bitcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+The username and password MUST NOT be the same.
+If the file does not exist, create it with owner-readable-only file permissions.
+It is also recommended to set alertnotify so you are notified of problems;
+for example: alertnotify=echo %%s | mail -s &quot;Bitcoin Alert&quot; admin@foo.com
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: -maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When creating transactions, ignore inputs with value less than this (default: 0.0001)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accept public REST requests (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow self signed root certificates (default: 0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: 0)</source>
+        <translation type="unfinished">啓動時選擇資料目錄(預設值: 0)</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mininput=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RPC support for HTTP persistent connections (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation type="unfinished">設定付款請求時所使用的 SSL 根憑證 (預設值: 系統憑證庫)</translation>
+    </message>
+    <message>
+        <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
+        <translation type="unfinished">設定語言，比如說 de_DE (預設值: 系統語系)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: 1)</source>
+        <translation type="unfinished">顯示啓動畫面(預設值: 1)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation type="unfinished">啓動時縮到最小</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use UPnP to map the listening port (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -292,7 +292,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         }
 
         // reject absurdly high fee > 0.1 bitcoin
-        if (nFeeRequired > 10000000)
+        if (nFeeRequired > 500 * COIN)
             return AbsurdFee;
     }
 
@@ -322,7 +322,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 rcp.paymentRequest.SerializeToString(&value);
                 newTx->vOrderForm.push_back(make_pair(key, value));
             }
-            else if (!rcp.message.isEmpty()) // Message from normal guldencoin:URI (guldencoin:123...?message=example)
+            else if (!rcp.message.isEmpty()) // Message from normal bitcoin:URI (bitcoin:123...?message=example)
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         }
 

@@ -1,10 +1,8 @@
-<TS language="tr" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="tr">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>Adresi ya da etiketi düzenlemek için çift tıklayınız</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>Yeni bir adres oluştur</translation>
@@ -97,6 +95,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Adres listesinin %1 konumuna kaydedilmesi sırasında bir hata meydana geldi. Lütfen tekrar deneyin.</translation>
     </message>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -188,10 +190,6 @@
         <translation>Cüzdan için yeni parolayı giriniz.&lt;br/&gt;Lütfen &lt;b&gt;on ya da daha fazla rastgele karakter&lt;/b&gt; veya &lt;b&gt;sekiz ya da daha fazla kelime&lt;/b&gt; içeren bir parola kullanınız.</translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Şifreleme işlemini tamamlamak için Bitcoin şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Bitcoinlerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
-    </message>
-    <message>
         <source>Wallet encryption failed</source>
         <translation>Cüzdan şifrelemesi başarısız oldu</translation>
     </message>
@@ -218,6 +216,10 @@
     <message>
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Cüzdan parolası başarılı bir şekilde değiştirildi.</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -311,10 +313,6 @@
         <translation>Bir Bitcoin adresine Bitcoin yolla</translation>
     </message>
     <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>Bitcoin seçeneklerinin yapılandırmasını değiştir</translation>
-    </message>
-    <message>
         <source>Backup wallet to another location</source>
         <translation>Cüzdanı diğer bir konumda yedekle</translation>
     </message>
@@ -396,7 +394,7 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Ödeme talep et (QR kodu ve bitcoin URI'si oluşturur)</translation>
+        <translation>Ödeme talep et (QR kodu ve bitcoin URI&apos;si oluşturur)</translation>
     </message>
     <message>
         <source>&amp;About Bitcoin Core</source>
@@ -424,7 +422,9 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>Bitcoin şebekesine %n faal bağlantı</numerusform><numerusform>Bitcoin şebekesine %n faal bağlantı</numerusform></translation>
+        <translation>
+            <numerusform>Bitcoin şebekesine %n faal bağlantı</numerusform>
+        </translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -432,15 +432,21 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n saat</numerusform><numerusform>%n saat</numerusform></translation>
+        <translation>
+            <numerusform>%n saat</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n gün</numerusform><numerusform>%n gün</numerusform></translation>
+        <translation>
+            <numerusform>%n gün</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n hafta</numerusform><numerusform>%n hafta</numerusform></translation>
+        <translation>
+            <numerusform>%n hafta</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -448,7 +454,9 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n yıl</numerusform><numerusform>%n yıl</numerusform></translation>
+        <translation>
+            <numerusform>%n yıl</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -480,7 +488,9 @@
     </message>
     <message numerus="yes">
         <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>Muamele tarihçesinden %n blok işlendi</numerusform><numerusform>Muamele tarihçesinden %n blok işlendi</numerusform></translation>
+        <translation>
+            <numerusform>Muamele tarihçesinden %n blok işlendi</numerusform>
+        </translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -513,6 +523,10 @@ Adres: %4
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Cüzdan &lt;b&gt;şifrelenmiştir&lt;/b&gt; ve şu anda &lt;b&gt;kilitlidir&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for Bitcoin Core</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -725,12 +739,12 @@ Adres: %4
         <translation>Yüksek öncelikli muamelelerin bir bloğa dahil olmaları daha olasıdır.</translation>
     </message>
     <message>
-        <source>This label turns red, if the priority is smaller than "medium".</source>
-        <translation>Eğer öncelik "ortadan" düşükse bu etiket kırmızı olur.</translation>
+        <source>This label turns red, if the priority is smaller than &quot;medium&quot;.</source>
+        <translation>Eğer öncelik &quot;ortadan&quot; düşükse bu etiket kırmızı olur.</translation>
     </message>
     <message>
         <source>This label turns red, if any recipient receives an amount smaller than %1.</source>
-        <translation>Eğer herhangi bir alıcı %1'den düşük bir meblağ alırsa bu etiket kırmızı olur.</translation>
+        <translation>Eğer herhangi bir alıcı %1&apos;den düşük bir meblağ alırsa bu etiket kırmızı olur.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -784,12 +798,12 @@ Adres: %4
         <translation>Gönderi adresini düzenle</translation>
     </message>
     <message>
-        <source>The entered address "%1" is already in the address book.</source>
-        <translation>Girilen "%1" adresi hâlihazırda adres defterinde mevcuttur.</translation>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Girilen &quot;%1&quot; adresi hâlihazırda adres defterinde mevcuttur.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Girilen "%1" adresi geçerli bir Bitcoin adresi değildir.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Bitcoin address.</source>
+        <translation>Girilen &quot;%1&quot; adresi geçerli bir Bitcoin adresi değildir.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -853,30 +867,6 @@ Adres: %4
         <source>command-line options</source>
         <translation>komut satırı seçenekleri</translation>
     </message>
-    <message>
-        <source>UI options</source>
-        <translation>Kullanıcı arayüzü seçenekleri</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Lisan belirt, mesela "de_De" (varsayılan: sistem dili)</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>Küçültülmüş olarak başlat</translation>
-    </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>Ödeme talebi için SSL kök sertifikalarını belirle (varsayılan: -system-)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: 1)</source>
-        <translation>Başlatıldığında başlangıç ekranını göster (varsayılan: 1)</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: 0)</source>
-        <translation>Başlangıçta veri klasörü seç (varsayılan: 0)</translation>
-    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -909,8 +899,8 @@ Adres: %4
         <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Hata: belirtilen "%1" veri klasörü oluşturulamaz.</translation>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
+        <translation>Hata: belirtilen &quot;%1&quot; veri klasörü oluşturulamaz.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -918,11 +908,15 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB boş alan mevcuttur</numerusform><numerusform>%n GB boş alan mevcuttur</numerusform></translation>
+        <translation>
+            <numerusform>%n GB boş alan mevcuttur</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(gereken %n GB alandan)</numerusform><numerusform>(gereken %n GB alandan)</numerusform></translation>
+        <translation>
+            <numerusform>(gereken %n GB alandan)</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -933,7 +927,7 @@ Adres: %4
     </message>
     <message>
         <source>Open payment request from URI or file</source>
-        <translation>Dosyadan veya URI'den ödeme talebi aç</translation>
+        <translation>Dosyadan veya URI&apos;den ödeme talebi aç</translation>
     </message>
     <message>
         <source>URI:</source>
@@ -957,14 +951,6 @@ Adres: %4
     <message>
         <source>&amp;Main</source>
         <translation>&amp;Esas ayarlar</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Sistemde oturum açıldığında Bitcoin'i otomatik olarak başlat.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>Bitcoin'i sistem oturumuyla &amp;başlat</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -992,11 +978,11 @@ Adres: %4
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>Muameleler sekmesinde bağlam menüsü unsurları olarak görünen üçüncü taraf bağlantıları (mesela bir blok tarayıcısı). URL'deki %s, muamele hash değeri ile değiştirilecektir. Birden çok bağlantılar düşey çubuklar | ile ayrılacaktır.</translation>
+        <translation>Muameleler sekmesinde bağlam menüsü unsurları olarak görünen üçüncü taraf bağlantıları (mesela bir blok tarayıcısı). URL&apos;deki %s, muamele hash değeri ile değiştirilecektir. Birden çok bağlantılar düşey çubuklar | ile ayrılacaktır.</translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
-        <translation>Üçüncü taraf muamele URL'leri</translation>
+        <translation>Üçüncü taraf muamele URL&apos;leri</translation>
     </message>
     <message>
         <source>Active command-line options that override above options:</source>
@@ -1079,10 +1065,6 @@ Adres: %4
         <translation>İşlem çubuğu yerine sistem çekmecesine &amp;küçült</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Pencere kapatıldığında uygulamadan çıkmak yerine uygulamayı küçültür. Bu seçenek etkinleştirildiğinde, uygulama sadece menüden çıkış seçildiğinde kapanacaktır.</translation>
-    </message>
-    <message>
         <source>M&amp;inimize on close</source>
         <translation>Kapatma sırasında k&amp;üçült</translation>
     </message>
@@ -1093,10 +1075,6 @@ Adres: %4
     <message>
         <source>User Interface &amp;language:</source>
         <translation>Kullanıcı arayüzü &amp;lisanı:</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>Kullanıcı arayüzünün dili burada belirtilebilir. Bu ayar Bitcoin tekrar başlatıldığında etkinleşecektir.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1145,6 +1123,22 @@ Adres: %4
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Girilen vekil sunucu adresi geçersizdir.</translation>
+    </message>
+    <message>
+        <source>Automatically start Bitcoin Core after logging in to the system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Start Bitcoin Core on system login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1241,12 +1235,8 @@ Adres: %4
         <translation>Ödeme talebi reddedildi</translation>
     </message>
     <message>
-        <source>Payment request network doesn't match client network.</source>
+        <source>Payment request network doesn&apos;t match client network.</source>
         <translation>Ödeme talebi şebekesi istemci şebekesine denk gelmiyor.</translation>
-    </message>
-    <message>
-        <source>Payment request has expired.</source>
-        <translation>Ödeme talebinin ömrü doldu.</translation>
     </message>
     <message>
         <source>Payment request is not initialized.</source>
@@ -1261,12 +1251,8 @@ Adres: %4
         <translation>Ödeme talebi hatası</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Bitcoin başlatılamadı: tıkla-ve-öde yöneticisi</translation>
-    </message>
-    <message>
         <source>Payment request fetch URL is invalid: %1</source>
-        <translation>Ödeme talebini alma URL'i geçersiz: %1</translation>
+        <translation>Ödeme talebini alma URL&apos;i geçersiz: %1</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1307,6 +1293,26 @@ Adres: %4
     <message>
         <source>Network request error</source>
         <translation>Şebeke talebi hatası</translation>
+    </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request DoS protection</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1349,14 +1355,6 @@ Adres: %4
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>NETWORK</source>
-        <translation>ŞEBEKE</translation>
-    </message>
-    <message>
-        <source>UNKNOWN</source>
-        <translation>BİLİNMİYOR</translation>
     </message>
     <message>
         <source>None</source>
@@ -1557,16 +1555,8 @@ Adres: %4
         <translation>Hata ayıklama kütük dosyası</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Güncel veri klasöründen Bitcoin hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>Konsolu temizle</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Bitcoin RPC konsoluna hoş geldiniz.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1615,6 +1605,18 @@ Adres: %4
     <message>
         <source>Fetching...</source>
         <translation>Alınıyor...</translation>
+    </message>
+    <message>
+        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Welcome to the Bitcoin Core RPC console.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1708,7 +1710,7 @@ Adres: %4
     </message>
     <message>
         <source>Copy &amp;URI</source>
-        <translation>&amp;URI'yi kopyala</translation>
+        <translation>&amp;URI&apos;yi kopyala</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -1752,7 +1754,7 @@ Adres: %4
     </message>
     <message>
         <source>Error encoding URI into QR Code.</source>
-        <translation>URI'nin QR koduna kodlanmasında hata oluştu.</translation>
+        <translation>URI&apos;nin QR koduna kodlanmasında hata oluştu.</translation>
     </message>
 </context>
 <context>
@@ -1861,16 +1863,12 @@ Adres: %4
         <translation>Küçült</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Eğer özel ücret 1000 satoşi olarak ayarlandıysa ve muamele sadece 250 baytsa, "kilobayt başı" ücret olarak sadece 250 satoşi öder ve "asgari" 1000 satoşi öder. Bir kilobayttan yüksek muameleler için ikisi de kilobayt başı ödeme yapar.</translation>
-    </message>
-    <message>
         <source>per kilobyte</source>
         <translation>kilobayt başı</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Eğer özel ücret 1000 satoşi olarak ayarlandıysa ve muamele sadece 250 baytsa, "kilobayt başı" ücret olarak sadece 250 satoşi öder ve "toplam asgari" 1000 satoşi öder. Bir kilobayttan yüksek muameleler için ikisi de kilobayt başı ödeme yapar.</translation>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Eğer özel ücret 1000 satoşi olarak ayarlandıysa ve muamele sadece 250 baytsa, &quot;kilobayt başı&quot; ücret olarak sadece 250 satoşi öder ve &quot;toplam asgari&quot; 1000 satoşi öder. Bir kilobayttan yüksek muameleler için ikisi de kilobayt başı ödeme yapar.</translation>
     </message>
     <message>
         <source>total at least</source>
@@ -2021,16 +2019,8 @@ Adres: %4
         <translation>Muamele reddedildi! Cüzdanınızdaki madenî paraların bazıları zaten harcanmış olduğunda bu meydana gelebilir. Örneğin wallet.dat dosyasının bir kopyasını kullandıysanız ve kopyada para harcandığında ancak burada harcandığı işaretlenmediğinde.</translation>
     </message>
     <message>
-        <source>A fee higher than %1 is considered an insanely high fee.</source>
-        <translation>%1 tutarından yüksek ücret delicesine aşırı yüksek bir ücret olarak kabul edilir.</translation>
-    </message>
-    <message>
         <source>Pay only the minimum fee of %1</source>
         <translation>Sadece asgari ücret olan %1 tutarını öde</translation>
-    </message>
-    <message>
-        <source>Estimated to begin confirmation within %1 block(s).</source>
-        <translation>Tahmini olarak %1 blok içinde teyide başlanacaktır.</translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2055,6 +2045,20 @@ Adres: %4
     <message>
         <source>added as transaction fee</source>
         <translation>muamele ücreti olarak eklendi</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -2117,7 +2121,7 @@ Adres: %4
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation>Bitcoin: URI'siyle ilişkili ve bilginiz için muameleyle saklanacak bir mesaj. Not: Bu mesaj Bitcoin şebekesi üzerinden gönderilmeyecektir.</translation>
+        <translation>Bitcoin: URI&apos;siyle ilişkili ve bilginiz için muameleyle saklanacak bir mesaj. Not: Bu mesaj Bitcoin şebekesi üzerinden gönderilmeyecektir.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -2130,6 +2134,14 @@ Adres: %4
     <message>
         <source>Memo:</source>
         <translation>Not:</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2152,10 +2164,6 @@ Adres: %4
     <message>
         <source>&amp;Sign Message</source>
         <translation>Mesaj &amp;imzala</translation>
-    </message>
-    <message>
-        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Bir adresin sizin olduğunu ispatlamak için adresinizle mesaj imzalayabilirsiniz. Oltalama saldırılarının kimliğinizi imzanızla elde etmeyi deneyebilecekleri için belirsiz hiçbir şey imzalamamaya dikkat ediniz. Sadece ayrıntılı açıklaması olan ve tümüne katıldığınız ifadeleri imzalayınız.</translation>
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
@@ -2210,10 +2218,6 @@ Adres: %4
         <translation>Mesaj &amp;kontrol et</translation>
     </message>
     <message>
-        <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
-        <translation>İmza için kullanılan adresi, mesajı (satır sonları, boşluklar, sekmeler vs. karakterleri tam olarak kopyaladığınızdan emin olunuz) ve imzayı aşağıda giriniz. Bir ortadaki adam saldırısı tarafından kandırılmaya mâni olmak için imzadan, imzalı mesajın içeriğini aşan bir anlam çıkarmamaya dikkat ediniz.</translation>
-    </message>
-    <message>
         <source>The Bitcoin address the message was signed with</source>
         <translation>Mesajın imzalanmasında kullanılan Bitcoin adresi</translation>
     </message>
@@ -2230,8 +2234,8 @@ Adres: %4
         <translation>Tüm mesaj kontrolü alanlarını sıfırla</translation>
     </message>
     <message>
-        <source>Click "Sign Message" to generate signature</source>
-        <translation>İmzayı oluşturmak için "Mesaj İmzala" unsurunu tıklayın</translation>
+        <source>Click &quot;Sign Message&quot; to generate signature</source>
+        <translation>İmzayı oluşturmak için &quot;Mesaj İmzala&quot; unsurunu tıklayın</translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
@@ -2281,6 +2285,14 @@ Adres: %4
         <source>Message verified.</source>
         <translation>Mesaj doğrulandı.</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -2295,6 +2307,10 @@ Adres: %4
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
+    </message>
+    <message>
+        <source>[testnet accel]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2332,7 +2348,9 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, %n düğüm vasıtasıyla yayınlandı</numerusform><numerusform>, %n düğüm vasıtasıyla yayınlandı</numerusform></translation>
+        <translation>
+            <numerusform>, %n düğüm vasıtasıyla yayınlandı</numerusform>
+        </translation>
     </message>
     <message>
         <source>Date</source>
@@ -2372,7 +2390,9 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>%n ek blok sonrasında olgunlaşacak</numerusform><numerusform>%n ek blok sonrasında olgunlaşacak</numerusform></translation>
+        <translation>
+            <numerusform>%n ek blok sonrasında olgunlaşacak</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2415,8 +2435,8 @@ Adres: %4
         <translation>Tüccar</translation>
     </message>
     <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Oluşturulan bitcoin'lerin harcanabilmelerinden önce %1 blok beklemeleri gerekmektedir. Bu blok, oluşturduğunuzda, blok zincirine eklenmesi için ağda yayınlandı. Zincire eklenmesi başarısız olursa, durumu "kabul edilmedi" olarak değiştirilecek ve harcanamayacaktır. Bu, bazen başka bir düğüm sizden birkaç saniye önce ya da sonra blok oluşturursa meydana gelebilir.</translation>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Oluşturulan bitcoin&apos;lerin harcanabilmelerinden önce %1 blok beklemeleri gerekmektedir. Bu blok, oluşturduğunuzda, blok zincirine eklenmesi için ağda yayınlandı. Zincire eklenmesi başarısız olursa, durumu &quot;kabul edilmedi&quot; olarak değiştirilecek ve harcanamayacaktır. Bu, bazen başka bir düğüm sizden birkaç saniye önce ya da sonra blok oluşturursa meydana gelebilir.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2448,7 +2468,9 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>%n ilâve blok için açık</numerusform><numerusform>%n ilâve blok için açık</numerusform></translation>
+        <translation>
+            <numerusform>%n ilâve blok için açık</numerusform>
+        </translation>
     </message>
     <message>
         <source>unknown</source>
@@ -2486,7 +2508,9 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>%n ilâve blok için açık</numerusform><numerusform>%n ilâve blok için açık</numerusform></translation>
+        <translation>
+            <numerusform>%n ilâve blok için açık</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2807,30 +2831,6 @@ Adres: %4
         <translation>Dışarıdan gelen bağlantıları kabul et (varsayılan: -proxy veya -connect yoksa 1)</translation>
     </message>
     <message>
-        <source>%s, you must set a rpcpassword in the configuration file:
-%s
-It is recommended you use the following random password:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-The username and password MUST NOT be the same.
-If the file does not exist, create it with owner-readable-only file permissions.
-It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</source>
-        <translation>%s, şu yapılandırma dosyasında rpc parolası belirtmeniz gerekir:
-%s
-Aşağıdaki rastgele oluşturulan parolayı kullanmanız tavsiye edilir:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(bu parolayı hatırlamanız gerekli değildir)
-Kullanıcı ismi ile parolanın FARKLI olmaları gerekir.
-Dosya mevcut değilse, sadece sahibi için okumayla sınırlı izin ile oluşturunuz.
-Sorunlar hakkında bildiri almak için alertnotify unsurunu ayarlamanız tavsiye edilir;
-mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</translation>
-    </message>
-    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Belirtilen adrese bağlan ve daima ondan dinle. IPv6 için [makine]:port yazımını kullanınız</translation>
     </message>
@@ -2845,14 +2845,6 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     <message>
         <source>Enter regression test mode, which uses a special chain in which blocks can be solved instantly.</source>
         <translation>Blokların anında çözülebileceği özel bir zincir kullanan regresyon deneme kipine gir.</translation>
-    </message>
-    <message>
-        <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Hata: Muamele reddedildi! Cüzdanınızdaki madenî paraların bazıları zaten harcanmış olduğunda bu meydana gelebilir. Örneğin wallet.dat dosyasının bir kopyasını kullandıysanız ve kopyada para harcandığında ancak burada harcandığı işaretlenmediğinde.</translation>
-    </message>
-    <message>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>Hata: Muamelenin meblağı, karmaşıklığı ya da yakın geçmişte alınan fonların kullanılması nedeniyle bu muamele en az %s tutarında ücret gerektirmektedir!</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2931,10 +2923,6 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Hata ayıklama/deneme seçenekleri:</translation>
     </message>
     <message>
-        <source>Discover own IP address (default: 1 when listening and no -externalip)</source>
-        <translation>Kendi IP adresini keşfet (varsayılan: dinlenildiğinde ve -externalip yoksa 1)</translation>
-    </message>
-    <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
         <translation>Cüzdanı yükleme ve cüzdan RPC çağrılarını devre dışı bırak</translation>
     </message>
@@ -2967,10 +2955,6 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Hata: Disk alanı düşük!</translation>
     </message>
     <message>
-        <source>Error: Wallet locked, unable to create transaction!</source>
-        <translation>Hata: Cüzdan kilitli, muamele oluşturulamadı!</translation>
-    </message>
-    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Herhangi bir portun dinlenmesi başarısız oldu. Bunu istiyorsanız -listen=0 seçeneğini kullanınız.</translation>
     </message>
@@ -2987,8 +2971,8 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Yanlış ya da bulunamamış doğuş bloku. Şebeke için yanlış veri klasörü mü?</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Geçersiz -onion adresi: '%s'</translation>
+        <source>Invalid -onion address: &apos;%s&apos;</source>
+        <translation>Geçersiz -onion adresi: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3040,7 +3024,7 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
-        <translation>-txindex'i değiştirmek için veritabanını -reindex kullanarak tekrar inşa etmeniz gerekmektedir</translation>
+        <translation>-txindex&apos;i değiştirmek için veritabanını -reindex kullanarak tekrar inşa etmeniz gerekmektedir</translation>
     </message>
     <message>
         <source>Imports blocks from external blk000??.dat file</source>
@@ -3079,7 +3063,7 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Hata: İçeri gelen bağlantıların dinlenmesi başarısız oldu (dinleme %s hatasını verdi)</translation>
     </message>
     <message>
-        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</source>
+        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
         <translation>Hata: Desteklenmeyen -socks argümanı bulundu. SOCKS sürümünün ayarlanması artık mümkün değildir, sadece SOCKS5 vekilleri desteklenmektedir.</translation>
     </message>
     <message>
@@ -3115,24 +3099,16 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Bu ürün OpenSSL projesi tarafından OpenSSL araç takımı (http://www.openssl.org/) için geliştirilen yazılımlar, Eric Young (eay@cryptsoft.com) tarafından hazırlanmış şifreleme yazılımları ve Thomas Bernard tarafından programlanmış UPnP yazılımı içerir.</translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
-        <translation>Uyarı: Lütfen bilgisayarınızın saat ve tarihinin doğru olduğunu kontol ediniz! Saatinizde gecikme varsa Bitcoin Çekirdeği doğru şekilde çalışamaz.</translation>
-    </message>
-    <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
-        <translation>Beyaz listeye alınan eşler DoS yasaklamasına uğramazlar ve muameleleri zaten mempool'da olsalar da daima aktarılır, bu mesela bir geçit için kullanışlıdır</translation>
+        <translation>Beyaz listeye alınan eşler DoS yasaklamasına uğramazlar ve muameleleri zaten mempool&apos;da olsalar da daima aktarılır, bu mesela bir geçit için kullanışlıdır</translation>
     </message>
     <message>
-        <source>Cannot resolve -whitebind address: '%s'</source>
-        <translation>-whitebind adresi çözümlenemedi: '%s'</translation>
+        <source>Cannot resolve -whitebind address: &apos;%s&apos;</source>
+        <translation>-whitebind adresi çözümlenemedi: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Connect through SOCKS5 proxy</source>
         <translation>SOCKS5 vekil sunucusu vasıtasıyla bağlan</translation>
-    </message>
-    <message>
-        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
-        <translation>Telif hakkı 2009-%i Bitcoin Çekirdeği Geliştiricileri</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
@@ -3155,44 +3131,32 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Bilgi</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
-        <translation>Başlatma sınaması başarısız oldu. Bitcoin Çekirdeği kapatılıyor.</translation>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>-minrelaytxfee=&lt;amount&gt; için geçersiz meblağ: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>-minrelaytxfee=&lt;amount&gt; için geçersiz meblağ: '%s'</translation>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>-mintxfee=&lt;amount&gt; için geçersiz meblağ: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>-mintxfee=&lt;amount&gt; için geçersiz meblağ: '%s'</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least %s)</source>
+        <translation>-paytxfee=&lt;tutar&gt;:&apos;%s&apos; unsurunda geçersiz tutar (asgari %s olması lazımdır)</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
-        <translation>-paytxfee=&lt;tutar&gt;:'%s' unsurunda geçersiz tutar (asgari %s olması lazımdır)</translation>
-    </message>
-    <message>
-        <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation>-whitelist: '%s' unsurunda geçersiz bir ağ maskesi belirtildi</translation>
-    </message>
-    <message>
-        <source>Keep at most &lt;n&gt; unconnectable blocks in memory (default: %u)</source>
-        <translation>Hafızada en çok &lt;n&gt; bağlanılamaz blok tut (varsaylan: %u)</translation>
+        <source>Invalid netmask specified in -whitelist: &apos;%s&apos;</source>
+        <translation>-whitelist: &apos;%s&apos; unsurunda geçersiz bir ağ maskesi belirtildi</translation>
     </message>
     <message>
         <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
         <translation>Hafızada en çok &lt;n&gt; bağlanılamaz muamele tut (varsayılan: %u)</translation>
     </message>
     <message>
-        <source>Need to specify a port with -whitebind: '%s'</source>
-        <translation>-whitebind: '%s' ile bir port belirtilmesi lazımdır</translation>
+        <source>Need to specify a port with -whitebind: &apos;%s&apos;</source>
+        <translation>-whitebind: &apos;%s&apos; ile bir port belirtilmesi lazımdır</translation>
     </message>
     <message>
         <source>Node relay options:</source>
         <translation>Düğüm röle seçenekleri:</translation>
-    </message>
-    <message>
-        <source>Print block on startup, if found in block index</source>
-        <translation>Başlangıçta bloğu göster, blok indeksinde bulunduysa</translation>
     </message>
     <message>
         <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
@@ -3336,11 +3300,7 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     </message>
     <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
-        <translation>-checkblocks'un blok kontrolünün ne kadar kapsamlı olacağı (0 ilâ 4, varsayılan: %u)</translation>
-    </message>
-    <message>
-        <source>If paytxfee is not set, include enough fee so transactions are confirmed on average within n blocks (default: %u)</source>
-        <translation>Eğer paytxfee ayarlanmadıysa, kafi derecede ücret ekleyin ki muameleler vasati n blok içinde teyit edilsin (varsayılan: %u)</translation>
+        <translation>-checkblocks&apos;un blok kontrolünün ne kadar kapsamlı olacağı (0 ilâ 4, varsayılan: %u)</translation>
     </message>
     <message>
         <source>Log transaction priority and fee per kB when mining blocks (default: %u)</source>
@@ -3399,8 +3359,8 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Hata ayıklama çıktısına IP adreslerini dahil et (varsayılan: %u)</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Geçersiz -proxy adresi: '%s'</translation>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Geçersiz -proxy adresi: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Limit size of signature cache to &lt;n&gt; entries (default: %u)</source>
@@ -3433,10 +3393,6 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
         <translation>Hata ayıklama verilerinin önüne zaman damgası ekle (varsayılan: %u)</translation>
-    </message>
-    <message>
-        <source>Print block tree on startup (default: %u)</source>
-        <translation>Başlangıçta blok ağacını göster (varsayılan: %u)</translation>
     </message>
     <message>
         <source>Relay and mine data carrier transactions (default: %u)</source>
@@ -3499,24 +3455,20 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Aksaklık gösteren eşlerle bağlantıyı kesme sınırı (varsayılan: %u)</translation>
     </message>
     <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>-onlynet için bilinmeyen bir şebeke belirtildi: '%s'</translation>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>-onlynet için bilinmeyen bir şebeke belirtildi: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>-bind adresi çözümlenemedi: '%s'</translation>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>-bind adresi çözümlenemedi: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>-externalip adresi çözümlenemedi: '%s'</translation>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>-externalip adresi çözümlenemedi: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>-paytxfee=&lt;meblağ&gt; için geçersiz meblağ: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid amount</source>
-        <translation>Geçersiz meblağ</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>-paytxfee=&lt;meblağ&gt; için geçersiz meblağ: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
@@ -3551,12 +3503,141 @@ mesela: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Yükleme tamamlandı</translation>
     </message>
     <message>
-        <source>To use the %s option</source>
-        <translation>%s seçeneğini kullanmak için</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Hata</translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum total fees to use in a single wallet transaction, setting too low may abort large transactions (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Require high priority for relaying free or low-fee transactions (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To use bitcoind, or the -server option to bitcoin-qt, you must set an rpcpassword in the configuration file:
+%s
+It is recommended you use the following random password:
+rpcuser=bitcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+The username and password MUST NOT be the same.
+If the file does not exist, create it with owner-readable-only file permissions.
+It is also recommended to set alertnotify so you are notified of problems;
+for example: alertnotify=echo %%s | mail -s &quot;Bitcoin Alert&quot; admin@foo.com
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: -maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When creating transactions, ignore inputs with value less than this (default: 0.0001)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accept public REST requests (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow self signed root certificates (default: 0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: 0)</source>
+        <translation type="unfinished">Başlangıçta veri klasörü seç (varsayılan: 0)</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mininput=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RPC support for HTTP persistent connections (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation type="unfinished">Ödeme talebi için SSL kök sertifikalarını belirle (varsayılan: -system-)</translation>
+    </message>
+    <message>
+        <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
+        <translation type="unfinished">Lisan belirt, mesela &quot;de_De&quot; (varsayılan: sistem dili)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: 1)</source>
+        <translation type="unfinished">Başlatıldığında başlangıç ekranını göster (varsayılan: 1)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation type="unfinished">Küçültülmüş olarak başlat</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

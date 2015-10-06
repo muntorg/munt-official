@@ -56,10 +56,10 @@ bool static TestSplitHost(string test, string host, int port)
 
 BOOST_AUTO_TEST_CASE(netbase_splithost)
 {
-    BOOST_CHECK(TestSplitHost("www.guldencoin.com", "www.guldencoin.com", -1));
-    BOOST_CHECK(TestSplitHost("[www.guldencoin.com]", "www.guldencoin.com", -1));
-    BOOST_CHECK(TestSplitHost("www.guldencoin.com:80", "www.guldencoin.com", 80));
-    BOOST_CHECK(TestSplitHost("[www.guldencoin.com]:80", "www.guldencoin.com", 80));
+    BOOST_CHECK(TestSplitHost("www.Gulden.com", "www.Gulden.com", -1));
+    BOOST_CHECK(TestSplitHost("[www.Gulden.com]", "www.Gulden.com", -1));
+    BOOST_CHECK(TestSplitHost("www.Gulden.com:80", "www.Gulden.com", 80));
+    BOOST_CHECK(TestSplitHost("[www.Gulden.com]:80", "www.Gulden.com", 80));
     BOOST_CHECK(TestSplitHost("127.0.0.1", "127.0.0.1", -1));
     BOOST_CHECK(TestSplitHost("127.0.0.1:9231", "127.0.0.1", 9231));
     BOOST_CHECK(TestSplitHost("[127.0.0.1]", "127.0.0.1", -1));

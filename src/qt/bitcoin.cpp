@@ -47,7 +47,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QTranslator>
-#include "guldencoin/GuldencoinTranslator.h"
+#include <_Gulden/GuldenTranslator.h>
 
 #if defined(QT_STATICPLUGIN)
 #include <QtPlugin>
@@ -87,7 +87,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("guldencoin-core", psz).toStdString();
+    return QCoreApplication::translate("Gulden", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -106,7 +106,7 @@ static QString GetLangTerritory()
 }
 
 /** Set up translations */
-static void initTranslations(QGuldencoinTranslator &qtTranslatorBase, QGuldencoinTranslator &qtTranslator, QGuldencoinTranslator &translatorBase, QGuldencoinTranslator &translator)
+static void initTranslations(GuldenTranslator &qtTranslatorBase, GuldenTranslator &qtTranslator, GuldenTranslator &translatorBase, GuldenTranslator &translator, GuldenTranslator &translatorBaseGulden, GuldenTranslator &translatorGulden)
 {
 
     // Remove old translators
@@ -139,9 +139,18 @@ static void initTranslations(QGuldencoinTranslator &qtTranslatorBase, QGuldencoi
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
+    // Load e.g. gulden_de.qm (shortcut "gulden_de" needs to be defined in bitcoin.qrc)
+    if (translatorBaseGulden.load(lang, ":/gulden_translations/"))
+        QApplication::installTranslator(&translatorBaseGulden);
+
     // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
+
+    // Load e.g. gulden_de_DE.qm (shortcut "gulden_de_DE" needs to be defined in bitcoin.qrc)
+    if (translatorGulden.load(lang_territory, ":/gulden_translations/"))
+        QApplication::installTranslator(&translatorGulden);
+
 }
 
 /* qDebug() message handler --> debug.log */
@@ -352,7 +361,7 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
-    SplashScreen *splash = new SplashScreen(0, networkStyle);
+    SplashScreen *splash = new SplashScreen(Qt::FramelessWindowHint, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, so use
     // Qt::WA_DeleteOnClose to make sure that the window will be deleted eventually.
     splash->setAttribute(Qt::WA_DeleteOnClose);
@@ -452,7 +461,7 @@ void BitcoinApplication::initializeResult(int retval)
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
-        // guldencoin: URIs or payment requests:
+        // bitcoin: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
                          window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
@@ -532,12 +541,12 @@ int main(int argc, char *argv[])
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
-    QGuldencoinTranslator qtEmptyTranslator(true), qtTranslatorBase, qtTranslator, translatorBase, translator;
+    GuldenTranslator qtEmptyTranslator(true), qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden;
     
-    // This one exists purely for the Guldencoin 'translation magic'
+    // This one exists purely for the Gulden 'translation magic'
     QApplication::installTranslator(&qtEmptyTranslator);
 
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
     uiInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
@@ -553,7 +562,7 @@ int main(int argc, char *argv[])
     // User language is set up: pick a data directory
     Intro::pickDataDirectory();
 
-    /// 6. Determine availability of data directory and parse guldencoin.conf
+    /// 6. Determine availability of data directory and parse Gulden.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!boost::filesystem::is_directory(GetDataDir(false)))
     {
@@ -590,7 +599,7 @@ int main(int argc, char *argv[])
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(networkStyle->getAppName());
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
 
 #ifdef ENABLE_WALLET
     /// 8. URI IPC sending
@@ -603,7 +612,7 @@ int main(int argc, char *argv[])
         exit(0);
 
     // Start up the payment server early, too, so impatient users that click on
-    // guldencoin: links repeatedly have their payment requests routed to this process:
+    // bitcoin: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
 #endif
 

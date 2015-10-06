@@ -124,8 +124,8 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no guldencoin: URI
-    if(!uri.isValid() || uri.scheme() != QString("guldencoin"))
+    // return if URI is not valid or is no bitcoin: URI
+    if(!uri.isValid() || (uri.scheme() != QString("guldencoin") && uri.scheme() != QString("Gulden")))
         return false;
 
     SendCoinsRecipient rv;
@@ -185,7 +185,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 
 bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert guldencoin:// to guldencoin:
+    // Convert bitcoin:// to bitcoin:
     //
     //    Cannot handle this later, because guldencoin:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
@@ -193,13 +193,18 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
     {
         uri.replace(0, 13, "guldencoin:");
     }
+    else if(uri.startsWith("Gulden://", Qt::CaseInsensitive))
+    {
+        uri.replace(0, 9, "guldencoin:");
+    }
+
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
 }
 
 QString formatBitcoinURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("guldencoin:%1").arg(info.address);
+    QString ret = QString("Gulden:%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
@@ -668,7 +673,7 @@ boost::filesystem::path static GetAutostartDir()
 
 boost::filesystem::path static GetAutostartFilePath()
 {
-    return GetAutostartDir() / "guldencoin.desktop";
+    return GetAutostartDir() / "Gulden.desktop";
 }
 
 bool GetStartOnSystemStartup()
@@ -706,18 +711,21 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         boost::filesystem::ofstream optionFile(GetAutostartFilePath(), std::ios_base::out|std::ios_base::trunc);
         if (!optionFile.good())
             return false;
-        // Write a guldencoin.desktop file to the autostart directory:
+        // Write a bitcoin.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         if (GetBoolArg("-testnet", false))
-            optionFile << "Name=Guldencoin (testnet)\n";
+            optionFile << "Name=Gulden (testnet)\n";
         else if (GetBoolArg("-regtest", false))
-            optionFile << "Name=Guldencoin (regtest)\n";
+            optionFile << "Name=Gulden (regtest)\n";
         else
-            optionFile << "Name=Guldencoin\n";
+            optionFile << "Name=Gulden\n";
         optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", GetBoolArg("-testnet", false), GetBoolArg("-regtest", false));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
+        optionFile << "MimeType=x-scheme-handler/guldencoin:\n";
+        optionFile << "MimeType=x-scheme-handler/Gulden:\n";
+
         optionFile.close();
     }
     return true;

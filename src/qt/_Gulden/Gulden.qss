@@ -1,0 +1,173 @@
+QStatusBar
+{
+	height: 20px;
+}
+
+QStatusBar QLabel
+{
+	color: grey;
+	height: 12px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#progress_bar_label
+{
+	color: grey;
+	padding-left: 8px;
+	width: 200px;
+	min-width: 200px;
+	max-width: 200px;
+}
+
+QStatusBar
+{
+	color: grey;
+}
+
+QStatusBar > QFrame
+{
+	width: 200px;
+	min-width: 200px;
+	max-width: 200px;
+	margin: 0px;
+	padding-right: 10px;
+}
+
+QStatusBar > QFrame > QLabel
+{
+	width: 16px;
+	padding: 0px;
+	margin: 0px;
+}
+
+
+QStatusBar > QProgressBar
+{
+	max-height: 10px;
+	height: 10px;
+	border: 1px solid #838383;
+	background-color: #939393;
+	border-radius: 5px;
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+	min-width: 200px;
+	max-width: 300px;
+}
+
+QStatusBar > QProgressBar::Chunk
+{
+	background-color: #E5E5E5;
+	border-radius: 5px;
+}
+
+BitcoinGUI > QToolBar
+{
+	height: 38px;
+	background-color: #093999;
+	border-bottom: 1px solid #fff;
+	spacing: 0px;
+}
+
+BitcoinGUI > QToolBar > QToolButton
+{
+	height: 38px;
+	border: 0px;
+	border-bottom: 1px solid #fff;
+	font-size: 13px;
+	color: #fff;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	padding-left: auto;
+	padding-right: auto;
+}
+
+BitcoinGUI > QToolBar > QToolButton:hover
+{
+	height: 38px;
+	border: 0px;
+	border-bottom: 1px solid #fff;
+	font-size: 13px;
+	color: #fff;
+	background-color: #0f40a2;
+	padding: 0px;
+	margin: 0px;
+	width:100%;
+	padding-left: auto;
+	padding-right: auto;
+}
+
+#gulden_bar > QToolButton:hover
+{
+        background-color: #093999;
+}
+
+
+BitcoinGUI > QToolBar > QToolButton:checked
+{
+	height: 38px;
+	border: 0px;
+	border-bottom: 1px solid #fff;
+	font-size: 13px;
+	color: #fff;
+	background-color: #1b4bab;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	padding-left: auto;
+	padding-right: auto;
+}
+
+#gulden_bar
+{
+	height: 44px;
+	border-bottom: 1px solid #1b4bab;
+	background-color: #093999;
+	color: #fff;
+	padding: 0px;
+	margin: 0px;
+}
+
+#gulden_label_change
+{
+	color: #6791e4;
+	font-size: 13px;
+	padding: 0px;
+	margin: 0px;
+	padding-left: 8px;
+}
+
+#gulden_label_balance
+{
+	color: #fff;
+	font-weight: 500;
+	font-size: 15px;
+	padding: 0px;
+	margin: 0px;
+}
+
+#gulden_bar_right_margin
+{
+	height: 44px;
+	width: 10px;
+	max-width: 10px;
+	min-width: 10px;
+	padding: 0px;
+	margin: 0px;
+}
+
+#gulden_bar QToolButton
+{
+	padding: 0px;
+	margin: 10px;
+	width: 24px;
+	height: 24px;
+	border: 0px;
+}
+
+QStatusBar::item
+{
+	border: none;
+} 

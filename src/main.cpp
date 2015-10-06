@@ -15,7 +15,7 @@
 #include "merkleblock.h"
 #include "net.h"
 #include "pow.h"
-#include "guldencoin/diff.h"
+#include <Gulden/diff.h>
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
@@ -23,7 +23,9 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validationinterface.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 #include "primitives/block.h"
 
 #include <sstream>
@@ -36,7 +38,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Guldencoin cannot be compiled without assertions."
+# error "Gulden cannot be compiled without assertions."
 #endif
 
 /**
@@ -852,7 +854,7 @@ CAmount GetMinRelayFee(const CTransaction& tx, unsigned int nBytes, bool fAllowF
             nMinFee = 0;
     }
 
-    // Guldencoin
+    // Gulden
     // To limit transaction spam, add nBaseFee for each output less than DUST_SOFT_LIMIT, onlt if number of transactions exceeds 10
     int64_t nBaseFee = 100000;
     int nNumOutputs=0;;
@@ -1689,7 +1691,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("guldencoin-scriptch");
+    RenameThread("Gulden-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -1732,7 +1734,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes in their
     // initial block download.
-    //Guldencoin: BIP30 always true for Guldencoin.
+    //Gulden: BIP30 always true for us.
     bool fEnforceBIP30 = true;
     if (fEnforceBIP30) {
         BOOST_FOREACH(const CTransaction& tx, block.vtx) {
@@ -2489,7 +2491,7 @@ bool CheckBlockHeader(const CBlock& block, CValidationState& state, bool fCheckP
                          REJECT_INVALID, "high-hash");
 
     // Check timestamp
-    if (block.GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
+    if (block.GetBlockTime() > GetAdjustedTime() + 15 * 60)
         return state.Invalid(error("CheckBlockHeader(): block timestamp too far in the future"),
                              REJECT_INVALID, "time-too-new");
 
@@ -2717,7 +2719,7 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
 
 static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired)
 {
-    // Guldencoin: temporarily disable v2 block lockin until we are ready for v2 transition
+    // Gulden: temporarily disable v2 block lockin until we are ready for v2 transition
     return false;
     unsigned int nToCheck = Params().ToCheckBlockUpgradeMajority();
     unsigned int nFound = 0;

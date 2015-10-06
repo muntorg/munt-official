@@ -21,7 +21,7 @@
 
 #include "json/json_spirit_value.h"
 
-#include <guldencoin/translate.h>
+#include <Gulden/translate.h>
 
 using namespace json_spirit;
 using namespace std;

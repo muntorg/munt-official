@@ -1,10 +1,8 @@
-<TS language="nl" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="nl">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>Dubbelklik om het adres of label te wijzigen</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>Maak een nieuw adres aan</translation>
@@ -97,6 +95,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Een fout is opgetreden tijdens het opslaan van deze adreslijst naar %1. Probeer het nogmaals.</translation>
     </message>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -188,10 +190,6 @@
         <translation>Vul een nieuw </translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin zal nu afsluiten om het versleutelingsproces te voltooien. Onthoud dat het versleutelen van uw portemonnee u niet volledig kan beschermen: Malware kan uw computer infecteren en uw bitcoins stelen.</translation>
-    </message>
-    <message>
         <source>Wallet encryption failed</source>
         <translation>Portemonneeversleuteling mislukt</translation>
     </message>
@@ -218,6 +216,10 @@
     <message>
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Portemonneewachtwoord is met succes gewijzigd.</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -309,10 +311,6 @@
     <message>
         <source>Send coins to a Bitcoin address</source>
         <translation>Verstuur munten naar een Bitcoinadres</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>Wijzig instellingen van Bitcoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -424,7 +422,10 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n actieve connectie naar Bitcoinnetwerk</numerusform><numerusform>%n actieve connecties naar Bitcoinnetwerk</numerusform></translation>
+        <translation>
+            <numerusform>%n actieve connectie naar Bitcoinnetwerk</numerusform>
+            <numerusform>%n actieve connecties naar Bitcoinnetwerk</numerusform>
+        </translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -432,15 +433,24 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n uur</numerusform><numerusform>%n uur</numerusform></translation>
+        <translation>
+            <numerusform>%n uur</numerusform>
+            <numerusform>%n uur</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n dag</numerusform><numerusform>%n dagen</numerusform></translation>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dagen</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n week</numerusform><numerusform>%n weken</numerusform></translation>
+        <translation>
+            <numerusform>%n week</numerusform>
+            <numerusform>%n weken</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -448,7 +458,10 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n jaar</numerusform><numerusform>%n jaar</numerusform></translation>
+        <translation>
+            <numerusform>%n jaar</numerusform>
+            <numerusform>%n jaar</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -480,7 +493,10 @@
     </message>
     <message numerus="yes">
         <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>%n Blok verwerkt van transactie geschiedenis.</numerusform><numerusform>%n Blokken verwerkt van transactie geschiedenis.</numerusform></translation>
+        <translation>
+            <numerusform>%n Blok verwerkt van transactie geschiedenis.</numerusform>
+            <numerusform>%n Blokken verwerkt van transactie geschiedenis.</numerusform>
+        </translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -513,6 +529,10 @@ Adres: %4
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;gesloten&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for Bitcoin Core</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -725,8 +745,8 @@ Adres: %4
         <translation>Transacties met een hogere prioriteit zullen eerder in een block gezet worden.</translation>
     </message>
     <message>
-        <source>This label turns red, if the priority is smaller than "medium".</source>
-        <translation>Als dit label rood is, is de prioriteit minder dan "medium".</translation>
+        <source>This label turns red, if the priority is smaller than &quot;medium&quot;.</source>
+        <translation>Als dit label rood is, is de prioriteit minder dan &quot;medium&quot;.</translation>
     </message>
     <message>
         <source>This label turns red, if any recipient receives an amount smaller than %1.</source>
@@ -784,12 +804,12 @@ Adres: %4
         <translation>Bewerk adres om naar te verzenden</translation>
     </message>
     <message>
-        <source>The entered address "%1" is already in the address book.</source>
-        <translation>Het opgegeven adres "%1" bestaat al in uw adresboek.</translation>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Het opgegeven adres &quot;%1&quot; bestaat al in uw adresboek.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Het opgegeven adres "%1" is een ongeldig Bitcoinadres</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Bitcoin address.</source>
+        <translation>Het opgegeven adres &quot;%1&quot; is een ongeldig Bitcoinadres</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -853,30 +873,6 @@ Adres: %4
         <source>command-line options</source>
         <translation>commandoregel-opties</translation>
     </message>
-    <message>
-        <source>UI options</source>
-        <translation>gebruikersinterfaceopties</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Stel taal in, bijvoorbeeld ''de_DE" (standaard: systeeminstellingen)</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>Geminimaliseerd starten</translation>
-    </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: 1)</source>
-        <translation>Laat laadscherm zien bij het opstarten. (standaard: 1)</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: 0)</source>
-        <translation>Kies de gegevensmap tijdens het opstarten (standaard: 0)</translation>
-    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -909,8 +905,8 @@ Adres: %4
         <translation>Bitcoin Kern</translation>
     </message>
     <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Fout: De gespecificeerde directory "%1" kan niet worden gecreëerd.</translation>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
+        <translation>Fout: De gespecificeerde directory &quot;%1&quot; kan niet worden gecreëerd.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -918,11 +914,17 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform><numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform></translation>
+        <translation>
+            <numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform>
+            <numerusform>%n GB aan vrije oplsagruimte beschikbaar</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(van %n GB nodig)</numerusform><numerusform>(van %n GB nodig)</numerusform></translation>
+        <translation>
+            <numerusform>(van %n GB nodig)</numerusform>
+            <numerusform>(van %n GB nodig)</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -959,14 +961,6 @@ Adres: %4
         <translation>&amp;Algemeen</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Start Bitcoin automatisch na inloggen in het systeem</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>Start &amp;Bitcoin bij het inloggen in het systeem</translation>
-    </message>
-    <message>
         <source>Size of &amp;database cache</source>
         <translation>Grootte van de &amp;database cache</translation>
     </message>
@@ -992,7 +986,7 @@ Adres: %4
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>Derde partijen URL's (bijvoorbeeld block explorer) dat in de transacties tab verschijnen als contextmenu elementen. %s in de URL is vervangen door transactie hash. Verscheidene URL's zijn gescheiden door een verticale streep |.  </translation>
+        <translation>Derde partijen URL&apos;s (bijvoorbeeld block explorer) dat in de transacties tab verschijnen als contextmenu elementen. %s in de URL is vervangen door transactie hash. Verscheidene URL&apos;s zijn gescheiden door een verticale streep |.  </translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
@@ -1079,10 +1073,6 @@ Adres: %4
         <translation>&amp;Minimaliseer naar het systeemvak in plaats van de taakbalk</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Minimaliseer het venster in de plaats van de applicatie af te sluiten als het venster gesloten wordt. Wanneer deze optie aan staan, kan de applicatie alleen worden afgesloten door Afsluiten te kiezen in het menu.</translation>
-    </message>
-    <message>
         <source>M&amp;inimize on close</source>
         <translation>Minimaliseer bij sluiten van het &amp;venster</translation>
     </message>
@@ -1093,10 +1083,6 @@ Adres: %4
     <message>
         <source>User Interface &amp;language:</source>
         <translation>Taal &amp;Gebruikersinterface:</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>De taal van de gebruikersinterface kan hier ingesteld worden. Deze instelling zal pas van kracht worden nadat Bitcoin herstart wordt.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1145,6 +1131,22 @@ Adres: %4
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Het opgegeven proxyadres is ongeldig.</translation>
+    </message>
+    <message>
+        <source>Automatically start Bitcoin Core after logging in to the system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Start Bitcoin Core on system login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1241,12 +1243,8 @@ Adres: %4
         <translation>Betalingsverzoek geweigerd</translation>
     </message>
     <message>
-        <source>Payment request network doesn't match client network.</source>
+        <source>Payment request network doesn&apos;t match client network.</source>
         <translation>Betalingsaanvraagnetwerk komt niet overeen met klantennetwerk.</translation>
-    </message>
-    <message>
-        <source>Payment request has expired.</source>
-        <translation>Betalingsverzoek is verlopen.</translation>
     </message>
     <message>
         <source>Payment request is not initialized.</source>
@@ -1259,10 +1257,6 @@ Adres: %4
     <message>
         <source>Payment request error</source>
         <translation>Fout bij betalingsverzoek</translation>
-    </message>
-    <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Kan bitcoin niet starten: click-to-pay handler</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1308,6 +1302,26 @@ Adres: %4
         <source>Network request error</source>
         <translation>Netwerkfout bij verzoek</translation>
     </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request DoS protection</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PeerTableModel</name>
@@ -1349,14 +1363,6 @@ Adres: %4
     <message>
         <source>%1 s</source>
         <translation>%1s</translation>
-    </message>
-    <message>
-        <source>NETWORK</source>
-        <translation>Netwerk</translation>
-    </message>
-    <message>
-        <source>UNKNOWN</source>
-        <translation>ONBEKEND</translation>
     </message>
     <message>
         <source>None</source>
@@ -1557,16 +1563,8 @@ Adres: %4
         <translation>Debug-logbestand</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het Bitcoindebug-logbestand van de huidige datamap. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>Maak console leeg</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Welkom bij de Bitcoin RPC-console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1574,7 +1572,7 @@ Adres: %4
     </message>
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Typ &lt;b&gt;help&lt;/b&gt; voor een overzicht van de beschikbare commando's.</translation>
+        <translation>Typ &lt;b&gt;help&lt;/b&gt; voor een overzicht van de beschikbare commando&apos;s.</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1615,6 +1613,18 @@ Adres: %4
     <message>
         <source>Fetching...</source>
         <translation>Ophalen...</translation>
+    </message>
+    <message>
+        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Welcome to the Bitcoin Core RPC console.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1993,16 +2003,8 @@ Adres: %4
         <translation>De transactie was afgewezen. Dit kan gebeuren als u eerder uitgegeven munten opnieuw wilt versturen, zoals wanneer u een kopie van uw wallet.dat heeft gebruikt en in de kopie deze munten zijn gemarkeerd als uitgegeven, maar in de huidige nog niet.</translation>
     </message>
     <message>
-        <source>A fee higher than %1 is considered an insanely high fee.</source>
-        <translation>Transactiekosten hoger dan %1 worden gezien als waanzinnig hoog.</translation>
-    </message>
-    <message>
         <source>Pay only the minimum fee of %1</source>
         <translation>Betaal alleen de minimale transactiekosten van %1</translation>
-    </message>
-    <message>
-        <source>Estimated to begin confirmation within %1 block(s).</source>
-        <translation>Beginnen van bevesting geschat binnen %1 blok(ken).</translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2027,6 +2029,45 @@ Adres: %4
     <message>
         <source>added as transaction fee</source>
         <translation>toegevoegd als transactiekosten</translation>
+    </message>
+    <message>
+        <source>collapse fee-settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(read the tooltip)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send as zero-fee transaction if possible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -2103,6 +2144,14 @@ Adres: %4
         <source>Memo:</source>
         <translation>Memo:</translation>
     </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShutdownWindow</name>
@@ -2124,10 +2173,6 @@ Adres: %4
     <message>
         <source>&amp;Sign Message</source>
         <translation>O&amp;nderteken Bericht</translation>
-    </message>
-    <message>
-        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>U kunt berichten ondertekenen met een van uw adressen om te bewijzen dat u dit adres bezit. Pas op dat u geen onduidelijke dingen ondertekent, want phishingaanvallen zouden u kunnen misleiden om zo uw identiteit te stelen. Onderteken alleen berichten waarmee u het volledig eens bent.</translation>
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
@@ -2182,10 +2227,6 @@ Adres: %4
         <translation>&amp;Verifiëer Bericht</translation>
     </message>
     <message>
-        <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
-        <translation>Voer het ondertekenende adres, bericht en handtekening hieronder in (let erop dat u nieuwe regels, spaties en tabs juist overneemt) om de handtekening te verifiëren. Let erop dat u niet meer uit het bericht interpreteert dan er daadwerkelijk staat,  om te voorkomen dat u wordt misleid in een man-in-the-middle-aanval.</translation>
-    </message>
-    <message>
         <source>The Bitcoin address the message was signed with</source>
         <translation>Het Bitcoin adres waarmee het bericht ondertekend is</translation>
     </message>
@@ -2202,8 +2243,8 @@ Adres: %4
         <translation>Verwijder alles in de invulvelden</translation>
     </message>
     <message>
-        <source>Click "Sign Message" to generate signature</source>
-        <translation>Klik "Onderteken Bericht" om de handtekening te genereren</translation>
+        <source>Click &quot;Sign Message&quot; to generate signature</source>
+        <translation>Klik &quot;Onderteken Bericht&quot; om de handtekening te genereren</translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
@@ -2253,6 +2294,14 @@ Adres: %4
         <source>Message verified.</source>
         <translation>Bericht correct geverifiëerd.</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -2267,6 +2316,10 @@ Adres: %4
     <message>
         <source>[testnet]</source>
         <translation>[testnetwerk]</translation>
+    </message>
+    <message>
+        <source>[testnet accel]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2304,7 +2357,10 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, uitgezonden naar %n node</numerusform><numerusform>, uitgezonden naar %n nodes</numerusform></translation>
+        <translation>
+            <numerusform>, uitgezonden naar %n node</numerusform>
+            <numerusform>, uitgezonden naar %n nodes</numerusform>
+        </translation>
     </message>
     <message>
         <source>Date</source>
@@ -2344,7 +2400,10 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>komt tot wasdom na %n nieuw blok</numerusform><numerusform>komt tot wasdom na %n nieuwe blokken</numerusform></translation>
+        <translation>
+            <numerusform>komt tot wasdom na %n nieuw blok</numerusform>
+            <numerusform>komt tot wasdom na %n nieuwe blokken</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2387,8 +2446,8 @@ Adres: %4
         <translation>Handelaar</translation>
     </message>
     <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Gegenereerde munten moeten %1 blokken rijpen voordat ze kunnen worden besteed. Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blokketen toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status te veranderen naar "niet geaccepteerd" en het zal deze niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een blok genereert binnen een paar seconden na die van u.</translation>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Gegenereerde munten moeten %1 blokken rijpen voordat ze kunnen worden besteed. Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blokketen toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status te veranderen naar &quot;niet geaccepteerd&quot; en het zal deze niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een blok genereert binnen een paar seconden na die van u.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2420,7 +2479,10 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
+        <translation>
+            <numerusform>Open voor nog %n blok</numerusform>
+            <numerusform>Open voor nog %n blokken</numerusform>
+        </translation>
     </message>
     <message>
         <source>unknown</source>
@@ -2458,7 +2520,10 @@ Adres: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
+        <translation>
+            <numerusform>Open voor nog %n blok</numerusform>
+            <numerusform>Open voor nog %n blokken</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2539,6 +2604,10 @@ Adres: %4
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation>Bedrag verwijderd van of toegevoegd aan saldo</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2760,11 +2829,11 @@ Adres: %4
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
-        <translation>Aanvaard commandoregel- en JSON-RPC-commando's</translation>
+        <translation>Aanvaard commandoregel- en JSON-RPC-commando&apos;s</translation>
     </message>
     <message>
         <source>Run in the background as a daemon and accept commands</source>
-        <translation>Draai in de achtergrond als daemon en aanvaard commando's</translation>
+        <translation>Draai in de achtergrond als daemon en aanvaard commando&apos;s</translation>
     </message>
     <message>
         <source>Use the test network</source>
@@ -2775,42 +2844,12 @@ Adres: %4
         <translation>Accepteer verbindingen van buitenaf (standaard: 1 als geen -proxy of -connect is opgegeven)</translation>
     </message>
     <message>
-        <source>%s, you must set a rpcpassword in the configuration file:
-%s
-It is recommended you use the following random password:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-The username and password MUST NOT be the same.
-If the file does not exist, create it with owner-readable-only file permissions.
-It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</source>
-        <translation>%s, u moet een RPC-wachtwoord instellen in het configuratiebestand: %s
-U wordt aangeraden het volgende willekeurige wachtwoord te gebruiken:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(u hoeft dit wachtwoord niet te onthouden)
-De gebruikersnaam en wachtwoord mogen niet hetzelfde zijn.
-Als het bestand niet bestaat, make hem dan aan met leesrechten voor enkel de eigenaar.
-Het is ook aan te bevelen "alertnotify" in te stellen zodat u op de hoogte gesteld wordt van problemen;
-bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</translation>
-    </message>
-    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Bind aan opgegeven adres en luister er altijd op. Gebruik [host]:port notatie voor IPv6</translation>
     </message>
     <message>
         <source>Enter regression test mode, which uses a special chain in which blocks can be solved instantly.</source>
         <translation>Schakel regressietest-modus in, die een speciale blokketen gebruikt waarin blokken onmiddellijk opgelost kunnen worden.</translation>
-    </message>
-    <message>
-        <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Fout: De transactie was afgewezen! Dit kan gebeuren als sommige munten in uw portemonnee al eerder uitgegeven zijn, zoals wanneer u een kopie van uw wallet.dat heeft gebruikt en in de kopie deze munten zijn uitgegeven, maar in deze portemonnee die munten nog niet als zodanig zijn gemarkeerd.</translation>
-    </message>
-    <message>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>Fout: Deze transactie vereist transactiekosten van tenminste %s, vanwege zijn grootte, complexiteit, of het gebruik van onlangs ontvangen munten!</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2846,7 +2885,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Warning: error reading wallet.dat! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
-        <translation>Waarschuwing: Fout bij het lezen van wallet.dat! Alle sleutels zijn in goede orde uitgelezen, maar transactiedata of adresboeklemma's zouden kunnen ontbreken of fouten bevatten.</translation>
+        <translation>Waarschuwing: Fout bij het lezen van wallet.dat! Alle sleutels zijn in goede orde uitgelezen, maar transactiedata of adresboeklemma&apos;s zouden kunnen ontbreken of fouten bevatten.</translation>
     </message>
     <message>
         <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
@@ -2885,10 +2924,6 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Foutopsporing/Testopties:</translation>
     </message>
     <message>
-        <source>Discover own IP address (default: 1 when listening and no -externalip)</source>
-        <translation>Ontdek eigen IP-adres (standaard: 1 als er wordt geluisterd en geen -externalip is opgegeven)</translation>
-    </message>
-    <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
         <translation>Laad de wallet niet en schakel wallet RPC oproepen uit</translation>
     </message>
@@ -2917,10 +2952,6 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Fout: Weinig vrije diskruimte!</translation>
     </message>
     <message>
-        <source>Error: Wallet locked, unable to create transaction!</source>
-        <translation>Fout: Portemonnee vergrendeld, aanmaak transactie niet mogelijk!</translation>
-    </message>
-    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Mislukt om op welke poort dan ook te luisteren. Gebruik -listen=0 as u dit wilt.</translation>
     </message>
@@ -2937,8 +2968,8 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Incorrect of geen genesis-blok gevonden. Verkeerde datamap voor het netwerk?</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Ongeldig -onion adres '%s'</translation>
+        <source>Invalid -onion address: &apos;%s&apos;</source>
+        <translation>Ongeldig -onion adres &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3013,28 +3044,20 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Informatie</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ongeldig bedrag voor -minrelaytxfee=&lt;bedrag&gt;: '%s'</translation>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ongeldig bedrag voor -minrelaytxfee=&lt;bedrag&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ongeldig bedrag voor -mintxfee=&lt;bedrag&gt;: '%s'</translation>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ongeldig bedrag voor -mintxfee=&lt;bedrag&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
-        <translation>Ongeldig bedrag voor -paytxfee=&lt;bedrag&gt;: '%s' (Minimum %s)</translation>
-    </message>
-    <message>
-        <source>Keep at most &lt;n&gt; unconnectable blocks in memory (default: %u)</source>
-        <translation>Houd maximaal &lt;n&gt; onverbonden blokken in geheugen (standaard: %u)</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least %s)</source>
+        <translation>Ongeldig bedrag voor -paytxfee=&lt;bedrag&gt;: &apos;%s&apos; (Minimum %s)</translation>
     </message>
     <message>
         <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
         <translation>Houd maximaal &lt;n&gt; onverbonden transacties in geheugen (standaard: %u)</translation>
-    </message>
-    <message>
-        <source>Print block on startup, if found in block index</source>
-        <translation>Toon block bij opstarten, wanneer gevonden in block index</translation>
     </message>
     <message>
         <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
@@ -3162,7 +3185,7 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
-        <translation>Gebruik een aparte SOCKS5 proxy om 'Tor hidden services' te bereiken (standaard: %s)</translation>
+        <translation>Gebruik een aparte SOCKS5 proxy om &apos;Tor hidden services&apos; te bereiken (standaard: %s)</translation>
     </message>
     <message>
         <source>Always query for peer addresses via DNS lookup (default: %u)</source>
@@ -3189,8 +3212,8 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Aantal te checken blokken bij het opstarten (standaard: %u, 0 = allemaal)</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Ongeldig -proxy adres: '%s'</translation>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Ongeldig -proxy adres: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Limit size of signature cache to &lt;n&gt; entries (default: %u)</source>
@@ -3223,10 +3246,6 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
         <translation>Prepend debug output met tijdstempel (standaard: %u)</translation>
-    </message>
-    <message>
-        <source>Print block tree on startup (default: %u)</source>
-        <translation>Toon block structuur bij opstarten (default: %u)</translation>
     </message>
     <message>
         <source>Run a thread to flush wallet periodically (default: %u)</source>
@@ -3277,24 +3296,20 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Drempel om verbinding te verbreken naar zich misdragende peers (standaard: %u)</translation>
     </message>
     <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>Onbekend netwerk gespecificeerd in -onlynet: '%s'</translation>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>Onbekend netwerk gespecificeerd in -onlynet: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>Kan -bind adres niet herleiden: '%s'</translation>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>Kan -bind adres niet herleiden: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>Kan -externlip adres niet herleiden: '%s'</translation>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>Kan -externlip adres niet herleiden: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ongeldig bedrag voor -paytxfee=&lt;bedrag&gt;: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid amount</source>
-        <translation>Ongeldig bedrag</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ongeldig bedrag voor -paytxfee=&lt;bedrag&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
@@ -3329,12 +3344,313 @@ bijvoorbeeld: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com</tran
         <translation>Klaar met laden</translation>
     </message>
     <message>
-        <source>To use the %s option</source>
-        <translation>Om de %s optie te gebruiken</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Fout</translation>
+    </message>
+    <message>
+        <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow JSON-RPC connections from specified source. Valid for &lt;ip&gt; are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while setting up the RPC address %s port %u for listening: %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continuously rate-limit free transactions to &lt;n&gt;*1000 bytes per minute (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file COPYING or &lt;http://www.opensource.org/licenses/mit-license.php&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Listening for incoming connections failed (listen returned error %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flush database activity from memory pool to disk log every &lt;n&gt; megabytes (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log transaction priority and fee per kB when mining blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum size of data in data carrier transactions we relay and mine (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum total fees to use in a single wallet transaction, setting too low may abort large transactions (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Require high priority for relaying free or low-fee transactions (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit &lt;https://www.openssl.org/&gt; and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To use bitcoind, or the -server option to bitcoin-qt, you must set an rpcpassword in the configuration file:
+%s
+It is recommended you use the following random password:
+rpcuser=bitcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+The username and password MUST NOT be the same.
+If the file does not exist, create it with owner-readable-only file permissions.
+It is also recommended to set alertnotify so you are notified of problems;
+for example: alertnotify=echo %%s | mail -s &quot;Bitcoin Alert&quot; admin@foo.com
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: -maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When creating transactions, ignore inputs with value less than this (default: 0.0001)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accept public REST requests (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acceptable ciphers (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow self signed root certificates (default: 0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot resolve -whitebind address: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: 0)</source>
+        <translation type="unfinished">Kies de gegevensmap tijdens het opstarten (standaard: 0)</translation>
+    </message>
+    <message>
+        <source>Connect through SOCKS5 proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not parse -rpcbind value %s as network address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: A fatal internal error occured, see debug.log for details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Unsupported argument -tor found, use -onion.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fee (in BTC/kB) to add to transactions you send (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Include IP addresses in debug output (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mininput=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Node relay options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RPC support for HTTP persistent connections (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relay and mine data carrier transactions (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relay non-P2SH multisig (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation type="unfinished">Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
+    </message>
+    <message>
+        <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
+        <translation type="unfinished">Stel taal in, bijvoorbeeld &apos;&apos;de_DE&quot; (standaard: systeeminstellingen)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: 1)</source>
+        <translation type="unfinished">Laat laadscherm zien bij het opstarten. (standaard: 1)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation type="unfinished">Geminimaliseerd starten</translation>
+    </message>
+    <message>
+        <source>Stop running after importing blocks from disk (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet needed to be rewritten: restart Bitcoin Core to complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Unsupported argument -benchmark ignored, use -debug=bench.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Unsupported argument -debugnet ignored, use -debug=net.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

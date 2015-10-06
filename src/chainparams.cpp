@@ -71,13 +71,15 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
         ( 212000, uint256S("0x1301ebdd83f6a9c224de33817d69e3fa339769acfd4401cbc3c3c88202c3dbdb"))
         ( 225000, uint256S("0xc9a5c5226d8f103972ffee38c31c3508189b694e0d4f93a394ccea2cac82ce49"))
         ( 233500, uint256S("0x7b16385152001b51c25004e04b1f62906088027d8753449bc36db88ef540aaaa"))
+        ( 250000, uint256S("0xa6635e1dbce15cfb4be7f3f464f612205dd13ba96828535000b99ce04648500d"))
+        ( 260000, uint256S("0x42c2254ffd8be411386b9089fec985fe3a06d5fc386ff0bd494b5a3aa292f107"))
         ;
 static const Checkpoints::CCheckpointData data = {
         &mapCheckpoints,
-        1408078859, // * UNIX timestamp of last checkpoint block
-        327087,    // * total number of transactions between genesis and last checkpoint
+        1443116050, // * UNIX timestamp of last checkpoint block
+        680226,    // * total number of transactions between genesis and last checkpoint
                     //   (the tx=... number in the SetBestChain debug.log lines)
-        8000.0     // * estimated number of transactions per day after checkpoint
+        350.0     // * estimated number of transactions per day after checkpoint
     };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
@@ -110,9 +112,9 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
-        consensus.powLimit = ~arith_uint256(0) >> 20;// Guldencoin: starting difficulty is 1 / 2^12
-        consensus.nPowTargetTimespan = 3.5 * 24 * 60 * 60; // Guldencoin: 3.5 days
-        consensus.nPowTargetSpacing = 2.5 * 60; // Guldencoin: 2.5 minutes
+        consensus.powLimit = ~arith_uint256(0) >> 20;// Gulden: starting difficulty is 1 / 2^12
+        consensus.nPowTargetTimespan = 3.5 * 24 * 60 * 60; // Gulden: 3.5 days
+        consensus.nPowTargetSpacing = 2.5 * 60; // Gulden: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         /** 
          * The message start string is designed to be unlikely to occur in normal data.
@@ -178,7 +180,7 @@ public:
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,38+128);
-        //Guldencoin: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/guldencoin2/issues/17
+        //Gulden: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/gulden-dev/issues/17
         //base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         //base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
@@ -231,7 +233,7 @@ public:
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,111+128);
-        //Guldencoin: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/guldencoin2/issues/17
+        //Gulden: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/gulden-dev/issues/17
         //base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         //base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
@@ -317,7 +319,7 @@ public:
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,111+128);
-        //Guldencoin: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/guldencoin2/issues/17
+        //Gulden: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/gulden-dev/issues/17
         //base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         //base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 

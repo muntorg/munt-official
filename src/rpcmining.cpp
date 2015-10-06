@@ -27,8 +27,9 @@
 #include "json/json_spirit_utils.h"
 #include "json/json_spirit_value.h"
 
-#include <guldencoin/rpcgulden.h>
-#include <guldencoin/translate.h>
+#include <Gulden/diff.h>
+#include <Gulden/rpcgulden.h>
+#include <Gulden/translate.h>
 
 using namespace json_spirit;
 using namespace std;
@@ -97,6 +98,7 @@ Value getnetworkhashps(const Array& params, bool fHelp)
     return GetNetworkHashPS(params.size() > 0 ? params[0].get_int() : 120, params.size() > 1 ? params[1].get_int() : -1);
 }
 
+#ifdef ENABLE_WALLET
 // Key used by getblocktemplate miners.
 // Allocated in InitRPCMining, free'd in ShutdownRPCMining
 static CReserveKey* pMiningKey = NULL;
@@ -118,7 +120,6 @@ void ShutdownRPCMining()
     delete pMiningKey; pMiningKey = NULL;
 }
 
-#ifdef ENABLE_WALLET
 Value getgenerate(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
@@ -458,6 +459,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
         uint256 hashWatchedChain;
         boost::system_time checktxtime;
         unsigned int nTransactionsUpdatedLastLP;
+        CBlockHeader blockUpdatedLastLP;
 
         if (lpval.type() == str_type)
         {
@@ -473,6 +475,8 @@ Value getblocktemplate(const Array& params, bool fHelp)
             hashWatchedChain = chainActive.Tip()->GetBlockHash();
             nTransactionsUpdatedLastLP = nTransactionsUpdatedLast;
         }
+        UpdateTime(&blockUpdatedLastLP, chainActive.Tip());
+        blockUpdatedLastLP.nBits = GetNextWorkRequired(chainActive.Tip(), &blockUpdatedLastLP, Params().GetConsensus());
 
         // Release the wallet and main lock while waiting
         LEAVE_CRITICAL_SECTION(cs_main);
@@ -486,6 +490,9 @@ Value getblocktemplate(const Array& params, bool fHelp)
                 {
                     // Timeout: Check transactions for update
                     if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLastLP)
+                        break;
+                    UpdateTime(&blockUpdatedLastLP, chainActive.Tip());
+                    if (GetNextWorkRequired(chainActive.Tip(), &blockUpdatedLastLP, Params().GetConsensus()) != blockUpdatedLastLP.nBits)
                         break;
                     checktxtime += boost::posix_time::seconds(10);
                 }

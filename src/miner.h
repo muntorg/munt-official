@@ -7,7 +7,7 @@
 #define BITCOIN_MINER_H
 
 #include "primitives/block.h"
-#include "guldencoin/scrypt.h"
+#include <Gulden/scrypt.h>
 
 #include <stdint.h>
 

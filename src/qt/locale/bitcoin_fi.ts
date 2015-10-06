@@ -1,10 +1,8 @@
-<TS language="fi" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="fi">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>Kaksoisnapauta muokataksesi osoitetta tai nimeä</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>Luo uusi osoite</translation>
@@ -97,6 +95,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Virhe tallentaessa osoitelistaa %1. Yritä uudelleen.</translation>
     </message>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -188,10 +190,6 @@
         <translation>Anna salauslause lompakkoon. &lt;br/&gt;Ole hyvä ja käytä lausetta jossa on &lt;b&gt;kymmenen tai enemmän satunnaista merkkiä&lt;/b&gt; tai &lt;b&gt;kahdeksan tai useampi sanaa&lt;/b&gt;.</translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin sulkeutuu lopettaakseen salausprosessin. Muista, että salattukaan lompakko ei täysin suojaa sitä haittaohjelmien aiheuttamilta varkauksilta.</translation>
-    </message>
-    <message>
         <source>Wallet encryption failed</source>
         <translation>Lompakon salaus epäonnistui</translation>
     </message>
@@ -218,6 +216,10 @@
     <message>
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Lompakon tunnuslause vaihdettiin onnistuneesti.</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -309,10 +311,6 @@
     <message>
         <source>Send coins to a Bitcoin address</source>
         <translation>Lähetä kolikoita Bitcoin-osoitteeseen</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>Muuta Bitcoinin konfiguraatioasetuksia</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -424,7 +422,10 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform></translation>
+        <translation>
+            <numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform>
+            <numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform>
+        </translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -432,15 +433,24 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n tunti</numerusform><numerusform>%n tuntia</numerusform></translation>
+        <translation>
+            <numerusform>%n tunti</numerusform>
+            <numerusform>%n tuntia</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n päivä</numerusform><numerusform>%n päivää</numerusform></translation>
+        <translation>
+            <numerusform>%n päivä</numerusform>
+            <numerusform>%n päivää</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n viikko</numerusform><numerusform>%n viikkoa</numerusform></translation>
+        <translation>
+            <numerusform>%n viikko</numerusform>
+            <numerusform>%n viikkoa</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -448,7 +458,10 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n vuosi</numerusform><numerusform>%n vuotta</numerusform></translation>
+        <translation>
+            <numerusform>%n vuosi</numerusform>
+            <numerusform>%n vuotta</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -508,6 +521,17 @@ Osoite: %4</translation>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;lukittuna&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for Bitcoin Core</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n blocks of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -708,8 +732,8 @@ Osoite: %4</translation>
         <translation>Rahansiirrot korkeammalla prioriteetilla sisällytetään varmemmin lohkoon.</translation>
     </message>
     <message>
-        <source>This label turns red, if the priority is smaller than "medium".</source>
-        <translation>Tämä nimi muuttuu punaiseksi jos prioriteetti on pienempi kuin "keskisuuri".</translation>
+        <source>This label turns red, if the priority is smaller than &quot;medium&quot;.</source>
+        <translation>Tämä nimi muuttuu punaiseksi jos prioriteetti on pienempi kuin &quot;keskisuuri&quot;.</translation>
     </message>
     <message>
         <source>This label turns red, if any recipient receives an amount smaller than %1.</source>
@@ -726,6 +750,18 @@ Osoite: %4</translation>
     <message>
         <source>(change)</source>
         <translation>(vaihtoraha)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -767,12 +803,12 @@ Osoite: %4</translation>
         <translation>Muokkaa lähtevää osoitetta</translation>
     </message>
     <message>
-        <source>The entered address "%1" is already in the address book.</source>
-        <translation>Osoite "%1" on jo osoitekirjassa.</translation>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Osoite &quot;%1&quot; on jo osoitekirjassa.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Antamasi osoite "%1" ei ole validi Bitcoin-osoite.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Bitcoin address.</source>
+        <translation>Antamasi osoite &quot;%1&quot; ei ole validi Bitcoin-osoite.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -836,30 +872,6 @@ Osoite: %4</translation>
         <source>command-line options</source>
         <translation>komentorivi parametrit</translation>
     </message>
-    <message>
-        <source>UI options</source>
-        <translation>Käyttöliittymäasetukset</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Set language, for example "de_DE" (default: system locale)</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>Käynnistä pienennettynä</translation>
-    </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>Aseta SSL root varmenne maksupyynnöille (oletus: -system-)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: 1)</source>
-        <translation>Näytä aloitusruutu käynnistettäessä (oletus: 1)</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: 0)</source>
-        <translation>Valitse data-hakemisto käynnistyksessä (oletus: 0)</translation>
-    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -892,14 +904,28 @@ Osoite: %4</translation>
         <translation>Bitcoin-ydin</translation>
     </message>
     <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Virhe: Annettu datahakemistoa "%1" ei voida luoda.</translation>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
+        <translation>Virhe: Annettu datahakemistoa &quot;%1&quot; ei voida luoda.</translation>
     </message>
     <message>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -932,14 +958,6 @@ Osoite: %4</translation>
     <message>
         <source>&amp;Main</source>
         <translation>&amp;Yleiset</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Käynnistä Bitcoin kirjautumisen yhteydessä.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>&amp;Käynnistä Bitcoin kirjautumisen yhteydessä</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1046,10 +1064,6 @@ Osoite: %4</translation>
         <translation>&amp;Pienennä ilmaisinalueelle työkalurivin sijasta</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Ikkunaa suljettaessa vain pienentää Bitcoin-ohjelman ikkunan lopettamatta itse ohjelmaa. Kun tämä asetus on valittuna, ohjelman voi sulkea vain valitsemalla Lopeta ohjelman valikosta.</translation>
-    </message>
-    <message>
         <source>M&amp;inimize on close</source>
         <translation>P&amp;ienennä suljettaessa</translation>
     </message>
@@ -1060,10 +1074,6 @@ Osoite: %4</translation>
     <message>
         <source>User Interface &amp;language:</source>
         <translation>&amp;Käyttöliittymän kieli</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>Tässä voit määritellä käyttöliittymän kielen. Muutokset astuvat voimaan seuraavan kerran, kun Bitcoin käynnistetään.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1112,6 +1122,30 @@ Osoite: %4</translation>
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Antamasi proxy-osoite on virheellinen.</translation>
+    </message>
+    <message>
+        <source>Automatically start Bitcoin Core after logging in to the system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Start Bitcoin Core on system login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1172,6 +1206,26 @@ Osoite: %4</translation>
         <source>out of sync</source>
         <translation>Ei ajan tasalla</translation>
     </message>
+    <message>
+        <source>Balances</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mined balance in watch-only addresses that has not yet matured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1188,20 +1242,12 @@ Osoite: %4</translation>
         <translation>Maksupyyntö hylätty</translation>
     </message>
     <message>
-        <source>Payment request has expired.</source>
-        <translation>Maksupyyntö on vanhentunut.</translation>
-    </message>
-    <message>
         <source>Requested payment amount of %1 is too small (considered dust).</source>
         <translation>Maksupyyntö %1 on liian pieni (huomioidaan tomuna).</translation>
     </message>
     <message>
         <source>Payment request error</source>
         <translation>Maksupyyntövirhe</translation>
-    </message>
-    <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Ei voida käynnistää bitcoin: klikkaa-maksu käsittelijää</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1239,6 +1285,42 @@ Osoite: %4</translation>
         <source>Network request error</source>
         <translation>Tietoverkon pyyntövirhe</translation>
     </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request network doesn&apos;t match client network.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request DoS protection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request cannot be parsed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PeerTableModel</name>
@@ -1246,7 +1328,15 @@ Osoite: %4</translation>
         <source>User Agent</source>
         <translation>Käyttöliittymä</translation>
     </message>
-    </context>
+    <message>
+        <source>Address/Hostname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>QObject</name>
     <message>
@@ -1276,6 +1366,14 @@ Osoite: %4</translation>
     <message>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>Enter a Bitcoin address (e.g. %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1408,16 +1506,8 @@ Osoite: %4</translation>
         <translation>Debug lokitiedosto</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Avaa lokitiedosto nykyisestä data-kansiosta. Tämä voi viedä useamman sekunnin, jos lokitiedosto on iso.</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>Tyhjennä konsoli</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Tervetuloa Bitcoin RPC konsoliin.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1447,7 +1537,95 @@ Osoite: %4</translation>
         <source>Unknown</source>
         <translation>Tuntematon</translation>
     </message>
-    </context>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Starting Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sync Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bytes Sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bytes Received</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Welcome to the Bitcoin Core RPC console.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetching...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1803,6 +1981,93 @@ Osoite: %4</translation>
         <source>added as transaction fee</source>
         <translation>lisätty rahansiirtomaksuna</translation>
     </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>collapse fee-settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>total at least</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(read the tooltip)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirmation time:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send as zero-fee transaction if possible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(confirmation may take longer)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pay only the minimum fee of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -1874,6 +2139,18 @@ Osoite: %4</translation>
         <source>Memo:</source>
         <translation>Muistio:</translation>
     </message>
+    <message>
+        <source>The Bitcoin address to send the payment to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1895,10 +2172,6 @@ Osoite: %4</translation>
     <message>
         <source>&amp;Sign Message</source>
         <translation>&amp;Allekirjoita viesti</translation>
-    </message>
-    <message>
-        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Voit allekirjoittaa viestit omalla osoitteellasi todistaaksesi että omistat ne. Ole huolellinen, että et allekirjoita mitään epämääräistä, phishing-hyökkääjät voivat huijata sinua allekirjoittamaan luovuttamalla henkilöllisyytesi. Allekirjoita selvitys täysin yksityiskohtaisesti mihin olet sitoutunut.</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1949,10 +2222,6 @@ Osoite: %4</translation>
         <translation>&amp;Varmista viesti</translation>
     </message>
     <message>
-        <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
-        <translation>Syötä allekirjoittava osoite, viesti ja allekirjoitus alla oleviin kenttiin varmistaaksesi allekirjoituksen aitouden. Varmista että kopioit kaikki kentät täsmälleen oikein, myös rivinvaihdot, välilyönnit, tabulaattorit, jne.</translation>
-    </message>
-    <message>
         <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
         <translation>Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä Bitcoin-osoitteella</translation>
     </message>
@@ -1965,8 +2234,8 @@ Osoite: %4</translation>
         <translation>Tyhjennä kaikki varmista-viesti-kentät</translation>
     </message>
     <message>
-        <source>Click "Sign Message" to generate signature</source>
-        <translation>Klikkaa "Allekirjoita Viesti luodaksesi allekirjoituksen </translation>
+        <source>Click &quot;Sign Message&quot; to generate signature</source>
+        <translation>Klikkaa &quot;Allekirjoita Viesti luodaksesi allekirjoituksen </translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
@@ -2016,6 +2285,22 @@ Osoite: %4</translation>
         <source>Message verified.</source>
         <translation>Viesti varmistettu.</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Bitcoin address to sign the message with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The Bitcoin address the message was signed with</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -2030,6 +2315,10 @@ Osoite: %4</translation>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
+    </message>
+    <message>
+        <source>[testnet accel]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2067,7 +2356,10 @@ Osoite: %4</translation>
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>lähetetty %n noodin läpi</numerusform><numerusform>lähetetty %n noodin läpi</numerusform></translation>
+        <translation>
+            <numerusform>lähetetty %n noodin läpi</numerusform>
+            <numerusform>lähetetty %n noodin läpi</numerusform>
+        </translation>
     </message>
     <message>
         <source>Date</source>
@@ -2103,7 +2395,10 @@ Osoite: %4</translation>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>kypsyy %n lohkon kuluttua</numerusform><numerusform>kypsyy %n lohkon kuluttua</numerusform></translation>
+        <translation>
+            <numerusform>kypsyy %n lohkon kuluttua</numerusform>
+            <numerusform>kypsyy %n lohkon kuluttua</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2138,8 +2433,8 @@ Osoite: %4</translation>
         <translation>Kauppias</translation>
     </message>
     <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Luodut kolikot täytyy kypsyttää %1 lohkoa kunnes ne voidaan käyttää. Kun loit tämän lohkon, se lähetettiin verkkoon lisänä lohkoketjuun. Jos se epäonnistuu pääsemään ketjuun sen tila tulee muuttumaan "ei hyväksytty" ja sitä ei voida käyttää. Tämä voi ajoittain tapahtua kun toisen solmun lohko luodaan samanaikaisesti omasi kanssa.</translation>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Luodut kolikot täytyy kypsyttää %1 lohkoa kunnes ne voidaan käyttää. Kun loit tämän lohkon, se lähetettiin verkkoon lisänä lohkoketjuun. Jos se epäonnistuu pääsemään ketjuun sen tila tulee muuttumaan &quot;ei hyväksytty&quot; ja sitä ei voida käyttää. Tämä voi ajoittain tapahtua kun toisen solmun lohko luodaan samanaikaisesti omasi kanssa.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2171,11 +2466,26 @@ Osoite: %4</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
+        <translation>
+            <numerusform>Avoinna %n lisälohkolle</numerusform>
+            <numerusform>Avoinna %n lisälohkolle</numerusform>
+        </translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>tuntematon</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2209,7 +2519,10 @@ Osoite: %4</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
+        <translation>
+            <numerusform>Avoinna %n lisälohkolle</numerusform>
+            <numerusform>Avoinna %n lisälohkolle</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2286,6 +2599,14 @@ Osoite: %4</translation>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation>Saldoon lisätty tai siitä vähennetty määrä.</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2426,10 +2747,18 @@ Osoite: %4</translation>
         <source>to</source>
         <translation>kenelle</translation>
     </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
-    </context>
+    <message>
+        <source>Unit to show amounts in. Click to select another unit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -2514,44 +2843,12 @@ Osoite: %4</translation>
         <translation>Hyväksy yhteyksiä ulkopuolelta (vakioasetus: 1 jos -proxy tai -connect ei määritelty)</translation>
     </message>
     <message>
-        <source>%s, you must set a rpcpassword in the configuration file:
-%s
-It is recommended you use the following random password:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-The username and password MUST NOT be the same.
-If the file does not exist, create it with owner-readable-only file permissions.
-It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</source>
-        <translation>%s, sinun tulee asettaa rpcpassword asetustietostossa:
-%s
-Suositellaan että käytät allaolevaa satunnaista salasanaa:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(sinun ei tarvitse muistaa tätä salasanaa)
-Tämän tunnuksen ja salasanan TULEE OLLA sama.
-Jos tiedostoa ei ole, luo se vain omistajan-luku-oikeudella.
-Suositellaan asettaa alertnotify jotta saat tietoa ongelmista;
-esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</translation>
-    </message>
-    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Kytkeydy annettuun osoitteeseen ja pidä linja aina auki. Käytä [host]:portin merkintätapaa IPv6:lle.</translation>
     </message>
     <message>
         <source>Enter regression test mode, which uses a special chain in which blocks can be solved instantly.</source>
         <translation>Aloita regression testimoodi joka käyttää erikoisketjua jossa lohkoja voidaan ratkaista välittömästi.</translation>
-    </message>
-    <message>
-        <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Virhe: Rahansiirto hylättiin! Tämä saattaa tapahtua jos jotkut kolikot lompakossa on jo käytetty. Esimerkiksi jos kopioit wallet.dat tiedoston ja kolikot on käytetty mutta ei merkattu täällä.</translation>
-    </message>
-    <message>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>Virhe: Tämä rahansiirto vaatii rahansiirtopalkkion vähintään %s johtuen sen määrästä, monimutkaisuudesta tai hiljattain vastaanotettujen summien käytöstä</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2626,10 +2923,6 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Debuggaus/Testauksen valinnat:</translation>
     </message>
     <message>
-        <source>Discover own IP address (default: 1 when listening and no -externalip)</source>
-        <translation>Hae oma IP osoite (vakioasetus: 1 kun kuuntelemassa ja ei -externalip)</translation>
-    </message>
-    <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
         <translation>Älä lataa lompakkoa ja poista lompakon RPC kutsut</translation>
     </message>
@@ -2658,10 +2951,6 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Varoitus: Levytila on vähissä!</translation>
     </message>
     <message>
-        <source>Error: Wallet locked, unable to create transaction!</source>
-        <translation>Virhe: Lompakko on lukittu, rahansiirtoa ei voida luoda</translation>
-    </message>
-    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Ei onnistuttu kuuntelemaan missään portissa. Käytä -listen=0 jos haluat tätä.</translation>
     </message>
@@ -2678,8 +2967,8 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Virheellinen tai olematon alkulohko löydetty. Väärä data-hakemisto verkolle?</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Virheellinen -onion osoite: '%s'</translation>
+        <source>Invalid -onion address: &apos;%s&apos;</source>
+        <translation>Virheellinen -onion osoite: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -2746,10 +3035,6 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Yhdistä SOCKS5 proxin kautta</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
-        <translation>Copyright (C) 2009-%i  Bitcoin kehittäjät</translation>
-    </message>
-    <message>
         <source>Error loading wallet.dat: Wallet requires newer version of Bitcoin Core</source>
         <translation>Virhe ladattaessa wallet.dat-tiedostoa: Tarvitset uudemman version Bitcoinista</translation>
     </message>
@@ -2758,16 +3043,12 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Tietoa</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Virheellinen määrä -minrelaytxfee=&lt;amount&gt;: '%s'</translation>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Virheellinen määrä -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Virheellinen määrä -mintxfee=&lt;amount&gt;: '%s'</translation>
-    </message>
-    <message>
-        <source>Print block on startup, if found in block index</source>
-        <translation>Tulosta lohko käynnistyksessä jos löydetään lohkoindeksistä</translation>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Virheellinen määrä -mintxfee=&lt;amount&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
@@ -2886,28 +3167,24 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Virhe ladattaessa wallet.dat-tiedostoa</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Virheellinen proxy-osoite '%s'</translation>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Virheellinen proxy-osoite &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>Tuntematon verkko -onlynet parametrina: '%s'</translation>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>Tuntematon verkko -onlynet parametrina: &apos;%s&apos;</translation>
     </message>
     <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>-bind osoitteen '%s' selvittäminen epäonnistui</translation>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>-bind osoitteen &apos;%s&apos; selvittäminen epäonnistui</translation>
     </message>
     <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>-externalip osoitteen '%s' selvittäminen epäonnistui</translation>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>-externalip osoitteen &apos;%s&apos; selvittäminen epäonnistui</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>-paytxfee=&lt;amount&gt;: '%s' on virheellinen</translation>
-    </message>
-    <message>
-        <source>Invalid amount</source>
-        <translation>Virheellinen määrä</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>-paytxfee=&lt;amount&gt;: &apos;%s&apos; on virheellinen</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
@@ -2942,12 +3219,437 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Lataus on valmis</translation>
     </message>
     <message>
-        <source>To use the %s option</source>
-        <translation>Käytä %s optiota</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Virhe</translation>
+    </message>
+    <message>
+        <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow JSON-RPC connections from specified source. Valid for &lt;ip&gt; are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred while setting up the RPC address %s port %u for listening: %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Continuously rate-limit free transactions to &lt;n&gt;*1000 bytes per minute (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file COPYING or &lt;http://www.opensource.org/licenses/mit-license.php&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Listening for incoming connections failed (listen returned error %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fees (in BTC/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flush database activity from memory pool to disk log every &lt;n&gt; megabytes (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log transaction priority and fee per kB when mining blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum size of data in data carrier transactions we relay and mine (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum total fees to use in a single wallet transaction, setting too low may abort large transactions (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of seconds to keep misbehaving peers from reconnecting (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Require high priority for relaying free or low-fee transactions (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit &lt;https://www.openssl.org/&gt; and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To use bitcoind, or the -server option to bitcoin-qt, you must set an rpcpassword in the configuration file:
+%s
+It is recommended you use the following random password:
+rpcuser=bitcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+The username and password MUST NOT be the same.
+If the file does not exist, create it with owner-readable-only file permissions.
+It is also recommended to set alertnotify so you are notified of problems;
+for example: alertnotify=echo %%s | mail -s &quot;Bitcoin Alert&quot; admin@foo.com
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: -maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When creating transactions, ignore inputs with value less than this (default: 0.0001)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accept public REST requests (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acceptable ciphers (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow self signed root certificates (default: 0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always query for peer addresses via DNS lookup (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot resolve -whitebind address: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: 0)</source>
+        <translation type="unfinished">Valitse data-hakemisto käynnistyksessä (oletus: 0)</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not parse -rpcbind value %s as network address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable safemode, override a real safe mode event (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: A fatal internal error occured, see debug.log for details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Unsupported argument -tor found, use -onion.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fee (in BTC/kB) to add to transactions you send (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force safe mode (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generate coins (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How many blocks to check at startup (default: %u, 0 = all)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Include IP addresses in debug output (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mininput=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit size of signature cache to &lt;n&gt; entries (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: %u or testnet: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Listen for connections on &lt;port&gt; (default: %u or testnet: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Node relay options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only accept block chain matching built-in checkpoints (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prepend debug output with timestamp (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RPC support for HTTP persistent connections (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relay and mine data carrier transactions (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relay non-P2SH multisig (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run a thread to flush wallet periodically (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server certificate file (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server private key (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation type="unfinished">Aseta SSL root varmenne maksupyynnöille (oletus: -system-)</translation>
+    </message>
+    <message>
+        <source>Set key pool size to &lt;n&gt; (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
+        <translation type="unfinished">Set language, for example &quot;de_DE&quot; (default: system locale)</translation>
+    </message>
+    <message>
+        <source>Set minimum block size in bytes (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set the number of threads to service RPC calls (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sets the DB_PRIVATE flag in the wallet db environment (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: 1)</source>
+        <translation type="unfinished">Näytä aloitusruutu käynnistettäessä (oletus: 1)</translation>
+    </message>
+    <message>
+        <source>Specify configuration file (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specify connection timeout in milliseconds (minimum: 1, default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specify pid file (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spend unconfirmed change when sending transactions (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation type="unfinished">Käynnistä pienennettynä</translation>
+    </message>
+    <message>
+        <source>Stop running after importing blocks from disk (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use UPnP to map the listening port (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Unsupported argument -benchmark ignored, use -debug=bench.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Unsupported argument -debugnet ignored, use -debug=net.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

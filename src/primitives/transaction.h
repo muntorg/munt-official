@@ -147,7 +147,7 @@ public:
         // with default minRelayTxFee.
         //size_t nSize = GetSerializeSize(SER_DISK,0)+148u;
         //return 3*minRelayTxFee.GetFee(nSize);
-        // Guldencoin: IsDust() detection disabled, allows any valid dust to be relayed.
+        // Gulden: IsDust() detection disabled, allows any valid dust to be relayed.
         // The fees imposed on each dust txo is considered sufficient spam deterrant. 
         return 0;
     }

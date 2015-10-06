@@ -25,7 +25,7 @@
 #include <boost/shared_ptr.hpp>
 #include "json/json_spirit_writer_template.h"
 
-#include <guldencoin/translate.h>
+#include <Gulden/translate.h>
 
 
 using namespace std;

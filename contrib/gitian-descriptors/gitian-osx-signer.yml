@@ -1,5 +1,5 @@
 ---
-name: "guldencoin-dmg-signer"
+name: "Gulden-dmg-signer"
 suites:
 - "precise"
 architectures:
@@ -10,8 +10,7 @@ packages:
 reference_datetime: "2013-06-01 00:00:00"
 remotes: []
 files:
-- "guldencoin-osx-unsigned.tar.gz"
-- "signature.tar.gz"
+- "Gulden-osx-unsigned.tar.gz"
 script: |
   WRAP_DIR=$HOME/wrapped
   mkdir -p ${WRAP_DIR}
@@ -28,10 +27,22 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=guldencoin-osx-unsigned.tar.gz
-  SIGNED=guldencoin-osx-signed.dmg
+  UNSIGNED=Gulden-osx-unsigned.tar.gz
+  SIGNED=Gulden-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
-  ./detached-sig-apply.sh ${UNSIGNED} signature.tar.gz
-  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Guldencoin-Qt" -no-pad -r -apple -o uncompressed.dmg signed-app
+  ROOTDIRR=dist
+  TEMPDIRR=signed.temp
+  OUTDIRR=signed-app
+
+
+   rm -rf ${TEMPDIRR} && mkdir -p ${TEMPDIRR}
+   tar -C ${TEMPDIRR} -xf ${UNSIGNED}
+
+   mv ${TEMPDIRR}/${ROOTDIRR} ${OUTDIRR}
+   rm -rf ${TEMPDIRR}
+
+  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Gulden" -no-pad -r -apple -o uncompressed.dmg signed-app
   ${WRAP_DIR}/dmg dmg uncompressed.dmg ${OUTDIR}/${SIGNED}
+
+

@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#define BOOST_TEST_MODULE Guldencoin Test Suite
+#define BOOST_TEST_MODULE Gulden Test Suite
 
 #include "test_bitcoin.h"
 
@@ -41,7 +41,7 @@ TestingSetup::TestingSetup()
         bitdb.MakeMock();
 #endif
         ClearDatadirCache();
-        pathTemp = GetTempPath() / strprintf("test_guldencoin_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        pathTemp = GetTempPath() / strprintf("test_gulden_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
         boost::filesystem::create_directories(pathTemp);
         mapArgs["-datadir"] = pathTemp.string();
         pblocktree = new CBlockTreeDB(1 << 20, true);

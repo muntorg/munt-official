@@ -11,14 +11,14 @@
 #include "main.h"
 #include "net.h"
 #include "pow.h"
-#include "guldencoin/diff.h"
+#include <Gulden/diff.h>
 #include "timedata.h"
 #include "util.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
-#include "guldencoin/hash/hash.h"
+#include <Gulden/hash/hash.h>
 
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -462,7 +462,7 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     {
         LOCK(cs_main);
         if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
-            return error("GuldencoinMiner: generated block is stale");
+            return error("GuldenMiner: generated block is stale");
     }
 
     // Remove key from key pool
@@ -477,7 +477,7 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     // Process this block the same as if we had received it from another node
     CValidationState state;
     if (!ProcessNewBlock(state, NULL, pblock))
-        return error("GuldencoinMiner: ProcessNewBlock, block not accepted");
+        return error("GuldenMiner: ProcessNewBlock, block not accepted");
 
     return true;
 }
@@ -491,7 +491,7 @@ static CCriticalSection timerCS;
 
 void static BitcoinMiner(CWallet *pwallet)
 {
-    LogPrintf("GuldencoinMiner started\n");
+    LogPrintf("GuldenMiner started\n");
     bool bTestnetAccel = GetBoolArg("-testnetaccel", false);
     bool bAllowMinDifficultyBlocks = Params().AllowMinDifficultyBlocks();
     bool bMiningRequiresPeers = Params().MiningRequiresPeers();
@@ -501,7 +501,7 @@ void static BitcoinMiner(CWallet *pwallet)
         nThreadPriority = THREAD_PRIORITY_ABOVE_NORMAL;
     SetThreadPriority(nThreadPriority);
     
-    RenameThread("guldencoin-miner");
+    RenameThread("gulden-miner");
     
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
@@ -540,13 +540,13 @@ void static BitcoinMiner(CWallet *pwallet)
             auto_ptr<CBlockTemplate> pblocktemplate(CreateNewBlockWithKey(reservekey));
             if (!pblocktemplate.get())
             {
-                LogPrintf("Error in GuldencoinMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running GuldencoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            LogPrintf("Running GuldenMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
     
             //
             // Search
@@ -644,7 +644,7 @@ void static BitcoinMiner(CWallet *pwallet)
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("GuldencoinMiner terminated\n");
+        LogPrintf("GuldenMiner terminated\n");
         throw;
     }
 }

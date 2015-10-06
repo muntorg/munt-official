@@ -155,6 +155,9 @@ public slots:
     */
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
 
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
@@ -183,6 +186,8 @@ private slots:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
+
+    void gotoWebsite();
 
     /** Show open dialog */
     void openClicked();

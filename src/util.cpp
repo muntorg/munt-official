@@ -67,6 +67,7 @@
 #include <sys/prctl.h>
 #endif
 
+#include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
@@ -267,6 +268,38 @@ static void InterpretNegativeSetting(string name, map<string, string>& mapSettin
 
 void ParseParameters(int argc, const char* const argv[])
 {
+      //Temporary - migrate old 'guldencoin' wallets to new 'gulden' wallets.
+    boost::filesystem::path newPath = GetDefaultDataDir();
+    if (!boost::filesystem::exists(newPath.string()))
+    {
+        try
+        {
+            std::string newPathString = newPath.string();
+            boost::replace_all(newPathString, "Gulden", "Guldencoin");
+            boost::filesystem::path oldPath(newPathString);
+            if (boost::filesystem::exists( oldPath.string() ))
+            {
+                boost::filesystem::rename(oldPath.string(), newPath.string());
+                boost::filesystem::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+                boost::filesystem::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+            }
+        }
+        catch(boost::filesystem::filesystem_error){}
+        try
+        {
+            std::string newPathString = newPath.string();
+            boost::replace_all(newPathString, "Gulden", "guldencoin");
+            boost::filesystem::path oldPath(newPathString);
+            if (boost::filesystem::exists( oldPath.string() ))
+            {
+                boost::filesystem::rename(oldPath.string(), newPath.string());
+                boost::filesystem::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+                boost::filesystem::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+            }
+        }
+        catch(boost::filesystem::filesystem_error){}
+    }
+
     mapArgs.clear();
     mapMultiArgs.clear();
 
@@ -368,7 +401,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "guldencoin";
+    const char* pszModule = "Gulden";
 #endif
     if (pex)
         return strprintf(
@@ -395,7 +428,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Unix: ~/.bitcoin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Guldencoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Gulden";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -407,10 +440,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "Guldencoin";
+    return pathRet / "Gulden";
 #else
     // Unix
-    return pathRet / ".guldencoin";
+    return pathRet / ".Gulden";
 #endif
 #endif
 }
@@ -457,7 +490,7 @@ void ClearDatadirCache()
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "guldencoin.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "Gulden.conf"));
     if (!pathConfigFile.is_complete())
         pathConfigFile = GetDataDir(false) / pathConfigFile;
 
@@ -493,7 +526,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 #ifndef WIN32
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "guldencoind.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "Gulden.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

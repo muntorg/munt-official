@@ -1,8 +1,8 @@
-Guldencoin
+Gulden
 ----------------
 
 On January 1st 2002, the Netherlands lost the Gulden which had been in circulation since 1252.
-Starting April 4th 2014, we are bringing it back in a digital form, the Guldencoin.
+Starting April 4th 2014, we are bringing it back in a digital form.
 
 
 Specifications

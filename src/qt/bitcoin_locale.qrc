@@ -1,4 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/gulden_translations">
+        <file alias="nl">locale/Gulden/gulden_nl.qm</file>
+    </qresource>
     <qresource prefix="/translations">
         <file alias="ach">locale/bitcoin_ach.qm</file>
         <file alias="af_ZA">locale/bitcoin_af_ZA.qm</file>

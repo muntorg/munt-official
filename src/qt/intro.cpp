@@ -18,7 +18,7 @@
 
 /* Minimum free space (in bytes) needed for data directory */
 static const uint64_t GB_BYTES = 1000000000LL;
-static const uint64_t BLOCK_CHAIN_SIZE = 20LL * GB_BYTES;
+static const uint64_t BLOCK_CHAIN_SIZE = 1LL * GB_BYTES;
 
 /* Check free space asynchronously to prevent hanging the UI thread.
 
@@ -191,8 +191,8 @@ void Intro::pickDataDirectory()
         settings.setValue("strDataDir", dataDir);
     }
     /* Only override -datadir if different from the default, to make it possible to
-     * override -datadir in the guldencoin.conf file in the default data directory
-     * (to be consistent with guldencoind behavior)
+     * override -datadir in the bitcoin.conf file in the default data directory
+     * (to be consistent with bitcoind behavior)
      */
     if(dataDir != getDefaultDataDirectory())
         SoftSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting

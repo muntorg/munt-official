@@ -4,28 +4,28 @@ SUBDIRS = src
 
 GZIP_ENV="-9n"
 
-if BUILD_BITCOIN_LIBS
+if BUILD_GULDEN_LIBS
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libbitcoinconsensus.pc
+pkgconfig_DATA = libguldenconsensus.pc
 endif
 
-BITCOIND_BIN=$(top_builddir)/src/guldencoind$(EXEEXT)
-BITCOIN_QT_BIN=$(top_builddir)/src/qt/guldencoin-qt$(EXEEXT)
-BITCOIN_CLI_BIN=$(top_builddir)/src/guldencoin-cli$(EXEEXT)
-BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
+GULDEND_BIN=$(top_builddir)/src/GuldenD$(EXEEXT)
+GULDEN_QT_BIN=$(top_builddir)/src/qt/Gulden$(EXEEXT)
+GULDEN_CLI_BIN=$(top_builddir)/src/Gulden-cli$(EXEEXT)
+GULDEN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
-OSX_APP=Guldencoin-Qt.app
-OSX_DMG=Guldencoin-Qt.dmg
+OSX_APP=Gulden.app
+OSX_DMG=Gulden.dmg
 OSX_BACKGROUND_IMAGE=background.tiff
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/bitcoin.icns
+OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/Gulden.icns
 OSX_PLIST=$(top_srcdir)/share/qt/Info.plist #not installed
 OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
 
 DIST_DOCS = $(wildcard doc/*.md) $(wildcard doc/release-notes/*.md)
 
-WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/gulden.ico \
+WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/Gulden.ico \
   $(top_srcdir)/share/pixmaps/nsis-header.bmp \
   $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
   $(top_srcdir)/doc/README_windows.txt
@@ -54,11 +54,11 @@ distcheck-hook:
 distcleancheck:
 	@:
 
-$(BITCOIN_WIN_INSTALLER): all-recursive
+$(GULDEN_WIN_INSTALLER): all-recursive
 	$(MKDIR_P) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_CLI_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEND_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_QT_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_CLI_BIN) $(top_builddir)/release
 	@test -f $(MAKENSIS) && $(MAKENSIS) $(top_builddir)/share/setup.nsi || \
 	  echo error: could not build $@
 
@@ -77,17 +77,17 @@ $(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/Resources/bitcoin.icns: $(OSX_INSTALLER_ICONS)
+$(OSX_APP)/Contents/Resources/Gulden.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Guldencoin-Qt: $(BITCOIN_QT_BIN)
+$(OSX_APP)/Contents/MacOS/Gulden: $(GULDEN_QT_BIN)
 	$(MKDIR_P) $(@D)
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
 
 OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
-  $(OSX_APP)/Contents/Resources/bitcoin.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Guldencoin-Qt
+  $(OSX_APP)/Contents/Resources/Gulden.icns $(OSX_APP)/Contents/Info.plist \
+  $(OSX_APP)/Contents/MacOS/Gulden
 
 if BUILD_DARWIN
 $(OSX_DMG): $(OSX_APP_BUILT) $(OSX_PACKAGING)
@@ -96,24 +96,28 @@ $(OSX_DMG): $(OSX_APP_BUILT) $(OSX_PACKAGING)
 deploydir: $(OSX_DMG)
 else
 APP_DIST_DIR=$(top_builddir)/dist
-APP_DIST_EXTRAS=$(APP_DIST_DIR)/.background/$(OSX_BACKGROUND_IMAGE) $(APP_DIST_DIR)/.DS_Store $(APP_DIST_DIR)/Applications
+APP_DIST_EXTRAS=$(APP_DIST_DIR)/.background/$(OSX_BACKGROUND_IMAGE) $(APP_DIST_DIR)/.DS_Store $(APP_DIST_DIR)/.VolumeIcon.icns  $(APP_DIST_DIR)/Applications
 
 $(APP_DIST_DIR)/Applications:
 	@rm -f $@
 	@cd $(@D); $(LN_S) /Applications $(@F)
 
-$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Guldencoin-Qt
+$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Gulden
 
 $(OSX_DMG): $(APP_DIST_EXTRAS)
-	$(GENISOIMAGE) -no-cache-inodes -D -l -probe -V "Guldencoin-Qt" -no-pad -r -apple -o $@ dist
+	$(GENISOIMAGE) -no-cache-inodes -D -l -probe -V "Gulden" -no-pad -r -apple -o $@ dist
 
 $(APP_DIST_DIR)/.background/$(OSX_BACKGROUND_IMAGE): contrib/macdeploy/$(OSX_BACKGROUND_IMAGE)
 	$(MKDIR_P) $(@D)
 	$(INSTALL) $< $@
 $(APP_DIST_DIR)/.DS_Store: contrib/macdeploy/DS_Store
 	$(INSTALL) $< $@
+$(APP_DIST_DIR)/.VolumeIcon.icns: $(top_srcdir)/src/qt/res/icons/Gulden.icns
+	$(INSTALL) $< $@
 
-$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Guldencoin-Qt: $(OSX_APP_BUILT) $(OSX_PACKAGING)
+
+
+$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Gulden: $(OSX_APP_BUILT) $(OSX_PACKAGING)
 	INSTALLNAMETOOL=$(INSTALLNAMETOOL)  OTOOL=$(OTOOL) STRIP=$(STRIP) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -translations-dir=$(QT_TRANSLATION_DIR) -add-qt-tr $(OSX_QT_TRANSLATIONS) -verbose 2
 
 deploydir: $(APP_DIST_EXTRAS)
@@ -124,16 +128,16 @@ appbundle: $(OSX_APP_BUILT)
 deploy: $(OSX_DMG)
 endif
 if TARGET_WINDOWS
-deploy: $(BITCOIN_WIN_INSTALLER)
+deploy: $(GULDEN_WIN_INSTALLER)
 endif
 
-$(BITCOIN_QT_BIN): FORCE
+$(GULDEN_QT_BIN): FORCE
 	$(MAKE) -C src qt/$(@F)
 
-$(BITCOIND_BIN): FORCE
+$(GULDEND_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
-$(BITCOIN_CLI_BIN): FORCE
+$(GULDEN_CLI_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
 if USE_LCOV
@@ -164,7 +168,7 @@ test_bitcoin_filtered.info: test_bitcoin.info
 
 block_test.info: test_bitcoin_filtered.info
 	$(MKDIR_P) qa/tmp
-	-@TIMEOUT=15 qa/pull-tester/run-bitcoind-for-test.sh $(JAVA) -jar $(JAVA_COMPARISON_TOOL) qa/tmp/compTool 0
+	-@TIMEOUT=15 qa/pull-tester/run-GuldenD-for-test.sh $(JAVA) -jar $(JAVA_COMPARISON_TOOL) qa/tmp/compTool 0
 	$(LCOV) -c -d $(abs_builddir)/src --t BitcoinJBlockTest -o $@
 	$(LCOV) -z -d $(abs_builddir)/src
 	$(LCOV) -z -d $(abs_builddir)/src/leveldb
@@ -193,12 +197,12 @@ endif
 if USE_COMPARISON_TOOL
 check-local:
 	$(MKDIR_P) qa/tmp
-	@qa/pull-tester/run-bitcoind-for-test.sh $(JAVA) -jar $(JAVA_COMPARISON_TOOL) qa/tmp/compTool $(COMPARISON_TOOL_REORG_TESTS) 2>&1
+	@qa/pull-tester/run-GuldenD-for-test.sh $(JAVA) -jar $(JAVA_COMPARISON_TOOL) qa/tmp/compTool $(COMPARISON_TOOL_REORG_TESTS) 2>&1
 endif
 
-EXTRA_DIST = $(top_srcdir)/share/genbuild.sh qa/pull-tester/rpc-tests.sh qa/pull-tester/run-bitcoin-cli qa/rpc-tests $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
+EXTRA_DIST = $(top_srcdir)/share/genbuild.sh qa/pull-tester/rpc-tests.sh qa/pull-tester/run-Gulden-cli qa/rpc-tests $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
 
-CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(GULDEN_WIN_INSTALLER)
 
 .INTERMEDIATE: $(COVERAGE_INFO)
 

@@ -1,10 +1,8 @@
-<TS language="da" version="2.0">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="da">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>Dobbeltklik for at redigere adresse eller mærkat</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>Opret en ny adresse</translation>
@@ -97,6 +95,10 @@
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Der opstod en fejl under gemning af adresselisten til %1. Prøv venligst igen.</translation>
     </message>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
@@ -188,10 +190,6 @@
         <translation>Indtast det nye kodeord til tegnebogen.&lt;br/&gt;Brug venligst et kodeord på &lt;b&gt;ti eller flere tilfældige tegn&lt;/b&gt; eller &lt;b&gt;otte eller flere ord&lt;/b&gt;.</translation>
     </message>
     <message>
-        <source>Bitcoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin vil nu lukke for at gennemføre krypteringsprocessen. Husk på, at kryptering af din tegnebog vil ikke beskytte dine bitcoins fuldt ud mod at blive stjålet af malware på din computer.</translation>
-    </message>
-    <message>
         <source>Wallet encryption failed</source>
         <translation>Tegnebogskryptering mislykkedes</translation>
     </message>
@@ -218,6 +216,10 @@
     <message>
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Tegnebogens adgangskode blev ændret.</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -311,10 +313,6 @@
         <translation>Send bitcoins til en Bitcoin-adresse</translation>
     </message>
     <message>
-        <source>Modify configuration options for Bitcoin</source>
-        <translation>Redigér konfigurationsindstillinger for Bitcoin</translation>
-    </message>
-    <message>
         <source>Backup wallet to another location</source>
         <translation>Lav sikkerhedskopi af tegnebogen til et andet sted</translation>
     </message>
@@ -396,7 +394,7 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Anmod om betalinger (genererer QR-koder og "bitcoin:"-URI'er)</translation>
+        <translation>Anmod om betalinger (genererer QR-koder og &quot;bitcoin:&quot;-URI&apos;er)</translation>
     </message>
     <message>
         <source>&amp;About Bitcoin Core</source>
@@ -412,7 +410,7 @@
     </message>
     <message>
         <source>Open a bitcoin: URI or payment request</source>
-        <translation>Åbn en "bitcoin:"-URI eller betalingsanmodning</translation>
+        <translation>Åbn en &quot;bitcoin:&quot;-URI eller betalingsanmodning</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -424,7 +422,10 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktiv forbindelse til Bitcoin-netværket</numerusform><numerusform>%n aktive forbindelser til Bitcoin-netværket</numerusform></translation>
+        <translation>
+            <numerusform>%n aktiv forbindelse til Bitcoin-netværket</numerusform>
+            <numerusform>%n aktive forbindelser til Bitcoin-netværket</numerusform>
+        </translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -432,15 +433,24 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n time</numerusform><numerusform>%n timer</numerusform></translation>
+        <translation>
+            <numerusform>%n time</numerusform>
+            <numerusform>%n timer</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n dag</numerusform><numerusform>%n dage</numerusform></translation>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dage</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n uge</numerusform><numerusform>%n uger</numerusform></translation>
+        <translation>
+            <numerusform>%n uge</numerusform>
+            <numerusform>%n uger</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -448,7 +458,10 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n år</numerusform><numerusform>%n år</numerusform></translation>
+        <translation>
+            <numerusform>%n år</numerusform>
+            <numerusform>%n år</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -480,7 +493,10 @@
     </message>
     <message numerus="yes">
         <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>%n blok af transaktionshistorikken er blevet behandlet.</numerusform><numerusform>%n blokke af transaktionshistorikken er blevet behandlet.</numerusform></translation>
+        <translation>
+            <numerusform>%n blok af transaktionshistorikken er blevet behandlet.</numerusform>
+            <numerusform>%n blokke af transaktionshistorikken er blevet behandlet.</numerusform>
+        </translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -513,6 +529,10 @@ Adresse: %4
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for Bitcoin Core</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -725,8 +745,8 @@ Adresse: %4
         <translation>Transaktioner med højere prioritet har højere sansynlighed for at blive inkluderet i en blok.</translation>
     </message>
     <message>
-        <source>This label turns red, if the priority is smaller than "medium".</source>
-        <translation>Dette mærkat bliver rødt, hvis prioriteten er mindre end "medium".</translation>
+        <source>This label turns red, if the priority is smaller than &quot;medium&quot;.</source>
+        <translation>Dette mærkat bliver rødt, hvis prioriteten er mindre end &quot;medium&quot;.</translation>
     </message>
     <message>
         <source>This label turns red, if any recipient receives an amount smaller than %1.</source>
@@ -784,12 +804,12 @@ Adresse: %4
         <translation>Redigér afsendelsesadresse</translation>
     </message>
     <message>
-        <source>The entered address "%1" is already in the address book.</source>
-        <translation>Den indtastede adresse "%1" er allerede i adressebogen.</translation>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Den indtastede adresse &quot;%1&quot; er allerede i adressebogen.</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Den indtastede adresse "%1" er ikke en gyldig Bitcoin-adresse.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Bitcoin address.</source>
+        <translation>Den indtastede adresse &quot;%1&quot; er ikke en gyldig Bitcoin-adresse.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -853,30 +873,6 @@ Adresse: %4
         <source>command-line options</source>
         <translation>kommandolinjetilvalg</translation>
     </message>
-    <message>
-        <source>UI options</source>
-        <translation>Brugergrænsefladeindstillinger</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Angiv sprog, fx "da_DK" (standard: systemlokalitet)</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>Start minimeret</translation>
-    </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>Sæt SSL-rodcertifikater for betalingsanmodning (standard: -system-)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: 1)</source>
-        <translation>Vis opstartsbillede ved opstart (standard: 1)</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: 0)</source>
-        <translation>Vælg datamappe ved opstart (standard: 0)</translation>
-    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -909,8 +905,8 @@ Adresse: %4
         <translation>Bitcoin Core</translation>
     </message>
     <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Fejl: Angivet datamappe "%1" kan ikke oprettes.</translation>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
+        <translation>Fejl: Angivet datamappe &quot;%1&quot; kan ikke oprettes.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -918,9 +914,19 @@ Adresse: %4
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB fri plads tilgængelig</numerusform><numerusform>%n GB fri plads tilgængelig</numerusform></translation>
+        <translation>
+            <numerusform>%n GB fri plads tilgængelig</numerusform>
+            <numerusform>%n GB fri plads tilgængelig</numerusform>
+        </translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -955,14 +961,6 @@ Adresse: %4
         <translation>&amp;Generelt</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin after logging in to the system.</source>
-        <translation>Start Bitcoin automatisk, når der logges ind på systemet.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin on system login</source>
-        <translation>&amp;Start Bitcoin ved systemlogin</translation>
-    </message>
-    <message>
         <source>Size of &amp;database cache</source>
         <translation>Størrelsen på &amp;databasens cache</translation>
     </message>
@@ -988,11 +986,11 @@ Adresse: %4
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>Tredjeparts-URL'er (fx et blokhåndteringsværktøj), der vises i transaktionsfanen som genvejsmenupunkter. %s i URL'en erstattes med transaktionens hash. Flere URL'er separeres med en lodret streg |.</translation>
+        <translation>Tredjeparts-URL&apos;er (fx et blokhåndteringsværktøj), der vises i transaktionsfanen som genvejsmenupunkter. %s i URL&apos;en erstattes med transaktionens hash. Flere URL&apos;er separeres med en lodret streg |.</translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
-        <translation>Tredjeparts-transaktions-URL'er</translation>
+        <translation>Tredjeparts-transaktions-URL&apos;er</translation>
     </message>
     <message>
         <source>Active command-line options that override above options:</source>
@@ -1075,10 +1073,6 @@ Adresse: %4
         <translation>&amp;Minimér til statusfeltet i stedet for proceslinjen</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
-        <translation>Minimér i stedet for at afslutte programmet, når vinduet lukkes. Når denne indstilling er valgt, vil programmet kun blive lukket, når du har valgt Afslut i menuen.</translation>
-    </message>
-    <message>
         <source>M&amp;inimize on close</source>
         <translation>M&amp;inimér ved lukning</translation>
     </message>
@@ -1089,10 +1083,6 @@ Adresse: %4
     <message>
         <source>User Interface &amp;language:</source>
         <translation>&amp;Sprog for brugergrænseflade:</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin.</source>
-        <translation>Sproget for brugergrænsefladen kan angives her. Denne indstilling træder først i kraft, når Bitcoin genstartes.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1141,6 +1131,22 @@ Adresse: %4
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Den angivne proxy-adresse er ugyldig.</translation>
+    </message>
+    <message>
+        <source>Automatically start Bitcoin Core after logging in to the system.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Start Bitcoin Core on system login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1237,12 +1243,8 @@ Adresse: %4
         <translation>Betalingsanmodning afvist</translation>
     </message>
     <message>
-        <source>Payment request network doesn't match client network.</source>
+        <source>Payment request network doesn&apos;t match client network.</source>
         <translation>Netværk for betalingsanmodning stemmer ikke overens med klientens netværk.</translation>
-    </message>
-    <message>
-        <source>Payment request has expired.</source>
-        <translation>Betalingsanmodning er udløbet.</translation>
     </message>
     <message>
         <source>Payment request is not initialized.</source>
@@ -1255,10 +1257,6 @@ Adresse: %4
     <message>
         <source>Payment request error</source>
         <translation>Fejl i betalingsanmodning</translation>
-    </message>
-    <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Kan ikke starte bitcoin: click-to-pay-håndtering</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1304,6 +1302,26 @@ Adresse: %4
         <source>Network request error</source>
         <translation>Fejl i netværksforespørgsel</translation>
     </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request DoS protection</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PeerTableModel</name>
@@ -1345,14 +1363,6 @@ Adresse: %4
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>NETWORK</source>
-        <translation>NETVÆRK</translation>
-    </message>
-    <message>
-        <source>UNKNOWN</source>
-        <translation>UKENDT</translation>
     </message>
     <message>
         <source>None</source>
@@ -1553,16 +1563,8 @@ Adresse: %4
         <translation>Fejlsøgningslogfil</translation>
     </message>
     <message>
-        <source>Open the Bitcoin debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Åbn Bitcoin-fejlsøgningslogfilen fra den nuværende datamappe. Dette kan tage nogle få sekunder for store logfiler.</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>Ryd konsol</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin RPC console.</source>
-        <translation>Velkommen til Bitcoin RPC-konsollen.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1611,6 +1613,18 @@ Adresse: %4
     <message>
         <source>Fetching...</source>
         <translation>Henter …</translation>
+    </message>
+    <message>
+        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Welcome to the Bitcoin Core RPC console.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1857,16 +1871,12 @@ Adresse: %4
         <translation>Minimér</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Hvis det brugertilpassede gebyr er sat til 1000 satoshis, og transaktionen kun fylder 250 byte, betaler "pr. kilobyte" kun 250 satoshis i gebyr, mens "mindst" betaler 1000 satoshis. For transaktioner større end en kilobyte betaler begge pr. kilobyte.</translation>
-    </message>
-    <message>
         <source>per kilobyte</source>
         <translation>pr. kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Hvis det brugertilpassede gebyr er sat til 1000 satoshis, og transaktionen kun fylder 250 byte, betaler "pr. kilobyte" kun 250 satoshis i gebyr, mens "total mindst" betaler 1000 satoshis. For transaktioner større end en kilobyte betaler begge pr. kilobyte.</translation>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Hvis det brugertilpassede gebyr er sat til 1000 satoshis, og transaktionen kun fylder 250 byte, betaler &quot;pr. kilobyte&quot; kun 250 satoshis i gebyr, mens &quot;total mindst&quot; betaler 1000 satoshis. For transaktioner større end en kilobyte betaler begge pr. kilobyte.</translation>
     </message>
     <message>
         <source>total at least</source>
@@ -2017,16 +2027,8 @@ Adresse: %4
         <translation>Transaktionen blev afvist! Dette kan ske, hvis nogle af dine bitcoins i din tegnebog allerede er brugt, som hvis du brugte en kopi af wallet.dat og dine bitcoins er blevet brugt i kopien, men ikke er markeret som brugt her.</translation>
     </message>
     <message>
-        <source>A fee higher than %1 is considered an insanely high fee.</source>
-        <translation>Et gebyr højere end %1 anses som et vanvittigt højt gebyr.</translation>
-    </message>
-    <message>
         <source>Pay only the minimum fee of %1</source>
         <translation>Betal kun det minimale gebyr på %1</translation>
-    </message>
-    <message>
-        <source>Estimated to begin confirmation within %1 block(s).</source>
-        <translation>Bekræftelse vurderes at begynde inden for %1 blok(ke).</translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2051,6 +2053,21 @@ Adresse: %4
     <message>
         <source>added as transaction fee</source>
         <translation>tilføjet som transaktionsgebyr</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -2113,7 +2130,7 @@ Adresse: %4
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation>En besked, som blev føjet til "bitcon:"-URI'en, som vil gemmes med transaktionen til din reference. Bemærk: Denne besked vil ikke blive sendt over Bitcoin-netværket.</translation>
+        <translation>En besked, som blev føjet til &quot;bitcon:&quot;-URI&apos;en, som vil gemmes med transaktionen til din reference. Bemærk: Denne besked vil ikke blive sendt over Bitcoin-netværket.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -2126,6 +2143,14 @@ Adresse: %4
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2148,10 +2173,6 @@ Adresse: %4
     <message>
         <source>&amp;Sign Message</source>
         <translation>&amp;Underskriv besked</translation>
-    </message>
-    <message>
-        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Du kan underskrive beskeder med dine Bitcoin-adresser for at bevise, at de tilhører dig. Pas på ikke at underskrive noget vagt, da phisingangreb kan narre dig til at overdrage din identitet. Underskriv kun fuldt detaljerede udsagn, du er enig i.</translation>
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
@@ -2195,7 +2216,7 @@ Adresse: %4
     </message>
     <message>
         <source>Reset all sign message fields</source>
-        <translation>Nulstil alle "underskriv besked"-felter</translation>
+        <translation>Nulstil alle &quot;underskriv besked&quot;-felter</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -2204,10 +2225,6 @@ Adresse: %4
     <message>
         <source>&amp;Verify Message</source>
         <translation>&amp;Verificér besked</translation>
-    </message>
-    <message>
-        <source>Enter the signing address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack.</source>
-        <translation>Indtast herunder den underskrivende adresse, beskeden (inkludér linjeskift, mellemrum mv. nøjagtigt, som de fremgår) og underskriften for at verificere beskeden. Vær forsigtig med ikke at lægge mere i underskriften end besked selv, så du undgår at blive narret af et man-in-the-middle-angreb.</translation>
     </message>
     <message>
         <source>The Bitcoin address the message was signed with</source>
@@ -2223,11 +2240,11 @@ Adresse: %4
     </message>
     <message>
         <source>Reset all verify message fields</source>
-        <translation>Nulstil alle "verificér besked"-felter</translation>
+        <translation>Nulstil alle &quot;verificér besked&quot;-felter</translation>
     </message>
     <message>
-        <source>Click "Sign Message" to generate signature</source>
-        <translation>Klik "Underskriv besked" for at generere underskriften</translation>
+        <source>Click &quot;Sign Message&quot; to generate signature</source>
+        <translation>Klik &quot;Underskriv besked&quot; for at generere underskriften</translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
@@ -2277,6 +2294,14 @@ Adresse: %4
         <source>Message verified.</source>
         <translation>Besked verificeret.</translation>
     </message>
+    <message>
+        <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -2291,6 +2316,10 @@ Adresse: %4
     <message>
         <source>[testnet]</source>
         <translation>[testnetværk]</translation>
+    </message>
+    <message>
+        <source>[testnet accel]</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2328,7 +2357,10 @@ Adresse: %4
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, transmitteret igennem %n knude</numerusform><numerusform>, transmitteret igennem %n knuder</numerusform></translation>
+        <translation>
+            <numerusform>, transmitteret igennem %n knude</numerusform>
+            <numerusform>, transmitteret igennem %n knuder</numerusform>
+        </translation>
     </message>
     <message>
         <source>Date</source>
@@ -2368,7 +2400,10 @@ Adresse: %4
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>modner efter yderligere %n blok</numerusform><numerusform>modner efter yderligere %n blokke</numerusform></translation>
+        <translation>
+            <numerusform>modner efter yderligere %n blok</numerusform>
+            <numerusform>modner efter yderligere %n blokke</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2411,8 +2446,8 @@ Adresse: %4
         <translation>Forretningsdrivende</translation>
     </message>
     <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Minede bitcoins skal modne %1 blokke, før de kan bruges. Da du genererede denne blok, blev den udsendt til netværket for at blive føjet til blokkæden. Hvis det ikke lykkes at få den i kæden, vil dens tilstand ændres til "ikke accepteret", og den vil ikke kunne bruges. Dette kan ske nu og da, hvis en anden knude udvinder en blok inden for nogle få sekunder fra din.</translation>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Minede bitcoins skal modne %1 blokke, før de kan bruges. Da du genererede denne blok, blev den udsendt til netværket for at blive føjet til blokkæden. Hvis det ikke lykkes at få den i kæden, vil dens tilstand ændres til &quot;ikke accepteret&quot;, og den vil ikke kunne bruges. Dette kan ske nu og da, hvis en anden knude udvinder en blok inden for nogle få sekunder fra din.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2444,7 +2479,10 @@ Adresse: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Åbn yderligere %n blok</numerusform><numerusform>Åbn yderligere %n blokke</numerusform></translation>
+        <translation>
+            <numerusform>Åbn yderligere %n blok</numerusform>
+            <numerusform>Åbn yderligere %n blokke</numerusform>
+        </translation>
     </message>
     <message>
         <source>unknown</source>
@@ -2482,7 +2520,10 @@ Adresse: %4
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Åbn yderligere %n blok</numerusform><numerusform>Åbn yderligere %n blokke</numerusform></translation>
+        <translation>
+            <numerusform>Åbn yderligere %n blok</numerusform>
+            <numerusform>Åbn yderligere %n blokke</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2803,30 +2844,6 @@ Adresse: %4
         <translation>Acceptér forbindelser udefra (standard: 1 hvis hverken -proxy eller -connect)</translation>
     </message>
     <message>
-        <source>%s, you must set a rpcpassword in the configuration file:
-%s
-It is recommended you use the following random password:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(you do not need to remember this password)
-The username and password MUST NOT be the same.
-If the file does not exist, create it with owner-readable-only file permissions.
-It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</source>
-        <translation>%s, du skal angive en RPC-adgangskode i konfigurationsfilen:
-%s
-Det anbefales, at du bruger nedenstående, tilfældige adgangskode:
-rpcuser=bitcoinrpc
-rpcpassword=%s
-(du behøver ikke huske denne adgangskode)
-Brugernavnet og adgangskode MÅ IKKE være det samme.
-Hvis filen ikke eksisterer, opret den og giv ingen andre end ejeren læserettighed.
-Det anbefales også at angive alertnotify, så du påmindes om problemer;
-fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
-</translation>
-    </message>
-    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Tildel til den givne adresse og lyt altid på den. Brug [vært]:port-notation for IPv6</translation>
     </message>
@@ -2841,14 +2858,6 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     <message>
         <source>Enter regression test mode, which uses a special chain in which blocks can be solved instantly.</source>
         <translation>Start regressionstesttilstand, som bruger en speciel kæde, hvor blokke kan løses med det samme.</translation>
-    </message>
-    <message>
-        <source>Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Fejl: Transaktionen blev afvist. Dette kan ske, hvis nogle af dine bitcoins i din tegnebog allerede er brugt, som hvis du brugte en kopi af wallet.dat og dine bitcoins er blevet brugt i kopien, men ikke er markeret som brugt her.</translation>
-    </message>
-    <message>
-        <source>Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!</source>
-        <translation>Fejl: Denne transaktion kræver et transaktionsgebyr på minimum %s pga. dens beløb, kompleksitet eller anvendelse af nyligt modtagne bitcoins!</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
@@ -2927,10 +2936,6 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Tilvalg for fejlfinding/test:</translation>
     </message>
     <message>
-        <source>Discover own IP address (default: 1 when listening and no -externalip)</source>
-        <translation>Find egen IP-adresse (standard: 1 når lytter og ingen -externalip)</translation>
-    </message>
-    <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
         <translation>Indlæs ikke tegnebogen og slå tegnebogs-RPC-kald fra</translation>
     </message>
@@ -2963,10 +2968,6 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Fejl: Mangel på ledig diskplads!</translation>
     </message>
     <message>
-        <source>Error: Wallet locked, unable to create transaction!</source>
-        <translation>Fejl: Tegnebog låst, kan ikke oprette transaktion!</translation>
-    </message>
-    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Lytning på enhver port mislykkedes. Brug -listen=0, hvis du ønsker dette.</translation>
     </message>
@@ -2983,8 +2984,8 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Ukorrekt eller ingen tilblivelsesblok fundet. Forkert datamappe for netværk?</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Ugyldig -onion adresse: "%s"</translation>
+        <source>Invalid -onion address: &apos;%s&apos;</source>
+        <translation>Ugyldig -onion adresse: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3075,7 +3076,7 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Fejl: Lytning efter indkommende forbindelser mislykkedes (lytning resultarede i fejl %s)</translation>
     </message>
     <message>
-        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</source>
+        <source>Error: Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
         <translation>Fejl: Ikke understøttet argument -socks blev fundet. Det er ikke muligt at angive SOCKS-version længere, da kun SOCKS5-proxier er understøttet.</translation>
     </message>
     <message>
@@ -3111,24 +3112,16 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Dette produkt indeholder software, der er udviklet af OpenSSL-projektet for brug i OpenSSL-værktøjskassen &lt;https://www.openssl.org/&gt;, samt kryptografisk software, der er skrevet af Eric Young, samt UPnP-software, der er skrevet af Thomas Bernard.</translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
-        <translation>Advarsel: Undersøg venligst at din computers dato og klokkeslet er korrekt indstillet! Hvis der er fejl i disse vil Bitcoin Core ikke fungere korrekt.</translation>
-    </message>
-    <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
-        <translation>Andre knuder på hvidliste kan ikke DoS-bandlyses, og deres transaktioner videresendes altid, selv hvis de allerede er i mempool'en. Brugbart til fx et adgangspunkt</translation>
+        <translation>Andre knuder på hvidliste kan ikke DoS-bandlyses, og deres transaktioner videresendes altid, selv hvis de allerede er i mempool&apos;en. Brugbart til fx et adgangspunkt</translation>
     </message>
     <message>
-        <source>Cannot resolve -whitebind address: '%s'</source>
-        <translation>Kan ikke løse -whitebind adresse: "%s"</translation>
+        <source>Cannot resolve -whitebind address: &apos;%s&apos;</source>
+        <translation>Kan ikke løse -whitebind adresse: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Connect through SOCKS5 proxy</source>
         <translation>Forbind gennem SOCKS5-proxy</translation>
-    </message>
-    <message>
-        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
-        <translation>Ophavsret © 2009-%i Udviklerne af Bitcoin Core</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
@@ -3151,44 +3144,32 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Information</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
-        <translation>Sundhedstjek under klargøring mislykkedes. Bitcoin Core lukker ned.</translation>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ugyldigt beløb til -minrelaytxfee=&lt;beløb&gt;: &quot;%s&quot;</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ugyldigt beløb til -minrelaytxfee=&lt;beløb&gt;: "%s"</translation>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ugyldigt beløb til -mintxfee=&lt;beløb&gt;: &quot;%s&quot;</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ugyldigt beløb til -mintxfee=&lt;beløb&gt;: "%s"</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least %s)</source>
+        <translation>Ugyldigt beløb for -paytxfee=&lt;beløb&gt;: &quot;%s&quot; (skal være mindst %s)</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
-        <translation>Ugyldigt beløb for -paytxfee=&lt;beløb&gt;: "%s" (skal være mindst %s)</translation>
-    </message>
-    <message>
-        <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation>Ugyldig netmaske angivet i -whitelist: "%s"</translation>
-    </message>
-    <message>
-        <source>Keep at most &lt;n&gt; unconnectable blocks in memory (default: %u)</source>
-        <translation>Behold højest &lt;n&gt; uforbindelige blokke i hukommelsen (standard: %u)</translation>
+        <source>Invalid netmask specified in -whitelist: &apos;%s&apos;</source>
+        <translation>Ugyldig netmaske angivet i -whitelist: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
         <translation>Behold højest &lt;n&gt; uforbindelige transaktioner i hukommelsen (standard: %u)</translation>
     </message>
     <message>
-        <source>Need to specify a port with -whitebind: '%s'</source>
-        <translation>Nødt til at angive en port med -whitebinde: "%s"</translation>
+        <source>Need to specify a port with -whitebind: &apos;%s&apos;</source>
+        <translation>Nødt til at angive en port med -whitebinde: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Node relay options:</source>
         <translation>Videresendelsesvalgmuligheder for knude:</translation>
-    </message>
-    <message>
-        <source>Print block on startup, if found in block index</source>
-        <translation>Udskriv blok under opstart, hvis den findes i blokindeks</translation>
     </message>
     <message>
         <source>RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)</source>
@@ -3335,10 +3316,6 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Hvor gennemarbejdet blokverificeringen for -checkblocks er (0-4; standard: %u)</translation>
     </message>
     <message>
-        <source>If paytxfee is not set, include enough fee so transactions are confirmed on average within n blocks (default: %u)</source>
-        <translation>Hvis paytxfee ikke er angivet, inkludér da nok gebyr til at transaktioner gennemsnitligt bekræftes inden for n blokke (standard: %u)</translation>
-    </message>
-    <message>
         <source>Log transaction priority and fee per kB when mining blocks (default: %u)</source>
         <translation>Prioritet for transaktionslog og gebyr pr. kB under udvinding af blokke (standard: %u)</translation>
     </message>
@@ -3395,8 +3372,8 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Inkludér IP-adresser i fejlretningsoutput (standard: %u)</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Ugyldig -proxy adresse: "%s"</translation>
+        <source>Invalid -proxy address: &apos;%s&apos;</source>
+        <translation>Ugyldig -proxy adresse: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Limit size of signature cache to &lt;n&gt; entries (default: %u)</source>
@@ -3429,10 +3406,6 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
         <translation>Føj tidsstempel foran fejlsøgningsoutput (standard: %u)</translation>
-    </message>
-    <message>
-        <source>Print block tree on startup (default: %u)</source>
-        <translation>Udskriv bloktræ under opstart (standard: %u)</translation>
     </message>
     <message>
         <source>Relay and mine data carrier transactions (default: %u)</source>
@@ -3497,24 +3470,20 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Grænse for afbrydelse af forbindelse til knuder, der opfører sig upassende (standard: %u)</translation>
     </message>
     <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>Ukendt netværk anført i -onlynet: "%s"</translation>
+        <source>Unknown network specified in -onlynet: &apos;%s&apos;</source>
+        <translation>Ukendt netværk anført i -onlynet: &quot;%s&quot;</translation>
     </message>
     <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>Kan ikke finde -bind adressen: "%s"</translation>
+        <source>Cannot resolve -bind address: &apos;%s&apos;</source>
+        <translation>Kan ikke finde -bind adressen: &quot;%s&quot;</translation>
     </message>
     <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>Kan ikke finde -externalip adressen: "%s"</translation>
+        <source>Cannot resolve -externalip address: &apos;%s&apos;</source>
+        <translation>Kan ikke finde -externalip adressen: &quot;%s&quot;</translation>
     </message>
     <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Ugyldigt beløb for -paytxfee=&lt;beløb&gt;: "%s"</translation>
-    </message>
-    <message>
-        <source>Invalid amount</source>
-        <translation>Ugyldigt beløb</translation>
+        <source>Invalid amount for -paytxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation>Ugyldigt beløb for -paytxfee=&lt;beløb&gt;: &quot;%s&quot;</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
@@ -3549,12 +3518,141 @@ fx: alertnotify=echo %%s | mail -s "Bitcoin Alert" admin@foo.com
         <translation>Indlæsning gennemført</translation>
     </message>
     <message>
-        <source>To use the %s option</source>
-        <translation>For at bruge %s mulighed</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Fejl</translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos; (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum total fees to use in a single wallet transaction, setting too low may abort large transactions (default: %s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Require high priority for relaying free or low-fee transactions (default:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To use bitcoind, or the -server option to bitcoin-qt, you must set an rpcpassword in the configuration file:
+%s
+It is recommended you use the following random password:
+rpcuser=bitcoinrpc
+rpcpassword=%s
+(you do not need to remember this password)
+The username and password MUST NOT be the same.
+If the file does not exist, create it with owner-readable-only file permissions.
+It is also recommended to set alertnotify so you are notified of problems;
+for example: alertnotify=echo %%s | mail -s &quot;Bitcoin Alert&quot; admin@foo.com
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the accelerated test network, accelerated testnet does not use seeding, please use -addnode to setup your own network, you can use -targetspeed to adjust the target spacing for your private accelerated testnet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: -maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When creating transactions, ignore inputs with value less than this (default: 0.0001)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accept public REST requests (default: %u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow self signed root certificates (default: 0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: 0)</source>
+        <translation type="unfinished">Vælg datamappe ved opstart (standard: 0)</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. Bitcoin Core is shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mininput=&lt;amount&gt;: &apos;%s&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RPC support for HTTP persistent connections (default: %d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation type="unfinished">Sæt SSL-rodcertifikater for betalingsanmodning (standard: -system-)</translation>
+    </message>
+    <message>
+        <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
+        <translation type="unfinished">Angiv sprog, fx &quot;da_DK&quot; (standard: systemlokalitet)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: 1)</source>
+        <translation type="unfinished">Vis opstartsbillede ved opstart (standard: 1)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation type="unfinished">Start minimeret</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

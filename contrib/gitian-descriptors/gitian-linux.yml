@@ -1,5 +1,5 @@
 ---
-name: "guldencoin-linux-1.5.0"
+name: "Gulden-linux-1.5.1"
 enable_cache: true
 suites:
 - "precise"
@@ -19,8 +19,8 @@ packages:
 - "libstdc++6-4.6-pic"
 reference_datetime: "2013-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/nlgcoin/guldencoin2.git"
-  "dir": "guldencoin"
+- "url": /home/guldencoin/guldencoin-build-manager/Gulden-dev
+  "dir": "Gulden"
 files: []
 script: |
   WRAP_DIR=$HOME/wrapped
@@ -64,7 +64,7 @@ script: |
   done
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd guldencoin
+  cd Gulden
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -83,13 +83,13 @@ script: |
   ./autogen.sh
   ./configure --prefix=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`
   make dist
-  SOURCEDIST=`echo guldencoin-*.tar.gz`
+  SOURCEDIST=`echo Gulden-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find guldencoin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Gulden-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   ORIGPATH="$PATH"

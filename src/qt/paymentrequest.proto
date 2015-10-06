@@ -7,7 +7,7 @@
 //
 
 package payments;
-option java_package = "org.guldencoin.protocols.payments";
+option java_package = "org.Gulden.protocols.payments";
 option java_outer_classname = "Protos";
 
 // Generalized form of "send payment to this/these bitcoin addresses"

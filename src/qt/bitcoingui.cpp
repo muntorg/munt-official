@@ -164,7 +164,7 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
 
     // Create status bar
     statusBar();
-    
+
     // Disable size grip because it looks ugly and nobody needs it
     statusBar()->setSizeGripEnabled(false);
 
@@ -179,18 +179,19 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     labelEncryptionIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
+
     if(enableWallet)
     {
-        frameBlocksLayout->addStretch();
+        //frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(unitDisplayControl);
-        frameBlocksLayout->addStretch();
+        //frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelEncryptionIcon);
     }
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
@@ -198,6 +199,7 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     progressBar = new GUIUtil::ProgressBar();
     progressBar->setAlignment(Qt::AlignCenter);
     progressBar->setVisible(false);
+
 
     // Override style sheet for progress bar for styles that have a segmented progress bar,
     // as they make the text unreadable (workaround for issue #1071)
@@ -209,7 +211,7 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     }
 
     statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
+    statusBar()->addWidget(progressBar, 1);
     statusBar()->addPermanentWidget(frameBlocks);
 
     connect(openRPCConsoleAction, SIGNAL(triggered()), rpcConsole, SLOT(show()));
@@ -225,6 +227,9 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle *networkStyle, QWidget *parent) :
 
     // Subscribe to notifications from core
     subscribeToCoreSignals();
+
+
+    #include "_Gulden/ApplyGuldenQSS.h"
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -414,12 +419,15 @@ void BitcoinGUI::createToolBars()
     if(walletFrame)
     {
         QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
+
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         overviewAction->setChecked(true);
+
+        #include <_Gulden/GuldenBar.h>
     }
 }
 
@@ -470,6 +478,9 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     if(!walletFrame)
         return false;
     setWalletActionsEnabled(true);
+
+    connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
+
     return walletFrame->addWallet(name, walletModel);
 }
 
@@ -636,18 +647,30 @@ void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
 }
+
+#include <QDesktopServices>
+#include <QUrl>
+void BitcoinGUI::gotoWebsite()
+{
+	QDesktopServices::openUrl(QUrl("http://www.Gulden.com/"));
+}
 #endif // ENABLE_WALLET
 
 void BitcoinGUI::setNumConnections(int count)
 {
+    float devicePixelRatio = 1.0;
+    #if QT_VERSION > 0x050100
+    devicePixelRatio = ((QGuiApplication*)QCoreApplication::instance())->devicePixelRatio();
+    #endif
+
     QString icon;
     switch(count)
     {
-    case 0: icon = ":/icons/connect_0"; break;
-    case 1: case 2: case 3: icon = ":/icons/connect_1"; break;
-    case 4: case 5: case 6: icon = ":/icons/connect_2"; break;
-    case 7: case 8: case 9: icon = ":/icons/connect_3"; break;
-    default: icon = ":/icons/connect_4"; break;
+    case 0: icon = devicePixelRatio<1.1?":/icons/connect_0":":/icons/connect_0_x2"; break;
+    case 1: case 2: case 3: icon = devicePixelRatio<1.1?":/icons/connect_1":":/icons/connect_1_x2"; break;
+    case 4: case 5: case 6: icon = devicePixelRatio<1.1?":/icons/connect_2":":/icons/connect_2_x2"; break;
+    case 7: case 8: case 9: icon = devicePixelRatio<1.1?":/icons/connect_3":":/icons/connect_3_x2"; break;
+    default: icon = devicePixelRatio<1.1?":/icons/connect_4":":/icons/connect_4_x2"; break;
     }
     labelConnectionsIcon->setPixmap(SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Bitcoin network", "", count));
@@ -730,7 +753,9 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate)
         progressBarLabel->setVisible(true);
         progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
         progressBar->setMaximum(1000000000);
+
         progressBar->setValue(clientModel->getVerificationProgress() * 1000000000.0 + 0.5);
+
         progressBar->setVisible(true);
 
         tooltip = tr("Catching up...") + QString("<br>") + tooltip;
@@ -749,8 +774,11 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate)
 #endif // ENABLE_WALLET
 
         tooltip += QString("<br>");
-        tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
-        tooltip += QString("<br>");
+        if (count>1)
+        {
+            tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
+            tooltip += QString("<br>");
+        }
         tooltip += tr("Transactions after this will not yet be visible.");
     }
 
@@ -820,6 +848,20 @@ void BitcoinGUI::message(const QString &title, const QString &message, unsigned 
     else
         notificator->notify((Notificator::Class)nNotifyIcon, strTitle, message);
 }
+
+#include <bitcoinunits.h>
+void BitcoinGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
+{
+    findChild<QLabel*>("gulden_label_balance")->setText(BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, balance, false, BitcoinUnits::separatorStandard, 2));
+    if (unconfirmedBalance>0)
+    {
+        findChild<QLabel*>("gulden_label_change")->setText("(+"+BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, unconfirmedBalance, false, BitcoinUnits::separatorStandard, 2)+")");
+        findChild<QLabel*>("gulden_label_change")->show();
+    }
+    else
+        findChild<QLabel*>("gulden_label_change")->hide();
+}
+
 
 void BitcoinGUI::changeEvent(QEvent *e)
 {
@@ -920,6 +962,11 @@ bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 
 void BitcoinGUI::setEncryptionStatus(int status)
 {
+    float devicePixelRatio = 1.0;
+    #if QT_VERSION > 0x050100
+    devicePixelRatio = ((QGuiApplication*)QCoreApplication::instance())->devicePixelRatio();
+    #endif
+
     switch(status)
     {
     case WalletModel::Unencrypted:
@@ -929,8 +976,8 @@ void BitcoinGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(true);
         break;
     case WalletModel::Unlocked:
-        labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(SingleColorIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelEncryptionIcon->hide();
+        labelEncryptionIcon->setPixmap(QIcon(devicePixelRatio<1.1?":/Gulden/lock":":/Gulden/lock_x2").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -938,7 +985,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Locked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(SingleColorIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelEncryptionIcon->setPixmap(QIcon(devicePixelRatio<1.1?":/Gulden/lock":":/Gulden/lock_x2").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);

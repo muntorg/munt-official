@@ -29,8 +29,8 @@
 #include <boost/thread.hpp>
 #include "json/json_spirit_writer_template.h"
 
-#include <guldencoin/rpcgulden.h>
-#include <guldencoin/translate.h>
+#include <Gulden/rpcgulden.h>
+#include <Gulden/translate.h>
 
 
 using namespace boost::asio;
@@ -311,11 +311,13 @@ static const CRPCCommand vRPCCommands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,      false },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,      false },
     { "mining",             "submitblock",            &submitblock,            true,      false },
-    //Guldencoin only
-    { "mining",             "gethashps",              &gethashps,              true,      false },
-    { "mining",             "sethashlimit",             &sethashlimit,              true,      false },
-
+    //gethasps and sethashlimit are 'Gulden only' commands
 #ifdef ENABLE_WALLET
+    { "mining",             "gethashps",              &gethashps,              true,      false },
+    { "mining",             "sethashlimit",           &sethashlimit,           true,      false },
+    { "mining",             "dumpdiffarray",          &dumpdiffarray,          true,      false },
+
+
     /* Coin generation */
     { "generating",         "getgenerate",            &getgenerate,            true,      false },
     { "generating",         "setgenerate",            &setgenerate,            true,      false },
@@ -1016,8 +1018,10 @@ json_spirit::Value CRPCTable::execute(const std::string &strMethod, const json_s
     const CRPCCommand *pcmd = tableRPC[strMethod];
     if (!pcmd)
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found");
+#ifdef ENABLE_WALLET
     if (pcmd->reqWallet && !pwalletMain)
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found (disabled)");
+#endif
 
     g_rpcSignals.PreCommand(*pcmd);
 
