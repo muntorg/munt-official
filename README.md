@@ -1,20 +1,26 @@
-Gulden
-----------------
-
-On January 1st 2002, the Netherlands lost the Gulden which had been in circulation since 1252.
-Starting April 4th 2014, we are bringing it back in a digital form.
+Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
 
 
-Specifications
+Find out more on gulden.com or connect with the community through one or more of the following websites:
+|:-----------|:-------|
+|Website:|http://www.Gulden.com|
+|Official forums:|http://www.community.gulden.com|
+|Community forums:|gulden.zone|
+|Twitter:|twitter.com/gulden|
+|Facebook:|facebook.com/guldenpay|
+|Reddit:|https://www.reddit.com/r/gulden/|
 
- - Algorithm: scrypt PoW DIGI
- - Transaction confirmations: 6
- - Total coins: 1680M
- - Premine: 170M (+/- 10%)
- - Starting diff: 0.000244
- - Block reward: 100 NLG from block 250001, 1000 NLG prior.
- - Block time: 150 seconds
- - Retarget: 576 blocks ... well KGW already kicked in.
- - Reward halving interval: 840000 blocks
- - Port: 9231
- - RPCPort: 9232
+
+You can also join a dedicated group of individuals on slack. Get your invitation here: 
+https://gulden.com/join
+
+
+Technical specifications
+|:-----------|:---------|
+|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment|
+|Transaction confirmations:|6|
+|Total coins:|1680M|
+|Premine reserved for development, marketing and funding of community projects:|170M (10%)|
+|Starting diff:|0.00244|
+|Block reward:|100 NLG|
+|Block time:|150 seconds|
