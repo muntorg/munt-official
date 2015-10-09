@@ -15,7 +15,7 @@ You can also join a dedicated group of individuals on slack. Get your invitation
 https://gulden.com/join
 
 
-Technical specifications
+|Technical specifications||
 |:-----------|:---------|
 |Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment|
 |Transaction confirmations:|6|
