@@ -69,11 +69,8 @@ endif
 
 GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/diff.h \
-  Gulden/diff_DGW.h \
-  Gulden/diff_DIGI.h \
   Gulden/diff_delta.h \
   Gulden/diff_old.h \
-  Gulden/diff_kimoto.h \
   Gulden/hash/hash.h \
   Gulden/hash/city.h \
   Gulden/hash/cityconfig.h \

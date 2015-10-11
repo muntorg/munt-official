@@ -1,5 +1,5 @@
 ---
-name: "Gulden-win-1.5.1"
+name: "Gulden-win-1.5.2"
 enable_cache: true
 suites:
 - "precise"

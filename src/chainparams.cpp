@@ -160,22 +160,12 @@ public:
 
         // To check the status of the seeds visit: https://seeds.guldencoin.com
 
-        vSeeds.push_back(CDNSSeedData("seed 0",  "seed-000.guldencoin.net"));
+        vSeeds.push_back(CDNSSeedData("seed 0",  "seed-000.gulden.com"));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed-001.guldencoin.org"));
         vSeeds.push_back(CDNSSeedData("seed 2",  "seed-002.guldencoin.nl"));
-        vSeeds.push_back(CDNSSeedData("seed 3",  "seed-003.guldencoin.net"));
+        vSeeds.push_back(CDNSSeedData("seed 3",  "seed-003.gulden.com"));
         vSeeds.push_back(CDNSSeedData("seed 4",  "seed-004.guldencoin.org"));
         vSeeds.push_back(CDNSSeedData("seed 5",  "seed-005.guldencoin.nl"));
-        vSeeds.push_back(CDNSSeedData("seed 6",  "seed-006.guldencoin.net"));
-        vSeeds.push_back(CDNSSeedData("seed 7",  "seed-007.guldencoin.org"));
-        vSeeds.push_back(CDNSSeedData("seed 8",  "seed-008.guldencoin.nl"));
-        vSeeds.push_back(CDNSSeedData("seed 9",  "seed-009.guldencoin.net"));
-        vSeeds.push_back(CDNSSeedData("seed 10", "seed-010.guldencoin.org"));
-        vSeeds.push_back(CDNSSeedData("seed 11", "seed-011.guldencoin.nl"));
-        vSeeds.push_back(CDNSSeedData("seed 12", "seed-012.guldencoin.net"));
-        vSeeds.push_back(CDNSSeedData("seed 13", "seed-013.guldencoin.org"));
-        vSeeds.push_back(CDNSSeedData("seed 14", "seed-014.guldencoin.nl"));
-
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);

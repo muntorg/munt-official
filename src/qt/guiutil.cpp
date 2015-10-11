@@ -125,7 +125,7 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
     // return if URI is not valid or is no bitcoin: URI
-    if(!uri.isValid() || (uri.scheme() != QString("guldencoin") && uri.scheme() != QString("Gulden")))
+    if(!uri.isValid() || (uri.scheme().toLower() != QString("guldencoin") && uri.scheme().toLower() != QString("gulden")))
         return false;
 
     SendCoinsRecipient rv;
@@ -195,7 +195,7 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
     }
     else if(uri.startsWith("Gulden://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 9, "guldencoin:");
+        uri.replace(0, 9, "gulden:");
     }
 
     QUrl uriInstance(uri);

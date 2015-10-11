@@ -44,6 +44,7 @@
       <key>CFBundleURLSchemes</key>
       <array>
         <string>gulden</string>
+        <string>guldencoin</string>
       </array>
     </dict>
   </array>

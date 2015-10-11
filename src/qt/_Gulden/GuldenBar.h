@@ -52,10 +52,11 @@ labelBalance->setText(BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, 0, false, 
 
 QLabel* labelChange = new QLabel("");
 labelChange->setObjectName("gulden_label_change");
-labelChange->hide();
 
 guldenBar->addWidget(labelBalance);
-guldenBar->addWidget(labelChange);
+guldenBar->addWidget(labelChange)->setObjectName("gulden_label_change_action");
+
+findChild<QAction*>("gulden_label_change_action")->setVisible(true);
 
 QWidget* margin = new QWidget();
 margin->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);

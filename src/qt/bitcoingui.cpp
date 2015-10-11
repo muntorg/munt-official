@@ -853,13 +853,14 @@ void BitcoinGUI::message(const QString &title, const QString &message, unsigned 
 void BitcoinGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     findChild<QLabel*>("gulden_label_balance")->setText(BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, balance, false, BitcoinUnits::separatorStandard, 2));
-    if (unconfirmedBalance>0)
+    if (immatureBalance>0 || unconfirmedBalance>0)
     {
-        findChild<QLabel*>("gulden_label_change")->setText("(+"+BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, unconfirmedBalance, false, BitcoinUnits::separatorStandard, 2)+")");
-        findChild<QLabel*>("gulden_label_change")->show();
+        findChild<QLabel*>("gulden_label_change")->setText("(+"+BitcoinUnits::formatWithUnit(BitcoinUnits::NLG, unconfirmedBalance + immatureBalance, false, BitcoinUnits::separatorStandard, 2)+")");
+        findChild<QLabel*>("gulden_label_change")->hide();
+        findChild<QAction*>("gulden_label_change_action")->setVisible(true);
     }
     else
-        findChild<QLabel*>("gulden_label_change")->hide();
+        findChild<QAction*>("gulden_label_change_action")->setVisible(false);
 }
 
 
