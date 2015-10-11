@@ -5,6 +5,7 @@ Gulden is a simple and very powerful payment system. Gulden uses blockchain tech
 
 
 Find out more on http://Gulden.com or connect with the community through one or more of the following websites:
+
 |Website:|http://Gulden.com|
 |:-----------|:-------|
 |Official forums:|http://community.gulden.com|
