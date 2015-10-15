@@ -8,11 +8,9 @@ Find out more on http://Gulden.com or connect with the community through one or 
 
 |Website:|http://Gulden.com|
 |:-----------|:-------|
-|Official forums:|http://community.gulden.com|
-|Community forums:|http://gulden.zone|
-|Twitter:|http://twitter.com/gulden|
-|Facebook:|http://facebook.com/guldenpay|
-|Reddit:|https://reddit.com/r/gulden/|
+|Forums:|https://community.gulden.com|
+|Twitter:|https://twitter.com/gulden|
+|Facebook:|https://facebook.com/guldenpay|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
 
 
