@@ -15,7 +15,7 @@ Find out more on https://gulden.com or connect with the community through one or
 
 
 You can also join a dedicated group of individuals on slack. Get your invitation here: 
-https://Gulden.com/join
+https://gulden.com/join
 
 
 |Technical specifications||
