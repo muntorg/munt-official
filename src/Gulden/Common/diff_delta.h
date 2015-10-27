@@ -13,7 +13,17 @@
 #define GULDENCOIN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
-unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
+
+#define BLOCK_TYPE const CBlockHeader*
+#define BLOCK_TIME(block) block->nTime
+#define INDEX_TYPE CBlockIndex*
+#define INDEX_HEIGHT(block) block->nHeight
+#define INDEX_TIME(block) block->GetBlockTime()
+#define INDEX_PREV(block) block->pprev
+#define INDEX_TARGET(block) block->nBits
+
+
+unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
@@ -93,19 +103,19 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     int64_t nDailyPercentage       = 0;
     #endif
 
-    const CBlockIndex* pindexFirst = pindexLast; //multi algo - last block is selected on a per algo basis.
+    const INDEX_TYPE pindexFirst = pindexLast; //multi algo - last block is selected on a per algo basis.
 
     // Genesis block
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
 
     // -- Use a fixed difficuly until we have enough blocks to work with (multi algo - this is calculated on a per algo basis)
-    if (pindexLast->nHeight <= nQBFrame)
+    if (INDEX_HEIGHT(pindexLast) <= nQBFrame)
         return nProofOfWorkLimit;
 
     // -- Calculate timespan for last block window (multi algo - this is calculated on a per algo basis)
-    pindexFirst = pindexLast->pprev;
-    nLBTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
+    pindexFirst = INDEX_PREV(pindexLast);
+    nLBTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
    
     // Check for very short and long blocks (algo specific)
     // If last block was far too short, let difficulty raise faster
@@ -125,7 +135,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     pindexFirst = pindexLast;
     for (unsigned int i = 1; pindexFirst && i <= nQBFrame; i++)
     {
-        nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
+        nDeltaTimespan = INDEX_TIME(pindexFirst) - INDEX_TIME(INDEX_PREV(pindexFirst));
         // Prevent bad/negative block times - switch them for a fixed time.
         if (nDeltaTimespan <= nBadTimeLimit)
             nDeltaTimespan = nBadTimeReplace;
@@ -133,11 +143,11 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         if (i<= nShortFrame)
             nShortTimespan += nDeltaTimespan;
         nQBTimespan += nDeltaTimespan;
-        pindexFirst = pindexFirst->pprev;
+        pindexFirst = INDEX_PREV(pindexFirst);
     }
        
     // -- Calculate time interval for middle window (multi algo - this is calculated on a per algo basis)
-    if (pindexLast->nHeight - nFirstDeltaBlock <= nMiddleFrame)
+    if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nMiddleFrame)
     {
         nMiddleWeight = nMiddleTimespan = 0;
     }
@@ -146,20 +156,20 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
         pindexFirst = pindexLast;
         for (unsigned int i = 1; pindexFirst && i <= nMiddleFrame; i++)
         {
-            nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
+            nDeltaTimespan = INDEX_TIME(pindexFirst) - INDEX_TIME(INDEX_PREV(pindexFirst));
             // Prevent bad/negative block times - switch them for a fixed time.
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
 
             nMiddleTimespan += nDeltaTimespan;
-            pindexFirst = pindexFirst->pprev;
+            pindexFirst = INDEX_PREV(pindexFirst);
         }
     }
 
 
     // -- Calculate timespan for long window (multi algo - this is calculated on a per algo basis)
     // NB! No need to worry about single negative block times as it has no significant influence over this many blocks.
-    if (pindexLast->nHeight - nFirstDeltaBlock <= nLongFrame)
+    if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nLongFrame)
     {
         nLongWeight = nLongTimespan = 0;
     }
@@ -167,9 +177,9 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     {
         pindexFirst = pindexLast;
         for (unsigned int i = 1; pindexFirst && i <= nLongFrame; i++)
-            pindexFirst = pindexFirst->pprev;
+            pindexFirst = INDEX_PREV(pindexFirst);
 
-        nLongTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
+        nLongTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
     }
 
 
@@ -177,7 +187,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
     if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 80 / PERCENT_FACTOR) )
     {
-        if (fDebug && (nPrevHeight != pindexLast->nHeight) )
+        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
@@ -218,7 +228,7 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     // -- Day interval (1 day; general over all algos)
     // so other algos can take blocks that 1 algo does not use
     // in case there are still longer gaps (high spikes)
-    if (pindexLast->nHeight <= nDayFrame)
+    if (INDEX_HEIGHT(pindexLast) <= nDayFrame)
     {
         nDayTimespan = nRetargetTimespan * nDayFrame;
     }
@@ -226,9 +236,9 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     {
         pindexFirst = pindexLast;
         for (int i = 1; pindexFirst && i <= nDayFrame; i++)
-            pindexFirst = pindexFirst->pprev;
+            pindexFirst = INDEX_PREV(pindexFirst);
 
-        nDayTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
+        nDayTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
     }
     nDailyPercentage = (nDayTimespan * PERCENT_FACTOR) / (nRetargetTimespan * nDayFrame);
 
@@ -247,42 +257,42 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     
     // Finally calculate and set the new difficulty.
     arith_uint256 bnNew;
-    bnNew.SetCompact(pindexLast->nBits);
+    bnNew.SetCompact(INDEX_TARGET(pindexLast));
     bnNew *= arith_uint256(nWeightedTimespan);
     bnNew /= arith_uint256(nRetargetTimespan);
 
     
     // Now that we have the difficulty we run a last few 'special purpose' exception rules which have the ability to override the calculation.
     // Exception 1 - Never adjust difficulty downward (human view) if previous block generation was faster than what we wanted.
-    nLBTimespan = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
-    if (nLBTimespan > 0 && nLBTimespan < nLowTimeLimit && bnNew > arith_uint256().SetCompact(pindexLast->nBits))
+    nLBTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(INDEX_PREV(pindexLast));
+    if (nLBTimespan > 0 && nLBTimespan < nLowTimeLimit && bnNew > arith_uint256().SetCompact(INDEX_TARGET(pindexLast)))
     {
         // If it is this low then we actually give it a slight nudge upwards - 5%
         if (nLBTimespan < nFloorTimeLimit)
         {
-            bnNew.SetCompact(pindexLast->nBits);
+            bnNew.SetCompact(INDEX_TARGET(pindexLast));
             bnNew *= arith_uint256(95);
             bnNew /= arith_uint256(PERCENT_FACTOR);
-            if (fDebug && (nPrevHeight != pindexLast->nHeight) )
+            if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo +=  strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
         }
         else
         {
-            bnNew.SetCompact(pindexLast->nBits);
-            if (fDebug && (nPrevHeight != pindexLast->nHeight) )
+            bnNew.SetCompact(INDEX_TARGET(pindexLast));
+            if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
         }
     }
 
     
     // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
-    if ((pblock->nTime - pindexLast->GetBlockTime()) > nLongTimeLimit)
+    if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit)
     {
         // Reduce in a linear fashion based on time steps.
-        int64_t nNumMissedSteps = ((pblock->nTime - pindexLast->GetBlockTime()) / nLongTimeStep);
+        int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
         bnNew *=  nNumMissedSteps;
 
-        if (fDebug && (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty) )
+        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty) )
             sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
     }
 
@@ -294,19 +304,19 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     
     if (fDebug)
     {
-        if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
+        if (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty)
         {
             static CCriticalSection logCS;
             LOCK(logCS);
-            LogPrintf("<DELTA> Height= %d\n" , pindexLast->nHeight);
+            LogPrintf("<DELTA> Height= %d\n" , INDEX_HEIGHT(pindexLast));
             LogPrintf("%s" , sLogInfo.c_str());
             LogPrintf("<DELTA> nTargetTimespan = %ld nActualTimespan = %ld nWeightedTimespan = %ld \n", nRetargetTimespan, nLBTimespan, nWeightedTimespan);
             LogPrintf("<DELTA> nShortTimespan/nShortFrame = %ld nMiddleTimespan/nMiddleFrame = %ld nLongTimespan/nLongFrame = %ld \n", nShortTimespan/nShortFrame, nMiddleTimespan/nMiddleFrame, nLongTimespan/nLongFrame);
-            LogPrintf("<DELTA> Before: %08x %s\n", pindexLast->nBits, arith_uint256().SetCompact(pindexLast->nBits).ToString().c_str());
+            LogPrintf("<DELTA> Before: %08x %s\n", INDEX_TARGET(pindexLast), arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).ToString().c_str());
             LogPrintf("<DELTA> After:  %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
-            LogPrintf("<DELTA> Rough change percentage (human view): %lf%%\n", -( ( (bnNew.getdouble() - arith_uint256().SetCompact(pindexLast->nBits).getdouble()) / arith_uint256().SetCompact(pindexLast->nBits).getdouble()) * 100) );
+            LogPrintf("<DELTA> Rough change percentage (human view): %lf%%\n", -( ( (bnNew.getdouble() - arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).getdouble()) / arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).getdouble()) * 100) );
         }
-        nPrevHeight = pindexLast->nHeight;
+        nPrevHeight = INDEX_HEIGHT(pindexLast);
         nPrevDifficulty = bnNew.GetCompact();
     }
 
