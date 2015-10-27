@@ -5,20 +5,18 @@
 #ifndef GULDEN_DIFF_COMMON_H
 #define GULDEN_DIFF_COMMON_H
 
-#include "../consensus/params.h"
-#include "../arith_uint256.h"
-#include "util.h"
-
 #ifdef DIFF_IOS
-    #define BLOCK_TYPE BRMerkleBlock
-    #define BLOCK_TIME(block) block.Timestamp
-    #define INDEX_TYPE BRMerkleBlock
+    #define BLOCK_TYPE BRMerkleBlock*
+    #define BLOCK_TIME(block) block.timestamp
+    #define INDEX_TYPE BRMerkleBlock*
     #define INDEX_HEIGHT(block) block.height
     #define INDEX_TIME(block) block.timestamp
-    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] timestampForBlockHeight:(block.height-1)]
+    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.previous)]
     #define INDEX_TARGET(block) block.target
-
 #else
+    #include "../consensus/params.h"
+    #include "../arith_uint256.h"
+    #include "util.h"
     #define BLOCK_TYPE CBlockHeader*
     #define BLOCK_TIME(block) block->nTime
     #define INDEX_TYPE CBlockIndex*
