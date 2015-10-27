@@ -14,15 +14,6 @@
 
 #define PERCENT_FACTOR 100
 
-#define BLOCK_TYPE const CBlockHeader*
-#define BLOCK_TIME(block) block->nTime
-#define INDEX_TYPE CBlockIndex*
-#define INDEX_HEIGHT(block) block->nHeight
-#define INDEX_TIME(block) block->GetBlockTime()
-#define INDEX_PREV(block) block->pprev
-#define INDEX_TARGET(block) block->nBits
-
-
 unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.

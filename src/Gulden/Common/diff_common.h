@@ -9,26 +9,45 @@
 #include "../arith_uint256.h"
 #include "util.h"
 
+#ifdef DIFF_IOS
+    #define BLOCK_TYPE BRMerkleBlock
+    #define BLOCK_TIME(block) block.Timestamp
+    #define INDEX_TYPE BRMerkleBlock
+    #define INDEX_HEIGHT(block) block.height
+    #define INDEX_TIME(block) block.timestamp
+    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] timestampForBlockHeight:(block.height-1)]
+    #define INDEX_TARGET(block) block.target
+
+#else
+    #define BLOCK_TYPE const CBlockHeader*
+    #define BLOCK_TIME(block) block->nTime
+    #define INDEX_TYPE CBlockIndex*
+    #define INDEX_HEIGHT(block) block->nHeight
+    #define INDEX_TIME(block) block->GetBlockTime()
+    #define INDEX_PREV(block) block->pprev
+    #define INDEX_TARGET(block) block->nBits
+#endif
+
 #include "diff_delta.h"
 #include "diff_old.h"
 
-unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, int64_t nPowTargetSpacing, unsigned int nPowLimit)
+unsigned int static GetNextWorkRequired(const CBlockIndex* indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit)
 {
     static int nDeltaSwitchoverBlock = GetBoolArg("-testnet", false) ? 350000 : (GetBoolArg("-testnetaccel", false) ? 1 : 213500);
     static int nOldDiffSwitchoverBlock = GetBoolArg("-testnet", false) ? 500 : (GetBoolArg("-testnetaccel", false) ? 500 : 260000);
 
-    if (pindexLast->nHeight+1 >= nOldDiffSwitchoverBlock)
+    if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
     {
-        if (pindexLast->nHeight+1 >= nDeltaSwitchoverBlock)
+        if (INDEX_HEIGHT(indexLast)+1 >= nDeltaSwitchoverBlock)
         {
-            return GetNextWorkRequired_DELTA(pindexLast, pblock, nPowTargetSpacing, nPowLimit, nDeltaSwitchoverBlock);
+            return GetNextWorkRequired_DELTA(indexLast, block, nPowTargetSpacing, nPowLimit, nDeltaSwitchoverBlock);
         }
         else
         {
             return 524287999;
         }
     }
-    return diff_old(pindexLast->nHeight+1);
+    return diff_old(INDEX_HEIGHT(indexLast)+1);
 }
 
 
