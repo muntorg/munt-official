@@ -19,7 +19,7 @@
     #define INDEX_TARGET(block) block.target
 
 #else
-    #define BLOCK_TYPE const CBlockHeader*
+    #define BLOCK_TYPE CBlockHeader*
     #define BLOCK_TIME(block) block->nTime
     #define INDEX_TYPE CBlockIndex*
     #define INDEX_HEIGHT(block) block->nHeight
@@ -31,7 +31,7 @@
 #include "diff_delta.h"
 #include "diff_old.h"
 
-unsigned int static GetNextWorkRequired(const CBlockIndex* indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit)
+unsigned int static GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit)
 {
     static int nDeltaSwitchoverBlock = GetBoolArg("-testnet", false) ? 350000 : (GetBoolArg("-testnetaccel", false) ? 1 : 213500);
     static int nOldDiffSwitchoverBlock = GetBoolArg("-testnet", false) ? 500 : (GetBoolArg("-testnetaccel", false) ? 500 : 260000);

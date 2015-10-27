@@ -14,7 +14,7 @@
 
 #define PERCENT_FACTOR 100
 
-unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
+unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
@@ -178,7 +178,7 @@ unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, BLOC
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
     if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 80 / PERCENT_FACTOR) )
     {
-        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) )
+        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
