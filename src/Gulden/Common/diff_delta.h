@@ -13,7 +13,7 @@
 #define GULDENCOIN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
-unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, unsigned int nFirstDeltaBlock)
+unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader *pblock, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
@@ -22,10 +22,10 @@ unsigned int static GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, co
     std::string sLogInfo;
 
     // The spacing we want our blocks to come in at.
-    int64_t nRetargetTimespan      = params.nPowTargetSpacing;
+    int64_t nRetargetTimespan      = nPowTargetSpacing;
 
     // The minimum difficulty that is allowed, this is set on a per algorithm basis.
-    const unsigned int nProofOfWorkLimit = params.powLimit.GetCompact();
+    const unsigned int nProofOfWorkLimit = nPowLimit;
 
     // How many blocks to use to calculate each of the four algo specific time windows (last block; short window; middle window; long window)
     const unsigned int nLastBlock           =   1;
