@@ -26025,11 +26025,13 @@ unsigned int diff_old(int32_t nHeight)
         return 0;
     }
     nRet = udiff[nHeight];
+    #ifndef BUILD_IOS
     if (fDebug)
     {
         static CCriticalSection logCS;
         LOCK(logCS);
         LogPrintf("<STATICDIFF> Height=%d Diff=%08x\n", nHeight, nRet);
     }
+    #endif
     return nRet;
 }

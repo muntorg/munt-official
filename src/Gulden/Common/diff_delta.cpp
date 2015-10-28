@@ -9,14 +9,24 @@
 // In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
 
 #include "diff_common.h"
+#include "diff_delta.h"
 
-unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
+#ifdef BUILD_IOS
+#include "NSData.Bitcoin.h"
+#include "arith_uint256.h"
+#import "BRMerkleBlock.h"
+#import "BRPeerManager.h"
+#endif
+
+unsigned int static GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
     
+    #ifndef BUILD_IOS
     std::string sLogInfo;
+    #endif
 
     // The spacing we want our blocks to come in at.
     int64_t nRetargetTimespan      = nPowTargetSpacing;
@@ -174,8 +184,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
     if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 80 / PERCENT_FACTOR) )
     {
+        #ifndef BUILD_IOS
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
+        #endif
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
     
@@ -188,7 +200,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Apply the adjustment limits
     // However if we are close to target time then we use smaller limits to smooth things off a little bit more.
-    if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 10 / PERCENT_FACTOR)
+    if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 10 / PERCENT_FACTOR)
     {
         // 90% of target
         // 11.11111111111111% difficulty increase
@@ -196,7 +208,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nMinimumAdjustLimit = nRetargetTimespan * 90 / PERCENT_FACTOR;
         nMaximumAdjustLimit = nRetargetTimespan * 110 / PERCENT_FACTOR;
     }
-    else if (std::abs(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR)
+    else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR)
     {
         // 80% of target - 25% difficulty increase/decrease maximum.
         nMinimumAdjustLimit = nRetargetTimespan * 80 / PERCENT_FACTOR;
@@ -260,14 +272,18 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             bnNew.SetCompact(INDEX_TARGET(pindexLast));
             bnNew *= arith_uint256(95);
             bnNew /= arith_uint256(PERCENT_FACTOR);
+            #ifndef BUILD_IOS
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo +=  strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
+            #endif
         }
         else
         {
             bnNew.SetCompact(INDEX_TARGET(pindexLast));
+            #ifndef BUILD_IOS
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
+            #endif
         }
     }
 
@@ -279,8 +295,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
         bnNew *=  nNumMissedSteps;
 
+	#ifndef BUILD_IOS
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty) )
             sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+        #endif
     }
 
     
@@ -289,6 +307,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         bnNew.SetCompact(nProofOfWorkLimit);
 
     
+    #ifndef BUILD_IOS
     if (fDebug)
     {
         if (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty)
@@ -306,6 +325,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nPrevHeight = INDEX_HEIGHT(pindexLast);
         nPrevDifficulty = bnNew.GetCompact();
     }
+    #endif
 
     // Difficulty is returned in compact form.
     return bnNew.GetCompact();

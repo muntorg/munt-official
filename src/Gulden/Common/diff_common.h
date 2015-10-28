@@ -6,16 +6,18 @@
 #define GULDEN_DIFF_COMMON_H
 
 #ifdef TARGET_OS_IPHONE
+    #define BUILD_IOS
     #define fDebug false
-    #define LogPrintf(MSG)
+    #define LogPrintf(...)
     #define BLOCK_TYPE BRMerkleBlock*
     #define BLOCK_TIME(block) block.timestamp
     #define INDEX_TYPE BRMerkleBlock*
     #define INDEX_HEIGHT(block) block.height
     #define INDEX_TIME(block) block.timestamp
-    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.previous)]
+    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
     #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
+    #define DIFF_ABS llabs
 #else
     #include "../consensus/params.h"
     #include "../arith_uint256.h"
@@ -31,30 +33,10 @@
     #define INDEX_PREV(block) block->pprev
     #define INDEX_TARGET(block) block->nBits
     #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) GetBoolArg("-testnet", false) ? TEST : (GetBoolArg("-testnetaccel", false) ? TESTA : MAIN);
+    #define DIFF_ABS std::abs
 #endif
 
-#include "diff_delta.h"
-#include "diff_old.h"
-
-unsigned int static GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit)
-{
-    static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 1, 250000);
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(500, 500, 260000);
-
-    if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
-    {
-        if (INDEX_HEIGHT(indexLast)+1 >= nDeltaSwitchoverBlock)
-        {
-            return GetNextWorkRequired_DELTA(indexLast, block, nPowTargetSpacing, nPowLimit, nDeltaSwitchoverBlock);
-        }
-        else
-        {
-            return 524287999;
-        }
-    }
-    return diff_old(INDEX_HEIGHT(indexLast)+1);
-}
-
+unsigned int static GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit);
 
 #endif
 
