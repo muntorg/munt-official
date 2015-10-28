@@ -15,6 +15,7 @@
     #define INDEX_TIME(block) block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.previous)]
     #define INDEX_TARGET(block) block.target
+    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
 #else
     #include "../consensus/params.h"
     #include "../arith_uint256.h"
@@ -29,6 +30,7 @@
     #define INDEX_TIME(block) block->GetBlockTime()
     #define INDEX_PREV(block) block->pprev
     #define INDEX_TARGET(block) block->nBits
+    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) GetBoolArg("-testnet", false) ? TEST : (GetBoolArg("-testnetaccel", false) ? TESTA : MAIN);
 #endif
 
 #include "diff_delta.h"
@@ -36,8 +38,8 @@
 
 unsigned int static GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit)
 {
-    static int nDeltaSwitchoverBlock = GetBoolArg("-testnet", false) ? 350000 : (GetBoolArg("-testnetaccel", false) ? 1 : 213500);
-    static int nOldDiffSwitchoverBlock = GetBoolArg("-testnet", false) ? 500 : (GetBoolArg("-testnetaccel", false) ? 500 : 260000);
+    static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 1, 250000);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(500, 500, 260000);
 
     if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
     {
