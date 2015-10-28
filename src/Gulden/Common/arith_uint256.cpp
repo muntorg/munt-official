@@ -4,11 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "arith_uint256.h"
-
 #include "uint256.h"
-#include "utilstrencodings.h"
-#include "crypto/common.h"
-
 #include <stdio.h>
 #include <string.h>
 
@@ -243,6 +239,35 @@ uint32_t arith_uint256::GetCompact(bool fNegative) const
     nCompact |= (fNegative && (nCompact & 0x007fffff) ? 0x00800000 : 0);
     return nCompact;
 }
+
+inline uint32_t bswap_32(uint32_t x)
+{
+    return (((x & 0xff000000U) >> 24) | ((x & 0x00ff0000U) >>  8) |
+            ((x & 0x0000ff00U) <<  8) | ((x & 0x000000ffU) << 24));
+}
+
+inline uint32_t le32toh(uint32_t little_endian_32bits)
+{
+    return bswap_32(little_endian_32bits);
+}
+
+inline uint32_t htole32(uint32_t host_32bits)
+{
+    return bswap_32(host_32bits);
+}
+
+
+uint32_t static inline ReadLE32(const unsigned char* ptr)
+{
+    return le32toh(*((uint32_t*)ptr));
+}
+
+
+void static inline WriteLE32(unsigned char* ptr, uint32_t x)
+{
+    *((uint32_t*)ptr) = htole32(x);
+}
+
 
 uint256 ArithToUint256(const arith_uint256 &a)
 {

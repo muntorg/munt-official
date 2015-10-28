@@ -8,17 +8,21 @@
 //
 // In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
 #include "diff_common.h"
 #include "diff_delta.h"
 
 #ifdef BUILD_IOS
-#include "NSData.Bitcoin.h"
+#include "NSData+Bitcoin.h"
 #include "arith_uint256.h"
 #import "BRMerkleBlock.h"
 #import "BRPeerManager.h"
 #endif
+#include <stdint.h>
 
-unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
+unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
@@ -293,6 +297,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     {
         // Reduce in a linear fashion based on time steps.
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
+
         bnNew *=  nNumMissedSteps;
 
 	#ifndef BUILD_IOS

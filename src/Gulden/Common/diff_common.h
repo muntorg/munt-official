@@ -2,18 +2,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+
 #ifndef GULDEN_DIFF_COMMON_H
 #define GULDEN_DIFF_COMMON_H
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
+    @class BRMerkleBlock;
     #define BUILD_IOS
     #define fDebug false
     #define LogPrintf(...)
     #define BLOCK_TYPE BRMerkleBlock*
-    #define BLOCK_TIME(block) block.timestamp
+    #define BLOCK_TIME(block) (int64_t)block.timestamp
     #define INDEX_TYPE BRMerkleBlock*
     #define INDEX_HEIGHT(block) block.height
-    #define INDEX_TIME(block) block.timestamp
+    #define INDEX_TIME(block) (int64_t)block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
     #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
@@ -36,7 +38,15 @@
     #define DIFF_ABS std::abs
 #endif
 
-extern unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit);
+#if defined __cplusplus
+extern "C" {
+#endif
+    
+extern unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, unsigned int nPowTargetSpacing, unsigned int nPowLimit);
 
+#if defined __cplusplus
+};
+#endif
+    
 #endif
 

@@ -6,7 +6,11 @@
 // It returns a ZERO DIFF when out of range, which can be catched as
 // error after the call (resulting diff > params.powLimit)
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
 #include "diff_common.h"
+#include <stdint.h>
 
 const int32_t nMaxHeight = 260000;
 const int32_t nDiffArraySize = nMaxHeight + 1;
@@ -26015,7 +26019,7 @@ const int32_t udiff[nDiffArraySize] = {504365040,
 
 
 
-unsigned int diff_old(int32_t nHeight)
+unsigned int diff_old(int nHeight)
 {
     unsigned int nRet;
 

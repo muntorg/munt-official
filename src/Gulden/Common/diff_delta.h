@@ -14,6 +14,6 @@
 
 #define PERCENT_FACTOR 100
 
-extern unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int64_t nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock);
+extern unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock);
 
 #endif

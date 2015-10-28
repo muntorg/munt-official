@@ -9,6 +9,6 @@
 #ifndef GULDEN_DIFF_OLD_H
 #define GULDEN_DIFF_OLD_H
 
-extern unsigned int diff_old(int32_t nHeight);
+extern unsigned int diff_old(int nHeight);
 
 #endif
