@@ -5,7 +5,9 @@
 #ifndef GULDEN_DIFF_COMMON_H
 #define GULDEN_DIFF_COMMON_H
 
-#ifdef DIFF_IOS
+#ifdef TARGET_OS_IPHONE
+    #define fDebug false
+    #define LogPrintf(MSG)
     #define BLOCK_TYPE BRMerkleBlock*
     #define BLOCK_TIME(block) block.timestamp
     #define INDEX_TYPE BRMerkleBlock*
@@ -16,7 +18,10 @@
 #else
     #include "../consensus/params.h"
     #include "../arith_uint256.h"
+    #include "../chain.h"
+    #include "../sync.h"
     #include "util.h"
+    #include <stdint.h>
     #define BLOCK_TYPE CBlockHeader*
     #define BLOCK_TIME(block) block->nTime
     #define INDEX_TYPE CBlockIndex*
