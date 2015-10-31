@@ -16,7 +16,7 @@
 unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, unsigned int nPowTargetSpacing, unsigned int nPowLimit)
 {
     static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 1, 250000);
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(500, 500, 260000);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 100, 260000);
 
     if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
     {
