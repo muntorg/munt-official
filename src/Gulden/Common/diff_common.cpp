@@ -3,8 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifdef __APPLE__
-#include <TargetConditionals.h>
-    #import "BRMerkleBlock.h"
+    #include <TargetConditionals.h>
 #endif
 #include "diff_common.h"
 #include "diff_delta.h"
