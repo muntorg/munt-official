@@ -9,8 +9,8 @@
 // In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
 
 
-#ifndef GULDENCOIN_DIFF_DELTA_H
-#define GULDENCOIN_DIFF_DELTA_H
+#ifndef GULDEN_DIFF_DELTA_H
+#define GULDEN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
 
