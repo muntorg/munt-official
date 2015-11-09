@@ -29,6 +29,16 @@ https://Gulden.com/join
 |Starting diff:|0.00244|
 |Block reward:|100 NLG|
 |Block time:|150 seconds|
+|P2P Port|9231|
+|P2P Port [Testnet]|9923|
+|RPC Port|9232|
+|RPC Port [Testnet]|9924|
+|P2P Network Header|fcfef7e0|
+|P2P Network Header [Testnet]|fcfef700|
+|Address version byte|38|
+|Address version byte [Testnet]|98|
+
+
 
 
 ###Building###
