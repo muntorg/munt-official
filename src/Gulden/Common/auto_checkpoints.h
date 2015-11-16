@@ -21,8 +21,18 @@ namespace Checkpoints
 	extern CSyncCheckpoint checkpointMessagePending;
 	extern uint256 hashInvalidCheckpoint;
 	extern CCriticalSection cs_hashSyncCheckpoint;
-	extern bool SetCheckpointPrivKey(std::string strPrivKey);
+	extern CBlockIndex* GetLastSyncCheckpoint();
+	extern bool ValidateSyncCheckpoint(uint256 hashCheckpoint);
+	extern bool WriteSyncCheckpoint(const uint256& hashCheckpoint);
+	extern bool AcceptPendingSyncCheckpoint();
+	extern uint256 AutoSelectSyncCheckpoint();
+	extern bool CheckSync(const uint256& hashBlock, const CBlockIndex* pindexPrev);
+	extern bool WantedByPendingSyncCheckpoint(uint256 hashBlock);
 	extern bool ResetSyncCheckpoint();
+	extern void AskForPendingSyncCheckpoint(CNode* pfrom);
+	extern bool SetCheckpointPrivKey(std::string strPrivKey);
+	extern bool SendSyncCheckpoint(uint256 hashCheckpoint);
+	extern bool IsSyncCheckpointTooOld(unsigned int nSeconds);
 }
 
 class CUnsignedSyncCheckpoint

@@ -19,6 +19,13 @@
 
 #include <boost/foreach.hpp>
 
+
+// Automatic checkpoint system.
+// Based on the checkpoint system developed initially by peercoin, however modified to work for Gulden.
+
+// How many blocks back the checkpoint should run
+#define AUTO_CHECKPOINT_DEPTH 4
+
 // ppcoin: synchronized checkpoint (centrally broadcasted)
 namespace Checkpoints
 {
@@ -30,7 +37,7 @@ namespace Checkpoints
 	CCriticalSection cs_hashSyncCheckpoint;
 
 
-	// ppcoin: get last synchronized checkpoint
+	// Get the highest auto synchronized checkpoint that we have received
 	CBlockIndex* GetLastSyncCheckpoint()
 	{
 		LOCK(cs_hashSyncCheckpoint);
@@ -41,13 +48,17 @@ namespace Checkpoints
 		return NULL;
 	}
 
-	// ppcoin: only descendant of current sync-checkpoint is allowed
+	// Check if an auto synchronized checkpoint we have received is valid
+	// If it is on a fork (i.e. not a descendant of the current checkpoint) then we have a problem.
 	bool ValidateSyncCheckpoint(uint256 hashCheckpoint)
 	{
-		if (!mapBlockIndex.count(hashSyncCheckpoint))
-			return error("ValidateSyncCheckpoint: block index missing for current sync-checkpoint %s", hashSyncCheckpoint.ToString().c_str());
 		if (!mapBlockIndex.count(hashCheckpoint))
 			return error("ValidateSyncCheckpoint: block index missing for received sync-checkpoint %s", hashCheckpoint.ToString().c_str());
+		if (hashSyncCheckpoint==uint256())
+			return true;
+		if (!mapBlockIndex.count(hashSyncCheckpoint))
+			return error("ValidateSyncCheckpoint: block index missing for current sync-checkpoint %s", hashSyncCheckpoint.ToString().c_str());
+		
 
 		CBlockIndex* pindexSyncCheckpoint = mapBlockIndex[hashSyncCheckpoint];
 		CBlockIndex* pindexCheckpointRecv = mapBlockIndex[hashCheckpoint];
@@ -68,24 +79,24 @@ namespace Checkpoints
 			}
 			return false; // ignore older checkpoint
 		}
-
+		
 		// Received checkpoint should be a descendant block of the current
 		// checkpoint. Trace back to the same height of current checkpoint
 		// to verify.
 		CBlockIndex* pindex = pindexCheckpointRecv;
 		while (pindex->nHeight > pindexSyncCheckpoint->nHeight)
+		    if (!(pindex = pindex->pprev))
+			return error("ValidateSyncCheckpoint: pprev2 null - block index structure failure");
+		if (pindex->GetBlockHash() != hashSyncCheckpoint)
 		{
-			if (!(pindex = pindex->pprev))
-				return error("ValidateSyncCheckpoint: pprev2 null - block index structure failure");
-			if (pindex->GetBlockHash() != hashSyncCheckpoint)
-			{
-				hashInvalidCheckpoint = hashCheckpoint;
-				return error("ValidateSyncCheckpoint: new sync-checkpoint %s is not a descendant of current sync-checkpoint %s", hashCheckpoint.ToString().c_str(), hashSyncCheckpoint.ToString().c_str());
-			}
+		    hashInvalidCheckpoint = hashCheckpoint;
+		    return error("ValidateSyncCheckpoint: new sync-checkpoint %s is not a descendant of current sync-checkpoint %s", hashCheckpoint.ToString().c_str(), hashSyncCheckpoint.ToString().c_str());
 		}
+
 		return true;
 	}
 
+	// Save the current auto sync checkpoint to disk
 	bool WriteSyncCheckpoint(const uint256& hashCheckpoint)
 	{
 		CCheckpointsDB CheckpointsDB;
@@ -97,6 +108,7 @@ namespace Checkpoints
 		return true;
 	}
 
+	
 	bool AcceptPendingSyncCheckpoint()
 	{
 		LOCK(cs_hashSyncCheckpoint);
@@ -140,23 +152,13 @@ namespace Checkpoints
 		return false;
 	}
 
-	// Automatically select a suitable sync-checkpoint 
-	uint256 AutoSelectSyncCheckpoint()
-	{
-		// Proof-of-work blocks are immediately checkpointed
-		// to defend against 51% attack which rejects other miners block 
-
-		// Select the last proof-of-work block
-		const CBlockIndex *pindex = chainActive.Tip();
-		// Search backwards 5 blocks
-		return pindex->pprev->pprev->pprev->pprev->pprev->GetBlockHash();
-	}
-
 	// Check against synchronized checkpoint
 	bool CheckSync(const uint256& hashBlock, const CBlockIndex* pindexPrev)
 	{
 		int nHeight = pindexPrev->nHeight + 1;
 		LOCK(cs_hashSyncCheckpoint);
+		if (hashSyncCheckpoint==uint256())
+		  return true;
 		// sync-checkpoint should always be accepted block
 		assert(mapBlockIndex.count(hashSyncCheckpoint));
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
@@ -188,7 +190,7 @@ namespace Checkpoints
 		return false;
 	}
 
-	// ppcoin: reset synchronized checkpoint to last hardened checkpoint
+	// Reset synchronized checkpoint to last hardened checkpoint (to be used if checkpoint key is changed for whatever reason - e.g. a stalled chain)
 	bool ResetSyncCheckpoint()
 	{
 		LOCK(cs_hashSyncCheckpoint);
@@ -224,11 +226,30 @@ namespace Checkpoints
 			pfrom->AskFor(CInv(MSG_BLOCK, hashPendingCheckpoint));
 	}
 
+	// Automatically select a suitable sync-checkpoint to broadcast [Checkpoint server only]
+	uint256 AutoSelectSyncCheckpoint()
+	{
+		// Proof-of-work blocks are immediately checkpointed
+		// to defend against 51% attack which rejects other miners block 
+
+		// Select the last proof-of-work block
+		CBlockIndex *pindex = chainActive.Tip();
+		if (pindex->nHeight < AUTO_CHECKPOINT_DEPTH+1)
+		      return pindex->GetBlockHash();
+		
+		// Search backwards AUTO_CHECKPOINT_DEPTH blocks
+		for(int i=0;i<AUTO_CHECKPOINT_DEPTH;i++)
+		  pindex = pindex->pprev;
+		
+		return pindex->GetBlockHash();
+	}
+	
+	// Set the private key with which to broadcast checkpoints [Checkpoint server only]
 	bool SetCheckpointPrivKey(std::string strPrivKey)
 	{
 		// Test signing a sync-checkpoint with genesis block
 		CSyncCheckpoint checkpoint;
-		checkpoint.hashCheckpoint = chainActive.Genesis()->GetBlockHash();
+		checkpoint.hashCheckpoint = uint256();
 		CDataStream sMsg(SER_NETWORK, PROTOCOL_VERSION);
 		sMsg << (CUnsignedSyncCheckpoint)checkpoint;
 		checkpoint.vchMsg = std::vector<unsigned char>(sMsg.begin(), sMsg.end());
@@ -244,6 +265,7 @@ namespace Checkpoints
 		return true;
 	}
 
+	// Broadcast a new checkpoint to the network [Checkpoint server only]
 	bool SendSyncCheckpoint(uint256 hashCheckpoint)
 	{
 		CSyncCheckpoint checkpoint;
@@ -265,6 +287,10 @@ namespace Checkpoints
 			printf("WARNING: SendSyncCheckpoint: Failed to process checkpoint.\n");
 			return false;
 		}
+		else 
+		{
+		  printf("SendSyncCheckpoint: SUCCESS.\n");
+		}
 
 		// Relay checkpoint
 		{
@@ -279,6 +305,8 @@ namespace Checkpoints
 	bool IsSyncCheckpointTooOld(unsigned int nSeconds)
 	{
 		LOCK(cs_hashSyncCheckpoint);
+		if (hashSyncCheckpoint==uint256())
+		  return true;
 		// sync-checkpoint should always be accepted block
 		assert(mapBlockIndex.count(hashSyncCheckpoint));
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
@@ -287,8 +315,8 @@ namespace Checkpoints
 }
 
 //Gulden checkpoint key public signature
-const std::string CSyncCheckpoint::strMasterPubKey         = "048dab1be6f354785bbade14008ca37541b6af7d8a6bb46508ac51e5afcae6d6cbcce5bbde7635921b07b223eecfa8a7c1f58d1396327730e1527eb6f247e3b697";
-const std::string CSyncCheckpoint::strMasterPubKeyTestnet  = "04f40b8edc609c94a142b90e8e1b13d17a83935121ee70b93e482b563a07e29521865dea6028bfe9bcd57ac6c0d4a0c18c2688e64fe6eeb001e8ea648d94639390";
+const std::string CSyncCheckpoint::strMasterPubKey         = "04c33d99fecb59d5faee7b9b3b68b7ceaea3576d7167ebfd2b4731ef1dd71341cbac29303a7c80e56da8082f093c566a0f9ca4cfca96fcddcaaa32bb2ec430bd81";
+const std::string CSyncCheckpoint::strMasterPubKeyTestnet  = "04c33d99fecb59d5faee7b9b3b68b7ceaea3576d7167ebfd2b4731ef1dd71341cbac29303a7c80e56da8082f093c566a0f9ca4cfca96fcddcaaa32bb2ec430bd81";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
