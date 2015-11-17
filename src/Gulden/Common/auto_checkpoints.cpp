@@ -216,7 +216,7 @@ namespace Checkpoints
 		return true;
 	}
 	
-	extern bool IsSecuredBySyncCheckpoint(const uint256& hashBlock)
+	bool IsSecuredBySyncCheckpoint(const uint256& hashBlock)
 	{
 		assert(mapBlockIndex.count(hashSyncCheckpoint));	
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
