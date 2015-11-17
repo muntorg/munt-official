@@ -222,7 +222,7 @@ namespace Checkpoints
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
 		const CBlockIndex* pindex = mapBlockIndex[hashBlock];
 		
-		if(!pIndexSync || !pindex || pindex->nHeight >= pIndexSync->nHeight)
+		if(!pindexSync || !pindex || pindex->nHeight >= pindexSync->nHeight)
 			return false;
 		
 		return true;
