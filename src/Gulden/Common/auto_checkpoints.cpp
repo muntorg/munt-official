@@ -68,7 +68,7 @@ namespace Checkpoints
 		{
 			return error("ValidateSyncCheckpoint: block index missing for current sync-checkpoint %s", hashSyncCheckpoint.ToString().c_str());
 		}
-		
+
 
 		CBlockIndex* pindexSyncCheckpoint = mapBlockIndex[hashSyncCheckpoint];
 		CBlockIndex* pindexCheckpointRecv = mapBlockIndex[hashCheckpoint];
@@ -91,7 +91,7 @@ namespace Checkpoints
 			}
 			return false; // ignore older checkpoint
 		}
-		
+
 		// Received checkpoint should be a descendant block of the current
 		// checkpoint. Trace back to the same height of current checkpoint
 		// to verify.
@@ -124,7 +124,7 @@ namespace Checkpoints
 		return true;
 	}
 
-	
+
 	bool AcceptPendingSyncCheckpoint()
 	{
 		LOCK(cs_hashSyncCheckpoint);
@@ -161,7 +161,7 @@ namespace Checkpoints
 			checkpointMessage = checkpointMessagePending;
 			checkpointMessagePending.SetNull();
 			LogPrintf("AcceptPendingSyncCheckpoint : sync-checkpoint at %s\n", hashSyncCheckpoint.ToString().c_str());
-			
+
 			// relay the checkpoint
 			if (!checkpointMessage.IsNull())
 			{
@@ -184,7 +184,7 @@ namespace Checkpoints
 		{
 		  return true;
 		}
-		
+
 		// sync-checkpoint should always be accepted block
 		assert(mapBlockIndex.count(hashSyncCheckpoint));
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
@@ -203,6 +203,7 @@ namespace Checkpoints
 				{
 					return false; // only descendant of sync-checkpoint can pass check
 				}
+			}
 		}
 		if (nHeight == pindexSync->nHeight && hashBlock != hashSyncCheckpoint)
 		{
@@ -233,7 +234,7 @@ namespace Checkpoints
 	bool ResetSyncCheckpoint()
 	{
 		LOCK(cs_hashSyncCheckpoint);
-		
+
 		const uint256& hash = GetLastCheckpoint()->GetBlockHash();
 		if (mapBlockIndex.count(hash) && !chainActive.Contains(mapBlockIndex[hash]))
 		{
@@ -283,16 +284,16 @@ namespace Checkpoints
 		{
 			return pindex->GetBlockHash();
 		}
-		
+
 		// Search backwards AUTO_CHECKPOINT_DEPTH blocks
 		for(int i=0;i<AUTO_CHECKPOINT_DEPTH;i++)
 		{
 			pindex = pindex->pprev;
 		}
-		
+
 		return pindex->GetBlockHash();
 	}
-	
+
 	// Set the private key with which to broadcast checkpoints [Checkpoint server only]
 	bool SetCheckpointPrivKey(std::string strPrivKey)
 	{
@@ -329,11 +330,11 @@ namespace Checkpoints
 		{
 			return error("SendSyncCheckpoint: Checkpoint master key unavailable.");
 		}
-		
+
 		std::vector<unsigned char> vchPrivKey = ParseHex(CSyncCheckpoint::strMasterPrivKey);
 		CKey key;
 		key.SetPrivKey(CPrivKey(vchPrivKey.begin(), vchPrivKey.end()), false); // if key is not correct openssl may crash
-		
+
 		if (!key.Sign(Hash(checkpoint.vchMsg.begin(), checkpoint.vchMsg.end()), checkpoint.vchSig))
 		{
 			return error("SendSyncCheckpoint: Unable to sign checkpoint, check private key?");
@@ -344,7 +345,7 @@ namespace Checkpoints
 			LogPrintf("WARNING: SendSyncCheckpoint: Failed to process checkpoint.\n");
 			return false;
 		}
-		else 
+		else
 		{
 			LogPrintf("SendSyncCheckpoint: SUCCESS.\n");
 		}
@@ -437,7 +438,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom)
 		{
 			return error("ProcessSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());
 		}
-		
+
 		CValidationState State;
 		if (!ActivateBestChain(State,&block))
 		{
@@ -450,7 +451,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom)
 	{
 		return error("ProcessSyncCheckpoint(): failed to write sync checkpoint %s", hashCheckpoint.ToString().c_str());
 	}
-	
+
 	Checkpoints::checkpointMessage = *this;
 	Checkpoints::hashPendingCheckpoint = uint256();
 	Checkpoints::checkpointMessagePending.SetNull();
