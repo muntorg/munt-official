@@ -62,7 +62,7 @@ namespace Checkpoints
 		}
 		if (hashSyncCheckpoint==uint256())
 		{
-			hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
+			return true;
 		}
 		if (!mapBlockIndex.count(hashSyncCheckpoint))
 		{
@@ -182,7 +182,7 @@ namespace Checkpoints
 		LOCK(cs_hashSyncCheckpoint);
 		if (hashSyncCheckpoint==uint256())
 		{
-                        hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
+			return true;
 		}
 
 		// sync-checkpoint should always be accepted block
@@ -218,7 +218,10 @@ namespace Checkpoints
 	
 	bool IsSecuredBySyncCheckpoint(const uint256& hashBlock)
 	{
-		assert(mapBlockIndex.count(hashSyncCheckpoint));	
+		if(hashSyncCheckpoint==uint256())
+			return false;
+
+		assert(mapBlockIndex.count(hashSyncCheckpoint));
 		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
 		const CBlockIndex* pindex = mapBlockIndex[hashBlock];
 		
@@ -379,9 +382,7 @@ namespace Checkpoints
 		LOCK(cs_hashSyncCheckpoint);
 		if (hashSyncCheckpoint==uint256())
 		{
-                        if (!chainActive.Tip())
-				return true;
-                        hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
+                        return true;
 		}
 		// sync-checkpoint should always be accepted block
 		assert(mapBlockIndex.count(hashSyncCheckpoint));
