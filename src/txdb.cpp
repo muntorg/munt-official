@@ -77,6 +77,31 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
     return db.WriteBatch(batch);
 }
 
+CCheckpointsDB::CCheckpointsDB() : db(GetDataDir() / "checkpoints", 2, false, false)
+{
+	
+}
+
+bool CCheckpointsDB::ReadSyncCheckpoint(uint256& hashCheckpoint)
+{
+    return db.Read(string("hashSyncCheckpoint"), hashCheckpoint);
+}
+
+bool CCheckpointsDB::WriteSyncCheckpoint(uint256 hashCheckpoint)
+{
+    return db.Write(string("hashSyncCheckpoint"), hashCheckpoint);
+}
+
+bool CCheckpointsDB::ReadCheckpointPubKey(std::string& strPubKey)
+{
+    return db.Read(string("SyncCheckpointPubKey"), strPubKey);
+}
+
+bool CCheckpointsDB::WriteCheckpointPubKey(std::string& strPubKey)
+{
+    return db.Write(string("SyncCheckpointPubKey"), strPubKey);
+}
+
 CBlockTreeDB::CBlockTreeDB(size_t nCacheSize, bool fMemory, bool fWipe) : CLevelDBWrapper(GetDataDir() / "blocks" / "index", nCacheSize, fMemory, fWipe) {
 }
 

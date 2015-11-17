@@ -24,6 +24,7 @@
 #include "json/json_spirit_utils.h"
 #include "json/json_spirit_value.h"
 
+#include <Gulden/auto_checkpoints.h>
 #include <Gulden/translate.h>
 
 using namespace std;
@@ -1226,6 +1227,11 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
     list<COutputEntry> listReceived;
     list<COutputEntry> listSent;
 
+    // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
+    bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
+    if (mapMultiArgs.count("-rpconlylistsecuredtransactions") && !securedTransaction)
+        return;
+    
     wtx.GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
 
     bool fAllAccounts = (strAccount == string("*"));
@@ -1245,6 +1251,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
             entry.push_back(Pair("amount", ValueFromAmount(-s.amount)));
             entry.push_back(Pair("vout", s.vout));
             entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
+            entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
             if (fLong)
                 WalletTxToJSON(wtx, entry);
             ret.push_back(entry);
@@ -1281,6 +1288,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
                 }
                 entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
                 entry.push_back(Pair("vout", r.vout));
+                entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 ret.push_back(entry);

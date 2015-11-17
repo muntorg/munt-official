@@ -1920,6 +1920,7 @@ CNode::CNode(SOCKET hSocketIn, CAddress addrIn, std::string addrNameIn, bool fIn
     nPingUsecStart = 0;
     nPingUsecTime = 0;
     fPingQueued = false;
+    hashCheckpointKnown = uint256();
 
     {
         LOCK(cs_nLastNodeId);

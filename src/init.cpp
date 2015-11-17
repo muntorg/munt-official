@@ -12,6 +12,7 @@
 #include "addrman.h"
 #include "amount.h"
 #include "checkpoints.h"
+#include <Gulden/auto_checkpoints.h>
 #include "compat/sanity.h"
 #include "key.h"
 #include "main.h"
@@ -409,6 +410,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcallowip=<ip>", _("Allow JSON-RPC connections from specified source. Valid for <ip> are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times"));
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(_("Set the number of threads to service RPC calls (default: %d)"), 4));
     strUsage += HelpMessageOpt("-rpckeepalive", strprintf(_("RPC support for HTTP persistent connections (default: %d)"), 1));
+    strUsage += HelpMessageOpt("-rpconlylistsecuredtransactions", _("When enabled RPC listtransactions command only returns transactions that have been secured by a checkpoint and therefore are safe from double spend (default: %d)"));
 
     strUsage += HelpMessageGroup(_("RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)"));
     strUsage += HelpMessageOpt("-rpcssl", _("Use OpenSSL (https) for JSON-RPC connections"));
@@ -792,6 +794,31 @@ bool AppInit2(boost::thread_group& threadGroup)
         if (!ParseMoney(mapArgs["-mininput"], nMinimumInputValue))
             return InitError(strprintf(_("Invalid amount for -mininput=<amount>: '%s'"), mapArgs["-mininput"].c_str()));
     }
+
+    //Gulden - generate private/public key pair for alert of checkpoint system
+    if (mapArgs.count("-genkeypair"))
+    {
+        CKey key;
+        int nCount = 0;
+        key.MakeNewKey(false);
+
+        CPrivKey vchPrivKey = key.GetPrivKey();
+        printf("PrivateKey %s\n", HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str());
+	CPubKey vchPubKey = key.GetPubKey();
+	vchPubKey.Decompress();
+        printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
+    }
+    
+    //Gulden - private key for checkpoint system.
+    if (mapArgs.count("-checkpointkey"))
+    {
+        std::string sKey=mapArgs["-checkpointkey"];
+        if (!Checkpoints::SetCheckpointPrivKey(sKey))
+            return InitError(_("Unable to sign checkpoint, wrong checkpointkey?\n"));
+        else
+            LogPrintf("Checkpoint server enabled\n");
+    }
+
 
     std::string strWalletFile = GetArg("-wallet", "wallet.dat");
 #endif // ENABLE_WALLET
