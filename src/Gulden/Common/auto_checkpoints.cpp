@@ -215,6 +215,18 @@ namespace Checkpoints
 		}
 		return true;
 	}
+	
+	extern bool IsSecuredBySyncCheckpoint(const uint256& hashBlock)
+	{
+		assert(mapBlockIndex.count(hashSyncCheckpoint));	
+		const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
+		const CBlockIndex* pindex = mapBlockIndex[hashBlock];
+		
+		if(!pIndexSync || !pindex || pindex->nHeight >= pIndexSync->nHeight)
+			return false;
+		
+		return true;
+	}
 
 	bool WantedByPendingSyncCheckpoint(uint256 hashBlock)
 	{

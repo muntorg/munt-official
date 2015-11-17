@@ -27,6 +27,7 @@ namespace Checkpoints
 	extern bool AcceptPendingSyncCheckpoint();
 	extern uint256 AutoSelectSyncCheckpoint();
 	extern bool CheckSync(const uint256& hashBlock, const CBlockIndex* pindexPrev);
+	extern bool IsSecuredBySyncCheckpoint(const uint256& hashBlock);
 	extern bool WantedByPendingSyncCheckpoint(uint256 hashBlock);
 	extern bool ResetSyncCheckpoint();
 	extern void AskForPendingSyncCheckpoint(CNode* pfrom);
