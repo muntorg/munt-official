@@ -62,7 +62,7 @@ namespace Checkpoints
 		}
 		if (hashSyncCheckpoint==uint256())
 		{
-			return true;
+			hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
 		}
 		if (!mapBlockIndex.count(hashSyncCheckpoint))
 		{
@@ -182,7 +182,7 @@ namespace Checkpoints
 		LOCK(cs_hashSyncCheckpoint);
 		if (hashSyncCheckpoint==uint256())
 		{
-		  return true;
+                        hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
 		}
 
 		// sync-checkpoint should always be accepted block
@@ -367,7 +367,9 @@ namespace Checkpoints
 		LOCK(cs_hashSyncCheckpoint);
 		if (hashSyncCheckpoint==uint256())
 		{
-			return true;
+                        if (!chainActive.Tip())
+				return true;
+                        hashSyncCheckpoint=chainActive.Tip()->GetBlockHash();
 		}
 		// sync-checkpoint should always be accepted block
 		assert(mapBlockIndex.count(hashSyncCheckpoint));
@@ -377,8 +379,8 @@ namespace Checkpoints
 }
 
 //Gulden checkpoint key public signature
-const std::string CSyncCheckpoint::strMasterPubKey		= "04c33d99fecb59d5faee7b9b3b68b7ceaea3576d7167ebfd2b4731ef1dd71341cbac29303a7c80e56da8082f093c566a0f9ca4cfca96fcddcaaa32bb2ec430bd81";
-const std::string CSyncCheckpoint::strMasterPubKeyTestnet  	= "04c33d99fecb59d5faee7b9b3b68b7ceaea3576d7167ebfd2b4731ef1dd71341cbac29303a7c80e56da8082f093c566a0f9ca4cfca96fcddcaaa32bb2ec430bd81";
+const std::string CSyncCheckpoint::strMasterPubKey		= "04062e2ce36bcb44dd25a9977569098695faeb1a7e5498d1af269b026ef84c7c269c94282ea07df7684dfda1fd684e2ec6948c920e621c23cb23952a0392696cba";
+const std::string CSyncCheckpoint::strMasterPubKeyTestnet  	= "04d223656a45088d8dbe5988b71e4e781000cd6ea64b3aaf4d5b20099840857adc1128a96574cf39525d454f196586bc8cfc6a449252b52a8a805d59d2d3cf439a";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
