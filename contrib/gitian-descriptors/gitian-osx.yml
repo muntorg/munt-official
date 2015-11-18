@@ -1,5 +1,5 @@
 ---
-name: "Gulden-osx-1.5.3"
+name: "Gulden-osx-1.5.4"
 enable_cache: true
 suites:
 - "precise"

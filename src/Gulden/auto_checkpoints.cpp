@@ -391,8 +391,8 @@ namespace Checkpoints
 }
 
 //Gulden checkpoint key public signature
-const std::string CSyncCheckpoint::strMasterPubKey		= "04062e2ce36bcb44dd25a9977569098695faeb1a7e5498d1af269b026ef84c7c269c94282ea07df7684dfda1fd684e2ec6948c920e621c23cb23952a0392696cba";
-const std::string CSyncCheckpoint::strMasterPubKeyTestnet  	= "04d223656a45088d8dbe5988b71e4e781000cd6ea64b3aaf4d5b20099840857adc1128a96574cf39525d454f196586bc8cfc6a449252b52a8a805d59d2d3cf439a";
+const std::string CSyncCheckpoint::strMasterPubKey		= "043872e04721dc342fee16ca8f76e0d0bee23170e000523241f83e5190dece6e259a465e8efd4194c0b8f208967c59089fc2d85fcb9847764568833021197344b0";
+const std::string CSyncCheckpoint::strMasterPubKeyTestnet  	= "042785eba41f699847a7afa0fd3d70485065b5d04d726925e5a7827ca11b5a0479ea8f90dc74e10500adff05ca695f1590bb6bd17ad3cccea80441d4c2e9a4e5e5";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
