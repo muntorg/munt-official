@@ -13,6 +13,8 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include <cstdio>
+
 using namespace std;
 
 struct SeedSpec6 {
@@ -73,6 +75,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
         ( 233500, uint256S("0x7b16385152001b51c25004e04b1f62906088027d8753449bc36db88ef540aaaa"))
         ( 250000, uint256S("0xa6635e1dbce15cfb4be7f3f464f612205dd13ba96828535000b99ce04648500d"))
         ( 260000, uint256S("0x42c2254ffd8be411386b9089fec985fe3a06d5fc386ff0bd494b5a3aa292f107"))
+        ( 280350, uint256S("0xf95b3e7f97a41db38a872bdd15d985aae252c5ab497a51319e5bd50161a48d18"))
         ;
 static const Checkpoints::CCheckpointData data = {
         &mapCheckpoints,
@@ -84,22 +87,27 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
         boost::assign::map_list_of
-        ( 0, uint256S("0x"))
+        ( 0, uint256S("0xbff0fcf9a89d4d4d6e00414e1d67ef495608c6569f7fbb5276cd20a46127f329"))
+        (  50000, uint256S("0x57656e366d3ac7bee3cea4cffec0fdae54274774aa82acd03e3a2b08423f6d64"))
+        ( 100000, uint256S("0x65e0d7c58bdd5632bd64c374146c8bee7d4ef16ff5add401cb9250e78329abae"))
+        ( 150000, uint256S("0xa5ec2fe07194495c8b9e02e660f130f28f40f36d01c1bf932673fba021cfa43e"))
+        ( 200000, uint256S("0x18e82b93c0526a99adb5522e311b71742f1731552eecc29edd7e283a9213eaa9"))
+        ( 250000, uint256S("0xbf110b2a5b3520d6d25c4fb592ccc552744338c283b7501bf42baadfca25ace0"))
         ;
 static const Checkpoints::CCheckpointData dataTestnet = {
         &mapCheckpointsTestnet,
-        1337966069,
-        1488,
-        300
+        1399759200,
+        0,
+        1
     };
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
         boost::assign::map_list_of
-        ( 0, uint256S("0x"))
+        ( 0, uint256S("0x6dbdcc5f450c07c61b51b492021dee6b4bd246c8dd578fd73e8f6c28cfe0393b"))
         ;
 static const Checkpoints::CCheckpointData dataRegtest = {
         &mapCheckpointsRegtest,
-        1369685559,
+        1296688602,
         0,
         0
     };
@@ -161,11 +169,11 @@ public:
         // To check the status of the seeds visit: https://seeds.guldencoin.com
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed-000.gulden.com"));
-        vSeeds.push_back(CDNSSeedData("seed 1",  "seed-001.guldencoin.org"));
-        vSeeds.push_back(CDNSSeedData("seed 2",  "seed-002.guldencoin.nl"));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "seed-001.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 2",  "seed-002.gulden.network"));
         vSeeds.push_back(CDNSSeedData("seed 3",  "seed-003.gulden.com"));
-        vSeeds.push_back(CDNSSeedData("seed 4",  "seed-004.guldencoin.org"));
-        vSeeds.push_back(CDNSSeedData("seed 5",  "seed-005.guldencoin.nl"));
+        vSeeds.push_back(CDNSSeedData("seed 4",  "seed-004.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 5",  "seed-005.gulden.network"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -201,6 +209,7 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
+        consensus.powLimit = ~arith_uint256(0) >> 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
@@ -212,17 +221,43 @@ public:
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1399759200;
-        genesis.nNonce = 332577;
+        genesis.nNonce = 397616;
+        genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0xf1fe2c7e57300c65ed0e4905ca5f74192a3e1feea209c4fcc2c60df024121a05"));
+
+
+        assert(consensus.hashGenesisBlock == uint256S("0xbff0fcf9a89d4d4d6e00414e1d67ef495608c6569f7fbb5276cd20a46127f329"));
+
+        #if 0
+        arith_uint256 thash;
+        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+        scrypt_1024_1_1_256_sp(BEGIN(genesis.nVersion), BEGIN(thash), scratchpad);
+        arith_uint256 foo;
+        while(thash > consensus.powLimit)
+        {
+            genesis.nNonce++;
+            scrypt_1024_1_1_256_sp(BEGIN(genesis.nVersion), BEGIN(thash), scratchpad);
+            if(genesis.nNonce == 0)
+                genesis.nTime++;
+        }
+        printf("%d\n",genesis.nNonce);
+        printf("%d\n",genesis.nTime);
+        printf("%d\n",genesis.nBits);
+        consensus.hashGenesisBlock = genesis.GetHash();
+        printf("%s\n", consensus.hashGenesisBlock.ToString().c_str());
+        exit(1);
+        #endif
+
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("Testnet Seed", "seedtest.guldencoin.com"));
+        vSeeds.push_back(CDNSSeedData("seed 0",  "testseed-00.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "testseed-01.gulden.network"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,98);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,111+128);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,98+128);
         //Gulden: Comment out for now, until we can address at a later date what we want to do with these https://github.com/nlgcoin/gulden-dev/issues/17
         //base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         //base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
@@ -305,6 +340,8 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
+        vSeeds.push_back(CDNSSeedData("seed 0",  "testseed-00.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "testseed-01.gulden.network"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);

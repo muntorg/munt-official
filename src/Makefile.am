@@ -71,16 +71,22 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/diff.h \
   Gulden/diff_delta.h \
   Gulden/diff_old.h \
+  Gulden/diff_common.h \
   Gulden/hash/hash.h \
   Gulden/hash/city.h \
   Gulden/hash/cityconfig.h \
   Gulden/scrypt.h \
-  Gulden/translate.h
+  Gulden/translate.h \
+  Gulden/auto_checkpoints.h
 
 GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
 
 GDN_COMMON_SRCS = Gulden/scrypt.cpp \
-  Gulden/hash/city.cpp
+  Gulden/hash/city.cpp \
+  Gulden/diff_delta.cpp \
+  Gulden/diff_old.cpp \
+  Gulden/diff_common.cpp \
+  Gulden/auto_checkpoints.cpp
 
 
 .PHONY: FORCE

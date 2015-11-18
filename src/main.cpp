@@ -10,12 +10,14 @@
 #include "arith_uint256.h"
 #include "chainparams.h"
 #include "checkpoints.h"
+#include "Gulden/auto_checkpoints.h"
 #include "checkqueue.h"
 #include "init.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "pow.h"
 #include <Gulden/diff.h>
+#include <Gulden/auto_checkpoints.h>
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
@@ -2583,6 +2585,11 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.DoS(100, error("%s: rejected by checkpoint lock-in at %d", __func__, nHeight),
                          REJECT_CHECKPOINT, "checkpoint mismatch");
 
+    // Gulden: check that the block satisfies synchronized checkpoint
+    if (!Checkpoints::CheckSync(hash, pindexPrev))
+        return error("AcceptBlock() : rejected by synchronized checkpoint");
+
+
     // Don't accept any forks from the main chain prior to last checkpoint
     CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint();
     if (pcheckpoint && nHeight < pcheckpoint->nHeight)
@@ -2757,6 +2764,16 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
 
     if (!ActivateBestChain(state, pblock))
         return error("%s: ActivateBestChain failed", __func__);
+
+    if (!IsInitialBlockDownload())
+    {
+        // Gulden: if responsible for sync-checkpoint send it
+        if (!CSyncCheckpoint::strMasterPrivKey.empty())
+            Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint());
+    }
+    
+    // Gulden: check pending sync-checkpoint
+    Checkpoints::AcceptPendingSyncCheckpoint();
 
     return true;
 }
@@ -2962,6 +2979,11 @@ bool static LoadBlockIndexDB()
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
+    
+    // Gulden: load hashSyncCheckpoint
+    CCheckpointsDB CheckpointsDB;
+    CheckpointsDB.ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
+    printf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
 
     LogPrintf("LoadBlockIndexDB(): hashBestChain=%s height=%d date=%s progress=%f\n",
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
@@ -3093,6 +3115,7 @@ bool LoadBlockIndex()
     // Load block index from databases
     if (!fReindex && !LoadBlockIndexDB())
         return false;
+    
     return true;
 }
 
@@ -3102,7 +3125,9 @@ bool InitBlockIndex() {
     // Check whether we're already initialized
     if (chainActive.Genesis() != NULL)
         return true;
-
+  
+    LogPrintf("Wrote sync checkpoint...\n");
+    
     // Use the provided setting for -txindex in the new database
     fTxIndex = GetBoolArg("-txindex", false);
     pblocktree->WriteFlag("txindex", fTxIndex);
@@ -3125,6 +3150,22 @@ bool InitBlockIndex() {
                 return error("LoadBlockIndex(): genesis block not accepted");
             if (!ActivateBestChain(state, &block))
                 return error("LoadBlockIndex(): genesis block cannot be activated");
+
+            // Gulden: initialize synchronized checkpoint
+            CCheckpointsDB CheckpointsDB;
+            if (!CheckpointsDB.WriteSyncCheckpoint(Params().GenesisBlock().GetHash()))
+                return error("LoadBlockIndex() : failed to init sync checkpoint");
+            std::string strPubKey;
+            std::string strPubKeyComp = GetBoolArg("-testnet", false) ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
+            if (!CheckpointsDB.ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
+            {
+                // write checkpoint master key to db
+                if (!CheckpointsDB.WriteCheckpointPubKey(strPubKeyComp))
+                    return error("LoadBlockIndex() : failed to write new checkpoint master key to db");
+                if (!Checkpoints::ResetSyncCheckpoint())
+                    return error("LoadBlockIndex() : failed to reset sync-checkpoint");
+            }
+        
             // Force a chainstate write so that when we VerifyDB in a moment, it doesn't check stale data
             return FlushStateToDisk(state, FLUSH_STATE_ALWAYS);
         } catch (const std::runtime_error& e) {
@@ -3272,6 +3313,20 @@ string GetWarnings(string strFor)
     {
         nPriority = 2000;
         strStatusBar = strRPC = _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
+    }
+
+    // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
+    if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
+    {
+        nPriority = 100;
+        strStatusBar = "WARNING: Checkpoint is too old. Wait for block chain to download, or notify developers of the issue.";
+    }
+
+    // Gulden: if detected invalid checkpoint enter safe mode
+    if (Checkpoints::hashInvalidCheckpoint != uint256())
+    {
+        nPriority = 3000;
+        strStatusBar = strRPC = "WARNING: Invalid checkpoint found! Displayed transactions may not be correct! You may need to upgrade, or notify developers of the issue.";
     }
 
     // Alerts
@@ -3509,6 +3564,16 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             vRecv >> pfrom->fRelayTxes; // set to true after we get the first filter* message
         else
             pfrom->fRelayTxes = true;
+
+        if (pfrom->cleanSubVer=="/Guldencoin:1.3.1/" || pfrom->cleanSubVer=="/Guldencoin:1.4.0/"/* || pfrom->cleanSubVer=="/Guldencoin:1.5.0/"*/)
+        {
+            // disconnect from peers older than this proto version
+            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+            pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,strprintf("Client version must be 1.5.1 or greater [%s]", pfrom->cleanSubVer));
+            pfrom->fDisconnect = true;
+            return false;
+        }
+
 
         // Disconnect if we connected to ourself
         if (nNonce == nLocalHostNonce && nNonce > 1)
@@ -4171,6 +4236,22 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             }
         }
     }
+
+    else if (strCommand == "checkpoint")
+    {
+        CSyncCheckpoint checkpoint;
+        vRecv >> checkpoint;
+
+        if (checkpoint.ProcessSyncCheckpoint(pfrom))
+        {
+            // Relay
+            pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
+            LOCK(cs_vNodes);
+            BOOST_FOREACH(CNode* pnode, vNodes)
+                checkpoint.RelayTo(pnode);
+        }
+    }
+
 
     else if (!fBloomFilters &&
              (strCommand == "filterload" ||

@@ -1,5 +1,5 @@
 ---
-name: "Gulden-osx-1.5.2"
+name: "Gulden-osx-1.5.3"
 enable_cache: true
 suites:
 - "precise"
@@ -70,6 +70,8 @@ script: |
   export PATH=${WRAP_DIR}:${PATH}
 
   cd Gulden
+  git submodule init
+  git submodule update
   BASEPREFIX=`pwd`/depends
 
   mkdir -p ${BASEPREFIX}/SDKs

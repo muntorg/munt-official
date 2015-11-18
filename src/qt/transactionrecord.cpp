@@ -7,6 +7,7 @@
 #include "base58.h"
 #include "main.h"
 #include "timedata.h"
+#include <Gulden/auto_checkpoints.h>
 #include "wallet/wallet.h"
 
 #include <stdint.h>
@@ -239,7 +240,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         {
             status.status = TransactionStatus::Unconfirmed;
         }
-        else if (status.depth < RecommendedNumConfirmations)
+        else if (status.depth < RecommendedNumConfirmations || !Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock))
         {
             status.status = TransactionStatus::Confirming;
         }
