@@ -1,5 +1,5 @@
 ---
-name: "Gulden-linux-1.5.4"
+name: "Gulden-linux-1.5.5"
 enable_cache: true
 suites:
 - "precise"

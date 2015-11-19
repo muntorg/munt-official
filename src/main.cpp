@@ -2983,7 +2983,7 @@ bool static LoadBlockIndexDB()
     // Gulden: load hashSyncCheckpoint
     CCheckpointsDB CheckpointsDB;
     CheckpointsDB.ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
-    printf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
+    LogPrintf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
 
     LogPrintf("LoadBlockIndexDB(): hashBestChain=%s height=%d date=%s progress=%f\n",
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),

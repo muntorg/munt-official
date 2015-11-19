@@ -799,7 +799,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (mapArgs.count("-genkeypair"))
     {
         CKey key;
-        int nCount = 0;
         key.MakeNewKey(false);
 
         CPrivKey vchPrivKey = key.GetPrivKey();
@@ -808,7 +807,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 	vchPubKey.Decompress();
         printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
     }
-    
+
     //Gulden - private key for checkpoint system.
     if (mapArgs.count("-checkpointkey"))
     {

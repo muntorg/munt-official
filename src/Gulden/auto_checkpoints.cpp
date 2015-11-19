@@ -199,10 +199,10 @@ namespace Checkpoints
 				{
 					return error("CheckSync: pprev null - block index structure failure");
 				}
-				if (pindex->nHeight < pindexSync->nHeight || pindex->GetBlockHash() != hashSyncCheckpoint)
-				{
-					return false; // only descendant of sync-checkpoint can pass check
-				}
+			}
+			if (pindex->nHeight < pindexSync->nHeight || pindex->GetBlockHash() != hashSyncCheckpoint)
+			{
+				return false; // only descendant of sync-checkpoint can pass check
 			}
 		}
 		if (nHeight == pindexSync->nHeight && hashBlock != hashSyncCheckpoint)
@@ -424,6 +424,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom)
 	}
 
 	LOCK(Checkpoints::cs_hashSyncCheckpoint);
+	
 	if (!mapBlockIndex.count(hashCheckpoint))
 	{
 		// We haven't received the checkpoint chain, keep the checkpoint as pending
