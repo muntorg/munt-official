@@ -217,8 +217,8 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR)
     {
         // 80% of target - 25% difficulty increase/decrease maximum.
-        nMinimumAdjustLimit = nRetargetTimespan * 80 / PERCENT_FACTOR;
-        nMaximumAdjustLimit = nRetargetTimespan * 120 / PERCENT_FACTOR;
+        nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 80 / PERCENT_FACTOR;
+        nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 120 / PERCENT_FACTOR;
     }
     
     // min
