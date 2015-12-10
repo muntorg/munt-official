@@ -24,9 +24,11 @@
 
 unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
 {
+    #ifndef BUILD_IOS
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
+    #endif
     
     #ifndef BUILD_IOS
     std::string sLogInfo;
@@ -82,9 +84,9 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Limit adjustment amount to try prevent jumping too far in either direction.
     // The same limits as DIGI difficulty algorithm are used.
     // min 75% of default time; 33.3% difficulty increase
-    unsigned int nMinimumAdjustLimit = nRetargetTimespan * 75 / PERCENT_FACTOR;
+    unsigned int nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 75 / PERCENT_FACTOR;
     // max 150% of default time; 33.3% difficuly decrease
-    unsigned int nMaximumAdjustLimit = nRetargetTimespan * 150 / PERCENT_FACTOR;
+    unsigned int nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 150 / PERCENT_FACTOR;
     
     // Variables used in calculation
     int64_t nDeltaTimespan         = 0;
@@ -209,8 +211,8 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         // 90% of target
         // 11.11111111111111% difficulty increase
         // 10% difficulty decrease.
-        nMinimumAdjustLimit = nRetargetTimespan * 90 / PERCENT_FACTOR;
-        nMaximumAdjustLimit = nRetargetTimespan * 110 / PERCENT_FACTOR;
+        nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 90 / PERCENT_FACTOR;
+        nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 110 / PERCENT_FACTOR;
     }
     else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR)
     {
@@ -298,7 +300,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         // Reduce in a linear fashion based on time steps.
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
 
-        bnNew *=  nNumMissedSteps;
+        bnNew *=  (uint32_t)nNumMissedSteps;
 
 	#ifndef BUILD_IOS
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty) )
