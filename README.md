@@ -45,5 +45,12 @@ https://Gulden.com/join
 Gulden is autotools based, to build Gulden from this repository please follow these steps:
 * ./autogen.sh
 * automake
-* ../configure
+* ./configure
+* make
+
+For older distributions with outdated autotools the above process may fail, a source tarball is available for these distributions.
+* https://developer.gulden.com/download/155/Gulden155-linux.tar.gz
+To build from source tarball follow these steps:
+* tar -zxvf Gulden155-linux.tar.gz
+* ./configure
 * make
