@@ -8,12 +8,12 @@ Find out more on http://Gulden.com or connect with the community through one or 
 
 |Website:|http://Gulden.com|
 |:-----------|:-------|
+|Slack:|https://guldenpay.slack.com/|
 |Official forums:|http://community.gulden.com|
-|Community forums:|http://gulden.zone|
 |Twitter:|http://twitter.com/gulden|
 |Facebook:|http://facebook.com/guldenpay|
-|Slack:|https://guldenpay.slack.com/|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
+|Community forums:|https://www.guldenforum.nl/|
 
 
 You can also join a dedicated group of individuals on slack. Get your invitation here: 
