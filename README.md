@@ -37,6 +37,7 @@ https://Gulden.com/join
 |P2P Network Header [Testnet]|fcfef700|
 |Address version byte|38|
 |Address version byte [Testnet]|98|
+|BIP44 'coin type'|87 0x80000057|
 
 
 
