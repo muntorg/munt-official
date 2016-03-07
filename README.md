@@ -12,7 +12,7 @@ Find out more on http://Gulden.com or connect with the community through one or 
 |Community forums:|http://gulden.zone|
 |Twitter:|http://twitter.com/gulden|
 |Facebook:|http://facebook.com/guldenpay|
-|Reddit:|https://reddit.com/r/gulden/|
+|Slack:|https://guldenpay.slack.com/|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
 
 
