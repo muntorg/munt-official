@@ -62,7 +62,7 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2P Network Header|fcfef700|
 |Address version byte|98|
 
-|Infrastructure|
+|Infrastructure||
 |:-----------|:---------|
 |Official block explorer|explorer.gulden.com|
 |Community block explorer|http://inzicht.deguldenmijn.eu/|
