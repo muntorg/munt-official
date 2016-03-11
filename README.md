@@ -66,8 +66,8 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |:-----------|:---------|
 |Official block explorer|explorer.gulden.com|
 |Community block explorer|http://inzicht.deguldenmijn.eu/|
-|Electrum server 1|electrum1.gulden.com|
-|Electrum server 2|electrum2.gulden.com|
+|Electrum server 1|electrum1.gulden.com:5038|
+|Electrum server 2|electrum2.gulden.com:5038|
 |Seed1|seed-000.gulden.com|
 |Seed2|seed-001.gulden.blue|
 |Seed3|seed-002.gulden.network|
