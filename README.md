@@ -35,7 +35,8 @@ To build from source tarball follow these steps:
 * make
 
 Binaries are output as follows by the build process:
-|Binary|Location||
+
+|Binary|Location|
 |:-----------|:---------|
 |Qt wallet|src/qt/Gulden|
 |Gulden Daemon/RPC server|src/GuldenD|
