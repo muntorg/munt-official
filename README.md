@@ -34,6 +34,14 @@ To build from source tarball follow these steps:
 * ./configure
 * make
 
+Binaries are output as follows by the build process:
+|Binary|Location|
+|:-----------|:---------|
+|Qt wallet|src/qt/Gulden|
+|Gulden Daemon/RPC server|src/GuldenD|
+|Gulden RPC client|src/Gulden-cli|
+|Gulden tx utility|src/Gulden-tx|
+
 Alternatively binaries are also available https://developer.gulden.com/apps/
 
 
