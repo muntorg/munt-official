@@ -8,30 +8,50 @@
 //
 // In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
 
+
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
 #include "diff_common.h"
 #include "diff_delta.h"
-
-#ifdef BUILD_IOS
-#include "NSData+Bitcoin.h"
-#include "arith_uint256.h"
-#import "BRMerkleBlock.h"
-#import "BRPeerManager.h"
+#ifndef __JAVA__
+    #ifdef BUILD_IOS
+    #include "NSData+Bitcoin.h"
+    #include "arith_uint256.h"
+    #import "BRMerkleBlock.h"
+    #import "BRPeerManager.h"
+    #endif
+    #include <stdint.h>
 #endif
-#include <stdint.h>
 
-unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock)
+#ifdef __JAVA__
+package org.bitcoinj.core;
+import org.bitcoinj.store.BlockStore;
+import java.math.BigInteger;
+import org.bitcoinj.store.BlockStoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+public class DeltaDiff extends OldDiff {
+public static
+#endif
+unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock
+#ifdef __JAVA__
+,final BlockStore blockStore
+#endif	
+)
 {
     #ifndef BUILD_IOS
+    #ifndef __JAVA__
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
+    
+    std::string sLogInfo;
+    #endif
     #endif
     
-    #ifndef BUILD_IOS
-    std::string sLogInfo;
+    #ifdef __JAVA__
+    try{
     #endif
 
     // The spacing we want our blocks to come in at.
@@ -136,7 +156,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // -- Calculate timespan for short window (multi algo - this is calculated on a per algo basis)
     pindexFirst = pindexLast;
-    for (unsigned int i = 1; pindexFirst && i <= nQBFrame; i++)
+    for (unsigned int i = 1; pindexFirst != NULL && i <= nQBFrame; i++)
     {
         nDeltaTimespan = INDEX_TIME(pindexFirst) - INDEX_TIME(INDEX_PREV(pindexFirst));
         // Prevent bad/negative block times - switch them for a fixed time.
@@ -157,7 +177,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     else
     {
         pindexFirst = pindexLast;
-        for (unsigned int i = 1; pindexFirst && i <= nMiddleFrame; i++)
+        for (unsigned int i = 1; pindexFirst != NULL && i <= nMiddleFrame; i++)
         {
             nDeltaTimespan = INDEX_TIME(pindexFirst) - INDEX_TIME(INDEX_PREV(pindexFirst));
             // Prevent bad/negative block times - switch them for a fixed time.
@@ -179,7 +199,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     else
     {
         pindexFirst = pindexLast;
-        for (unsigned int i = 1; pindexFirst && i <= nLongFrame; i++)
+        for (unsigned int i = 1; pindexFirst != NULL && i <= nLongFrame; i++)
             pindexFirst = INDEX_PREV(pindexFirst);
 
         nLongTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
@@ -190,10 +210,12 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
     if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 80 / PERCENT_FACTOR) )
     {
+	#ifndef __JAVA__
         #ifndef BUILD_IOS
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
         #endif
+	#endif
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
     
@@ -240,7 +262,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     else
     {
         pindexFirst = pindexLast;
-        for (int i = 1; pindexFirst && i <= nDayFrame; i++)
+        for (int i = 1; pindexFirst != NULL && i <= nDayFrame; i++)
             pindexFirst = INDEX_PREV(pindexFirst);
 
         nDayTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
@@ -262,33 +284,39 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     
     // Finally calculate and set the new difficulty.
     arith_uint256 bnNew;
-    bnNew.SetCompact(INDEX_TARGET(pindexLast));
-    bnNew *= arith_uint256(nWeightedTimespan);
-    bnNew /= arith_uint256(nRetargetTimespan);
+    SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
+    bnNew =  BIGINT_MULTIPLY(bnNew, arith_uint256(nWeightedTimespan));
+    bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(nRetargetTimespan));
 
     
     // Now that we have the difficulty we run a last few 'special purpose' exception rules which have the ability to override the calculation.
     // Exception 1 - Never adjust difficulty downward (human view) if previous block generation was faster than what we wanted.
     nLBTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(INDEX_PREV(pindexLast));
-    if (nLBTimespan > 0 && nLBTimespan < nLowTimeLimit && bnNew > arith_uint256().SetCompact(INDEX_TARGET(pindexLast)))
+    arith_uint256 bnComp;
+    SET_COMPACT(bnComp, INDEX_TARGET(pindexLast));
+    if (nLBTimespan > 0 && nLBTimespan < nLowTimeLimit && BIGINT_GREATER_THAN(bnNew, bnComp))
     {
         // If it is this low then we actually give it a slight nudge upwards - 5%
         if (nLBTimespan < nFloorTimeLimit)
         {
-            bnNew.SetCompact(INDEX_TARGET(pindexLast));
-            bnNew *= arith_uint256(95);
-            bnNew /= arith_uint256(PERCENT_FACTOR);
+            SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
+            bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(95));
+            bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
+            #ifndef __JAVA__
             #ifndef BUILD_IOS
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo +=  strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
             #endif
+            #endif
         }
         else
         {
-            bnNew.SetCompact(INDEX_TARGET(pindexLast));
+            SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
+	    #ifndef __JAVA__
             #ifndef BUILD_IOS
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
+            #endif
             #endif
         }
     }
@@ -300,24 +328,28 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         // Reduce in a linear fashion based on time steps.
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
 
-        bnNew *=  (uint32_t)nNumMissedSteps;
+        bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(nNumMissedSteps));
 
+	#ifndef __JAVA__
 	#ifndef BUILD_IOS
-        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty) )
-            sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+        if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  GET_COMPACT(bnNew) != nPrevDifficulty) )
+            sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
+        #endif
         #endif
     }
 
     
     // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.
-    if (bnNew > arith_uint256().SetCompact(nProofOfWorkLimit))
-        bnNew.SetCompact(nProofOfWorkLimit);
+    SET_COMPACT(bnComp, nProofOfWorkLimit);
+    if (BIGINT_GREATER_THAN(bnNew, bnComp))
+        SET_COMPACT(bnNew, nProofOfWorkLimit);
 
     
     #ifndef BUILD_IOS
+    #ifndef __JAVA__
     if (fDebug)
     {
-        if (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  bnNew.GetCompact() != nPrevDifficulty)
+        if (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  GET_COMPACT(bnNew) != nPrevDifficulty)
         {
             static CCriticalSection logCS;
             LOCK(logCS);
@@ -326,14 +358,25 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             LogPrintf("<DELTA> nTargetTimespan = %ld nActualTimespan = %ld nWeightedTimespan = %ld \n", nRetargetTimespan, nLBTimespan, nWeightedTimespan);
             LogPrintf("<DELTA> nShortTimespan/nShortFrame = %ld nMiddleTimespan/nMiddleFrame = %ld nLongTimespan/nLongFrame = %ld \n", nShortTimespan/nShortFrame, nMiddleTimespan/nMiddleFrame, nLongTimespan/nLongFrame);
             LogPrintf("<DELTA> Before: %08x %s\n", INDEX_TARGET(pindexLast), arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).ToString().c_str());
-            LogPrintf("<DELTA> After:  %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+            LogPrintf("<DELTA> After:  %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
             LogPrintf("<DELTA> Rough change percentage (human view): %lf%%\n", -( ( (bnNew.getdouble() - arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).getdouble()) / arith_uint256().SetCompact(INDEX_TARGET(pindexLast)).getdouble()) * 100) );
         }
         nPrevHeight = INDEX_HEIGHT(pindexLast);
-        nPrevDifficulty = bnNew.GetCompact();
+        nPrevDifficulty = GET_COMPACT(bnNew);
     }
+    #endif
     #endif
 
     // Difficulty is returned in compact form.
-    return bnNew.GetCompact();
+    return GET_COMPACT(bnNew);
+    #ifdef __JAVA__
+    }
+    catch (BlockStoreException e)
+    {
+            throw new RuntimeException(e); 
+    }
+    #endif
 }
+#ifdef __JAVA__
+}//class DeltaDiff
+#endif

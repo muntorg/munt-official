@@ -6,15 +6,50 @@
 // It returns a ZERO DIFF when out of range, which can be catched as
 // error after the call (resulting diff > params.powLimit)
 
+#ifndef __JAVA__
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
-#include "diff_common.h"
 #include <stdint.h>
+#endif
+#include "diff_common.h"
 
+#ifdef __JAVA__
+package org.bitcoinj.core;
+import org.bitcoinj.store.BlockStore;
+import java.math.BigInteger;
+import org.bitcoinj.store.BlockStoreException;
+import java.util.*;
+public class OldDiff{
+#endif
+
+
+#ifdef __JAVA__
+static int nMaxHeight = 260000;
+static int nDiffArraySize = nMaxHeight + 1;
+static Integer udiff[];
+static Boolean is_unit_test = null;
+public static boolean isJUnitTest()
+{
+	if (is_unit_test == null)
+	{
+	    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+	    List<StackTraceElement> list = Arrays.asList(stackTrace);
+	    for (StackTraceElement element : list) {
+	        if (element.getClassName().startsWith("org.junit.")) {
+	            is_unit_test = new Boolean(true);
+	        }           
+	    }
+	    if (is_unit_test == null)
+	    {
+	    	is_unit_test = new Boolean(false);
+	    }
+	}
+	return is_unit_test;
+}
+#else
 const int32_t nMaxHeight = 260000;
 const int32_t nDiffArraySize = nMaxHeight + 1;
-
 const int32_t udiff[nDiffArraySize] = {504365040,
         504365040, 504365040, 504365040, 504365040, 504365040, 504365040, 504365040, 504365040, 504365040, 504365055,
         504365055, 504365055, 504365055, 504365055, 504365055, 504365055, 504365055, 504365055, 504365055, 504365055,
@@ -26016,11 +26051,27 @@ const int32_t udiff[nDiffArraySize] = {504365040,
         469971482, 469961010, 470060491, 470045568, 470031392, 470017924, 469953102, 470047355, 470190008, 470168610,
         470148281, 470128969, 470036015, 469966610, 469914787, 469991156, 469933115, 469889778, 469953643, 470049440,
         470035070, 470021418, 470008449, 469946027, 469899418, 469968103, 469968103, 469968103, 469957800, 470055676};
+#endif
 
-
-
-unsigned int diff_old(int nHeight)
+#ifdef __JAVA__
+public static
+#endif
+unsigned int diff_old(int nHeight, unsigned int nPowLimit)
 {
+#ifdef __JAVA__
+     if(udiff == null)
+    {
+        udiff = new Integer[nDiffArraySize];
+        Scanner s = new Scanner(OldDiff.class.getResourceAsStream("/org.gulden.difficulties"));
+        int count = 0;
+        while (count < nMaxHeight)
+        {
+            udiff[count] = Integer.valueOf(s.next());
+            count = count+1;
+        }
+        s.close();
+    }
+#endif
     unsigned int nRet;
 
     if ((nHeight < 0) || (nHeight > nMaxHeight))
@@ -26028,7 +26079,8 @@ unsigned int diff_old(int nHeight)
         LogPrintf("DIFF_old: block height out of range (%d)\n", nHeight);
         return 0;
     }
-    nRet = udiff[nHeight];
+    nRet = (unsigned int)udiff[nHeight];
+    #ifndef __JAVA__
     #ifndef BUILD_IOS
     if (fDebug)
     {
@@ -26037,5 +26089,22 @@ unsigned int diff_old(int nHeight)
         LogPrintf("<STATICDIFF> Height=%d Diff=%08x\n", nHeight, nRet);
     }
     #endif
+    #endif
+    #ifdef __JAVA__
+    //Help JUint tests work a bit faster
+    if (isJUnitTest())
+    {
+    	nRet*=4;
+    }
+    #endif
+    
+    if (nRet > nPowLimit)
+    	return nPowLimit;
+    
     return nRet;
 }
+
+
+#ifdef __JAVA__
+}
+#endif

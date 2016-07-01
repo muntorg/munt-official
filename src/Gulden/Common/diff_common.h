@@ -6,7 +6,25 @@
 #ifndef GULDEN_DIFF_COMMON_H
 #define GULDEN_DIFF_COMMON_H
 
-#if TARGET_OS_IPHONE
+#ifdef __JAVA__
+    #define fDebug false
+    #define LogPrintf(...)
+    #define BLOCK_TYPE Block
+    #define BLOCK_TIME(block) block.getTimeSeconds()
+    #define INDEX_TYPE StoredBlock
+    #define INDEX_HEIGHT(block) block.getHeight()
+    #define INDEX_TIME(block) block.getHeader().getTimeSeconds()
+    #define INDEX_PREV(block) blockStore.get(block.getHeader().getPrevBlockHash())
+    #define INDEX_TARGET(block) block.getHeader().getDifficultyTarget()
+    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
+    #define DIFF_ABS Math.abs
+    #define arith_uint256(x) BigInteger.valueOf(x)
+    #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED = Utils.decodeCompactBits(COMPACT)
+    #define GET_COMPACT(EXPANDED) Utils.encodeCompactBits(EXPANDED)
+    #define BIGINT_MULTIPLY(x, y) x.multiply(y)
+    #define BIGINT_DIVIDE(x, y) x.divide(y)
+    #define BIGINT_GREATER_THAN(x, y) (x.compareTo(y) == 1)
+    #elif defined(TARGET_OS_IPHONE)
     @class BRMerkleBlock;
     #define BUILD_IOS
     #define fDebug false
@@ -20,6 +38,11 @@
     #define INDEX_TARGET(block) block.target
     #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
     #define DIFF_ABS llabs
+    #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
+    #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
+    #define BIGINT_MULTIPLY(x, y) x * y
+    #define BIGINT_DIVIDE(x, y) x / y
+    #define BIGINT_GREATER_THAN(x, y) (x > y)
 #else
     #include "../consensus/params.h"
     #include "../arith_uint256.h"
@@ -36,8 +59,14 @@
     #define INDEX_TARGET(block) block->nBits
     #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) GetBoolArg("-testnet", false) ? TEST : (GetBoolArg("-testnetaccel", false) ? TESTA : MAIN);
     #define DIFF_ABS std::abs
+    #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
+    #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
+    #define BIGINT_MULTIPLY(x, y) x * y
+    #define BIGINT_DIVIDE(x, y) x / y
+    #define BIGINT_GREATER_THAN(x, y) (x > y)
 #endif
 
+#ifndef __JAVA__
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -46,6 +75,7 @@ extern unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_
 
 #if defined __cplusplus
 };
+#endif
 #endif
     
 #endif
