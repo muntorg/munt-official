@@ -10,7 +10,7 @@
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    return GetNextWorkRequired(pindexLast, pblock, params.nPowTargetSpacing, params.powLimit.GetCompact());
+    return GetNextWorkRequired(pindexLast, pblock, params.nPowTargetSpacing, UintToArith256(params.powLimit).GetCompact());
 }
 
 
