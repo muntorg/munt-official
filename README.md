@@ -27,6 +27,9 @@ Gulden is autotools based, to build Gulden from this repository please follow th
 * ./configure
 * make
 
+On some distributions (Ubuntu 16.04) there may be issues when compiling with boost >= 1.58.0 to work around this configure with the following (in adition to your usual configure flags)
+CXXFLAGS="$CXXFLAGS -DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT=1" ./configure
+
 For older distributions with outdated autotools the above process may fail, a source tarball is available for these distributions.
 * https://developer.gulden.com/download/155/Gulden155-linux.tar.gz
 To build from source tarball follow these steps:
@@ -73,13 +76,11 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 
 |Infrastructure||
 |:-----------|:---------|
-|Official block explorer|explorer.gulden.com|
-|Community block explorer|http://inzicht.deguldenmijn.eu/|
+|Official block explorer|blockchain.gulden.com|
+|Community block explorer|inzicht.deguldenmijn.eu|
 |Electrum server 1|electrum1.gulden.com:5038|
 |Electrum server 2|electrum2.gulden.com:5038|
-|Seed1|seed-000.gulden.com|
-|Seed2|seed-001.gulden.blue|
-|Seed3|seed-002.gulden.network|
-|Seed4|seed-003.gulden.com|
-|Seed5|seed-004.gulden.blue|
-|Seed6|seed-005.gulden.network|
+|Seed1|seed.gulden.com|
+|Seed2|amsterdam.gulden.com|
+|Seed3|seed.gulden.network|
+|Seed4|rotterdam.gulden.network|
