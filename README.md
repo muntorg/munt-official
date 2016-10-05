@@ -76,26 +76,21 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 
 |Infrastructure||
 |:-----------|:---------|
-
 |Official block explorer|blockchain.gulden.com|
 |Community block explorer|inzicht.deguldenmijn.eu|
-
 |Electrum server 1|electrum1.gulden.com:5038|
 |Electrum server 2|electrum2.gulden.com:5038|
-
 |DNS Seed 1|seed.gulden.com|
 |DNS Seed 2|amsterdam.gulden.com|
 |DNS Seed 3|seed.gulden.network|
 |DNS Seed 4|rotterdam.gulden.network|
 |DNS Seed 5|seed.gulden.blue|
-
 |Seed node 1|seed-000.gulden.com|
 |Seed node 2|seed-001.gulden.blue|
 |Seed node 3|seed-002.gulden.network|
 |Seed node 4|seed-003.gulden.com|
 |Seed node 5|seed-004.gulden.blue|
 |Seed node 6|seed-005.gulden.network|
-
 |Testnet DNS Seed 1|testseed.gulden.blue|
 |Testnet DNS Seed 2|testseed.gulden.network|
 |Testnet Seed node 1|testseed-00.gulden.blue|
