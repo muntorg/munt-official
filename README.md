@@ -5,19 +5,14 @@ Gulden is a simple and very powerful payment system. Gulden uses blockchain tech
 
 ###Community###
 
-Find out more on https://gulden.com
-You can also join a dedicated group of individuals on slack for realtime discussion. Get your invitation at https://Gulden.com/join
-
-Or connect with the community through one or more of the following websites:
+Connect with the community through one or more of the following:
 
 |Website:|https://gulden.com|
 |:-----------|:-------|
 |Slack:|https://guldenpay.slack.com/|
-|Official forums:|https://community.gulden.com|
 |Twitter:|http://twitter.com/gulden|
 |Facebook:|http://facebook.com/guldenpay|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
-|Community forums:|https://www.guldenforum.nl/|
 
 
 ###Building###
