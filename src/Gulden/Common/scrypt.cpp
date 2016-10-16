@@ -334,10 +334,7 @@ void scrypt_1024_1_1_256(const char *input, char *output)
 
 void PBKDF2_SHA512(const char* pass, size_t passwdlen, const unsigned char* salt,  size_t saltlen, int32_t iterations, unsigned char* digest, uint32_t outputbytes)
 {
-    unsigned int i;
     PKCS5_PBKDF2_HMAC(pass, passwdlen, salt, saltlen, iterations, EVP_sha512(), outputbytes, digest);
-    //for (i = 0; i < sizeof(digest); i++)
-        //sprintf(HexResult + (i * 2), "%02x", 255 & digest[i]);
 }
 
 

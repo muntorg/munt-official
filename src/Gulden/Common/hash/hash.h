@@ -6,15 +6,22 @@
 #ifndef GULDEN_HASH_H
 #define GULDEN_HASH_H
 
-#include "../hash.h"
-#include "../uint256.h"
+#include <hash.h>
+#include <uint256.h>
 #include "../scrypt.h"
 #include "city.h"
 
-inline void hash_sha256(const void* pData, arith_uint256& thash)
+inline void hash_sha256(const void* pData, unsigned int size, unsigned char* hash)
 {
     CSHA256 sha;
-    sha.Write((unsigned char*)pData, 80);
+    sha.Write((unsigned char*)pData, size);
+    sha.Finalize((unsigned char*)hash);
+}
+
+inline void hash_sha256(const void* pData, unsigned int size, arith_uint256& thash)
+{
+    CSHA256 sha;
+    sha.Write((unsigned char*)pData, size);
     sha.Finalize((unsigned char*)&thash);
 }
 

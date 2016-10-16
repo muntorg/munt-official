@@ -37,7 +37,7 @@ public static
 unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock
 #ifdef __JAVA__
 ,final BlockStore blockStore
-#endif	
+#endif
 )
 {
     #ifndef BUILD_IOS
@@ -45,11 +45,11 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
-    
+
     std::string sLogInfo;
     #endif
     #endif
-    
+
     #ifdef __JAVA__
     try{
     #endif
@@ -66,10 +66,6 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     const unsigned int nMiddleFrame         =  24;
     const unsigned int nLongFrame           = 576;
 
-    // How many blocks to use for the fifth window, fifth window is across all algorithms.
-    #ifdef MULTI_ALGO
-    const unsigned int nDayFrame            = 576;
-    #endif
 
     // Weighting to use for each of the four algo specific time windows.
     const int64_t nLBWeight        =  64;
@@ -80,7 +76,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Minimum and maximum threshold for the last block, if it exceeds these thresholds then favour a larger swing in difficulty.
     const int64_t nLBMinGap        = nRetargetTimespan / 6;
     const int64_t nLBMaxGap        = nRetargetTimespan * 6;
-    
+
     // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficulty.
     const int64_t nQBFrame         = nShortFrame + 1;
     const int64_t nQBMinGap        = (nRetargetTimespan * PERCENT_FACTOR / 120 ) * nQBFrame;
@@ -88,13 +84,13 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Any block with a time lower than nBadTimeLimit is considered to have a 'bad' time, the time is replaced with the value of nBadTimeReplace.
     const int64_t nBadTimeLimit    = 0;
     const int64_t nBadTimeReplace  = nRetargetTimespan / 10;
-    
+
     // Used for 'exception 1' (see code below), if block is lower than 'nLowTimeLimit' then prevent the algorithm from decreasing difficulty any further.
     // If block is lower than 'nFloorTimeLimit' then impose a minor increase in difficulty.
     // This helps to prevent the algorithm from generating and giving away too many sudden/easy 'quick blocks' after a long block or two have occured, and instead forces things to be recovered more gently over time without intefering with other desirable properties of the algorithm.
     const int64_t nLowTimeLimit    = nRetargetTimespan * 90 / PERCENT_FACTOR;
     const int64_t nFloorTimeLimit  = nRetargetTimespan * 65 / PERCENT_FACTOR;
-    
+
     // Used for 'exception 2' (see code below), if a block has taken longer than nLongTimeLimit we perform a difficulty reduction by taking the original difficulty and dividing by nLongTimeStep
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
     // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.
@@ -107,7 +103,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     unsigned int nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 75 / PERCENT_FACTOR;
     // max 150% of default time; 33.3% difficuly decrease
     unsigned int nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 150 / PERCENT_FACTOR;
-    
+
     // Variables used in calculation
     int64_t nDeltaTimespan         = 0;
     int64_t nLBTimespan            = 0;
@@ -115,16 +111,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     int64_t nMiddleTimespan        = 0;
     int64_t nLongTimespan          = 0;
     int64_t nQBTimespan            = 0;
-    #ifdef MULTI_ALGO
-    int64_t nDayTimespan           = 0;
-    #endif
 
     int64_t nWeightedSum           = 0;
     int64_t nWeightedDiv           = 0;
     int64_t nWeightedTimespan      = 0;
-    #ifdef MULTI_ALGO
-    int64_t nDailyPercentage       = 0;
-    #endif
 
     const INDEX_TYPE pindexFirst = pindexLast; //multi algo - last block is selected on a per algo basis.
 
@@ -132,14 +122,14 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
 
-    // -- Use a fixed difficuly until we have enough blocks to work with (multi algo - this is calculated on a per algo basis)
+    // -- Use a fixed difficulty until we have enough blocks to work with (multi algo - this is calculated on a per algo basis)
     if (INDEX_HEIGHT(pindexLast) <= nQBFrame)
         return nProofOfWorkLimit;
 
-    // -- Calculate timespan for last block window (multi algo - this is calculated on a per algo basis)
+    // -- Calculate timespan for last block window
     pindexFirst = INDEX_PREV(pindexLast);
     nLBTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
-   
+
     // Check for very short and long blocks (algo specific)
     // If last block was far too short, let difficulty raise faster
     // by cutting 50% of last block time
@@ -154,7 +144,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nLBTimespan = nLBTimespan * 150 / PERCENT_FACTOR;
 
 
-    // -- Calculate timespan for short window (multi algo - this is calculated on a per algo basis)
+    // -- Calculate timespan for short window
     pindexFirst = pindexLast;
     for (unsigned int i = 1; pindexFirst != NULL && i <= nQBFrame; i++)
     {
@@ -168,8 +158,8 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nQBTimespan += nDeltaTimespan;
         pindexFirst = INDEX_PREV(pindexFirst);
     }
-       
-    // -- Calculate time interval for middle window (multi algo - this is calculated on a per algo basis)
+
+    // -- Calculate time interval for middle window
     if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nMiddleFrame)
     {
         nMiddleWeight = nMiddleTimespan = 0;
@@ -190,7 +180,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     }
 
 
-    // -- Calculate timespan for long window (multi algo - this is calculated on a per algo basis)
+    // -- Calculate timespan for long window
     // NB! No need to worry about single negative block times as it has no significant influence over this many blocks.
     if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nLongFrame)
     {
@@ -206,8 +196,9 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     }
 
 
-    // Check for multiple very short blocks (algo specific)
+    // Check for multiple very short blocks
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
+    // fixme: GULDEN DELTA NEXT - 80 becomes 40
     if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 80 / PERCENT_FACTOR) )
     {
 	#ifndef __JAVA__
@@ -218,7 +209,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 	#endif
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
     }
-    
+
     // -- Combine all the timespans and weights to get a weighted timespan
     nWeightedSum      = (nLBTimespan * nLBWeight) + (nShortTimespan * nShortWeight);
     nWeightedSum     += (nMiddleTimespan * nMiddleWeight) + (nLongTimespan * nLongWeight);
@@ -228,6 +219,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Apply the adjustment limits
     // However if we are close to target time then we use smaller limits to smooth things off a little bit more.
+    //fixme: GULDEN DELTA NEXT - Adjust this to 80 and 60 percent
     if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 10 / PERCENT_FACTOR)
     {
         // 90% of target
@@ -242,7 +234,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 80 / PERCENT_FACTOR;
         nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 120 / PERCENT_FACTOR;
     }
-    
+
     // min
     if (nWeightedTimespan < nMinimumAdjustLimit)
         nWeightedTimespan = nMinimumAdjustLimit;
@@ -251,44 +243,14 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nWeightedTimespan = nMaximumAdjustLimit;
 
 
-    #ifdef MULTI_ALGO
-    // -- Day interval (1 day; general over all algos)
-    // so other algos can take blocks that 1 algo does not use
-    // in case there are still longer gaps (high spikes)
-    if (INDEX_HEIGHT(pindexLast) <= nDayFrame)
-    {
-        nDayTimespan = nRetargetTimespan * nDayFrame;
-    }
-    else
-    {
-        pindexFirst = pindexLast;
-        for (int i = 1; pindexFirst != NULL && i <= nDayFrame; i++)
-            pindexFirst = INDEX_PREV(pindexFirst);
 
-        nDayTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
-    }
-    nDailyPercentage = (nDayTimespan * PERCENT_FACTOR) / (nRetargetTimespan * nDayFrame);
-
-    // Limit day interval adjustment to 10%
-    if (nDailyPercentage > 110)
-        nDailyPercentage = 110;
-    if (nDailyPercentage <  90)
-        nDailyPercentage =  90;
-
-
-    // Adjust Time based on day interval
-    nWeightedTimespan *= nDailyPercentage;
-    nWeightedTimespan /= PERCENT_FACTOR;
-    #endif
-
-    
     // Finally calculate and set the new difficulty.
     arith_uint256 bnNew;
     SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
     bnNew =  BIGINT_MULTIPLY(bnNew, arith_uint256(nWeightedTimespan));
     bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(nRetargetTimespan));
 
-    
+
     // Now that we have the difficulty we run a last few 'special purpose' exception rules which have the ability to override the calculation.
     // Exception 1 - Never adjust difficulty downward (human view) if previous block generation was faster than what we wanted.
     nLBTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(INDEX_PREV(pindexLast));
@@ -321,7 +283,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         }
     }
 
-    
+
     // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
     if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit)
     {
@@ -338,13 +300,13 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         #endif
     }
 
-    
+
     // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.
     SET_COMPACT(bnComp, nProofOfWorkLimit);
     if (BIGINT_GREATER_THAN(bnNew, bnComp))
         SET_COMPACT(bnNew, nProofOfWorkLimit);
 
-    
+
     #ifndef BUILD_IOS
     #ifndef __JAVA__
     if (fDebug)
@@ -373,7 +335,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     }
     catch (BlockStoreException e)
     {
-            throw new RuntimeException(e); 
+            throw new RuntimeException(e);
     }
     #endif
 }

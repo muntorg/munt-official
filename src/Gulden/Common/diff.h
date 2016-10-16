@@ -5,7 +5,7 @@
 #ifndef GULDEN_DIFF_H
 #define GULDEN_DIFF_H
 
-#include "../consensus/params.h"
+#include <consensus/params.h>
 #include "diff_common.h"
 
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)

@@ -44,11 +44,11 @@
     #define BIGINT_DIVIDE(x, y) x / y
     #define BIGINT_GREATER_THAN(x, y) (x > y)
 #else
-    #include "../consensus/params.h"
-    #include "../arith_uint256.h"
-    #include "../chain.h"
-    #include "../sync.h"
-    #include "util.h"
+    #include <consensus/params.h>
+    #include <arith_uint256.h>
+    #include <chain.h>
+    #include <sync.h>
+    #include <util.h>
     #include <stdint.h>
     #define BLOCK_TYPE CBlockHeader*
     #define BLOCK_TIME(block) block->nTime
