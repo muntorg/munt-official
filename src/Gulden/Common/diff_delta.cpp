@@ -203,8 +203,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     {
 	#ifndef __JAVA__
         #ifndef BUILD_IOS
+	#if 0
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ) )
             sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
+	#endif
         #endif
 	#endif
         nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
@@ -266,8 +268,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
             #ifndef __JAVA__
             #ifndef BUILD_IOS
+            #if 0
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo +=  strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
+            #endif
             #endif
             #endif
         }
@@ -276,8 +280,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
 	    #ifndef __JAVA__
             #ifndef BUILD_IOS
+            #if 0
             if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)) )
                 sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
+            #endif
             #endif
             #endif
         }
@@ -294,8 +300,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
 	#ifndef __JAVA__
 	#ifndef BUILD_IOS
+        #if 0
         if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  GET_COMPACT(bnNew) != nPrevDifficulty) )
             sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
+        #endif
         #endif
         #endif
     }
@@ -309,6 +317,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     #ifndef BUILD_IOS
     #ifndef __JAVA__
+    #if 0
     if (fDebug)
     {
         if (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  GET_COMPACT(bnNew) != nPrevDifficulty)
@@ -326,6 +335,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nPrevHeight = INDEX_HEIGHT(pindexLast);
         nPrevDifficulty = GET_COMPACT(bnNew);
     }
+    #endif
     #endif
     #endif
 
