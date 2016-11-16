@@ -95,4 +95,7 @@ bool isAutoRequestingBlocks();
  */
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload);
 void ProcessPriorityRequests(const std::shared_ptr<CBlock> block);
+bool FlushPriorityDownloads();
+size_t CountPriorityDownloads();
+
 #endif // GULDEN_NET_PROCESSING_H
