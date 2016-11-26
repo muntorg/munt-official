@@ -16,7 +16,7 @@
     #define INDEX_TIME(block) block.getHeader().getTimeSeconds()
     #define INDEX_PREV(block) blockStore.get(block.getHeader().getPrevBlockHash())
     #define INDEX_TARGET(block) block.getHeader().getDifficultyTarget()
-    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
+    #define DIFF_SWITCHOVER(T, M) Constants.TEST ? T : M);
     #define DIFF_ABS Math.abs
     #define arith_uint256(x) BigInteger.valueOf(x)
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED = Utils.decodeCompactBits(COMPACT)
@@ -36,7 +36,7 @@
     #define INDEX_TIME(block) (int64_t)block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
-    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) MAIN
+    #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
     #define DIFF_ABS llabs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
     #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
@@ -57,7 +57,7 @@
     #define INDEX_TIME(block) block->GetBlockTime()
     #define INDEX_PREV(block) block->pprev
     #define INDEX_TARGET(block) block->nBits
-    #define DIFF_SWITCHOVER(TEST, TESTA, MAIN) GetBoolArg("-testnet", false) ? TEST : (GetBoolArg("-testnetaccel", false) ? TESTA : MAIN);
+    #define DIFF_SWITCHOVER(TEST, MAIN) (GetBoolArg("-testnet", false) ? TEST :  MAIN)
     #define DIFF_ABS std::abs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
     #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
