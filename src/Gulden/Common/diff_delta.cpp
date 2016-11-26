@@ -41,7 +41,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 )
 {
     int ndeltaVersion = 1;
-    if ( INDEX_HEIGHT(pindexLast) > DIFF_SWITCHOVER(445500, 437500) )
+    if ( INDEX_HEIGHT(pindexLast) > DIFF_SWITCHOVER(446500, 437500) )
         ndeltaVersion = 2;
     
     #ifndef BUILD_IOS
@@ -300,12 +300,12 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
             bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(nNumMissedSteps));
         }
-        else if(ndeltaVersion == 2) // Fixed reduction for each missed step.
+        else if(ndeltaVersion == 2) // Fixed reduction for each missed step. (10%)
         {
             int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
             for(int i=0;i < nNumMissedSteps; ++i)
             {
-                bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(115));
+                bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
                 bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
             }
         }
