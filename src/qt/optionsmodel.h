@@ -6,12 +6,36 @@
 #define BITCOIN_QT_OPTIONSMODEL_H
 
 #include "amount.h"
+#include "_Gulden/ticker.h"
+#include "_Gulden/nockssettings.h"
 
 #include <QAbstractListModel>
 
 QT_BEGIN_NAMESPACE
 class QNetworkProxy;
 QT_END_NAMESPACE
+
+class OptionsModel;
+class QSettings;
+
+// Gulden specific settings go here
+class GuldenOptionsModel : public QObject
+{
+    Q_OBJECT
+    
+public:
+    GuldenOptionsModel( OptionsModel* parent );
+    ~GuldenOptionsModel();
+    void InitSettings(QSettings& settings);
+    void setLocalCurrency(const QString &value);
+    QString getLocalCurrency();
+private:
+    OptionsModel* m_pImpl;
+    QString localCurrency;
+    
+Q_SIGNALS:
+    void localCurrencyChanged(QString currency);
+};
 
 /** Interface from Qt to configuration data structure for Bitcoin client.
    To Qt, the options are presented as a list with the different options
@@ -71,6 +95,27 @@ public:
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);
     bool isRestartRequired();
+    
+    GuldenOptionsModel* guldenSettings;
+    friend class GuldenOptionsModel;
+    
+    void setTicker(CurrencyTicker* ticker)
+    {
+        currencyTicker = ticker;
+    }
+    CurrencyTicker* getTicker()
+    {
+        return currencyTicker;
+    }
+    
+    void setNocksSettings(NocksSettings* settings)
+    {
+        nocksSettings = settings;
+    }
+    NocksSettings* getNocksSettings()
+    {
+        return nocksSettings;
+    }
 
 private:
     /* Qt-only settings */
@@ -83,6 +128,9 @@ private:
     bool fCoinControlFeatures;
     /* settings that were overriden by command-line */
     QString strOverriddenByCommandLine;
+    
+    CurrencyTicker* currencyTicker;
+    NocksSettings* nocksSettings;
 
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);

@@ -596,6 +596,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Client name</source>
+        <translation>Nome do cliente</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>N/A</translation>
     </message>

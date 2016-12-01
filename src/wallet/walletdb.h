@@ -9,6 +9,7 @@
 #include "amount.h"
 #include "primitives/transaction.h"
 #include "wallet/db.h"
+#include "wallet/walletdberrors.h"
 #include "key.h"
 
 #include <list>
@@ -19,7 +20,9 @@
 
 static const bool DEFAULT_FLUSHWALLET = true;
 
+class CHDSeed;
 class CAccount;
+class CAccountHD;
 class CAccountingEntry;
 struct CBlockLocator;
 class CKeyPool;
@@ -29,17 +32,7 @@ class CWallet;
 class CWalletTx;
 class uint160;
 class uint256;
-
-/** Error statuses for the wallet database */
-enum DBErrors
-{
-    DB_LOAD_OK,
-    DB_CORRUPT,
-    DB_NONCRITICAL_ERROR,
-    DB_TOO_NEW,
-    DB_LOAD_FAIL,
-    DB_NEED_REWRITE
-};
+class CKeyMetadata;
 
 /* simple HD chain data model */
 class CHDChain
@@ -70,50 +63,6 @@ public:
     }
 };
 
-class CKeyMetadata
-{
-public:
-    static const int VERSION_BASIC=1;
-    static const int VERSION_WITH_HDDATA=10;
-    static const int CURRENT_VERSION=VERSION_WITH_HDDATA;
-    int nVersion;
-    int64_t nCreateTime; // 0 means unknown
-    std::string hdKeypath; //optional HD/bip32 keypath
-    CKeyID hdMasterKeyID; //id of the HD masterkey used to derive this key
-
-    CKeyMetadata()
-    {
-        SetNull();
-    }
-    CKeyMetadata(int64_t nCreateTime_)
-    {
-        SetNull();
-        nCreateTime = nCreateTime_;
-    }
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(this->nVersion);
-        nVersion = this->nVersion;
-        READWRITE(nCreateTime);
-        if (this->nVersion >= VERSION_WITH_HDDATA)
-        {
-            READWRITE(hdKeypath);
-            READWRITE(hdMasterKeyID);
-        }
-    }
-
-    void SetNull()
-    {
-        nVersion = CKeyMetadata::CURRENT_VERSION;
-        nCreateTime = 0;
-        hdKeypath.clear();
-        hdMasterKeyID.SetNull();
-    }
-};
-
 /** Access to the wallet database */
 class CWalletDB : public CDB
 {
@@ -131,8 +80,11 @@ public:
     bool WriteTx(const CWalletTx& wtx);
     bool EraseTx(uint256 hash);
 
-    bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta);
-    bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta);
+    bool EraseKey(const CPubKey& vchPubKey);
+    bool EraseEncryptedKey(const CPubKey& vchPubKey);
+    bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
+    bool WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, const int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount);
+    bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
 
     bool WriteCScript(const uint160& hash, const CScript& redeemScript);
@@ -145,19 +97,22 @@ public:
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
 
-    bool WriteDefaultKey(const CPubKey& vchPubKey);
-
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
-    bool ErasePool(int64_t nPool);
+    bool ErasePool(CWallet* pwallet, int64_t nPool);
+    bool ErasePool(CWallet* pwallet, const CKeyID& id);
+    bool HasPool(CWallet* pwallet, const CKeyID& id);
 
     bool WriteMinVersion(int nVersion);
 
     /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry_Backend(const CAccountingEntry& acentry);
-    bool ReadAccount(const std::string& strAccount, CAccount& account);
-    bool WriteAccount(const std::string& strAccount, const CAccount& account);
+
+    bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
+    bool EraseAccountLabel(const std::string& strUUID);
+
+    bool WriteAccount(const std::string& strAccount, const CAccount* account);
 
     /// Write destination data key,value tuple to database
     bool WriteDestData(const std::string &address, const std::string &key, const std::string &value);
@@ -168,7 +123,7 @@ public:
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& acentries);
 
     DBErrors ReorderTransactions(CWallet* pwallet);
-    DBErrors LoadWallet(CWallet* pwallet);
+    DBErrors LoadWallet(CWallet* pwallet, bool& firstRunRet);
     DBErrors FindWalletTx(CWallet* pwallet, std::vector<uint256>& vTxHash, std::vector<CWalletTx>& vWtx);
     DBErrors ZapWalletTx(CWallet* pwallet, std::vector<CWalletTx>& vWtx);
     DBErrors ZapSelectTx(CWallet* pwallet, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
@@ -177,6 +132,12 @@ public:
 
     //! write the hdchain model (external chain child index counter)
     bool WriteHDChain(const CHDChain& chain);
+    
+    //! write the seed (mnemonic / account index counter)
+    bool WriteHDSeed(const CHDSeed& seed);
+    
+    bool WritePrimarySeed(const CHDSeed& seed);
+    bool WritePrimaryAccount(const CAccount* account);
 
 private:
     CWalletDB(const CWalletDB&);

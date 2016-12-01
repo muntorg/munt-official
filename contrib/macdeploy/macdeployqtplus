@@ -161,11 +161,13 @@ class ApplicationBundleInfo(object):
             raise RuntimeError("Could not find bundle binary for " + path)
         self.resourcesPath = os.path.join(path, "Contents", "Resources")
         self.pluginPath = os.path.join(path, "Contents", "PlugIns")
+        self.libexecPath = os.path.join(path, "Contents", "libexec")
 
 class DeploymentInfo(object):
     def __init__(self):
         self.qtPath = None
         self.pluginPath = None
+        self.libexecPath = None
         self.deployedFrameworks = []
     
     def detectQtPath(self, frameworkDirectory):
@@ -186,6 +188,9 @@ class DeploymentInfo(object):
             pluginPath = os.path.join(self.qtPath, "plugins")
             if os.path.exists(pluginPath):
                 self.pluginPath = pluginPath
+            libexecPath = os.path.join(self.qtPath, "libexec")
+            if os.path.exists(libexecPath):
+                self.libexecPath = libexecPath
     
     def usesFramework(self, name):
         nameDot = "%s." % name
@@ -232,6 +237,26 @@ def runInstallNameTool(action, *args):
     installnametoolbin=os.getenv("INSTALLNAMETOOL", "install_name_tool")
     subprocess.check_call([installnametoolbin, "-"+action] + list(args))
 
+def runIcuFix(basePath):
+    command = "for dylib in $( find BASEPATH -name *.dylib); do for libref in $(otool -L $dylib | grep -o .*dylib | grep libicudata.58.dylib); do install_name_tool -change $libref $(echo $libref | sed 's/58.dylib/58.1.dylib/') $dylib ;done  ; done"
+    installnametoolbin=os.getenv("INSTALLNAMETOOL", "install_name_tool")
+    otoolbin=os.getenv("OTOOL", "otool")
+
+    commanddebug = command
+    commanddebug = commanddebug.replace('otool', otoolbin)
+    commanddebug = commanddebug.replace('install_name_tool', 'echo install_name_tool')
+    commanddebug = commanddebug.replace('BASEPATH', basePath)
+
+
+    command = command.replace('otool', otoolbin)
+    command = command.replace('install_name_tool', installnametoolbin)
+    command = command.replace('BASEPATH', basePath)
+    print ("Fix icudata dylib")
+    print (command)
+    subprocess.call(commanddebug, shell=True)
+    subprocess.call(command, shell=True)
+
+
 def changeInstallName(oldName, newName, binaryPath, verbose):
     if verbose >= 3:
         print("Using install_name_tool:")
@@ -254,6 +279,11 @@ def runStrip(binaryPath, verbose):
         print(" stripped", binaryPath)
     subprocess.check_call([stripbin, "-x", binaryPath])
 
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
+        
 def copyFramework(framework, path, verbose):
     if framework.sourceFilePath.startswith("Qt"):
         #standard place for Nokia Qt installer's frameworks
@@ -262,6 +292,15 @@ def copyFramework(framework, path, verbose):
         fromPath = framework.sourceFilePath
     toDir = os.path.join(path, framework.destinationDirectory)
     toPath = os.path.join(toDir, framework.binaryName)
+    
+    if verbose >= 2:
+        print("Copy framework", fromPath)
+
+    if not os.path.exists(fromPath):
+        fromPath = find(os.path.basename(fromPath), "../")
+
+    if not os.path.exists(fromPath):
+        raise RuntimeError("No file at " + fromPath)
     
     if not os.path.exists(fromPath):
         raise RuntimeError("No file at " + fromPath)
@@ -370,6 +409,48 @@ def deployFrameworksForAppBundle(applicationBundle, strip, verbose):
         return DeploymentInfo()
     else:
         return deployFrameworks(frameworks, applicationBundle.path, applicationBundle.binaryPath, strip, verbose)
+
+def deployWebkit(appBundleInfo, deploymentInfo, strip, verbose):
+    # Lookup available bins, exclude unneeded
+    bins = []
+    if deploymentInfo.libexecPath is None:
+        return
+    for dirpath, dirnames, filenames in os.walk(deploymentInfo.libexecPath):
+        binDirectory = os.path.relpath(dirpath, deploymentInfo.libexecPath)
+
+        for binName in filenames:
+            binPath = os.path.join(binDirectory, binName)
+            if binName != "QtWebProcess":
+                # Skip
+                continue
+
+            bins.append((binDirectory, binName))
+    
+    for binDirectory, binName in bins:
+        print("Processing binary dep", os.path.join(binDirectory, binName), "...")
+        
+        sourcePath = os.path.join(deploymentInfo.libexecPath, binDirectory, binName)
+        destinationDirectory = os.path.join(appBundleInfo.libexecPath, binDirectory)
+        if not os.path.exists(destinationDirectory):
+            os.makedirs(destinationDirectory)
+        
+        destinationPath = os.path.join(destinationDirectory, binName)
+        shutil.copy2(sourcePath, destinationPath)
+        print("Copied:", sourcePath)
+        print(" to:", destinationPath)
+        
+        if strip:
+            runStrip(destinationPath, 3)
+        
+        dependencies = getFrameworks(destinationPath, 3)
+        
+        for dependency in dependencies:
+            changeInstallName(dependency.installName, dependency.deployedInstallName, destinationPath, verbose)
+            # Deploy framework if necessary.
+            if dependency.frameworkName not in deploymentInfo.deployedFrameworks:
+                deployFrameworks([dependency], appBundleInfo.path, destinationPath, strip, verbose, deploymentInfo)
+
+
 
 def deployPlugins(appBundleInfo, deploymentInfo, strip, verbose):
     # Lookup available plugins, exclude unneeded
@@ -646,6 +727,21 @@ if config.plugins:
         if verbose >= 1:
             sys.stderr.write("Error: %s\n" % str(e))
         sys.exit(1)
+        
+# ------------------------------------------------
+
+if config.plugins:
+    if verbose >= 2:
+        print("+ Deploying webkit +")
+    
+    try:
+        deployWebkit(applicationBundle, deploymentInfo, config.strip, verbose)
+    except RuntimeError as e:
+        if verbose >= 1:
+            sys.stderr.write("Error: %s\n" % str(e))
+        sys.exit(1)
+        
+        
 
 # ------------------------------------------------
 
@@ -711,6 +807,10 @@ elif config.sign:
     if verbose >= 1:
         print("Code-signing app bundle %s"%(target,))
     subprocess.check_call("codesign --force %s %s"%(os.environ['CODESIGNARGS'], target), shell=True)
+
+
+
+runIcuFix(applicationBundle.path)
 
 # ------------------------------------------------
 

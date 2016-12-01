@@ -38,6 +38,7 @@
 #include <stdint.h>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/thread.hpp>
 
 #include <QApplication>
@@ -49,6 +50,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QTranslator>
+#include <_Gulden/GuldenTranslator.h>
 #include <QSslConfiguration>
 
 #if defined(QT_STATICPLUGIN)
@@ -91,7 +93,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("bitcoin-core", psz).toStdString();
+    return QCoreApplication::translate("Gulden", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -110,7 +112,7 @@ static QString GetLangTerritory()
 }
 
 /** Set up translations */
-static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator)
+static void initTranslations(GuldenTranslator &qtTranslatorBase, GuldenTranslator &qtTranslator, GuldenTranslator &translatorBase, GuldenTranslator &translator, GuldenTranslator &translatorBaseGulden, GuldenTranslator &translatorGulden)
 {
     // Remove old translators
     QApplication::removeTranslator(&qtTranslatorBase);
@@ -142,9 +144,18 @@ static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTrans
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
+    // Load e.g. gulden_de.qm (shortcut "gulden_de" needs to be defined in bitcoin.qrc)
+    if (translatorBaseGulden.load(lang, ":/gulden_translations/"))
+        QApplication::installTranslator(&translatorBaseGulden);
+
     // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
+
+    // Load e.g. gulden_de_DE.qm (shortcut "gulden_de_DE" needs to be defined in bitcoin.qrc)
+    if (translatorGulden.load(lang_territory, ":/gulden_translations/"))
+        QApplication::installTranslator(&translatorGulden);
+
 }
 
 /* qDebug() message handler --> debug.log */
@@ -210,8 +221,7 @@ public:
     /// Create splash screen
     void createSplashScreen(const NetworkStyle *networkStyle);
 
-    /// Request core initialization
-    void requestInitialize();
+    
     /// Request core shutdown
     void requestShutdown();
 
@@ -222,6 +232,8 @@ public:
     WId getMainWinId() const;
 
 public Q_SLOTS:
+    /// Request core initialization
+    void requestInitialize();
     void initializeResult(int retval);
     void shutdownResult(int retval);
     /// Handle runaway exceptions. Shows a message box with the problem and quits the program.
@@ -247,6 +259,8 @@ private:
     const PlatformStyle *platformStyle;
 
     void startThread();
+    
+    bool shutDownRequested;
 };
 
 #include "bitcoin.moc"
@@ -304,7 +318,8 @@ BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     paymentServer(0),
     walletModel(0),
 #endif
-    returnValue(0)
+    returnValue(0),
+    shutDownRequested(false)
 {
     setQuitOnLastWindowClosed(false);
 
@@ -356,21 +371,19 @@ void BitcoinApplication::createOptionsModel(bool resetSettings)
 void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 {
     window = new BitcoinGUI(platformStyle, networkStyle, 0);
+    connect( (QObject*)window->walletFrame, SIGNAL( loadWallet() ), this, SLOT( requestInitialize() ) );
 
     pollShutdownTimer = new QTimer(window);
     connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
     pollShutdownTimer->start(200);
+    
+    window->show();
+    
+    
 }
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
-    SplashScreen *splash = new SplashScreen(0, networkStyle);
-    // We don't hold a direct pointer to the splash screen after creation, so use
-    // Qt::WA_DeleteOnClose to make sure that the window will be deleted eventually.
-    splash->setAttribute(Qt::WA_DeleteOnClose);
-    splash->show();
-    connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
-    connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
 }
 
 void BitcoinApplication::startThread()
@@ -414,6 +427,8 @@ void BitcoinApplication::requestShutdown()
     window->hide();
     window->setClientModel(0);
     pollShutdownTimer->stop();
+    
+    shutDownRequested = true;
 
 #ifdef ENABLE_WALLET
     window->removeAllWallets();
@@ -435,7 +450,7 @@ void BitcoinApplication::initializeResult(int retval)
     qDebug() << __func__ << ": Initialization result: " << retval;
     // Set exit result: 0 if successful, 1 if failure
     returnValue = retval ? 0 : 1;
-    if(retval)
+    if(retval && shutDownRequested == false)
     {
         // Log this only after AppInit2 finishes, as then logging setup is guaranteed complete
         qWarning() << "Platform customization:" << platformStyle->getName();
@@ -528,17 +543,19 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(bitcoin);
     Q_INIT_RESOURCE(bitcoin_locale);
 
-    BitcoinApplication app(argc, argv);
-#if QT_VERSION > 0x050100
+    //NB!!! This must be called -before- the application is created, otherwise it has -no- effect.
+    #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
-#if QT_VERSION >= 0x050600
+    #endif
+    #if QT_VERSION >= 0x050600
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
-#ifdef Q_OS_MAC
+    #endif
+    #ifdef Q_OS_MAC
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
-#endif
+    #endif
+    
+    BitcoinApplication app(argc, argv);
 #if QT_VERSION >= 0x050500
     // Because of the POODLE attack it is recommended to disable SSLv3 (https://disablessl3.com/),
     // so set SSL protocols to TLS1.0+.
@@ -563,8 +580,12 @@ int main(int argc, char *argv[])
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
-    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    GuldenTranslator qtEmptyTranslator(true), qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden;
+    
+    // This one exists purely for the Gulden 'translation magic'
+    QApplication::installTranslator(&qtEmptyTranslator);
+
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
     translationInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
@@ -581,7 +602,7 @@ int main(int argc, char *argv[])
     if (!Intro::pickDataDirectory())
         return 0;
 
-    /// 6. Determine availability of data directory and parse bitcoin.conf
+    /// 6. Determine availability of data directory and parse Gulden.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!boost::filesystem::is_directory(GetDataDir(false)))
     {
@@ -620,7 +641,7 @@ int main(int argc, char *argv[])
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(networkStyle->getAppName());
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
 
 #ifdef ENABLE_WALLET
     /// 8. URI IPC sending
@@ -659,13 +680,30 @@ int main(int argc, char *argv[])
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
 
-    if (GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !GetBoolArg("-min", false))
-        app.createSplashScreen(networkStyle.data());
+    app.createSplashScreen(networkStyle.data());
 
+    //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
+    // Make sure only a single Bitcoin process is using the data directory.
+    boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
+    FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
+    if (file) fclose(file);
+
+    try {
+        static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
+        if (!lock.try_lock())
+        {
+            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(strprintf(_("Cannot obtain a lock on data directory %s. %s is probably already running."), GetDataDir().string(), _(PACKAGE_NAME))));
+            return 1;
+        }
+    } catch(const boost::interprocess::interprocess_exception& e) {
+        QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(strprintf(_("Cannot obtain a lock on data directory %s. %s is probably already running."), GetDataDir().string(), _(PACKAGE_NAME))));
+        return 1;
+    }
+    
     try
     {
         app.createWindow(networkStyle.data());
-        app.requestInitialize();
+        //app.requestInitialize();
 #if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
         WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());
 #endif

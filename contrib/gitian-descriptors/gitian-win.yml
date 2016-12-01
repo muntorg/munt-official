@@ -6,6 +6,7 @@ suites:
 architectures:
 - "amd64"
 packages:
+- "wget"
 - "curl"
 - "g++"
 - "git-core"
@@ -21,6 +22,10 @@ packages:
 - "zip"
 - "ca-certificates"
 - "python"
+- "gperf"
+- "ruby"
+- "bison"
+- "flex"
 remotes:
 - "url": "https://github.com/bitcoin/bitcoin.git"
   "dir": "bitcoin"
@@ -105,7 +110,7 @@ script: |
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
+    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" V=1
   done
 
   # Faketime for binaries
@@ -142,13 +147,19 @@ script: |
     tar --strip-components=1 -xf ../$SOURCEDIST
 
     CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}"
+    mkdir release
+    cp -rf ${BASEPREFIX}/${i}/native/bin/*.dll release/
+    cp -rf ${BASEPREFIX}/${i}/lib/*.dll release/
+    cp -rf ${BASEPREFIX}/${i}/plugins/platforms release/
+    cp -rf ${BASEPREFIX}/${i}/plugins/imageformats release/
+    cp -rf /usr/${i}/lib/libwinpthread-1.dll release/
+    cp -rf /usr/lib/gcc/${i}/4.8/*.dll release/
     make ${MAKEOPTS}
     make ${MAKEOPTS} -C src check-security
     make deploy
     make install DESTDIR=${INSTALLPATH}
     cp -f bitcoin-*setup*.exe $OUTDIR/
     cd installed
-    mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/
     find . -name "lib*.la" -delete
     find . -name "lib*.a" -delete
     rm -rf ${DISTNAME}/lib/pkgconfig

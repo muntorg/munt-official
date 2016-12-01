@@ -6,6 +6,7 @@
 
 #include "bitcoingui.h"
 #include "walletview.h"
+#include "_Gulden/welcomedialog.h"
 
 #include <cstdio>
 
@@ -22,11 +23,9 @@ WalletFrame::WalletFrame(const PlatformStyle *platformStyle, BitcoinGUI *_gui) :
     setContentsMargins(0,0,0,0);
     walletStack = new QStackedWidget(this);
     walletFrameLayout->setContentsMargins(0,0,0,0);
+    walletFrameLayout->setSpacing(0);
     walletFrameLayout->addWidget(walletStack);
-
-    QLabel *noWallet = new QLabel(tr("No wallet has been loaded."));
-    noWallet->setAlignment(Qt::AlignCenter);
-    walletStack->addWidget(noWallet);
+    setObjectName("walletFrame");
 }
 
 WalletFrame::~WalletFrame()
@@ -50,7 +49,7 @@ bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
     walletView->showOutOfSyncWarning(bOutOfSync);
 
      /* TODO we should goto the currently selected page once dynamically adding wallets is supported */
-    walletView->gotoOverviewPage();
+    walletView->gotoReceiveCoinsPage();
     walletStack->addWidget(walletView);
     mapWalletViews[name] = walletView;
 

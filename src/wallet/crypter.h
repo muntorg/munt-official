@@ -72,6 +72,11 @@ namespace wallet_crypto
     class TestCrypter;
 }
 
+bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const std::vector<unsigned char>& nIV, std::vector<unsigned char> &vchCiphertext);
+bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const uint256& nIV, std::vector<unsigned char> &vchCiphertext);
+bool DecryptSecret(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCiphertext, const std::vector<unsigned char>& nIV, CKeyingMaterial& vchPlaintext);
+bool DecryptSecret(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCiphertext, const uint256& nIV, CKeyingMaterial& vchPlaintext);
+
 /** Encryption/decryption context with key information */
 class CCrypter
 {
@@ -134,24 +139,26 @@ private:
     bool fDecryptionThoroughlyChecked;
 
 protected:
-    bool SetCrypted();
+    virtual bool SetCrypted();
 
     //! will encrypt previously unencrypted keys
-    bool EncryptKeys(CKeyingMaterial& vMasterKeyIn);
+    virtual bool EncryptKeys(CKeyingMaterial& vMasterKeyIn);
 
-    bool Unlock(const CKeyingMaterial& vMasterKeyIn);
+    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn);
 
-public:
-    CCryptoKeyStore() : fUseCrypto(false), fDecryptionThoroughlyChecked(false)
+    CCryptoKeyStore()
+    : CBasicKeyStore()
+    , fUseCrypto(false)
+    , fDecryptionThoroughlyChecked(false)
     {
     }
 
-    bool IsCrypted() const
+    virtual bool IsCrypted() const
     {
         return fUseCrypto;
     }
 
-    bool IsLocked() const
+    virtual bool IsLocked() const
     {
         if (!IsCrypted())
             return false;
@@ -163,11 +170,12 @@ public:
         return result;
     }
 
-    bool Lock();
+    virtual bool Lock();
 
     virtual bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret);
-    bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey);
-    bool HaveKey(const CKeyID &address) const
+    virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey);
+    virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey);
+    virtual bool HaveKey(const CKeyID &address) const
     {
         {
             LOCK(cs_KeyStore);
@@ -177,9 +185,11 @@ public:
         }
         return false;
     }
-    bool GetKey(const CKeyID &address, CKey& keyOut) const;
-    bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
-    void GetKeys(std::set<CKeyID> &setAddress) const
+    virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const;
+    virtual bool GetKey(const CKeyID &address, CKey& keyOut) const;
+    virtual bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const;
+    virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
+    virtual void GetKeys(std::set<CKeyID> &setAddress) const
     {
         if (!IsCrypted())
         {
@@ -195,11 +205,15 @@ public:
         }
     }
 
+public:
     /**
      * Wallet status (encrypted, locked) changed.
      * Note: Called without locks held.
      */
     boost::signals2::signal<void (CCryptoKeyStore* wallet)> NotifyStatusChanged;
+    friend class CAccount;
+    friend class CAccountHD;
+    friend class CWallet;
 };
 
 #endif // BITCOIN_WALLET_CRYPTER_H

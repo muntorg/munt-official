@@ -5,6 +5,11 @@
 #ifndef BITCOIN_CRYPTO_RIPEMD160_H
 #define BITCOIN_CRYPTO_RIPEMD160_H
 
+//fixme: (GULDEN) (HIGH) - Not the greatest solution, but silence annoying fortify source warnings for now so that we can see the real warnings
+#ifndef NDEBUG
+#undef _FORTIFY_SOURCE
+#endif
+
 #include <stdint.h>
 #include <stdlib.h>
 

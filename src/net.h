@@ -400,6 +400,7 @@ public:
     CRollingBloomFilter addrKnown;
     bool fGetAddr;
     std::set<uint256> setKnown;
+    uint256 hashCheckpointKnown;
     int64_t nNextAddrSend;
     int64_t nNextLocalAddrSend;
 

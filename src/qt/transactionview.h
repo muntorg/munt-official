@@ -13,6 +13,7 @@
 class PlatformStyle;
 class TransactionFilterProxy;
 class WalletModel;
+class CAccount;
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -53,7 +54,7 @@ public:
         STATUS_COLUMN_WIDTH = 30,
         WATCHONLY_COLUMN_WIDTH = 23,
         DATE_COLUMN_WIDTH = 120,
-        TYPE_COLUMN_WIDTH = 113,
+        TYPE_COLUMN_WIDTH = 0,
         AMOUNT_MINIMUM_COLUMN_WIDTH = 120,
         MINIMUM_COLUMN_WIDTH = 23
     };
@@ -86,6 +87,7 @@ private:
     bool eventFilter(QObject *obj, QEvent *event);
 
 private Q_SLOTS:
+    void activeAccountChanged(CAccount* account);
     void contextualMenu(const QPoint &);
     void dateRangeChanged();
     void showDetails();

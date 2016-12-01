@@ -20,6 +20,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
+#include "_Gulden/GuldenGUI.h"
 
 AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent) :
     QDialog(parent),
@@ -29,6 +30,8 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, 
     tab(tab)
 {
     ui->setupUi(this);
+    
+    setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 
     if (!platformStyle->getImagesOnButtons()) {
         ui->newAddress->setIcon(QIcon());
@@ -41,6 +44,19 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, 
         ui->deleteAddress->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
         ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
+    
+    QFrame* horizontalLine = new QFrame(this);
+    horizontalLine->setFrameStyle(QFrame::HLine);
+    horizontalLine->setFixedHeight(1);
+    horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
+    ui->verticalLayout->insertWidget(2, horizontalLine);
+    
+    ui->newAddress->setCursor(Qt::PointingHandCursor);
+    ui->copyAddress->setCursor(Qt::PointingHandCursor);
+    ui->deleteAddress->setCursor(Qt::PointingHandCursor);
+    ui->exportButton->setCursor(Qt::PointingHandCursor);
+    ui->closeButton->setCursor(Qt::PointingHandCursor);
 
     switch(mode)
     {

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
+    <width>580</width>
     <height>440</height>
    </rect>
   </property>
@@ -17,16 +17,37 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>40</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>40</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
        <string>&amp;Main</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Main">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QCheckBox" name="bitcoinAtStartup">
          <property name="toolTip">
@@ -137,12 +158,33 @@
        <string>W&amp;allet</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Wallet">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Expert</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>25</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QCheckBox" name="coinControlFeatures">
             <property name="toolTip">
@@ -186,6 +228,12 @@
        <string>&amp;Network</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Network">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QCheckBox" name="mapPortUpnp">
          <property name="toolTip">
@@ -504,6 +552,12 @@
        <string>&amp;Window</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Window">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QCheckBox" name="hideTrayIcon">
          <property name="toolTip">
@@ -554,6 +608,12 @@
        <string>&amp;Display</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Display">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_1_Display">
          <item>
@@ -691,6 +751,19 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Buttons">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>&amp;Cancel</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="resetButton">
        <property name="toolTip">
@@ -740,6 +813,9 @@
        <property name="wordWrap">
         <bool>true</bool>
        </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
       </widget>
      </item>
      <item>
@@ -765,16 +841,6 @@
        </property>
        <property name="default">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancelButton">
-       <property name="text">
-        <string>&amp;Cancel</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
        </property>
       </widget>
      </item>

@@ -45,10 +45,6 @@
 <context>
     <name>AskPassphraseDialog</name>
     <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialogo de contraseña</translation>
-    </message>
-    <message>
         <source>Enter passphrase</source>
         <translation>Ingrese la contraseña</translation>
     </message>
@@ -63,10 +59,6 @@
 </context>
 <context>
     <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Máscara de red</translation>
-    </message>
     </context>
 <context>
     <name>BitcoinGUI</name>
@@ -185,10 +177,6 @@
     <message>
         <source>&amp;Receive</source>
         <translation>&amp;Recibir</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Mostrar / Ocultar</translation>
     </message>
     <message>
         <source>&amp;File</source>

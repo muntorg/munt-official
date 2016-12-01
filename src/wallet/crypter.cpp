@@ -110,24 +110,36 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 }
 
 
-static bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const uint256& nIV, std::vector<unsigned char> &vchCiphertext)
+bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const std::vector<unsigned char>& nIV, std::vector<unsigned char> &vchCiphertext)
 {
+    assert(nIV.size() == WALLET_CRYPTO_IV_SIZE);
     CCrypter cKeyCrypter;
-    std::vector<unsigned char> chIV(WALLET_CRYPTO_IV_SIZE);
-    memcpy(&chIV[0], &nIV, WALLET_CRYPTO_IV_SIZE);
-    if(!cKeyCrypter.SetKey(vMasterKey, chIV))
+    if(!cKeyCrypter.SetKey(vMasterKey, nIV))
         return false;
     return cKeyCrypter.Encrypt(*((const CKeyingMaterial*)&vchPlaintext), vchCiphertext);
 }
 
-static bool DecryptSecret(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCiphertext, const uint256& nIV, CKeyingMaterial& vchPlaintext)
+bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const uint256& nIV, std::vector<unsigned char> &vchCiphertext)
 {
-    CCrypter cKeyCrypter;
     std::vector<unsigned char> chIV(WALLET_CRYPTO_IV_SIZE);
     memcpy(&chIV[0], &nIV, WALLET_CRYPTO_IV_SIZE);
-    if(!cKeyCrypter.SetKey(vMasterKey, chIV))
+    return EncryptSecret(vMasterKey, vchPlaintext, chIV, vchCiphertext);
+}
+
+bool DecryptSecret(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCiphertext, const std::vector<unsigned char>& nIV, CKeyingMaterial& vchPlaintext)
+{
+    assert(nIV.size() == WALLET_CRYPTO_IV_SIZE);
+    CCrypter cKeyCrypter;
+    if(!cKeyCrypter.SetKey(vMasterKey, nIV))
         return false;
     return cKeyCrypter.Decrypt(vchCiphertext, *((CKeyingMaterial*)&vchPlaintext));
+}
+
+bool DecryptSecret(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCiphertext, const uint256& nIV, CKeyingMaterial& vchPlaintext)
+{
+    std::vector<unsigned char> chIV(WALLET_CRYPTO_IV_SIZE);
+    memcpy(&chIV[0], &nIV, WALLET_CRYPTO_IV_SIZE);
+    return DecryptSecret(vMasterKey, vchCiphertext, chIV, vchPlaintext);
 }
 
 static bool DecryptKey(const CKeyingMaterial& vMasterKey, const std::vector<unsigned char>& vchCryptedSecret, const CPubKey& vchPubKey, CKey& key)
@@ -175,30 +187,33 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
         if (!SetCrypted())
             return false;
 
-        bool keyPass = false;
-        bool keyFail = false;
-        CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
-        for (; mi != mapCryptedKeys.end(); ++mi)
+        if (!mapCryptedKeys.empty())
         {
-            const CPubKey &vchPubKey = (*mi).second.first;
-            const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
-            CKey key;
-            if (!DecryptKey(vMasterKeyIn, vchCryptedSecret, vchPubKey, key))
+            bool keyPass = false;
+            bool keyFail = false;
+            CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
+            for (; mi != mapCryptedKeys.end(); ++mi)
             {
-                keyFail = true;
-                break;
+                const CPubKey &vchPubKey = (*mi).second.first;
+                const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
+                CKey key;
+                if (!DecryptKey(vMasterKeyIn, vchCryptedSecret, vchPubKey, key))
+                {
+                    keyFail = true;
+                    break;
+                }
+                keyPass = true;
+                if (fDecryptionThoroughlyChecked)
+                    break;
             }
-            keyPass = true;
-            if (fDecryptionThoroughlyChecked)
-                break;
+            if (keyPass && keyFail)
+            {
+                LogPrintf("The wallet is probably corrupted: Some keys decrypt but not all.\n");
+                assert(false);
+            }
+            if (keyFail || !keyPass)
+                return false;
         }
-        if (keyPass && keyFail)
-        {
-            LogPrintf("The wallet is probably corrupted: Some keys decrypt but not all.\n");
-            assert(false);
-        }
-        if (keyFail || !keyPass)
-            return false;
         vMasterKey = vMasterKeyIn;
         fDecryptionThoroughlyChecked = true;
     }
@@ -227,6 +242,15 @@ bool CCryptoKeyStore::AddKeyPubKey(const CKey& key, const CPubKey &pubkey)
     return true;
 }
 
+bool CCryptoKeyStore::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey)
+{
+    // For HD we don't encrypt anything here - as the public key we need access to anyway, and the index is not special info - we derive the private key when we need it.
+    {
+        LOCK(cs_KeyStore);
+        return CBasicKeyStore::AddKeyPubKey(HDKeyIndex, pubkey);
+    }
+}
+
 
 bool CCryptoKeyStore::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret)
 {
@@ -238,6 +262,23 @@ bool CCryptoKeyStore::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<
         mapCryptedKeys[vchPubKey.GetID()] = make_pair(vchPubKey, vchCryptedSecret);
     }
     return true;
+}
+
+bool CCryptoKeyStore::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const
+{
+    {
+        LOCK(cs_KeyStore);
+        if (!IsCrypted())
+            return false;
+
+        CryptedKeyMap::const_iterator mi = mapCryptedKeys.find(address);
+        if (mi != mapCryptedKeys.end())
+        {
+            encryptedKeyOut = (*mi).second.second;
+            return true;
+        }
+    }
+    return false;
 }
 
 bool CCryptoKeyStore::GetKey(const CKeyID &address, CKey& keyOut) const
@@ -256,6 +297,15 @@ bool CCryptoKeyStore::GetKey(const CKeyID &address, CKey& keyOut) const
         }
     }
     return false;
+}
+
+bool CCryptoKeyStore::GetKey(const CKeyID &address, int64_t& HDKeyIndex) const
+{
+    // For HD we don't encrypt anything here - as the public key we need access to anyway, and the index is not special info - we derive the private key when we need it.
+    {
+        LOCK(cs_KeyStore);
+        return CBasicKeyStore::GetKey(address, HDKeyIndex);
+    }
 }
 
 bool CCryptoKeyStore::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const

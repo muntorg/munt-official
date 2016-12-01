@@ -5,6 +5,7 @@
 #include "walletmodel.h"
 
 #include "addresstablemodel.h"
+#include "_Gulden/accounttablemodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "paymentserver.h"
@@ -26,19 +27,22 @@
 #include <QTimer>
 
 #include <boost/foreach.hpp>
+#include "askpassphrasedialog.h"
 
 WalletModel::WalletModel(const PlatformStyle *platformStyle, CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
-    QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
+    QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0), accountTableModel(0),
     transactionTableModel(0),
     recentRequestsTableModel(0),
     cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
     cachedEncryptionStatus(Unencrypted),
-    cachedNumBlocks(0)
+    cachedNumBlocks(0),
+    patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$")
 {
     fHaveWatchOnly = wallet->HaveWatchOnly();
     fForceCheckBalanceChanged = false;
 
     addressTableModel = new AddressTableModel(wallet, this);
+    accountTableModel = new AccountTableModel(wallet, this);
     transactionTableModel = new TransactionTableModel(platformStyle, wallet, this);
     recentRequestsTableModel = new RecentRequestsTableModel(wallet, this);
 
@@ -55,9 +59,10 @@ WalletModel::~WalletModel()
     unsubscribeFromCoreSignals();
 }
 
-CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
+CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinControl) const
 {
-    if (coinControl)
+    //fixme: GULDEN 1.6.1 - coin control
+    /*if (coinControl)
     {
         CAmount nBalance = 0;
         std::vector<COutput> vCoins;
@@ -67,14 +72,14 @@ CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
                 nBalance += out.tx->vout[out.i].nValue;
 
         return nBalance;
-    }
+    }*/
 
-    return wallet->GetBalance();
+    return wallet->GetBalance(forAccount);
 }
 
-CAmount WalletModel::getUnconfirmedBalance() const
+CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 {
-    return wallet->GetUnconfirmedBalance();
+    return wallet->GetUnconfirmedBalance(forAccount);
 }
 
 CAmount WalletModel::getImmatureBalance() const
@@ -189,7 +194,22 @@ bool WalletModel::validateAddress(const QString &address)
     return addressParsed.IsValid();
 }
 
-WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl)
+bool WalletModel::validateAddressBCOIN(const QString &address)
+{
+    CBitcoinAddress addressParsed(address.toStdString());
+    return addressParsed.IsValidBCOIN();
+}
+
+bool WalletModel::validateAddressIBAN(const QString &address)
+{
+    if (patternMatcherIBAN.match(address).hasMatch())
+        return true;
+    return false;
+}
+
+
+
+WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccount, WalletModelTransaction &transaction, const CCoinControl *coinControl)
 {
     CAmount total = 0;
     bool fSubtractFeeFromAmount = false;
@@ -256,7 +276,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         return DuplicateAddress;
     }
 
-    CAmount nBalance = getBalance(coinControl);
+    CAmount nBalance = getBalance(forAccount, coinControl);
 
     if(total > nBalance)
     {
@@ -266,7 +286,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     {
         LOCK2(cs_main, wallet->cs_wallet);
 
-        transaction.newPossibleKeyChange(wallet);
+        transaction.newPossibleKeyChange(forAccount, wallet);
 
         CAmount nFeeRequired = 0;
         int nChangePosRet = -1;
@@ -274,7 +294,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
+        bool fCreated = wallet->CreateTransaction(forAccount, vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && fCreated)
             transaction.reassignAmounts(nChangePosRet);
@@ -293,7 +313,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         // reject absurdly high fee. (This can never happen because the
         // wallet caps the fee at maxTxFee. This merely serves as a
         // belt-and-suspenders check)
-        if (nFeeRequired > maxTxFee)
+        if (nFeeRequired > 500 * COIN)
             return AbsurdFee;
     }
 
@@ -342,24 +362,23 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
     Q_FOREACH(const SendCoinsRecipient &rcp, transaction.getRecipients())
     {
         // Don't touch the address book when we have a payment request
-        if (!rcp.paymentRequest.IsInitialized())
+        if (!rcp.paymentRequest.IsInitialized() && rcp.addToAddressBook)
         {
-            std::string strAddress = rcp.address.toStdString();
-            CTxDestination dest = CBitcoinAddress(strAddress).Get();
+            std::string strAddress = rcp.forexAddress.isEmpty() ? rcp.address.toStdString() : rcp.forexAddress.toStdString();
             std::string strLabel = rcp.label.toStdString();
             {
                 LOCK(wallet->cs_wallet);
 
-                std::map<CTxDestination, CAddressBookData>::iterator mi = wallet->mapAddressBook.find(dest);
+                std::map<std::string, CAddressBookData>::iterator mi = wallet->mapAddressBook.find(strAddress);
 
                 // Check if we have a new address or an updated label
                 if (mi == wallet->mapAddressBook.end())
                 {
-                    wallet->SetAddressBook(dest, strLabel, "send");
+                    wallet->SetAddressBook(strAddress, strLabel, "send");
                 }
                 else if (mi->second.name != strLabel)
                 {
-                    wallet->SetAddressBook(dest, strLabel, ""); // "" means don't change purpose
+                    wallet->SetAddressBook(strAddress, strLabel, ""); // "" means don't change purpose
                 }
             }
         }
@@ -378,6 +397,11 @@ OptionsModel *WalletModel::getOptionsModel()
 AddressTableModel *WalletModel::getAddressTableModel()
 {
     return addressTableModel;
+}
+
+AccountTableModel *WalletModel::getAccountTableModel()
+{
+    return accountTableModel;
 }
 
 TransactionTableModel *WalletModel::getTransactionTableModel()
@@ -458,16 +482,15 @@ static void NotifyKeyStoreStatusChanged(WalletModel *walletmodel, CCryptoKeyStor
 }
 
 static void NotifyAddressBookChanged(WalletModel *walletmodel, CWallet *wallet,
-        const CTxDestination &address, const std::string &label, bool isMine,
+        const std::string &address, const std::string &label, bool isMine,
         const std::string &purpose, ChangeType status)
 {
-    QString strAddress = QString::fromStdString(CBitcoinAddress(address).ToString());
     QString strLabel = QString::fromStdString(label);
     QString strPurpose = QString::fromStdString(purpose);
 
-    qDebug() << "NotifyAddressBookChanged: " + strAddress + " " + strLabel + " isMine=" + QString::number(isMine) + " purpose=" + strPurpose + " status=" + QString::number(status);
+    qDebug() << "NotifyAddressBookChanged: " + QString::fromStdString(address) + " " + strLabel + " isMine=" + QString::number(isMine) + " purpose=" + strPurpose + " status=" + QString::number(status);
     QMetaObject::invokeMethod(walletmodel, "updateAddressBook", Qt::QueuedConnection,
-                              Q_ARG(QString, strAddress),
+                              Q_ARG(QString, QString::fromStdString(address)),
                               Q_ARG(QString, strLabel),
                               Q_ARG(bool, isMine),
                               Q_ARG(QString, strPurpose),
@@ -481,6 +504,65 @@ static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, 
     Q_UNUSED(status);
     QMetaObject::invokeMethod(walletmodel, "updateTransaction", Qt::QueuedConnection);
 }
+
+static void NotifyAccountNameChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
+{
+    Q_UNUSED(wallet);
+    if (account == walletmodel->getActiveAccount())
+    {
+        LogPrintf("NotifyAccountNameChanged\n");
+        QMetaObject::invokeMethod(walletmodel, "activeAccountChanged", Q_ARG(CAccount*, account));
+    }
+}
+
+static void NotifyUpdateAccountList(WalletModel *walletmodel, CWallet *wallet)
+{
+    Q_UNUSED(wallet);
+    LogPrintf("NotifyAccountNameChanged\n");
+    QMetaObject::invokeMethod(walletmodel, "accountListChanged");
+}
+
+static void NotifyActiveAccountChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
+{
+    Q_UNUSED(wallet);
+    LogPrintf("walletmodel::setActiveAccount\n");
+    QMetaObject::invokeMethod(walletmodel, "activeAccountChanged", Q_ARG(CAccount*, account));
+}
+
+
+static void NotifyAccountAdded(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
+{
+    LogPrintf("NotifyAccountAdded\n");
+    Q_UNUSED(wallet);
+    QMetaObject::invokeMethod(walletmodel, "accountAdded", Q_ARG(CAccount*, account));
+    walletmodel->setActiveAccount(account);
+}
+
+static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
+{
+    LogPrintf("NotifyAccountDeleted\n");
+    if (wallet)
+    {   
+        QMetaObject::invokeMethod(walletmodel, "accountDeleted", Q_ARG(CAccount*, account));
+        if (account == walletmodel->getActiveAccount())
+        {
+            if (wallet->activeAccount && wallet->activeAccount->m_Type != AccountType::Deleted && account != wallet->activeAccount)
+            {
+                walletmodel->setActiveAccount(wallet->activeAccount);
+                return;
+            }
+            for ( const auto& iter : wallet->mapAccounts)
+            {
+                if (iter.second->m_Type == AccountType::Normal)
+                {
+                    walletmodel->setActiveAccount(iter.second);   
+                    return;
+                }
+            }
+        }
+    }
+}
+
 
 static void ShowProgress(WalletModel *walletmodel, const std::string &title, int nProgress)
 {
@@ -499,9 +581,19 @@ static void NotifyWatchonlyChanged(WalletModel *walletmodel, bool fHaveWatchonly
 void WalletModel::subscribeToCoreSignals()
 {
     // Connect signals to wallet
-    wallet->NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+    //fixme: (GULDEN) (FUT) - FInd a better way to do this instead of connecting to a specific account
+    if (wallet->mapAccounts.size() > 0)
+    {
+        wallet->activeAccount->externalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        wallet->activeAccount->internalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+    }
     wallet->NotifyAddressBookChanged.connect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
     wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+    wallet->NotifyAccountNameChanged.connect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
+    wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
+    wallet->NotifyUpdateAccountList.connect(boost::bind(NotifyUpdateAccountList, this, _1));
+    wallet->NotifyAccountAdded.connect(boost::bind(NotifyAccountAdded, this, _1, _2));
+    wallet->NotifyAccountDeleted.connect(boost::bind(NotifyAccountDeleted, this, _1, _2));
     wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
     wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1));
 }
@@ -509,9 +601,19 @@ void WalletModel::subscribeToCoreSignals()
 void WalletModel::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from wallet
-    wallet->NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+    //fixme: (GULDEN) (FUT) - FInd a better way to do this instead of connecting to a specific account
+    if (wallet->activeAccount)
+    {
+        wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        wallet->activeAccount->internalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+    }
     wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
     wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+    wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
+    wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
+    wallet->NotifyUpdateAccountList.connect(boost::bind(NotifyUpdateAccountList, this, _1));
+    wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
+    wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
     wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
     wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
 }
@@ -583,11 +685,32 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
     return wallet->IsSpent(outpoint.hash, outpoint.n);
 }
 
+QString WalletModel::getAccountLabel(std::string uuid)
+{
+    LOCK(wallet->cs_wallet);
+    if (wallet->mapAccountLabels.count(uuid) > 0)
+    {
+        return QString::fromStdString(wallet->mapAccountLabels[uuid]);
+    }
+    return "";
+}
+
+void WalletModel::setActiveAccount( CAccount* account )
+{
+    wallet->setActiveAccount(account);
+}
+
+CAccount* WalletModel::getActiveAccount()
+{
+    return wallet->getActiveAccount();
+}
+
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const
 {
     std::vector<COutput> vCoins;
-    wallet->AvailableCoins(vCoins);
+    //fixme: GULDEN (FUT) (1.6.1) (COINCONTROL) (ACCOUNTS)
+    wallet->AvailableCoins(wallet->activeAccount, vCoins);
 
     LOCK2(cs_main, wallet->cs_wallet); // ListLockedCoins, mapWallet
     std::vector<COutPoint> vLockedCoins;
@@ -648,7 +771,7 @@ void WalletModel::listLockedCoins(std::vector<COutPoint>& vOutpts)
 void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests)
 {
     LOCK(wallet->cs_wallet);
-    BOOST_FOREACH(const PAIRTYPE(CTxDestination, CAddressBookData)& item, wallet->mapAddressBook)
+    BOOST_FOREACH(const PAIRTYPE(std::string, CAddressBookData)& item, wallet->mapAddressBook)
         BOOST_FOREACH(const PAIRTYPE(std::string, std::string)& item2, item.second.destdata)
             if (item2.first.size() > 2 && item2.first.substr(0,2) == "rr") // receive request
                 vReceiveRequests.push_back(item2.second);

@@ -33,7 +33,8 @@ public:
         Date = 2,
         Type = 3,
         ToAddress = 4,
-        Amount = 5
+        AmountReceived = 5,
+        AmountSent = 6,
     };
 
     /** Roles to get specific information from a transaction row.
@@ -52,6 +53,9 @@ public:
         LongDescriptionRole,
         /** Address of transaction */
         AddressRole,
+        /** Account of transaction */
+        AccountRole,
+        AccountParentRole,
         /** Label of address related to transaction */
         LabelRole,
         /** Net amount of transaction */
@@ -72,6 +76,8 @@ public:
         StatusRole,
         /** Unprocessed icon */
         RawDecorationRole,
+        /** For sorting */
+        SortRole
     };
 
     int rowCount(const QModelIndex &parent) const;
@@ -98,7 +104,8 @@ private:
     QString formatTxDate(const TransactionRecord *wtx) const;
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
-    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
+    QString formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
+    QString formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QVariant txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;

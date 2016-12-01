@@ -21,9 +21,13 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 
+#include <map>
+
 using namespace std;
 
 static uint64_t nAccountingEntryNumber = 0;
+
+static std::map<CKeyID, int64_t> staticPoolCache;
 
 //
 // CWalletDB
@@ -67,7 +71,19 @@ bool CWalletDB::EraseTx(uint256 hash)
     return Erase(std::make_pair(std::string("tx"), hash));
 }
 
-bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata& keyMeta)
+bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("key"), vchPubKey));
+}
+
+bool CWalletDB::EraseEncryptedKey(const CPubKey& vchPubKey)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("ckey"), vchPubKey));
+}
+
+bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata& keyMeta, const std::string forAccount, int64_t nKeyChain)
 {
     nWalletDBUpdated++;
 
@@ -81,12 +97,21 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
     vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
 
-    return Write(std::make_pair(std::string("key"), vchPubKey), std::make_pair(vchPrivKey, Hash(vchKey.begin(), vchKey.end())), false);
+    return Write(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(vchPrivKey, Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
 }
 
-bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey,
-                                const std::vector<unsigned char>& vchCryptedSecret,
-                                const CKeyMetadata &keyMeta)
+bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
+{
+    nWalletDBUpdated++;
+
+    if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
+               keyMeta, false))
+        return false;
+
+    return Write(std::make_pair(std::string("keyHD"), vchPubKey), std::make_tuple(HDKeyIndex, keyChain, forAccount) , false);
+}
+
+bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain)
 {
     const bool fEraseUnencryptedKey = true;
     nWalletDBUpdated++;
@@ -95,7 +120,7 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey,
             keyMeta))
         return false;
 
-    if (!Write(std::make_pair(std::string("ckey"), vchPubKey), vchCryptedSecret, false))
+    if (!Write(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(vchCryptedSecret, forAccount, nKeyChain), false))
         return false;
     if (fEraseUnencryptedKey)
     {
@@ -148,12 +173,6 @@ bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
     return Write(std::string("orderposnext"), nOrderPosNext);
 }
 
-bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
-{
-    nWalletDBUpdated++;
-    return Write(std::string("defaultkey"), vchPubKey);
-}
-
 bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 {
     return Read(std::make_pair(std::string("pool"), nPool), keypool);
@@ -161,14 +180,37 @@ bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 
 bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 {
+    staticPoolCache[keypool.vchPubKey.GetID()] = nPool;
+    
     nWalletDBUpdated++;
     return Write(std::make_pair(std::string("pool"), nPool), keypool);
 }
 
-bool CWalletDB::ErasePool(int64_t nPool)
+bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 {
     nWalletDBUpdated++;
     return Erase(std::make_pair(std::string("pool"), nPool));
+}
+
+bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
+{
+    nWalletDBUpdated++;
+    //fixme: GULDEN (FUT) (OPT) (CBSU)
+    //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
+    for (auto iter : pwallet->mapAccounts)
+    {
+        int64_t keyIndex = staticPoolCache[id];
+        iter.second->setKeyPoolExternal.erase(keyIndex);
+        iter.second->setKeyPoolInternal.erase(keyIndex);
+    }
+    //Remove from disk
+    return Erase(std::make_pair(std::string("pool"), staticPoolCache[id]));
+}
+
+bool CWalletDB::HasPool(CWallet* pwallet, const CKeyID& id)
+{
+    //Remove from disk
+    return Exists(std::make_pair(std::string("pool"), staticPoolCache[id]));
 }
 
 bool CWalletDB::WriteMinVersion(int nVersion)
@@ -176,16 +218,28 @@ bool CWalletDB::WriteMinVersion(int nVersion)
     return Write(std::string("minversion"), nVersion);
 }
 
-bool CWalletDB::ReadAccount(const string& strAccount, CAccount& account)
+bool CWalletDB::WriteAccountLabel(const string& strUUID, const string& strLabel)
 {
-    account.SetNull();
-    return Read(make_pair(string("acc"), strAccount), account);
+    nWalletDBUpdated++;
+    return Write(std::make_pair(string("acclabel"), strUUID), strLabel);
+}
+  
+bool CWalletDB::EraseAccountLabel(const string& strUUID)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(string("acclabel"), strUUID));
+}
+    
+bool CWalletDB::WriteAccount(const string& strAccount, const CAccount* account)
+{
+    nWalletDBUpdated++;
+    
+    if (account->IsHD())
+      return Write(make_pair(string("acchd"), strAccount), *((CAccountHD*)account));
+    else
+      return Write(make_pair(string("accleg"), strAccount), *account);
 }
 
-bool CWalletDB::WriteAccount(const string& strAccount, const CAccount& account)
-{
-    return Write(make_pair(string("acc"), strAccount), account);
-}
 
 bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry)
 {
@@ -359,13 +413,13 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             string strAddress;
             ssKey >> strAddress;
-            ssValue >> pwallet->mapAddressBook[CBitcoinAddress(strAddress).Get()].name;
+            ssValue >> pwallet->mapAddressBook[strAddress].name;
         }
         else if (strType == "purpose")
         {
             string strAddress;
             ssKey >> strAddress;
-            ssValue >> pwallet->mapAddressBook[CBitcoinAddress(strAddress).Get()].purpose;
+            ssValue >> pwallet->mapAddressBook[strAddress].purpose;
         }
         else if (strType == "tx")
         {
@@ -432,8 +486,32 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             // so set the wallet birthday to the beginning of time.
             pwallet->nTimeFirstKey = 1;
         }
+        else if (strType == "keyHD")
+        {
+            std::string forAccount = "";
+            CPubKey vchPubKey;
+            ssKey >> vchPubKey;
+            if (!vchPubKey.IsValid())
+            {
+                strErr = "Error reading wallet database: CPubKey corrupt";
+                return false;
+            }
+            
+            int64_t HDKeyIndex;
+            int64_t keyChain;
+            ssValue >> HDKeyIndex;
+            ssValue >> keyChain;
+            ssValue >> forAccount;
+
+            if (!pwallet->LoadKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
+            {
+                strErr = "Error reading wallet database: LoadKey (HD) failed";
+                return false;
+            }
+        }
         else if (strType == "key" || strType == "wkey")
         {
+            std::string forAccount = "";
             CPubKey vchPubKey;
             ssKey >> vchPubKey;
             if (!vchPubKey.IsValid())
@@ -460,11 +538,19 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             // using EC operations as a checksum.
             // Newer wallets store keys as "key"[pubkey] => [privkey][hash(pubkey,privkey)], which is much faster while
             // remaining backwards-compatible.
+            int64_t nKeyChain;
             try
             {
                 ssValue >> hash;
+                //1.6.0 wallets and upward store keys by account - older wallets will just lump all keys into a default account.
+                ssValue >> forAccount;
+                ssValue >> nKeyChain;
             }
-            catch (...) {}
+            catch (...)
+            {
+                forAccount = pwallet->activeAccount->getUUID();
+                nKeyChain = KEYCHAIN_EXTERNAL;
+            }
 
             bool fSkipCheck = false;
 
@@ -490,7 +576,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 strErr = "Error reading wallet database: CPrivKey corrupt";
                 return false;
             }
-            if (!pwallet->LoadKey(key, vchPubKey))
+            if (!pwallet->LoadKey(key, vchPubKey, forAccount, nKeyChain))
             {
                 strErr = "Error reading wallet database: LoadKey failed";
                 return false;
@@ -513,6 +599,8 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         }
         else if (strType == "ckey")
         {
+            std::string forAccount="";
+            int64_t nKeyChain;
             CPubKey vchPubKey;
             ssKey >> vchPubKey;
             if (!vchPubKey.IsValid())
@@ -523,8 +611,19 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             vector<unsigned char> vchPrivKey;
             ssValue >> vchPrivKey;
             wss.nCKeys++;
+            try
+            {
+                //1.6.0 wallets and upward store keys by account - older wallets will just lump all keys into a default account.
+                ssValue >> forAccount;
+                ssValue >> nKeyChain;
+            }
+            catch (...)
+            {
+                forAccount = pwallet->activeAccount->getUUID();
+                nKeyChain = KEYCHAIN_EXTERNAL;
+            }
 
-            if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey))
+            if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey, forAccount, nKeyChain))
             {
                 strErr = "Error reading wallet database: LoadCryptedKey failed";
                 return false;
@@ -546,17 +645,39 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
                 pwallet->nTimeFirstKey = keyMeta.nCreateTime;
         }
-        else if (strType == "defaultkey")
-        {
-            ssValue >> pwallet->vchDefaultKey;
-        }
         else if (strType == "pool")
         {
             int64_t nIndex;
             ssKey >> nIndex;
             CKeyPool keypool;
             ssValue >> keypool;
-            pwallet->setKeyPool.insert(nIndex);
+            
+            CAccount* forAccount = NULL;
+            std::string accountUUID = keypool.accountName;
+            // If we are importing an old legacy (pre HD) wallet - then this keypool becomes the keypool of our 'legacy' account
+            if (accountUUID.empty())
+            {
+                forAccount = pwallet->activeAccount;
+                keypool.nChain = KEYCHAIN_EXTERNAL;
+            }
+            else
+            {
+                if ( pwallet->mapAccounts.count(accountUUID) == 0 )
+                {
+                    strErr = "Wallet contains key for non existent account";
+                    return false;
+                }
+                forAccount = pwallet->mapAccounts[accountUUID];
+            }
+            
+            if (keypool.nChain == KEYCHAIN_EXTERNAL)
+            {
+                forAccount->setKeyPoolExternal.insert(nIndex);
+            }
+            else
+            {
+                forAccount->setKeyPoolInternal.insert(nIndex);
+            }
 
             // If no metadata exists yet, create a default with the pool key's
             // creation time. Note that this may be overwritten by actually
@@ -564,6 +685,8 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             CKeyID keyid = keypool.vchPubKey.GetID();
             if (pwallet->mapKeyMetadata.count(keyid) == 0)
                 pwallet->mapKeyMetadata[keyid] = CKeyMetadata(keypool.nTime);
+            
+            staticPoolCache[keyid] = nIndex;
         }
         else if (strType == "version")
         {
@@ -599,15 +722,65 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
         }
-        else if (strType == "hdchain")
+        else if (strType == "hdseed")
         {
-            CHDChain chain;
-            ssValue >> chain;
-            if (!pwallet->SetHDChain(chain, true))
+            CHDSeed* newSeed = new CHDSeed();
+            ssValue >> *newSeed;
+            if (!pwallet->activeSeed)
+                pwallet->activeSeed = newSeed;
+            pwallet->mapSeeds[newSeed->getUUID()] = newSeed;
+        }
+        else if (strType == "primaryseed")
+        {
+            //Do nothing - aleady handled in first pass through
+        }
+        else if (strType == "primaryaccount")
+        {
+            //Do nothing - aleady handled in first pass through
+        }
+        else if (strType == "acc")
+        {
+            //Throw old 'accounts' away.
+        }
+        else if (strType == "accleg")
+        {
+            std::string strAccountUUID;
+            ssKey >> strAccountUUID;
+            if (pwallet->mapAccounts.count(strAccountUUID) == 0)
             {
-                strErr = "Error reading wallet database: SetHDChain failed";
-                return false;
+                CAccount* newAccount = new CAccount();
+                newAccount->setUUID(strAccountUUID);
+                ssValue >> *newAccount;
+                pwallet->mapAccounts[strAccountUUID] = newAccount;
+                //fixme: (GULDEN) Reconsider if this is a good idea or not.
+                //If no active account saved (for whatever reason) - make the first one we run into the active one.
+                if (!pwallet->activeAccount)
+                    pwallet->activeAccount = newAccount;
             }
+        }
+        else if (strType == "acchd")
+        {
+            std::string strAccountUUID;
+            ssKey >> strAccountUUID;
+            if (pwallet->mapAccounts.count(strAccountUUID) == 0)
+            {
+                CAccountHD* newAccount = new CAccountHD();
+                newAccount->setUUID(strAccountUUID);
+                ssValue >> *newAccount;
+                pwallet->mapAccounts[strAccountUUID] = newAccount;
+                //fixme: (FUT) (1.6.1) - Re-evaluate whether this is necessary.
+                if (!pwallet->activeAccount)
+                    pwallet->activeAccount = newAccount;
+            }
+        }
+        else if (strType == "acclabel")
+        {
+            std::string strAccountUUID;
+            std::string strAccountLabel;
+            ssKey >> strAccountUUID;
+            ssValue >> strAccountLabel;
+            
+            pwallet->mapAccountLabels[strAccountUUID] = strAccountLabel;
         }
     } catch (...)
     {
@@ -622,13 +795,14 @@ static bool IsKeyType(string strType)
             strType == "mkey" || strType == "ckey");
 }
 
-DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
+DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
 {
-    pwallet->vchDefaultKey = CPubKey();
     CWalletScanState wss;
     bool fNoncriticalErrors = false;
     DBErrors result = DB_LOAD_OK;
 
+    std::string primaryAccountString;
+    std::string primarySeedString;
     try {
         LOCK(pwallet->cs_wallet);
         int nMinVersion = 0;
@@ -639,6 +813,116 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
             pwallet->LoadMinVersion(nMinVersion);
         }
 
+        
+        bool isPreHDWallet=false;
+        // Accounts first
+        {
+            // Get cursor
+            Dbc* pcursor = GetCursor();
+            if (!pcursor)
+            {
+                LogPrintf("Error getting wallet database cursor\n");
+                return DB_CORRUPT;
+            }
+            while (true)
+            {
+                // Read next record
+                CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+                CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+                int ret = ReadAtCursor(pcursor, ssKey, ssValue);
+                if (ret == DB_NOTFOUND)
+                    break;
+                else if (ret != 0)
+                {
+                    LogPrintf("Error reading next record from wallet database\n");
+                    return DB_CORRUPT;
+                }
+
+                std::string sKey;
+                ssKey >> sKey;
+                if (sKey == "accleg" || sKey == "acchd")
+                {
+                    CDataStream ssKey2(SER_DISK, CLIENT_VERSION);
+                    std::string accountUUID;
+                    ssKey >> accountUUID;
+                    ssKey2 << sKey << accountUUID;
+                    // Try to be tolerant of single corrupt records:
+                    string strType, strErr;
+                    if (!ReadKeyValue(pwallet, ssKey2, ssValue, wss, strType, strErr))
+                    {
+                        // losing keys is considered a catastrophic error, anything else
+                        // we assume the user can live with:
+                        if (IsKeyType(strType))
+                            result = DB_CORRUPT;
+                        else
+                        {
+                            // Leave other errors alone, if we try to fix them we might make things worse.
+                            fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
+                            if (strType == "tx") // Rescan if there is a bad transaction record:
+                                SoftSetBoolArg("-rescan", true);
+                        }
+                    }
+                    if (!strErr.empty())
+                        LogPrintf("%s\n", strErr);
+                }
+                else if (sKey == "primaryseed")
+                {
+                    ssValue >> primarySeedString;
+                }
+                else if (sKey == "primaryaccount")
+                {
+                    ssValue >> primaryAccountString;
+                }
+                else if (sKey == "defaultkey")
+                {
+                    isPreHDWallet = true;
+                }
+            }
+            pcursor->close();
+        }
+                
+        
+        firstRunRet = true;
+        if (!primaryAccountString.empty())
+        {   
+            firstRunRet = false;
+            if (pwallet->mapAccounts.count(primaryAccountString) == 0)
+            {
+                LogPrintf("Error - missing primary account for UUID [%s]\n", primaryAccountString);
+                fNoncriticalErrors = true;
+            }
+            else
+            {
+                pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
+            }
+        }
+        else if(isPreHDWallet)
+        {
+            firstRunRet = false;
+            
+            //Upgrade old legacy wallet - set active account - all the old keys will just land up in this.
+            if (pwallet->activeAccount == NULL && pwallet->activeSeed == NULL)
+            {
+                try
+                {
+                    boost::filesystem::path oldPath = bitdb.strPath;
+                    oldPath = oldPath / strFile;
+                    boost::filesystem::path backupPath = oldPath;
+                    backupPath.replace_extension(".old.preHD");
+                    boost::filesystem::copy_file(oldPath, backupPath);
+                }
+                catch(...)
+                {
+                    //We don't care enough about this to worry - if it fails we just carry on.
+                }
+                
+                pwallet->activeAccount = new CAccount();
+                pwallet->activeAccount->setLabel("Legacy", NULL);
+                pwallet->mapAccounts[pwallet->activeAccount->getUUID()] = pwallet->activeAccount;
+                pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] = "Legacy";
+            }
+        }
+        
         // Get cursor
         Dbc* pcursor = GetCursor();
         if (!pcursor)
@@ -689,6 +973,34 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
     catch (...) {
         result = DB_CORRUPT;
     }
+    
+    for (const auto& labelPair : pwallet->mapAccountLabels)
+        {
+            if (pwallet->mapAccounts.count(labelPair.first) == 0)
+            {
+                //Definitely a non-crticial error, user will just see a very unfriendly account name that they can manually correct.
+                LogPrintf("Error - missing account label for account UUID [%s]\n", labelPair.first);
+                fNoncriticalErrors = true;
+            }
+            else
+            {
+                pwallet->mapAccounts[labelPair.first]->setLabel(labelPair.second, NULL);
+            }
+        }
+    if (!primarySeedString.empty())
+    {
+        if (pwallet->mapSeeds.count(primarySeedString) == 0)
+        {
+            //fixme: Treat this more severely?
+            LogPrintf("Error - missing primary seed for UUID [%s]\n", primarySeedString);
+            fNoncriticalErrors = true;
+        }
+        else
+        {
+            pwallet->activeSeed = pwallet->mapSeeds[primarySeedString];
+        }
+    }
+    
 
     if (fNoncriticalErrors && result == DB_LOAD_OK)
         result = DB_NONCRITICAL_ERROR;
@@ -731,7 +1043,6 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
 
 DBErrors CWalletDB::FindWalletTx(CWallet* pwallet, vector<uint256>& vTxHash, vector<CWalletTx>& vWtx)
 {
-    pwallet->vchDefaultKey = CPubKey();
     bool fNoncriticalErrors = false;
     DBErrors result = DB_LOAD_OK;
 
@@ -854,7 +1165,7 @@ DBErrors CWalletDB::ZapWalletTx(CWallet* pwallet, vector<CWalletTx>& vWtx)
 void ThreadFlushWalletDB(const string& strFile)
 {
     // Make this thread recognisable as the wallet flushing thread
-    RenameThread("bitcoin-wallet");
+    RenameThread("Gulden-wallet");
 
     static bool fOneThread;
     if (fOneThread)
@@ -1020,3 +1331,22 @@ bool CWalletDB::WriteHDChain(const CHDChain& chain)
     nWalletDBUpdated++;
     return Write(std::string("hdchain"), chain);
 }
+
+bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
+{
+    nWalletDBUpdated++;
+    return Write(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
+}
+
+bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
+{
+    nWalletDBUpdated++;
+    return Write(std::string("primaryseed"), seed.getUUID());
+}
+
+bool CWalletDB::WritePrimaryAccount(const CAccount* account)
+{
+    nWalletDBUpdated++;
+    return Write(std::string("primaryaccount"), account->getUUID());
+}
+

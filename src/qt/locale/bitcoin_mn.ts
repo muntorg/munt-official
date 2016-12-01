@@ -292,6 +292,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Client name</source>
+        <translation>Клиентийн нэр</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>Алга Байна</translation>
     </message>

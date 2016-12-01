@@ -17,6 +17,7 @@
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QPushButton>
+#include "_Gulden/GuldenGUI.h"
 
 AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
     QDialog(parent),
@@ -26,6 +27,23 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
     fCapsLock(false)
 {
     ui->setupUi(this);
+    
+    setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
+    
+    QFrame* horizontalLine = new QFrame(this);
+    horizontalLine->setFrameStyle(QFrame::HLine);
+    horizontalLine->setFixedHeight(1);
+    horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
+    ui->verticalLayout->insertWidget(2, horizontalLine);
+    
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN);
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Cancel"));
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setCursor(Qt::PointingHandCursor);
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE_NOMARGIN);
+    QObject::connect(ui->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), this, SLOT(reject()));
 
     ui->passEdit1->setMinimumSize(ui->passEdit1->sizeHint());
     ui->passEdit2->setMinimumSize(ui->passEdit2->sizeHint());

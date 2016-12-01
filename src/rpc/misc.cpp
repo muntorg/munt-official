@@ -22,6 +22,7 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include <Gulden/translate.h>
 #include <univalue.h>
 
 using namespace std;
@@ -96,8 +97,10 @@ UniValue getinfo(const UniValue& params, bool fHelp)
 #ifdef ENABLE_WALLET
     if (pwalletMain) {
         obj.push_back(Pair("keypoololdest", pwalletMain->GetOldestKeyPoolTime()));
-        obj.push_back(Pair("keypoolsize",   (int)pwalletMain->GetKeyPoolSize()));
+	//fixme: (GULDEN) (BIP44)
+        obj.push_back(Pair("keypoolsize",   (int)pwalletMain->activeAccount->GetKeyPoolSize()));
     }
+    obj.push_back(Pair("mininput",      ValueFromAmount(nMinimumInputValue)));
     if (pwalletMain && pwalletMain->IsCrypted())
         obj.push_back(Pair("unlocked_until", nWalletUnlockTime));
     obj.push_back(Pair("paytxfee",      ValueFromAmount(payTxFee.GetFeePerK())));
@@ -165,13 +168,12 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
             "  \"isscript\" : true|false,      (boolean) If the key is a script\n"
             "  \"pubkey\" : \"publickeyhex\",    (string) The hex value of the raw public key\n"
             "  \"iscompressed\" : true|false,  (boolean) If the address is compressed\n"
-            "  \"account\" : \"account\"         (string) DEPRECATED. The account associated with the address, \"\" is the default account\n"
-            "  \"hdkeypath\" : \"keypath\"       (string, optional) The HD keypath if the key is HD and available\n"
-            "  \"hdmasterkeyid\" : \"<hash160>\" (string, optional) The Hash160 of the HD master pubkey\n"
+            "  \"account\" : \"account\"         (string) The account associated with the address, \n"
+            "  \"accountlabel\" : \"accountlabel\" (string) Label of the account associated with the address, \n"
             "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("validateaddress", "\"1PSSGeFHDnKNxiEyFrD1wcEaHr9hrQDDWc\"")
-            + HelpExampleRpc("validateaddress", "\"1PSSGeFHDnKNxiEyFrD1wcEaHr9hrQDDWc\"")
+            + HelpExampleCli("validateaddress", "\"GPSSGeFHDnKNxiEyFrD1wcEaHr9hrQDDWc\"")
+            + HelpExampleRpc("validateaddress", "\"GPSSGeFHDnKNxiEyFrD1wcEaHr9hrQDDWc\"")
         );
 
 #ifdef ENABLE_WALLET
@@ -200,13 +202,13 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
         ret.push_back(Pair("iswatchonly", (mine & ISMINE_WATCH_ONLY) ? true: false));
         UniValue detail = boost::apply_visitor(DescribeAddressVisitor(), dest);
         ret.pushKVs(detail);
-        if (pwalletMain && pwalletMain->mapAddressBook.count(dest))
-            ret.push_back(Pair("account", pwalletMain->mapAddressBook[dest].name));
-        CKeyID keyID;
-        if (pwalletMain && address.GetKeyID(keyID) && pwalletMain->mapKeyMetadata.count(keyID) && !pwalletMain->mapKeyMetadata[keyID].hdKeypath.empty())
+        for (const auto& accountIter : pwalletMain->mapAccounts)
         {
-            ret.push_back(Pair("hdkeypath", pwalletMain->mapKeyMetadata[keyID].hdKeypath));
-            ret.push_back(Pair("hdmasterkeyid", pwalletMain->mapKeyMetadata[keyID].hdMasterKeyID.GetHex()));
+            if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
+            {
+                ret.push_back(Pair("account", accountIter.second->getUUID()));
+                ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
+            }
         }
 #endif
     }
@@ -278,7 +280,7 @@ CScript _createmultisig_redeemScript(const UniValue& params)
 }
 
 UniValue createmultisig(const UniValue& params, bool fHelp)
-{
+{   
     if (fHelp || params.size() < 2 || params.size() > 2)
     {
         string msg = "createmultisig nrequired [\"key\",...]\n"
@@ -301,12 +303,15 @@ UniValue createmultisig(const UniValue& params, bool fHelp)
 
             "\nExamples:\n"
             "\nCreate a multisig address from 2 addresses\n"
-            + HelpExampleCli("createmultisig", "2 \"[\\\"16sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"171sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"") +
+            + HelpExampleCli("createmultisig", "2 \"[\\\"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"G71sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("createmultisig", "2, \"[\\\"16sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"171sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"")
+            + HelpExampleRpc("createmultisig", "2, \"[\\\"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\\\",\\\"G71sgjn4YtPu27adkKGrdDwzRTxnRkBfKV\\\"]\"")
         ;
         throw runtime_error(msg);
     }
+    
+    //fixme: (FUT) (1.6.1)
+    throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     // Construct using pay-to-script-hash:
     CScript inner = _createmultisig_redeemScript(params);
@@ -373,11 +378,11 @@ UniValue verifymessage(const UniValue& params, bool fHelp)
             "\nUnlock the wallet for 30 seconds\n"
             + HelpExampleCli("walletpassphrase", "\"mypassphrase\" 30") +
             "\nCreate the signature\n"
-            + HelpExampleCli("signmessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"my message\"") +
+            + HelpExampleCli("signmessage", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"my message\"") +
             "\nVerify the signature\n"
-            + HelpExampleCli("verifymessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"signature\" \"my message\"") +
+            + HelpExampleCli("verifymessage", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"signature\" \"my message\"") +
             "\nAs json rpc\n"
-            + HelpExampleRpc("verifymessage", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"signature\", \"my message\"")
+            + HelpExampleRpc("verifymessage", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"signature\", \"my message\"")
         );
 
     LOCK(cs_main);

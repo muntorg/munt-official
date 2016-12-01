@@ -88,10 +88,13 @@ public:
     /**
      * Status bar alerts changed.
      */
-    boost::signals2::signal<void ()> NotifyAlertChanged;
+    boost::signals2::signal<void (const uint256 &hash, ChangeType status)> NotifyAlertChanged;
 
     /** A wallet has been loaded. */
     boost::signals2::signal<void (CWallet* wallet)> LoadWallet;
+    
+    /** The core requires a wallet unlock. */
+    boost::signals2::signal<void (CWallet* wallet, std::string reason)> RequestUnlock;
 
     /** Show progress e.g. for verifychain */
     boost::signals2::signal<void (const std::string &title, int nProgress)> ShowProgress;

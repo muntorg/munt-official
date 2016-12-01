@@ -12,7 +12,7 @@
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "platformstyle.h"
-#include "receivecoinsdialog.h"
+#include "qt/_Gulden/receivecoinsdialog.h"
 #include "sendcoinsdialog.h"
 #include "signverifymessagedialog.h"
 #include "transactiontablemodel.h"
@@ -28,6 +28,9 @@
 #include <QProgressDialog>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QToolButton>
+
+
 
 WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     QStackedWidget(parent),
@@ -38,12 +41,18 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     // Create tabs
     overviewPage = new OverviewPage(platformStyle);
 
+    setContentsMargins( 0, 0, 0, 0);
+    
     transactionsPage = new QWidget(this);
+    
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(platformStyle, this);
-    vbox->addWidget(transactionView);
+    transactionsPage->setObjectName("transactionView");
+    transactionView->setObjectName("transactionViewTable");
+    vbox->addWidget(transactionView,6);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
+    exportButton->setVisible(false);
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
     if (platformStyle->getImagesOnButtons()) {
         exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
@@ -51,7 +60,14 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
+    vbox->addStretch(1);
+    
     transactionsPage->setLayout(vbox);
+    transactionsPage->setContentsMargins( 0, 0, 0, 0);
+    vbox->setContentsMargins( 0, 0, 0, 0);
+    vbox->setSpacing(0);
+   
+    
 
     receiveCoinsPage = new ReceiveCoinsDialog(platformStyle);
     sendCoinsPage = new SendCoinsDialog(platformStyle);
@@ -97,7 +113,7 @@ void WalletView::setBitcoinGUI(BitcoinGUI *gui)
         connect(this, SIGNAL(encryptionStatusChanged(int)), gui, SLOT(setEncryptionStatus(int)));
 
         // Pass through transaction notifications
-        connect(this, SIGNAL(incomingTransaction(QString,int,CAmount,QString,QString,QString)), gui, SLOT(incomingTransaction(QString,int,CAmount,QString,QString,QString)));
+        connect(this, SIGNAL(incomingTransaction(QString,int,CAmount,CAmount,QString,QString,QString,QString)), gui, SLOT(incomingTransaction(QString,int,CAmount,CAmount,QString,QString,QString,QString)));
     }
 }
 
@@ -142,7 +158,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     }
 }
 
-void WalletView::processNewTransaction(const QModelIndex& parent, int start, int /*end*/)
+void WalletView::processNewTransaction(const QModelIndex& parent, int start, int end)
 {
     // Prevent balloon-spam when initial block download is in progress
     if (!walletModel || !clientModel || clientModel->inInitialBlockDownload())
@@ -152,14 +168,34 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
     if (!ttm || ttm->processingQueuedTransactions())
         return;
 
-    QString date = ttm->index(start, TransactionTableModel::Date, parent).data().toString();
-    qint64 amount = ttm->index(start, TransactionTableModel::Amount, parent).data(Qt::EditRole).toULongLong();
-    QString type = ttm->index(start, TransactionTableModel::Type, parent).data().toString();
-    QModelIndex index = ttm->index(start, 0, parent);
-    QString address = ttm->data(index, TransactionTableModel::AddressRole).toString();
-    QString label = ttm->data(index, TransactionTableModel::LabelRole).toString();
+    for(int idx = start; idx<=end; ++idx )
+    {
+        QString date = ttm->index(idx, TransactionTableModel::Date, parent).data().toString();
+        qint64 amountReceived = ttm->index(idx, TransactionTableModel::AmountReceived, parent).data(Qt::EditRole).toULongLong();
+        qint64 amountSent = ttm->index(idx, TransactionTableModel::AmountSent, parent).data(Qt::EditRole).toULongLong();
+        QString type = ttm->index(idx, TransactionTableModel::Type, parent).data().toString();
+        QModelIndex index = ttm->index(idx, 0, parent);
+        QString address = ttm->data(index, TransactionTableModel::AddressRole).toString();
+        QString label = ttm->data(index, TransactionTableModel::LabelRole).toString();
+        
+        
+        QString accountUUID = ttm->data(index, TransactionTableModel::AccountRole).toString();
+        if (fShowChildAccountsSeperately)
+        {
+            QString accountParentUUID = ttm->data(index, TransactionTableModel::AccountParentRole).toString();
+            if (!accountParentUUID.isEmpty())
+                accountUUID = accountParentUUID;
+        }
+        
+        QString account;
+        if(!accountUUID.isEmpty())
+        {
+            account = walletModel->getAccountLabel(accountUUID.toStdString());
+        }
+        
 
-    Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amount, type, address, label);
+        Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, account, label);
+    }
 }
 
 void WalletView::gotoOverviewPage()
@@ -175,6 +211,7 @@ void WalletView::gotoHistoryPage()
 void WalletView::gotoReceiveCoinsPage()
 {
     setCurrentWidget(receiveCoinsPage);
+    receiveCoinsPage->gotoReceievePage();
 }
 
 void WalletView::gotoSendCoinsPage(QString addr)

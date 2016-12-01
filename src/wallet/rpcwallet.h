@@ -6,7 +6,10 @@
 #define BITCOIN_WALLET_RPCWALLET_H
 
 class CRPCTable;
+class CAccount;
+class UniValue;
 
+CAccount* AccountFromValue(const UniValue& value, bool useDefaultIfEmpty);
 void RegisterWalletRPCCommands(CRPCTable &tableRPC);
 
 #endif //BITCOIN_WALLET_RPCWALLET_H

@@ -50,6 +50,8 @@
       <key>CFBundleURLSchemes</key>
       <array>
         <string>bitcoin</string>
+        <string>guldencoin</string>
+        <string>gulden</string>
       </array>
     </dict>
   </array>

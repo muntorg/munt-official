@@ -6,6 +6,7 @@ suites:
 architectures:
 - "amd64"
 packages:
+- "wget"
 - "curl"
 - "g++-aarch64-linux-gnu"
 - "g++-4.8-aarch64-linux-gnu"
@@ -27,6 +28,10 @@ packages:
 - "bsdmainutils"
 - "ca-certificates"
 - "python"
+- "gperf"
+- "ruby"
+- "bison"
+- "flex"
 remotes:
 - "url": "https://github.com/bitcoin/bitcoin.git"
   "dir": "bitcoin"
@@ -34,7 +39,7 @@ files: []
 script: |
 
   WRAP_DIR=$HOME/wrapped
-  HOSTS="i686-pc-linux-gnu x86_64-linux-gnu arm-linux-gnueabihf aarch64-linux-gnu"
+  HOSTS="x86_64-linux-gnu i686-pc-linux-gnu"
   CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-bench --disable-gui-tests"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="date ar ranlib nm"
@@ -121,8 +126,10 @@ script: |
     if [ -d "$EXTRA_INCLUDES" ]; then
       export HOST_ID_SALT="$EXTRA_INCLUDES"
     fi
+    export LD_LIBRARY_PATH="/home/ubuntu/build/Gulden/depends/${i}/lib/:../../qtbase/lib/"
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
     unset HOST_ID_SALT
+    unset LD_LIBRARY_PATH
   done
 
   # Faketime for binaries
@@ -133,7 +140,7 @@ script: |
 
   # Create the release tarball using (arbitrarily) the first host
   ./autogen.sh
-  CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
+  CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/ 
   make dist
   SOURCEDIST=`echo bitcoin-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
@@ -153,8 +160,12 @@ script: |
     INSTALLPATH=`pwd`/installed/${DISTNAME}
     mkdir -p ${INSTALLPATH}
     tar --strip-components=1 -xf ../$SOURCEDIST
+    
+    # Gross hack - prevent static qt libs from screwing up build
+    sed -i.old "s|Libs.private:.*|Libs.private:|" /home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig/Qt5*.pc
 
-    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}"
+    FINAL_LDFLAGS="-Wl,-rpath-link -Wl,/home/ubuntu/build/Gulden/depends/${i}/lib -Wl,-rpath -Wl,\\\$\$ORIGIN -Wl,-rpath -Wl,\\\$\$ORIGIN/lib -Wl,-rpath -Wl,\\\$\$ORIGIN/../lib"
+    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${FINAL_LDFLAGS} ${HOST_LDFLAGS}"
     make ${MAKEOPTS}
     make ${MAKEOPTS} -C src check-security
 

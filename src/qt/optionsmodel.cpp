@@ -27,9 +27,42 @@
 #include <QSettings>
 #include <QStringList>
 
+GuldenOptionsModel::GuldenOptionsModel( OptionsModel* parent )
+: QObject(parent)
+, m_pImpl( parent )
+{
+}
+
+GuldenOptionsModel::~GuldenOptionsModel()
+{
+}
+    
+void GuldenOptionsModel::InitSettings(QSettings& settings)
+{
+    // Local currency defaults to EUR
+    if (!settings.contains("localCurrencySymbol"))
+        settings.setValue("localCurrencySymbol", QString("EUR"));
+    localCurrency = settings.value("localCurrencySymbol").toString();
+}
+
+void GuldenOptionsModel::setLocalCurrency(const QString& value)
+{
+    QSettings settings;
+    settings.setValue("localCurrencySymbol", value);
+    localCurrency = settings.value("localCurrencySymbol").toString();
+    Q_EMIT localCurrencyChanged(localCurrency);
+}
+
+QString GuldenOptionsModel::getLocalCurrency()
+{
+    return localCurrency;
+}
+    
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
+    //fixme: (LOW) small leak here.
+    guldenSettings = new GuldenOptionsModel(this);
     Init(resetSettings);
 }
 
@@ -70,7 +103,7 @@ void OptionsModel::Init(bool resetSettings)
     // Display
     if (!settings.contains("nDisplayUnit"))
         settings.setValue("nDisplayUnit", BitcoinUnits::BTC);
-    nDisplayUnit = settings.value("nDisplayUnit").toInt();
+    nDisplayUnit = BitcoinUnits::BTC;//settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");
@@ -78,7 +111,7 @@ void OptionsModel::Init(bool resetSettings)
 
     if (!settings.contains("fCoinControlFeatures"))
         settings.setValue("fCoinControlFeatures", false);
-    fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
+    fCoinControlFeatures = false;//settings.value("fCoinControlFeatures", false).toBool();
 
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
@@ -148,6 +181,10 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();
+    
+    currencyTicker = NULL;
+    nocksSettings = NULL;
+    guldenSettings->InitSettings(settings);
 }
 
 void OptionsModel::Reset()
@@ -233,13 +270,13 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("bSpendZeroConfChange");
 #endif
         case DisplayUnit:
-            return nDisplayUnit;
+            return BitcoinUnits::BTC; // fixme: GULDEN - look at adding display units back possibly - nDisplayUnit;
         case ThirdPartyTxUrls:
-            return strThirdPartyTxUrls;
+            return "";// fixme: GULDEN - Consider adding this back strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
         case CoinControlFeatures:
-            return fCoinControlFeatures;
+            return false; // fixme: GULDEN - look at adding coin control back - fCoinControlFeatures;
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:

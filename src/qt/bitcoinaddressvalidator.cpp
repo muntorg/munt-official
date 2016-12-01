@@ -5,6 +5,7 @@
 #include "bitcoinaddressvalidator.h"
 
 #include "base58.h"
+#include <QRegularExpression>
 
 /* Base58 characters are:
      "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -59,7 +60,7 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
     }
 
     // Validation
-    QValidator::State state = QValidator::Acceptable;
+    /*QValidator::State state = QValidator::Acceptable;
     for (int idx = 0; idx < input.size(); ++idx)
     {
         int ch = input.at(idx).unicode();
@@ -75,9 +76,9 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
         {
             state = QValidator::Invalid;
         }
-    }
+    }*/
 
-    return state;
+    return QValidator::Acceptable;
 }
 
 BitcoinAddressCheckValidator::BitcoinAddressCheckValidator(QObject *parent) :
@@ -90,7 +91,9 @@ QValidator::State BitcoinAddressCheckValidator::validate(QString &input, int &po
     Q_UNUSED(pos);
     // Validate the passed Bitcoin address
     CBitcoinAddress addr(input.toStdString());
-    if (addr.IsValid())
+    //fixme: GUlden Duplicate code
+    QRegularExpression patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$");
+    if (addr.IsValid() || addr.IsValidBCOIN() || patternMatcherIBAN.match(input).hasMatch())
         return QValidator::Acceptable;
 
     return QValidator::Invalid;

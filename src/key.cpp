@@ -185,7 +185,7 @@ bool CKey::VerifyPubKey(const CPubKey& pubkey) const {
         return false;
     }
     unsigned char rnd[8];
-    std::string str = "Bitcoin key verification\n";
+    std::string str = "Gulden key verification\n";
     GetRandBytes(rnd, sizeof(rnd));
     uint256 hash;
     CHash256().Write((unsigned char*)str.data(), str.size()).Write(rnd, sizeof(rnd)).Finalize(hash.begin());
@@ -251,11 +251,10 @@ bool CExtKey::Derive(CExtKey &out, unsigned int nChild) const {
     return key.Derive(out.key, out.chaincode, nChild, chaincode);
 }
 
-void CExtKey::SetMaster(const unsigned char *seed, unsigned int nSeedLen) {
-    static const unsigned char hashkey[] = {'B','i','t','c','o','i','n',' ','s','e','e','d'};
+void CExtKey::SetMaster(const std::vector<unsigned char>& hashkey, const unsigned char *seed, unsigned int nSeedLen) {
     unsigned char out[64];
     LockObject(out);
-    CHMAC_SHA512(hashkey, sizeof(hashkey)).Write(seed, nSeedLen).Finalize(out);
+    CHMAC_SHA512(&hashkey[0], hashkey.size()).Write(seed, nSeedLen).Finalize(out);
     key.Set(&out[0], &out[32], true);
     memcpy(chaincode.begin(), &out[32], 32);
     UnlockObject(out);

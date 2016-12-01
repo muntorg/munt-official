@@ -1,5 +1,41 @@
 <!DOCTYPE RCC><RCC version="1.0">
+
+    <qresource prefix="/Gulden">
+        <file alias="qss">_Gulden/Gulden.qss</file>
+        <file alias="angle_down_blue">_Gulden/res/AngleDownBlue.png</file>
+        <file alias="angle_up_blue">_Gulden/res/AngleUpBlue.png</file>
+        <file alias="angle_down_grey">_Gulden/res/AngleDownGrey.png</file>
+        <file alias="angle_up_grey">_Gulden/res/AngleUpGrey.png</file>
+        <file alias="logo_blue">_Gulden/res/LogoBlue.png</file>
+        <file alias="loading_animation">_Gulden/res/LoadingAnimation.gif</file>
+        <file alias="lock">_Gulden/res/Lock.png</file>
+        <file alias="lock_x2">_Gulden/res/Lock@2x.png</file>
+        <file alias="main_background">_Gulden/res/MainBackground.png</file>
+        <file alias="dialog_background">_Gulden/res/DialogBackground.png</file>
+        <file alias="fontawesome">_Gulden/fonts/FontAwesome.otf</file>
+        <file alias="guldensign">_Gulden/fonts/guldensign.ttf</file>
+        <file alias="lato_black">_Gulden/fonts/Lato-Black.ttf</file>
+        <file alias="lato_blackitalic">_Gulden/fonts/Lato-BlackItalic.ttf</file>
+        <file alias="lato_bold">_Gulden/fonts/Lato-Bold.ttf</file>
+        <file alias="lato_bolditalic">_Gulden/fonts/Lato-BoldItalic.ttf</file>
+        <file alias="lato_italic">_Gulden/fonts/Lato-Italic.ttf</file>
+        <file alias="lato_medium">_Gulden/fonts/Lato-Medium.ttf</file>
+        <file alias="lato_mediumitalic">_Gulden/fonts/Lato-MediumItalic.ttf</file>
+        <file alias="lato_regular">_Gulden/fonts/Lato-Regular.ttf</file>
+    </qresource>
+
     <qresource prefix="/icons">
+
+        <file alias="splash">res/icons/splash.png</file>
+        <file alias="splash_testnet">res/icons/splash_testnet.png</file>
+        <file alias="splash_x2">res/icons/splash@2x.png</file>
+        <file alias="splash_testnet_x2">res/icons/splash_testnet@2x.png</file>
+        <file alias="connect_0_x2">res/icons/connect0@2x.png</file>
+        <file alias="connect_1_x2">res/icons/connect1@2x.png</file>
+        <file alias="connect_2_x2">res/icons/connect2@2x.png</file>
+        <file alias="connect_3_x2">res/icons/connect3@2x.png</file>
+        <file alias="connect_4_x2">res/icons/connect4@2x.png</file>
+
         <file alias="bitcoin">res/icons/bitcoin.png</file>
         <file alias="address-book">res/icons/address-book.png</file>
         <file alias="quit">res/icons/quit.png</file>

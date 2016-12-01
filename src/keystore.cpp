@@ -38,6 +38,13 @@ bool CBasicKeyStore::AddKeyPubKey(const CKey& key, const CPubKey &pubkey)
     return true;
 }
 
+bool CBasicKeyStore::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey)
+{
+    LOCK(cs_KeyStore);
+    mapHDKeys[pubkey.GetID()] = HDKeyIndex;
+    return true;
+}
+
 bool CBasicKeyStore::AddCScript(const CScript& redeemScript)
 {
     if (redeemScript.size() > MAX_SCRIPT_ELEMENT_SIZE)

@@ -35,7 +35,8 @@ static int column_alignments[] = {
         Qt::AlignLeft|Qt::AlignVCenter, /* date */
         Qt::AlignLeft|Qt::AlignVCenter, /* type */
         Qt::AlignLeft|Qt::AlignVCenter, /* address */
-        Qt::AlignRight|Qt::AlignVCenter /* amount */
+        Qt::AlignRight|Qt::AlignVCenter, /* amount received */
+        Qt::AlignRight|Qt::AlignVCenter /* amount sent */
     };
 
 // Comparison operator for sort/binary search of model tx list
@@ -243,7 +244,7 @@ TransactionTableModel::TransactionTableModel(const PlatformStyle *platformStyle,
         fProcessingQueuedTransactions(false),
         platformStyle(platformStyle)
 {
-    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Label") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Description") << tr("Received") << tr("Sent");
     priv->refreshWallet();
 
     connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
@@ -260,8 +261,8 @@ TransactionTableModel::~TransactionTableModel()
 /** Updates the column title to "Amount (DisplayUnit)" and emits headerDataChanged() signal for table headers to react. */
 void TransactionTableModel::updateAmountColumnTitle()
 {
-    columns[Amount] = BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
-    Q_EMIT headerDataChanged(Qt::Horizontal,Amount,Amount);
+    /*columns[Amount] = BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    Q_EMIT headerDataChanged(Qt::Horizontal,Amount,Amount);*/
 }
 
 void TransactionTableModel::updateTransaction(const QString &hash, int status, bool showTransaction)
@@ -352,6 +353,14 @@ QString TransactionTableModel::formatTxDate(const TransactionRecord *wtx) const
  */
 QString TransactionTableModel::lookupAddress(const std::string &address, bool tooltip) const
 {
+    if (address.empty())
+    {
+        return tr("External payee");
+    }
+    if (address.find(", ") != std::string::npos)
+    {
+        return tr("Multiple addresses");
+    }
     QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(address));
     QString description;
     if(!label.isEmpty())
@@ -378,6 +387,8 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Sent to");
     case TransactionRecord::SendToSelf:
         return tr("Payment to yourself");
+    case TransactionRecord::InternalTransfer:
+        return tr("Internal transfer");
     case TransactionRecord::Generated:
         return tr("Mined");
     default:
@@ -410,19 +421,60 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         watchAddress = wtx->involvesWatchAddress ? QString(" (") + tr("watch-only") + QString(")") : "";
     }
 
+    LOCK(wallet->cs_wallet);
+    
+    //fixme: GULDEN HIGH fShowChildAccountsSeperately
+    if (wtx->credit > wtx->debit)
+    {
+        if ( wtx->fromAccountUUID != "")
+        {
+            std::string fromUUID = wtx->fromAccountUUID;
+            if (!fShowChildAccountsSeperately && wtx->fromAccountParentUUID != "")
+            {
+                fromUUID = wtx->fromAccountParentUUID;
+            }
+            //return tr("Self payment.");
+            if (wallet->mapAccountLabels.count(fromUUID) != 0)
+            {
+                return tr("Internal transfer from: ") + QString::fromStdString(wallet->mapAccountLabels[fromUUID]);
+            }
+        }
+    }
+    else if (wtx->debit > wtx->credit)
+    {
+        if ( wtx->receiveAccountUUID != "")
+        {
+            std::string receiveUUID = wtx->receiveAccountUUID;
+            if (!fShowChildAccountsSeperately && wtx->receiveAccountParentUUID != "")
+            {
+                receiveUUID = wtx->receiveAccountParentUUID;
+            }
+            //return tr("Self payment.");
+            if (wallet->mapAccountLabels.count(receiveUUID) != 0)
+            {
+                return tr("Internal transfer to: ") + QString::fromStdString(wallet->mapAccountLabels[receiveUUID]);
+            }
+        }
+    }
+    
     switch(wtx->type)
     {
     case TransactionRecord::RecvFromOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::SendToAddress:
+        return tr("Payment from: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::Generated:
-        return lookupAddress(wtx->address, tooltip) + watchAddress;
+        return tr("Mined") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
+    case TransactionRecord::SendToAddress:
+        return tr("Paid to: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
-        return QString::fromStdString(wtx->address) + watchAddress;
+        return tr("Paid to: "); QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::SendToSelf:
+        return tr("Internal account movement");
+    case TransactionRecord::InternalTransfer:
+        return "";//Already  handled above this switch
     default:
-        return tr("(n/a)") + watchAddress;
+        return tr("Complex transaction, view transaction details.") + watchAddress;
     }
 }
 
@@ -440,6 +492,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
             return COLOR_BAREADDRESS;
         } break;
     case TransactionRecord::SendToSelf:
+    case TransactionRecord::InternalTransfer:
         return COLOR_BAREADDRESS;
     default:
         break;
@@ -447,9 +500,23 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     return QVariant();
 }
 
-QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
+QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
 {
-    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit, false, separators);
+    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit , false, separators, 2);
+    //fixme: GULDEN (FUT) (1.6.0) We could maybe strip the trailing .00 here to clean display up a bit?
+    if(showUnconfirmed)
+    {
+        if(!wtx->status.countsForBalance)
+        {
+            str = QString("[") + str + QString("]");
+        }
+    }
+    return QString(str);
+}
+
+QString TransactionTableModel::formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
+{
+    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->debit, false, separators, 2);
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)
@@ -477,9 +544,10 @@ QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx)
         switch(wtx->status.depth)
         {
         case 1: return QIcon(":/icons/transaction_1");
-        case 2: return QIcon(":/icons/transaction_2");
-        case 3: return QIcon(":/icons/transaction_3");
-        case 4: return QIcon(":/icons/transaction_4");
+        case 2: 
+        case 3: return QIcon(":/icons/transaction_2");
+        case 4: return QIcon(":/icons/transaction_3");
+        case 5: return QIcon(":/icons/transaction_4");
         default: return QIcon(":/icons/transaction_5");
         };
     case TransactionStatus::Confirmed:
@@ -526,6 +594,21 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
 
     switch(role)
     {
+    case SortRole:
+        switch(index.column())
+        {
+        case Date:
+            return rec->time;
+        case Type:
+            return formatTxType(rec);
+        case ToAddress:
+            return formatTxToAddress(rec, false);
+        case AmountReceived:
+            return formatTxAmountReceived(rec, true, BitcoinUnits::separatorAlways);
+        case AmountSent:
+            return formatTxAmountSent(rec, true, BitcoinUnits::separatorAlways);
+        }
+        break;
     case RawDecorationRole:
         switch(index.column())
         {
@@ -540,7 +623,7 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole:
     {
         QIcon icon = qvariant_cast<QIcon>(index.data(RawDecorationRole));
-        return platformStyle->TextColorIcon(icon);
+        return icon;
     }
     case Qt::DisplayRole:
         switch(index.column())
@@ -551,8 +634,10 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxType(rec);
         case ToAddress:
             return formatTxToAddress(rec, false);
-        case Amount:
-            return formatTxAmount(rec, true, BitcoinUnits::separatorAlways);
+        case AmountReceived:
+            return formatTxAmountReceived(rec, true, BitcoinUnits::separatorAlways);
+        case AmountSent:
+            return formatTxAmountSent(rec, true, BitcoinUnits::separatorAlways);
         }
         break;
     case Qt::EditRole:
@@ -569,8 +654,10 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return (rec->involvesWatchAddress ? 1 : 0);
         case ToAddress:
             return formatTxToAddress(rec, true);
-        case Amount:
-            return qint64(rec->credit + rec->debit);
+        case AmountReceived:
+            return qint64(rec->credit);
+        case AmountSent:
+            return qint64(rec->debit);
         }
         break;
     case Qt::ToolTipRole:
@@ -588,10 +675,10 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         {
             return COLOR_UNCONFIRMED;
         }
-        if(index.column() == Amount && (rec->credit+rec->debit) < 0)
+        /*if(index.column() == Amount && (rec->credit+rec->debit) < 0)
         {
             return COLOR_NEGATIVE;
-        }
+        }*/
         if(index.column() == ToAddress)
         {
             return addressColor(rec);
@@ -609,6 +696,10 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return priv->describe(rec, walletModel->getOptionsModel()->getDisplayUnit());
     case AddressRole:
         return QString::fromStdString(rec->address);
+    case AccountRole:
+        return QString::fromStdString(rec->actionAccountUUID);
+    case AccountParentRole:
+        return QString::fromStdString(rec->actionAccountParentUUID);
     case LabelRole:
         return walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
     case AmountRole:
@@ -644,14 +735,16 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
                 details.append(QString::fromStdString(rec->address));
                 details.append(" ");
             }
-            details.append(formatTxAmount(rec, false, BitcoinUnits::separatorNever));
+            //fixme: GULDEN (FUT)
+            details.append(formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever));
             return details;
         }
     case ConfirmedRole:
         return rec->status.countsForBalance;
     case FormattedAmountRole:
         // Used for copy/export, so don't include separators
-        return formatTxAmount(rec, false, BitcoinUnits::separatorNever);
+        //fixme: GULDEN (FUT)
+        return formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever);
     case StatusRole:
         return rec->status.status;
     }
@@ -683,8 +776,10 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
                 return tr("Whether or not a watch-only address is involved in this transaction.");
             case ToAddress:
                 return tr("User-defined intent/purpose of the transaction.");
-            case Amount:
-                return tr("Amount removed from or added to balance.");
+            case AmountReceived:
+                return tr("Amount added to balance.");
+            case AmountSent:
+                return tr("Amount removed from balance.");
             }
         }
     }
@@ -706,7 +801,8 @@ void TransactionTableModel::updateDisplayUnit()
 {
     // emit dataChanged to update Amount column with the current unit
     updateAmountColumnTitle();
-    Q_EMIT dataChanged(index(0, Amount), index(priv->size()-1, Amount));
+    Q_EMIT dataChanged(index(0, AmountReceived), index(priv->size()-1, AmountReceived));
+    Q_EMIT dataChanged(index(0, AmountSent), index(priv->size()-1, AmountSent));
 }
 
 // queue notifications to show a non freezing progress dialog e.g. for rescan

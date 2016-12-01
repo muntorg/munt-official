@@ -9,13 +9,16 @@
 #include "walletmodeltransaction.h"
 
 #include "support/allocators/secure.h"
+#include "account.h"
 
 #include <map>
 #include <vector>
 
 #include <QObject>
+#include <QRegularExpression>
 
 class AddressTableModel;
+class AccountTableModel;
 class OptionsModel;
 class PlatformStyle;
 class RecentRequestsTableModel;
@@ -29,6 +32,7 @@ class COutput;
 class CPubKey;
 class CWallet;
 class uint256;
+class CAccount;
 
 QT_BEGIN_NAMESPACE
 class QTimer;
@@ -39,7 +43,7 @@ class SendCoinsRecipient
 public:
     explicit SendCoinsRecipient() : amount(0), fSubtractFeeFromAmount(false), nVersion(SendCoinsRecipient::CURRENT_VERSION) { }
     explicit SendCoinsRecipient(const QString &addr, const QString &label, const CAmount& amount, const QString &message):
-        address(addr), label(label), amount(amount), message(message), fSubtractFeeFromAmount(false), nVersion(SendCoinsRecipient::CURRENT_VERSION) {}
+        address(addr), label(label), amount(amount), message(message), fSubtractFeeFromAmount(false), paymentType(PaymentType::NormalPayment), nVersion(SendCoinsRecipient::CURRENT_VERSION) {}
 
     // If from an unauthenticated payment request, this is used for storing
     // the addresses, e.g. address-A<br />address-B<br />address-C.
@@ -57,7 +61,22 @@ public:
     // Empty if no authentication or invalid signature/cert/etc.
     QString authenticatedMerchant;
 
+    enum PaymentType
+    {
+        NormalPayment,
+        IBANPayment,
+        BCOINPayment,
+        InvalidPayment
+    };
     bool fSubtractFeeFromAmount; // memory only
+    bool addToAddressBook; //memory only
+    PaymentType paymentType; //memory only
+    PaymentType forexPaymentType; //memory only
+    QString forexAddress; //memory only
+    CAmount forexAmount; //memory only
+    std::string forexFailCode; //memory only
+    int64_t expiry; //memory only
+    
 
     static const int CURRENT_VERSION = 1;
     int nVersion;
@@ -115,7 +134,8 @@ public:
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
         AbsurdFee,
-        PaymentRequestExpired
+        PaymentRequestExpired,
+        ForexFailed
     };
 
     enum EncryptionStatus
@@ -127,11 +147,12 @@ public:
 
     OptionsModel *getOptionsModel();
     AddressTableModel *getAddressTableModel();
+    AccountTableModel *getAccountTableModel();
     TransactionTableModel *getTransactionTableModel();
     RecentRequestsTableModel *getRecentRequestsTableModel();
 
-    CAmount getBalance(const CCoinControl *coinControl = NULL) const;
-    CAmount getUnconfirmedBalance() const;
+    CAmount getBalance(CAccount* forAccount=NULL, const CCoinControl *coinControl = NULL) const;
+    CAmount getUnconfirmedBalance(CAccount* forAccount=NULL) const;
     CAmount getImmatureBalance() const;
     bool haveWatchOnly() const;
     CAmount getWatchBalance() const;
@@ -141,6 +162,8 @@ public:
 
     // Check address for validity
     bool validateAddress(const QString &address);
+    bool validateAddressBCOIN(const QString &address);
+    bool validateAddressIBAN(const QString &address);
 
     // Return status record for SendCoins, contains error id + information
     struct SendCoinsReturn
@@ -151,7 +174,7 @@ public:
     };
 
     // prepare transaction for getting txfee before sending coins
-    SendCoinsReturn prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl = NULL);
+    SendCoinsReturn prepareTransaction(CAccount* forAccount, WalletModelTransaction &transaction, const CCoinControl *coinControl = NULL);
 
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction &transaction);
@@ -202,7 +225,12 @@ public:
 
     bool transactionCanBeAbandoned(uint256 hash) const;
     bool abandonTransaction(uint256 hash) const;
-
+    
+    //fixme: GULDEN (FUT) - Move this into a gulden specific subclass to keep diffs to a minimum
+    void setActiveAccount( CAccount* account );
+    CAccount* getActiveAccount();
+    QString getAccountLabel(std::string uuid);
+    
 private:
     CWallet *wallet;
     bool fHaveWatchOnly;
@@ -213,6 +241,7 @@ private:
     OptionsModel *optionsModel;
 
     AddressTableModel *addressTableModel;
+    AccountTableModel *accountTableModel;
     TransactionTableModel *transactionTableModel;
     RecentRequestsTableModel *recentRequestsTableModel;
 
@@ -231,6 +260,9 @@ private:
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
     void checkBalanceChanged();
+    
+    QRegularExpression patternMatcherIBAN;
+    
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
@@ -256,6 +288,11 @@ Q_SIGNALS:
 
     // Watch-only address added
     void notifyWatchonlyChanged(bool fHaveWatchonly);
+    
+    void activeAccountChanged(CAccount* account);
+    void accountListChanged();
+    void accountAdded(CAccount* account);
+    void accountDeleted(CAccount* account);
 
 public Q_SLOTS:
     /* Wallet status might have changed */

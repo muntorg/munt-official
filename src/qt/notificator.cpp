@@ -201,15 +201,16 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
     QIcon tmpicon;
     if(icon.isNull())
     {
-        QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
+        //fixme: GULDEN - different icons for different types
+        /*QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
         switch(cls)
         {
         case Information: sicon = QStyle::SP_MessageBoxInformation; break;
         case Warning: sicon = QStyle::SP_MessageBoxWarning; break;
         case Critical: sicon = QStyle::SP_MessageBoxCritical; break;
         default: break;
-        }
-        tmpicon = QApplication::style()->standardIcon(sicon);
+        }*/
+        tmpicon = QIcon(":/Gulden/logo_blue");
     }
     else
     {
@@ -258,14 +259,17 @@ void Notificator::notifyGrowl(Class cls, const QString &title, const QString &te
 
     QPixmap notificationIconPixmap;
     if (icon.isNull()) { // If no icon specified, set icon based on class
-        QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
+        //fixme: GULDEN - different icons for different types
+        /*QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
         switch (cls)
         {
         case Information: sicon = QStyle::SP_MessageBoxInformation; break;
         case Warning: sicon = QStyle::SP_MessageBoxWarning; break;
         case Critical: sicon = QStyle::SP_MessageBoxCritical; break;
         }
-        notificationIconPixmap = QApplication::style()->standardPixmap(sicon);
+        notificationIconPixmap = QApplication::style()->standardPixmap(sicon);*/
+        QIcon notificationIcon = QIcon(":/Gulden/logo_blue");
+        notificationIconPixmap = notificationIcon.pixmap(icon.actualSize(QSize(48, 48)));
     }
     else {
         QSize size = icon.actualSize(QSize(48, 48));

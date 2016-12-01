@@ -72,6 +72,7 @@
 #include <sys/prctl.h>
 #endif
 
+#include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
@@ -99,8 +100,8 @@ namespace boost {
 
 using namespace std;
 
-const char * const BITCOIN_CONF_FILENAME = "bitcoin.conf";
-const char * const BITCOIN_PID_FILENAME = "bitcoind.pid";
+const char * const BITCOIN_CONF_FILENAME = "Gulden.conf";
+const char * const BITCOIN_PID_FILENAME = "GuldenD.pid";
 
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
@@ -109,6 +110,7 @@ bool fPrintToConsole = false;
 bool fPrintToDebugLog = true;
 bool fDaemon = false;
 bool fServer = false;
+bool fNoUI = false;
 string strMiscWarning;
 bool fLogTimestamps = DEFAULT_LOGTIMESTAMPS;
 bool fLogTimeMicros = DEFAULT_LOGTIMEMICROS;
@@ -344,6 +346,38 @@ static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
 
 void ParseParameters(int argc, const char* const argv[])
 {
+      //Temporary - migrate old 'guldencoin' wallets to new 'gulden' wallets.
+    boost::filesystem::path newPath = GetDefaultDataDir();
+    if (!boost::filesystem::exists(newPath.string()))
+    {
+        try
+        {
+            std::string newPathString = newPath.string();
+            boost::replace_all(newPathString, "Gulden", "Guldencoin");
+            boost::filesystem::path oldPath(newPathString);
+            if (boost::filesystem::exists( oldPath.string() ))
+            {
+                boost::filesystem::rename(oldPath.string(), newPath.string());
+                boost::filesystem::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+                boost::filesystem::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+            }
+        }
+        catch(boost::filesystem::filesystem_error){}
+        try
+        {
+            std::string newPathString = newPath.string();
+            boost::replace_all(newPathString, "Gulden", "guldencoin");
+            boost::filesystem::path oldPath(newPathString);
+            if (boost::filesystem::exists( oldPath.string() ))
+            {
+                boost::filesystem::rename(oldPath.string(), newPath.string());
+                boost::filesystem::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+                boost::filesystem::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
+            }
+        }
+        catch(boost::filesystem::filesystem_error){}
+    }
+
     mapArgs.clear();
     mapMultiArgs.clear();
 
@@ -435,7 +469,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "bitcoin";
+    const char* pszModule = "Gulden";
 #endif
     if (pex)
         return strprintf(
@@ -461,7 +495,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Unix: ~/.bitcoin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Bitcoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Gulden";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -471,10 +505,10 @@ boost::filesystem::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/Bitcoin";
+    return pathRet / "Library/Application Support/Gulden";
 #else
     // Unix
-    return pathRet / ".bitcoin";
+    return pathRet / ".Gulden";
 #endif
 #endif
 }

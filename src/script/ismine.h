@@ -12,6 +12,7 @@
 
 class CKeyStore;
 class CScript;
+class CWallet;
 
 /** IsMine() return codes */
 enum isminetype
@@ -29,6 +30,20 @@ enum isminetype
 typedef uint8_t isminefilter;
 
 isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CScript& scriptPubKey, uint64_t time);
+
 isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CTxDestination& dest, uint64_t time);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CTxDestination& dest, uint64_t time);
+
+isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CTxOut& txout, uint64_t time);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CTxOut& txout, uint64_t time);
+
+
+
+
+
 
 #endif // BITCOIN_SCRIPT_ISMINE_H

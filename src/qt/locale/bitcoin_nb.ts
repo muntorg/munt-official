@@ -311,10 +311,6 @@
         <translation>Oppdatert</translation>
     </message>
     <message>
-        <source>%1 client</source>
-        <translation>%1 klient</translation>
-    </message>
-    <message>
         <source>Catching up...</source>
         <translation>Laster ned...</translation>
     </message>
@@ -501,10 +497,6 @@
         <translation> (%1-bit)</translation>
     </message>
     <message>
-        <source>About %1</source>
-        <translation>Om %1</translation>
-    </message>
-    <message>
         <source>Command-line options</source>
         <translation>Kommandolinjevalg</translation>
     </message>
@@ -546,10 +538,6 @@
     <message>
         <source>Welcome</source>
         <translation>Velkommen</translation>
-    </message>
-    <message>
-        <source>Welcome to %1.</source>
-        <translation>Velkommen til %1.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -941,6 +929,10 @@
 </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Client name</source>
+        <translation>Klientnavn</translation>
+    </message>
     <message>
         <source>N/A</source>
         <translation>-</translation>
@@ -1755,6 +1747,14 @@
         <translation>Bruk UPnP for lytteport (standardverdi: 1 ved lytting og uten -proxy)</translation>
     </message>
     <message>
+        <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
+        <translation>ADVARSEL: unormalt høyt antall blokker generert, %d blokker mottatt de siste %d timene (%d forventet)</translation>
+    </message>
+    <message>
+        <source>WARNING: check your network connection, %d blocks received in the last %d hours (%d expected)</source>
+        <translation>ADVARSEL: kontroller nettverkstilkoblingen, mottok %d blokker i de siste %d timene (%d forventet)</translation>
+    </message>
+    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Advarsel: Nettverket ser ikke ut til å være enig! Noen minere ser ut til å ha problemer.</translation>
     </message>
@@ -2269,6 +2269,10 @@
     <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Angi størrelse på nøkkel-lager til &lt;n&gt; (standardverdi: %u)</translation>
+    </message>
+    <message>
+        <source>Set minimum block size in bytes (default: %u)</source>
+        <translation>Sett minimum blokkstørrelse i bytes (standardverdi: %u)</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>

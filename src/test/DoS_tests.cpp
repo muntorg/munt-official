@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
     }
 
     // ... and 50 that depend on other orphans:
-    for (int i = 0; i < 50; i++)
+/*    for (int i = 0; i < 50; i++)
     {
         CTransaction txPrev = RandomOrphan();
 
@@ -151,10 +151,10 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         SignSignature(keystore, txPrev, tx, 0, SIGHASH_ALL);
 
         AddOrphanTx(tx, i);
-    }
+    }*/
 
     // This really-big orphan should be ignored:
-    for (int i = 0; i < 10; i++)
+/*    for (int i = 0; i < 10; i++)
     {
         CTransaction txPrev = RandomOrphan();
 
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
             tx.vin[j].scriptSig = tx.vin[0].scriptSig;
 
         BOOST_CHECK(!AddOrphanTx(tx, i));
-    }
+    }*/
 
     // Test EraseOrphansFor:
     for (NodeId i = 0; i < 3; i++)

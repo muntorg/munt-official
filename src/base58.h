@@ -108,6 +108,7 @@ public:
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
+    bool IsValidBCOIN() const;
 
     CBitcoinAddress() {}
     CBitcoinAddress(const CTxDestination &dest) { Set(dest); }
@@ -133,6 +134,28 @@ public:
 
     CBitcoinSecret(const CKey& vchSecret) { SetKey(vchSecret); }
     CBitcoinSecret() {}
+};
+
+/**
+ * A combination base58 and hex encoded secret extended key
+ * Key portion is base58 chaincode is hex
+ */
+class CBitcoinSecretExt 
+{
+public:
+    void SetKey(const CExtKey& vchSecret);
+    //CExtKey GetKey();
+    bool SetString(const char* pszSecret);
+    bool SetString(const std::string& strSecret);
+    std::string ToString(std::string creationtime, std::string payAccount) const;
+
+    CBitcoinSecretExt(const CExtKey& vchSecret) { SetKey(vchSecret); }
+    CBitcoinSecretExt(const std::string& strSecret) { SetString(strSecret); }
+    CBitcoinSecretExt() {}
+    
+private:
+    CExtKey key;
+    std::string secret;
 };
 
 template<typename K, int Size, CChainParams::Base58Type Type> class CBitcoinExtKeyBase : public CBase58Data

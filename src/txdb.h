@@ -98,6 +98,7 @@ private:
     friend class CCoinsViewDB;
 };
 
+
 /** Access to the block database (blocks/index/) */
 class CBlockTreeDB : public CDBWrapper
 {

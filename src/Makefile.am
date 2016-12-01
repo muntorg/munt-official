@@ -69,8 +69,43 @@ if BUILD_BITCOIN_UTILS
 endif
 
 .PHONY: FORCE check-symbols check-security
+
+GDN_INCLUDES = Gulden/rpcgulden.h \
+  Gulden/Common/diff.h \
+  Gulden/Common/diff_delta.h \
+  Gulden/Common/diff_old.h \
+  Gulden/Common/diff_common.h \
+  Gulden/Common/hash/hash.h \
+  Gulden/Common/hash/city.h \
+  Gulden/Common/hash/cityconfig.h \
+  Gulden/Common/scrypt.h \
+  Gulden/translate.h \
+  Gulden/mnemonic.h \
+  Gulden/auto_checkpoints.h \
+  alert.h \
+  Gulden/guldenapplication.h \
+  account.h
+
+GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
+
+GDN_COMMON_SRCS = \
+  Gulden/auto_checkpoints.cpp \
+  alert.cpp
+
+GDN_CONSENSUS_SRCS = \
+  Gulden/Common/scrypt.cpp \
+  Gulden/Common/diff_delta.cpp \
+  Gulden/Common/diff_old.cpp \
+  Gulden/Common/diff_common.cpp \
+  Gulden/Common/hash/city.cpp
+
+GDN_WALLET_SRCS = account.cpp \
+   Gulden/mnemonic.cpp \
+   Gulden/guldenapplication.cpp
+
 # bitcoin core #
 BITCOIN_CORE_H = \
+  $(GDN_INCLUDES) \
   addrman.h \
   base58.h \
   bloom.h \
@@ -146,6 +181,7 @@ BITCOIN_CORE_H = \
   wallet/rpcwallet.h \
   wallet/wallet.h \
   wallet/walletdb.h \
+  wallet/walletdberrors.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
@@ -162,6 +198,7 @@ libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
+  $(GDN_SERVER_SRCS) \
   addrman.cpp \
   bloom.cpp \
   blockencodings.cpp \
@@ -212,6 +249,7 @@ endif
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
+  $(GDN_WALLET_SRCS) \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -245,6 +283,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
 libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_consensus_a_SOURCES = \
+  $(GDN_CONSENSUS_SRCS) \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -262,6 +301,7 @@ libbitcoin_consensus_a_SOURCES = \
   pubkey.cpp \
   pubkey.h \
   script/bitcoinconsensus.cpp \
+  script/bitcoinconsensus.h \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -280,6 +320,7 @@ libbitcoin_consensus_a_SOURCES = \
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
+  $(GDN_COMMON_SRCS) \
   amount.cpp \
   base58.cpp \
   chainparams.cpp \
@@ -344,10 +385,10 @@ endif
 
 bitcoind_LDADD = \
   $(LIBBITCOIN_SERVER) \
+  $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
@@ -355,7 +396,20 @@ bitcoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+bitcoind_LDADD +=  $(LIBBITCOIN_SERVER) \
+  $(LIBBITCOIN_WALLET) \
+  $(LIBBITCOIN_COMMON) \
+  $(LIBUNIVALUE) \
+  $(LIBBITCOIN_UTIL) \
+  $(LIBBITCOIN_ZMQ) \
+  $(LIBBITCOIN_CONSENSUS) \
+  $(LIBBITCOIN_CRYPTO) \
+  $(LIBLEVELDB) \
+  $(LIBMEMENV) \
+  $(LIBSECP256K1)
+
+
+bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 
 # bitcoin-cli binary #
 bitcoin_cli_SOURCES = bitcoin-cli.cpp
@@ -406,8 +460,8 @@ if GLIBC_BACK_COMPAT
   libbitcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
+libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS)
+libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS)
 libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
 libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
@@ -475,13 +529,13 @@ if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
 endif
 
-if ENABLE_TESTS
-include Makefile.test.include
-endif
+#if ENABLE_TESTS
+#include Makefile.test.include
+#endif
 
-if ENABLE_BENCH
-include Makefile.bench.include
-endif
+#if ENABLE_BENCH
+#include Makefile.bench.include
+#endif
 
 if ENABLE_QT
 include Makefile.qt.include

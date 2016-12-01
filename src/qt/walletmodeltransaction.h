@@ -6,6 +6,7 @@
 #define BITCOIN_QT_WALLETMODELTRANSACTION_H
 
 #include "walletmodel.h"
+#include "wallet/wallet.h"
 
 #include <QObject>
 
@@ -32,7 +33,7 @@ public:
 
     CAmount getTotalTransactionAmount();
 
-    void newPossibleKeyChange(CWallet *wallet);
+    void newPossibleKeyChange(CAccount* forAccount, CWallet *wallet);
     CReserveKey *getPossibleKeyChange();
 
     void reassignAmounts(int nChangePosRet); // needed for the subtract-fee-from-amount feature

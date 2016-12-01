@@ -74,8 +74,13 @@ Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
     File @abs_top_srcdir@/release/@BITCOIN_GUI_NAME@@EXEEXT@
+    File @abs_top_srcdir@/release/*.dll
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=readme.txt @abs_top_srcdir@/doc/README_windows.txt
+    SetOutPath $INSTDIR\platforms
+    File @abs_top_srcdir@/release/platforms/*
+    SetOutPath $INSTDIR\imageformats
+    File @abs_top_srcdir@/release/imageformats/*
     SetOutPath $INSTDIR\daemon
     File @abs_top_srcdir@/release/@BITCOIN_DAEMON_NAME@@EXEEXT@
     File @abs_top_srcdir@/release/@BITCOIN_CLI_NAME@@EXEEXT@
@@ -107,6 +112,10 @@ Section -post SEC0001
     WriteRegStr HKCR "@PACKAGE_TARNAME@" "" "URL:Bitcoin"
     WriteRegStr HKCR "@PACKAGE_TARNAME@\DefaultIcon" "" $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
     WriteRegStr HKCR "@PACKAGE_TARNAME@\shell\open\command" "" '"$INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@" "%1"'
+    WriteRegStr HKCR "gulden" "URL Protocol" ""
+    WriteRegStr HKCR "gulden" "" "URL:Gulden"
+    WriteRegStr HKCR "gulden\DefaultIcon" "" $INSTDIR\Gulden.exe
+    WriteRegStr HKCR "gulden\shell\open\command" "" '"$INSTDIR\Gulden.exe" "%1"'
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -127,6 +136,9 @@ Section /o -un.Main UNSEC0000
     Delete /REBOOTOK $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
     Delete /REBOOTOK $INSTDIR\COPYING.txt
     Delete /REBOOTOK $INSTDIR\readme.txt
+    Delete /REBOOTOK $INSTDIR\*.dll
+    RMDIR /r /REBOOTOK $INSTDIR\platforms
+    RMDIR /r /REBOOTOK $INSTDIR\imageformats
     RMDir /r /REBOOTOK $INSTDIR\daemon
     RMDir /r /REBOOTOK $INSTDIR\doc
     DeleteRegValue HKCU "${REGKEY}\Components" Main

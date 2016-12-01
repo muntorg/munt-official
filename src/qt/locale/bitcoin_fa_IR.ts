@@ -300,6 +300,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Client name</source>
+        <translation>نام کنسول RPC</translation>
+    </message>
+    <message>
         <source>Client version</source>
         <translation>ویرایش کنسول RPC</translation>
     </message>
@@ -511,6 +515,10 @@
     <message>
         <source>Loading addresses...</source>
         <translation>لود شدن آدرسها..</translation>
+    </message>
+    <message>
+        <source>Set minimum block size in bytes (default: %u)</source>
+        <translation>تنظیم کمینه اندازه بلاک بر حسب بایت (پیش فرض: %u)</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>

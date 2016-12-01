@@ -21,8 +21,14 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include <boost/interprocess/sync/file_lock.hpp>
 
+
+#include <Gulden/translate.h>
 #include <stdio.h>
+
+#define _(x) gulden_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
+
 
 /* Introduction text for doxygen: */
 
@@ -41,6 +47,7 @@
  */
 
 static bool fDaemon;
+bool fBitcoinD;
 
 void WaitForShutdown(boost::thread_group* threadGroup)
 {
@@ -121,7 +128,7 @@ bool AppInit(int argc, char* argv[])
         // Command-line RPC
         bool fCommandLine = false;
         for (int i = 1; i < argc; i++)
-            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "bitcoin:"))
+            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "Gulden:"))
                 fCommandLine = true;
 
         if (fCommandLine)
@@ -133,7 +140,7 @@ bool AppInit(int argc, char* argv[])
         fDaemon = GetBoolArg("-daemon", false);
         if (fDaemon)
         {
-            fprintf(stdout, "Bitcoin server starting\n");
+            fprintf(stdout, "Gulden server starting\n");
 
             // Daemonize
             pid_t pid = fork();
@@ -154,10 +161,31 @@ bool AppInit(int argc, char* argv[])
         }
 #endif
         SoftSetBoolArg("-server", true);
+        
+        fNoUI = true;
 
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
+        
+        //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
+        // Make sure only a single Bitcoin process is using the data directory.
+        boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
+        FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
+        if (file) fclose(file);
+
+        try {
+            static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
+            if (!lock.try_lock())
+            {
+                fprintf(stderr, _("Cannot obtain a lock on data directory %s. %s is probably already running.").c_str(), GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+                return 1;
+            }
+        } catch(const boost::interprocess::interprocess_exception& e) {
+            fprintf(stderr, _("Cannot obtain a lock on data directory %s. %s is probably already running.").c_str(), GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+            return 1;
+        }
+        
         fRet = AppInit2(threadGroup, scheduler);
     }
     catch (const std::exception& e) {

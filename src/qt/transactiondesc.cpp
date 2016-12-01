@@ -94,14 +94,14 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
             if (CBitcoinAddress(rec->address).IsValid())
             {
                 CTxDestination address = CBitcoinAddress(rec->address).Get();
-                if (wallet->mapAddressBook.count(address))
+                if (wallet->mapAddressBook.count(rec->address))
                 {
                     strHTML += "<b>" + tr("From") + ":</b> " + tr("unknown") + "<br>";
                     strHTML += "<b>" + tr("To") + ":</b> ";
                     strHTML += GUIUtil::HtmlEscape(rec->address);
                     QString addressOwned = (::IsMine(*wallet, address) == ISMINE_SPENDABLE) ? tr("own address") : tr("watch-only");
-                    if (!wallet->mapAddressBook[address].name.empty())
-                        strHTML += " (" + addressOwned + ", " + tr("label") + ": " + GUIUtil::HtmlEscape(wallet->mapAddressBook[address].name) + ")";
+                    if (!wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name.empty())
+                        strHTML += " (" + addressOwned + ", " + tr("label") + ": " + GUIUtil::HtmlEscape(wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name) + ")";
                     else
                         strHTML += " (" + addressOwned + ")";
                     strHTML += "<br>";
@@ -118,9 +118,8 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
         // Online transaction
         std::string strAddress = wtx.mapValue["to"];
         strHTML += "<b>" + tr("To") + ":</b> ";
-        CTxDestination dest = CBitcoinAddress(strAddress).Get();
-        if (wallet->mapAddressBook.count(dest) && !wallet->mapAddressBook[dest].name.empty())
-            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[dest].name) + " ";
+        if (wallet->mapAddressBook.count(strAddress) && !wallet->mapAddressBook[strAddress].name.empty())
+            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[strAddress].name) + " ";
         strHTML += GUIUtil::HtmlEscape(strAddress) + "<br>";
     }
 
@@ -187,8 +186,8 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                     if (ExtractDestination(txout.scriptPubKey, address))
                     {
                         strHTML += "<b>" + tr("To") + ":</b> ";
-                        if (wallet->mapAddressBook.count(address) && !wallet->mapAddressBook[address].name.empty())
-                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[address].name) + " ";
+                        if (wallet->mapAddressBook.count(CBitcoinAddress(address).ToString()) && !wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name.empty())
+                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name) + " ";
                         strHTML += GUIUtil::HtmlEscape(CBitcoinAddress(address).ToString());
                         if(toSelf == ISMINE_SPENDABLE)
                             strHTML += " (own address)";
@@ -208,8 +207,15 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                 // Payment to self
                 CAmount nChange = wtx.GetChange();
                 CAmount nValue = nCredit - nChange;
-                strHTML += "<b>" + tr("Total debit") + ":</b> " + BitcoinUnits::formatHtmlWithUnit(unit, -nValue) + "<br>";
-                strHTML += "<b>" + tr("Total credit") + ":</b> " + BitcoinUnits::formatHtmlWithUnit(unit, nValue) + "<br>";
+                if (nValue != 0)
+                {
+                    strHTML += "<b>" + tr("Total debit") + ":</b> " + BitcoinUnits::formatHtmlWithUnit(unit, -nValue) + "<br>";
+                    strHTML += "<b>" + tr("Total credit") + ":</b> " + BitcoinUnits::formatHtmlWithUnit(unit, nValue) + "<br>";
+                }
+                else
+                {
+                    strHTML += "<b>" + tr("Total moved") + ":</b> " + BitcoinUnits::formatHtmlWithUnit(unit, nCredit) + "<br>";
+                }
             }
 
             CAmount nTxFee = nDebit - wtx.GetValueOut();
@@ -302,8 +308,8 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                     CTxDestination address;
                     if (ExtractDestination(vout.scriptPubKey, address))
                     {
-                        if (wallet->mapAddressBook.count(address) && !wallet->mapAddressBook[address].name.empty())
-                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[address].name) + " ";
+                        if (wallet->mapAddressBook.count(CBitcoinAddress(address).ToString()) && !wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name.empty())
+                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name) + " ";
                         strHTML += QString::fromStdString(CBitcoinAddress(address).ToString());
                     }
                     strHTML = strHTML + " " + tr("Amount") + "=" + BitcoinUnits::formatHtmlWithUnit(unit, vout.nValue);

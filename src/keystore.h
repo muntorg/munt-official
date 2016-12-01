@@ -12,8 +12,13 @@
 #include "script/standard.h"
 #include "sync.h"
 
+#include "util.h"
+
 #include <boost/signals2/signal.hpp>
 #include <boost/variant.hpp>
+
+//temp
+#include "base58.h"
 
 /** A virtual base class for key stores */
 class CKeyStore
@@ -26,11 +31,13 @@ public:
 
     //! Add a key to the store.
     virtual bool AddKeyPubKey(const CKey &key, const CPubKey &pubkey) =0;
+    virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey) =0;
     virtual bool AddKey(const CKey &key);
 
     //! Check whether a key corresponding to a given address is present in the store.
     virtual bool HaveKey(const CKeyID &address) const =0;
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const =0;
+    virtual bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const =0;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const =0;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const =0;
 
@@ -47,6 +54,7 @@ public:
 };
 
 typedef std::map<CKeyID, CKey> KeyMap;
+typedef std::map<CKeyID, int64_t> KeyMapHD;
 typedef std::map<CKeyID, CPubKey> WatchKeyMap;
 typedef std::map<CScriptID, CScript > ScriptMap;
 typedef std::set<CScript> WatchOnlySet;
@@ -56,20 +64,28 @@ class CBasicKeyStore : public CKeyStore
 {
 protected:
     KeyMap mapKeys;
+    KeyMapHD mapHDKeys;
     WatchKeyMap mapWatchKeys;
     ScriptMap mapScripts;
     WatchOnlySet setWatchOnly;
 
 public:
     bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey);
+    bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey);
     bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     bool HaveKey(const CKeyID &address) const
     {
-        bool result;
+        bool result=false;
         {
             LOCK(cs_KeyStore);
             result = (mapKeys.count(address) > 0);
         }
+        if (!result)
+        {
+            LOCK(cs_KeyStore);
+            result = (mapHDKeys.count(address) > 0);
+        }
+            
         return result;
     }
     void GetKeys(std::set<CKeyID> &setAddress) const
@@ -83,6 +99,12 @@ public:
                 setAddress.insert((*mi).first);
                 mi++;
             }
+            KeyMapHD::const_iterator mi2 = mapHDKeys.begin();
+            while (mi2 != mapHDKeys.end())
+            {
+                setAddress.insert((*mi2).first);
+                mi2++;
+            }
         }
     }
     bool GetKey(const CKeyID &address, CKey &keyOut) const
@@ -93,6 +115,19 @@ public:
             if (mi != mapKeys.end())
             {
                 keyOut = mi->second;
+                return true;
+            }
+        }
+        return false;
+    }
+    bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const
+    {
+        {
+            LOCK(cs_KeyStore);
+            KeyMapHD::const_iterator mi = mapHDKeys.find(address);
+            if (mi != mapHDKeys.end())
+            {
+                HDKeyIndex = mi->second;
                 return true;
             }
         }

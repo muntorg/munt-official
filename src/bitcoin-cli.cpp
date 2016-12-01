@@ -17,6 +17,9 @@
 #include <boost/filesystem/operations.hpp>
 #include <stdio.h>
 
+#include <Gulden/translate.h>
+
+#define _(x) gulden_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
 #include <event2/event.h>
 #include <event2/http.h>
 #include <event2/buffer.h>

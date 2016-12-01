@@ -9,6 +9,7 @@
 #include "support/pagelocker.h"
 
 #include <string>
+#include <vector>
 
 //
 // Allocator that locks its contents from being paged
@@ -58,5 +59,8 @@ struct secure_allocator : public std::allocator<T> {
 
 // This is exactly like std::string, but with a custom allocator.
 typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> > SecureString;
+
+typedef std::vector<char, secure_allocator<char> > SecureCharVector;
+typedef std::vector<unsigned char, secure_allocator<unsigned char> > SecureUnsignedCharVector;
 
 #endif // BITCOIN_SUPPORT_ALLOCATORS_SECURE_H

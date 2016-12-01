@@ -31,6 +31,7 @@
 
 #include <boost/assign/list_of.hpp>
 
+#include <Gulden/translate.h>
 #include <univalue.h>
 
 using namespace std;
@@ -240,6 +241,8 @@ UniValue gettxoutproof(const UniValue& params, bool fHelp)
             "2. \"block hash\"  (string, optional) If specified, looks for txid in the block with this hash\n"
             "\nResult:\n"
             "\"data\"           (string) A string that is a serialized, hex-encoded data for the proof.\n"
+            + HelpExampleCli("listunspent", "6 9999999 \"[\\\"GPGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"GLtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\"")
+            + HelpExampleRpc("listunspent", "6, 9999999 \"[\\\"GPGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"GLtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\"")
         );
 
     set<uint256> setTxids;
@@ -489,7 +492,7 @@ UniValue decoderawtransaction(const UniValue& params, bool fHelp)
             "         \"reqSigs\" : n,            (numeric) The required sigs\n"
             "         \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
             "         \"addresses\" : [           (json array of string)\n"
-            "           \"12tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) bitcoin address\n"
+            "           \"G2tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) bitcoin address\n"
             "           ,...\n"
             "         ]\n"
             "       }\n"
@@ -763,7 +766,8 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
     }
 
 #ifdef ENABLE_WALLET
-    const CKeyStore& keystore = ((fGivenKeys || !pwalletMain) ? tempKeystore : *pwalletMain);
+    //fixme: (GULDEN) (BIP44)
+    const CKeyStore& keystore = ((fGivenKeys || !pwalletMain->activeAccount) ? tempKeystore : pwalletMain->activeAccount->externalKeyStore);
 #else
     const CKeyStore& keystore = tempKeystore;
 #endif

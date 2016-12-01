@@ -14,6 +14,7 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "wallet/wallet.h"
+#include "clientversion.h"
 
 #include <cstdlib>
 
@@ -47,14 +48,15 @@
 #endif
 
 const int BITCOIN_IPC_CONNECT_TIMEOUT = 1000; // milliseconds
-const QString BITCOIN_IPC_PREFIX("bitcoin:");
+const QString BITCOIN_IPC_PREFIX("Gulden:");
+const QString BITCOIN_IPC_PREFIX_OLD("guldencoin:"); //Gulden: Keep this around for a while and then eventually get rid of it.
 // BIP70 payment protocol messages
 const char* BIP70_MESSAGE_PAYMENTACK = "PaymentACK";
 const char* BIP70_MESSAGE_PAYMENTREQUEST = "PaymentRequest";
 // BIP71 payment protocol media types
-const char* BIP71_MIMETYPE_PAYMENT = "application/bitcoin-payment";
-const char* BIP71_MIMETYPE_PAYMENTACK = "application/bitcoin-paymentack";
-const char* BIP71_MIMETYPE_PAYMENTREQUEST = "application/bitcoin-paymentrequest";
+const char* BIP71_MIMETYPE_PAYMENT = "application/gulden-payment";
+const char* BIP71_MIMETYPE_PAYMENTACK = "application/gulden-paymentack";
+const char* BIP71_MIMETYPE_PAYMENTREQUEST = "application/gulden-paymentrequest";
 // BIP70 max payment request size in bytes (DoS protection)
 const qint64 BIP70_MAX_PAYMENTREQUEST_SIZE = 50000;
 
@@ -75,7 +77,7 @@ void PaymentServer::freeCertStore()
 //
 static QString ipcServerName()
 {
-    QString name("BitcoinQt");
+    QString name("Gulden");
 
     // Append a simple hash of the datadir
     // Note that GetDataDir(true) returns a different path
@@ -213,7 +215,7 @@ void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
         // network as that would require fetching and parsing the payment request.
         // That means clicking such an URI which contains a testnet payment request
         // will start a mainnet instance and throw a "wrong network" error.
-        if (arg.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // bitcoin: URI
+        if (arg.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive) || arg.startsWith(BITCOIN_IPC_PREFIX_OLD, Qt::CaseInsensitive)) // bitcoin: URI
         {
             savedPaymentRequests.append(arg);
 
@@ -407,7 +409,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
         return;
     }
 
-    if (s.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // bitcoin: URI
+    if (s.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive) || s.startsWith(BITCOIN_IPC_PREFIX_OLD, Qt::CaseInsensitive)) // bitcoin: URI
     {
 #if QT_VERSION < 0x050000
         QUrl uri(s);
@@ -648,9 +650,10 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
     }
     else {
         CPubKey newKey;
-        if (wallet->GetKeyFromPool(newKey)) {
+        //fixme: GULDEN (1.6.1) (FUT)
+        if (wallet->GetKeyFromPool(newKey, wallet->activeAccount, KEYCHAIN_EXTERNAL)) {
             CKeyID keyID = newKey.GetID();
-            wallet->SetAddressBook(keyID, strAccount, "refund");
+            wallet->SetAddressBook(CBitcoinAddress(keyID).ToString(), strAccount, "refund");
 
             CScript s = GetScriptForDestination(keyID);
             payments::Output* refund_to = payment.add_refund_to();

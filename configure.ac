@@ -62,6 +62,7 @@ CHECK_ATOMIC
 
 dnl Libtool init checks.
 LT_INIT([pic-only])
+LIBTOOL="$LIBTOOL --preserve-dup-deps"
 
 dnl Check/return PATH for base programs.
 AC_PATH_TOOL(AR, ar)

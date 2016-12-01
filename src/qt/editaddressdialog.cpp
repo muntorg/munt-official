@@ -10,6 +10,8 @@
 
 #include <QDataWidgetMapper>
 #include <QMessageBox>
+#include <QPushButton>
+#include "_Gulden/GuldenGUI.h"
 
 EditAddressDialog::EditAddressDialog(Mode mode, QWidget *parent) :
     QDialog(parent),
@@ -21,6 +23,24 @@ EditAddressDialog::EditAddressDialog(Mode mode, QWidget *parent) :
     ui->setupUi(this);
 
     GUIUtil::setupAddressWidget(ui->addressEdit, this);
+    
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN);
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Cancel"));
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setCursor(Qt::PointingHandCursor);
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE_NOMARGIN);
+    QObject::connect(ui->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), this, SLOT(reject()));
+    
+    QFrame* horizontalLine = new QFrame(this);
+    horizontalLine->setFrameStyle(QFrame::HLine);
+    horizontalLine->setFixedHeight(1);
+    horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
+    ui->verticalLayout->insertWidget(1, horizontalLine);
+    
+    //Need a minimum height otherwise our horizontal line gets hidden.
+    setMinimumSize(400,200);
 
     switch(mode)
     {

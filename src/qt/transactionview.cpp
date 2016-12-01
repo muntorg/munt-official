@@ -45,13 +45,13 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     QHBoxLayout *hlayout = new QHBoxLayout();
     hlayout->setContentsMargins(0,0,0,0);
 
-    if (platformStyle->getUseExtraSpacing()) {
+    /*if (platformStyle->getUseExtraSpacing()) {
         hlayout->setSpacing(5);
         hlayout->addSpacing(26);
     } else {
         hlayout->setSpacing(0);
         hlayout->addSpacing(23);
-    }
+    }*/
 
     watchOnlyWidget = new QComboBox(this);
     watchOnlyWidget->setFixedWidth(24);
@@ -61,53 +61,59 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     hlayout->addWidget(watchOnlyWidget);
 
     dateWidget = new QComboBox(this);
-    if (platformStyle->getUseExtraSpacing()) {
+    /*if (platformStyle->getUseExtraSpacing()) {
         dateWidget->setFixedWidth(121);
     } else {
         dateWidget->setFixedWidth(120);
-    }
-    dateWidget->addItem(tr("All"), All);
+    }*/
+    dateWidget->addItem(tr("All dates"), All);
     dateWidget->addItem(tr("Today"), Today);
     dateWidget->addItem(tr("This week"), ThisWeek);
     dateWidget->addItem(tr("This month"), ThisMonth);
     dateWidget->addItem(tr("Last month"), LastMonth);
     dateWidget->addItem(tr("This year"), ThisYear);
-    dateWidget->addItem(tr("Range..."), Range);
+    dateWidget->addItem(tr("Select range"), Range);
     hlayout->addWidget(dateWidget);
 
     typeWidget = new QComboBox(this);
-    if (platformStyle->getUseExtraSpacing()) {
+    /*if (platformStyle->getUseExtraSpacing()) {
         typeWidget->setFixedWidth(121);
     } else {
         typeWidget->setFixedWidth(120);
-    }
+    }*/
 
-    typeWidget->addItem(tr("All"), TransactionFilterProxy::ALL_TYPES);
+    typeWidget->addItem(tr("All transaction types"), TransactionFilterProxy::ALL_TYPES);
     typeWidget->addItem(tr("Received with"), TransactionFilterProxy::TYPE(TransactionRecord::RecvWithAddress) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::RecvFromOther));
     typeWidget->addItem(tr("Sent to"), TransactionFilterProxy::TYPE(TransactionRecord::SendToAddress) |
                                   TransactionFilterProxy::TYPE(TransactionRecord::SendToOther));
-    typeWidget->addItem(tr("To yourself"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf));
+    typeWidget->addItem(tr("Internal transfer"), TransactionFilterProxy::TYPE(TransactionRecord::InternalTransfer));
+    //typeWidget->addItem(tr("Internal account movement"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf));
     typeWidget->addItem(tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
     typeWidget->addItem(tr("Other"), TransactionFilterProxy::TYPE(TransactionRecord::Other));
 
     hlayout->addWidget(typeWidget);
 
+    QLabel* searchLabel = new QLabel("");
+    searchLabel->setObjectName("searchLabel1");
+    searchLabel->setContentsMargins(0, 0, 0, 0);
+    hlayout->addWidget(searchLabel);
+    
     addressWidget = new QLineEdit(this);
+    addressWidget->setObjectName("searchBox1");
 #if QT_VERSION >= 0x040700
-    addressWidget->setPlaceholderText(tr("Enter address or label to search"));
+    addressWidget->setPlaceholderText(tr("Search label"));
 #endif
     hlayout->addWidget(addressWidget);
 
     amountWidget = new QLineEdit(this);
+    amountWidget->setObjectName("amountWidget");
+    amountWidget->setAlignment(Qt::AlignRight);
 #if QT_VERSION >= 0x040700
     amountWidget->setPlaceholderText(tr("Min amount"));
 #endif
-    if (platformStyle->getUseExtraSpacing()) {
-        amountWidget->setFixedWidth(97);
-    } else {
-        amountWidget->setFixedWidth(100);
-    }
+    amountWidget->setFixedWidth(120);
+    
     amountWidget->setValidator(new QDoubleValidator(0, 1e20, 8, this));
     hlayout->addWidget(amountWidget);
 
@@ -115,20 +121,27 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     vlayout->setContentsMargins(0,0,0,0);
     vlayout->setSpacing(0);
 
+    QFrame* topMargin = new QFrame(this);
+    topMargin->setObjectName("topMargin");
+    topMargin->setContentsMargins(0,0,0,0);
+    vlayout->addWidget(topMargin);
+    
+    vlayout->addWidget(createDateRangeWidget());
+    
     QTableView *view = new QTableView(this);
     vlayout->addLayout(hlayout);
     vlayout->addWidget(createDateRangeWidget());
     vlayout->addWidget(view);
     vlayout->setSpacing(0);
-    int width = view->verticalScrollBar()->sizeHint().width();
+    /*int width = view->verticalScrollBar()->sizeHint().width();
     // Cover scroll bar width with spacing
     if (platformStyle->getUseExtraSpacing()) {
         hlayout->addSpacing(width+2);
     } else {
         hlayout->addSpacing(width);
-    }
+    }*/
     // Always show scroll bar
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     view->setTabKeyNavigation(false);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -189,6 +202,8 @@ void TransactionView::setModel(WalletModel *model)
     this->model = model;
     if(model)
     {
+        connect(model, SIGNAL(activeAccountChanged(CAccount*)), this, SLOT(activeAccountChanged(CAccount*)));
+        
         transactionProxyModel = new TransactionFilterProxy(this);
         transactionProxyModel->setSourceModel(model->getTransactionTableModel());
         transactionProxyModel->setDynamicSortFilter(true);
@@ -205,14 +220,30 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->setSortingEnabled(true);
         transactionView->sortByColumn(TransactionTableModel::Date, Qt::DescendingOrder);
         transactionView->verticalHeader()->hide();
+        transactionView->setShowGrid(false);
 
         transactionView->setColumnWidth(TransactionTableModel::Status, STATUS_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Watchonly, WATCHONLY_COLUMN_WIDTH);
+        transactionView->setColumnHidden(TransactionTableModel::Watchonly, true);
         transactionView->setColumnWidth(TransactionTableModel::Date, DATE_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Type, TYPE_COLUMN_WIDTH);
-        transactionView->setColumnWidth(TransactionTableModel::Amount, AMOUNT_MINIMUM_COLUMN_WIDTH);
+        transactionView->setColumnHidden(TransactionTableModel::Type, true);
+        transactionView->setColumnWidth(TransactionTableModel::AmountSent, AMOUNT_MINIMUM_COLUMN_WIDTH);
+        transactionView->setColumnWidth(TransactionTableModel::AmountReceived, AMOUNT_MINIMUM_COLUMN_WIDTH);
+        
+        
+        // Description column streches, all other columns fixed but user resizable.
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Status, QHeaderView::Interactive);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Watchonly, QHeaderView::Interactive);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Date, QHeaderView::Interactive);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Type, QHeaderView::Interactive);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::ToAddress, QHeaderView::Stretch);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::AmountReceived, QHeaderView::Interactive);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::AmountSent, QHeaderView::Interactive);
+        
+        
 
-        columnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(transactionView, AMOUNT_MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH);
+        //columnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(transactionView, AMOUNT_MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH);
 
         if (model->getOptionsModel())
         {
@@ -361,6 +392,15 @@ void TransactionView::exportClicked()
     }
 }
 
+void TransactionView::activeAccountChanged(CAccount* account)
+{
+    LogPrintf("TransactionView::activeAccountChanged\n");
+    
+    if(!transactionProxyModel)
+        return;
+    transactionProxyModel->setAccountFilter(account);
+}
+
 void TransactionView::contextualMenu(const QPoint &point)
 {
     QModelIndex index = transactionView->indexAt(point);
@@ -372,6 +412,7 @@ void TransactionView::contextualMenu(const QPoint &point)
     uint256 hash;
     hash.SetHex(selection.at(0).data(TransactionTableModel::TxHashRole).toString().toStdString());
     abandonAction->setEnabled(model->transactionCanBeAbandoned(hash));
+    abandonAction->setVisible(model->transactionCanBeAbandoned(hash));
 
     if(index.isValid())
     {
@@ -555,7 +596,7 @@ void TransactionView::focusTransaction(const QModelIndex &idx)
 void TransactionView::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
-    columnResizingFixer->stretchColumnWidth(TransactionTableModel::ToAddress);
+    //columnResizingFixer->stretchColumnWidth(TransactionTableModel::ToAddress - 1);
 }
 
 // Need to override default Ctrl+C action for amount as default behaviour is just to copy DisplayRole text

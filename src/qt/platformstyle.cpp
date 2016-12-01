@@ -95,7 +95,7 @@ PlatformStyle::PlatformStyle(const QString &name, bool imagesOnButtons, bool col
         singleColor = colorbase;
     }
     // Determine text color
-    textColor = QColor(QApplication::palette().color(QPalette::WindowText));
+    singleColor = textColor = QColor("#000");
 }
 
 QImage PlatformStyle::SingleColorImage(const QString& filename) const

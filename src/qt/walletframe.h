@@ -50,6 +50,10 @@ private:
 
     WalletView *currentWalletView();
 
+Q_SIGNALS:
+    /** Signal to the app that we are ready for wallet loading to commence */
+    void loadWallet();
+    
 public Q_SLOTS:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
@@ -78,6 +82,8 @@ public Q_SLOTS:
     void usedSendingAddresses();
     /** Show used receiving addresses */
     void usedReceivingAddresses();
+    
+    friend class GuldenGUI;
 };
 
 #endif // BITCOIN_QT_WALLETFRAME_H

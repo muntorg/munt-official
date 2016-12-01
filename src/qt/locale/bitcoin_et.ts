@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Paremkliki aadressi või sildi muutmiseks</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Loo uus aadress</translation>
     </message>
@@ -545,6 +541,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Client name</source>
+        <translation>Kliendi nimi</translation>
+    </message>
     <message>
         <source>N/A</source>
         <translation>N/A</translation>

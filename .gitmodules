@@ -1,0 +1,3 @@
+[submodule "src/Gulden"]
+	path = src/Gulden/Common
+	url = git@github.com:Gulden/Gulden-common.git

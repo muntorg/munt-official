@@ -930,6 +930,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Client name</source>
+        <translation>客户端名称</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>不可用</translation>
     </message>
@@ -1760,6 +1764,14 @@
         <translation>使用UPnP暴露本机监听端口（默认：1 当正在监听且不使用代理）</translation>
     </message>
     <message>
+        <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
+        <translation>警告：数据块生成数量异常，最近 %d 小时收到了 %d 个数据块（预期为 %d 个）</translation>
+    </message>
+    <message>
+        <source>WARNING: check your network connection, %d blocks received in the last %d hours (%d expected)</source>
+        <translation>警告：请检查您的网络连接，最近 %d 小时收到了 %d 个数据块（预期为 %d 个）</translation>
+    </message>
+    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>警告：网络似乎并不完全同意！有些矿工似乎遇到了问题。</translation>
     </message>
@@ -2259,6 +2271,10 @@
     <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>设置私钥池大小为 &lt;n&gt; (默认：%u) </translation>
+    </message>
+    <message>
+        <source>Set minimum block size in bytes (default: %u)</source>
+        <translation>设置数据块 最小字节数 (默认: %u) </translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>

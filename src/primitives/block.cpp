@@ -18,7 +18,9 @@ uint256 CBlockHeader::GetHash() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, input=%s, PoW=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+        HexStr(BEGIN(nVersion),BEGIN(nVersion)+80,false).c_str(),
+        GetPoWHash().ToString().c_str(),
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
@@ -31,6 +33,23 @@ std::string CBlock::ToString() const
     }
     return s.str();
 }
+
+uint256 CBlock::GetPoWHash() const
+{
+        arith_uint256 thash;
+        //fixme: (FUT) (1.6.1) - put testnet on city hash.
+        if (GetBoolArg("-testnetaccel", false))
+        {
+            hash_city(BEGIN(nVersion), thash);
+        }
+        else
+        {
+            char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+            scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
+        }
+        return ArithToUint256(thash);
+}
+
 
 int64_t GetBlockWeight(const CBlock& block)
 {

@@ -77,20 +77,21 @@ public:
         SendToOther,
         RecvWithAddress,
         RecvFromOther,
-        SendToSelf
+        SendToSelf,
+        InternalTransfer
     };
 
     /** Number of confirmation recommended for accepting a transaction */
     static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
-            hash(), time(0), type(Other), address(""), debit(0), credit(0), idx(0)
+            hash(), time(0), type(Other), address(""), debit(0), credit(0), fee(0), idx(0)
     {
     }
 
     TransactionRecord(uint256 hash, qint64 time):
             hash(hash), time(time), type(Other), address(""), debit(0),
-            credit(0), idx(0)
+            credit(0), fee(0), idx(0)
     {
     }
 
@@ -113,8 +114,18 @@ public:
     qint64 time;
     Type type;
     std::string address;
+    //Which account the record belongs too - i.e. a send belongs to a sender account while a receive belongs to a receiver account.
+    std::string actionAccountUUID;
+    std::string actionAccountParentUUID;
+    //Sender account
+    std::string fromAccountUUID;
+    std::string fromAccountParentUUID;
+    //Receiver account
+    std::string receiveAccountUUID;
+    std::string receiveAccountParentUUID;
     CAmount debit;
     CAmount credit;
+    CAmount fee;
     /**@}*/
 
     /** Subtransaction index, for sort key */

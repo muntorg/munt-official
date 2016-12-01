@@ -6,10 +6,12 @@
 #include "main.h"
 
 #include "addrman.h"
+#include "alert.h"
 #include "arith_uint256.h"
 #include "blockencodings.h"
 #include "chainparams.h"
 #include "checkpoints.h"
+#include "Gulden/auto_checkpoints.h"
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
@@ -21,6 +23,7 @@
 #include "policy/fees.h"
 #include "policy/policy.h"
 #include "pow.h"
+#include <Gulden/Common/diff.h>
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 #include "random.h"
@@ -37,6 +40,9 @@
 #include "utilstrencodings.h"
 #include "validationinterface.h"
 #include "versionbits.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <atomic>
 #include <sstream>
@@ -51,7 +57,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Bitcoin cannot be compiled without assertions."
+# error "Gulden cannot be compiled without assertions."
 #endif
 
 /**
@@ -78,6 +84,7 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+bool fAlerts = DEFAULT_ALERTS;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
 
@@ -116,7 +123,11 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Bitcoin Signed Message:\n";
+int64_t nMinimumInputValue = DUST_HARD_LIMIT;
+
+const string strMessageMagic = "Guldencoin Signed Message:\n";
+
+
 
 // Internal stuff
 namespace {
@@ -824,7 +835,7 @@ bool CheckFinalTx(const CTransaction &tx, int flags)
     // chain tip, so we use that to calculate the median time passed to
     // IsFinalTx() if LOCKTIME_MEDIAN_TIME_PAST is set.
     const int64_t nBlockTime = (flags & LOCKTIME_MEDIAN_TIME_PAST)
-                             ? chainActive.Tip()->GetMedianTimePast()
+                             ? chainActive.Tip()->GetMedianTimePast(chainActive.Height())
                              : GetAdjustedTime();
 
     return IsFinalTx(tx, nBlockHeight, nBlockTime);
@@ -875,7 +886,7 @@ static std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, in
         int nCoinHeight = (*prevHeights)[txinIndex];
 
         if (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) {
-            int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast();
+            int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast(block.GetAncestor(std::max(nCoinHeight-1, 0))->nHeight);
             // NOTE: Subtract 1 to maintain nLockTime semantics
             // BIP 68 relative lock times have the semantics of calculating
             // the first block or time at which the transaction would be
@@ -901,7 +912,7 @@ static std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, in
 static bool EvaluateSequenceLocks(const CBlockIndex& block, std::pair<int, int64_t> lockPair)
 {
     assert(block.pprev);
-    int64_t nBlockTime = block.pprev->GetMedianTimePast();
+    int64_t nBlockTime = block.pprev->GetMedianTimePast(block.pprev->nHeight);
     if (lockPair.first >= block.nHeight || lockPair.second >= nBlockTime)
         return false;
 
@@ -1680,7 +1691,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     }
 
     // Check the header
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -1698,14 +1709,20 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
-    // Force block reward to zero when right shift is undefined.
-    if (halvings >= 64)
-        return 0;
+    CAmount nSubsidy = 0;
+    if(nHeight == 1) //First block premine
+    {
+        nSubsidy = 170000000 * COIN;
+    }
+    else if(nHeight <= 250000) // 1000 Gulden per block for first 250k blocks
+    {
+        nSubsidy = 1000 * COIN; 
+    }
+    else if(nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
+    {
+        nSubsidy = 100 * COIN; 
+    }
 
-    CAmount nSubsidy = 50 * COIN;
-    // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
-    nSubsidy >>= halvings;
     return nSubsidy;
 }
 
@@ -1736,7 +1753,7 @@ bool IsInitialBlockDownload()
 bool fLargeWorkForkFound = false;
 bool fLargeWorkInvalidChainFound = false;
 CBlockIndex *pindexBestForkTip = NULL, *pindexBestForkBase = NULL;
-
+#if 0
 static void AlertNotify(const std::string& strMessage)
 {
     uiInterface.NotifyAlertChanged();
@@ -1753,7 +1770,7 @@ static void AlertNotify(const std::string& strMessage)
 
     boost::thread t(runCommand, strCmd); // thread runs free
 }
-
+#endif
 void CheckForkWarningConditions()
 {
     AssertLockHeld(cs_main);
@@ -1773,7 +1790,7 @@ void CheckForkWarningConditions()
         {
             std::string warning = std::string("'Warning: Large-work fork detected, forking after block ") +
                 pindexBestForkBase->phashBlock->ToString() + std::string("'");
-            AlertNotify(warning);
+            CAlert::Notify(warning, true);
         }
         if (pindexBestForkTip && pindexBestForkBase)
         {
@@ -2244,7 +2261,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("bitcoin-scriptch");
+    RenameThread("Gulden-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2348,9 +2365,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes during their
     // initial block download.
-    bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
-                          !((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
-                           (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
+    //Gulden: BIP30 always true for us.
+    bool fEnforceBIP30 = true;
 
     // Once BIP34 activated it was not possible to create new duplicate coinbases and thus other than starting
     // with the 2 existing duplicate coinbase pairs, not possible to create overwriting txs.  But by the
@@ -2371,8 +2387,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         }
     }
 
-    // BIP16 didn't become active until Apr 1 2012
-    int64_t nBIP16SwitchTime = 1333238400;
+    // BIP16 didn't become active until Oct 1 2012
+    int64_t nBIP16SwitchTime = 1349049600;
     bool fStrictPayToScriptHash = (pindex->GetBlockTime() >= nBIP16SwitchTime);
 
     unsigned int flags = fStrictPayToScriptHash ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE;
@@ -2698,7 +2714,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
                 if (state == THRESHOLD_ACTIVE) {
                     strMiscWarning = strprintf(_("Warning: unknown new rules activated (versionbit %i)"), bit);
                     if (!fWarned) {
-                        AlertNotify(strMiscWarning);
+                        CAlert::Notify(strMiscWarning, true);
                         fWarned = true;
                     }
                 } else {
@@ -2721,7 +2737,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             // strMiscWarning is read by GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
             strMiscWarning = _("Warning: Unknown block versions being mined! It's possible unknown rules are in effect");
             if (!fWarned) {
-                AlertNotify(strMiscWarning);
+                CAlert::Notify(strMiscWarning, true);
                 fWarned = true;
             }
         }
@@ -3359,10 +3375,10 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
     return true;
 }
 
-bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
+bool CheckBlockHeader(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     return true;
@@ -3437,6 +3453,11 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
         return true;
 
     int nHeight = pindexPrev->nHeight+1;
+    // Gulden: check that the block satisfies synchronized checkpoint
+    if (!Checkpoints::CheckSync(hash, pindexPrev))
+        return error("AcceptBlock() : rejected by synchronized checkpoint");
+
+
     // Don't accept any forks from the main chain prior to last checkpoint
     CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint(chainparams.Checkpoints());
     if (pcheckpoint && nHeight < pcheckpoint->nHeight)
@@ -3517,12 +3538,20 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
     // Check timestamp against prev
-    if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())
-        return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
+    if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast(pindexPrev->nHeight))
+            return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
 
     // Check timestamp
-    if (block.GetBlockTime() > nAdjustedTime + 2 * 60 * 60)
-        return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
+    if (pindexPrev->nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
+    {
+        if (block.GetBlockTime() > nAdjustedTime + 60)
+            return state.Invalid(false, REJECT_INVALID, "time-too-new", strprintf("block timestamp too far in the future block:%n adjusted:%n system:%n offset:%n", block.GetBlockTime(), nAdjustedTime, GetTime(), GetTimeOffset()));
+    }
+    else
+    {
+        if (block.GetBlockTime() > nAdjustedTime + 15 * 60)
+            return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
+    }
 
     // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
     for (int32_t version = 2; version < 5; ++version) // check for version 2, 3 and 4 upgrades
@@ -3545,7 +3574,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
     }
 
     int64_t nLockTimeCutoff = (nLockTimeFlags & LOCKTIME_MEDIAN_TIME_PAST)
-                              ? pindexPrev->GetMedianTimePast()
+                              ? pindexPrev->GetMedianTimePast(pindexPrev->nHeight)
                               : block.GetBlockTime();
 
     // Check that all transactions are finalized
@@ -3732,6 +3761,9 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
 
 static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned nRequired, const Consensus::Params& consensusParams)
 {
+    if (pstart->nHeight < (GetBoolArg("-testnet", false) ? 446500  : 434500))
+        return false;
+        
     unsigned int nFound = 0;
     for (int i = 0; i < consensusParams.nMajorityWindow && nFound < nRequired && pstart != NULL; i++)
     {
@@ -3767,6 +3799,16 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, C
 
     if (!ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed", __func__);
+
+    if (!IsInitialBlockDownload())
+    {
+        // Gulden: if responsible for sync-checkpoint send it
+        if (!CSyncCheckpoint::strMasterPrivKey.empty())
+            Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint(), chainparams);
+    }
+
+    // Gulden: check pending sync-checkpoint
+    Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
 
     return true;
 }
@@ -4070,6 +4112,16 @@ bool static LoadBlockIndexDB()
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
+    
+    //Temporary code to clean up old checkpoints database - WE can remove this in future versions
+    if ( boost::filesystem::exists(GetDataDir() / "checkpoints") )
+    {
+        boost::filesystem::remove_all( GetDataDir() / "checkpoints" );
+    }
+    
+    // Gulden: load hashSyncCheckpoint
+    Checkpoints::ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
+    LogPrintf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
@@ -4319,6 +4371,8 @@ bool InitBlockIndex(const CChainParams& chainparams)
     if (chainActive.Genesis() != NULL)
         return true;
 
+    LogPrintf("Wrote sync checkpoint...\n");
+
     // Use the provided setting for -txindex in the new database
     fTxIndex = GetBoolArg("-txindex", DEFAULT_TXINDEX);
     pblocktree->WriteFlag("txindex", fTxIndex);
@@ -4339,6 +4393,21 @@ bool InitBlockIndex(const CChainParams& chainparams)
             CBlockIndex *pindex = AddToBlockIndex(block);
             if (!ReceivedBlockTransactions(block, state, pindex, blockPos))
                 return error("LoadBlockIndex(): genesis block not accepted");
+
+            // Gulden: initialize synchronized checkpoint
+            if (!Checkpoints::WriteSyncCheckpoint(Params().GenesisBlock().GetHash()))
+                return error("LoadBlockIndex() : failed to init sync checkpoint");
+            std::string strPubKey;
+            std::string strPubKeyComp = GetBoolArg("-testnet", false) ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
+            if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
+            {
+                // write checkpoint master key to db
+                if (!Checkpoints::WriteCheckpointPubKey(strPubKeyComp))
+                    return error("LoadBlockIndex() : failed to write new checkpoint master key to db");
+                if (!Checkpoints::ResetSyncCheckpoint(chainparams))
+                    return error("LoadBlockIndex() : failed to reset sync-checkpoint");
+            }
+ 
             // Force a chainstate write so that when we VerifyDB in a moment, it doesn't check stale data
             return FlushStateToDisk(state, FLUSH_STATE_ALWAYS);
         } catch (const std::runtime_error& e) {
@@ -4650,6 +4719,7 @@ void static CheckBlockIndex(const Consensus::Params& consensusParams)
 
 std::string GetWarnings(const std::string& strFor)
 {
+    int nPriority = 0;
     string strStatusBar;
     string strRPC;
     string strGUI;
@@ -4666,19 +4736,50 @@ std::string GetWarnings(const std::string& strFor)
     // Misc warnings like out of disk space and clock is wrong
     if (strMiscWarning != "")
     {
+        nPriority = 1000;
         strStatusBar = strMiscWarning;
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + strMiscWarning;
     }
 
     if (fLargeWorkForkFound)
     {
+        nPriority = 2000;
         strStatusBar = strRPC = "Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.";
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.");
     }
     else if (fLargeWorkInvalidChainFound)
     {
+        nPriority = 2000;
         strStatusBar = strRPC = "Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.";
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
+    }
+
+    // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
+    if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
+    {
+        nPriority = 100;
+        strStatusBar = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
+    }
+
+    // Gulden: if detected invalid checkpoint enter safe mode
+    if (Checkpoints::hashInvalidCheckpoint != uint256())
+    {
+        nPriority = 3000;
+        strStatusBar = strRPC = "WARNING: Invalid checkpoint found! Displayed transactions may not be correct! You may need to upgrade, or notify developers of the issue.";
+    }
+
+    // Alerts
+    {
+        LOCK(cs_mapAlerts);
+        BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
+        {
+            const CAlert& alert = item.second;
+            if (alert.AppliesToMe() && alert.nPriority > nPriority)
+            {
+                nPriority = alert.nPriority;
+                strStatusBar = alert.strStatusBar;
+            }
+        }
     }
 
     if (strFor == "gui")
@@ -4995,6 +5096,16 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 pfrom->fRelayTxes = true;
         }
 
+        if (pfrom->cleanSubVer=="/Guldencoin:1.3.1/" || pfrom->cleanSubVer=="/Guldencoin:1.4.0/"/* || pfrom->cleanSubVer=="/Guldencoin:1.5.0/"*/)
+        {
+            // disconnect from peers older than this proto version
+            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+            pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,strprintf("Client version must be 1.5.1 or greater [%s]", pfrom->cleanSubVer));
+            pfrom->fDisconnect = true;
+            return false;
+        }
+
+
         // Disconnect if we connected to ourself
         if (nNonce == nLocalHostNonce && nNonce > 1)
         {
@@ -5055,6 +5166,13 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 pfrom->fGetAddr = true;
             }
             addrman.Good(pfrom->addr);
+        }
+
+        // Relay alerts
+        {
+            LOCK(cs_mapAlerts);
+            BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
+                item.second.RelayTo(pfrom);
         }
 
         pfrom->fSuccessfullyConnected = true;
@@ -6066,6 +6184,50 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         }
     }
 
+    else if (fAlerts && strCommand == NetMsgType::ALERT)
+    {
+        CAlert alert;
+        vRecv >> alert;
+
+        uint256 alertHash = alert.GetHash();
+        if (pfrom->setKnown.count(alertHash) == 0)
+        {
+            if (alert.ProcessAlert(chainparams.AlertKey()))
+            {
+                // Relay
+                pfrom->setKnown.insert(alertHash);
+                {
+                    LOCK(cs_vNodes);
+                    BOOST_FOREACH(CNode* pnode, vNodes)
+                        alert.RelayTo(pnode);
+                }
+            }
+            else {
+                // Small DoS penalty so peers that send us lots of
+                // duplicate/expired/invalid-signature/whatever alerts
+                // eventually get banned.
+                // This isn't a Misbehaving(100) (immediate ban) because the
+                // peer might be an older or different implementation with
+                // a different signature key, etc.
+                Misbehaving(pfrom->GetId(), 10);
+            }
+        }
+    }
+
+    else if (strCommand == "checkpoint")
+    {
+        CSyncCheckpoint checkpoint;
+        vRecv >> checkpoint;
+
+        if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams))
+        {
+            // Relay
+            pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
+            LOCK(cs_vNodes);
+            BOOST_FOREACH(CNode* pnode, vNodes)
+                checkpoint.RelayTo(pnode);
+        }
+    }
 
     else if (strCommand == NetMsgType::FILTERLOAD)
     {

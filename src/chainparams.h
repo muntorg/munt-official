@@ -49,12 +49,12 @@ public:
         SECRET_KEY,
         EXT_PUBLIC_KEY,
         EXT_SECRET_KEY,
-
         MAX_BASE58_TYPES
     };
 
     const Consensus::Params& GetConsensus() const { return consensus; }
     const CMessageHeader::MessageStartChars& MessageStart() const { return pchMessageStart; }
+    const std::vector<unsigned char>& AlertKey() const { return vAlertPubKey; }
     int GetDefaultPort() const { return nDefaultPort; }
 
     const CBlock& GenesisBlock() const { return genesis; }
@@ -75,11 +75,15 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
+    // Only used by testnets.
+    virtual void ParseCommandLine(){};
 protected:
     CChainParams() {}
 
     Consensus::Params consensus;
     CMessageHeader::MessageStartChars pchMessageStart;
+    //! Raw pub key bytes for the broadcast alert signing key.
+    std::vector<unsigned char> vAlertPubKey;
     int nDefaultPort;
     uint64_t nPruneAfterHeight;
     std::vector<CDNSSeedData> vSeeds;

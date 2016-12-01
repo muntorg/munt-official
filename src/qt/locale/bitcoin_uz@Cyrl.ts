@@ -728,6 +728,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Client name</source>
+        <translation>Мижоз номи</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>Тўғри келмайди</translation>
     </message>

@@ -6,6 +6,7 @@ suites:
 architectures:
 - "amd64"
 packages:
+- "wget"
 - "ca-certificates"
 - "curl"
 - "g++"
@@ -27,6 +28,11 @@ packages:
 - "python-dev"
 - "python-setuptools"
 - "fonts-tuffy"
+- "gperf"
+- "ruby"
+- "bison"
+- "flex"
+- "genisoimage"
 remotes:
 - "url": "https://github.com/bitcoin/bitcoin.git"
   "dir": "bitcoin"
@@ -91,6 +97,7 @@ script: |
 
   # Build dependencies for each host
   for i in $HOSTS; do
+    export PATH=${PATH}:/home/ubuntu/build/Gulden/depends/${i}/native/bin/
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
   done
 
@@ -117,17 +124,24 @@ script: |
   ORIGPATH="$PATH"
   # Extract the release tarball into a dir for each host and build
   for i in ${HOSTS}; do
-    export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGPATH}
+    export PATH=/home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig:${BASEPREFIX}/${i}/native/bin:${ORIGPATH}
     mkdir -p distsrc-${i}
     cd distsrc-${i}
     INSTALLPATH=`pwd`/installed/${DISTNAME}
     mkdir -p ${INSTALLPATH}
     tar --strip-components=1 -xf ../$SOURCEDIST
 
-    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS}
+
+    # Gross hack - prevent static qt libs from screwing up build
+    sed -i.old "s|Libs.private:.*|Libs.private:|" /home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig/Qt5*.pc
+
+    echo "<<<<<<<<<<<<<<<<<<<< START make Gulden >>>>>>>>>>>>>>>>>>>"
+    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --enable-shared="qt" --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS}
     make ${MAKEOPTS}
     make install-strip DESTDIR=${INSTALLPATH}
 
+
+    echo "<<<<<<<<<<<<<<<<<<<< START make deploydir >>>>>>>>>>>>>>>>>>>"
     make osx_volname
     make deploydir
     OSX_VOLNAME="$(cat osx_volname)"
@@ -143,6 +157,9 @@ script: |
     find . | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-osx-unsigned.tar.gz
     popd
 
+
+
+    echo "<<<<<<<<<<<<<<<<<<<< START make deploy >>>>>>>>>>>>>>>>>>>"    
     make deploy
     ${WRAP_DIR}/dmg dmg "${OSX_VOLNAME}.dmg" ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
 

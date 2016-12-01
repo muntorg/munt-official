@@ -18,6 +18,8 @@
 #include <QPoint>
 #include <QSystemTrayIcon>
 
+#include "_Gulden/GuldenGUI.h"
+
 class ClientModel;
 class NetworkStyle;
 class Notificator;
@@ -52,7 +54,7 @@ public:
 
     explicit BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~BitcoinGUI();
-
+    
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
@@ -77,9 +79,11 @@ protected:
     void dropEvent(QDropEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
 
+public:
+    WalletFrame *walletFrame;
 private:
     ClientModel *clientModel;
-    WalletFrame *walletFrame;
+    
 
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelEncryptionIcon;
@@ -114,6 +118,7 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    QMenu *settingsMenu;
     Notificator *notificator;
     RPCConsole *rpcConsole;
     HelpMessageDialog *helpMessageDialog;
@@ -142,6 +147,10 @@ private:
     void subscribeToCoreSignals();
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
+    
+    QFrame *frameBlocks;
+    GuldenGUI* m_pGuldenImpl;
+    friend class GuldenGUI;
 
 Q_SIGNALS:
     /** Signal raised when a URI was entered or dragged to the GUI */
@@ -162,6 +171,9 @@ public Q_SLOTS:
     */
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
 
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
@@ -172,7 +184,7 @@ public Q_SLOTS:
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     /** Show incoming transaction notification for new transactions. */
-    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label);
+    void incomingTransaction(const QString& date, int unit, const CAmount& amountReceived, const CAmount& amountSent, const QString& type, const QString& address, const QString& account, const QString& label);
 #endif // ENABLE_WALLET
 
 private Q_SLOTS:

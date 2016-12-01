@@ -6,10 +6,13 @@
 
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
+#include "account.h"
+#include "wallet/wallet.h"
 
 #include <cstdlib>
 
 #include <QDateTime>
+
 
 // Earliest date that can be represented (far in the past)
 const QDateTime TransactionFilterProxy::MIN_DATE = QDateTime::fromTime_t(0);
@@ -25,8 +28,10 @@ TransactionFilterProxy::TransactionFilterProxy(QObject *parent) :
     watchOnlyFilter(WatchOnlyFilter_All),
     minAmount(0),
     limitRows(-1),
-    showInactive(true)
+    showInactive(true),
+    account(NULL)
 {
+    setSortRole(TransactionTableModel::RoleIndex::SortRole);
 }
 
 bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -37,10 +42,16 @@ bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &
     QDateTime datetime = index.data(TransactionTableModel::DateRole).toDateTime();
     bool involvesWatchAddress = index.data(TransactionTableModel::WatchonlyRole).toBool();
     QString address = index.data(TransactionTableModel::AddressRole).toString();
+    QString accountUUID = index.data(TransactionTableModel::AccountRole).toString();
+    QString accountParentUUID = index.data(TransactionTableModel::AccountParentRole).toString();
     QString label = index.data(TransactionTableModel::LabelRole).toString();
     qint64 amount = llabs(index.data(TransactionTableModel::AmountRole).toLongLong());
     int status = index.data(TransactionTableModel::StatusRole).toInt();
 
+    if(account && account->getUUID() != accountUUID.toStdString() && (fShowChildAccountsSeperately || account->getUUID() != accountParentUUID.toStdString()))
+        return false;
+    //if(account && !fShowChildAccountsSeperately && )
+        //return false;
     if(!showInactive && status == TransactionStatus::Conflicted)
         return false;
     if(!(TYPE(type) & typeFilter))
@@ -87,6 +98,12 @@ void TransactionFilterProxy::setMinAmount(const CAmount& minimum)
 void TransactionFilterProxy::setWatchOnlyFilter(WatchOnlyFilter filter)
 {
     this->watchOnlyFilter = filter;
+    invalidateFilter();
+}
+
+void TransactionFilterProxy::setAccountFilter(CAccount* account)
+{
+    this->account = account;
     invalidateFilter();
 }
 

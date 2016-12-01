@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "prevector.h"
+#include "support/allocators/secure.h"
 
 static const unsigned int MAX_SIZE = 0x02000000;
 
@@ -513,6 +514,9 @@ CVarInt<I> WrapVarInt(I& n) { return CVarInt<I>(n); }
 template<typename C> unsigned int GetSerializeSize(const std::basic_string<C>& str, int, int=0);
 template<typename Stream, typename C> void Serialize(Stream& os, const std::basic_string<C>& str, int, int=0);
 template<typename Stream, typename C> void Unserialize(Stream& is, std::basic_string<C>& str, int, int=0);
+template<typename C, typename T, typename A> unsigned int GetSerializeSize(const std::basic_string<C, T, A>& str, int, int=0);
+template<typename Stream, typename C, typename T, typename A> void Serialize(Stream& os, const std::basic_string<C, T, A>& str, int, int=0);
+template<typename Stream, typename C, typename T, typename A> void Unserialize(Stream& is, std::basic_string<C, T, A>& str, int, int=0);
 
 /**
  * prevector
@@ -548,6 +552,16 @@ template<typename Stream, typename T, typename A> inline void Unserialize(Stream
 template<typename K, typename T> unsigned int GetSerializeSize(const std::pair<K, T>& item, int nType, int nVersion);
 template<typename Stream, typename K, typename T> void Serialize(Stream& os, const std::pair<K, T>& item, int nType, int nVersion);
 template<typename Stream, typename K, typename T> void Unserialize(Stream& is, std::pair<K, T>& item, int nType, int nVersion);
+
+/**
+ * tuple
+ */
+template<typename T1, typename T2, typename T3> unsigned int GetSerializeSize(const std::tuple<T1, T2, T3>& item, int nType, int nVersion);
+template<typename Stream, typename T1, typename T2, typename T3> void Serialize(Stream& os, const std::tuple<T1, T2, T3>& item, int nType, int nVersion);
+template<typename Stream, typename T1, typename T2, typename T3> void Unserialize(Stream& is, std::tuple<T1, T2, T3>& item, int nType, int nVersion);
+template<typename T1, typename T2, typename T3, typename T4> unsigned int GetSerializeSize(const std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion);
+template<typename Stream, typename T1, typename T2, typename T3, typename T4> void Serialize(Stream& os, const std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion);
+template<typename Stream, typename T1, typename T2, typename T3, typename T4> void Unserialize(Stream& is, std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion);
 
 /**
  * map
@@ -620,6 +634,31 @@ void Unserialize(Stream& is, std::basic_string<C>& str, int, int)
     if (nSize != 0)
         is.read((char*)&str[0], nSize * sizeof(str[0]));
 }
+
+template<typename C, typename T, typename A>
+unsigned int GetSerializeSize(const std::basic_string<C, T, A>& str, int, int)
+{
+    return GetSizeOfCompactSize(str.size()) + str.size() * sizeof(str[0]);
+}
+
+template<typename Stream, typename C, typename T, typename A>
+void Serialize(Stream& os, const std::basic_string<C, T, A>& str, int, int)
+{
+    WriteCompactSize(os, str.size());
+    if (!str.empty())
+        os.write((char*)&str[0], str.size() * sizeof(str[0]));
+}
+
+template<typename Stream, typename C, typename T, typename A>
+void Unserialize(Stream& is, std::basic_string<C, T, A>& str, int, int)
+{
+    unsigned int nSize = ReadCompactSize(is);
+    str.resize(nSize);
+    if (nSize != 0)
+        is.read((char*)&str[0], nSize * sizeof(str[0]));
+}
+
+
 
 
 
@@ -824,6 +863,57 @@ void Unserialize(Stream& is, std::pair<K, T>& item, int nType, int nVersion)
 {
     Unserialize(is, item.first, nType, nVersion);
     Unserialize(is, item.second, nType, nVersion);
+}
+
+
+
+/**
+ * tuple
+ */
+template<typename T1, typename T2, typename T3>
+unsigned int GetSerializeSize(const std::tuple<T1, T2, T3>& item, int nType, int nVersion)
+{
+    return GetSerializeSize(std::get<0>(item), nType, nVersion) + GetSerializeSize(std::get<1>(item), nType, nVersion) + GetSerializeSize(std::get<2>(item), nType, nVersion);
+}
+
+template<typename Stream, typename T1, typename T2, typename T3>
+void Serialize(Stream& os, const std::tuple<T1, T2, T3>& item, int nType, int nVersion)
+{
+    Serialize(os, std::get<0>(item), nType, nVersion);
+    Serialize(os, std::get<1>(item), nType, nVersion);
+    Serialize(os, std::get<2>(item), nType, nVersion);
+}
+
+template<typename Stream, typename T1, typename T2, typename T3>
+void Unserialize(Stream& is, std::tuple<T1, T2, T3>& item, int nType, int nVersion)
+{
+    Unserialize(is, std::get<0>(item), nType, nVersion);
+    Unserialize(is, std::get<1>(item), nType, nVersion);
+    Unserialize(is, std::get<2>(item), nType, nVersion);
+}
+
+template<typename T1, typename T2, typename T3, typename T4>
+unsigned int GetSerializeSize(const std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion)
+{
+    return GetSerializeSize(std::get<0>(item), nType, nVersion) + GetSerializeSize(std::get<1>(item), nType, nVersion) + GetSerializeSize(std::get<2>(item), nType, nVersion) + GetSerializeSize(std::get<3>(item), nType, nVersion);
+}
+
+template<typename Stream, typename T1, typename T2, typename T3, typename T4>
+void Serialize(Stream& os, const std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion)
+{
+    Serialize(os, std::get<0>(item), nType, nVersion);
+    Serialize(os, std::get<1>(item), nType, nVersion);
+    Serialize(os, std::get<2>(item), nType, nVersion);
+    Serialize(os, std::get<3>(item), nType, nVersion);
+}
+
+template<typename Stream, typename T1, typename T2, typename T3, typename T4>
+void Unserialize(Stream& is, std::tuple<T1, T2, T3, T4>& item, int nType, int nVersion)
+{
+    Unserialize(is, std::get<0>(item), nType, nVersion);
+    Unserialize(is, std::get<1>(item), nType, nVersion);
+    Unserialize(is, std::get<2>(item), nType, nVersion);
+    Unserialize(is, std::get<3>(item), nType, nVersion);
 }
 
 

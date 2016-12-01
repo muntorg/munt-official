@@ -176,7 +176,7 @@ public:
         // need a CTxIn of at least 67 bytes to spend:
         // so dust is a spendable txout less than
         // 294*minRelayTxFee/1000 (in satoshis).
-        if (scriptPubKey.IsUnspendable())
+        /*if (scriptPubKey.IsUnspendable())
             return 0;
 
         size_t nSize = GetSerializeSize(SER_DISK, 0);
@@ -190,8 +190,11 @@ public:
         } else {
             nSize += (32 + 4 + 1 + 107 + 4); // the 148 mentioned above
         }
-
         return 3 * minRelayTxFee.GetFee(nSize);
+        */
+        // Gulden: IsDust() detection disabled, allows any valid dust to be relayed.
+        // The fees imposed on each dust txo is considered sufficient spam deterrant. 
+        return 0;
     }
 
     bool IsDust(const CFeeRate &minRelayTxFee) const

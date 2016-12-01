@@ -4,10 +4,10 @@ $(package)_download_path=http://download.qt.io/official_releases/qt/5.6/$($(pack
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=0ac67cf8d66d52b995f96c31c4b48117a1afb3db99eaa93e20ccd8f7f55f7fde
-$(package)_dependencies=openssl
-$(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext
+$(package)_dependencies=openssl icu
+$(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib
+$(package)_qt_libs=corelib network widgets gui plugins testlib sql
 $(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-xcb-include-order.patch fix_qt_pkgconfig.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
@@ -17,8 +17,19 @@ $(package)_qttranslations_sha256_hash=dcc1534d247babca1840cb6d0a000671801a341ea3
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=e0f845de28c31230dfa428f0190ccb3b91d1fc02481b1f064698ae4ef8376aa1
 
+
+$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
+$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
+
+
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
+$(package)_extra_sources += $($(package)_qtwebkit_file_name)
+
+$(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
+$(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
+
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -36,10 +47,8 @@ $(package)_config_opts += -no-eglfs
 $(package)_config_opts += -no-feature-style-windowsmobile
 $(package)_config_opts += -no-feature-style-windowsce
 $(package)_config_opts += -no-freetype
-$(package)_config_opts += -no-gif
 $(package)_config_opts += -no-glib
 $(package)_config_opts += -no-gstreamer
-$(package)_config_opts += -no-icu
 $(package)_config_opts += -no-iconv
 $(package)_config_opts += -no-kms
 $(package)_config_opts += -no-linuxfb
@@ -58,8 +67,8 @@ $(package)_config_opts += -no-sql-tds
 $(package)_config_opts += -no-sql-mysql
 $(package)_config_opts += -no-sql-odbc
 $(package)_config_opts += -no-sql-psql
-$(package)_config_opts += -no-sql-sqlite
 $(package)_config_opts += -no-sql-sqlite2
+$(package)_config_opts += -qt-sql-sqlite
 $(package)_config_opts += -no-use-gold-linker
 $(package)_config_opts += -no-xinput2
 $(package)_config_opts += -no-xrender
@@ -76,7 +85,6 @@ $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -qt-pcre
 $(package)_config_opts += -qt-zlib
 $(package)_config_opts += -reduce-exports
-$(package)_config_opts += -static
 $(package)_config_opts += -silent
 $(package)_config_opts += -v
 
@@ -105,7 +113,8 @@ endef
 define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash))
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
+$(call fetch_file,$(package),$($(package)_download_path_webkit),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
 endef
 
 define $(package)_extract_cmds
@@ -113,13 +122,15 @@ define $(package)_extract_cmds
   echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  echo "$($(package)_qtwebkit_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwebkit_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   mkdir qtbase && \
   tar --strip-components=1 -xf $($(package)_source) -C qtbase && \
   mkdir qttranslations && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttranslations_file_name) -C qttranslations && \
   mkdir qttools && \
-  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools
+  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
+  mkdir qtwebkit && tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwebkit_file_name) -C qtwebkit
 endef
 
 
@@ -129,6 +140,8 @@ define $(package)_preprocess_cmds
   sed -i.old "s|X11/extensions/XIproto.h|X11/X.h|" qtbase/src/plugins/platforms/xcb/qxcbxsettings.cpp && \
   sed -i.old 's/if \[ "$$$$XPLATFORM_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/if \[ "$$$$BUILD_ON_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/' qtbase/configure && \
   sed -i.old 's/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, 0)/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, kCGMouseButtonLeft)/' qtbase/src/plugins/platforms/cocoa/qcocoacursor.mm && \
+  sed -i.old "s|type nul|perl -e ''|" qtwebkit/Source/WebCore/DerivedSources.pri && \
+  sed -i.old "s|CFG_FRAMEWORK=.*|CFG_FRAMEWORK=no|" qtbase/configure && \
   mkdir -p qtbase/mkspecs/macx-clang-linux &&\
   cp -f qtbase/mkspecs/macx-clang/Info.plist.lib qtbase/mkspecs/macx-clang-linux/ &&\
   cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ &&\
@@ -150,21 +163,24 @@ define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
-  ./configure $($(package)_config_opts) && \
+  PKG_CONFIG_PATH='$(host_prefix)/share/pkgconfig' OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure `pkg-config icu-i18n icu-uc --cflags` `pkg-config icu-i18n icu-uc --libs` $($(package)_config_opts) && \
   $(MAKE) sub-src-clean && \
+  cd ../qtwebkit && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. &&\
   cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile
 endef
 
 define $(package)_build_cmds
-  $(MAKE) -C src $(addprefix sub-,$($(package)_qt_libs)) && \
+  $(MAKE) && \
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
-  $(MAKE) -C ../qttranslations
+  $(MAKE) -C ../qttranslations && \
+  $(MAKE) -C ../qtwebkit
 endef
 
 define $(package)_stage_cmds
   $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. &&\
+  $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \

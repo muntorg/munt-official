@@ -12,7 +12,9 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "platformstyle.h"
-#include "sendcoinsentry.h"
+#include "_Gulden/guldensendcoinsentry.h"
+#include "_Gulden/nocksrequest.h"
+#include "_Gulden/GuldenGUI.h"
 #include "walletmodel.h"
 
 #include "base58.h"
@@ -53,7 +55,6 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);
 
-    addEntry();
 
     connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
@@ -117,6 +118,55 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
     ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
     minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
+    
+    //Gulden
+    ui->customFee->setVisible(false);
+    ui->labelFeeHeadline->setVisible(false);
+    ui->label->setVisible(false);
+    ui->labelBalance->setVisible(false);
+    ui->addButton->setVisible(false);
+    ui->frameFee->setVisible(false);
+    
+    ui->horizontalLayout->removeWidget(ui->sendButton);
+    QPushButton* editButton = new QPushButton();
+    editButton->setText("&Edit");
+    editButton->setObjectName("editButton");
+    ui->horizontalLayout->addWidget(editButton);
+    ui->horizontalLayout->addWidget(ui->sendButton);
+    
+    ui->sendButton->setIcon(QIcon());
+    ui->clearButton->setIcon(QIcon());
+    ui->clearButton->setText("&Clear");
+    ui->clearButton->setMinimumSize(QSize(0, 0));
+    ui->sendButton->setMinimumSize(QSize(0, 0));
+    
+    
+    
+    ui->verticalLayout->setContentsMargins(QMargins(0, 0, 0, 0));
+    QFrame* horizontalLine = new QFrame(this);
+    horizontalLine->setObjectName("horizontalLine");
+    horizontalLine->setFrameStyle(QFrame::HLine);
+    horizontalLine->setFixedHeight(1);
+    horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    
+    ui->verticalLayout->insertWidget(2, horizontalLine);
+    
+    QPushButton* deleteButton = new QPushButton();
+    deleteButton->setText("&Delete");
+    deleteButton->setObjectName("deleteButton");
+    ui->horizontalLayout->insertWidget(0, deleteButton);
+    
+    ui->clearButton->setCursor(Qt::PointingHandCursor);
+    ui->sendButton->setCursor(Qt::PointingHandCursor);
+    editButton->setCursor(Qt::PointingHandCursor);
+    deleteButton->setCursor(Qt::PointingHandCursor);
+    
+    connect(deleteButton, SIGNAL(clicked()), this, SLOT(deleteAddressBookEntry()));
+    connect(editButton, SIGNAL(clicked()), this, SLOT(editAddressBookEntry()));
+    
+    addEntry();
+    
+    nocksRequest = NULL;
 }
 
 void SendCoinsDialog::setClientModel(ClientModel *clientModel)
@@ -136,7 +186,7 @@ void SendCoinsDialog::setModel(WalletModel *model)
     {
         for(int i = 0; i < ui->entries->count(); ++i)
         {
-            SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+            GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
             if(entry)
             {
                 entry->setModel(model);
@@ -189,28 +239,43 @@ SendCoinsDialog::~SendCoinsDialog()
     settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
 
     delete ui;
+    
+    if (nocksRequest)
+    {
+        nocksRequest->deleteLater();
+        nocksRequest = NULL;
+    }
 }
 
 void SendCoinsDialog::on_sendButton_clicked()
 {
+    ui->sendButton->setEnabled(true);
+    
     if(!model || !model->getOptionsModel())
         return;
 
     QList<SendCoinsRecipient> recipients;
     bool valid = true;
 
-    for(int i = 0; i < ui->entries->count(); ++i)
+    if (!pendingRecipients.isEmpty())
     {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
-        if(entry)
+        recipients = pendingRecipients;
+    }
+    else
+    {
+        for(int i = 0; i < ui->entries->count(); ++i)
         {
-            if(entry->validate())
+            GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+            if(entry)
             {
-                recipients.append(entry->getValue());
-            }
-            else
-            {
-                valid = false;
+                if(entry->validate())
+                {
+                    recipients.append(entry->getValue());
+                }
+                else
+                {
+                    valid = false;
+                }
             }
         }
     }
@@ -219,6 +284,36 @@ void SendCoinsDialog::on_sendButton_clicked()
     {
         return;
     }
+    
+    if (nocksRequest)
+    {
+        nocksRequest->deleteLater();
+        nocksRequest = NULL;
+    }
+    
+    // Convert all our 'forex' requests into normal requests before commencing.
+    pendingRecipients = recipients;
+    for (int i=0; i < pendingRecipients.size(); ++i)
+    {
+        if (pendingRecipients[i].paymentType != SendCoinsRecipient::PaymentType::NormalPayment)
+        {
+            nocksRequest = new NocksRequest(this, &pendingRecipients[i], NocksRequest::RequestType::Order);
+            connect(nocksRequest, SIGNAL(requestProcessed()), this, SLOT(on_sendButton_clicked()));
+            ui->sendButton->setEnabled(false);
+            return;
+        }
+        else if(!pendingRecipients[i].forexFailCode.empty())
+        {
+            WalletModel::SendCoinsReturn errorRet;
+            errorRet.status = WalletModel::StatusCode::ForexFailed;
+            processSendCoinsReturn(errorRet, QString::fromStdString(pendingRecipients[i].forexFailCode));
+            ui->sendButton->setEnabled(true);
+            pendingRecipients.clear();
+            return;
+        }
+    }
+    pendingRecipients.clear();
+    
 
     fNewRecipientAllowed = false;
     WalletModel::UnlockContext ctx(model->requestUnlock());
@@ -232,10 +327,57 @@ void SendCoinsDialog::on_sendButton_clicked()
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
-    if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-        prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
-    else
-        prepareStatus = model->prepareTransaction(currentTransaction);
+    
+    
+    CAccount* forAccount = model->getActiveAccount();
+    std::vector<CAccount*> accountsToTry;
+    {    
+        LOCK(pwalletMain->cs_wallet);
+        
+        //Try to pay first from legacy acocunts (empty them)
+        
+        for ( const auto& accountPair : pwalletMain->mapAccounts )
+        {
+            if(accountPair.second->getParentUUID() == forAccount->getUUID())
+            {
+                accountsToTry.push_back(accountPair.second);
+            }
+        }
+        accountsToTry.push_back(forAccount);
+    }
+    bool allFailed=true;
+    bool didShowError=false;
+    for (auto& account : accountsToTry)
+    {
+        if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) > currentTransaction.getTotalTransactionAmount())
+        {
+            if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
+                prepareStatus = model->prepareTransaction(account, currentTransaction, CoinControlDialog::coinControl);
+            else
+                prepareStatus = model->prepareTransaction(account, currentTransaction);
+            if (prepareStatus.status == WalletModel::OK)
+            {
+                allFailed = false;
+                didShowError = false;
+                forAccount = account;
+                break;
+            }
+            if (prepareStatus.status != WalletModel::AmountExceedsBalance)
+            {
+                didShowError = true;
+            }
+        }
+    }
+    if (allFailed)
+    {
+        // If we failed inside prepareTransaction then we already displayed a warning, so don't display another one.
+        if (didShowError)
+        {
+            return;
+        }
+        prepareStatus.status =  WalletModel::AmountExceedsBalance;
+    }
+    
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
@@ -251,13 +393,33 @@ void SendCoinsDialog::on_sendButton_clicked()
     // Format confirmation message
     QStringList formatted;
     Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
-    {
+    {        
         // generate bold amount string
         QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
         amount.append("</b>");
         // generate monospace address string
         QString address = "<span style='font-family: monospace;'>" + rcp.address;
         address.append("</span>");
+        
+        
+        if (!rcp.forexAddress.isEmpty())
+        {
+            amount = "<b>" + BitcoinUnits::format(BitcoinUnits::BTC, rcp.forexAmount);
+            if (rcp.forexPaymentType == SendCoinsRecipient::PaymentType::IBANPayment)
+            {
+                amount.append(" Euro");
+            }
+            else if(rcp.forexPaymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
+            {
+                amount.append(" BTC");
+            }
+            amount.append(" (");
+            amount.append(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount));
+            amount.append(")</b>");
+            
+            address = "<span style='font-family: monospace;'>" + rcp.forexAddress;
+            address.append("</span>");
+        }
 
         QString recipientElement;
 
@@ -314,15 +476,24 @@ void SendCoinsDialog::on_sendButton_clicked()
     questionString.append(QString("<span style='font-size:10pt;font-weight:normal;'><br />(=%2)</span>")
         .arg(alternativeUnits.join(" " + tr("or") + "<br />")));
 
-    SendConfirmationDialog confirmationDialog(tr("Confirm send coins"),
-        questionString.arg(formatted.join("<br />")), SEND_CONFIRM_DELAY, this);
-    confirmationDialog.exec();
-    QMessageBox::StandardButton retval = (QMessageBox::StandardButton)confirmationDialog.result();
-
-    if(retval != QMessageBox::Yes)
+    
+    QDialog* d = GuldenGUI::createDialog(this, questionString.arg(formatted.join("<br />")), "Send", "Cancel", 600, 360);
+    
+    int result = d->exec();
+    if(result != QDialog::Accepted)
     {
         fNewRecipientAllowed = true;
         return;
+    }
+    
+    Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
+    {
+        if(!rcp.forexAddress.isEmpty() && GetTime() > rcp.expiry)
+        {
+            prepareStatus.status =  WalletModel::PaymentRequestExpired;
+            fNewRecipientAllowed = true;
+            return;
+        }
     }
 
     // now send the prepared transaction
@@ -361,14 +532,44 @@ void SendCoinsDialog::accept()
     clear();
 }
 
-SendCoinsEntry *SendCoinsDialog::addEntry()
+void SendCoinsDialog::deleteAddressBookEntry()
 {
-    SendCoinsEntry *entry = new SendCoinsEntry(platformStyle, this);
+    //fixme: (GULDEN) Multiple entries.
+    for(int i = 0; i < ui->entries->count(); ++i)
+    {
+        GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        if(entry && !entry->isHidden())
+        {
+            entry->deleteAddressBookEntry();
+            break;
+        }
+    }
+}
+
+void SendCoinsDialog::editAddressBookEntry()
+{
+    //fixme: (GULDEN) Multiple entries.
+    for(int i = 0; i < ui->entries->count(); ++i)
+    {
+        GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        if(entry && !entry->isHidden())
+        {
+            entry->editAddressBookEntry();
+            break;
+        }
+    }
+}
+
+GuldenSendCoinsEntry *SendCoinsDialog::addEntry()
+{
+    GuldenSendCoinsEntry *entry = new GuldenSendCoinsEntry(platformStyle, this);
     entry->setModel(model);
     ui->entries->addWidget(entry);
-    connect(entry, SIGNAL(removeEntry(SendCoinsEntry*)), this, SLOT(removeEntry(SendCoinsEntry*)));
+    connect(entry, SIGNAL(removeEntry(GuldenSendCoinsEntry*)), this, SLOT(removeEntry(GuldenSendCoinsEntry*)));
     connect(entry, SIGNAL(payAmountChanged()), this, SLOT(coinControlUpdateLabels()));
     connect(entry, SIGNAL(subtractFeeFromAmountChanged()), this, SLOT(coinControlUpdateLabels()));
+    
+    connect(entry, SIGNAL(sendTabChanged()), this, SLOT(updateActionButtons()));
 
     // Focus the field, so that entry can start immediately
     entry->clear();
@@ -380,6 +581,7 @@ SendCoinsEntry *SendCoinsDialog::addEntry()
         bar->setSliderPosition(bar->maximum());
 
     updateTabsAndLabels();
+    updateActionButtonsForEntry(entry);
     return entry;
 }
 
@@ -389,7 +591,7 @@ void SendCoinsDialog::updateTabsAndLabels()
     coinControlUpdateLabels();
 }
 
-void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
+void SendCoinsDialog::removeEntry(GuldenSendCoinsEntry* entry)
 {
     entry->hide();
 
@@ -406,7 +608,7 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 {
     for(int i = 0; i < ui->entries->count(); ++i)
     {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
         if(entry)
         {
             prev = entry->setupTabChain(prev);
@@ -420,11 +622,11 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 
 void SendCoinsDialog::setAddress(const QString &address)
 {
-    SendCoinsEntry *entry = 0;
+    GuldenSendCoinsEntry *entry = 0;
     // Replace the first entry if it is still unused
     if(ui->entries->count() == 1)
     {
-        SendCoinsEntry *first = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(0)->widget());
+        GuldenSendCoinsEntry *first = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(0)->widget());
         if(first->isClear())
         {
             entry = first;
@@ -443,11 +645,11 @@ void SendCoinsDialog::pasteEntry(const SendCoinsRecipient &rv)
     if(!fNewRecipientAllowed)
         return;
 
-    SendCoinsEntry *entry = 0;
+    GuldenSendCoinsEntry *entry = 0;
     // Replace the first entry if it is still unused
     if(ui->entries->count() == 1)
     {
-        SendCoinsEntry *first = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(0)->widget());
+        GuldenSendCoinsEntry *first = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(0)->widget());
         if(first->isClear())
         {
             entry = first;
@@ -485,6 +687,21 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
     }
 }
 
+void SendCoinsDialog::updateActionButtonsForEntry(GuldenSendCoinsEntry* entry)
+{
+      findChild<QPushButton*>("editButton")->setVisible(entry->ShouldShowEditButton());
+      findChild<QPushButton*>("deleteButton")->setVisible(entry->ShouldShowDeleteButton());
+      findChild<QPushButton*>("clearButton")->setVisible(entry->ShouldShowClearButton());
+}
+
+void SendCoinsDialog::updateActionButtons()
+{
+      QObject* sender = this->sender();
+      GuldenSendCoinsEntry* entry = qobject_cast<GuldenSendCoinsEntry*>(sender);
+  
+      updateActionButtonsForEntry(entry);
+}
+
 void SendCoinsDialog::updateDisplayUnit()
 {
     setBalance(model->getBalance(), 0, 0, 0, 0, 0);
@@ -511,7 +728,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         msgParams.first = tr("The amount to pay must be larger than 0.");
         break;
     case WalletModel::AmountExceedsBalance:
-        msgParams.first = tr("The amount exceeds your balance.");
+        msgParams.first = tr("The amount exceeds your balance.\nIf you  have recently received funds you may need to wait for them to clear before spending them.");
         break;
     case WalletModel::AmountWithFeeExceedsBalance:
         msgParams.first = tr("The total exceeds your balance when the %1 transaction fee is included.").arg(msgArg);
@@ -532,6 +749,10 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         break;
     case WalletModel::PaymentRequestExpired:
         msgParams.first = tr("Payment request expired.");
+        msgParams.second = CClientUIInterface::MSG_ERROR;
+        break;
+    case WalletModel::ForexFailed:
+        msgParams.first = tr("Nocks request failed [%1]").arg(msgArg);
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     // included to prevent a compiler warning.
@@ -807,7 +1028,7 @@ void SendCoinsDialog::coinControlUpdateLabels()
     CoinControlDialog::fSubtractFeeFromAmount = false;
     for(int i = 0; i < ui->entries->count(); ++i)
     {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
         if(entry && !entry->isHidden())
         {
             SendCoinsRecipient rcp = entry->getValue();

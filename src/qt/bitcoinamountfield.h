@@ -10,9 +10,14 @@
 #include <QWidget>
 
 class AmountSpinBox;
+class OptionsModel;
+class CurrencyTicker;
+class ClickableLabel;
+class NocksRequest;
 
 QT_BEGIN_NAMESPACE
 class QValueComboBox;
+class QLabel;
 QT_END_NAMESPACE
 
 /** Widget for entering bitcoin amounts.
@@ -29,7 +34,9 @@ public:
     explicit BitcoinAmountField(QWidget *parent = 0);
 
     CAmount value(bool *value=0) const;
+    CAmount valueForCurrency(bool *value=0) const;
     void setValue(const CAmount& value);
+    void setValue(const CAmount& value, int nLimit);
 
     /** Set single step in satoshis **/
     void setSingleStep(const CAmount& step);
@@ -55,7 +62,18 @@ public:
         in these cases we have to set it up manually.
     */
     QWidget *setupTabChain(QWidget *prev);
-
+    
+    enum AmountFieldCurrency
+    {
+        CurrencyGulden,
+        CurrencyBCOIN,
+        CurrencyEuro,
+        CurrencyLocal
+    };
+    void setCurrency(OptionsModel* optionsModel_, CurrencyTicker* ticker, AmountFieldCurrency currency_);
+    
+    void nocksRequestProcessed(NocksRequest*& request, int position);
+    
 Q_SIGNALS:
     void valueChanged();
 
@@ -65,11 +83,35 @@ protected:
 
 private:
     AmountSpinBox *amount;
-    QValueComboBox *unit;
+    QLabel* unit;
+    ClickableLabel* secondaryAmountDisplay;
+    ClickableLabel* tertiaryAmountDisplay;
+    ClickableLabel* quadAmountDisplay;
+    ClickableLabel* amountSeperator;
+    AmountFieldCurrency primaryCurrency;
+    AmountFieldCurrency displayCurrency;
+    QLabel* forexError;
+    
+    OptionsModel* optionsModel;
+    CurrencyTicker* ticker;
+    
+    CAmount secondaryAmount;
+    CAmount tertiaryAmount;
+    CAmount quadAmount;
+    
+    NocksRequest* nocksRequestBTCtoNLG;
+    NocksRequest* nocksRequestEURtoNLG;
+    NocksRequest* nocksRequestNLGtoBTC;
+    NocksRequest* nocksRequestNLGtoEUR;
 
+    bool validateEurLimits(CAmount EURAmount);
+    bool validateBTCLimits(CAmount EURAmount);
 private Q_SLOTS:
     void unitChanged(int idx);
-
+    void update();
+    void changeToSecondaryCurrency();
+    void changeToTertiaryCurrency();
+    void changeToQuadCurrency();
 };
 
 #endif // BITCOIN_QT_BITCOINAMOUNTFIELD_H

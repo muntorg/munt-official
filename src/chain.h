@@ -281,10 +281,12 @@ public:
         return (int64_t)nTime;
     }
 
-    enum { nMedianTimeSpan=11 };
-
-    int64_t GetMedianTimePast() const
+    int64_t GetMedianTimePast(int nHeight) const
     {
+        int nMedianTimeSpan = 11;
+        if (nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
+            nMedianTimeSpan = 3;
+            
         int64_t pmedian[nMedianTimeSpan];
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
         int64_t* pend = &pmedian[nMedianTimeSpan];

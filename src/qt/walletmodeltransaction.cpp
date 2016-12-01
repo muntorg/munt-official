@@ -89,9 +89,9 @@ CAmount WalletModelTransaction::getTotalTransactionAmount()
     return totalTransactionAmount;
 }
 
-void WalletModelTransaction::newPossibleKeyChange(CWallet *wallet)
+void WalletModelTransaction::newPossibleKeyChange(CAccount* forAccount, CWallet *wallet)
 {
-    keyChange = new CReserveKey(wallet);
+    keyChange = new CReserveKey(wallet, forAccount, KEYCHAIN_CHANGE);
 }
 
 CReserveKey *WalletModelTransaction::getPossibleKeyChange()

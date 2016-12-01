@@ -13,8 +13,10 @@
 #include "util.h"
 #include "utiltime.h"
 #include "wallet.h"
+#include "walletdb.h"
 #include "merkleblock.h"
 #include "core_io.h"
+#include "rpcwallet.h"
 
 #include <fstream>
 #include <stdint.h>
@@ -25,6 +27,8 @@
 #include <univalue.h>
 
 #include <boost/foreach.hpp>
+
+#include <Gulden/translate.h>
 
 using namespace std;
 
@@ -79,14 +83,15 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() < 1 || params.size() > 3)
+    if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
             "importprivkey \"bitcoinprivkey\" ( \"label\" rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
             "1. \"bitcoinprivkey\"   (string, required) The private key (see dumpprivkey)\n"
-            "2. \"label\"            (string, optional, default=\"\") An optional label\n"
-            "3. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
+            "2. \"account\"          (string, required) The account in which to import the key. \"\" for the currently active account. NB! Must be a legacy account, cannot import keys into an HD account.\n"
+            "3. \"label\"            (string, optional, default=\"\") An optional label\n"
+            "4. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
             "\nNote: This call can take minutes to complete if rescan is true.\n"
             "\nExamples:\n"
             "\nDump a private key\n"
@@ -106,13 +111,19 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
 
     string strSecret = params[0].get_str();
     string strLabel = "";
-    if (params.size() > 1)
-        strLabel = params[1].get_str();
+    if (params.size() > 2)
+        strLabel = params[2].get_str();
+    
+    CAccount* AccountFromValue(const UniValue& value, bool useDefaultIfEmpty);
+    CAccount* forAccount = AccountFromValue(params[1], true);
+    
+    if (forAccount->IsHD())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot import a privkey into an HD account.");
 
     // Whether to perform rescan after import
     bool fRescan = true;
-    if (params.size() > 2)
-        fRescan = params[2].get_bool();
+    if (params.size() > 3)
+        fRescan = params[3].get_bool();
 
     if (fRescan && fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Rescan is disabled in pruned mode");
@@ -130,7 +141,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     CKeyID vchAddress = pubkey.GetID();
     {
         pwalletMain->MarkDirty();
-        pwalletMain->SetAddressBook(vchAddress, strLabel, "receive");
+        pwalletMain->SetAddressBook(CBitcoinAddress(vchAddress).ToString(), strLabel, "receive");
 
         // Don't throw error in case a key is already there
         if (pwalletMain->HaveKey(vchAddress))
@@ -138,7 +149,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
 
         pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
 
-        if (!pwalletMain->AddKeyPubKey(key, pubkey))
+        if (!pwalletMain->AddKeyPubKey(key, pubkey, *forAccount, KEYCHAIN_EXTERNAL))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
 
         // whenever a key is imported, we need to scan the whole chain
@@ -170,7 +181,7 @@ void ImportScript(const CScript& script, const string& strLabel, bool isRedeemSc
     } else {
         CTxDestination destination;
         if (ExtractDestination(script, destination)) {
-            pwalletMain->SetAddressBook(destination, strLabel, "receive");
+            pwalletMain->SetAddressBook(CBitcoinAddress(destination).ToString(), strLabel, "receive");
         }
     }
 }
@@ -181,14 +192,14 @@ void ImportAddress(const CBitcoinAddress& address, const string& strLabel)
     ImportScript(script, strLabel, false);
     // add to address book or update label
     if (address.IsValid())
-        pwalletMain->SetAddressBook(address.Get(), strLabel, "receive");
+        pwalletMain->SetAddressBook(address.ToString(), strLabel, "receive");
 }
 
 UniValue importaddress(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
-    
+       
     if (fHelp || params.size() < 1 || params.size() > 4)
         throw runtime_error(
             "importaddress \"address\" ( \"label\" rescan p2sh )\n"
@@ -212,6 +223,9 @@ UniValue importaddress(const UniValue& params, bool fHelp)
         );
 
 
+    //fixme: (FUT) (1.6.1)
+    throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
+    
     string strLabel = "";
     if (params.size() > 1)
         strLabel = params[1].get_str();
@@ -355,7 +369,7 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
-
+    
     if (fHelp || params.size() < 1 || params.size() > 4)
         throw runtime_error(
             "importpubkey \"pubkey\" ( \"label\" rescan )\n"
@@ -374,7 +388,9 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
             + HelpExampleRpc("importpubkey", "\"mypubkey\", \"testing\", false")
         );
 
-
+    //fixme: (FUT) (1.6.1)
+    throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
+    
     string strLabel = "";
     if (params.size() > 1)
         strLabel = params[1].get_str();
@@ -414,12 +430,13 @@ UniValue importwallet(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() != 2)
         throw runtime_error(
             "importwallet \"filename\"\n"
             "\nImports keys from a wallet dump file (see dumpwallet).\n"
             "\nArguments:\n"
             "1. \"filename\"    (string, required) The wallet file\n"
+            "2. \"account\"     (string, required) The account in which to import the key. \"\" for the currently active account. NB! Must be a legacy account, cannot import keys into an HD account.\n"
             "\nExamples:\n"
             "\nDump the wallet\n"
             + HelpExampleCli("dumpwallet", "\"test\"") +
@@ -431,6 +448,11 @@ UniValue importwallet(const UniValue& params, bool fHelp)
 
     if (fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Importing wallets is disabled in pruned mode");
+    
+    CAccount* forAccount = AccountFromValue(params[1], true);
+    
+    if (forAccount->IsHD())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot import a privkey into an HD account.");
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
@@ -487,13 +509,14 @@ UniValue importwallet(const UniValue& params, bool fHelp)
             }
         }
         LogPrintf("Importing %s...\n", CBitcoinAddress(keyid).ToString());
-        if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
+        
+        if (!pwalletMain->AddKeyPubKey(key, pubkey, *forAccount, KEYCHAIN_EXTERNAL)) {
             fGood = false;
             continue;
         }
         pwalletMain->mapKeyMetadata[keyid].nCreateTime = nTime;
         if (fLabel)
-            pwalletMain->SetAddressBook(keyid, strLabel, "receive");
+            pwalletMain->SetAddressBook(CBitcoinAddress(keyid).ToString(), strLabel, "receive");
         nTimeBegin = std::min(nTimeBegin, nTime);
     }
     file.close();
@@ -521,13 +544,15 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
             "dumpprivkey \"bitcoinaddress\"\n"
             "\nReveals the private key corresponding to 'bitcoinaddress'.\n"
             "Then the importprivkey can be used with this output\n"
+            "WARNING! If a dumped private key from an HD account is exposed or given out -all- keys within that account (current and future) are also at risk, if the attacker can also get hold of your public key for that account.\n"
             "\nArguments:\n"
             "1. \"bitcoinaddress\"   (string, required) The bitcoin address for the private key\n"
+            "2. \"HDConsent\"        (string, optional) If dumping from an HD account please pass the string 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY' for this paramater, if you do not understand the risk then please do not do this.\n"
             "\nResult:\n"
             "\"key\"                (string) The private key\n"
             "\nExamples:\n"
@@ -548,23 +573,40 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
     CKey vchSecret;
+    
+    for(const auto& accountIter : pwalletMain->mapAccounts)
+    {
+        if (accountIter.second->HaveKey(keyID))
+        {
+            if (accountIter.second->IsHD())
+            {
+                if (params.size() < 2 || params[1].get_str() != "I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY")
+                {
+                    throw JSONRPCError(RPC_INTERNAL_ERROR, "Please pass the correct HDConsent option in order to proceed.");
+                }
+            }
+        }
+    }
+    
     if (!pwalletMain->GetKey(keyID, vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
     return CBitcoinSecret(vchSecret).ToString();
 }
-
 
 UniValue dumpwallet(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
             "dumpwallet \"filename\"\n"
             "\nDumps all wallet keys in a human-readable format.\n"
+            "WARNING! If a dumped private key from an HD account is exposed or given out -all- keys within that account (current and future) are also at risk, if the attacker can also get hold of your public key for that account.\n"
+            "It is strongly advised not to use this function with an HD wallet, please proceed at your own risk.\n"
             "\nArguments:\n"
             "1. \"filename\"    (string, required) The filename\n"
+            "2. \"HDConsent\"        (string, optional) If dumping from an HD account please pass the string 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY' for this paramater, if you do not understand the risk then please do not do this.\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpwallet", "\"test\"")
             + HelpExampleRpc("dumpwallet", "\"test\"")
@@ -578,6 +620,17 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     file.open(params[0].get_str().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
+    
+    for(const auto& accountIter : pwalletMain->mapAccounts)
+    {
+        if (accountIter.second->IsHD())
+        {
+            if (params.size() < 2 || params[1].get_str() != "I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY")
+            {
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "Please pass the correct HDConsent option in order to proceed.");
+            }
+        }
+    }
 
     std::map<CKeyID, int64_t> mapKeyBirth;
     std::set<CKeyID> setKeyPool;
@@ -593,28 +646,12 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by Bitcoin %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet dump created by Gulden %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
     file << "\n";
 
-    // add the base58check encoded extended master if the wallet uses HD 
-    CKeyID masterKeyID = pwalletMain->GetHDChain().masterKeyID;
-    if (!masterKeyID.IsNull())
-    {
-        CKey key;
-        if (pwalletMain->GetKey(masterKeyID, key))
-        {
-            CExtKey masterKey;
-            masterKey.SetMaster(key.begin(), key.size());
-
-            CBitcoinExtKey b58extkey;
-            b58extkey.SetKey(masterKey);
-
-            file << "# extended private masterkey: " << b58extkey.ToString() << "\n\n";
-        }
-    }
     for (std::vector<std::pair<int64_t, CKeyID> >::const_iterator it = vKeyBirth.begin(); it != vKeyBirth.end(); it++) {
         const CKeyID &keyid = it->second;
         std::string strTime = EncodeDumpTime(it->first);
@@ -622,18 +659,13 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
         CKey key;
         if (pwalletMain->GetKey(keyid, key)) {
             file << strprintf("%s %s ", CBitcoinSecret(key).ToString(), strTime);
-            if (pwalletMain->mapAddressBook.count(keyid)) {
-                file << strprintf("label=%s", EncodeDumpString(pwalletMain->mapAddressBook[keyid].name));
-            } else if (keyid == masterKeyID) {
-                file << "hdmaster=1";
+            if (pwalletMain->mapAddressBook.count(CBitcoinAddress(keyid).ToString())) {
+                file << strprintf("label=%s", EncodeDumpString(pwalletMain->mapAddressBook[CBitcoinAddress(keyid).ToString()].name));
             } else if (setKeyPool.count(keyid)) {
                 file << "reserve=1";
-            } else if (pwalletMain->mapKeyMetadata[keyid].hdKeypath == "m") {
-                file << "inactivehdmaster=1";
             } else {
                 file << "change=1";
             }
-            file << strprintf(" # addr=%s%s\n", strAddr, (pwalletMain->mapKeyMetadata[keyid].hdKeypath.size() > 0 ? " hdkeypath="+pwalletMain->mapKeyMetadata[keyid].hdKeypath : ""));
         }
     }
     file << "\n";

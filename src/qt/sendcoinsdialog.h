@@ -15,8 +15,9 @@
 class ClientModel;
 class OptionsModel;
 class PlatformStyle;
-class SendCoinsEntry;
+class GuldenSendCoinsEntry;
 class SendCoinsRecipient;
+class NocksRequest;
 
 namespace Ui {
     class SendCoinsDialog;
@@ -47,15 +48,19 @@ public:
     void setAddress(const QString &address);
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
+    void updateActionButtonsForEntry(GuldenSendCoinsEntry* entry);
 
 public Q_SLOTS:
     void clear();
     void reject();
     void accept();
-    SendCoinsEntry *addEntry();
+    void deleteAddressBookEntry();
+    void editAddressBookEntry();
+    GuldenSendCoinsEntry *addEntry();
     void updateTabsAndLabels();
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void updateActionButtons();
 
 private:
     Ui::SendCoinsDialog *ui;
@@ -64,6 +69,10 @@ private:
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
     const PlatformStyle *platformStyle;
+    
+    NocksRequest* nocksRequest;
+    
+    QList<SendCoinsRecipient> pendingRecipients;
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in Q_EMIT message().
@@ -76,7 +85,7 @@ private Q_SLOTS:
     void on_sendButton_clicked();
     void on_buttonChooseFee_clicked();
     void on_buttonMinimizeFee_clicked();
-    void removeEntry(SendCoinsEntry* entry);
+    void removeEntry(GuldenSendCoinsEntry* entry);
     void updateDisplayUnit();
     void coinControlFeatureChanged(bool);
     void coinControlButtonClicked();
