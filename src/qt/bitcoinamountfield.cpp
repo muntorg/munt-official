@@ -476,7 +476,13 @@ void BitcoinAmountField::setValue(const CAmount& value)
 
 void BitcoinAmountField::setValue(const CAmount& value, int nLimit)
 {
-    amount->setValue(value, nLimit);
+    CAmount finalValue;
+    BitcoinUnits::parse(BitcoinUnits::BTC, BitcoinUnits::format(BitcoinUnits::BTC, value, false, BitcoinUnits::separatorAlways, nLimit), &finalValue);
+    if (finalValue > MAX_MONEY)
+    {
+        finalValue = MAX_MONEY;
+    }
+    amount->setValue(finalValue, nLimit);
 }
 
 void BitcoinAmountField::setReadOnly(bool fReadOnly)
@@ -677,12 +683,10 @@ void BitcoinAmountField::update()
     if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" ) 
     {
         quadAmountDisplay->setVisible(false);
-        displayCurrency = AmountFieldCurrency::CurrencyBCOIN;
     }
     else if (optionsModel->guldenSettings->getLocalCurrency().toStdString() == "EUR")
     {
         quadAmountDisplay->setVisible(false);
-        displayCurrency = AmountFieldCurrency::CurrencyEuro;
     }
     else
     {
