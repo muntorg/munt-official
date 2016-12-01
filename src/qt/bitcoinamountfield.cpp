@@ -268,6 +268,10 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     nocksRequestNLGtoBTC = NULL;
     nocksRequestNLGtoEUR = NULL;
     
+    secondaryAmount = CAmount(0);
+    tertiaryAmount = CAmount(0);
+    quadAmount = CAmount(0);
+    
     primaryCurrency = AmountFieldCurrency::CurrencyGulden;
     displayCurrency = AmountFieldCurrency::CurrencyGulden;
     

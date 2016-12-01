@@ -491,6 +491,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         if(!rcp.forexAddress.isEmpty() && GetTime() > rcp.expiry)
         {
             prepareStatus.status =  WalletModel::PaymentRequestExpired;
+            processSendCoinsReturn(prepareStatus, BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
             fNewRecipientAllowed = true;
             return;
         }

@@ -181,7 +181,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
                 {
                     QString depositAmount = successValue.toObject().value("depositAmount").toString();
                     QString depositAddress = successValue.toObject().value("deposit").toString();
-                    QString expirationTime = successValue.toObject().value("expiration").toString();
+                    QString expirationTime = successValue.toObject().value("expirationTimestamp").toString();
                     QString withdrawalAmount = successValue.toObject().value("withdrawalAmount").toString();
                     QString withdrawalAddress = successValue.toObject().value("withdrawalOriginal").toString();
                     
