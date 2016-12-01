@@ -335,6 +335,10 @@ static bool InterpretBool(const std::string& strValue)
         return true;
     if (strValue == "yes")
         return true;
+    if (strValue == "false")
+        return false;
+    if (strValue == "no")
+        return false;
     return (atoi(strValue) != 0);
 }
 
