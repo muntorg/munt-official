@@ -475,7 +475,17 @@ UniValue listallaccounts(const UniValue& params, bool fHelp)
     for (const auto& accountPair : pwalletMain->mapAccounts)
     {
         if (!accountPair.second->IsHD())
+        {
+            if (!forSeed)
+            {
+                UniValue rec(UniValue::VOBJ);
+                rec.push_back(Pair("UUID", accountPair.first));
+                rec.push_back(Pair("label", accountPair.second->getLabel()));
+                rec.push_back(Pair("type", "legacy"));
+                allAccounts.push_back(rec);
+            }
             continue;
+        }
         if (accountPair.second->m_Type == AccountType::Shadow)
             continue;
         if (forSeed && ((CAccountHD*)accountPair.second)->getSeedUUID() != forSeed->getUUID())
@@ -484,6 +494,7 @@ UniValue listallaccounts(const UniValue& params, bool fHelp)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", accountPair.first));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
+        rec.push_back(Pair("type", "HD"));
         allAccounts.push_back(rec);
     }
     

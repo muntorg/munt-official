@@ -936,7 +936,7 @@ QString getAccountLabel(CAccount* account)
     {
         accountName.append(QString("%1").arg(((CAccountHD*)account)->getIndex()));
     }*/
-    return limitString(accountName, 35);
+    return limitString(accountName, 28);
 }
 
 void GuldenGUI::refreshAccountControls()
