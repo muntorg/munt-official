@@ -59,7 +59,7 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
 {
     m_account = account;
 
-    ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 35) );
+    ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 26) );
     
     //fixme: GULDEN - Use AccountTableModel.
     m_accountBalance = pwalletMain->GetAccountBalance(m_account->getUUID(), 0, ISMINE_SPENDABLE, true );

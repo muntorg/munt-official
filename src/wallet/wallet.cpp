@@ -4182,7 +4182,7 @@ bool CWallet::InitLoadWallet()
             {
                 if (mapArgs.count("-usehd") == 0)
                 {
-                    throw runtime_error("Must specify -usehd=true or -usehd=false, in order to allow or refuse HD upgrade.");
+                    throw runtime_error("Must specify -usehd=1 or -usehd=0, in order to allow or refuse HD upgrade.");
                 }
             }
         }
@@ -4248,6 +4248,41 @@ bool CWallet::InitLoadWallet()
                         CWalletDB walletdb(walletFile);
                         walletdb.WritePrimaryAccount(walletInstance->activeAccount);
                     }
+                }
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                {
+                    LOCK(walletInstance->cs_wallet);
+                    if (!walletInstance->IsLocked())
+                        break;
+                    walletInstance->wantDelayLock = true;
+                    uiInterface.RequestUnlock(walletInstance, _("Wallet unlock required for wallet upgrade"));
+                }
+                MilliSleep(5000);
+            }
+            
+            bool walletWasCrypted = walletInstance->activeAccount->externalKeyStore.IsCrypted();
+            {
+                LOCK(walletInstance->cs_wallet);
+            
+                //Force old legacy account to resave
+                {
+                    CWalletDB walletdb(walletFile);
+                    walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
+                    if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
+                    {
+                        throw runtime_error("Writing legacy account failed");
+                    }
+                    if (walletWasCrypted && !walletInstance->activeAccount->internalKeyStore.IsCrypted())
+                    {
+                        walletInstance->activeAccount->internalKeyStore.SetCrypted();
+                        walletInstance->activeAccount->internalKeyStore.Unlock(walletInstance->activeAccount->vMasterKey);
+                    }
+                    walletInstance->ForceRewriteKeys(*walletInstance->activeAccount);
                 }
             }
         }
