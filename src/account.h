@@ -300,7 +300,7 @@ public:
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain) override;
 
     void GetPubKey(CExtPubKey& childKey, int nChain) const;
-    bool IsHD() const {return true;};
+    bool IsHD() const override {return true;};
     uint32_t getIndex();
     std::string getSeedUUID() const;
     CExtKey* GetAccountMasterPrivKey();   

@@ -1053,7 +1053,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source></source>
-        <translation type="unfinished">Account overzicht widget</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>20 000</source>
@@ -1096,6 +1096,14 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Pending maturity: %1</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation type="unfinished">Mijn accounts</translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation type="unfinished">Account toevoegen</translation>
     </message>
 </context>
 <context>
@@ -3682,10 +3690,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enter your recovery phrase that you wrote down when installing the software previously.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>I wrote it down</source>
         <translation type="unfinished">Ik heb het opgeschreven</translation>
     </message>
@@ -3727,7 +3731,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>

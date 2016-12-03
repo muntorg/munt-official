@@ -339,7 +339,7 @@ void GuldenGUI::createToolBarsGulden()
         
         ClickableLabel* myAccountLabel = new ClickableLabel( myAccountsFrame );
         myAccountLabel->setObjectName( "labelMyAccounts" );
-        myAccountLabel->setText( "My accounts" );
+        myAccountLabel->setText( tr("My accounts") );
         layoutMyAccounts->addWidget( myAccountLabel );
         myAccountLabel->setContentsMargins( 0, 0, 0, 0 );
         
@@ -383,7 +383,7 @@ void GuldenGUI::createToolBarsGulden()
     }
 
     QPushButton* addAccButton = new QPushButton( m_pImpl );
-    addAccButton->setText( " Add account" );
+    addAccButton->setText( " "+tr("Add account") );
     addAccButton->setObjectName( "add_account_button" );
     addAccButton->setCursor( Qt::PointingHandCursor );
     accountBar->addWidget( addAccButton );

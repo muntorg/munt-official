@@ -551,7 +551,13 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 forAccount = pwallet->activeAccount->getUUID();
                 nKeyChain = KEYCHAIN_EXTERNAL;
             }
-
+            
+            if (strType == "key" && GetBoolArg("-skipplainkeys", false))
+            {
+                LogPrintf("Skipping unencrypted key [skipplainkeys]\n");
+            }
+            else
+            {
             bool fSkipCheck = false;
 
             if (!hash.IsNull())
@@ -580,6 +586,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             {
                 strErr = "Error reading wallet database: LoadKey failed";
                 return false;
+            }
             }
         }
         else if (strType == "mkey")

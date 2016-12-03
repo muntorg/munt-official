@@ -138,8 +138,8 @@ void WelcomeDialog::processRecoveryPhrase()
 {
     QString recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
     
-    //Strip double whitespace and leading/trailing whitespace, newlines etc.
-    recoveryPhrase = recoveryPhrase.simplified();
+    //Strip double whitespace and leading/trailing whitespace, newlines, capitals etc.
+    recoveryPhrase = recoveryPhrase.simplified().toLower();
     if(ui->checkboxConfirmRecoveryPhraseWrittenDown->isChecked())
     {
         // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
@@ -167,7 +167,7 @@ void WelcomeDialog::processRecoveryPhrase()
                 recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
             }
             
-            GuldenApplication::gApp->setRecoveryPhrase(ui->edittextEnterRecoveryPhrase->toPlainText().toStdString().c_str());
+            GuldenApplication::gApp->setRecoveryPhrase(recoveryPhrase.toStdString().c_str());
             
             //Try burn memory - just in case - not guaranteed to work everywhere but better than doing nothing.
             burnTextEditMemory(ui->edittextEnterRecoveryPhrase);

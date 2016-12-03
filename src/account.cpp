@@ -620,7 +620,60 @@ void CAccount::GetKeys(std::set<CKeyID> &setAddress) const
 
 bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
 {
-    return externalKeyStore.EncryptKeys(vMasterKeyIn) && internalKeyStore.EncryptKeys(vMasterKeyIn);
+    if (!externalKeyStore.EncryptKeys(vMasterKeyIn))
+        return false;
+    if (!internalKeyStore.EncryptKeys(vMasterKeyIn))
+        return false;
+    
+    if (pwalletMain)
+    {
+        if (!pwalletMain->fFileBacked)
+            return true;
+        {
+            std::set<CKeyID> setAddress;
+            GetKeys(setAddress);
+            
+            LOCK(pwalletMain->cs_wallet);                
+            for (const auto& keyID : setAddress)
+            {
+                CPubKey pubKey;
+                if (!GetPubKey(keyID, pubKey))
+                { 
+                    LogPrintf("CAccount::EncryptKeys(): Failed to get pubkey");
+                    return false;
+                }
+                if (pwalletMain->pwalletdbEncryption)
+                    pwalletMain->pwalletdbEncryption->EraseKey(pubKey);
+                else
+                    CWalletDB(pwalletMain->strWalletFile).EraseKey(pubKey);
+                
+                std::vector<unsigned char> secret;
+                if (!GetKey(keyID, secret))
+                { 
+                    LogPrintf("CAccount::EncryptKeys(): Failed to get crypted key");
+                    return false;
+                }
+                if (pwalletMain->pwalletdbEncryption)
+                {
+                    if (!pwalletMain->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    {
+                        LogPrintf("CAccount::EncryptKeys(): Failed to write key");
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (!CWalletDB(pwalletMain->strWalletFile).WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    {
+                        LogPrintf("CAccount::EncryptKeys(): Failed to write key");
+                        return false;
+                    }
+                }
+                
+            }
+        }
+    }
+    return true;
 }
 
 bool CAccount::Encrypt(CKeyingMaterial& vMasterKeyIn)
