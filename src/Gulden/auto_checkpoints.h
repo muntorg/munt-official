@@ -1,7 +1,13 @@
-// Copyright (c) 2009-2012 The Gulden developers
-// Copyright (c) 2011-2013 The PPCoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2015-2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
+// Portions of this code have been copied from PPCoin
+// These portions are Copyright (c) 2011-2013 The PPCoin developers
+// and are Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef GULDEN_AUTO_CHECKPOINT_H
 #define  GULDEN_AUTO_CHECKPOINT_H
 

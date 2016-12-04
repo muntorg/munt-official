@@ -618,6 +618,10 @@
         <translation>&amp;Principal</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Começar o %1 automaticamente ao iniciar a sessão no sistema.</translation>
+    </message>
+    <message>
         <source>&amp;Start %1 on system login</source>
         <translation>&amp;Iniciar o %1 no início de sessão do sistema</translation>
     </message>
@@ -962,10 +966,6 @@
 </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>Client name</source>
-        <translation>Nome do Cliente</translation>
-    </message>
     <message>
         <source>N/A</source>
         <translation>N/D</translation>
@@ -1812,14 +1812,6 @@
         <translation>Utilizar UPnP para mapear a porta de escuta (predefinição: 1 quando escutar e sem -proxy)</translation>
     </message>
     <message>
-        <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
-        <translation>AVISO: gerado um número anormalmente elevado de blocos, %d blocos recebidos nas últimas %d horas (%d esperados)</translation>
-    </message>
-    <message>
-        <source>WARNING: check your network connection, %d blocks received in the last %d hours (%d expected)</source>
-        <translation>AVISO: verifique a sua conexão à rede, %d blocos recebidos nas últimas %d horas (%d esperados)</translation>
-    </message>
-    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Aviso: A rede não parece estar completamente de acordo! Parece que alguns mineiros estão com dificuldades técnicas.</translation>
     </message>
@@ -1842,6 +1834,10 @@
     <message>
         <source>Append comment to the user agent string</source>
         <translation>Anexar um comentário para a entrada de agente do utilizador</translation>
+    </message>
+    <message>
+        <source>Attempt to recover private keys from a corrupt wallet on startup</source>
+        <translation>Tentar reuperar as chaves privadas de um "wallet" ao iniciar</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -2390,10 +2386,6 @@
     <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Definir tamanho do banco de memória da chave para &lt;n&gt; (predefinição: %u)</translation>
-    </message>
-    <message>
-        <source>Set minimum block size in bytes (default: %u)</source>
-        <translation>Definir tamanho minímo de um bloco em bytes (por defeito: %u)</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>

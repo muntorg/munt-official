@@ -914,10 +914,6 @@
 <context>
     <name>RPCConsole</name>
     <message>
-        <source>Client name</source>
-        <translation>Nume client</translation>
-    </message>
-    <message>
         <source>N/A</source>
         <translation>indisponibil</translation>
     </message>
@@ -1865,10 +1861,6 @@
     <message>
         <source>Invalid -proxy address: '%s'</source>
         <translation>Adresa -proxy nevalidă: '%s'</translation>
-    </message>
-    <message>
-        <source>Set minimum block size in bytes (default: %u)</source>
-        <translation>Setare mărime minimă bloc în octeţi (implicit: %u)</translation>
     </message>
     <message>
         <source>Specify configuration file (default: %s)</source>

@@ -1,3 +1,8 @@
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #include "accounttablemodel.h"
 #include "walletmodel.h"
 #include "bitcoinunits.h"
@@ -36,7 +41,8 @@ int AccountTableModel::columnCount(const QModelIndex & parent) const
 
 QVariant AccountTableModel::data(const QModelIndex& index, int role) const
 {
-    LogPrintf("AccountTableModel::data\n");
+    if (fDebug)
+        LogPrintf("AccountTableModel::data\n");
     
     if (!m_wallet)
         return QVariant();

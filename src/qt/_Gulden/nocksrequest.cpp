@@ -1,6 +1,7 @@
-// Copyright (c) 2015 The Gulden developers.
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include "nocksrequest.h"
 #include "utilmoneystr.h"

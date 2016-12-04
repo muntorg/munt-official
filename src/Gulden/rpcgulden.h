@@ -1,3 +1,8 @@
+// Copyright (c) 2015-2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #ifndef GULDEN_RPC_H
 #define GULDEN_RPC_H
 

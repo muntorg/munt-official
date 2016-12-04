@@ -1,3 +1,8 @@
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #ifndef BITCOIN_QT_ACCOUNT_SUMMARY_WIDGET_H
 #define BITCOIN_QT_ACCOUNT_SUMMARY_WIDGET_H
 
