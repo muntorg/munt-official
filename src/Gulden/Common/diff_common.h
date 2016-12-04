@@ -17,7 +17,7 @@
     #define INDEX_TIME(block) block.getHeader().getTimeSeconds()
     #define INDEX_PREV(block) blockStore.get(block.getHeader().getPrevBlockHash())
     #define INDEX_TARGET(block) block.getHeader().getDifficultyTarget()
-    #define DIFF_SWITCHOVER(T, M) Constants.TEST ? T : M);
+    #define DIFF_SWITCHOVER(T, M) (Constants.TEST ? T : M)
     #define DIFF_ABS Math.abs
     #define arith_uint256(x) BigInteger.valueOf(x)
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED = Utils.decodeCompactBits(COMPACT)
