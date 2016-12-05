@@ -5,16 +5,20 @@
 #ifndef BITCOIN_CRYPTO_RIPEMD160_H
 #define BITCOIN_CRYPTO_RIPEMD160_H
 
+//fixme: (GULDEN) (HIGH) - Not the greatest solution, but silence annoying fortify source warnings for now so that we can see the real warnings
+#ifndef NDEBUG
+#undef _FORTIFY_SOURCE
+#endif
+
 #include <stdint.h>
 #include <stdlib.h>
 
 /** A hasher class for RIPEMD-160. */
-class CRIPEMD160
-{
+class CRIPEMD160 {
 private:
     uint32_t s[5];
     unsigned char buf[64];
-    size_t bytes;
+    uint64_t bytes;
 
 public:
     static const size_t OUTPUT_SIZE = 20;

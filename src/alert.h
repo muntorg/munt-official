@@ -1,7 +1,14 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2013 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #ifndef BITCOIN_ALERT_H
 #define BITCOIN_ALERT_H
@@ -27,21 +34,19 @@ extern CCriticalSection cs_mapAlerts;
  * not read the entire buffer if the alert is for a newer version, but older
  * versions can still relay the original data.
  */
-class CUnsignedAlert
-{
+class CUnsignedAlert {
 public:
     int nVersion;
-    int64_t nRelayUntil;      // when newer nodes stop relaying to newer nodes
+    int64_t nRelayUntil; // when newer nodes stop relaying to newer nodes
     int64_t nExpiration;
     int nID;
     int nCancel;
     std::set<int> setCancel;
-    int nMinVer;            // lowest version inclusive
-    int nMaxVer;            // highest version inclusive
-    std::set<std::string> setSubVer;  // empty matches all
+    int nMinVer; // lowest version inclusive
+    int nMaxVer; // highest version inclusive
+    std::set<std::string> setSubVer; // empty matches all
     int nPriority;
 
-    // Actions
     std::string strComment;
     std::string strStatusBar;
     std::string strReserved;
@@ -49,7 +54,8 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
         READWRITE(nRelayUntil);
@@ -73,8 +79,7 @@ public:
 };
 
 /** An alert is a combination of a serialized CUnsignedAlert and a signature. */
-class CAlert : public CUnsignedAlert
-{
+class CAlert : public CUnsignedAlert {
 public:
     std::vector<unsigned char> vchMsg;
     std::vector<unsigned char> vchSig;
@@ -87,7 +92,8 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
         READWRITE(vchMsg);
         READWRITE(vchSig);
     }
@@ -97,17 +103,17 @@ public:
     uint256 GetHash() const;
     bool IsInEffect() const;
     bool Cancels(const CAlert& alert) const;
-    bool AppliesTo(int nVersion, std::string strSubVerIn) const;
+    bool AppliesTo(int nVersion, const std::string& strSubVerIn) const;
     bool AppliesToMe() const;
     bool RelayTo(CNode* pnode) const;
-    bool CheckSignature() const;
-    bool ProcessAlert(bool fThread = true); // fThread means run -alertnotify in a free-running thread
+    bool CheckSignature(const std::vector<unsigned char>& alertKey) const;
+    bool ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThread = true); // fThread means run -alertnotify in a free-running thread
     static void Notify(const std::string& strMessage, bool fThread);
 
     /*
      * Get copy of (active) alert object by hash. Returns a null alert if it is not found.
      */
-    static CAlert getAlertByHash(const uint256 &hash);
+    static CAlert getAlertByHash(const uint256& hash);
 };
 
 #endif // BITCOIN_ALERT_H

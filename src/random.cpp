@@ -1,18 +1,21 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "random.h"
 
+#include "crypto/sha512.h"
 #include "support/cleanse.h"
 #ifdef WIN32
 #include "compat.h" // for Windows API
+#include <wincrypt.h>
 #endif
-#include "serialize.h"        // for begin_ptr(vec)
-#include "util.h"             // for LogPrint()
+#include "serialize.h" // for begin_ptr(vec)
+#include "util.h" // for LogPrint()
 #include "utilstrencodings.h" // for GetTime()
 
+#include <stdlib.h>
 #include <limits>
 
 #ifndef WIN32
@@ -21,6 +24,12 @@
 
 #include <openssl/err.h>
 #include <openssl/rand.h>
+
+static void RandFailure()
+{
+    LogPrintf("Failed to read randomness, aborting\n");
+    abort();
+}
 
 static inline int64_t GetPerformanceCounter()
 {
@@ -37,21 +46,18 @@ static inline int64_t GetPerformanceCounter()
 
 void RandAddSeed()
 {
-    // Seed with CPU performance counter
+
     int64_t nCounter = GetPerformanceCounter();
     RAND_add(&nCounter, sizeof(nCounter), 1.5);
     memory_cleanse((void*)&nCounter, sizeof(nCounter));
 }
 
-void RandAddSeedPerfmon()
+static void RandAddSeedPerfmon()
 {
     RandAddSeed();
 
 #ifdef WIN32
-    // Don't need this on Linux, OpenSSL automatically uses /dev/urandom
-    // Seed with the entire set of perfmon data
 
-    // This can take up to 2 seconds, so only do it every 10 minutes
     static int64_t nLastPerfmon;
     if (GetTime() < nLastPerfmon + 10 * 60)
         return;
@@ -83,12 +89,60 @@ void RandAddSeedPerfmon()
 #endif
 }
 
+/** Get 32 bytes of system entropy. */
+static void GetOSRand(unsigned char* ent32)
+{
+#ifdef WIN32
+    HCRYPTPROV hProvider;
+    int ret = CryptAcquireContextW(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+    if (!ret) {
+        RandFailure();
+    }
+    ret = CryptGenRandom(hProvider, 32, ent32);
+    if (!ret) {
+        RandFailure();
+    }
+    CryptReleaseContext(hProvider, 0);
+#else
+    int f = open("/dev/urandom", O_RDONLY);
+    if (f == -1) {
+        RandFailure();
+    }
+    int have = 0;
+    do {
+        ssize_t n = read(f, ent32 + have, 32 - have);
+        if (n <= 0 || n + have > 32) {
+            RandFailure();
+        }
+        have += n;
+    } while (have < 32);
+    close(f);
+#endif
+}
+
 void GetRandBytes(unsigned char* buf, int num)
 {
     if (RAND_bytes(buf, num) != 1) {
-        LogPrintf("%s: OpenSSL RAND_bytes() failed with error: %s\n", __func__, ERR_error_string(ERR_get_error(), NULL));
-        assert(false);
+        RandFailure();
     }
+}
+
+void GetStrongRandBytes(unsigned char* out, int num)
+{
+    assert(num <= 32);
+    CSHA512 hasher;
+    unsigned char buf[64];
+
+    RandAddSeedPerfmon();
+    GetRandBytes(buf, 32);
+    hasher.Write(buf, 32);
+
+    GetOSRand(buf);
+    hasher.Write(buf, 32);
+
+    hasher.Finalize(buf);
+    memcpy(out, buf, num);
+    memory_cleanse(buf, 64);
 }
 
 uint64_t GetRand(uint64_t nMax)
@@ -96,8 +150,6 @@ uint64_t GetRand(uint64_t nMax)
     if (nMax == 0)
         return 0;
 
-    // The range of the random source must be a multiple of the modulus
-    // to give every possible output value an equal possibility
     uint64_t nRange = (std::numeric_limits<uint64_t>::max() / nMax) * nMax;
     uint64_t nRand = 0;
     do {
@@ -122,7 +174,7 @@ uint32_t insecure_rand_Rz = 11;
 uint32_t insecure_rand_Rw = 11;
 void seed_insecure_rand(bool fDeterministic)
 {
-    // The seed values have some unlikely fixed points which we avoid.
+
     if (fDeterministic) {
         insecure_rand_Rz = insecure_rand_Rw = 11;
     } else {

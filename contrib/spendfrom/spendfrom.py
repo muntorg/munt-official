@@ -1,13 +1,16 @@
 #!/usr/bin/env python
+# Copyright (c) 2013 The Gulden Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #
-# Use the raw transactions API to spend guldencoins received on particular addresses,
+# Use the raw transactions API to spend guldens received on particular addresses,
 # and send any change back to that same address.
 #
 # Example usage:
 #  spendfrom.py  # Lists available funds
 #  spendfrom.py --from=ADDRESS --to=ADDRESS --amount=11.00
 #
-# Assumes it will talk to a guldencoind or Guldencoin-Qt running
+# Assumes it will talk to a GuldenD or Gulden-Qt running
 # on localhost.
 #
 # Depends on jsonrpc
@@ -33,15 +36,15 @@ def check_json_precision():
         raise RuntimeError("JSON encode/decode loses precision")
 
 def determine_db_dir():
-    """Return the default location of the guldencoin data directory"""
+    """Return the default location of the gulden data directory"""
     if platform.system() == "Darwin":
-        return os.path.expanduser("~/Library/Application Support/Guldencoin/")
+        return os.path.expanduser("~/Library/Application Support/Gulden/")
     elif platform.system() == "Windows":
-        return os.path.join(os.environ['APPDATA'], "Guldencoin")
-    return os.path.expanduser("~/.guldencoin")
+        return os.path.join(os.environ['APPDATA'], "Gulden")
+    return os.path.expanduser("~/.gulden")
 
-def read_guldencoin_config(dbdir):
-    """Read the guldencoin.conf file from dbdir, returns dictionary of settings"""
+def read_gulden_config(dbdir):
+    """Read the gulden.conf file from dbdir, returns dictionary of settings"""
     from ConfigParser import SafeConfigParser
 
     class FakeSecHead(object):
@@ -59,11 +62,11 @@ def read_guldencoin_config(dbdir):
                 return s
 
     config_parser = SafeConfigParser()
-    config_parser.readfp(FakeSecHead(open(os.path.join(dbdir, "guldencoin.conf"))))
+    config_parser.readfp(FakeSecHead(open(os.path.join(dbdir, "gulden.conf"))))
     return dict(config_parser.items("all"))
 
 def connect_JSON(config):
-    """Connect to a guldencoin JSON-RPC server"""
+    """Connect to a gulden JSON-RPC server"""
     testnet = config.get('testnet', '0')
     testnet = (int(testnet) > 0)  # 0/1 in config file, convert to True/False
     if not 'rpcport' in config:
@@ -72,7 +75,7 @@ def connect_JSON(config):
     try:
         result = ServiceProxy(connect)
         # ServiceProxy is lazy-connect, so send an RPC command mostly to catch connection errors,
-        # but also make sure the guldencoind we're talking to is/isn't testnet:
+        # but also make sure the GuldenD we're talking to is/isn't testnet:
         if result.getmininginfo()['testnet'] != testnet:
             sys.stderr.write("RPC server at "+connect+" testnet setting mismatch\n")
             sys.exit(1)
@@ -81,36 +84,36 @@ def connect_JSON(config):
         sys.stderr.write("Error connecting to RPC server at "+connect+"\n")
         sys.exit(1)
 
-def unlock_wallet(guldencoind):
-    info = guldencoind.getinfo()
+def unlock_wallet(GuldenD):
+    info = GuldenD.getinfo()
     if 'unlocked_until' not in info:
         return True # wallet is not encrypted
     t = int(info['unlocked_until'])
     if t <= time.time():
         try:
             passphrase = getpass.getpass("Wallet is locked; enter passphrase: ")
-            guldencoind.walletpassphrase(passphrase, 5)
+            GuldenD.walletpassphrase(passphrase, 5)
         except:
             sys.stderr.write("Wrong passphrase\n")
 
-    info = guldencoind.getinfo()
+    info = GuldenD.getinfo()
     return int(info['unlocked_until']) > time.time()
 
-def list_available(guldencoind):
+def list_available(GuldenD):
     address_summary = dict()
 
     address_to_account = dict()
-    for info in guldencoind.listreceivedbyaddress(0):
+    for info in GuldenD.listreceivedbyaddress(0):
         address_to_account[info["address"]] = info["account"]
 
-    unspent = guldencoind.listunspent(0)
+    unspent = GuldenD.listunspent(0)
     for output in unspent:
         # listunspent doesn't give addresses, so:
-        rawtx = guldencoind.getrawtransaction(output['txid'], 1)
+        rawtx = GuldenD.getrawtransaction(output['txid'], 1)
         vout = rawtx["vout"][output['vout']]
         pk = vout["scriptPubKey"]
 
-        # This code only deals with ordinary pay-to-guldencoin-address
+        # This code only deals with ordinary pay-to-gulden-address
         # or pay-to-script-hash outputs right now; anything exotic is ignored.
         if pk["type"] != "pubkeyhash" and pk["type"] != "scripthash":
             continue
@@ -139,8 +142,8 @@ def select_coins(needed, inputs):
         n += 1
     return (outputs, have-needed)
 
-def create_tx(guldencoind, fromaddresses, toaddress, amount, fee):
-    all_coins = list_available(guldencoind)
+def create_tx(GuldenD, fromaddresses, toaddress, amount, fee):
+    all_coins = list_available(GuldenD)
 
     total_available = Decimal("0.0")
     needed = amount+fee
@@ -159,7 +162,7 @@ def create_tx(guldencoind, fromaddresses, toaddress, amount, fee):
     # Note:
     # Python's json/jsonrpc modules have inconsistent support for Decimal numbers.
     # Instead of wrestling with getting json.dumps() (used by jsonrpc) to encode
-    # Decimals, I'm casting amounts to float before sending them to guldencoind.
+    # Decimals, I'm casting amounts to float before sending them to GuldenD.
     #  
     outputs = { toaddress : float(amount) }
     (inputs, change_amount) = select_coins(needed, potential_inputs)
@@ -170,8 +173,8 @@ def create_tx(guldencoind, fromaddresses, toaddress, amount, fee):
         else:
             outputs[change_address] = float(change_amount)
 
-    rawtx = guldencoind.createrawtransaction(inputs, outputs)
-    signed_rawtx = guldencoind.signrawtransaction(rawtx)
+    rawtx = GuldenD.createrawtransaction(inputs, outputs)
+    signed_rawtx = GuldenD.signrawtransaction(rawtx)
     if not signed_rawtx["complete"]:
         sys.stderr.write("signrawtransaction failed\n")
         sys.exit(1)
@@ -179,10 +182,10 @@ def create_tx(guldencoind, fromaddresses, toaddress, amount, fee):
 
     return txdata
 
-def compute_amount_in(guldencoind, txinfo):
+def compute_amount_in(GuldenD, txinfo):
     result = Decimal("0.0")
     for vin in txinfo['vin']:
-        in_info = guldencoind.getrawtransaction(vin['txid'], 1)
+        in_info = GuldenD.getrawtransaction(vin['txid'], 1)
         vout = in_info['vout'][vin['vout']]
         result = result + vout['value']
     return result
@@ -193,12 +196,12 @@ def compute_amount_out(txinfo):
         result = result + vout['value']
     return result
 
-def sanity_test_fee(guldencoind, txdata_hex, max_fee):
+def sanity_test_fee(GuldenD, txdata_hex, max_fee):
     class FeeError(RuntimeError):
         pass
     try:
-        txinfo = guldencoind.decoderawtransaction(txdata_hex)
-        total_in = compute_amount_in(guldencoind, txinfo)
+        txinfo = GuldenD.decoderawtransaction(txdata_hex)
+        total_in = compute_amount_in(GuldenD, txinfo)
         total_out = compute_amount_out(txinfo)
         if total_in-total_out > max_fee:
             raise FeeError("Rejecting transaction, unreasonable fee of "+str(total_in-total_out))
@@ -221,15 +224,15 @@ def main():
 
     parser = optparse.OptionParser(usage="%prog [options]")
     parser.add_option("--from", dest="fromaddresses", default=None,
-                      help="addresses to get guldencoins from")
+                      help="addresses to get guldens from")
     parser.add_option("--to", dest="to", default=None,
-                      help="address to get send guldencoins to")
+                      help="address to get send guldens to")
     parser.add_option("--amount", dest="amount", default=None,
                       help="amount to send")
     parser.add_option("--fee", dest="fee", default="0.0",
                       help="fee to include")
     parser.add_option("--datadir", dest="datadir", default=determine_db_dir(),
-                      help="location of guldencoin.conf file with RPC username/password (default: %default)")
+                      help="location of gulden.conf file with RPC username/password (default: %default)")
     parser.add_option("--testnet", dest="testnet", default=False, action="store_true",
                       help="Use the test network")
     parser.add_option("--dry_run", dest="dry_run", default=False, action="store_true",
@@ -238,12 +241,12 @@ def main():
     (options, args) = parser.parse_args()
 
     check_json_precision()
-    config = read_guldencoin_config(options.datadir)
+    config = read_gulden_config(options.datadir)
     if options.testnet: config['testnet'] = True
-    guldencoind = connect_JSON(config)
+    GuldenD = connect_JSON(config)
 
     if options.amount is None:
-        address_summary = list_available(guldencoind)
+        address_summary = list_available(GuldenD)
         for address,info in address_summary.iteritems():
             n_transactions = len(info['outputs'])
             if n_transactions > 1:
@@ -253,14 +256,14 @@ def main():
     else:
         fee = Decimal(options.fee)
         amount = Decimal(options.amount)
-        while unlock_wallet(guldencoind) == False:
+        while unlock_wallet(GuldenD) == False:
             pass # Keep asking for passphrase until they get it right
-        txdata = create_tx(guldencoind, options.fromaddresses.split(","), options.to, amount, fee)
-        sanity_test_fee(guldencoind, txdata, amount*Decimal("0.01"))
+        txdata = create_tx(GuldenD, options.fromaddresses.split(","), options.to, amount, fee)
+        sanity_test_fee(GuldenD, txdata, amount*Decimal("0.01"))
         if options.dry_run:
             print(txdata)
         else:
-            txid = guldencoind.sendrawtransaction(txdata)
+            txid = GuldenD.sendrawtransaction(txdata)
             print(txid)
 
 if __name__ == '__main__':

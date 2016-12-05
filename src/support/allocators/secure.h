@@ -1,14 +1,22 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2013 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
-#ifndef BITCOIN_ALLOCATORS_SECURE_H
-#define BITCOIN_ALLOCATORS_SECURE_H
+#ifndef BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
+#define BITCOIN_SUPPORT_ALLOCATORS_SECURE_H
 
 #include "support/pagelocker.h"
 
 #include <string>
+#include <vector>
 
 //
 // Allocator that locks its contents from being paged
@@ -16,7 +24,7 @@
 //
 template <typename T>
 struct secure_allocator : public std::allocator<T> {
-    // MSVC8 default copy constructor is broken
+
     typedef std::allocator<T> base;
     typedef typename base::size_type size_type;
     typedef typename base::difference_type difference_type;
@@ -26,9 +34,13 @@ struct secure_allocator : public std::allocator<T> {
     typedef typename base::const_reference const_reference;
     typedef typename base::value_type value_type;
     secure_allocator() throw() {}
-    secure_allocator(const secure_allocator& a) throw() : base(a) {}
+    secure_allocator(const secure_allocator& a) throw()
+        : base(a)
+    {
+    }
     template <typename U>
-    secure_allocator(const secure_allocator<U>& a) throw() : base(a)
+    secure_allocator(const secure_allocator<U>& a) throw()
+        : base(a)
     {
     }
     ~secure_allocator() throw() {}
@@ -56,7 +68,9 @@ struct secure_allocator : public std::allocator<T> {
     }
 };
 
-// This is exactly like std::string, but with a custom allocator.
 typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> > SecureString;
 
-#endif // BITCOIN_ALLOCATORS_SECURE_H
+typedef std::vector<char, secure_allocator<char> > SecureCharVector;
+typedef std::vector<unsigned char, secure_allocator<unsigned char> > SecureUnsignedCharVector;
+
+#endif // BITCOIN_SUPPORT_ALLOCATORS_SECURE_H

@@ -1,21 +1,21 @@
 
 Debian
 ====================
-This directory contains files used to package guldencoind/guldencoin-qt
-for Debian-based Linux systems. If you compile guldencoind/guldencoin-qt yourself, there are some useful files here.
+This directory contains files used to package GuldenD/Gulden
+for Debian-based Linux systems. If you compile GuldenD/Gulden yourself, there are some useful files here.
 
-## guldencoin: URI support ##
+## gulden: URI support ##
 
 
-guldencoin-qt.desktop  (Gnome / Open Desktop)
+Gulden.desktop  (Gnome / Open Desktop)
 To install:
 
-	sudo desktop-file-install guldencoin-qt.desktop
+	sudo desktop-file-install Gulden.desktop
 	sudo update-desktop-database
 
 If you build yourself, you will either need to modify the paths in
-the .desktop file or copy or symlink your guldencoin-qt binary to `/usr/bin`
-and the `../../share/pixmaps/guldencoin128.png` to `/usr/share/pixmaps`
+the .desktop file or copy or symlink your Gulden binary to `/usr/bin`
+and the `../../share/pixmaps/gulden128.png` to `/usr/share/pixmaps`
 
-guldencoin-qt.protocol (KDE)
+Gulden.protocol (KDE)
 

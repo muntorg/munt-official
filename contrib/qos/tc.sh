@@ -1,8 +1,12 @@
+# Copyright (c) 2013 The Gulden Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #network interface on which to limit traffic
 IF="eth0"
 #limit of the network interface in question
 LINKCEIL="1gbit"
-#limit outbound Guldencoin protocol traffic to this rate
+#limit outbound Gulden protocol traffic to this rate
 LIMIT="160kbit"
 #defines the address space for which you wish to disable rate limiting
 LOCALNET="192.168.0.0/16"

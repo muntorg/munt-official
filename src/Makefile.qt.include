@@ -4,68 +4,158 @@ EXTRA_LIBRARIES += qt/libguldenqt.a
 GDN_TS = qt/locale/Gulden/gulden_nl.ts
 
 GDN_QRC = qt/_Gulden/Gulden.qss \
-qt/_Gulden/res/Logo.png \
-qt/_Gulden/res/Logo@2x.png \
+qt/_Gulden/res/AngleDownBlue.png \
+qt/_Gulden/res/AngleUpBlue.png \
+qt/_Gulden/res/AngleDownGrey.png \
+qt/_Gulden/res/AngleUpGrey.png \
+qt/_Gulden/res/LogoBlue.png \
+qt/_Gulden/res/LoadingAnimation.gif \
 qt/_Gulden/res/Lock.png \
-qt/_Gulden/res/Lock@2x.png
+qt/_Gulden/res/Lock@2x.png \
+qt/_Gulden/res/MainBackground.png \
+qt/_Gulden/res/DialogBackground.png \
+qt/_Gulden/fonts/FontAwesome.otf \
+qt/_Gulden/fonts/guldensign.ttf \
+qt/_Gulden/fonts/Lato-Black.ttf \
+qt/_Gulden/fonts/Lato-BlackItalic.ttf \
+qt/_Gulden/fonts/Lato-Bold.ttf \
+qt/_Gulden/fonts/Lato-BoldItalic.ttf \
+qt/_Gulden/fonts/Lato-Italic.ttf \
+qt/_Gulden/fonts/Lato-Medium.ttf \
+qt/_Gulden/fonts/Lato-MediumItalic.ttf \
+qt/_Gulden/fonts/Lato-Regular.ttf 
 
+GDN_MOCS = qt/_Gulden/moc_GuldenTranslator.cpp \
+qt/_Gulden/moc_guldensendcoinsentry.cpp \
+qt/_Gulden/moc_accountsummarywidget.cpp \
+qt/_Gulden/moc_receivecoinsdialog.cpp \
+qt/_Gulden/moc_GuldenGUI.cpp \
+qt/_Gulden/moc_ticker.cpp \
+qt/_Gulden/moc_nockssettings.cpp \
+qt/_Gulden/moc_nocksrequest.cpp \
+qt/_Gulden/moc_clickablelabel.cpp \
+qt/_Gulden/moc_clickableqrimage.cpp \
+qt/_Gulden/moc_newaccountdialog.cpp \
+qt/_Gulden/moc_accountsettingsdialog.cpp \
+qt/_Gulden/moc_passwordmodifydialog.cpp \
+qt/_Gulden/moc_backupdialog.cpp \
+qt/_Gulden/moc_welcomedialog.cpp \
+qt/_Gulden/moc_exchangeratedialog.cpp \
+qt/_Gulden/moc_accounttablemodel.cpp
 
-GDN_MOCS = qt/_Gulden/moc_GuldenTranslator.cpp
+GDN_FORMS = qt/_Gulden/forms/guldensendcoinsentry.ui \
+qt/_Gulden/forms/accountsummarywidget.ui \
+qt/_Gulden/forms/receivecoinsdialog.ui \
+qt/_Gulden/forms/newaccountdialog.ui \
+qt/_Gulden/forms/accountsettingsdialog.ui \
+qt/_Gulden/forms/passwordmodifydialog.ui \
+qt/_Gulden/forms/backupdialog.ui \
+qt/_Gulden/forms/welcomedialog.ui \
+qt/_Gulden/forms/exchangeratedialog.ui 
 
 GDN_QT_H = qt/_Gulden/GuldenTranslator.h \
-  qt/_Gulden/ApplyGuldenQSS.h \
-  qt/_Gulden/GuldenBar.h
+qt/_Gulden/guldensendcoinsentry.h \
+qt/_Gulden/accountsummarywidget.h \
+qt/_Gulden/receivecoinsdialog.h \
+qt/_Gulden/GuldenGUI.h \
+qt/_Gulden/ticker.h \
+qt/_Gulden/nockssettings.h \
+qt/_Gulden/nocksrequest.h \
+qt/_Gulden/clickablelabel.h \
+qt/_Gulden/clickableqrimage.h \
+qt/_Gulden/newaccountdialog.h \
+qt/_Gulden/accountsettingsdialog.h \
+qt/_Gulden/passwordmodifydialog.h \
+qt/_Gulden/backupdialog.h \
+qt/_Gulden/welcomedialog.h \
+qt/_Gulden/exchangeratedialog.h \
+qt/_Gulden/accounttablemodel.h
 
-GDN_QT_SRCS = qt/_Gulden/GuldenTranslator.cpp
+GDN_QT_SRCS = qt/_Gulden/GuldenTranslator.cpp \
+qt/_Gulden/guldensendcoinsentry.cpp \
+qt/_Gulden/accountsummarywidget.cpp \
+qt/_Gulden/receivecoinsdialog.cpp \
+qt/_Gulden/GuldenGUI.cpp \
+qt/_Gulden/ticker.cpp \
+qt/_Gulden/nockssettings.cpp \
+qt/_Gulden/nocksrequest.cpp \
+qt/_Gulden/clickablelabel.cpp \
+qt/_Gulden/clickableqrimage.cpp \
+qt/_Gulden/newaccountdialog.cpp \
+qt/_Gulden/accountsettingsdialog.cpp \
+qt/_Gulden/passwordmodifydialog.cpp \
+qt/_Gulden/backupdialog.cpp \
+qt/_Gulden/welcomedialog.cpp \
+qt/_Gulden/exchangeratedialog.cpp \
+qt/_Gulden/accounttablemodel.cpp
+
+GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
+  qt/res/icons/connect1@2x.png \
+  qt/res/icons/connect2@2x.png \
+  qt/res/icons/connect3@2x.png \
+  qt/res/icons/connect4@2x.png \
+  qt/res/icons/splash.png \
+  qt/res/icons/splash_testnet.png \
+  qt/res/icons/splash@2x.png \
+  qt/res/icons/splash_testnet@2x.png
 
 # bitcoin qt core #
 QT_TS = \
   $(GDN_TS) \
-  qt/locale/bitcoin_ach.ts \
+  qt/locale/bitcoin_af.ts \
   qt/locale/bitcoin_af_ZA.ts \
   qt/locale/bitcoin_ar.ts \
   qt/locale/bitcoin_be_BY.ts \
   qt/locale/bitcoin_bg.ts \
-  qt/locale/bitcoin_bs.ts \
+  qt/locale/bitcoin_bg_BG.ts \
   qt/locale/bitcoin_ca_ES.ts \
   qt/locale/bitcoin_ca.ts \
   qt/locale/bitcoin_ca@valencia.ts \
-  qt/locale/bitcoin_cmn.ts \
+  qt/locale/bitcoin_cs_CZ.ts \
   qt/locale/bitcoin_cs.ts \
   qt/locale/bitcoin_cy.ts \
   qt/locale/bitcoin_da.ts \
   qt/locale/bitcoin_de.ts \
   qt/locale/bitcoin_el_GR.ts \
+  qt/locale/bitcoin_el.ts \
+  qt/locale/bitcoin_en_GB.ts \
   qt/locale/bitcoin_en.ts \
   qt/locale/bitcoin_eo.ts \
+  qt/locale/bitcoin_es_AR.ts \
   qt/locale/bitcoin_es_CL.ts \
+  qt/locale/bitcoin_es_CO.ts \
   qt/locale/bitcoin_es_DO.ts \
+  qt/locale/bitcoin_es_ES.ts \
   qt/locale/bitcoin_es_MX.ts \
   qt/locale/bitcoin_es.ts \
   qt/locale/bitcoin_es_UY.ts \
+  qt/locale/bitcoin_es_VE.ts \
   qt/locale/bitcoin_et.ts \
   qt/locale/bitcoin_eu_ES.ts \
   qt/locale/bitcoin_fa_IR.ts \
   qt/locale/bitcoin_fa.ts \
   qt/locale/bitcoin_fi.ts \
   qt/locale/bitcoin_fr_CA.ts \
+  qt/locale/bitcoin_fr_FR.ts \
   qt/locale/bitcoin_fr.ts \
   qt/locale/bitcoin_gl.ts \
-  qt/locale/bitcoin_gu_IN.ts \
   qt/locale/bitcoin_he.ts \
   qt/locale/bitcoin_hi_IN.ts \
   qt/locale/bitcoin_hr.ts \
   qt/locale/bitcoin_hu.ts \
   qt/locale/bitcoin_id_ID.ts \
+  qt/locale/bitcoin_it_IT.ts \
   qt/locale/bitcoin_it.ts \
   qt/locale/bitcoin_ja.ts \
   qt/locale/bitcoin_ka.ts \
   qt/locale/bitcoin_kk_KZ.ts \
   qt/locale/bitcoin_ko_KR.ts \
+  qt/locale/bitcoin_ku_IQ.ts \
   qt/locale/bitcoin_ky.ts \
   qt/locale/bitcoin_la.ts \
   qt/locale/bitcoin_lt.ts \
   qt/locale/bitcoin_lv_LV.ts \
+  qt/locale/bitcoin_mk_MK.ts \
   qt/locale/bitcoin_mn.ts \
   qt/locale/bitcoin_ms_MY.ts \
   qt/locale/bitcoin_nb.ts \
@@ -75,14 +165,18 @@ QT_TS = \
   qt/locale/bitcoin_pt_BR.ts \
   qt/locale/bitcoin_pt_PT.ts \
   qt/locale/bitcoin_ro_RO.ts \
+  qt/locale/bitcoin_ro.ts \
+  qt/locale/bitcoin_ru_RU.ts \
   qt/locale/bitcoin_ru.ts \
-  qt/locale/bitcoin_sah.ts \
   qt/locale/bitcoin_sk.ts \
   qt/locale/bitcoin_sl_SI.ts \
   qt/locale/bitcoin_sq.ts \
+  qt/locale/bitcoin_sr@latin.ts \
   qt/locale/bitcoin_sr.ts \
   qt/locale/bitcoin_sv.ts \
+  qt/locale/bitcoin_ta.ts \
   qt/locale/bitcoin_th_TH.ts \
+  qt/locale/bitcoin_tr_TR.ts \
   qt/locale/bitcoin_tr.ts \
   qt/locale/bitcoin_uk.ts \
   qt/locale/bitcoin_ur_PK.ts \
@@ -91,9 +185,11 @@ QT_TS = \
   qt/locale/bitcoin_vi_VN.ts \
   qt/locale/bitcoin_zh_CN.ts \
   qt/locale/bitcoin_zh_HK.ts \
+  qt/locale/bitcoin_zh.ts \
   qt/locale/bitcoin_zh_TW.ts
 
 QT_FORMS_UI = \
+  $(GDN_FORMS) \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/coincontroldialog.ui \
@@ -105,7 +201,7 @@ QT_FORMS_UI = \
   qt/forms/overviewpage.ui \
   qt/forms/receivecoinsdialog.ui \
   qt/forms/receiverequestdialog.ui \
-  qt/forms/rpcconsole.ui \
+  qt/forms/debugwindow.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
@@ -116,6 +212,7 @@ QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
+  qt/moc_bantablemodel.cpp \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
   qt/moc_bitcoingui.cpp \
@@ -182,6 +279,7 @@ GULDEN_QT_H = \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
+  qt/bantablemodel.h \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
   qt/bitcoingui.h \
@@ -205,13 +303,13 @@ GULDEN_QT_H = \
   qt/paymentrequestplus.h \
   qt/paymentserver.h \
   qt/peertablemodel.h \
+  qt/platformstyle.h \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
   qt/receivecoinsdialog.h \
   qt/receiverequestdialog.h \
   qt/recentrequeststablemodel.h \
   qt/rpcconsole.h \
-  qt/scicon.h \
   qt/sendcoinsdialog.h \
   qt/sendcoinsentry.h \
   qt/signverifymessagedialog.h \
@@ -231,12 +329,15 @@ GULDEN_QT_H = \
   qt/winshutdownmonitor.h
 
 RES_ICONS = \
+  $(GDN_RES_ICONS) \
   qt/res/icons/add.png \
   qt/res/icons/address-book.png \
   qt/res/icons/about.png \
   qt/res/icons/about_qt.png \
   qt/res/icons/Gulden.ico \
+  qt/res/icons/Gulden_testnet.ico \
   qt/res/icons/bitcoin.png \
+  qt/res/icons/chevron.png \
   qt/res/icons/clock1.png \
   qt/res/icons/clock2.png \
   qt/res/icons/clock3.png \
@@ -248,11 +349,6 @@ RES_ICONS = \
   qt/res/icons/connect2.png \
   qt/res/icons/connect3.png \
   qt/res/icons/connect4.png \
-  qt/res/icons/connect0@2x.png \
-  qt/res/icons/connect1@2x.png \
-  qt/res/icons/connect2@2x.png \
-  qt/res/icons/connect3@2x.png \
-  qt/res/icons/connect4@2x.png \
   qt/res/icons/debugwindow.png \
   qt/res/icons/edit.png \
   qt/res/icons/editcopy.png \
@@ -262,6 +358,8 @@ RES_ICONS = \
   qt/res/icons/eye_minus.png \
   qt/res/icons/eye_plus.png \
   qt/res/icons/filesave.png \
+  qt/res/icons/fontbigger.png \
+  qt/res/icons/fontsmaller.png \
   qt/res/icons/history.png \
   qt/res/icons/info.png \
   qt/res/icons/key.png \
@@ -273,10 +371,6 @@ RES_ICONS = \
   qt/res/icons/receive.png \
   qt/res/icons/remove.png \
   qt/res/icons/send.png \
-  qt/res/icons/splash.png \
-  qt/res/icons/splash_testnet.png \
-  qt/res/icons/splash@2x.png \
-  qt/res/icons/splash_testnet@2x.png \
   qt/res/icons/synced.png \
   qt/res/icons/transaction0.png \
   qt/res/icons/transaction2.png \
@@ -285,10 +379,13 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
-  qt/res/icons/verify.png
+  qt/res/icons/warning.png \
+  qt/res/icons/verify.png \
+  qt/res/icons/transaction_abandoned.png
 
 GULDEN_QT_CPP = \
   $(GDN_QT_SRCS) \
+  qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
   qt/bitcoingui.cpp \
@@ -302,10 +399,10 @@ GULDEN_QT_CPP = \
   qt/optionsdialog.cpp \
   qt/optionsmodel.cpp \
   qt/peertablemodel.cpp \
+  qt/platformstyle.cpp \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
-  qt/scicon.cpp \
   qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp
@@ -351,10 +448,11 @@ RES_MOVIES = $(wildcard qt/res/movies/spinner-*.png)
 GULDEN_RC = qt/res/Gulden-res.rc
 
 GULDEN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
-  -I$(builddir)/qt/forms
+  -I$(builddir)/qt/forms -DQT_NO_KEYWORDS
 
-qt_libguldenqt_a_CPPFLAGS = $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
+qt_libguldenqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
   $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+qt_libguldenqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_libguldenqt_a_SOURCES = $(GULDEN_QT_CPP) $(GULDEN_QT_H) $(QT_FORMS_UI) \
   $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES) $(GDN_QRC)
@@ -376,8 +474,9 @@ $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
 # Gulden binary #
-qt_Gulden_CPPFLAGS = $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
+qt_Gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+qt_Gulden_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_Gulden_SOURCES = qt/bitcoin.cpp
 if TARGET_DARWIN
@@ -390,8 +489,27 @@ qt_Gulden_LDADD = qt/libguldenqt.a $(LIBGULDEN_SERVER)
 if ENABLE_WALLET
 qt_Gulden_LDADD += $(LIBGULDEN_WALLET)
 endif
-qt_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_CRYPTO) $(LIBGULDEN_UNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1)
+if ENABLE_ZMQ
+qt_Gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+endif
+qt_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) -lQt5WebKit -lQt5WebKitWidgets  $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+
+qt_Gulden_LDADD += qt/libguldenqt.a $(LIBGULDEN_SERVER)
+if ENABLE_WALLET
+qt_Gulden_LDADD += $(LIBGULDEN_WALLET)
+endif
+if ENABLE_ZMQ
+qt_Gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+endif
+qt_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+
+
+
+
 qt_Gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_Gulden_LIBTOOLFLAGS = --tag CXX
 
@@ -400,21 +518,22 @@ QT_QM=$(QT_TS:.ts=.qm)
 
 SECONDARY: $(QT_QM)
 
-qt/bitcoinstrings.cpp: $(libgulden_server_a_SOURCES) $(libgulden_wallet_a_SOURCES)
+$(srcdir)/qt/bitcoinstrings.cpp: $(libgulden_server_a_SOURCES) $(libgulden_wallet_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
-	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) ../share/qt/extract_strings_qt.py $^
+	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" COPYRIGHT_HOLDERS="$(COPYRIGHT_HOLDERS)" COPYRIGHT_HOLDERS_SUBSTITUTION="$(COPYRIGHT_HOLDERS_SUBSTITUTION)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: qt/bitcoinstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(GULDEN_QT_CPP) $(GULDEN_QT_H) $(GULDEN_MM)
+translate: $(srcdir)/qt/bitcoinstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(GULDEN_QT_CPP) $(GULDEN_QT_H) $(GULDEN_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts qt/locale/bitcoin_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/bitcoin_en.ts
 	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations none -no-obsolete -ts `ls qt/locale/*.ts | grep -v qt/locale/bitcoin_en.ts`
 
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
-	@test -f $(@D)/$(<F) || cp -f $< $(@D)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name bitcoin_locale $(@D)/$(<F) | \
+	@cp -f $< $(@D)/temp_$(<F)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name bitcoin_locale $(@D)/temp_$(<F) | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_MOVIES) $(PROTOBUF_H) $(GDN_QRC)
 	@test -f $(RCC)
@@ -436,11 +555,11 @@ ui_%.h: %.ui
 	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(UIC) -o $@ $< || (echo "Error creating $@"; false)
 
 %.moc: %.cpp
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 moc_%.cpp: %.h
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 %.qm: %.ts

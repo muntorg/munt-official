@@ -1,15 +1,15 @@
 [Unit]
-Description=Guldencoin's distributed currency daemon
+Description=Gulden's distributed currency daemon
 After=network.target
 
 [Service]
-User=guldencoin
-Group=guldencoin
+User=gulden
+Group=gulden
 
 Type=forking
-PIDFile=/var/lib/guldencoind/guldencoind.pid
-ExecStart=/usr/bin/guldencoind -daemon -pid=/var/lib/guldencoind/guldencoind.pid \
--conf=/etc/guldencoin/guldencoin.conf -datadir=/var/lib/guldencoind -disablewallet
+PIDFile=/var/lib/GuldenD/GuldenD.pid
+ExecStart=/usr/bin/GuldenD -daemon -pid=/var/lib/GuldenD/GuldenD.pid \
+-conf=/etc/gulden/gulden.conf -datadir=/var/lib/GuldenD -disablewallet
 
 Restart=always
 PrivateTmp=true

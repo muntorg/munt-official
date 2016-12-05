@@ -18,13 +18,11 @@ void* memcpy_int(void* a, const void* b, size_t c)
     return memcpy(a, b, c);
 }
 
-namespace
-{
+namespace {
 // trigger: Use the memcpy_int wrapper which calls our internal memcpy.
 //   A direct call to memcpy may be optimized away by the compiler.
 // test: Fill an array with a sequence of integers. memcpy to a new empty array.
-//   Verify that the arrays are equal. Use an odd size to decrease the odds of
-//   the call being optimized away.
+
 template <unsigned int T>
 bool sanity_test_memcpy()
 {
@@ -43,10 +41,7 @@ bool sanity_test_memcpy()
 }
 
 #if defined(HAVE_SYS_SELECT_H)
-// trigger: Call FD_SET to trigger __fdelt_chk. FORTIFY_SOURCE must be defined
-//   as >0 and optimizations must be set to at least -O2.
-// test: Add a file descriptor to an empty fd_set. Verify that it has been
-//   correctly added.
+
 bool sanity_test_fdelt()
 {
     fd_set fds;

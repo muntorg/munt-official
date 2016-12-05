@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2015 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -17,18 +17,20 @@ class uint256;
 
 class uint_error : public std::runtime_error {
 public:
-    explicit uint_error(const std::string& str) : std::runtime_error(str) {}
+    explicit uint_error(const std::string& str)
+        : std::runtime_error(str)
+    {
+    }
 };
 
 /** Template base class for unsigned big integers. */
-template<unsigned int BITS>
-class base_uint
-{
+template <unsigned int BITS>
+class base_uint {
 protected:
-    enum { WIDTH=BITS/32 };
+    enum { WIDTH = BITS / 32 };
     uint32_t pn[WIDTH];
-public:
 
+public:
     base_uint()
     {
         for (int i = 0; i < WIDTH; i++)
@@ -135,8 +137,7 @@ public:
     base_uint& operator+=(const base_uint& b)
     {
         uint64_t carry = 0;
-        for (int i = 0; i < WIDTH; i++)
-        {
+        for (int i = 0; i < WIDTH; i++) {
             uint64_t n = carry + pn[i] + b.pn[i];
             pn[i] = n & 0xffffffff;
             carry = n >> 32;
@@ -172,16 +173,16 @@ public:
 
     base_uint& operator++()
     {
-        // prefix operator
+
         int i = 0;
-        while (++pn[i] == 0 && i < WIDTH-1)
+        while (++pn[i] == 0 && i < WIDTH - 1)
             i++;
         return *this;
     }
 
     const base_uint operator++(int)
     {
-        // postfix operator
+
         const base_uint ret = *this;
         ++(*this);
         return ret;
@@ -189,16 +190,16 @@ public:
 
     base_uint& operator--()
     {
-        // prefix operator
+
         int i = 0;
-        while (--pn[i] == (uint32_t)-1 && i < WIDTH-1)
+        while (--pn[i] == (uint32_t)-1 && i < WIDTH - 1)
             i++;
         return *this;
     }
 
     const base_uint operator--(int)
     {
-        // postfix operator
+
         const base_uint ret = *this;
         --(*this);
         return ret;
@@ -213,8 +214,7 @@ public:
     friend inline const base_uint operator/(const base_uint& a, const base_uint& b) { return base_uint(a) /= b; }
     friend inline const base_uint operator|(const base_uint& a, const base_uint& b) { return base_uint(a) |= b; }
     friend inline const base_uint operator&(const base_uint& a, const base_uint& b) { return base_uint(a) &= b; }
-    friend inline const base_uint operator^(const base_uint& a, const base_uint& b) { return base_uint(a) ^= b; }
-    friend inline const base_uint operator>>(const base_uint& a, int shift) { return base_uint(a) >>= shift; }
+    friend inline const base_uint operator^(const base_uint& a, const base_uint& b) { return base_uint(a) ^= b; } friend inline const base_uint operator>>(const base_uint& a, int shift) { return base_uint(a) >>= shift; }
     friend inline const base_uint operator<<(const base_uint& a, int shift) { return base_uint(a) <<= shift; }
     friend inline const base_uint operator*(const base_uint& a, uint32_t b) { return base_uint(a) *= b; }
     friend inline bool operator==(const base_uint& a, const base_uint& b) { return memcmp(a.pn, b.pn, sizeof(a.pn)) == 0; }
@@ -253,9 +253,18 @@ public:
 class arith_uint256 : public base_uint<256> {
 public:
     arith_uint256() {}
-    arith_uint256(const base_uint<256>& b) : base_uint<256>(b) {}
-    arith_uint256(uint64_t b) : base_uint<256>(b) {}
-    explicit arith_uint256(const std::string& str) : base_uint<256>(str) {}
+    arith_uint256(const base_uint<256>& b)
+        : base_uint<256>(b)
+    {
+    }
+    arith_uint256(uint64_t b)
+        : base_uint<256>(b)
+    {
+    }
+    explicit arith_uint256(const std::string& str)
+        : base_uint<256>(str)
+    {
+    }
 
     /**
      * The "compact" format is a representation of a whole
@@ -277,14 +286,14 @@ public:
      * complexities of the sign bit and using base 256 are probably an
      * implementation accident.
      */
-    arith_uint256& SetCompact(uint32_t nCompact, bool *pfNegative = NULL, bool *pfOverflow = NULL);
+    arith_uint256& SetCompact(uint32_t nCompact, bool* pfNegative = NULL, bool* pfOverflow = NULL);
     uint32_t GetCompact(bool fNegative = false) const;
 
-    friend uint256 ArithToUint256(const arith_uint256 &);
-    friend arith_uint256 UintToArith256(const uint256 &);
+    friend uint256 ArithToUint256(const arith_uint256&);
+    friend arith_uint256 UintToArith256(const uint256&);
 };
 
-uint256 ArithToUint256(const arith_uint256 &);
-arith_uint256 UintToArith256(const uint256 &);
+uint256 ArithToUint256(const arith_uint256&);
+arith_uint256 UintToArith256(const uint256&);
 
-#endif // BITCOIN_UINT256_H
+#endif // BITCOIN_ARITH_UINT256_H

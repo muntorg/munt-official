@@ -1,173 +1,1134 @@
-QStatusBar
+*
 {
-	height: 20px;
+    padding:0px;
+    margin: 0px;
+    border: 0px;
+    outline: 0;
 }
 
-QStatusBar QLabel
+/*Default font*/
+QMainWindow *
 {
-	color: grey;
-	height: 12px;
-	margin: 0px;
-	padding: 0px;
+    font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif, "FontAwesome", "'FontAwesome'";
+    font-weight: 400;
+}
+
+/*Buttons get FontAwesome for icons*/
+QToolButton, QPushButton, #searchLabel1, #searchLabel2, #accountSettings, #labelWalletSettings, #account_bar QLabel
+{
+    font-family: "FontAwesome", "'FontAwesome'", "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+
+QMainWindow, QDialog
+{
+    border-image: url(':/Gulden/main_background') 0 0 0 0 stretch stretch;
+}
+
+QMainWindow QMenu
+{
+    background-color: #f3f4f6;
+    border: 1px solid #999;
+    color: black;
+}
+
+QMenu::item
+{
+    color: black;
+}
+
+QMenu::item:disabled
+{
+    color: #999;
+}
+
+QMenu::separator
+{
+    background-color: #999;
+    height: 1px;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+
+
+
+#forexError
+{
+    color: #FF8080;
+}
+
+#settings_button
+{
+    font-size: BUTTON_FONT_SIZE;
+    padding-left: BUTTON_FONT_SIZE;
+    padding-right: 11px;
+}
+
+QMainWindow #home_button
+{
+    font-family: "guldensign", "'guldensign'";
+    font-size: LOGO_FONT_SIZE;
+    line-height: 44px;
+    color: #999;
+    padding: 0px;
+    margin: 0px;
+    padding-left: 1px;
+}
+
+#settings_button::menu-indicator
+{
+    image: url(none.jpg);
+    width: 0px;
+}
+
+#status_bar
+{
+    border-top: 1px solid rgba(0, 0, 0, 5%);
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
+}
+
+#status_bar_status_area
+{
+    width: SIDE_BAR_WIDTH;
+    min-width: SIDE_BAR_WIDTH;
+    max-width: SIDE_BAR_WIDTH;
 }
 
 #progress_bar_label
 {
-	color: grey;
-	padding-left: 8px;
-	width: 200px;
-	min-width: 200px;
-	max-width: 200px;
+    margin: 0px;
+    padding: 0px;
+    color: #999;
+    padding-left: 40px;
+    background-color: transparent;
 }
 
-QStatusBar
+#status_bar_frame_blocks
 {
-	color: grey;
+    color: black;
 }
 
-QStatusBar > QFrame
+
+
+#status_bar QProgressBar
 {
-	width: 200px;
-	min-width: 200px;
-	max-width: 200px;
-	margin: 0px;
-	padding-right: 10px;
+    max-height: 10px;
+    height: 10px;
+    border: 1px solid ACCENT_COLOR_1;
+    background-color: transparent;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 258px;
+    width: 258px;
+    max-width: 258px;
 }
 
-QStatusBar > QFrame > QLabel
+
+#status_bar QProgressBar::Chunk
 {
-	width: 16px;
-	padding: 0px;
-	margin: 0px;
+    border: 1px solid ACCENT_COLOR_1;
+    background-color: ACCENT_COLOR_1;
+    border-radius: 4px;
 }
 
-
-QStatusBar > QProgressBar
+/*Popup dialogs*/
+BitcoinGUI QDialog:window, QDialog:window
 {
-	max-height: 10px;
-	height: 10px;
-	border: 1px solid #838383;
-	background-color: #939393;
-	border-radius: 5px;
-	text-align: center;
-	margin: 0px;
-	padding: 0px;
-	min-width: 200px;
-	max-width: 300px;
+    border-image: url(':/Gulden/dialog_background') 0 0 0 0 stretch stretch;
+    color: black;
 }
 
-QStatusBar > QProgressBar::Chunk
+BitcoinGUI QDialog:window *
 {
-	background-color: #E5E5E5;
-	border-radius: 5px;
+    color: black;
 }
+   
+BitcoinGUI QDialog, BitcoinGUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAccountDialog, #scanToConnectPage, #newAccountPage
+{
+    background-color: transparent;
+    border-image: url(none.jpg);
+}
+
+
+BitcoinGUI #NewAccountDialog, BitcoinGUI #AccountSettingsDialog, BitcoinGUI #walletFrame, BitcoinGUI > QToolBar, BitcoinGUI > QDialog, BitcoinGUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, BitcoinGUI #progress_bar
+{
+    background-color: rgba(255, 255, 255, 50%);
+    border-image: url(none.jpg);
+}
+
+#account_bar, #gulden_bar,  #account_bar *, #gulden_bar *, #status_bar, #status_bar_status_area
+{
+    background-color: rgba(255, 255, 255, 0%);
+}
+
+
+#menuBarSpaceFiller
+{
+    background-color: rgba(255, 255, 255, 0%);
+    border-image: url(none.jpg);
+}
+
+BitcoinGUI QMenuBar
+{
+    background-color: rgba(0, 0, 0, 5%);
+}
+
+BitcoinGUI QMenuBar,#menuBarSpaceFiller
+{
+    border: 0px;
+}
+
+#account_bar
+{
+    width: SIDE_BAR_WIDTH;
+    max-width: SIDE_BAR_WIDTH;
+    min-width: SIDE_BAR_WIDTH;
+}
+
+#buy_page_error_text
+{
+    color: black;
+}
+
+BitcoinGUI QMenuBar
+{
+    max-width: SIDE_BAR_WIDTH;
+    max-height: 21px;
+}
+
+
+QMenuBar
+{
+    color : black;
+}
+
+BitcoinGUI *
+{
+    background-color: transparent;
+}
+
+
 
 BitcoinGUI > QToolBar
 {
-	height: 38px;
-	background-color: #093999;
-	border-bottom: 1px solid #fff;
 	spacing: 0px;
 }
 
 BitcoinGUI > QToolBar > QToolButton
 {
-	height: 38px;
-	border: 0px;
-	border-bottom: 1px solid #fff;
-	font-size: 13px;
-	color: #fff;
-	padding: 0px;
-	margin: 0px;
-	width: 100%;
-	padding-left: auto;
-	padding-right: auto;
+    color: #aaa;
+    height: 41px;
+    border-radius: 2px;
+    font-size: TOOLBAR_FONT_SIZE;
+    padding: 0px;
+    margin: 0px;
+    padding-right:20px;
 }
 
 BitcoinGUI > QToolBar > QToolButton:hover
 {
-	height: 38px;
-	border: 0px;
-	border-bottom: 1px solid #fff;
-	font-size: 13px;
-	color: #fff;
-	background-color: #0f40a2;
-	padding: 0px;
-	margin: 0px;
-	width:100%;
-	padding-left: auto;
-	padding-right: auto;
+    color: #555;
+    height: 44px;
 }
-
-#gulden_bar > QToolButton:hover
-{
-        background-color: #093999;
-}
-
 
 BitcoinGUI > QToolBar > QToolButton:checked
 {
-	height: 38px;
-	border: 0px;
-	border-bottom: 1px solid #fff;
-	font-size: 13px;
-	color: #fff;
-	background-color: #1b4bab;
-	padding: 0px;
-	margin: 0px;
-	width: 100%;
-	padding-left: auto;
-	padding-right: auto;
+    color: #000;
 }
+
+#gulden_bar > QToolButton
+{
+    height: 44px;
+}
+
 
 #gulden_bar
 {
-	height: 44px;
-	border-bottom: 1px solid #1b4bab;
-	background-color: #093999;
-	color: #fff;
-	padding: 0px;
-	margin: 0px;
+    height: 80px;
+    spacing: 0px;
 }
 
-#gulden_label_change
+#navigation_bar, #account_info_bar
 {
-	color: #6791e4;
-	font-size: 13px;
-	padding: 0px;
-	margin: 0px;
-	padding-left: 8px;
+    border-bottom: 1px solid #ebebeb;
 }
 
-#gulden_label_balance
+#account_bar QLabel[hover=true], #account_bar QPushButton:hover, #labelWalletSettings[hover=true], #accountSettings[hover=true], #gulden_label_balance_forex[hover=true], #accountBalanceForex[hover=true], #home_button[hover=true], #secondaryAmountDisplay[hover=true], #tertiaryAmountDisplay[hover=true], #quadAmountDisplay[hover=true]
 {
-	color: #fff;
-	font-weight: 500;
-	font-size: 15px;
-	padding: 0px;
-	margin: 0px;
+    color: #777;
 }
 
-#gulden_bar_right_margin
+#account_bar QLabel[pressed=true], #account_bar QPushButton:pressed, #labelWalletSettings[pressed=true], #accountSettings[pressed=true], #gulden_label_balance_forex[pressed=true], #accountBalanceForex[pressed=true], #home_button[pressed=true], #secondaryAmountDisplay[pressed=true], #tertiaryAmountDisplay[pressed=true], #quadAmountDisplay[pressed=true]
 {
-	height: 44px;
-	width: 10px;
-	max-width: 10px;
-	min-width: 10px;
-	padding: 0px;
-	margin: 0px;
+    color: #333;
 }
 
-#gulden_bar QToolButton
+#secondaryAmountDisplay
 {
-	padding: 0px;
-	margin: 10px;
-	width: 24px;
-	height: 24px;
-	border: 0px;
+    font-family:  "guldensign", "'guldensign'", "FontAwesome", "'FontAwesome'", "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-QStatusBar::item
+#account_bar QLabel[checked=true]
 {
-	border: none;
-} 
+    color: black;
+    background-color: rgba(0, 0, 0, 5%);
+}
+
+#account_bar QLabel, #account_bar QPushButton, #account_bar #labelMyAccounts[hover=true]
+{
+    text-align: left;
+    height:30px;
+    min-height:30px;
+    max-height:30px;
+    line-height:30px;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 40px;
+    font-size: TOOLBAR_FONT_SIZE;
+    color: #999;
+}
+
+
+
+#account_bar #labelWalletSettings
+{
+    padding-left: 0px;
+}
+
+#frameMyAccounts
+{
+    margin: 0px;
+    padding: 0px;
+    margin-top: 30px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-right: 40px;
+}
+
+
+
+#account_bar #add_account_button 
+{
+    margin-top: 6px;
+    margin-bottom: 18px;
+}
+
+
+#gulden_label_balance, #gulden_label_balance_forex
+{
+    padding: 0px;
+    margin: 0px;
+    color: #999;
+    font-size: TOOLBAR_FONT_SIZE;
+}
+
+#gulden_label_balance_forex
+{
+    padding-left: 4px;
+}
+
+#gulden_bar_right_margin, #gulden_bar_left_margin
+{
+    height: 44px;
+    width: 40px;
+    max-width: 40px;
+    min-width: 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QTabWidget
+{
+    background-color: transparent;
+    color: #fff;
+    padding: 0px;
+    margin: 0px;
+    font-size: BUTTON_FONT_SIZE;
+}
+
+QTabBar::tab
+{
+    color: #999;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    height: 60px;
+    padding-right: 20px;
+}
+
+QTabWidget::tab-bar
+{
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+QTabWidget::pane
+{
+    border: 0px;
+}
+
+QTabBar::tab:hover
+{
+    color: #555;
+}
+
+QTabBar::tab:selected
+{
+    color: #000;
+}
+
+QTabWidget *
+{
+    background-color: transparent;
+    color: #fff;
+}
+
+#add_account_button
+{
+    margin-top: 40px;
+    color: ACCENT_COLOR_1;
+}
+
+
+
+
+
+BitcoinGUI QDialog:window QPushButton
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: ACCENT_COLOR_1;
+    border-radius: 2px; 
+    margin: 0px;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
+BitcoinGUI QDialog:window QPushButton:pressed
+{
+    color: #0067d9;
+}
+
+
+
+
+/*Cancel buttons*/
+#clearButton, #deleteButton, #cancelButton, #cancelButton2, #deleteButton, BitcoinGUI #closeButton, #buttonDone, #buttonCancel
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: #e02121;
+    margin: 0px;
+    padding: 0px;   
+    margin-bottom: 18px;
+}
+#clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, BitcoinGUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
+{
+    color: #bf1b3a;
+}
+
+
+/*Normal buttons*/
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: ACCENT_COLOR_1;
+    border-radius: 2px; 
+    margin: 0px;
+    padding: 0px;
+    margin-right: 30px;
+    margin-left: 20px;
+    margin-bottom: 18px;
+}
+#accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton
+{
+    margin-left: 0px;
+    margin-right: 0px;    
+}
+#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #accountCopyToClipboardButton:pressed, #generateAnotherRequestButton:pressed
+{
+    color: #0067d9;
+}
+
+/* The special 'focus' buttons*/
+#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: #fff;
+    background-color: ACCENT_COLOR_1;
+    border-radius: 2px; 
+    margin: 0px;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 18px;
+}
+#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed
+{
+    background-color: #0067d9;
+}
+#sendButton
+{
+    margin-top: 4px;
+}
+
+#buttonNewWallet, #buttonRestoreWallet
+{
+    max-width: 150px;
+}
+
+#labelDescribeRecoveryPhrase, #edittextEnterRecoveryPhrase, #labelEnterRecoveryPhrase, #labelEULAREesponsibility
+{
+    min-width: 600px;
+    max-width: 600px;
+}
+
+
+ReceiveCoinsDialog #receiveCoinsStackedWidget
+{
+    margin-top: 32px;
+}
+
+GuldenSendCoinsEntry
+{
+    margin-top: 30px;
+}
+
+BitcoinGUI #topMargin
+{
+    height: 30px;
+    max-height: 30px;
+    min-height: 30px;
+}
+
+
+
+#payAmount QAbstractSpinBox, #requestAmount QAbstractSpinBox
+{
+    font-size: BUTTON_FONT_SIZE;
+    border: 1px solid #ebebeb;
+    background-color: #fff;
+}
+
+
+
+
+
+QTableView
+{
+    alternate-background-color: #f8f8f8;
+    background-color: #fff;
+    selection-background-color: ACCENT_COLOR_1;
+    color: #999;
+    outline: 0;
+}
+
+QTableView::item:focus QLineEdit
+{
+    color: #999;
+    background-color: ACCENT_COLOR_1;
+}
+
+QTableView::item:focus QHeaderView
+{
+    background-color: transparent;
+}
+
+
+QTableView::item
+{
+    padding: 0px;
+    margin: 0px;
+    padding-left: 4px;
+}
+
+#transactionViewTable
+{
+    background-color: transparent;
+    alternate-background-color: transparent;
+}
+
+
+/* Pull down lists*/
+QComboBox
+{
+    font-size: BUTTON_FONT_SIZE;
+    height: 28px;
+    color: #999;
+    background-color: white;
+    border-left: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 2px;
+}
+
+/* menu that appears from pull down list */
+QComboBox QAbstractItemView
+{
+    font-size: BUTTON_FONT_SIZE;
+    line-height: 28px;
+    color: #999;
+    background-color: white;
+    border-left: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 2px;
+}
+
+QComboBox::drop-down
+{
+    subcontrol-position: right center;
+    subcontrol-origin: padding;
+    background-color: transparent;
+    border: 0px;
+}
+
+QComboBox::down-arrow
+{
+    width: 8px;
+    height: 8px;
+    image: url(':/Gulden/angle_down_grey');
+}
+
+QComboBox::down-arrow:hover
+{
+    image: url(':/Gulden/angle_down_blue');
+}
+
+/* Pull down lists for transaction table*/
+#transactionView QComboBox
+{
+    margin: 0px;
+    margin-right: 10px;
+    padding: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+#transactionView #searchBox1
+{
+    color: #999;
+}
+
+#amountWidget
+{
+    font-size: BUTTON_FONT_SIZE;
+    height: 28px;
+    color: #999;
+    background-color: white;
+    border-left: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 2px;
+    margin: 0px;
+    margin-left: 10px;
+    padding: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+    text-align: right;
+}
+
+
+
+
+
+QHeaderView::section
+{
+    background-color: transparent;
+    color: #999;
+}
+
+
+QHeaderView::down-arrow
+{
+    width: 10px;
+    height: 10px;
+    image: url(':/Gulden/angle_down_grey');
+}
+
+QHeaderView::up-arrow
+{
+    width: 10px;
+    height: 10px;
+    image: url(':/Gulden/angle_up_grey');
+}
+
+QHeaderView::down-arrow:hover
+{
+    image: url(':/Gulden/angle_down_blue');
+}
+
+QHeaderView::up-arrow:hover
+{
+    image: url(':/Gulden/angle_up_blue');
+}
+
+#addressBookTabTable, #myAccountsTabTable
+{
+    alternate-background-color: transparent;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+    width:100%;
+    color: black;
+}
+
+
+
+
+
+
+/* Search control */
+#searchLabel1, #searchLabel2
+{
+    font-size: BUTTON_FONT_SIZE;
+    height: 28px;
+    color: #999;
+    background-color: white;
+    border-left: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 2px;
+    padding-left: 6px;
+    padding-right: 7px;
+}
+#searchBox1, #searchBox2
+{
+    font-size: BUTTON_FONT_SIZE;
+    height: 28px;
+    background-color: white;
+    color: black;
+    border: 1px solid #ebebeb;
+    border-radius: 2px;
+    border-left: 0px;
+}
+
+#receivingAddress, #receivingAddressLabel, #receivingAddress_dialog, #receivingAddressLabel_dialog, #newAccountName, #requestLabel, #buyEmailAddress, #buyBank, #lineEditChangeAccountName, #lineEditOldPassword, #lineEditNewPassword, #lineEditNewPasswordRepeat, #labelBackupPhrase, #edittextEnterRecoveryPhrase, #passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit
+{
+    font-size: BUTTON_FONT_SIZE;
+    height: 28px;
+    background-color: white;
+    color: black;
+    border: 1px solid #ebebeb;
+    border-radius: 2px;
+    border-left: 0px;
+    margin-bottom: 10px;
+}
+
+#receivingAddress_dialog
+{
+    margin-top: 18px;
+}
+
+#passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit
+{
+    margin-left: 20px;
+}
+
+#receivingAddress_dialog, #receivingAddressLabel_dialog
+{
+    margin-right: 40px;
+    margin-left: 40px;
+    color: #999;
+}
+
+#scanQRSyncHeader
+{
+    color: #999;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+#labelDialogMessage
+{
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-top: 18px;
+    color: #999;
+}
+
+#labelPaymentRequestHeading
+{
+    color: black;
+}
+
+#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading2, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation
+{
+    color: #999;
+}
+
+#labelEULAREesponsibility
+{
+    color: #ccc;
+    font-size: SMALL_BUTTON_FONT_SIZE;
+}
+
+QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+
+OptionsDialog QSpinBox
+{
+    background-color: white;
+}
+
+#labelDescribeRecoveryPhrase, #labelEnterRecoveryPhrase
+{
+    font-size: BUTTON_FONT_SIZE;
+    padding-bottom: 10px;
+}
+
+#labelPaymentRequestHeading, #labelPaymentRequestHeading2
+{
+    margin-bottom: 18px;
+}
+
+#labelBackupPhrase, #labelShowBackupPhrase
+{
+    color: #2f93ff;
+    padding: 20px;
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    background-color: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 2px;
+}
+
+#addressQRImage, #scanQRCode
+{
+    color: #2f93ff;
+    font-size: SMALL_BUTTON_FONT_SIZE;
+}
+
+#checkboxConfirmRecoveryPhraseWrittenDown
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: #999;
+    margin: 0px;
+    padding: 0px;   
+    margin-bottom: 18px;
+    margin-right: 20px;
+}
+
+#requestAmount
+{
+    color: black;
+}
+
+QToolTip
+{
+    background-color: white;
+    color: #999;
+    padding: 6px;
+    border: 1px solid black;
+}
+
+
+#amountSeperator
+{
+    color: ACCENT_COLOR_1;
+}
+
+#newAccountName
+{
+    margin-top: 30px;
+}
+
+#checkBoxAddToAddressBook
+{
+    font-size: MINOR_LABEL_FONT_SIZE;
+    color: #999;
+    text-transform: uppercase;
+    border: 0px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+#accountSummaryWidget
+{
+    margin-top:10px;
+    margin-bottom:10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+#accountSettings
+{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    text-indent: 0px;
+    font-size: BUTTON_FONT_SIZE;
+    color: #999;
+    padding-left: 4px;
+    margin-top 10px;
+}
+
+#accountName
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    color: #999;
+    margin-top 10px;
+}
+
+#accountBalance
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: BUTTON_FONT_SIZE;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+#accountBalanceForex
+{
+    margin: 0px;
+    padding: 0px;
+    padding-left: 4px;
+    border: 0px;
+    text-indent: 0px;
+    font-size: BUTTON_FONT_SIZE;	
+    color: #999;
+    margin-bottom: 10px;
+}
+
+#leftMargin
+{
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+}
+
+#progress_bar_spacer_left
+{
+    width: 32px;
+    min-width: 32px;
+    max-width: 32px;
+}
+
+#rightMargin
+{
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+}
+
+#walletFrame
+{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+#addressQRImage
+{
+    border: 1px solid #ebebeb;
+    margin-top: 10px;
+}
+
+#accountActionButtonFrame,	#accountActionButtonFrame2
+{
+    border-top: 1px solid #ebebeb;
+    padding-top: 10px;
+}
+
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading
+{
+    margin: 0px;
+    padding: 0px;
+    margin-top: 6px;
+    height:20px;
+    font-size: MINOR_LABEL_FONT_SIZE;
+    color: #999;
+    text-transform: uppercase;
+}
+
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName
+{
+    margin-top: 35px;
+    margin-bottom: 10px;
+}
+
+#requestLabel
+{
+    margin-top: 18px;
+}
+
+#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded
+{
+    margin-top: 20px;
+}
+
+#accountAddress
+{
+    margin: 0px;
+    padding: 0px;
+    margin-top: 6px;
+    height:20px;;
+    font-size: MINOR_LABEL_FONT_SIZE;
+    color: black;
+}
+
+#horizontalLine
+{
+    max-height: 1px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #ebebeb;
+}
+
+
+#labelWelcomeDialogLogo
+{
+    padding:0px;
+    margin:0px;
+    border: 0px;
+}
+
+#labelWelcomeScreenProgressDisplay
+{
+    color: black;
+}
+
+
+
+QAbstractSpinBox
+{
+    color: black;
+    font-size: BUTTON_FONT_SIZE;
+    height:28px;
+}
+
+BitcoinAmountField QLabel
+{
+    color: #999;
+    font-size: BUTTON_FONT_SIZE;
+    height:28px;
+}
+
+
+BitcoinGUI QScrollBar:vertical
+{
+    margin: 0px;
+    border: 0;
+    background-color: transparent;
+    width: 16px;
+    border-radius: 4px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-right: 8px solid rgba(0, 0, 0, 0%);
+}
+
+BitcoinGUI QScrollBar::handle:vertical
+{
+    background-color: #ccc;
+    min-height: 10px;
+    max-height: 10px;
+    max-width: 8px;
+    border-radius: 4px;
+}
+
+BitcoinGUI QScrollBar::handle:vertical:hover
+{
+    background-color: #999;
+}
+
+BitcoinGUI QScrollBar::handle:vertical:pressed
+{
+    background-color: #888;
+}
+
+BitcoinGUI QScrollBar::add-line
+{
+    background-color: transparent;
+}
+
+BitcoinGUI QScrollBar::sub-line
+{
+    background-color: transparent;
+}
+
+BitcoinGUI QScrollBar::add-page
+{
+    background-color: transparent;
+}
+
+BitcoinGUI QScrollBar::sub-page
+{
+    background-color: transparent;
+}
+
+
+BitcoinGUI QScrollBar:down-arrow:vertical
+{
+    width: 8px;
+    height: 8px;
+    border-top: 16px solid rgba(0, 0, 0, 0%);
+    border-right: 8px solid rgba(0, 0, 0, 0%);
+    image: url(':/Gulden/angle_down_grey');
+}
+
+BitcoinGUI QScrollBar:down-arrow:vertical:hover
+{
+    image: url(':/Gulden/angle_down_blue');
+    border-right: 8px solid rgba(0, 0, 0, 0%);
+}
+
+BitcoinGUI QScrollBar::down-arrow:vertical:pressed
+{
+    
+}
+
+BitcoinGUI QScrollBar::up-arrow:vertical
+{
+    width: 8px;
+    height: 8px;
+    border-bottom: 16px solid rgba(0, 0, 0, 0%);
+    border-right: 8px solid rgba(0, 0, 0, 0%);
+    image: url(':/Gulden/angle_up_grey'); 
+}
+
+BitcoinGUI QScrollBar::up-arrow:vertical:hover
+{
+    image: url(':/Gulden/angle_up_blue');
+    border-right: 8px solid rgba(0, 0, 0, 0%);
+}
+
+BitcoinGUI QScrollBar::up-arrow:vertical:pressed
+{
+    
+}
+
+BitcoinGUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+{
+    background: none;
+}
+
+#newAccountName[valid=false], #lineEditNewPasswordRepeat[valid=false], #lineEditNewPassword[valid=false], #lineEditOldPassword[valid=false]
+{
+    background-color: #FF8080;
+}
+
+

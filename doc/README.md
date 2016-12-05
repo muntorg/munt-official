@@ -1,65 +1,68 @@
-Guldencoin Core 0.10.99
+Gulden Core 0.13.0
 =====================
 
 Setup
 ---------------------
-[Guldencoin Core](https://guldencoin.com/download) is the original Guldencoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Bitcoin transactions (which is currently several GBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Gulden Core](https://gulden.com/download) is the original Gulden client and it builds the backbone of the network. However, it downloads and stores the entire history of Gulden transactions (which is currently several GBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 Running
 ---------------------
-The following are some helpful notes on how to run Guldencoin on your native platform. 
+The following are some helpful notes on how to run Gulden on your native platform.
 
 ### Unix
 
-You need the Qt4 run-time libraries to run Guldencoin-Qt. On Debian or Ubuntu:
-
-	sudo apt-get install libqtgui4
-
 Unpack the files into a directory and run:
 
-- bin/32/guldencoin-qt (GUI, 32-bit) or bin/32/guldencoind (headless, 32-bit)
-- bin/64/guldencoin-qt (GUI, 64-bit) or bin/64/guldencoind (headless, 64-bit)
-
-
+- `bin/Gulden` (GUI) or
+- `bin/GuldenD` (headless)
 
 ### Windows
 
-Unpack the files into a directory, and then run guldencoin-qt.exe.
+Unpack the files into a directory, and then run Gulden.exe.
 
-### OSX
+### OS X
 
-Drag Guldencoin-Qt to your applications folder, and then run Guldencoin-Qt.
+Drag Gulden-Core to your applications folder, and then run Gulden-Core.
 
 ### Need Help?
 
-* See the documentation at the [Bitcoin Wiki](https://en.bitcoin.it/wiki/Main_Page)
+* See the documentation at the [Gulden Wiki](https://en.gulden.it/wiki/Main_Page)
 for help and more information.
-* Ask for help on [#guldencoin] on irc.tweakers.net.
-* Ask for help on the [Guldencoin Community Forum](https://community.guldencoin.com/) forums.
-* Ask for help on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Guldencoin thread](https://bitcointalk.org/index.php?topic=554412).
+* Ask for help on [#gulden](http://webchat.freenode.net?channels=gulden) on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net?channels=gulden).
+* Ask for help on the [GuldenTalk](https://bitcointalk.org/) forums, in the [Technical Support board](https://bitcointalk.org/index.php?topic=1343317).
 
 Building
 ---------------------
-The following are developer notes on how to build Guldencoin on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+The following are developer notes on how to build Gulden on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
-- [OSX Build Notes](build-osx.md)
+- [OS X Build Notes](build-osx.md)
 - [Unix Build Notes](build-unix.md)
+- [Windows Build Notes](build-windows.md)
+- [OpenBSD Build Notes](build-openbsd.md)
+- [Gitian Building Guide](gitian-building.md)
 
 Development
 ---------------------
-The Guldencoin repo's [root README](https://github.com/nlgcoin/guldencoin2/blob/master/README.md) contains relevant information on the development process and automated testing.
+The Gulden repo's [root README](/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Multiwallet Qt Development](multiwallet-qt.md)
 - [Release Notes](release-notes.md)
 - [Release Process](release-process.md)
-- [Source Code Documentation (External Link)](https://dev.visucore.com/bitcoin/doxygen/)
+- [Source Code Documentation (External Link)](https://dev.visucore.com/gulden/doxygen/)
 - [Translation Process](translation_process.md)
+- [Translation Strings Policy](translation_strings_policy.md)
 - [Unit Tests](unit-tests.md)
+- [Unauthenticated REST Interface](REST-interface.md)
+- [Shared Libraries](shared-libraries.md)
+- [BIPS](bips.md)
+- [Dnsseed Policy](dnsseed-policy.md)
+- [Benchmarking](benchmarking.md)
 
 ### Resources
-* Discuss on [#guldencoin] on irc.tweakers.net.
-* Discuss on the [Guldencoin Community Forum](https://community.guldencoin.com/) forums in the development category (https://community.guldencoin.com/c/development).
+* Discuss on the [GuldenTalk](https://bitcointalk.org/) forums, in the [Development & Technical Discussion board](https://bitcointalk.org/index.php?board=6.0).
+* Discuss project-specific development on #gulden-core-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=gulden-core-dev).
+* Discuss general Gulden development on #gulden on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=gulden-dev).
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2013 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,9 +9,10 @@
 
 class AddressTableModel;
 class OptionsModel;
+class PlatformStyle;
 
 namespace Ui {
-    class AddressBookPage;
+class AddressBookPage;
 }
 
 QT_BEGIN_NAMESPACE
@@ -24,8 +25,7 @@ QT_END_NAMESPACE
 
 /** Widget that shows a list of sending or receiving addresses.
   */
-class AddressBookPage : public QDialog
-{
+class AddressBookPage : public QDialog {
     Q_OBJECT
 
 public:
@@ -36,30 +36,30 @@ public:
 
     enum Mode {
         ForSelection, /**< Open address book to pick address */
-        ForEditing  /**< Open address book for editing */
+        ForEditing /**< Open address book for editing */
     };
 
-    explicit AddressBookPage(Mode mode, Tabs tab, QWidget *parent);
+    explicit AddressBookPage(const PlatformStyle* platformStyle, Mode mode, Tabs tab, QWidget* parent);
     ~AddressBookPage();
 
-    void setModel(AddressTableModel *model);
-    const QString &getReturnValue() const { return returnValue; }
+    void setModel(AddressTableModel* model);
+    const QString& getReturnValue() const { return returnValue; }
 
-public slots:
+public Q_SLOTS:
     void done(int retval);
 
 private:
-    Ui::AddressBookPage *ui;
-    AddressTableModel *model;
+    Ui::AddressBookPage* ui;
+    AddressTableModel* model;
     Mode mode;
     Tabs tab;
     QString returnValue;
-    QSortFilterProxyModel *proxyModel;
-    QMenu *contextMenu;
-    QAction *deleteAction; // to be able to explicitly disable it
+    QSortFilterProxyModel* proxyModel;
+    QMenu* contextMenu;
+    QAction* deleteAction; // to be able to explicitly disable it
     QString newAddressToSelect;
 
-private slots:
+private Q_SLOTS:
     /** Delete currently selected address entry */
     void on_deleteAddress_clicked();
     /** Create a new address for receiving coins and / or add a new address book entry */
@@ -76,11 +76,11 @@ private slots:
     /** Set button states based on selected tab and selection */
     void selectionChanged();
     /** Spawn contextual menu (right mouse menu) for address book entry */
-    void contextualMenu(const QPoint &point);
+    void contextualMenu(const QPoint& point);
     /** New entry/entries were added to address table */
-    void selectNewAddress(const QModelIndex &parent, int begin, int /*end*/);
+    void selectNewAddress(const QModelIndex& parent, int begin, int /*end*/);
 
-signals:
+Q_SIGNALS:
     void sendCoins(QString addr);
 };
 

@@ -1,12 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Guldencoin
-Comment=Guldencoin P2P Cryptocurrency
-Comment[fr]=Guldencoin, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=Guldencoin, eşten eşe kriptografik sanal para birimi
-Exec=guldencoin-qt %u
+Name=Gulden
+Comment=Gulden P2P Cryptocurrency
+Comment[fr]=Gulden, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Gulden, eşten eşe kriptografik sanal para birimi
+Exec=Gulden %u
 Terminal=false
 Type=Application
-Icon=guldencoin128
-MimeType=x-scheme-handler/guldencoin;
+Icon=gulden128
+MimeType=x-scheme-handler/gulden;
 Categories=Office;Finance;

@@ -2,37 +2,41 @@
 
 # backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/guldencoin/.guldencoin" ]; then
-	GULDENCOIND_DEFAULT_DATADIR="/var/lib/guldencoin/.guldencoin"
+if [ -d "/var/lib/gulden/.gulden" ]; then
+	GULDEND_DEFAULT_DATADIR="/var/lib/gulden/.gulden"
 else
-	GULDENCOIND_DEFAULT_DATADIR="/var/lib/guldencoind"
+	GULDEND_DEFAULT_DATADIR="/var/lib/GuldenD"
 fi
 
-GULDENCOIND_CONFIGFILE=${GULDENCOIND_CONFIGFILE:-/etc/guldencoin/guldencoin.conf}
-GULDENCOIND_PIDDIR=${GULDENCOIND_PIDDIR:-/var/run/guldencoind}
-GULDENCOIND_PIDFILE=${GULDENCOIND_PIDFILE:-${GULDENCOIND_PIDDIR}/guldencoind.pid}
-GULDENCOIND_DATADIR=${GULDENCOIND_DATADIR:-${GULDENCOIND_DEFAULT_DATADIR}}
-GULDENCOIND_USER=${GULDENCOIND_USER:-${GULDENCOIN_USER:-guldencoin}}
-GULDENCOIND_GROUP=${GULDENCOIND_GROUP:-guldencoin}
-GULDENCOIND_BIN=${GULDENCOIND_BIN:-/usr/bin/guldencoind}
-GULDENCOIND_NICE=${GULDENCOIND_NICE:-${NICELEVEL:-0}}
-GULDENCOIND_OPTS="${GULDENCOIND_OPTS:-${GULDENCOIN_OPTS}}"
+GULDEND_CONFIGFILE=${GULDEND_CONFIGFILE:-/etc/gulden/gulden.conf}
+GULDEND_PIDDIR=${GULDEND_PIDDIR:-/var/run/GuldenD}
+GULDEND_PIDFILE=${GULDEND_PIDFILE:-${GULDEND_PIDDIR}/GuldenD.pid}
+GULDEND_DATADIR=${GULDEND_DATADIR:-${GULDEND_DEFAULT_DATADIR}}
+GULDEND_USER=${GULDEND_USER:-${GULDEN_USER:-gulden}}
+GULDEND_GROUP=${GULDEND_GROUP:-gulden}
+GULDEND_BIN=${GULDEND_BIN:-/usr/bin/GuldenD}
+GULDEND_NICE=${GULDEND_NICE:-${NICELEVEL:-0}}
+GULDEND_OPTS="${GULDEND_OPTS:-${GULDEN_OPTS}}"
 
-name="Guldencoin Core Daemon"
-description="Guldencoin crypto-currency p2p network daemon"
+name="Gulden Core Daemon"
+description="Gulden cryptocurrency P2P network daemon"
 
-command="/usr/bin/guldencoind"
-command_args="-pid=\"${GULDENCOIND_PIDFILE}\" \
-		-conf=\"${GULDENCOIND_CONFIGFILE}\" \
-		-datadir=\"${GULDENCOIND_DATADIR}\" \
+command="/usr/bin/GuldenD"
+command_args="-pid=\"${GULDEND_PIDFILE}\" \
+		-conf=\"${GULDEND_CONFIGFILE}\" \
+		-datadir=\"${GULDEND_DATADIR}\" \
 		-daemon \
-		${GULDENCOIND_OPTS}"
+		${GULDEND_OPTS}"
 
-required_files="${GULDENCOIND_CONFIGFILE}"
-start_stop_daemon_args="-u ${GULDENCOIND_USER} \
-			-N ${GULDENCOIND_NICE} -w 2000"
-pidfile="${GULDENCOIND_PIDFILE}"
-retry=60
+required_files="${GULDEND_CONFIGFILE}"
+start_stop_daemon_args="-u ${GULDEND_USER} \
+			-N ${GULDEND_NICE} -w 2000"
+pidfile="${GULDEND_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${GULDEND_SIGTERM_TIMEOUT}"
 
 depend() {
 	need localmount net
@@ -46,29 +50,29 @@ start_pre() {
 	checkpath \
 	-d \
 	--mode 0750 \
-	--owner "${GULDENCOIND_USER}:${GULDENCOIND_GROUP}" \
-	"${GULDENCOIND_DATADIR}"
+	--owner "${GULDEND_USER}:${GULDEND_GROUP}" \
+	"${GULDEND_DATADIR}"
 
 	checkpath \
 	-d \
 	--mode 0755 \
-	--owner "${GULDENCOIND_USER}:${GULDENCOIND_GROUP}" \
-	"${GULDENCOIND_PIDDIR}"
+	--owner "${GULDEND_USER}:${GULDEND_GROUP}" \
+	"${GULDEND_PIDDIR}"
 
 	checkpath -f \
-	-o ${GULDENCOIND_USER}:${GULDENCOIND_GROUP} \
+	-o ${GULDEND_USER}:${GULDEND_GROUP} \
 	-m 0660 \
-	${GULDENCOIND_CONFIGFILE}
+	${GULDEND_CONFIGFILE}
 
 	checkconfig || return 1
 }
 
 checkconfig()
 {
-	if ! grep -qs '^rpcpassword=' "${GULDENCOIND_CONFIGFILE}" ; then
+	if ! grep -qs '^rpcpassword=' "${GULDEND_CONFIGFILE}" ; then
 		eerror ""
-		eerror "ERROR: You must set a secure rpcpassword to run guldencoind."
-		eerror "The setting must appear in ${GULDENCOIND_CONFIGFILE}"
+		eerror "ERROR: You must set a secure rpcpassword to run GuldenD."
+		eerror "The setting must appear in ${GULDEND_CONFIGFILE}"
 		eerror ""
 		eerror "This password is security critical to securing wallets "
 		eerror "and must not be the same as the rpcuser setting."
@@ -80,7 +84,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"Guldencoin Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Gulden Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1

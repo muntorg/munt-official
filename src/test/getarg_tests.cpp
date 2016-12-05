@@ -1,6 +1,13 @@
-// Copyright (c) 2012-2013 The Bitcoin Core developers
+// Copyright (c) 2012-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include "util.h"
 #include "test/test_bitcoin.h"
@@ -18,14 +25,12 @@ static void ResetArgs(const std::string& strArg)
 {
     std::vector<std::string> vecArg;
     if (strArg.size())
-      boost::split(vecArg, strArg, boost::is_space(), boost::token_compress_on);
+        boost::split(vecArg, strArg, boost::is_space(), boost::token_compress_on);
 
-    // Insert dummy executable name:
     vecArg.insert(vecArg.begin(), "testgulden");
 
-    // Convert to char*:
     std::vector<const char*> vecChar;
-    BOOST_FOREACH(std::string& s, vecArg)
+    BOOST_FOREACH (std::string& s, vecArg)
         vecChar.push_back(s.c_str());
 
     ParseParameters(vecChar.size(), &vecChar[0]);
@@ -51,7 +56,6 @@ BOOST_AUTO_TEST_CASE(boolarg)
     BOOST_CHECK(GetBoolArg("-foo", false));
     BOOST_CHECK(GetBoolArg("-foo", true));
 
-    // New 0.6 feature: auto-map -nosomething to !-something:
     ResetArgs("-nofoo");
     BOOST_CHECK(!GetBoolArg("-foo", false));
     BOOST_CHECK(!GetBoolArg("-foo", true));
@@ -60,19 +64,18 @@ BOOST_AUTO_TEST_CASE(boolarg)
     BOOST_CHECK(!GetBoolArg("-foo", false));
     BOOST_CHECK(!GetBoolArg("-foo", true));
 
-    ResetArgs("-foo -nofoo");  // -foo should win
-    BOOST_CHECK(GetBoolArg("-foo", false));
-    BOOST_CHECK(GetBoolArg("-foo", true));
-
-    ResetArgs("-foo=1 -nofoo=1");  // -foo should win
-    BOOST_CHECK(GetBoolArg("-foo", false));
-    BOOST_CHECK(GetBoolArg("-foo", true));
-
-    ResetArgs("-foo=0 -nofoo=0");  // -foo should win
+    ResetArgs("-foo -nofoo"); // -nofoo should win
     BOOST_CHECK(!GetBoolArg("-foo", false));
     BOOST_CHECK(!GetBoolArg("-foo", true));
 
-    // New 0.6 feature: treat -- same as -:
+    ResetArgs("-foo=1 -nofoo=1"); // -nofoo should win
+    BOOST_CHECK(!GetBoolArg("-foo", false));
+    BOOST_CHECK(!GetBoolArg("-foo", true));
+
+    ResetArgs("-foo=0 -nofoo=0"); // -nofoo=0 should win
+    BOOST_CHECK(GetBoolArg("-foo", false));
+    BOOST_CHECK(GetBoolArg("-foo", true));
+
     ResetArgs("--foo=1");
     BOOST_CHECK(GetBoolArg("-foo", false));
     BOOST_CHECK(GetBoolArg("-foo", true));
@@ -80,7 +83,6 @@ BOOST_AUTO_TEST_CASE(boolarg)
     ResetArgs("--nofoo=1");
     BOOST_CHECK(!GetBoolArg("-foo", false));
     BOOST_CHECK(!GetBoolArg("-foo", true));
-
 }
 
 BOOST_AUTO_TEST_CASE(stringarg)
@@ -104,7 +106,6 @@ BOOST_AUTO_TEST_CASE(stringarg)
     ResetArgs("-foo=eleven");
     BOOST_CHECK_EQUAL(GetArg("-foo", ""), "eleven");
     BOOST_CHECK_EQUAL(GetArg("-foo", "eleven"), "eleven");
-
 }
 
 BOOST_AUTO_TEST_CASE(intarg)
@@ -150,9 +151,9 @@ BOOST_AUTO_TEST_CASE(boolargno)
     BOOST_CHECK(GetBoolArg("-foo", true));
     BOOST_CHECK(GetBoolArg("-foo", false));
 
-    ResetArgs("-foo --nofoo");
-    BOOST_CHECK(GetBoolArg("-foo", true));
-    BOOST_CHECK(GetBoolArg("-foo", false));
+    ResetArgs("-foo --nofoo"); // --nofoo should win
+    BOOST_CHECK(!GetBoolArg("-foo", true));
+    BOOST_CHECK(!GetBoolArg("-foo", false));
 
     ResetArgs("-nofoo -foo"); // foo always wins:
     BOOST_CHECK(GetBoolArg("-foo", true));

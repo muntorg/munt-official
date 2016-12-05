@@ -23,6 +23,6 @@ extern Iterator* NewDBIterator(
     SequenceNumber sequence,
     uint32_t seed);
 
-}  // namespace leveldb
+} // namespace leveldb
 
-#endif  // STORAGE_LEVELDB_DB_DB_ITER_H_
+#endif // STORAGE_LEVELDB_DB_DB_ITER_H_

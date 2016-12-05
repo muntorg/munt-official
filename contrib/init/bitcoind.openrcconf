@@ -1,27 +1,33 @@
-# /etc/conf.d/guldencoind: config file for /etc/init.d/guldencoind
+# /etc/conf.d/GuldenD: config file for /etc/init.d/GuldenD
 
 # Config file location
-#GULDENCOIND_CONFIGFILE="/etc/guldencoin/guldencoin.conf"
+#GULDEND_CONFIGFILE="/etc/gulden/gulden.conf"
 
-# What directory to write pidfile to?  (created and owned by $GULDENCOIND_USER)
-#GULDENCOIND_PIDDIR="/var/run/guldencoind"
+# What directory to write pidfile to?  (created and owned by $GULDEND_USER)
+#GULDEND_PIDDIR="/var/run/GuldenD"
 
 # What filename to give the pidfile
-#GULDENCOIND_PIDFILE="${GULDENCOIND_PIDDIR}/guldencoind.pid"
+#GULDEND_PIDFILE="${GULDEND_PIDDIR}/GuldenD.pid"
 
-# Where to write guldencoind data (be mindful that the blockchain is large)
-#GULDENCOIND_DATADIR="/var/lib/guldencoind"
+# Where to write GuldenD data (be mindful that the blockchain is large)
+#GULDEND_DATADIR="/var/lib/GuldenD"
 
-# User and group to own guldencoind process
-#GULDENCOIND_USER="guldencoin"
-#GULDENCOIND_GROUP="guldencoin"
+# User and group to own GuldenD process
+#GULDEND_USER="gulden"
+#GULDEND_GROUP="gulden"
 
-# Path to guldencoind executable
-#GULDENCOIND_BIN="/usr/bin/guldencoind"
+# Path to GuldenD executable
+#GULDEND_BIN="/usr/bin/GuldenD"
 
-# Nice value to run guldencoind under
-#GULDENCOIND_NICE=0
+# Nice value to run GuldenD under
+#GULDEND_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)
-GULDENCOIND_OPTS="-disablewallet"
+GULDEND_OPTS="-disablewallet"
 
+# The timeout in seconds OpenRC will wait for GuldenD to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+GULDEND_SIGTERM_TIMEOUT=60

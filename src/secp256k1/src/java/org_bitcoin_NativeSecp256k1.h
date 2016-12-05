@@ -12,8 +12,7 @@ extern "C" {
  * Method:    secp256k1_ecdsa_verify
  * Signature: (Ljava/nio/ByteBuffer;)I
  */
-JNIEXPORT jint JNICALL Java_org_bitcoin_NativeSecp256k1_secp256k1_1ecdsa_1verify
-  (JNIEnv *, jclass, jobject);
+JNIEXPORT jint JNICALL Java_org_bitcoin_NativeSecp256k1_secp256k1_1ecdsa_1verify(JNIEnv*, jclass, jobject);
 
 #ifdef __cplusplus
 }

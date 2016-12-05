@@ -1,6 +1,6 @@
 [Protocol]
-exec=guldencoin-qt '%u'
-protocol=guldencoin
+exec=Gulden '%u'
+protocol=gulden
 input=none
 output=none
 helper=true

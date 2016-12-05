@@ -1,4 +1,4 @@
-Source: guldencoin
+Source: gulden
 Section: utils
 Priority: optional
 Maintainer: Jonas Smedegaard <dr@jones.dk>
@@ -20,39 +20,48 @@ Build-Depends: debhelper,
  qt4-qmake,
  libqt4-dev,
  libqrencode-dev,
- libprotobuf-dev, protobuf-compiler
+ libprotobuf-dev, protobuf-compiler,
+ python
 Standards-Version: 3.9.2
-Homepage: https://www.guldencoin.com/
-Vcs-Git: https://github.com/nlgcoin/guldencoin2.git
-Vcs-Browser: https://github.com/nlgcoin/guldencoin2
+Homepage: https://guldencore.org/
+Vcs-Git: git@github.com:Gulden/gulden-official.git
+Vcs-Browser: https://github.com/gulden/gulden
 
-Package: guldencoind
+Package: GuldenD
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
- Guldencoin is a free open source peer-to-peer electronic cash system that
- is completely decentralized, without the need for a central server or
- trusted parties.  Users hold the crypto keys to their own money and
- transact directly with each other, with the help of a P2P network to
- check for double-spending.
+ Gulden is an experimental new digital currency that enables instant
+ payments to anyone, anywhere in the world. Gulden uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. Gulden Core
+ is the name of the open source software which enables the use of this currency.
  .
- Full transaction history is stored locally at each client.  This
- requires 20+ GB of space, slowly growing.
- .
- This package provides the daemon, guldencoind, and the CLI tool
- guldencoin-cli to interact with the daemon.
+ This package provides the daemon, GuldenD, and the CLI tool
+ Gulden-cli to interact with the daemon.
 
-Package: guldencoin-qt
+Package: Gulden
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - Qt GUI
- Guldencoin is a free open source peer-to-peer electronic cash system that
- is completely decentralized, without the need for a central server or
- trusted parties.  Users hold the crypto keys to their own money and
- transact directly with each other, with the help of a P2P network to
- check for double-spending.
+ Gulden is an experimental new digital currency that enables instant
+ payments to anyone, anywhere in the world. Gulden uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. Gulden Core
+ is the name of the open source software which enables the use of this currency.
  .
- Full transaction history is stored locally at each client.  This
- requires 20+ GB of space, slowly growing.
+ This package provides Gulden-Qt, a GUI for Gulden based on Qt.
+
+Package: Gulden-tx
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: peer-to-peer digital currency - standalone transaction tool
+ Gulden is an experimental new digital currency that enables instant
+ payments to anyone, anywhere in the world. Gulden uses peer-to-peer
+ technology to operate with no central authority: managing transactions
+ and issuing money are carried out collectively by the network. Gulden Core
+ is the name of the open source software which enables the use of this currency.
  .
- This package provides Guldencoin-Qt, a GUI for Guldencoin based on Qt.
+ This package provides Gulden-tx, a command-line transaction creation
+ tool which can be used without a gulden daemon.  Some means of
+ exchanging minimal transaction data with peers is still required.

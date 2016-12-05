@@ -1,18 +1,73 @@
 Contents
-===========
+========
 This directory contains tools for developers working on this repository.
 
-github-merge.sh
-==================
+check-doc.py
+============
+
+Check if all command line args are documented. The return value indicates the
+number of undocumented args.
+
+clang-format.py
+===============
+
+A script to format cpp source code according to [.clang-format](../../src/.clang-format). This should only be applied to new files or files which are currently not actively developed on. Also, git subtrees are not subject to formatting.
+
+clang-format-diff.py
+===================
+
+A script to format unified git diffs according to [.clang-format](../../src/.clang-format).
+
+For instance, to format the last commit with 0 lines of context,
+the script should be called from the git root folder as follows.
+
+```
+git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -p1 -i -v
+```
+
+fix-copyright-headers.py
+========================
+
+Every year newly updated files need to have its copyright headers updated to reflect the current year.
+If you run this script from the root folder it will automatically update the year on the copyright header for all
+source files if these have a git commit from the current year.
+
+For example a file changed in 2015 (with 2015 being the current year):
+
+```// Copyright (c) 2009-2013 The Bitcoin Core developers```
+
+would be changed to:
+
+```// Copyright (c) 2009-2015 The Bitcoin Core developers```
+
+git-subtree-check.sh
+====================
+
+Run this script from the root of the repository to verify that a subtree matches the contents of
+the commit it claims to have been updated to.
+
+To use, make sure that you have fetched the upstream repository branch in which the subtree is
+maintained:
+* for `src/secp256k1`: https://github.com/Gulden-core/secp256k1.git (branch master)
+* for `src/leveldb`: https://github.com/Gulden-core/leveldb.git (branch Gulden-fork)
+* for `src/univalue`: https://github.com/Gulden-core/univalue.git (branch master)
+* for `src/crypto/ctaes`: https://github.com/Gulden-core/ctaes.git (branch master)
+
+Usage: `git-subtree-check.sh DIR (COMMIT)`
+
+`COMMIT` may be omitted, in which case `HEAD` is used.
+
+github-merge.py
+===============
 
 A small script to automate merging pull-requests securely and sign them with GPG.
 
 For example:
 
-  ./github-merge.sh guldencoin/guldencoin 3077
+  ./github-merge.py 3077
 
 (in any git repository) will help you merge pull request #3077 for the
-guldencoin/guldencoin repository.
+Gulden/Gulden repository.
 
 What it does:
 * Fetch master and the pull request.
@@ -30,30 +85,28 @@ couldn't mess with the sources.
 
 Setup
 ---------
-Configuring the github-merge tool for the guldencoin repository is done in the following way:
+Configuring the github-merge tool for the Gulden repository is done in the following way:
 
-    git config githubmerge.repository guldencoin/guldencoin
+    git config githubmerge.repository Gulden/Gulden
     git config githubmerge.testcmd "make -j4 check" (adapt to whatever you want to use for testing)
     git config --global user.signingkey mykeyid (if you want to GPG sign)
 
-fix-copyright-headers.py
-===========================
+optimize-pngs.py
+================
 
-Every year newly updated files need to have its copyright headers updated to reflect the current year.
-If you run this script from src/ it will automatically update the year on the copyright header for all
-.cpp and .h files if these have a git commit from the current year.
+A script to optimize png files in the Gulden
+repository (requires pngcrush).
 
-For example a file changed in 2014 (with 2014 being the current year):
-```// Copyright (c) 2009-2013 The Bitcoin Core developers```
+security-check.py and test-security-check.py
+============================================
 
-would be changed to:
-```// Copyright (c) 2009-2014 The Bitcoin Core developers```
+Perform basic ELF security checks on a series of executables.
 
 symbol-check.py
-==================
+===============
 
 A script to check that the (Linux) executables produced by gitian only contain
-allowed gcc, glibc and libstdc++ version symbols.  This makes sure they are
+allowed gcc, glibc and libstdc++ version symbols. This makes sure they are
 still compatible with the minimum supported Linux distribution versions.
 
 Example usage after a gitian build:
@@ -64,13 +117,13 @@ If only supported symbols are used the return value will be 0 and the output wil
 
 If there are 'unsupported' symbols, the return value will be 1 a list like this will be printed:
 
-    .../64/test_guldencoin: symbol memcpy from unsupported version GLIBC_2.14
-    .../64/test_guldencoin: symbol __fdelt_chk from unsupported version GLIBC_2.15
-    .../64/test_guldencoin: symbol std::out_of_range::~out_of_range() from unsupported version GLIBCXX_3.4.15
-    .../64/test_guldencoin: symbol _ZNSt8__detail15_List_nod from unsupported version GLIBCXX_3.4.15
+    .../64/test_Gulden: symbol memcpy from unsupported version GLIBC_2.14
+    .../64/test_Gulden: symbol __fdelt_chk from unsupported version GLIBC_2.15
+    .../64/test_Gulden: symbol std::out_of_range::~out_of_range() from unsupported version GLIBCXX_3.4.15
+    .../64/test_Gulden: symbol _ZNSt8__detail15_List_nod from unsupported version GLIBCXX_3.4.15
 
 update-translations.py
-=======================
+======================
 
 Run this script from the root of the repository to update all translations from transifex.
 It will do the following automatically:
@@ -80,4 +133,3 @@ It will do the following automatically:
 - add missing translations to the build system (TODO)
 
 See doc/translation-process.md for more information.
-

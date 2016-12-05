@@ -1,59 +1,65 @@
-// Copyright (c) 2011-2013 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include "walletframe.h"
 
 #include "bitcoingui.h"
 #include "walletview.h"
+#include "_Gulden/welcomedialog.h"
 
 #include <cstdio>
 
 #include <QHBoxLayout>
 #include <QLabel>
 
-WalletFrame::WalletFrame(BitcoinGUI *_gui) :
-    QFrame(_gui),
-    gui(_gui)
+WalletFrame::WalletFrame(const PlatformStyle* platformStyle, BitcoinGUI* _gui)
+    : QFrame(_gui)
+    , gui(_gui)
+    , platformStyle(platformStyle)
 {
-    // Leave HBox hook for adding a list view later
-    QHBoxLayout *walletFrameLayout = new QHBoxLayout(this);
-    setContentsMargins(0,0,0,0);
-    walletStack = new QStackedWidget(this);
-    walletFrameLayout->setContentsMargins(0,0,0,0);
-    walletFrameLayout->addWidget(walletStack);
 
-    QLabel *noWallet = new QLabel(tr("No wallet has been loaded."));
-    noWallet->setAlignment(Qt::AlignCenter);
-    walletStack->addWidget(noWallet);
+    QHBoxLayout* walletFrameLayout = new QHBoxLayout(this);
+    setContentsMargins(0, 0, 0, 0);
+    walletStack = new QStackedWidget(this);
+    walletFrameLayout->setContentsMargins(0, 0, 0, 0);
+    walletFrameLayout->setSpacing(0);
+    walletFrameLayout->addWidget(walletStack);
+    setObjectName("walletFrame");
 }
 
 WalletFrame::~WalletFrame()
 {
 }
 
-void WalletFrame::setClientModel(ClientModel *clientModel)
+void WalletFrame::setClientModel(ClientModel* clientModel)
 {
     this->clientModel = clientModel;
 }
 
-bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
+bool WalletFrame::addWallet(const QString& name, WalletModel* walletModel)
 {
     if (!gui || !clientModel || !walletModel || mapWalletViews.count(name) > 0)
         return false;
 
-    WalletView *walletView = new WalletView(this);
+    WalletView* walletView = new WalletView(platformStyle, this);
     walletView->setBitcoinGUI(gui);
     walletView->setClientModel(clientModel);
     walletView->setWalletModel(walletModel);
     walletView->showOutOfSyncWarning(bOutOfSync);
 
-     /* TODO we should goto the currently selected page once dynamically adding wallets is supported */
-    walletView->gotoHistoryPage();
+    /* TODO we should goto the currently selected page once dynamically adding wallets is supported */
+    walletView->gotoReceiveCoinsPage();
     walletStack->addWidget(walletView);
     mapWalletViews[name] = walletView;
 
-    // Ensure a walletView is able to show the main window
     connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
 
     return true;
@@ -64,18 +70,18 @@ bool WalletFrame::setCurrentWallet(const QString& name)
     if (mapWalletViews.count(name) == 0)
         return false;
 
-    WalletView *walletView = mapWalletViews.value(name);
+    WalletView* walletView = mapWalletViews.value(name);
     walletStack->setCurrentWidget(walletView);
     walletView->updateEncryptionStatus();
     return true;
 }
 
-bool WalletFrame::removeWallet(const QString &name)
+bool WalletFrame::removeWallet(const QString& name)
 {
     if (mapWalletViews.count(name) == 0)
         return false;
 
-    WalletView *walletView = mapWalletViews.take(name);
+    WalletView* walletView = mapWalletViews.take(name);
     walletStack->removeWidget(walletView);
     return true;
 }
@@ -88,9 +94,9 @@ void WalletFrame::removeAllWallets()
     mapWalletViews.clear();
 }
 
-bool WalletFrame::handlePaymentRequest(const SendCoinsRecipient &recipient)
+bool WalletFrame::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (!walletView)
         return false;
 
@@ -135,62 +141,61 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
 
 void WalletFrame::gotoSignMessageTab(QString addr)
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->gotoSignMessageTab(addr);
 }
 
 void WalletFrame::gotoVerifyMessageTab(QString addr)
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->gotoVerifyMessageTab(addr);
 }
 
 void WalletFrame::encryptWallet(bool status)
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->encryptWallet(status);
 }
 
 void WalletFrame::backupWallet()
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->backupWallet();
 }
 
 void WalletFrame::changePassphrase()
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->changePassphrase();
 }
 
 void WalletFrame::unlockWallet()
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->unlockWallet();
 }
 
 void WalletFrame::usedSendingAddresses()
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->usedSendingAddresses();
 }
 
 void WalletFrame::usedReceivingAddresses()
 {
-    WalletView *walletView = currentWalletView();
+    WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->usedReceivingAddresses();
 }
 
-WalletView *WalletFrame::currentWalletView()
+WalletView* WalletFrame::currentWalletView()
 {
     return qobject_cast<WalletView*>(walletStack->currentWidget());
 }
-

@@ -1,10 +1,11 @@
 Sample configuration files for:
 
-SystemD: guldencoind.service
-Upstart: guldencoind.conf
-OpenRC:  guldencoind.openrc
-         guldencoind.openrcconf
-CentOS:  guldencoind.init
+SystemD: GuldenD.service
+Upstart: GuldenD.conf
+OpenRC:  GuldenD.openrc
+         GuldenD.openrcconf
+CentOS:  GuldenD.init
+OS X:    org.gulden.GuldenD.plist
 
 have been made available to assist packagers in creating node packages here.
 

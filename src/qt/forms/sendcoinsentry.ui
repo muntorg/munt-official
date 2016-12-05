@@ -21,14 +21,20 @@
     <string>This is a normal payment.</string>
    </property>
    <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Sunken</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="spacing">
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <property name="horizontalSpacing">
      <number>12</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>8</number>
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="payToLabel">
@@ -193,9 +199,16 @@
       </property>
      </widget>
     </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QFrame" name="SendCoins_InsecurePaymentRequest">
+  <widget class="QFrame" name="SendCoins_UnauthenticatedPaymentRequest">
    <property name="palette">
     <palette>
      <active>
@@ -612,16 +625,13 @@
     </palette>
    </property>
    <property name="toolTip">
-    <string>This is an unverified payment request.</string>
+    <string>This is an unauthenticated payment request.</string>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
    <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Sunken</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout_is">
     <property name="spacing">
@@ -700,7 +710,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QFrame" name="SendCoins_SecurePaymentRequest">
+  <widget class="QFrame" name="SendCoins_AuthenticatedPaymentRequest">
    <property name="palette">
     <palette>
      <active>
@@ -1144,16 +1154,13 @@
     </palette>
    </property>
    <property name="toolTip">
-    <string>This is a verified payment request.</string>
+    <string>This is an authenticated payment request.</string>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
    <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Sunken</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout_s">
     <property name="spacing">

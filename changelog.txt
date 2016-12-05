@@ -1,0 +1,54 @@
+1.6.0
+
+New user interface with drastic improvements over the old user interface.
+Ticker/Exchange rate integration into app.
+In wallet support for buying coins with euro via nocks.
+New 'account based' wallet internals.
+New in wallet buy support for bitcoin and IBAN via nocks API.
+Full support for BIP33 and BIP44 HD wallet standards with mnemonics.
+Implement support for synchronised mobile accounts.
+Update to upstream bitcoin 0.13 codebase providing numerous bug fixes and improvements.
+Improve the checkpointing code, fix a checkpoint corruption issue that some users were experiencing.
+Change 'rpconlylistsecuredtransactions' to be on by default.
+
+
+1.5.5
+
+Introduce a checkpoint system to protect against 50% attacks.
+Update the UI so that only checkpointed transactions are marked as 'final'
+Update several RPC commands so that exchanges can make use of the checkpoint system to be double spend proof.
+
+
+
+1.5.4
+
+Minor bugfix release.
+
+
+
+1.5.3
+
+Minor bugfix release.
+
+
+
+1.5.2
+
+Minor bugfix release.
+Updated to new seed nodes.
+Fixed an issue with some external URIs not working on OSX machines.
+Add the KGW fix to all platforms.
+
+
+
+1.5.1
+
+Rebrand to Gulden, updated UI.
+Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
+
+
+
+1.5.0
+
+New updated codebase based on bitcoin 0.10/0.11
+Impement a new difficulty adjustment algorithm named DELTA.

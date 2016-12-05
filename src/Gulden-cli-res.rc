@@ -16,8 +16,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Gulden"
-            VALUE "FileDescription",    "Gulden-cli (Gulden RPC client)"
+            VALUE "CompanyName",        "Bitcoin"
+            VALUE "FileDescription",    "Gulden-cli (JSON-RPC client for " PACKAGE_NAME ")"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "Gulden-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR

@@ -1,10 +1,17 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2016 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
-#ifndef BITCOIN_DB_H
-#define BITCOIN_DB_H
+#ifndef BITCOIN_WALLET_DB_H
+#define BITCOIN_WALLET_DB_H
 
 #include "clientversion.h"
 #include "serialize.h"
@@ -20,26 +27,23 @@
 
 #include <db_cxx.h>
 
-class CDiskBlockIndex;
-class COutPoint;
+static const unsigned int DEFAULT_WALLET_DBLOGSIZE = 100;
+static const bool DEFAULT_WALLET_PRIVDB = true;
 
 extern unsigned int nWalletDBUpdated;
 
-void ThreadFlushWalletDB(const std::string& strWalletFile);
-
-
-class CDBEnv
-{
+class CDBEnv {
 private:
     bool fDbEnvInit;
     bool fMockDb;
-    boost::filesystem::path path;
+
+public:
+    std::string strPath;
 
     void EnvShutdown();
 
-public:
     mutable CCriticalSection cs_db;
-    DbEnv *dbenv;
+    DbEnv* dbenv;
     std::map<std::string, int> mapFileUseCount;
     std::map<std::string, Db*> mapDb;
 
@@ -90,10 +94,8 @@ public:
 
 extern CDBEnv bitdb;
 
-
 /** RAII class that provides access to a Berkeley database */
-class CDB
-{
+class CDB {
 protected:
     Db* pdb;
     std::string strFile;
@@ -101,7 +103,7 @@ protected:
     bool fReadOnly;
     bool fFlushOnClose;
 
-    explicit CDB(const std::string& strFilename, const char* pszMode = "r+", bool fFlushOnCloseIn=true);
+    explicit CDB(const std::string& strFilename, const char* pszMode = "r+", bool fFlushOnCloseIn = true);
     ~CDB() { Close(); }
 
 public:
@@ -119,13 +121,11 @@ protected:
         if (!pdb)
             return false;
 
-        // Key
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
         Dbt datKey(&ssKey[0], ssKey.size());
 
-        // Read
         Dbt datValue;
         datValue.set_flags(DB_DBT_MALLOC);
         int ret = pdb->get(activeTxn, &datKey, &datValue, 0);
@@ -133,15 +133,14 @@ protected:
         if (datValue.get_data() == NULL)
             return false;
 
-        // Unserialize value
         try {
             CDataStream ssValue((char*)datValue.get_data(), (char*)datValue.get_data() + datValue.get_size(), SER_DISK, CLIENT_VERSION);
             ssValue >> value;
-        } catch (const std::exception&) {
+        }
+        catch (const std::exception&) {
             return false;
         }
 
-        // Clear and free memory
         memset(datValue.get_data(), 0, datValue.get_size());
         free(datValue.get_data());
         return (ret == 0);
@@ -155,22 +154,18 @@ protected:
         if (fReadOnly)
             assert(!"Write called on database in read-only mode");
 
-        // Key
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
         Dbt datKey(&ssKey[0], ssKey.size());
 
-        // Value
         CDataStream ssValue(SER_DISK, CLIENT_VERSION);
         ssValue.reserve(10000);
         ssValue << value;
         Dbt datValue(&ssValue[0], ssValue.size());
 
-        // Write
         int ret = pdb->put(activeTxn, &datKey, &datValue, (fOverwrite ? 0 : DB_NOOVERWRITE));
 
-        // Clear memory in case it was a private key
         memset(datKey.get_data(), 0, datKey.get_size());
         memset(datValue.get_data(), 0, datValue.get_size());
         return (ret == 0);
@@ -184,16 +179,13 @@ protected:
         if (fReadOnly)
             assert(!"Erase called on database in read-only mode");
 
-        // Key
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
         Dbt datKey(&ssKey[0], ssKey.size());
 
-        // Erase
         int ret = pdb->del(activeTxn, &datKey, 0);
 
-        // Clear memory
         memset(datKey.get_data(), 0, datKey.get_size());
         return (ret == 0 || ret == DB_NOTFOUND);
     }
@@ -204,16 +196,13 @@ protected:
         if (!pdb)
             return false;
 
-        // Key
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
         Dbt datKey(&ssKey[0], ssKey.size());
 
-        // Exists
         int ret = pdb->exists(activeTxn, &datKey, 0);
 
-        // Clear memory
         memset(datKey.get_data(), 0, datKey.get_size());
         return (ret == 0);
     }
@@ -231,7 +220,7 @@ protected:
 
     int ReadAtCursor(Dbc* pcursor, CDataStream& ssKey, CDataStream& ssValue, unsigned int fFlags = DB_NEXT)
     {
-        // Read at cursor
+
         Dbt datKey;
         if (fFlags == DB_SET || fFlags == DB_SET_RANGE || fFlags == DB_GET_BOTH || fFlags == DB_GET_BOTH_RANGE) {
             datKey.set_data(&ssKey[0]);
@@ -250,7 +239,6 @@ protected:
         else if (datKey.get_data() == NULL || datValue.get_data() == NULL)
             return 99999;
 
-        // Convert to streams
         ssKey.SetType(SER_DISK);
         ssKey.clear();
         ssKey.write((char*)datKey.get_data(), datKey.get_size());
@@ -258,7 +246,6 @@ protected:
         ssValue.clear();
         ssValue.write((char*)datValue.get_data(), datValue.get_size());
 
-        // Clear and free memory
         memset(datKey.get_data(), 0, datKey.get_size());
         memset(datValue.get_data(), 0, datValue.get_size());
         free(datKey.get_data());
@@ -310,4 +297,4 @@ public:
     bool static Rewrite(const std::string& strFile, const char* pszSkip = NULL);
 };
 
-#endif // BITCOIN_DB_H
+#endif // BITCOIN_WALLET_DB_H

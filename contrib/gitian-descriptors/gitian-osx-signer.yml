@@ -1,14 +1,14 @@
 ---
 name: "Gulden-dmg-signer"
 suites:
-- "precise"
+- "trusty"
 architectures:
 - "amd64"
 packages:
-- "libc6:i386"
 - "faketime"
-reference_datetime: "2013-06-01 00:00:00"
-remotes: []
+remotes:
+- "url": /home/debian/guldencoin-build-manager/gulden-dev
+  "dir": "signature"
 files:
 - "Gulden-osx-unsigned.tar.gz"
 script: |
@@ -21,7 +21,7 @@ script: |
   for prog in ${FAKETIME_PROGS}; do
     echo '#!/bin/bash' > ${WRAP_DIR}/${prog}
     echo "REAL=\`which -a ${prog} | grep -v ${WRAP_DIR}/${prog} | head -1\`" >> ${WRAP_DIR}/${prog}
-    echo 'export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1' >> ${WRAP_DIR}/${prog}
+    echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1' >> ${WRAP_DIR}/${prog}
     echo "export FAKETIME=\"${REFERENCE_DATETIME}\"" >> ${WRAP_DIR}/${prog}
     echo "\$REAL \$@" >> $WRAP_DIR/${prog}
     chmod +x ${WRAP_DIR}/${prog}
@@ -31,6 +31,7 @@ script: |
   SIGNED=Gulden-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
+  OSX_VOLNAME="$(cat osx_volname)"
   ROOTDIRR=dist
   TEMPDIRR=signed.temp
   OUTDIRR=signed-app
@@ -42,7 +43,7 @@ script: |
    mv ${TEMPDIRR}/${ROOTDIRR} ${OUTDIRR}
    rm -rf ${TEMPDIRR}
 
-  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Gulden" -no-pad -r -apple -o uncompressed.dmg signed-app
+  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "${OSX_VOLNAME}" -no-pad -r -dir-mode 0755 -apple -o uncompressed.dmg signed-app
   ${WRAP_DIR}/dmg dmg uncompressed.dmg ${OUTDIR}/${SIGNED}
 
 
