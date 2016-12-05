@@ -27,8 +27,10 @@ void RegisterMiningRPCCommands(CRPCTable &tableRPC);
 /** Register raw transaction RPC commands */
 void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC);
 
+#ifdef ENABLE_WALLET
 /** Register gulden RPC commands */
 void RegisterGuldenRPCCommands(CRPCTable &tableRPC);
+#endif
 
 static inline void RegisterAllCoreRPCCommands(CRPCTable &tableRPC)
 {
@@ -37,7 +39,9 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &tableRPC)
     RegisterMiscRPCCommands(tableRPC);
     RegisterMiningRPCCommands(tableRPC);
     RegisterRawTransactionRPCCommands(tableRPC);
+    #ifdef ENABLE_WALLET
     RegisterGuldenRPCCommands(tableRPC);
+    #endif
 }
 
 #endif

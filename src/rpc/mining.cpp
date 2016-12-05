@@ -36,8 +36,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <univalue.h>
-
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 #include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
 #include <Gulden/translate.h>
@@ -160,24 +161,32 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
 
 // Key used by getblocktemplate miners.
 // Allocated in InitRPCMining, free'd in ShutdownRPCMining
+#ifdef ENABLE_WALLET
 static CReserveKey* pMiningKey = NULL;
+#endif
 
 void InitRPCMining()
 {
+    #ifdef ENABLE_WALLET
     if (!pwalletMain)
         return;
 
     // getblocktemplate mining rewards paid here:
     //fixme: GULDEN HD 
     pMiningKey = new CReserveKey(pwalletMain, pwalletMain->activeAccount, KEYCHAIN_EXTERNAL);
+    #else
+	return;
+    #endif
 }
 
 void ShutdownRPCMining()
 {
+    #ifdef ENABLE_WALLET
     if (!pMiningKey)
         return;
 
     delete pMiningKey; pMiningKey = NULL;
+    #endif
 }
 
 UniValue getgenerate(const UniValue& params, bool fHelp)
