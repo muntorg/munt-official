@@ -26,7 +26,7 @@ On some distributions (Ubuntu 16.04) there may be issues when compiling with boo
 CXXFLAGS="$CXXFLAGS -DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT=1" ./configure
 
 For older distributions with outdated autotools the above process may fail, a source tarball is available for these distributions.
-* https://github.com/Gulden/gulden-binaries/blob/master/Gulden-1.6.1.tar.gz
+* https://github.com/Gulden/gulden-binaries/raw/master/Gulden-1.6.1.tar.gz
 To build from source tarball follow these steps:
 * tar -zxvf Gulden-1.6.1.tar.gz
 * ./configure
