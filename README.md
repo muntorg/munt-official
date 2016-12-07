@@ -16,14 +16,26 @@ Connect with the community through one or more of the following:
 
 
 ###Building###
+First, reconsider whether it is actually necessary for you to build. Linux binaries are provided by us (for UI as well as the daemon) and are sufficient for most cases.
+A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.,
+
 Gulden is autotools based, to build Gulden from this repository please follow these steps:
 * ./autogen.sh
 * automake
 * ./configure
 * make
 
-On some distributions (Ubuntu 16.04) there may be issues when compiling with boost >= 1.58.0 to work around this configure with the following (in adition to your usual configure flags)
-CXXFLAGS="$CXXFLAGS -DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT=1" ./configure
+Prerequisites:
+>=g++-4.8 pkg-config autoconf libtool automake gperf bison flex
+
+Required dependencies:
+bdb-4.8.30 boost-1_61_0 expat-2.1.1 openssl-1.0.1k miniupnpc-2.0 protobuf-2.6.1 zeromq-4.1.4
+
+Optional dependencies (depending on configure - e.g. qt only for GUI builds):
+dbus-1.8.6 fontconfig-2.11.1 freetype-2.6.3 icu-58.1 libevent-2.0.22 libX11-1.6.2 libXau-1.0.8 libxcb-1.10 libXext-1.3.2 libXrender-0.9.10  qrencode-3.4.4 qt-5.6.1 renderproto-0.11 xcb_proto-1.10 xextproto-7.3.0 xproto-7.0.26 xtrans-1.3.4
+
+
+Troubleshooting:
 
 For older distributions with outdated autotools the above process may fail, a source tarball is available for these distributions.
 * https://github.com/Gulden/gulden-binaries/raw/master/Gulden-1.6.1.tar.gz
@@ -31,6 +43,10 @@ To build from source tarball follow these steps:
 * tar -zxvf Gulden-1.6.1.tar.gz
 * ./configure
 * make
+
+If you compile your own boost you need to pass the -fPIC flag.
+sudo ./b2 --with=all -j 1 install cxxflags=-fPIC cflags=-fPIC
+
 
 Binaries are output as follows by the build process:
 
@@ -72,7 +88,7 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |Infrastructure||
 |:-----------|:---------|
 |Official block explorer|blockchain.gulden.com|
-|Community block explorer|inzicht.deguldenmijn.eu|
+|Community block explorer|guldenchain.com|
 |Electrum server 1|electrum1.gulden.com:5038|
 |Electrum server 2|electrum2.gulden.com:5038|
 |DNS Seed 1|seed.gulden.com|
