@@ -47,8 +47,12 @@ To build from source tarball follow these steps:
 
 If your distro (e.g. Ubuntu 14.04) does not have boost 1.61 you can do the following to build it
 > wget https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2 && tar -xvf boost_1_61_0.tar.bz2 && cd boost_1_61_0/ && ./bootstrap.sh && ./b2 --prefix=/boost166 cxxflags=-fPIC cflags=-fPIC install
+
 And then add it to your configure flags
 > ./configure --with-boost=/boost166 ...
+
+To run after doing the above
+> LD_LIBRARY_PATH=/boost166/lib src/GuldenD ...
 
 Binaries are output as follows by the build process:
 
