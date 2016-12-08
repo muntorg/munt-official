@@ -26,13 +26,13 @@ Gulden is autotools based, to build Gulden from this repository please follow th
 * make
 
 Prerequisites:
->=g++-4.8 pkg-config autoconf libtool automake gperf bison flex
+> >=g++-4.8 pkg-config autoconf libtool automake gperf bison flex
 
 Required dependencies:
-bdb-4.8.30 boost-1_61_0 expat-2.1.1 openssl-1.0.1k miniupnpc-2.0 protobuf-2.6.1 zeromq-4.1.4
+> bdb-4.8.30 boost-1_61_0 expat-2.1.1 openssl-1.0.1k miniupnpc-2.0 protobuf-2.6.1 zeromq-4.1.4
 
 Optional dependencies (depending on configure - e.g. qt only for GUI builds):
-dbus-1.8.6 fontconfig-2.11.1 freetype-2.6.3 icu-58.1 libevent-2.0.22 libX11-1.6.2 libXau-1.0.8 libxcb-1.10 libXext-1.3.2 libXrender-0.9.10  qrencode-3.4.4 qt-5.6.1 renderproto-0.11 xcb_proto-1.10 xextproto-7.3.0 xproto-7.0.26 xtrans-1.3.4
+> dbus-1.8.6 fontconfig-2.11.1 freetype-2.6.3 icu-58.1 libevent-2.0.22 libX11-1.6.2 libXau-1.0.8 libxcb-1.10 libXext-1.3.2 libXrender-0.9.10  qrencode-3.4.4 qt-5.6.1 renderproto-0.11 xcb_proto-1.10 xextproto-7.3.0 xproto-7.0.26 xtrans-1.3.4
 
 
 Troubleshooting:
