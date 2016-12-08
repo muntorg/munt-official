@@ -26,7 +26,7 @@ Gulden is autotools based, to build Gulden from this repository please follow th
 * make
 
 Prerequisites:
-> >=g++-4.8 pkg-config autoconf libtool automake gperf bison flex
+> &gt;=g++-4.8 pkg-config autoconf libtool automake gperf bison flex
 
 Required dependencies:
 > bdb-4.8.30 boost-1_61_0 expat-2.1.1 openssl-1.0.1k miniupnpc-2.0 protobuf-2.6.1 zeromq-4.1.4
