@@ -17,7 +17,7 @@ Connect with the community through one or more of the following:
 
 ###Building###
 First, reconsider whether it is actually necessary for you to build. Linux binaries are provided by us (for UI as well as the daemon) and are sufficient for most cases.
-A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.,
+A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.
 
 Gulden is autotools based, to build Gulden from this repository please follow these steps:
 * ./autogen.sh
