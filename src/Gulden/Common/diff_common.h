@@ -25,7 +25,7 @@
     #define BIGINT_MULTIPLY(x, y) x.multiply(y)
     #define BIGINT_DIVIDE(x, y) x.divide(y)
     #define BIGINT_GREATER_THAN(x, y) (x.compareTo(y) == 1)
-    #elif defined(TARGET_OS_IPHONE)
+#elif defined(TARGET_OS_IPHONE)
     @class BRMerkleBlock;
     #define BUILD_IOS
     #define fDebug false
@@ -37,7 +37,11 @@
     #define INDEX_TIME(block) (int64_t)block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
-    #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
+    #ifdef GULDEN_TESTNET
+        #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
+    #else
+        #define DIFF_SWITCHOVER(TEST, MAIN) TEST
+    #endif
     #define DIFF_ABS llabs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
     #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
