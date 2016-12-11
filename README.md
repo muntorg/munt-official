@@ -37,11 +37,11 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 
 Troubleshooting:
 
-For older distributions with outdated autotools the above process may fail, a source tarball is available for these distributions.
+Errors when running autogen.sh - autotool/libtool errors
+For older distributions with outdated autotools the above process may fail, either update to newer autotools/libtools or use the old_autotools branch, which is identical but contains a configure script that will work for old autotools.
 * https://github.com/Gulden/gulden-binaries/raw/master/Gulden-1.6.1.tar.gz
-To build from source tarball follow these steps:
-* tar -zxvf Gulden-1.6.1.tar.gz
-* cd Gulden-1.6.1
+Steps:
+* git checkout old_autotools
 * ./configure
 * make
 
