@@ -12,6 +12,11 @@
 #include <stdint.h>
 #include <string>
 
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
+
+
 static bool noui_ThreadSafeMessageBox(const std::string& message, const std::string& caption, unsigned int style)
 {
     bool fSecure = style & CClientUIInterface::SECURE;
@@ -49,10 +54,35 @@ static void noui_InitMessage(const std::string& message)
     LogPrintf("init message: %s\n", message);
 }
 
+#ifdef ENABLE_WALLET
+static void NotifyRequestUnlockS(CWallet* wallet, std::string reason)
+{
+    SecureString passwd = GetArg("-unlockpasswd", "").c_str();
+    if (!passwd.empty())
+    {
+        if (!wallet->Unlock(passwd))
+        {
+            fprintf(stderr, "Wallet requested unlock but -unlockpasswd was invalid - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd : reason [%s]\n", reason.c_str());
+            return;
+        }
+	else
+	{
+	    return;
+	}
+    }
+    fprintf(stderr, "Wallet requested unlock but could not unlock - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd : reason [%s]\n", reason.c_str());
+}
+#endif
+
+
 void noui_connect()
 {
 
     uiInterface.ThreadSafeMessageBox.connect(noui_ThreadSafeMessageBox);
     uiInterface.ThreadSafeQuestion.connect(noui_ThreadSafeQuestion);
     uiInterface.InitMessage.connect(noui_InitMessage);
+
+    #ifdef ENABLE_WALLET
+    uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, _1, _2));
+    #endif
 }
