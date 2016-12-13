@@ -889,14 +889,6 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
     }
 
-    if (mapArgs.count("-checkpointkey")) {
-        std::string sKey = mapArgs["-checkpointkey"];
-        if (!Checkpoints::SetCheckpointPrivKey(sKey))
-            return InitError(_("Unable to sign checkpoint, wrong checkpointkey?\n"));
-        else
-            LogPrintf("Checkpoint server enabled\n");
-    }
-
 #endif // ENABLE_WALLET
 
     fIsBareMultisigStd = GetBoolArg("-permitbaremultisig", DEFAULT_PERMIT_BAREMULTISIG);
@@ -925,7 +917,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     globalVerifyHandle.reset(new ECCVerifyHandle());
 
     if (!InitSanityCheck())
-        return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down."), _(PACKAGE_NAME)));
+        return InitError(strprintf(_("InitializatiFcon sanity check failed. %s is shutting down."), _(PACKAGE_NAME)));
 
     std::string strDataDir = GetDataDir().string();
 
@@ -950,6 +942,14 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (nScriptCheckThreads) {
         for (int i = 0; i < nScriptCheckThreads - 1; i++)
             threadGroup.create_thread(&ThreadScriptCheck);
+    }
+
+    if (mapArgs.count("-checkpointkey")) {
+        std::string sKey = mapArgs["-checkpointkey"];
+        if (!Checkpoints::SetCheckpointPrivKey(sKey))
+            return InitError(_("Unable to sign checkpoint, wrong checkpointkey?\n"));
+        else
+            LogPrintf("Checkpoint server enabled\n");
     }
 
 #ifdef ENABLE_WALLET
