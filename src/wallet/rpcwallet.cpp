@@ -25,6 +25,7 @@
 #include "utilmoneystr.h"
 #include "wallet.h"
 #include "walletdb.h"
+#include "script/ismine.h"
 
 #include <stdint.h>
 
@@ -300,7 +301,7 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
     return NullUniValue;
 }*/
 
-/*UniValue getaccount(const UniValue& params, bool fHelp)
+UniValue getaccount(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
@@ -308,15 +309,17 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccount \"bitcoinaddress\"\n"
-            "\nDEPRECATED. Returns the account associated with the given address.\n"
+            "\nReturns the UUID and label of the account associated with the given address.\n"
             "\nArguments:\n"
             "1. \"bitcoinaddress\"  (string, required) The bitcoin address for account lookup.\n"
             "\nResult:\n"
-            "\"accountname\"        (string) the account address\n"
+            "[                     (json array of string)\n"
+            "  \"accountUUID\"   (string) a bitcoin address associated with the given account\n"
+            "  \"accountLabel\"  (string) a bitcoin address associated with the given account\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
-            + HelpExampleRpc("getaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
-        );
+            + HelpExampleRpc("getaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\""));
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
@@ -324,14 +327,23 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
 
-    string strAccount;
-    map<std::string, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.ToString());
-    if (mi != pwalletMain->mapAddressBook.end() && !(*mi).second.name.empty())
-        strAccount = (*mi).second.name;
-    return strAccount;
-}*/
+    UniValue jsonGroupings(UniValue::VARR);
 
-/*UniValue getaddressesbyaccount(const UniValue& params, bool fHelp)
+    for (const auto& accountIter : pwalletMain->mapAccounts) {
+        if (::IsMine(*accountIter.second, address.Get())) {
+            UniValue jsonGrouping(UniValue::VARR);
+            UniValue addressInfo(UniValue::VARR);
+            addressInfo.push_back(accountIter.second->getUUID());
+            addressInfo.push_back(accountIter.second->getLabel());
+            jsonGrouping.push_back(addressInfo);
+            jsonGroupings.push_back(jsonGrouping);
+        }
+    }
+
+    return jsonGroupings;
+}
+
+UniValue getaddressesbyaccount(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
@@ -339,9 +351,9 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaddressesbyaccount \"account\"\n"
-            "\nDEPRECATED. Returns the list of addresses for the given account.\n"
+            "\nReturns the list of assigned addresses for the given account, includes empty addresses but excludes addresses still in the keypool.\n"
             "\nArguments:\n"
-            "1. \"account\"  (string, required) The account name.\n"
+            "1. \"account\"  (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\"\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
             "  \"bitcoinaddress\"  (string) a bitcoin address associated with the given account\n"
@@ -349,24 +361,35 @@ UniValue getrawchangeaddress(const UniValue& params, bool fHelp)
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("getaddressesbyaccount", "\"tabby\"")
-            + HelpExampleRpc("getaddressesbyaccount", "\"tabby\"")
-        );
+            + HelpExampleRpc("getaddressesbyaccount", "\"tabby\""));
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    string strAccount = AccountFromValue(params[0]);
+    CAccount* fromAccount = AccountFromValue(params[0], true);
 
+    std::set<CKeyID> setAddress;
+    fromAccount->GetKeys(setAddress);
+
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    for (const auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE }) {
+        const auto& keyPool = (keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal);
+        CKeyPool keypoolentry;
+        for (const auto& keyIndex : keyPool) {
+            if (!walletdb.ReadPool(keyIndex, keypoolentry))
+                throw runtime_error(std::string(__func__) + ": read failed");
+
+            if (setAddress.find(keypoolentry.vchPubKey.GetID()) != setAddress.end()) {
+                setAddress.erase(setAddress.find(keypoolentry.vchPubKey.GetID()));
+            }
+        }
+    }
 
     UniValue ret(UniValue::VARR);
-    BOOST_FOREACH(const PAIRTYPE(CBitcoinAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
-    {
-        const CBitcoinAddress& address = item.first;
-        const string& strName = item.second.name;
-        if (strName == strAccount)
-            ret.push_back(address.ToString());
+    for (const auto& key : setAddress) {
+        ret.push_back(key.ToString());
     }
     return ret;
-}*/
+}
 
 static void SendMoney(CAccount* fromAccount, const CTxDestination& address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew)
 {
@@ -2598,6 +2621,8 @@ static const CRPCCommand commands[] = { //  category              name          
     { "wallet", "dumpwallet", &dumpwallet, true },
     { "wallet", "encryptwallet", &encryptwallet, true },
 
+    { "account", "getaccount", &getaccount, true },
+    { "account", "getaddressesbyaccount", &getaddressesbyaccount, true },
     { "wallet", "getbalance", &getbalance, false },
     { "wallet", "getnewaddress", &getnewaddress, true },
     { "wallet", "getrawchangeaddress", &getrawchangeaddress, true },
