@@ -41,10 +41,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 #endif
 )
 {
-    int ndeltaVersion = 1;
-    if ( INDEX_HEIGHT(pindexLast) > DIFF_SWITCHOVER(446500, 437500) )
-        ndeltaVersion = 2;
-    
+   
     #ifndef BUILD_IOS
     #ifndef __JAVA__
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
@@ -98,15 +95,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Used for 'exception 2' (see code below), if a block has taken longer than nLongTimeLimit we perform a difficulty reduction, which increases over time based on nLongTimeStep
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
-    // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.
-    int64_t nLongTimeLimit   = 2 * 16 * 60;
-    int64_t nLongTimeStep    = 15 * 60;
-    if (ndeltaVersion == 2)
-    {
-        const int64_t nDrift = 1;
-        nLongTimeLimit   = ((6 * nDrift)) * 60;
-        nLongTimeStep    = nDrift * 60;
-    }
+    // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.   
+    const int64_t nDrift   = 1;
+    int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
+    int64_t nLongTimeStep  = nDrift * 60;
 
     // Limit adjustment amount to try prevent jumping too far in either direction.
     // The same limits as DIGI difficulty algorithm are used.
@@ -149,6 +141,9 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Prevent bad/negative block times - switch them for a fixed time.
     if (nLBTimespan <= nBadTimeLimit)
         nLBTimespan = nBadTimeReplace;
+    //fixme: (DELTA3)
+    //if (nLBTimespan > (nLongTimeLimit + nLongTimeStep))
+        //nLBTimespan = nRetargetTimespan;
     // If last block took far too long, let difficulty drop faster
     // by adding 50% of last block time
     if (nLBTimespan > nLBMaxGap)
@@ -163,6 +158,9 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         // Prevent bad/negative block times - switch them for a fixed time.
         if (nDeltaTimespan <= nBadTimeLimit)
             nDeltaTimespan = nBadTimeReplace;
+        //fixme: (DELTA3)
+        //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
+            //nDeltaTimespan = nRetargetTimespan;
 
         if (i<= nShortFrame)
             nShortTimespan += nDeltaTimespan;
@@ -184,6 +182,10 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             // Prevent bad/negative block times - switch them for a fixed time.
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
+            
+            //fixme: (DELTA3)
+            //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
+            //nDeltaTimespan = nRetargetTimespan;
 
             nMiddleTimespan += nDeltaTimespan;
             pindexFirst = INDEX_PREV(pindexFirst);
@@ -209,7 +211,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Check for multiple very short blocks
     // If last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
-    if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * (ndeltaVersion == 2 ? 40 : 80) / PERCENT_FACTOR) )
+    if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 40 / PERCENT_FACTOR) )
     {
         #ifndef __JAVA__
         #ifndef BUILD_IOS
@@ -229,7 +231,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Apply the adjustment limits
     // However if we are close to target time then we use smaller limits to smooth things off a little bit more.
-    if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * (ndeltaVersion==2 ? 20 : 10) / PERCENT_FACTOR)
+    if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR)
     {
         // 90% of target
         // 11.11111111111111% difficulty increase
@@ -237,7 +239,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 90 / PERCENT_FACTOR;
         nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 110 / PERCENT_FACTOR;
     }
-    else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * (ndeltaVersion==2 ? 30 : 20) / PERCENT_FACTOR)
+    else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 30 / PERCENT_FACTOR)
     {
         // 80% of target - 25% difficulty increase/decrease maximum.
         nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 80 / PERCENT_FACTOR;
@@ -296,20 +298,13 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
     if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit)
     {
-        if (ndeltaVersion == 1) // Reduce in a linear fashion based on time steps.
+        // Fixed reduction for each missed step. (10%)
+        int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
+        for(int i=0;i < nNumMissedSteps; ++i)
         {
-            int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
-            bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(nNumMissedSteps));
-        }
-        else if(ndeltaVersion == 2) // Fixed reduction for each missed step. (10%)
-        {
-            int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
-            for(int i=0;i < nNumMissedSteps; ++i)
-            {
-                bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
-                bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
-            }
-        }
+            bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
+            bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
+        }        
 
         #ifndef __JAVA__
         #ifndef BUILD_IOS
