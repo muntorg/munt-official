@@ -39,7 +39,6 @@ Troubleshooting:
 
 Errors when running autogen.sh - autotool/libtool errors
 For older distributions with outdated autotools the above process may fail, either update to newer autotools/libtools or use the old_autotools branch, which is identical but contains a configure script that will work for old autotools.
-* https://github.com/Gulden/gulden-binaries/raw/master/Gulden-1.6.1.tar.gz
 Steps:
 * git checkout old_autotools
 * ./configure
