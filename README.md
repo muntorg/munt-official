@@ -9,9 +9,9 @@ Connect with the community through one or more of the following:
 
 |Website:|https://gulden.com|
 |:-----------|:-------|
-|Slack:|https://guldenpay.slack.com/|
+|Slack:|https://gulden.com/join|
 |Twitter:|http://twitter.com/gulden|
-|Facebook:|http://facebook.com/guldenpay|
+|Facebook:|http://facebook.com/gulden|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
 
 
