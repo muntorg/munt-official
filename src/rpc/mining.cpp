@@ -546,6 +546,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     static unsigned int nTransactionsUpdatedLast;
 
     bool forceBlockUpdate = false;
+    static int64_t nStart;
     if (!lpval.isNull()) {
 
         uint256 hashWatchedChain;
@@ -594,11 +595,16 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
         if (!IsRPCRunning())
             throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Shutting down");
+
+    } else {
+        if (GetTime() - nStart > 20) {
+            forceBlockUpdate = true;
+        }
     }
 
     static CBlockIndex* pindexPrev;
-    static int64_t nStart;
     static CBlockTemplate* pblocktemplate;
+
     if (forceBlockUpdate || pindexPrev != chainActive.Tip() || (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5)) {
 
         pindexPrev = NULL;
@@ -734,7 +740,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue));
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
-    result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast(pindexPrev->nHeight) + 1));
+    result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePast(pindexPrev->nHeight) + 1, GetTime())));
+
     result.push_back(Pair("mutable", aMutable));
     result.push_back(Pair("noncerange", "00000000ffffffff"));
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;

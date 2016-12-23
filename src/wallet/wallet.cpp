@@ -3060,9 +3060,10 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
             CAmount nReceived, nSent, nFee;
             wtx.GetAccountAmounts(strAccount, nReceived, nSent, nFee, filter);
 
-            if (nReceived != 0 && wtx.GetDepthInMainChain() >= nMinDepth)
+            if (nReceived != 0 && wtx.GetDepthInMainChain() >= nMinDepth) {
                 nBalance += nReceived;
-            nBalance -= nSent /*+ nFee*/;
+                nBalance -= nSent /*+ nFee*/;
+            }
         }
     }
 
