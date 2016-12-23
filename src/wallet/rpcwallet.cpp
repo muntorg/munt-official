@@ -2621,8 +2621,8 @@ static const CRPCCommand commands[] = { //  category              name          
     { "wallet", "dumpwallet", &dumpwallet, true },
     { "wallet", "encryptwallet", &encryptwallet, true },
 
-    { "account", "getaccount", &getaccount, true },
-    { "account", "getaddressesbyaccount", &getaddressesbyaccount, true },
+    { "accounts", "getaccount", &getaccount, true },
+    { "accounts", "getaddressesbyaccount", &getaddressesbyaccount, true },
     { "wallet", "getbalance", &getbalance, false },
     { "wallet", "getnewaddress", &getnewaddress, true },
     { "wallet", "getrawchangeaddress", &getrawchangeaddress, true },
