@@ -577,6 +577,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     static unsigned int nTransactionsUpdatedLast;
 
     bool forceBlockUpdate = false;
+    static int64_t nStart;
     if (!lpval.isNull())
     {
         // Wait to respond until either the best block changes, OR a minute has passed and there are more transactions
@@ -636,11 +637,18 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Shutting down");
         // TODO: Maybe recheck connections/IBD and (if something wrong) send an expires-immediately template to stop miners?
     }
+    else
+    {
+        if (GetTime() - nStart > 20)
+        {
+            forceBlockUpdate = true;
+        }
+    }
 
     // Update block
     static CBlockIndex* pindexPrev;
-    static int64_t nStart;
     static CBlockTemplate* pblocktemplate;
+    
     if (forceBlockUpdate || pindexPrev != chainActive.Tip() || (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
     {
         // Clear pindexPrev so future calls make a new block, despite any failures from here on
@@ -788,7 +796,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue));
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
-    result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast(pindexPrev->nHeight)+1));
+    result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePast(pindexPrev->nHeight)+1, GetTime())));
+    //fixme: (GULDEN) (MED) - Implement 'maxtime' here?
     result.push_back(Pair("mutable", aMutable));
     result.push_back(Pair("noncerange", "00000000ffffffff"));
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;

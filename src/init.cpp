@@ -1025,7 +1025,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // Sanity check
     if (!InitSanityCheck())
-        return InitError(strprintf(_("InitializatiFcon sanity check failed. %s is shutting down."), _(PACKAGE_NAME)));
+        return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down."), _(PACKAGE_NAME)));
 
     std::string strDataDir = GetDataDir().string();
 
