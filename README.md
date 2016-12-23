@@ -56,6 +56,7 @@ To run after doing the above
 If your distro is missing Berkley DB 4.8 (error: Found Berkeley DB other than 4.8, required for portable wallets)
 Either configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
 > ./configure --with-incompatible-bdb ...
+
 Or compile your own:
 > mkdir /db-4.8 wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && tar -xzvf db-4.8.30.NC.tar.gz && cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=/db-4.8/ && make install
 
