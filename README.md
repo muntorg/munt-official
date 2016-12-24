@@ -17,6 +17,8 @@ Connect with the community through one or more of the following:
 
 ###Building###
 First, reconsider whether it is actually necessary for you to build. Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer. https://github.com/Gulden/gulden-official/releases
+Should you disregard the above and decide to build the software for yourself anyway, please make sure that you thoroughly read all of the extra information below before requesting assistance.
+
 
 Distro specific instructions:
 
@@ -24,7 +26,9 @@ Distro specific instructions:
 |:-----------|:-------|:-------|
 |Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d|
 
+
 Generic instructions:
+
 Gulden is autotools based, to build Gulden from this repository please follow these steps:
 * ./autogen.sh
 * automake
