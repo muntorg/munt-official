@@ -20,8 +20,8 @@ First, reconsider whether it is actually necessary for you to build. Linux binar
 
 Distro specific instructions:
 
-|:-----------|:-------|:-------|
 |Distro|Version|Instructions|
+|:-----------|:-------|:-------|
 |Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d|
 
 Generic instructions:
