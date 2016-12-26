@@ -9,15 +9,27 @@ Connect with the community through one or more of the following:
 
 |Website:|https://gulden.com|
 |:-----------|:-------|
-|Slack:|https://guldenpay.slack.com/|
+|Slack:|https://gulden.com/join|
 |Twitter:|http://twitter.com/gulden|
-|Facebook:|http://facebook.com/guldenpay|
+|Facebook:|http://facebook.com/gulden|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
 
 
 ###Building###
-First, reconsider whether it is actually necessary for you to build. Linux binaries are provided by us (for UI as well as the daemon) and are sufficient for most cases.
-A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.
+First, reconsider whether it is actually necessary for you to build. Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer. https://github.com/Gulden/gulden-official/releases
+
+Should you disregard the above and decide to build the software for yourself anyway, please make sure that you thoroughly read all of the extra information below before requesting assistance.
+
+
+Distro specific instructions:
+
+|Distro|Version|Instructions|
+|:-----------|:-------|:-------|
+|Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d|
+|Ubuntu|14.04.4|https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76|
+
+
+Generic instructions:
 
 Gulden is autotools based, to build Gulden from this repository please follow these steps:
 * ./autogen.sh
@@ -43,22 +55,24 @@ Steps:
 * git checkout old_autotools
 * ./configure
 * make
+If the above fails it may also be necessary to run ./autogen.sh but try without it first.
 
-If your distro (e.g. Ubuntu 14.04) does not have boost 1.61 you can do the following to build it
+
+If your distro  does not have boost 1.61 you can do the following to build it
 > wget https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2 && tar -xvf boost_1_61_0.tar.bz2 && cd boost_1_61_0/ && ./bootstrap.sh && ./b2 --prefix=/boost166 cxxflags=-fPIC cflags=-fPIC install
 
 And then add it to your configure flags
-> ./configure --with-boost=/boost166 ...
+> ./configure --with-boost=/boost166 LDFLAGS="-L/boost166/lib/" CPPFLAGS="-I/boost166/include" <otherconfigureflagshere>
 
 To run after doing the above
-> LD_LIBRARY_PATH=/boost166/lib src/GuldenD ...
+> LD_LIBRARY_PATH=/boost166/lib src/GuldenD 
 
 If your distro is missing Berkley DB 4.8 (error: Found Berkeley DB other than 4.8, required for portable wallets)
 Either configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
-> ./configure --with-incompatible-bdb ...
+> ./configure --with-incompatible-bdb <otherconfigureflagshere>
 
 Or compile your own:
-> mkdir /db-4.8 wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && tar -xzvf db-4.8.30.NC.tar.gz && cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=/db-4.8/ && make install
+> sudo mkdir /db-4.8 && sudo chmod -R a+rwx /db-4.8 && wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && tar -xzvf db-4.8.30.NC.tar.gz && cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=/db-4.8/ && make install
 
 > ./configure LDFLAGS="-L/db-4.8/lib/" CPPFLAGS="-I/db-4.8/include"
 

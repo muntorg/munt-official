@@ -20,7 +20,7 @@ class CommonDiff extends DeltaDiff {
 public
     static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 250000);
 public
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 260000);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 437600);
 public
     static
 #endif
@@ -34,7 +34,7 @@ public
     {
 #ifndef __JAVA__
         static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 250000);
-        static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 260000);
+        static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 437600);
 #endif
 
         if (INDEX_HEIGHT(indexLast) + 1 >= nOldDiffSwitchoverBlock) {

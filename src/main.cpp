@@ -3131,7 +3131,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 
     if (pindexPrev->nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500)) {
         if (block.GetBlockTime() > nAdjustedTime + 60)
-            return state.Invalid(false, REJECT_INVALID, "time-too-new", strprintf("block timestamp too far in the future block:%n adjusted:%n system:%n offset:%n", block.GetBlockTime(), nAdjustedTime, GetTime(), GetTimeOffset()));
+            return state.Invalid(false, REJECT_INVALID, "time-too-new", strprintf("block timestamp too far in the future block:%u adjusted:%u system:%u offset:%u", block.GetBlockTime(), nAdjustedTime, GetTime(), GetTimeOffset()));
     } else {
         if (block.GetBlockTime() > nAdjustedTime + 15 * 60)
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
@@ -3237,7 +3237,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         assert(pindexPrev);
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
-            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
+            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, FormatStateMessage(state));
 
         if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));

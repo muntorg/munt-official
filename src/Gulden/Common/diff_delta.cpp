@@ -44,9 +44,6 @@ public
 #endif
                                   )
     {
-        int ndeltaVersion = 1;
-        if (INDEX_HEIGHT(pindexLast) > DIFF_SWITCHOVER(446500, 437500))
-            ndeltaVersion = 2;
 
 #ifndef BUILD_IOS
 #ifndef __JAVA__
@@ -88,13 +85,9 @@ public
             const int64_t nLowTimeLimit = nRetargetTimespan * 90 / PERCENT_FACTOR;
             const int64_t nFloorTimeLimit = nRetargetTimespan * 65 / PERCENT_FACTOR;
 
-            int64_t nLongTimeLimit = 2 * 16 * 60;
-            int64_t nLongTimeStep = 15 * 60;
-            if (ndeltaVersion == 2) {
-                const int64_t nDrift = 1;
-                nLongTimeLimit = ((6 * nDrift)) * 60;
-                nLongTimeStep = nDrift * 60;
-            }
+            const int64_t nDrift = 1;
+            int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
+            int64_t nLongTimeStep = nDrift * 60;
 
             unsigned int nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 75 / PERCENT_FACTOR;
 
@@ -169,7 +162,7 @@ public
                 nLongTimespan = INDEX_TIME(pindexLast) - INDEX_TIME(pindexFirst);
             }
 
-            if ((nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * (ndeltaVersion == 2 ? 40 : 80) / PERCENT_FACTOR)) {
+            if ((nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 40 / PERCENT_FACTOR)) {
 #ifndef __JAVA__
 #ifndef BUILD_IOS
                 if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
@@ -185,11 +178,11 @@ public
             nWeightedDiv += (nMiddleFrame * nMiddleWeight) + (nLongFrame * nLongWeight);
             nWeightedTimespan = nWeightedSum / nWeightedDiv;
 
-            if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * (ndeltaVersion == 2 ? 20 : 10) / PERCENT_FACTOR) {
+            if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 20 / PERCENT_FACTOR) {
 
                 nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 90 / PERCENT_FACTOR;
                 nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 110 / PERCENT_FACTOR;
-            } else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * (ndeltaVersion == 2 ? 30 : 20) / PERCENT_FACTOR) {
+            } else if (DIFF_ABS(nLBTimespan - nRetargetTimespan) < nRetargetTimespan * 30 / PERCENT_FACTOR) {
 
                 nMinimumAdjustLimit = (unsigned int)nRetargetTimespan * 80 / PERCENT_FACTOR;
                 nMaximumAdjustLimit = (unsigned int)nRetargetTimespan * 120 / PERCENT_FACTOR;
@@ -233,17 +226,11 @@ public
             }
 
             if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit) {
-                if (ndeltaVersion == 1) // Reduce in a linear fashion based on time steps.
-                {
-                    int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) / nLongTimeStep);
-                    bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(nNumMissedSteps));
-                } else if (ndeltaVersion == 2) // Fixed reduction for each missed step. (10%)
-                {
-                    int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
-                    for (int i = 0; i < nNumMissedSteps; ++i) {
-                        bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
-                        bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
-                    }
+
+                int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
+                for (int i = 0; i < nNumMissedSteps; ++i) {
+                    bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
+                    bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
                 }
 
 #ifndef __JAVA__

@@ -24,7 +24,7 @@ static const int INIT_PROTO_VERSION = 209;
 //! In this version, 'getheaders' was introduced.
 static const int GETHEADERS_VERSION = 31800;
 
-static const int MIN_PEER_PROTO_VERSION = 70002;
+static const int MIN_PEER_PROTO_VERSION = 70014;
 
 static const int CADDR_TIME_VERSION = 31402;
 
