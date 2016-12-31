@@ -38,9 +38,9 @@
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
     #ifdef GULDEN_TESTNET
-        #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
-    #else
         #define DIFF_SWITCHOVER(TEST, MAIN) TEST
+    #else
+        #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
     #endif
     #define DIFF_ABS llabs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
