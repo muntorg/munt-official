@@ -50,6 +50,8 @@
 # error "Gulden cannot be compiled without assertions."
 #endif
 
+static std::atomic<bool> fAutoRequestBlocks(DEFAULT_AUTOMATIC_BLOCK_REQUESTS);
+
 std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
 
 struct IteratorComparator
@@ -520,6 +522,10 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
 
     // Make sure pindexBestKnownBlock is up to date, we'll need it.
     ProcessBlockAvailability(nodeid);
+
+    if (!fAutoRequestBlocks) {
+        return;
+    }
 
     if (state->pindexBestKnownBlock == NULL || state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
         // This peer has nothing interesting.
@@ -2678,6 +2684,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                         pindexLast->GetBlockHashPoW2().ToString(),
                         pindexLast->nHeight);
             } else {
+                // Do not request blocks if autorequest is disabled
+                if (!fAutoRequestBlocks) {
+                    return true;
+                }
                 std::vector<CInv> vGetData;
                 // Download as much as possible, from earliest to latest.
                 BOOST_REVERSE_FOREACH(const CBlockIndex *pindex, vToFetch) {
@@ -3855,6 +3865,14 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         }
     }
     return true;
+}
+
+void SetAutoRequestBlocks(bool state) {
+    fAutoRequestBlocks = state;
+}
+
+bool isAutoRequestingBlocks() {
+    return fAutoRequestBlocks;
 }
 
 class CNetProcessingCleanup
