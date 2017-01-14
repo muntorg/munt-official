@@ -414,7 +414,7 @@ UniValue getaddressesbyaccount(const UniValue& params, bool fHelp)
     UniValue ret(UniValue::VARR);
     for(const auto& key : setAddress)
     {   
-        ret.push_back(key.ToString());
+        ret.push_back(CBitcoinAddress(key).ToString());
     }
     return ret;
 }
