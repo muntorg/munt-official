@@ -243,7 +243,7 @@ UniValue stop(const UniValue& params, bool fHelp)
             "\nStop Bitcoin server.");
 
     StartShutdown();
-    return "Bitcoin server stopping";
+    return "Gulden server stopping";
 }
 
 /**
