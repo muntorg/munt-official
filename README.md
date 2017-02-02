@@ -126,5 +126,5 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |DNS Seed 5|seed.gulden.blue|
 |Testnet DNS Seed 1|testseed.gulden.blue|
 |Testnet DNS Seed 2|testseed.gulden.network|
-|Testnet Seed node 1|testseed-00.gulden.blue|
-|Testnet Seed node 2|testseed-01.gulden.network|
+|Testnet DNS Seed 3|testseed.coinpool.nl|
+
