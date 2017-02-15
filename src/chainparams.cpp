@@ -277,17 +277,10 @@ public:
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
             ( 0, uint256S("0xbff0fcf9a89d4d4d6e00414e1d67ef495608c6569f7fbb5276cd20a46127f329"))
-            (  50000, uint256S("0x57656e366d3ac7bee3cea4cffec0fdae54274774aa82acd03e3a2b08423f6d64"))
-            ( 100000, uint256S("0x65e0d7c58bdd5632bd64c374146c8bee7d4ef16ff5add401cb9250e78329abae"))
-            ( 150000, uint256S("0xa5ec2fe07194495c8b9e02e660f130f28f40f36d01c1bf932673fba021cfa43e"))
-            ( 200000, uint256S("0x18e82b93c0526a99adb5522e311b71742f1731552eecc29edd7e283a9213eaa9"))
-            ( 250000, uint256S("0xbf110b2a5b3520d6d25c4fb592ccc552744338c283b7501bf42baadfca25ace0"))
-            ( 300000, uint256S("0x7eee9742ed49753ae5d7835117ec33cca6ed4e4970b4af0f038f3bdad7936ebf"))
-            ( 350000, uint256S("0xe5d6bed3dda6863068cbaffecb08d74a61ebbdf196d23d27405f2648bc0aa1a7"))
-            ( 350000, uint256S("0xe5d6bed3dda6863068cbaffecb08d74a61ebbdf196d23d27405f2648bc0aa1a7"))
-            ( 400000, uint256S("0xc6b8416c9e5d7b40b4be4fc3e73681e88de669099577049f3bc15a22800f65fc"))
-            ( 425000, uint256S("0x184be134ccbb5015ae16c7a99f1ebb8a7681d382eb420059f4826cbca0942d9c")),
-            1399759200,
+            ( 1, uint256S("0xac089cb1604e64d9e80cf386d48c8d05a755a0f9e0dd40184ca2387abe3bfaaf"))
+            ( 1000, uint256S("0xe0065728c6c1fbb9513704413dcdeda3295bb2117f744d5c71d88fb36a85880c"))
+            ( 6000, uint256S("0xfc5ea77c1c433fa4131ddc12aa55f032caad1c0d3fee0018abf220fba6e6c276"))
+            1487143921,
             0,
             1
         };
