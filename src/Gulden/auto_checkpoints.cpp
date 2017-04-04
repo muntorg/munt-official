@@ -23,6 +23,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 
 // Automatic checkpoint system.

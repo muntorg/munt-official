@@ -113,7 +113,7 @@ public:
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
         pchMessageStart[2] = 0xf7; // 'G' + 0xb0
-        pchMessageStart[3] = 0xe0; // 0xe0 (e for "echt", testnet has 0x00 as last byte)
+        pchMessageStart[3] = 0xe0; // 0xe0 (e for "echt", testnet has 0x01 as last byte)
         vAlertPubKey = ParseHex("073513ffe7147aba88d33aea4da129d8a2829c545526d5d854ab51d5778f4d0625431ba1c5a3245bdfe8736b127fdfdb488de72640727d37355c4c3a66c547efad");
         nDefaultPort = 9231;
         nPruneAfterHeight = 100000;
@@ -183,7 +183,7 @@ public:
 static CMainParams mainParams;
 
 /**
- * Testnet (v3)
+ * Testnet (v2)
  */
 class CTestNetParams : public CChainParams {
 public:
@@ -219,24 +219,23 @@ public:
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
         pchMessageStart[2] = 0xf7; // 'G' + 0xb0
-        pchMessageStart[3] = 0x00; // 0x00
+        pchMessageStart[3] = 0x02; // 0x02
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
         nDefaultPort = 9923;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1399759200, 397616, 0x1e0ffff0, 1, 0);
+        genesis = CreateGenesisBlock(1491167107, 2201040, 524287999, 1, 0);
         genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
         consensus.hashGenesisBlock = genesis.GetHash();
 
-
-        assert(consensus.hashGenesisBlock == uint256S("0xbff0fcf9a89d4d4d6e00414e1d67ef495608c6569f7fbb5276cd20a46127f329"));
+        assert(consensus.hashGenesisBlock == uint256S("0x99fe3f8f7b7d89513bae2cab359143e04d32d3b9b64ef978a2ee2a248f93bfd9"));
 
         #if 0
         arith_uint256 thash;
         char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
         scrypt_1024_1_1_256_sp(BEGIN(genesis.nVersion), BEGIN(thash), scratchpad);
         arith_uint256 foo;
-        while(thash > consensus.powLimit)
+        while(thash > UintToArith256(consensus.powLimit))
         {
             genesis.nNonce++;
             scrypt_1024_1_1_256_sp(BEGIN(genesis.nVersion), BEGIN(thash), scratchpad);
@@ -254,35 +253,32 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("seed 0",  "testseed.gulden.blue"));
-        vSeeds.push_back(CDNSSeedData("seed 1",  "testseed.gulden.network"));
-        vSeeds.push_back(CDNSSeedData("seed 2",  "testseed-00.gulden.blue"));
-        vSeeds.push_back(CDNSSeedData("seed 3",  "testseed-01.gulden.network"));
+        vSeeds.push_back(CDNSSeedData("seed 0", "testseed.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 1", "testseed.gulden.network"));
+        
 
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,98);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,98+128);
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,65);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,127);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,65+128);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
 
-        checkpointData = (CCheckpointData) {
+        checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0xbff0fcf9a89d4d4d6e00414e1d67ef495608c6569f7fbb5276cd20a46127f329"))
-            ( 1, uint256S("0xac089cb1604e64d9e80cf386d48c8d05a755a0f9e0dd40184ca2387abe3bfaaf"))
-            ( 1000, uint256S("0xe0065728c6c1fbb9513704413dcdeda3295bb2117f744d5c71d88fb36a85880c"))
-            ( 6000, uint256S("0xfc5ea77c1c433fa4131ddc12aa55f032caad1c0d3fee0018abf220fba6e6c276")),
-            1487143921,
+            ( 0, uint256S("0x99fe3f8f7b7d89513bae2cab359143e04d32d3b9b64ef978a2ee2a248f93bfd9")),
             0,
-            1
+            0,
+            0
         };
 
     }
