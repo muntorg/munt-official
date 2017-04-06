@@ -103,15 +103,15 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2P Port|9231|
 |RPC Port|9232|
 |P2P Network Header|fcfef7e0|
-|Address version byte|38|
+|Address version byte|38 (G)|
 |BIP44 coin type|87 0x80000057|
 
 |Technical specifications - Testnet||
 |:-----------|:---------|
 |P2P Port|9923|
 |RPC Port|9924|
-|P2P Network Header|fcfef700|
-|Address version byte|98|
+|P2P Network Header|fcfef702|
+|Address version byte|127 (T)|
 
 |Infrastructure||
 |:-----------|:---------|
