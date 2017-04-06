@@ -113,7 +113,7 @@ public:
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
         pchMessageStart[2] = 0xf7; // 'G' + 0xb0
-        pchMessageStart[3] = 0xe0; // 0xe0 (e for "echt", testnet has 0x01 as last byte)
+        pchMessageStart[3] = 0xe0; // 0xe0 (e for "echt", testnet has 0x02 as last byte)
         vAlertPubKey = ParseHex("073513ffe7147aba88d33aea4da129d8a2829c545526d5d854ab51d5778f4d0625431ba1c5a3245bdfe8736b127fdfdb488de72640727d37355c4c3a66c547efad");
         nDefaultPort = 9231;
         nPruneAfterHeight = 100000;
@@ -255,7 +255,7 @@ public:
         vSeeds.clear();
         vSeeds.push_back(CDNSSeedData("seed 0", "testseed.gulden.blue"));
         vSeeds.push_back(CDNSSeedData("seed 1", "testseed.gulden.network"));
-        
+        vSeeds.push_back(CDNSSeedData("seed 2", "testseed.coinpool.nl"));
 
 
 
