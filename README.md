@@ -91,27 +91,26 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 ### Additional technical information
 
 
-|Technical specifications - Main network||
-|:-----------|:---------|
-|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment|
-|Transaction confirmations:|6|
-|Total coins:|1680M|
-|Premine reserved for development, marketing and funding of community projects:|170M (10%)|
-|Starting diff:|0.00244|
-|Block reward:|100 NLG|
-|Block time:|150 seconds|
-|P2P Port|9231|
-|RPC Port|9232|
-|P2P Network Header|fcfef7e0|
-|Address version byte|38 (G)|
-|BIP44 coin type|87 0x80000057|
+|Technical specifications|Main network|Testnet|
+|:-----------|:---------||:---------|
+|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment||
+|Transaction confirmations:|6||
+|Total coins:|1680M||
+|Premine reserved for development, marketing and funding of community projects:|170M (10%)||
+|Block reward:|100 NLG||
+|Block time:|150 seconds||
+|P2P Port|9231|9923|
+|RPC Port|9232|9924|
+|P2P Network Header|fcfef7e0|fcfef702|
+|Address version byte|38 (G)|127 (T)|
+|BIP44 coin type|87 0x80000057||
 
-|Technical specifications - Testnet||
+|Technical specifications - ||
 |:-----------|:---------|
 |P2P Port|9923|
 |RPC Port|9924|
-|P2P Network Header|fcfef702|
-|Address version byte|127 (T)|
+|P2P Network Header||
+|Address version byte||
 
 |Infrastructure||
 |:-----------|:---------|
