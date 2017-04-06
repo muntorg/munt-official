@@ -92,7 +92,7 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 
 
 |Technical specifications|Main network|Testnet|
-|:-----------|:---------||:---------|
+|:-----------|:---------|:---------|
 |Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment||
 |Transaction confirmations:|6||
 |Total coins:|1680M||
@@ -104,13 +104,6 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2P Network Header|fcfef7e0|fcfef702|
 |Address version byte|38 (G)|127 (T)|
 |BIP44 coin type|87 0x80000057||
-
-|Technical specifications - ||
-|:-----------|:---------|
-|P2P Port|9923|
-|RPC Port|9924|
-|P2P Network Header||
-|Address version byte||
 
 |Infrastructure||
 |:-----------|:---------|
