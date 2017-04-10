@@ -129,8 +129,8 @@ public:
         vSeeds.push_back(CDNSSeedData("seed 3",  "rotterdam.gulden.network"));
         vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);// 'G'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);// 'g'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,38+128);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
@@ -176,7 +176,7 @@ public:
             1443116050, // * UNIX timestamp of last checkpoint block
             680226,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            350.0     // * estimated number of transactions per day after checkpoint
+            1700.0     // * estimated number of transactions per day after checkpoint
         };
     }
 };
@@ -197,7 +197,7 @@ public:
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
         consensus.powLimit =  uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 150;
+        consensus.nPowTargetSpacing = 150;//2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
@@ -259,8 +259,8 @@ public:
 
 
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,65);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,127);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,65);// 'T'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,127);// 't'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,65+128);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
@@ -275,10 +275,17 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0x99fe3f8f7b7d89513bae2cab359143e04d32d3b9b64ef978a2ee2a248f93bfd9")),
-            0,
-            0,
-            0
+            ( 0, uint256S("0x99fe3f8f7b7d89513bae2cab359143e04d32d3b9b64ef978a2ee2a248f93bfd9"))
+            ( 50000, uint256S("0x153a43e9c01a65a372c1c8b994907db55e668fb220a82c311ffedfe556cdb1b0"))
+            ( 100000, uint256S("0xab808d151304c05de0ed4c8ed4992559727d9b3a6f2344d897965e17bde362d5"))
+            ( 150000, uint256S("0xe5d716a226cb346ca6f8786192d90941cef8595987bcb672985362e951a73951"))
+            ( 200000, uint256S("0x7e35577b14b39f90532fec7912d70153a89f3f27e63aa295d76156547f7f1e73"))
+            ( 250000, uint256S("0xbc0f4759be0232cfda9d70747313bc552712e7d27688cb2fa3f260c242ae246d"))
+            ( 300000, uint256S("0x52d735ffd4e679662754465e63b226e10a31d8eee708c0f703ea2a899381ebbe"))
+            ( 350000, uint256S("0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7")),
+            1491612899,
+            350019,
+            700.0
         };
 
     }
@@ -300,7 +307,7 @@ public:
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetSpacing = 60;//1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
@@ -318,7 +325,7 @@ public:
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
         pchMessageStart[2] = 0xf7; // 'G' + 0xb0
-        pchMessageStart[3] = 0x00; // 0x00
+        pchMessageStart[3] = 0xFF; // 0xFF
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
         //assert(consensus.hashGenesisBlock == uint256S("0x6dbdcc5f450c07c61b51b492021dee6b4bd246c8dd578fd73e8f6c28cfe0393b"));
@@ -343,9 +350,9 @@ public:
             0,
             0
         };
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);// 'R'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);// 'r'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,60+128);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
     }
