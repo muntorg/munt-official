@@ -102,7 +102,8 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
 |P2P Network Header|fcfef7e0|fcfef702|
-|Address version byte|38 (G)|127 (T)|
+|Address version byte|38 (G)|65 (T)|
+|P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057||
 
 |Infrastructure||
