@@ -1,3 +1,22 @@
+1.6.4
+
+New menu item for importing private keys.
+Modify createaccount RPC command so that it can also create legacy accounts.
+
+1.6.3
+
+Fix incorrect getaddressesbyaccount output.
+Fix a possible crash in the checkpoint system.
+
+1.6.2
+
+Bring back RPC command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
+Bring back RPC command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
+
+1.6.1
+
+Minor bugfix release.
+
 1.6.0
 
 New user interface with drastic improvements over the old user interface.

@@ -978,6 +978,7 @@ public:
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
     
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType);
+    CAccount* GenerateNewLegacyAccount(std::string strAccount);
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet, CWalletDB* pwalletdb);

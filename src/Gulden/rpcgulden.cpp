@@ -247,13 +247,13 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() == 0 || params.size() > 2)
         throw std::runtime_error(
             "createaccount \"name\"\n"
-            "Create an account.\n"
+            "Create an account, for HD accounts the currently active seed will be used to create the account.\n"
             "\nArguments:\n"
-            //"1. \"seed\"        (string) The UUID or unique label of the seed from which to create the account. \"\" to use the currently active seed.\n"
             "1. \"name\"       (string) Specify the label for the account.\n"
+            "2. \"type\"       (string, optional) Type of account to create (HD; Mobile; Legacy)\n"
             "\nExamples:\n"
             + HelpExampleCli("createaccount", "")
             + HelpExampleRpc("createaccount", ""));
@@ -262,9 +262,26 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    //CHDSeed* seed = SeedFromValue(params[0], true);
-                    
-    CAccount* account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+    
+    std::string accountType = "HD";
+    if (params.size() > 1)
+    {
+        accountType = params[1].get_str();
+        if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy")
+            throw runtime_error("Invalid account type");    
+    }
+                       
+    CAccount* account = NULL;
+    
+    if (accountType == "HD")
+        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+    else if (accountType == "Mobile")
+        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
+    else if (accountType == "Legacy")
+    {
+        EnsureWalletIsUnlocked();
+        account = pwalletMain->GenerateNewLegacyAccount(params[0].get_str());
+    }
     
     if (!account)
         throw runtime_error("Unable to create account.");

@@ -1116,7 +1116,7 @@ bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bFo
 }
 
 
-// Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect thouse.
+// Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect those.
 // So we keep these 'shadow' accounts, and if they ever receive a transaction we automatically 'convert' them into normal accounts in the UI.
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
 CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType)
@@ -1138,8 +1138,17 @@ CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type
                 if (accountPair.second->m_Type == AccountType::Shadow)
                 {
                     if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex())
-                        newAccount = (CAccountHD*)accountPair.second;
-                    
+                    {
+                        if (((CAccountHD*)accountPair.second)->getSeedUUID() == getActiveSeed()->getUUID())
+                        {
+                            //Only consider accounts that are
+                            //1) Of the required type
+                            //2) Marked as being shadow
+                            //3) From the active seed
+                            //4) Always take the lowest account index that we can find
+                            newAccount = (CAccountHD*)accountPair.second;
+                        }
+                    }
                 }
             }
         }
@@ -1181,6 +1190,14 @@ CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
         TopUpKeyPool(2);//We only assign the bare minimum addresses here - and let the background thread do the rest
+    
+    return newAccount;
+}
+
+CAccount* CWallet::GenerateNewLegacyAccount(std::string strAccount)
+{
+    CAccount* newAccount = new CAccount();
+    addAccount(newAccount, strAccount);
     
     return newAccount;
 }
