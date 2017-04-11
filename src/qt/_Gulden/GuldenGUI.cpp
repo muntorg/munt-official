@@ -46,6 +46,7 @@
 
 #include <_Gulden/accountsummarywidget.h>
 #include <_Gulden/newaccountdialog.h>
+#include <_Gulden/importprivkeydialog.h>
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
 #include "wallet/wallet.h"
@@ -177,6 +178,8 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , balanceContainer( NULL )
 , welcomeScreen( NULL )
 , accountScrollArea( NULL )
+, toolsMenu( NULL )
+, importPrivateKeyAction( NULL )
 , accountSummaryWidget( NULL )   
 , dialogNewAccount( NULL )
 , dialogAccountSettings( NULL )
@@ -302,6 +305,19 @@ void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
     connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ) );
     updateExchangeRates();
     
+}
+
+void GuldenGUI::createMenusGulden()
+{
+    toolsMenu = m_pImpl->appMenuBar->addMenu(tr("&Tools"));
+
+    importPrivateKeyAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
+    importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
+    importPrivateKeyAction->setCheckable(false);
+    
+    toolsMenu->addAction(importPrivateKeyAction);
+    
+    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
 }
 
 void GuldenGUI::createToolBarsGulden()
@@ -1110,11 +1126,61 @@ void GuldenGUI::accountButtonPressed()
     setActiveAccountButton( accButton );
 }
 
+void rescanThread()
+{
+    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+}
+
+void GuldenGUI::promptImportPrivKey()
+{
+    ImportPrivKeyDialog dlg(this->m_pImpl);
+    dlg.exec();
+    
+    CBitcoinSecret vchSecret;
+    bool fGood = vchSecret.SetString(dlg.getPrivKey().c_str());
+    
+    if (fGood)
+    {
+        LOCK2(cs_main, pwalletMain->cs_wallet);
+        
+        CKey key = vchSecret.GetKey();
+        if (!key.IsValid())
+        {
+            m_pImpl->message(tr("Error importing private key"), tr("Invalid private key."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+
+        CPubKey pubkey = key.GetPubKey();
+        assert(key.VerifyPubKey(pubkey));
+        CKeyID vchAddress = pubkey.GetID();
+        
+        //Don't import an address that is already in wallet.
+        if (pwalletMain->HaveKey(vchAddress))
+        {
+            m_pImpl->message(tr("Error importing private key"), tr("Wallet already contains key."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+        
+        CAccount* pAccount = pwalletMain->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
+        pwalletMain->MarkDirty();
+        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+        if (!pwalletMain->AddKeyPubKey(key, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
+        {
+            m_pImpl->message(tr("Error importing private key"), tr("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+
+        // Whenever a key is imported, we need to scan the whole chain - do so now
+        pwalletMain->nTimeFirstKey = 1;
+        boost::thread t(rescanThread); // thread runs free
+    }
+}
+
 void GuldenGUI::gotoWebsite()
 {
     QDesktopServices::openUrl( QUrl( "http://www.Gulden.com/" ) );
 }
-
 
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {

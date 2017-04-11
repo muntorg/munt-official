@@ -146,6 +146,19 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
     widget->setCheckValidator(new BitcoinAddressCheckValidator(parent));
 }
 
+
+void setupPrivKeyWidget(QValidatedLineEdit *widget, QWidget *parent)
+{
+    parent->setFocusProxy(widget);
+
+    widget->setFont(fixedPitchFont());
+#if QT_VERSION >= 0x040700
+    widget->setPlaceholderText(QObject::tr("Enter a private key"));
+#endif
+    widget->setValidator(new BitcoinAddressEntryValidator(parent));
+    widget->setCheckValidator(new BitcoinAddressCheckValidator(parent));
+}
+
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 {
     QDoubleValidator *amountValidator = new QDoubleValidator(parent);

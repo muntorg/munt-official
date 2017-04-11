@@ -42,6 +42,7 @@ class WelcomeDialog;
 class CWallet;
 class QLineEdit;
 class QTextEdit;
+class QMenu;
 
 
 #define GULDEN_DIALOG_CANCEL_BUTTON_STYLE "QPushButton{color: #e02121; margin-left: 40px; padding-left: 0px}"
@@ -108,6 +109,8 @@ public:
     
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
     
+    void createMenusGulden();
+    
     void createToolBarsGulden();
     void hideToolBars();
     void showToolBars();
@@ -135,6 +138,9 @@ private:
     WelcomeDialog* welcomeScreen;
     
     QFrame* accountScrollArea;
+    
+    QMenu* toolsMenu;
+    QAction* importPrivateKeyAction;
     
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
@@ -184,6 +190,7 @@ private Q_SLOTS:
     void accountAdded(CAccount* account);
     void accountDeleted(CAccount* account);
     void accountButtonPressed();
+    void promptImportPrivKey();
     void gotoWebsite();
     void gotoNewAccountDialog();
     void gotoPasswordDialog();
