@@ -152,6 +152,11 @@ SecureString CHDSeed::getMnemonic()
     return unencryptedMnemonic;
 }
 
+SecureString CHDSeed::getPubkey()
+{
+    return CBitcoinSecretExt<CExtPubKey>(masterKeyPub).ToString().c_str();
+}
+
 bool CHDSeed::IsLocked() const
 {
     if (unencryptedMnemonic.size() > 0)
@@ -262,8 +267,27 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
     changeChainKeyPub = changeChainKeyPriv.Neuter();
 }
 
+CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
+: CAccount()
+, m_SeedID(seedID)
+, m_nIndex(accountKey_.nChild)
+, m_nNextChildIndex(0)
+, m_nNextChangeIndex(0)
+, encrypted(false)
+{
+    //Random key - not actually used, but written to disk to avoid unnecessary complexity in serialisation code
+    accountKeyPriv.GetMutableKey().MakeNewKey(true);
+    primaryChainKeyPriv.GetMutableKey().MakeNewKey(true);
+    changeChainKeyPriv.GetMutableKey().MakeNewKey(true);
+    
+    accountKey_.Derive(primaryChainKeyPub, 0);  //a/0
+    accountKey_.Derive(changeChainKeyPub, 1);  //a/1
+    m_readOnly = true;
+}
+
 void CAccountHD::GetKey(CExtKey& childKey, int nChain)
 {
+    assert(!m_readOnly);
     if (nChain == KEYCHAIN_EXTERNAL)
     {
         primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
@@ -278,6 +302,8 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
     if(IsLocked())
         return false;
+    
+    assert(!m_readOnly);
     
     int64_t nKeyIndex = -1;
     CExtKey privKey;
@@ -468,6 +494,14 @@ CExtKey* CAccountHD::GetAccountMasterPrivKey()
     return &accountKeyPriv;
 }
 
+SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
+{
+    if (IsLocked())
+        return NULL;
+    
+    return CBitcoinSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
+}
+
 std::string CAccountHD::getSeedUUID() const
 {
     return boost::uuids::to_string(m_SeedID);
@@ -488,6 +522,7 @@ CAccount::CAccount()
     parentUUID = boost::uuids::nil_generator()();
     m_Type = AccountType::Normal;
     m_SubType = AccountSubType::Desktop;
+    m_readOnly = false;
 }
 
 void CAccount::SetNull()

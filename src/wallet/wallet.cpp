@@ -41,6 +41,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include <boost/uuid/nil_generator.hpp>
 
 
 #include <Gulden/Common/scrypt.h>
@@ -1198,6 +1199,33 @@ CAccount* CWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
     addAccount(newAccount, strAccount);
+    
+    return newAccount;
+}
+
+CAccountHD* CWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)
+{
+    CAccountHD* newAccount = NULL;
+
+    CExtPubKey pubkey;
+    try
+    {
+        CBitcoinSecretExt<CExtPubKey> secretExt;
+        secretExt.SetString(encExtPubKey.c_str());
+        pubkey = secretExt.GetKey();
+    }
+    catch(...)
+    {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+    
+    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
+        
+    // Write new account
+    addAccount(newAccount, strAccount);
+    
+    //We only assign the bare minimum addresses here - and let the background thread do the rest
+    TopUpKeyPool(2);
     
     return newAccount;
 }

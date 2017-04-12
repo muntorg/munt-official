@@ -17,6 +17,7 @@
 
 #include "wallet/wallet.h"
 #include <Gulden/translate.h>
+#include <Gulden/util.h>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/median.hpp>
@@ -315,6 +316,72 @@ UniValue getactiveaccount(const UniValue& params, bool fHelp)
     return pwalletMain->activeAccount->getUUID();
 }
 
+UniValue getreadonlyaccount(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+    
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+            "getreadonlyaccount \"account\" \n"
+            "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
+            "1. \"account\"        (string, required) The unique UUID or label for the account or \"\" for the active account.\n"
+            "\nResult:\n"
+            "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
+            "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getreadonlyaccount", "")
+            + HelpExampleRpc("getreadonlyaccount", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+    
+    CAccount* account = AccountFromValue(params[0], false);
+    
+    if (!account->IsHD())
+        throw runtime_error("Can only be used on a HD account.");
+    
+    CAccountHD* accountHD = dynamic_cast<CAccountHD*>(account);
+    
+    EnsureWalletIsUnlocked();
+
+    return accountHD->GetAccountMasterPubKeyEncoded().c_str();
+}
+
+UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+    
+    if (fHelp || params.size() != 2)
+        throw std::runtime_error(
+            "importreadonlyaccount \"name\" \"encodedkey\" \n"
+            "\nImport a read only account from an \"encodedkey\" which has been obtained by using \"getreadonlyaccount\"\n"
+            "1. \"name\"       (string) Name to assign to the new account.\n"
+            "1. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
+            "\nResult:\n"
+            "\nReturn the UUID of the new account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", "")
+            + HelpExampleRpc("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+    
+    EnsureWalletIsUnlocked();
+       
+    CAccount* account = pwalletMain->CreateReadOnlyAccount(params[0].get_str().c_str(), params[1].get_str().c_str());
+    
+    if (!account)
+        throw runtime_error("Unable to create account.");
+    
+    // Whenever a key is imported, we need to scan the whole chain - do so now
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
+    
+    return account->getUUID();
+}
+
 UniValue getactiveseed(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -602,22 +669,24 @@ static const CRPCCommand commands[] =
     { "mining",             "gethashps",              &gethashps,              true  },
     { "mining",             "sethashlimit",           &sethashlimit,           true  },
 
-    { "developer",          "dumpdiffarray",          &dumpdiffarray,          true  },
     { "developer",          "dumpblockgaps",          &dumpblockgaps,          true  },
+    { "developer",          "dumpdiffarray",          &dumpdiffarray,          true  },
     
-    { "accounts",           "changeaccountname",      &changeaccountname,     true  },
+    { "accounts",           "changeaccountname",      &changeaccountname,      true  },
     { "accounts",           "createaccount",          &createaccount,          true  },
     { "accounts",           "deleteaccount",          &deleteaccount,          true  },
     { "accounts",           "getactiveaccount",       &getactiveaccount,       true  },
+    { "accounts",           "getreadonlyaccount",     &getreadonlyaccount,     true  },
+    { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true  },
     { "accounts",           "listaccounts",           &listallaccounts,        true  },
     { "accounts",           "setactiveaccount",       &setactiveaccount,       true  },
     
-    { "mnemonics",          "getactiveseed",          &getactiveseed,          true  },
-    { "mnemonics",          "setactiveseed",          &setactiveseed,          true  },
-    { "mnemonics",          "listseeds",              &listseeds,              true  },
     { "mnemonics",          "createseed",             &createseed,             true  },
-    { "mnemonics",          "importseed",             &importseed,             true  },
+    { "mnemonics",          "getactiveseed",          &getactiveseed,          true  },
     { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true  },
+    { "mnemonics",          "setactiveseed",          &setactiveseed,          true  },
+    { "mnemonics",          "importseed",             &importseed,             true  },
+    { "mnemonics",          "listseeds",              &listseeds,              true  },
 };
 
 void RegisterGuldenRPCCommands(CRPCTable &tableRPC)

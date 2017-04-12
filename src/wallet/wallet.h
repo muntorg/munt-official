@@ -979,6 +979,7 @@ public:
     
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType);
     CAccount* GenerateNewLegacyAccount(std::string strAccount);
+    CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet, CWalletDB* pwalletdb);

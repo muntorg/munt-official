@@ -200,6 +200,9 @@ struct CExtPubKey {
     unsigned int nChild;
     ChainCode chaincode;
     CPubKey pubkey;
+    
+    const CPubKey& GetKey() const { return pubkey; };
+    CPubKey& GetMutableKey() { return pubkey; };
 
     friend bool operator==(const CExtPubKey &a, const CExtPubKey &b)
     {

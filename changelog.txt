@@ -2,6 +2,8 @@
 
 New menu item for importing private keys.
 Modify createaccount RPC command so that it can also create legacy accounts.
+Support for read only (watch) HD accounts.
+New RPC commands to read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
 
 1.6.3
 

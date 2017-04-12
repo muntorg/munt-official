@@ -49,6 +49,7 @@
 #include <_Gulden/importprivkeydialog.h>
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
+#include <Gulden/util.h>
 #include "wallet/wallet.h"
 #include "walletframe.h"
 #include "walletview.h"
@@ -948,17 +949,22 @@ QString getAccountLabel(CAccount* account)
     {
         accountName.append(QString::fromUtf8(" \uf187"));
     }
-    /*else
+    if ( account->IsReadOnly() )
     {
-        accountName.append(QString("%1").arg(((CAccountHD*)account)->getIndex()));
-    }*/
+         accountName.append(QString::fromUtf8(" \uf06e"));
+    }
+    
     return limitString(accountName, 28);
 }
 
 void GuldenGUI::refreshAccountControls()
 {
     LogPrintf("GuldenGUI::refreshAccountControls\n");
-    
+
+    //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
+    if (pwalletMain->getActiveAccount()->IsReadOnly())
+        m_pImpl->sendCoinsAction->setVisible( false );
+        
     for ( const auto& controlPair : m_accountMap )
     {
         controlPair.first->deleteLater();
@@ -1122,14 +1128,11 @@ void GuldenGUI::accountButtonPressed()
 {
     QObject* sender = this->sender();
     ClickableLabel* accButton = qobject_cast<ClickableLabel*>( sender );
-    restoreCachedWidgetIfNeeded();
     setActiveAccountButton( accButton );
+    restoreCachedWidgetIfNeeded();
 }
 
-void rescanThread()
-{
-    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
-}
+
 
 void GuldenGUI::promptImportPrivKey()
 {
@@ -1185,7 +1188,18 @@ void GuldenGUI::gotoWebsite()
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
     m_pImpl->receiveCoinsAction->setVisible( true );
-    m_pImpl->sendCoinsAction->setVisible( true );
+    if (pwalletMain->getActiveAccount()->IsReadOnly())
+    {
+        m_pImpl->sendCoinsAction->setVisible( false );
+        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
+        {
+            m_pImpl->gotoReceiveCoinsPage();
+        }
+    }
+    else
+    {
+        m_pImpl->sendCoinsAction->setVisible( true );
+    }
     m_pImpl->historyAction->setVisible( true );
     passwordAction->setVisible( false );
     backupAction->setVisible( false );

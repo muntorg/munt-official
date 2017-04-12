@@ -330,45 +330,4 @@ bool CBitcoinSecret::SetString(const std::string& strSecret)
 }
 
 
-void CBitcoinSecretExt::SetKey(const CExtKey& vchSecret)
-{
-    key = vchSecret;
-    //secret = ToString();
-}
 
-/*CExtKey CBitcoinSecretExt::GetKey()
-{
-    CKey ret;
-    CExtKey retExt;
-    const unsigned char* szSecret = (const unsigned char*)secret.c_str();
-    
-    ret.Set(szSecret, szSecret + 32, secret[32] == 1);
-    retExt.chaincode.SetHex( std::string( secret.begin() + 33, secret.end() ) );
-    return retExt;
-}*/
-
-bool CBitcoinSecretExt::SetString(const char* pszSecret)
-{
-    secret = pszSecret;
-    return true;
-}
-
-
-bool CBitcoinSecretExt::SetString(const std::string& strSecret)
-{
-    secret = strSecret;
-    return true;
-}
-
-std::string CBitcoinSecretExt::ToString(std::string creationtime, std::string payAccount) const
-{
-    std::string ret =  EncodeBase58( key.key.begin(),key.key.end() );
-    ret = ret + "-" + EncodeBase58( key.chaincode.begin(), key.chaincode.end() );
-    
-    const unsigned char* creationTimeRaw = (const unsigned char*)creationtime.c_str();
-    ret = ret + ":" + EncodeBase58( creationTimeRaw, creationTimeRaw + creationtime.length() );
-    
-    ret = ret + ";" + payAccount;
-    
-    return ret;
-}

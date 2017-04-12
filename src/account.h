@@ -122,6 +122,7 @@ public:
      
     std::string getUUID() const;    
     SecureString getMnemonic();
+    SecureString getPubkey();
 
     virtual bool IsLocked() const;
     virtual bool IsCrypted() const;
@@ -214,6 +215,15 @@ public:
             }
         }
         READWRITE(earliestPossibleCreationTime);
+        
+        // Read will fail on older wallets
+        try
+        {
+            READWRITE(m_readOnly);
+        }
+        catch(...)
+        {
+        }
     }
     
     template <typename Stream, typename Operation>
@@ -260,6 +270,8 @@ public:
     void setUUID(const std::string& stringUUID);
     std::string getParentUUID() const;
     
+    bool IsReadOnly() { return m_readOnly; };
+    
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
     mutable CCriticalSection cs_keypool;
@@ -277,6 +289,8 @@ protected:
     std::string accountLabel;
     uint64_t earliestPossibleCreationTime;
     
+    bool m_readOnly;
+    
     CKeyingMaterial vMasterKey;//Memory only.
     friend class CWallet;
 };
@@ -288,6 +302,8 @@ class CAccountHD: public CAccount
 public:
     //Normal construction.
     CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID);
+    //Read only construction.
+    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID);
     //For serialization only.
     CAccountHD(){};
     
@@ -308,7 +324,8 @@ public:
     bool IsHD() const override {return true;};
     uint32_t getIndex();
     std::string getSeedUUID() const;
-    CExtKey* GetAccountMasterPrivKey();   
+    CExtKey* GetAccountMasterPrivKey();
+    SecureString GetAccountMasterPubKeyEncoded();
     
     
     ADD_SERIALIZE_METHODS;

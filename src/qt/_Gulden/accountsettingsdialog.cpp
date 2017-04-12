@@ -111,7 +111,7 @@ void AccountSettingsDialog::showSyncQr()
             return;
         payoutAddress = CBitcoinAddress(vchPubKey.GetID()).ToString();
     
-        QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
+        QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
         ui->addressQRImage->setCode(qrString);
     
         disconnect(this, SLOT( showSyncQr() ));
