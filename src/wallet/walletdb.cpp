@@ -1357,6 +1357,12 @@ bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
     return Write(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
 }
 
+bool CWalletDB::DeleteHDSeed(const CHDSeed& seed)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(std::string("hdseed"), seed.getUUID()));
+}
+
 bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
 {
     nWalletDBUpdated++;

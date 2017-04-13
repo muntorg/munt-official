@@ -142,6 +142,7 @@ public:
     
     //! write the seed (mnemonic / account index counter)
     bool WriteHDSeed(const CHDSeed& seed);
+    bool DeleteHDSeed(const CHDSeed& seed);
     
     bool WritePrimarySeed(const CHDSeed& seed);
     bool WritePrimaryAccount(const CAccount* account);

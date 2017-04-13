@@ -4573,6 +4573,35 @@ CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     return newSeed;
 }
 
+CHDSeed* CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
+{
+    mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
+    if (!CWalletDB(strWalletFile).DeleteHDSeed(*deleteSeed))
+    {
+        throw runtime_error("Deleting seed failed");
+    }
+    
+    //fixme: purge accounts completely if empty?
+    for (const auto& accountPair : pwalletMain->mapAccounts)
+    {
+        if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
+        {
+            //fixme: check balance
+            deleteAccount(accountPair.second);
+        }
+    }
+    
+    if (activeSeed == deleteSeed)
+    {
+        if (mapSeeds.empty())
+            setActiveSeed(NULL);
+        else
+            setActiveSeed(mapSeeds.begin()->second);
+    }
+    
+    delete deleteSeed;
+}
+
 CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))

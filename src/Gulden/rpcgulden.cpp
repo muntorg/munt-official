@@ -520,6 +520,34 @@ UniValue createseed(const UniValue& params, bool fHelp)
     return newSeed->getUUID();
 }
 
+UniValue deleteseed(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+    
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+            "deleteseed \"seed\" \n"
+            "\nDelete a HD seed.\n"
+            "1. \"seed\"        (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
+            "\nResult:\n"
+            "\ntrue on success.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("deleteseed", "")
+            + HelpExampleRpc("deleteseed", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+    
+    CHDSeed* seed = SeedFromValue(params[0], true);  
+    
+    EnsureWalletIsUnlocked();
+    
+    pwalletMain->DeleteSeed(seed, false);
+
+    return true;
+}
+
 UniValue importseed(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -634,7 +662,7 @@ UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
             "1. \"seed\"        (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
             "\nResult:\n"
             "\nReturn the mnemonic as a string.\n"
-            "\nNote it is important to ensure that nobdy gets access to this mnemonic or all funds in accounts made from the seed can be compromised.\n"
+            "\nNote it is important to ensure that nobody gets access to this mnemonic or all funds in accounts made from the seed can be compromised.\n"
             "\nExamples:\n"
             + HelpExampleCli("getmnemonicfromseed", "")
             + HelpExampleRpc("getmnemonicfromseed", ""));
@@ -731,6 +759,7 @@ static const CRPCCommand commands[] =
     { "accounts",           "setactiveaccount",       &setactiveaccount,       true  },
     
     { "mnemonics",          "createseed",             &createseed,             true  },
+    { "mnemonics",          "deleteseed",             &deleteseed,             true  },
     { "mnemonics",          "getactiveseed",          &getactiveseed,          true  },
     { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true  },
     { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true  },

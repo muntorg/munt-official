@@ -6,6 +6,7 @@ Support for read only (watch) HD accounts.
 New RPC commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
 Support for read only (watch) HD seeds.
 New RPC command for read only (watch) HD seeds, getreadonlyseed.
+New 'deleteaccount' RPC command
 Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
 
 1.6.3
