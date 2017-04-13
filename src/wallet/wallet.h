@@ -1169,8 +1169,9 @@ public:
     void setActiveAccount(CAccount* newActiveAccount);
     CAccount* getActiveAccount();
     void setActiveSeed(CHDSeed* newActiveSeed);
-    CHDSeed* GenerateHDSeed();
+    CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
     CHDSeed* ImportHDSeed(SecureString mnemonic);
+    CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
     CHDSeed* getActiveSeed();
     
     CAccount* activeAccount;

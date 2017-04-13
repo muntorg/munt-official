@@ -423,6 +423,9 @@ static void SendMoney(CAccount* fromAccount, const CTxDestination &address, CAmo
 {
     CAmount curBalance = pwalletMain->GetBalance();
 
+    if (fromAccount->IsReadOnly())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Can't send from a read only account");
+        
     // Check amount
     if (nValue <= 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");

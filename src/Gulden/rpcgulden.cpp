@@ -15,7 +15,6 @@
 
 #include <univalue.h>
 
-#include "wallet/wallet.h"
 #include <Gulden/translate.h>
 #include <Gulden/util.h>
 #include <boost/accumulators/accumulators.hpp>
@@ -375,6 +374,7 @@ UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
     if (!account)
         throw runtime_error("Unable to create account.");
     
+    //fixme: Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwalletMain->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
@@ -478,15 +478,23 @@ UniValue setactiveseed(const UniValue& params, bool fHelp)
     return seed->getUUID();
 }
 
+           
 UniValue createseed(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 0)
+    if (fHelp || params.size() > 1)
         throw std::runtime_error(
             "createseed \n"
             "\nCreate a new seed using random entropy.\n"
+            "1. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
+            "\nThe default is correct in almost all cases, only experts should work with the other types\n"
+            "\nBIP44 - This is the standard Gulden seed type that should be used in almost all cases.\n"
+            "\nBIP44NH - (No Hardening) This is the same as above, however with weakened security required for \"read only\" (watch) seed capability, use this only if you understand the implications and if you want to share your seed with another read only wallet.\n"
+            "\nBIP44E - This is a modified BIP44 with a different hash value, required for compatibility with some external wallets (e.g. Coinomi).\n"
+            "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
+            "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -498,7 +506,13 @@ UniValue createseed(const UniValue& params, bool fHelp)
     
     EnsureWalletIsUnlocked();
     
-    CHDSeed *newSeed = pwalletMain->GenerateHDSeed();
+    CHDSeed::SeedType seedType = CHDSeed::CHDSeed::BIP44;
+    if (params.size() > 0)
+    {
+        seedType = SeedTypeFromString(params[0].get_str());
+    }
+    
+    CHDSeed* newSeed = pwalletMain->GenerateHDSeed(seedType);
     
     if(!newSeed)
         throw runtime_error("Failed to generate seed");
@@ -511,11 +525,13 @@ UniValue importseed(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() < 1 || params.size() > 2)
         throw std::runtime_error(
-            "importseed \"mnemonic\" \n"
+            "importseed \"mnemonic or pubkey\" \"read only\" \n"
             "\nSet the currently active seed by UUID.\n"
-            "1. \"mnemonic\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "1. \"mnemonic or pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
+            "2. \"read only\"      (boolean, optional, default=false) Rescan the wallet for transactions\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -527,10 +543,26 @@ UniValue importseed(const UniValue& params, bool fHelp)
     
     EnsureWalletIsUnlocked();
     
-    SecureString mnemonic = params[0].get_str().c_str();
-    CHDSeed* newSeed = pwalletMain->ImportHDSeed(mnemonic);
+    bool fReadOnly = false;
+    if (params.size() > 1)
+        fReadOnly = params[1].get_bool();
+    
+    CHDSeed* newSeed = NULL;
+    if (fReadOnly)
+    {
+        SecureString pubkeyString = params[0].get_str().c_str();
+        newSeed = pwalletMain->ImportHDSeedFromPubkey(pubkeyString);
+    }
+    else
+    {
+        SecureString mnemonic = params[0].get_str().c_str();
+        newSeed = pwalletMain->ImportHDSeed(mnemonic);
+    }
 
-    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    //fixme: Use a timestamp here
+    // Whenever a key is imported, we need to scan the whole chain - do so now
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
     
     return newSeed->getUUID();
 }
@@ -617,20 +649,35 @@ UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
     return seed->getMnemonic().c_str();
 }
 
-std::string StringFromSeedType(CHDSeed* seed)
+UniValue getreadonlyseed(const UniValue& params, bool fHelp)
 {
-    switch(seed->m_type)
-    {
-        case CHDSeed::CHDSeed::BIP32:
-            return "BIP32";
-        case CHDSeed::CHDSeed::BIP32Legacy:
-            return "BIP32 Legacy";
-        case CHDSeed::CHDSeed::BIP44:
-            return "BIP44";
-        case CHDSeed::CHDSeed::BIP44External:
-            return "BIP44 External";
-    }
-    return "unknown";
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+    
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+            "getreadonlyseed \"seed\" \n"
+            "\nGet the public key of an HD seed, this can be used to import the seed as a read only seed in another wallet.\n"
+            "1. \"seed\"        (string, required) The unique UUID for the seed that we want the public key of, or \"\" for the active seed.\n"
+            "\nNote the seed must be a 'non hardened' BIP44NH seed and not a regular seed.\n"
+            "\nResult:\n"
+            "\nReturn the public key as a string.\n"
+            "\nNote it is important to be careful with and protect access to this public key as if it is compromised it can weaken security in cases where private keys are also compromised.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getreadonlyseed", "")
+            + HelpExampleRpc("getreadonlyseed", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+    
+    CHDSeed* seed = SeedFromValue(params[0], true);
+    
+    if (seed->m_type != CHDSeed::SeedType::BIP44NoHardening)
+        throw runtime_error("Can only use command with a non-hardened BIP44 seed");
+    
+    EnsureWalletIsUnlocked();
+
+    return seed->getPubkey().c_str();
 }
 
 UniValue listseeds(const UniValue& params, bool fHelp)
@@ -656,6 +703,8 @@ UniValue listseeds(const UniValue& params, bool fHelp)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", seedPair.first));
         rec.push_back(Pair("type", StringFromSeedType(seedPair.second)));
+        if (seedPair.second->IsReadOnly())
+            rec.push_back(Pair("readonly", "true"));
         AllSeeds.push_back(rec);
     }
     
@@ -684,6 +733,7 @@ static const CRPCCommand commands[] =
     { "mnemonics",          "createseed",             &createseed,             true  },
     { "mnemonics",          "getactiveseed",          &getactiveseed,          true  },
     { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true  },
+    { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true  },
     { "mnemonics",          "setactiveseed",          &setactiveseed,          true  },
     { "mnemonics",          "importseed",             &importseed,             true  },
     { "mnemonics",          "listseeds",              &listseeds,              true  },

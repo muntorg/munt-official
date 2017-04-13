@@ -6,6 +6,11 @@
 #ifndef GULDEN_UTIL_H
 #define GULDEN_UTIL_H
 
+#include <string>
+#include "wallet/wallet.h"
+
 void rescanThread();
+std::string StringFromSeedType(CHDSeed* seed);
+CHDSeed::SeedType SeedTypeFromString(std::string type);
 
 #endif

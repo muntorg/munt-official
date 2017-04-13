@@ -117,6 +117,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setban", 3 },
     { "getmempoolancestors", 1 },
     { "getmempooldescendants", 1 },
+    { "importseed", 1 },
 };
 
 class CRPCConvertTable

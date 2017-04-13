@@ -21,6 +21,7 @@ CHDSeed::CHDSeed()
 : m_nAccountIndex(HDDesktopStartIndex)
 , m_nAccountIndexMobi(HDMobileStartIndex)
 , encrypted(false)
+, m_readOnly(false)
 {
 }
 
@@ -30,10 +31,31 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 , m_nAccountIndex(HDDesktopStartIndex)
 , m_nAccountIndexMobi(HDMobileStartIndex)
 , encrypted(false)
+, m_readOnly(false)
 {
     //fixme: GULDEN (FUT) (1.6.1) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
     unencryptedMnemonic = mnemonic;
     Init();
+}
+
+CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
+: m_type(type)
+, m_UUID(boost::uuids::nil_generator()())
+, m_nAccountIndex(HDDesktopStartIndex)
+, m_nAccountIndexMobi(HDMobileStartIndex)
+, encrypted(false)
+, m_readOnly(true)
+{
+    unencryptedMnemonic = "";
+    masterKeyPub = pubkey;
+    
+    //Random key - not actually used, but written to disk to avoid unnecessary complexity in serialisation code
+    masterKeyPriv.GetMutableKey().MakeNewKey(true);
+    assert(masterKeyPriv.key.IsValid());
+    cointypeKeyPriv.GetMutableKey().MakeNewKey(true);
+    purposeKeyPriv.GetMutableKey().MakeNewKey(true);
+    
+    InitReadOnly();
 }
 
 void CHDSeed::Init()
@@ -66,6 +88,12 @@ void CHDSeed::Init()
                 purposeKeyPriv.Derive(cointypeKeyPriv, 87 | BIP32_HARDENED_KEY_LIMIT);  //m/44'/87'
             }
             break;
+        case BIP44NoHardening:
+            {
+                masterKeyPriv.Derive(purposeKeyPriv, 44);  //m/44
+                purposeKeyPriv.Derive(cointypeKeyPriv, 87);  //m/44/87
+            }
+            break;
         default:
             assert(0);
     }
@@ -79,8 +107,17 @@ void CHDSeed::Init()
     }
 }
 
-
-
+void CHDSeed::InitReadOnly()
+{   
+    assert(m_type == BIP44NoHardening);
+    masterKeyPub.Derive(purposeKeyPub, 44);  //m/44
+    purposeKeyPub.Derive(cointypeKeyPub, 87);  //m/44/87
+    
+    if(m_UUID.is_nil())
+    {
+        m_UUID = boost::uuids::random_generator()();
+    }
+}
 
 
 CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
@@ -119,25 +156,36 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
 
 CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
 {
-    if(IsLocked())
+    if (IsLocked())
         return NULL;
-    
+        
     CExtKey accountKey;
-    switch (m_type)
+    if ( IsReadOnly() )
     {
-        case BIP32:
-        case BIP32Legacy:
-            masterKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/n' (BIP32) 
-            break;
-        case BIP44:
-        case BIP44External:
-            cointypeKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/87'/n' (BIP44)
-            break;
-        default:
-            assert(0);
-    }   
-    
-    return new CAccountHD(accountKey, m_UUID);
+        CExtPubKey accountKeyPub;
+        cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/87/n (BIP44)
+        return new CAccountHD(accountKeyPub, m_UUID);
+    }
+    else
+    {
+        switch (m_type)
+        {
+            case BIP32:
+            case BIP32Legacy:
+                masterKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/n' (BIP32) 
+                break;
+            case BIP44:
+            case BIP44External:
+                cointypeKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/87'/n' (BIP44)
+                break;
+            case BIP44NoHardening:
+                cointypeKeyPriv.Derive(accountKey, nAccountIndex);  // m/44'/87'/n (BIP44 without hardening (for read only sync))
+                break;
+            default:
+                assert(0);
+        }      
+        return new CAccountHD(accountKey, m_UUID);
+    }
 }
 
 
@@ -159,7 +207,7 @@ SecureString CHDSeed::getPubkey()
 
 bool CHDSeed::IsLocked() const
 {
-    if (unencryptedMnemonic.size() > 0)
+    if (unencryptedMnemonic.size() > 0 || m_readOnly)
     {
         return false;
     }

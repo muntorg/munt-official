@@ -82,7 +82,7 @@ void ThreadShadowPoolManager()
             for (const auto& seedIter : pwalletMain->mapSeeds)
             {
                 //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
-                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44)
+                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
                     continue;
                 
                 for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi })
@@ -2698,6 +2698,12 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
 bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
+    if (forAccount->IsReadOnly())
+    {
+        strFailReason = _("Can't send from read only (watch) account.");
+        return false;
+    }
+        
     CAmount nValue = 0;
     int nChangePosRequest = nChangePosInOut;
     unsigned int nSubtractFeeFromAmount = 0;
@@ -4541,7 +4547,7 @@ void CWallet::setActiveSeed(CHDSeed* newActiveSeed)
     }
 }
 
-CHDSeed* CWallet::GenerateHDSeed()
+CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
@@ -4550,7 +4556,48 @@ CHDSeed* CWallet::GenerateHDSeed()
     
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), CHDSeed::CHDSeed::BIP44);
+    CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), seedType);
+    if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
+    {
+        throw runtime_error("Writing seed failed");
+    }
+    if (IsCrypted())
+    {
+        if (!newSeed->Encrypt(activeAccount->vMasterKey))
+        {
+            throw runtime_error("Encrypting seed failed");
+        }
+    }
+    mapSeeds[newSeed->getUUID()] = newSeed;
+    
+    return newSeed;
+}
+
+CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
+{
+    if (IsCrypted() && (!activeAccount || IsLocked()))
+    {
+        throw runtime_error("Generating seed requires unlocked wallet");
+    }
+    
+    CExtPubKey pubkey;
+    try
+    {
+        CBitcoinSecretExt<CExtPubKey> secretExt;
+        secretExt.SetString(pubKeyString.c_str());
+        pubkey = secretExt.GetKey();
+    }
+    catch(...)
+    {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+    
+    if (!pubkey.pubkey.IsValid())
+    {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+
+    CHDSeed* newSeed = new CHDSeed(pubkey, CHDSeed::CHDSeed::BIP44NoHardening);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
     {
         throw runtime_error("Writing seed failed");
