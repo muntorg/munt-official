@@ -10,6 +10,8 @@ New RPC command for read only (watch) HD seeds, getreadonlyseed.
 New 'deleteaccount' RPC command
 Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
 Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message) 
+Merge a bug fix from user 'mezrin' for 'dumpwallet' RPC command.
+Fix a bug in RPC command 'gettransaction' where transaction would not show if 'rpconlylistsecuredtransactions' flag was set to false.
 
 1.6.3
 

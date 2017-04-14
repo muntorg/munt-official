@@ -1515,7 +1515,7 @@ static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
         entry.push_back(Pair("address", addr.ToString()));
 }
 
-void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter)
+void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter, bool ignorerpconlylistsecuredtransactions=false)
 {
     CAmount nFee;
     string strSentAccount;
@@ -1525,7 +1525,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
     // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
     bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
     //fixme: Get checkpoints working for testnet.
-    if (GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !GetBoolArg("-testnet", false) ))
+    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !GetBoolArg("-testnet", false) ))
         return;
     
     std::vector<CAccount*> doForAccounts;
@@ -2000,7 +2000,7 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
     WalletTxToJSON(wtx, entry);
 
     UniValue details(UniValue::VARR);
-    ListTransactions(wtx, "*", 0, false, details, filter);
+    ListTransactions(wtx, "*", 0, false, details, filter, true);
     entry.push_back(Pair("details", details));
 
     string strHex = EncodeHexTx(static_cast<CTransaction>(wtx));
