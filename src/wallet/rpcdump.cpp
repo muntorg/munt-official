@@ -635,6 +635,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
             } else {
                 file << "change=1";
             }
+            file << strprintf(" # addr=%s\n", strAddr);
         }
     }
     file << "\n";
