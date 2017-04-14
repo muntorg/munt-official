@@ -70,6 +70,11 @@ public:
     CHDSeed();
     CHDSeed(SecureString mnemonic, SeedType type);
     CHDSeed(CExtPubKey& pubkey, SeedType type);
+    virtual ~CHDSeed()
+    {
+        //fixme: Check if any cleanup needed here?
+    }
+    
     void Init();
     void InitReadOnly();
     CAccountHD* GenerateAccount(AccountSubType type, CWalletDB* Db);

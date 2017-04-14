@@ -356,7 +356,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     bool didShowError=false;
     for (auto& account : accountsToTry)
     {
-        if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) > currentTransaction.getTotalTransactionAmount())
+        //fixme: Check if 'spend unconfirmed' is checked or not.
+        if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) >= currentTransaction.getTotalTransactionAmount())
         {
             if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
                 prepareStatus = model->prepareTransaction(account, currentTransaction, CoinControlDialog::coinControl);

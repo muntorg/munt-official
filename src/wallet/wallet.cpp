@@ -782,6 +782,13 @@ bool CWallet::Verify()
     
     if (boost::filesystem::exists(GetDataDir() / walletFile))
     {
+        // Check file permissions.
+        {
+            std::fstream testPerms((GetDataDir() / walletFile).string(), ios::in | ios::out | ios::app);
+            if (!testPerms.is_open())
+                return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+        }
+        
         CDBEnv::VerifyResult r = bitdb.Verify(walletFile, CWalletDB::Recover);
         if (r == CDBEnv::RECOVER_OK)
         {
@@ -4573,7 +4580,7 @@ CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     return newSeed;
 }
 
-CHDSeed* CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
+void CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
 {
     mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
     if (!CWalletDB(strWalletFile).DeleteHDSeed(*deleteSeed))

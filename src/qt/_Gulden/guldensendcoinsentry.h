@@ -32,7 +32,7 @@ public:
     void setModel(WalletModel *model);
     bool validate();
     SendCoinsRecipient::PaymentType getPaymentType(const QString& fromAddress);
-    SendCoinsRecipient getValue();
+    SendCoinsRecipient getValue(bool showWarningDialogs=true);
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();

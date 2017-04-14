@@ -1,5 +1,6 @@
 1.6.4
 
+UX improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
 New menu item for importing private keys.
 Modify createaccount RPC command so that it can also create legacy accounts.
 Support for read only (watch) HD accounts.
@@ -8,6 +9,7 @@ Support for read only (watch) HD seeds.
 New RPC command for read only (watch) HD seeds, getreadonlyseed.
 New 'deleteaccount' RPC command
 Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
+Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message) 
 
 1.6.3
 

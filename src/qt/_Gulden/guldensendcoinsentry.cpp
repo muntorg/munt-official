@@ -164,7 +164,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *model)
 
 void GuldenSendCoinsEntry::addressChanged()
 {
-    SendCoinsRecipient val = getValue();
+    SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
     {
     }
@@ -264,7 +264,7 @@ bool GuldenSendCoinsEntry::validate()
     if (recipient.paymentRequest.IsInitialized())
         return retval;
 
-    SendCoinsRecipient val = getValue();
+    SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
     {
         ui->receivingAddress->setProperty("valid", false);
@@ -352,7 +352,7 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
     return ret;
 }
 
-SendCoinsRecipient GuldenSendCoinsEntry::getValue()
+SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 {
     // Payment request
     if (recipient.paymentRequest.IsInitialized())
@@ -362,6 +362,25 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue()
     recipient.addToAddressBook = false;
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->valueForCurrency();
+    
+    
+            
+    //fixme: GULDEN - give user a choice here.
+    //fixme: Check if 'spend unconfirmed' is checked or not.
+    if (recipient.amount >= ( pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount()) ))
+    {
+        if (showWarningDialogs)
+        {
+            QString message = tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
+            QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), "", 400, 180);
+            d->exec();
+        }
+    
+        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount());
+        recipient.fSubtractFeeFromAmount = true;
+    }
+    
+    
     //fixme: GULDEN - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();        
     
