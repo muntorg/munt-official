@@ -10,6 +10,7 @@
         <file alias="guldensign">_Gulden/fonts/guldensign.ttf</file>
         <file alias="qss">_Gulden/Gulden.qss</file>
         <file alias="import">_Gulden/res/Import.png</file>
+        <file alias="rescan">_Gulden/res/Rescan.png</file>
         <file alias="lato_black">_Gulden/fonts/Lato-Black.ttf</file>
         <file alias="lato_blackitalic">_Gulden/fonts/Lato-BlackItalic.ttf</file>
         <file alias="lato_bold">_Gulden/fonts/Lato-Bold.ttf</file>

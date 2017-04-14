@@ -184,6 +184,7 @@ void Interrupt(boost::thread_group& threadGroup)
 
 void Shutdown()
 {
+    fRequestShutdown = true;
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
     TRY_LOCK(cs_Shutdown, lockShutdown);

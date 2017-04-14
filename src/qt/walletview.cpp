@@ -161,7 +161,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
         connect(walletModel, SIGNAL(requireUnlock()), this, SLOT(unlockWallet()));
 
         // Show progress dialog
-        connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+        //connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
     }
 }
 
@@ -343,7 +343,7 @@ void WalletView::showProgress(const QString &title, int nProgress)
     if (nProgress == 0)
     {
         progressDialog = new QProgressDialog(title, "", 0, 100);
-        progressDialog->setWindowModality(Qt::ApplicationModal);
+        progressDialog->setModal(false);
         progressDialog->setMinimumDuration(0);
         progressDialog->setCancelButton(0);
         progressDialog->setAutoClose(false);

@@ -1,7 +1,9 @@
 1.6.4
 
-UX improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
-New menu item for importing private keys.
+UI - Improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
+UI - New menu item for importing private keys.
+UI - New menu item to allow users to easily rescan without having to use command line flags or mess around in RPC console.
+UI - Improve the way rescan (and other actions that require progress) display in the program.
 Modify createaccount RPC command so that it can also create legacy accounts.
 Support for read only (watch) HD accounts.
 New RPC commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.

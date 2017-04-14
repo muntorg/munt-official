@@ -181,6 +181,7 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , accountScrollArea( NULL )
 , toolsMenu( NULL )
 , importPrivateKeyAction( NULL )
+, rescanAction( NULL )
 , accountSummaryWidget( NULL )   
 , dialogNewAccount( NULL )
 , dialogAccountSettings( NULL )
@@ -314,11 +315,15 @@ void GuldenGUI::createMenusGulden()
 
     importPrivateKeyAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
     importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
-    importPrivateKeyAction->setCheckable(false);
-    
+    importPrivateKeyAction->setCheckable(false);   
     toolsMenu->addAction(importPrivateKeyAction);
-    
     connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
+    
+    rescanAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
+    rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    rescanAction->setCheckable(false);   
+    toolsMenu->addAction(rescanAction);
+    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
 }
 
 void GuldenGUI::createToolBarsGulden()
@@ -1178,6 +1183,13 @@ void GuldenGUI::promptImportPrivKey()
         pwalletMain->nTimeFirstKey = 1;
         boost::thread t(rescanThread); // thread runs free
     }
+}
+
+void GuldenGUI::promptRescan()
+{
+    // Whenever a key is imported, we need to scan the whole chain - do so now
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
 }
 
 void GuldenGUI::gotoWebsite()

@@ -24,6 +24,7 @@
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #endif
+#include "account.h"
 
 #include <stdint.h>
 
@@ -104,8 +105,11 @@ UniValue getinfo(const UniValue& params, bool fHelp)
 #ifdef ENABLE_WALLET
     if (pwalletMain) {
         obj.push_back(Pair("keypoololdest", pwalletMain->GetOldestKeyPoolTime()));
-	//fixme: (GULDEN) (BIP44)
-        obj.push_back(Pair("keypoolsize",   (int)pwalletMain->activeAccount->GetKeyPoolSize()));
+        //fixme: (GULDEN) (BIP44)
+        {
+            LOCK(pwalletMain->activeAccount->cs_keypool);
+            obj.push_back(Pair("keypoolsize",   (int)pwalletMain->activeAccount->GetKeyPoolSize()));
+        }
     }
     obj.push_back(Pair("mininput",      ValueFromAmount(nMinimumInputValue)));
     if (pwalletMain && pwalletMain->IsCrypted())

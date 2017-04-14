@@ -7,9 +7,14 @@
 #include "wallet/wallet.h"
 #include "main.h"
 
+static bool alreadyInRescan = false;
 void rescanThread()
 {
+    if (alreadyInRescan)
+        return;
+    alreadyInRescan = true;
     pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    alreadyInRescan = false;
 }
 
 std::string StringFromSeedType(CHDSeed* seed)

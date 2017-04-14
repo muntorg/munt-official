@@ -141,6 +141,7 @@ private:
     
     QMenu* toolsMenu;
     QAction* importPrivateKeyAction;
+    QAction* rescanAction;
     
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
@@ -191,6 +192,7 @@ private Q_SLOTS:
     void accountDeleted(CAccount* account);
     void accountButtonPressed();
     void promptImportPrivKey();
+    void promptRescan();
     void gotoWebsite();
     void gotoNewAccountDialog();
     void gotoPasswordDialog();

@@ -34,6 +34,7 @@
 #include "ui_interface.h"
 #include "utilmoneystr.h"
 #include "account.h"
+#include "init.h"
 
 #include <assert.h>
 #include "script/ismine.h"
@@ -1949,13 +1950,18 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
         double dProgressTip = Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), chainActive.Tip(), false);
         while (pindex)
         {
+            LEAVE_CRITICAL_SECTION(cs_main)
+            LEAVE_CRITICAL_SECTION(cs_wallet)
             if (pindex->nHeight % 100 == 0 && dProgressTip - dProgressStart > 0.0)
             {
                 // Temporarily release lock to allow shadow key allocation a chance to do it's thing
-                LEAVE_CRITICAL_SECTION(cs_wallet)
                 ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), pindex, false) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
-                ENTER_CRITICAL_SECTION(cs_wallet)
             }
+            ENTER_CRITICAL_SECTION(cs_main)
+            ENTER_CRITICAL_SECTION(cs_wallet)
+            
+            if (ShutdownRequested())
+                return ret;
 
             CBlock block;
             ReadBlockFromDisk(block, pindex, Params().GetConsensus());
