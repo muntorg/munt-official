@@ -1170,7 +1170,8 @@ void BitcoinGUI::showProgress(const QString &title, int nProgress)
         if (!progressBar->isVisible() || progressBarLabel->text() == title)
         {
             progressBarLabel->setText(title);
-            progressBar->setValue(nProgress * 1000000000.0 + 0.5);
+            progressBar->setMaximum(1000000000);
+            progressBar->setValue(nProgress * 10000000.0 + 0.5);
             progressBarLabel->setVisible(true);
             progressBar->setVisible(true);
             m_pGuldenImpl->showProgressBarLabel();
