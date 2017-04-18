@@ -904,7 +904,7 @@ UniValue movecmd(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. \"fromaccount\"   (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
             "2. \"toaccount\"     (string, required) The UUID or unique label of the account to move funds to. May be the currently active account using \"\".\n"
-            "3. amount            (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts.\n"
+            "3. amount            (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
             "4. minconf           (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"       (string, optional) An optional comment, stored in the wallet only.\n"
             "\nResult:\n"
@@ -927,22 +927,32 @@ UniValue movecmd(const UniValue& params, bool fHelp)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, string("From and to account are the same"));
     }
-    
-    CAmount nAmount = AmountFromValue(params[2]);
+        
     int nMinDepth = 0;
-    if (nAmount <= 0)
-        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
     if (params.size() > 3)
         nMinDepth = params[3].get_int();
     string strComment;
     if (params.size() > 4)
         strComment = params[4].get_str();
+    
+    bool subtractFeeFromAmount = false;
+    CAmount nBalance = pwalletMain->GetAccountBalance(fromAccount->getUUID(), nMinDepth, ISMINE_SPENDABLE);
+    CAmount nAmount = 0;
+    if (params[2].getValStr() == "-1")
+    {
+        subtractFeeFromAmount = true;
+        nAmount = nBalance;
+    }
+    else
+        nAmount = AmountFromValue(params[2]);
+    
+    if (nAmount <= 0)
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
 
 
     EnsureWalletIsUnlocked();
 
     // Check funds
-    CAmount nBalance = pwalletMain->GetAccountBalance(fromAccount->getUUID(), nMinDepth, ISMINE_SPENDABLE);
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
@@ -957,7 +967,7 @@ UniValue movecmd(const UniValue& params, bool fHelp)
     if (!receiveKey.GetReservedKey(vchPubKey))
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
     
-    SendMoney(fromAccount, vchPubKey.GetID(), nAmount, false, wtx);
+    SendMoney(fromAccount, vchPubKey.GetID(), nAmount, subtractFeeFromAmount, wtx);
 
     receiveKey.KeepKey();
     
