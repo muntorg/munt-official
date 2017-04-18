@@ -356,7 +356,10 @@ void ReceiveCoinsDialog::generateRequest()
     CReserveKey reservekey(pwalletMain, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
+    {
+        //fixme: (GULDEN) Better error handling.
         return;
+    }
     reservekey.KeepKey();
     
     
@@ -474,10 +477,20 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
         
         buyReceiveAddress = new CReserveKey(pwalletMain, currentAccount, KEYCHAIN_EXTERNAL);
         CPubKey pubKey;
-        buyReceiveAddress->GetReservedKey(pubKey);
-        CKeyID keyID = pubKey.GetID();
-            
-        QString guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        QString guldenAddress;
+        
+        
+        if (!buyReceiveAddress->GetReservedKey(pubKey))
+        {
+            //fixme: better error handling
+            guldenAddress = "error";
+        }
+        else
+        {
+            CKeyID keyID = pubKey.GetID();
+            guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        }
+        
         //fixme: (FUT) (1.6.1) fill proper email address etc. here
         QString emailAddress = QString("");
         QString paymentMethod = QString("");

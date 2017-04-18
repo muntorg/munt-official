@@ -1070,9 +1070,15 @@ void GuldenGUI::updateAccount(CAccount* account)
     
     receiveAddress = new CReserveKey(pwalletMain, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
-    receiveAddress->GetReservedKey(pubKey);
-    CKeyID keyID = pubKey.GetID();
-    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CBitcoinAddress(keyID).ToString()) );
+    if (receiveAddress->GetReservedKey(pubKey))
+    {
+        CKeyID keyID = pubKey.GetID();
+        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CBitcoinAddress(keyID).ToString()) );
+    }
+    else
+    {
+        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
+    }
     m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account) ;
 }
 

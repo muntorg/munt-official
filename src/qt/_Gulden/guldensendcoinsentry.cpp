@@ -422,7 +422,13 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
                     CReserveKey key(pwalletMain, pwalletMain->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
                     CPubKey pubKey;
-                    key.GetReservedKey(pubKey);
+                    if (!key.GetReservedKey(pubKey))
+                    {
+                        //fixme: (GULDEN) Better error handling
+                        recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                        recipient.address = QString("error");
+                        return recipient;
+                    }
                     key.KeepKey();
                     CKeyID keyID = pubKey.GetID();
                     recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
