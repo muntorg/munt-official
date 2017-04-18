@@ -1637,7 +1637,7 @@ isminetype CWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
 }
 
 
-bool IsMine(CAccount* forAccount, const CWalletTx& tx)
+bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
 {
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& txout : tx.vout)
@@ -2103,7 +2103,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
     return credit;
 }
 
-CAmount CWalletTx::GetImmatureCredit(bool fUseCache) const
+CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount) const
 {
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
     {
@@ -2117,7 +2117,7 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache) const
     return 0;
 }
 
-CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
+CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount) const
 {
     if (pwallet == 0)
         return 0;
@@ -2127,7 +2127,10 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
         return 0;
 
     if (fUseCache && fAvailableCreditCached)
-        return nAvailableCreditCached;
+        if (!forAccount)
+            return nAvailableCreditCached;
+    if (fUseCache && availableCreditForAccountCached.find(forAccount) != availableCreditForAccountCached.end())
+        return availableCreditForAccountCached[forAccount];
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
@@ -2136,14 +2139,22 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
         if (!pwallet->IsSpent(hashTx, i))
         {
             const CTxOut &txout = vout[i];
-            nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-            if (!MoneyRange(nCredit))
-                throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            if (!forAccount || IsMine(*forAccount, txout.scriptPubKey))
+            {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            }
         }
     }
 
-    nAvailableCreditCached = nCredit;
-    fAvailableCreditCached = true;
+    if (forAccount)
+        availableCreditForAccountCached[forAccount] = nCredit;
+    else
+    {
+        nAvailableCreditCached = nCredit;
+        fAvailableCreditCached = true;
+    }
     return nCredit;
 }
 
@@ -2306,7 +2317,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime)
  */
 
 
-CAmount CWallet::GetBalance(CAccount* forAccount) const
+CAmount CWallet::GetBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
@@ -2318,7 +2329,7 @@ CAmount CWallet::GetBalance(CAccount* forAccount) const
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (pcoin->IsTrusted())
-                    nTotal += pcoin->GetAvailableCredit();
+                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
             }
         }
     }
@@ -2326,7 +2337,7 @@ CAmount CWallet::GetBalance(CAccount* forAccount) const
     return nTotal;
 }
 
-CAmount CWallet::GetUnconfirmedBalance(CAccount* forAccount) const
+CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
@@ -2338,14 +2349,14 @@ CAmount CWallet::GetUnconfirmedBalance(CAccount* forAccount) const
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
-                    nTotal += pcoin->GetAvailableCredit();
+                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
             }
         }
     }
     return nTotal;
 }
 
-CAmount CWallet::GetImmatureBalance() const
+CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
@@ -2353,7 +2364,10 @@ CAmount CWallet::GetImmatureBalance() const
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            nTotal += pcoin->GetImmatureCredit();
+            if (!forAccount || ::IsMine(forAccount, *pcoin))
+            {
+                nTotal += pcoin->GetImmatureCredit(true, forAccount);
+            }
         }
     }
     return nTotal;
@@ -2439,7 +2453,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
             for (unsigned int i = 0; i < pcoin->vout.size(); i++)
             {
                 isminetype mine = ::IsMine(*forAccount, pcoin->vout[i].scriptPubKey);
-                if (!(IsSpent(wtxid, i)) && mine != ISMINE_NO &&
+                 if (!(IsSpent(wtxid, i)) && mine != ISMINE_NO &&
                     !IsLockedCoin((*it).first, i) && (pcoin->vout[i].nValue > nMinimumInputValue || fIncludeZeroValue) &&
                     (!coinControl || !coinControl->HasSelected() || coinControl->fAllowOtherInputs || coinControl->IsSelected(COutPoint((*it).first, i))))
                         vCoins.push_back(COutput(pcoin, i, nDepth,
@@ -3684,7 +3698,7 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
             CAmount nReceived, nSent, nFee;
             wtx.GetAccountAmounts(strAccount, nReceived, nSent, nFee, filter);
 
-            if (nReceived != 0 && wtx.GetDepthInMainChain() >= nMinDepth)
+            if (wtx.GetDepthInMainChain() >= nMinDepth)
             {
                 nBalance += nReceived;
                 nBalance -= nSent /*+ nFee*/;
@@ -3693,6 +3707,7 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
     }
 
     // Tally internal accounting entries
+    //fixme: (GULDEN) Does this actually serve any purpose here?
     nBalance += walletdb.GetAccountCreditDebit(strAccount);
     
     

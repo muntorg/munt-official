@@ -302,6 +302,7 @@ public:
     mutable bool fCreditCached;
     mutable bool fImmatureCreditCached;
     mutable bool fAvailableCreditCached;
+    mutable std::map<const CAccount*, CAmount> availableCreditForAccountCached;
     mutable bool fWatchDebitCached;
     mutable bool fWatchCreditCached;
     mutable bool fImmatureWatchCreditCached;
@@ -434,8 +435,8 @@ public:
     //! filter decides which addresses will count towards the debit
     CAmount GetDebit(const isminefilter& filter) const;
     CAmount GetCredit(const isminefilter& filter) const;
-    CAmount GetImmatureCredit(bool fUseCache=true) const;
-    CAmount GetAvailableCredit(bool fUseCache=true) const;
+    CAmount GetImmatureCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
+    CAmount GetAvailableCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true) const;
     CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true) const;
     CAmount GetChange() const;
@@ -989,9 +990,9 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime);
-    CAmount GetBalance(CAccount* forAccount = NULL) const;
-    CAmount GetUnconfirmedBalance(CAccount* forAccount = NULL) const;
-    CAmount GetImmatureBalance() const;
+    CAmount GetBalance(const CAccount* forAccount = NULL) const;
+    CAmount GetUnconfirmedBalance(const CAccount* forAccount = NULL) const;
+    CAmount GetImmatureBalance(const CAccount* forAccount = NULL) const;
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
