@@ -1252,7 +1252,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
-        <translation type="unfinished">Voer ontvangstadres in (Gulden, Bitcoin, IBAN)</translation>
+        <translation type="unfinished">Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -1279,8 +1279,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Dit is een normale betaling.</translation>
     </message>
     <message>
-        <source>Enter receiving address (Gulden, Bitcoin, IBAN)</source>
-        <translation type="unfinished">Voer ontvangstadres in (Gulden, Bitcoin, IBAN)</translation>
+        <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
+        <translation type="unfinished">Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
