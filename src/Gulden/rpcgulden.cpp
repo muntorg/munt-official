@@ -230,7 +230,7 @@ UniValue deleteaccount(const UniValue& params, bool fHelp)
     if (params.size() == 1 || params[1].get_str() != "force")
     {
         CAmount balance = pwalletMain->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
-        if (balance > MINIMUM_VALUABLE_AMOUNT)
+        if (balance > MINIMUM_VALUABLE_AMOUNT && ! account->IsReadOnly())
         {
             throw runtime_error("Account not empty, please first empty your account before trying to delete it.");
         }

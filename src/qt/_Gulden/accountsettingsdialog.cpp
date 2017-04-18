@@ -139,7 +139,7 @@ void AccountSettingsDialog::deleteAccount()
     if (activeAccount)
     {
         CAmount balance = pwalletMain->GetAccountBalance(activeAccount->getUUID(), 0, ISMINE_SPENDABLE, true );
-        if (balance > MINIMUM_VALUABLE_AMOUNT)
+        if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");
             QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), QString(""), 400, 180);
