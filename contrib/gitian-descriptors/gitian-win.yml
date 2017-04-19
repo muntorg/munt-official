@@ -26,10 +26,14 @@ packages:
 - "ruby"
 - "bison"
 - "flex"
+- "libssl-dev"
 remotes:
 - "url": "https://github.com/bitcoin/bitcoin.git"
   "dir": "bitcoin"
-files: []
+files:
+- "osslsigncode-1.7.1.tar.gz"
+- "osslsigncode-Backports-to-1.7.1.patch"
+- "codesign.tar.gz"    #Place an empty file if no code signing required.
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-w64-mingw32 i686-w64-mingw32"
@@ -106,6 +110,19 @@ script: |
   create_per-host_linker_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
+  echo "f9a8cdb38b9c309326764ebc937cba1523a3a751a7ab05df3ecc99d18ae466c9  osslsigncode-1.7.1.tar.gz" | sha256sum -c
+  echo "a8c4e9cafba922f89de0df1f2152e7be286aba73f78505169bc351a7938dd911  osslsigncode-Backports-to-1.7.1.patch" | sha256sum -c
+  tar xf osslsigncode-1.7.1.tar.gz
+  cd osslsigncode-1.7.1
+  patch -p1 < ${BUILD_DIR}/osslsigncode-Backports-to-1.7.1.patch
+  ./configure --without-gsf --without-curl --disable-dependency-tracking
+  make
+  make install
+  cd ..
+
+  mkdir codesign
+  tar -xf codesign.tar.gz # | true
+
   cd bitcoin
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
@@ -155,9 +172,19 @@ script: |
     cp -rf /usr/${i}/lib/libwinpthread-1.dll release/
     cp -rf /usr/lib/gcc/${i}/4.8/*.dll release/
     make ${MAKEOPTS}
+
+    find . -name "*.exe" | while read i; do
+      osslsigncode -spc "${BUILD_DIR}/codesign.spc" -key "${BUILD_DIR}/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "{$i}" -out "${i}" #| true
+    done
+
     make ${MAKEOPTS} -C src check-security
     make deploy
     make install DESTDIR=${INSTALLPATH}
+
+    find . -name "*.exe" | while read i; do
+      osslsigncode -spc "${BUILD_DIR}/codesign.spc" -key "${BUILD_DIR}/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "{$i}" -out "${i}" #| true
+    done
+
     cp -f bitcoin-*setup*.exe $OUTDIR/
     cd installed
     find . -name "lib*.la" -delete
@@ -171,8 +198,8 @@ script: |
     rm -rf distsrc-${i}
   done
   cd $OUTDIR
-  rename 's/-setup\.exe$/-setup-unsigned.exe/' *-setup.exe
-  find . -name "*-setup-unsigned.exe" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-win-unsigned.tar.gz
+  #rename 's/-setup\.exe$/-setup-unsigned.exe/' *-setup.exe
+  find . -name "*-setup.exe" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-win.tar.gz
   mv ${OUTDIR}/${DISTNAME}-x86_64-*-debug.zip ${OUTDIR}/${DISTNAME}-win64-debug.zip
   mv ${OUTDIR}/${DISTNAME}-i686-*-debug.zip ${OUTDIR}/${DISTNAME}-win32-debug.zip
   mv ${OUTDIR}/${DISTNAME}-x86_64-*.zip ${OUTDIR}/${DISTNAME}-win64.zip
