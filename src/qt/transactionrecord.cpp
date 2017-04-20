@@ -179,6 +179,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 sub.idx = parts.size();
                 sub.involvesWatchAddress = involvesWatchAddress;
                 sub.credit = sub.debit = 0;
+                bool anyAreMine = false;
                 for (unsigned int nOut = 0; nOut < wtx.vout.size(); nOut++)
                 {
                     const CTxOut& txout = wtx.vout[nOut];
@@ -186,11 +187,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         continue;
                     }
+                    anyAreMine = true;
 
                     CAmount nValue = txout.nValue;
                     sub.credit += nValue;
                 }
-                parts.append(sub);
+                if (anyAreMine)
+                    parts.append(sub);
             }
             else if (fAllFromMe)
             {

@@ -117,7 +117,6 @@ script: |
   patch -p1 < ${BUILD_DIR}/osslsigncode-Backports-to-1.7.1.patch
   ./configure --without-gsf --without-curl --disable-dependency-tracking
   make
-  make install
   cd ..
 
   mkdir codesign
@@ -174,15 +173,17 @@ script: |
     make ${MAKEOPTS}
 
     find . -name "*.exe" | while read i; do
-      osslsigncode -spc "${BUILD_DIR}/codesign.spc" -key "${BUILD_DIR}/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "{$i}" -out "${i}" #| true
+      ${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s" #| true
+      mv ${i}s ${i}
     done
 
     make ${MAKEOPTS} -C src check-security
     make deploy
     make install DESTDIR=${INSTALLPATH}
 
-    find . -name "*.exe" | while read i; do
-      osslsigncode -spc "${BUILD_DIR}/codesign.spc" -key "${BUILD_DIR}/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "{$i}" -out "${i}" #| true
+    find . -name "*setup*.exe" | while read i; do
+     ${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s" #| true
+     mv ${i}s ${i}
     done
 
     cp -f bitcoin-*setup*.exe $OUTDIR/
