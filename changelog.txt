@@ -1,31 +1,31 @@
 1.6.4
 
+Support for read only (watch) HD accounts.
+Support for read only (watch) HD seeds.
+Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message)
+Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
 UI - Improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
 UI - New menu item for importing private keys.
 UI - New menu item to allow users to easily rescan without having to use command line flags or mess around in RPC console.
 UI - Improve the way rescan (and other actions that require progress) display in the program.
-Modify createaccount RPC command so that it can also create legacy accounts.
-Support for read only (watch) HD accounts.
-New RPC commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
-Support for read only (watch) HD seeds.
-New RPC command for read only (watch) HD seeds, getreadonlyseed.
-New 'deleteaccount' RPC command
-Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
-Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message) 
-Modify 'move' RPC command so that it can handle `-1` as input for the amount field, passing '-1' will calculate the available balance in the account for the confirmation level passed and transfer all of it.
-Merge a bug fix from user 'mezrin' for 'dumpwallet' RPC command.
-Fix a bug in RPC command 'gettransaction' where transaction would not show if 'rpconlylistsecuredtransactions' flag was set to false.
+RPC - Modify createaccount command so that it can also create legacy accounts.
+RPC - New commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
+RPC - New command for read only (watch) HD seeds, getreadonlyseed.
+RPC - New 'deleteaccount' command
+RPC - Modify 'move' command so that it can handle `-1` as input for the amount field, passing '-1' will calculate the available balance in the account for the confirmation level passed and transfer all of it.
+RPC - Merge a bug fix from user 'mezrin' for 'dumpwallet' command.
+RPC - Fix a bug in command 'gettransaction' where transaction would not show if 'rpconlylistsecuredtransactions' flag was set to false.
 Assorted other minor bug fixes.
 
 1.6.3
 
-Fix incorrect getaddressesbyaccount output.
+RPC - Fix incorrect getaddressesbyaccount output.
 Fix a possible crash in the checkpoint system.
 
 1.6.2
 
-Bring back RPC command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
-Bring back RPC command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
+RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
+RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
 
 1.6.1
 
@@ -33,23 +33,23 @@ Minor bugfix release.
 
 1.6.0
 
-New user interface with drastic improvements over the old user interface.
-Ticker/Exchange rate integration into app.
-In wallet support for buying coins with euro via nocks.
-New 'account based' wallet internals.
-New in wallet buy support for bitcoin and IBAN via nocks API.
-Full support for BIP33 and BIP44 HD wallet standards with mnemonics.
-Implement support for synchronised mobile accounts.
-Update to upstream bitcoin 0.13 codebase providing numerous bug fixes and improvements.
+UI - New user interface with drastic improvements over the old user interface.
+UI - Ticker/Exchange rate integration into app.
+UI - In wallet support for buying coins with euro via nocks.
+UI/RPC/CORE - New 'account based' wallet internals.
+UI - New in wallet buy support for bitcoin and IBAN via nocks API.
+UI/RPC/CORE - Full support for BIP33 and BIP44 HD wallet standards with mnemonics.
+UI/CORE - Implement support for synchronised mobile accounts.
+CORE - Update to upstream bitcoin 0.13 codebase providing numerous bug fixes and improvements.
 Improve the checkpointing code, fix a checkpoint corruption issue that some users were experiencing.
-Change 'rpconlylistsecuredtransactions' to be on by default.
+RPC - Change 'rpconlylistsecuredtransactions' to be on by default.
 
 
 1.5.5
 
-Introduce a checkpoint system to protect against 50% attacks.
-Update the UI so that only checkpointed transactions are marked as 'final'
-Update several RPC commands so that exchanges can make use of the checkpoint system to be double spend proof.
+CORE - Introduce a checkpoint system to protect against 50% attacks.
+UI - Update the UI so that only checkpointed transactions are marked as 'final'
+RPC - Update several commands so that exchanges can make use of the checkpoint system to be double spend proof.
 
 
 
