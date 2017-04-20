@@ -2129,8 +2129,8 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
     if (fUseCache && fAvailableCreditCached)
         if (!forAccount)
             return nAvailableCreditCached;
-    if (fUseCache && availableCreditForAccountCached.find(forAccount) != availableCreditForAccountCached.end())
-        return availableCreditForAccountCached[forAccount];
+    //if (fUseCache && availableCreditForAccountCached.find(forAccount) != availableCreditForAccountCached.end())
+        //return availableCreditForAccountCached[forAccount];
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
@@ -2149,7 +2149,9 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
     }
 
     if (forAccount)
-        availableCreditForAccountCached[forAccount] = nCredit;
+    {
+        //availableCreditForAccountCached[forAccount] = nCredit;
+    }
     else
     {
         nAvailableCreditCached = nCredit;

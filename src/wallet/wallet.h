@@ -302,7 +302,8 @@ public:
     mutable bool fCreditCached;
     mutable bool fImmatureCreditCached;
     mutable bool fAvailableCreditCached;
-    mutable std::map<const CAccount*, CAmount> availableCreditForAccountCached;
+    //fixme: (GULDEN) (SBSU) - Caching would be faster but seems to become invalid if we do internal transfers between accounts.
+    //mutable std::map<const CAccount*, CAmount> availableCreditForAccountCached;
     mutable bool fWatchDebitCached;
     mutable bool fWatchCreditCached;
     mutable bool fImmatureWatchCreditCached;
