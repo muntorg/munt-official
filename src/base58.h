@@ -158,15 +158,15 @@ public:
         SecureString secretKey = SecureString(secret.begin(), secret.begin() + secret.find('-'));
         SecureString secretCode = SecureString(secret.begin() + secret.find('-') + 1, secret.end());
         
+        std::vector<unsigned char> vchSecretKey;
+        std::vector<unsigned char> vchSecretCode;
+        DecodeBase58(secretKey.c_str(), vchSecretKey);
+        DecodeBase58(secretCode.c_str(), vchSecretCode);
+        
+        if (vchSecretCode.size() == 32)
         {
-            std::vector<unsigned char> vch;
-            DecodeBase58(secretKey.c_str(), vch);
-            retExt.GetMutableKey().Set(vch.begin(), vch.end());
-        }
-        {
-            std::vector<unsigned char> vch;
-            DecodeBase58(secretCode.c_str(), vch);
-            retExt.chaincode = uint256(vch);
+            retExt.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end());                
+            retExt.chaincode = uint256(vchSecretCode);
         }
         
         return retExt;
