@@ -71,6 +71,7 @@ public:
         return (nBits == 0);
     }
 
+    mutable uint256 cachedHash;
     uint256 GetHash() const;
 
     int64_t GetBlockTime() const
@@ -113,8 +114,10 @@ public:
         CBlockHeader::SetNull();
         vtx.clear();
         fChecked = false;
+        cachedHash = uint256();
     }
 
+    mutable uint256 cachedPOWHash;
     uint256 GetPoWHash() const;
 
     CBlockHeader GetBlockHeader() const

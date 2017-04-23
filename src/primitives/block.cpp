@@ -19,7 +19,11 @@
 
 uint256 CBlockHeader::GetHash() const
 {
-    return SerializeHash(*this);
+    if (!cachedHash.IsNull())
+        return cachedHash;
+    
+    cachedHash = SerializeHash(*this);
+    return cachedHash;
 }
 
 std::string CBlock::ToString() const
@@ -43,18 +47,22 @@ std::string CBlock::ToString() const
 
 uint256 CBlock::GetPoWHash() const
 {
-        arith_uint256 thash;
-        //fixme: (FUT) (1.6.1) - put testnet on city hash.
-        if (GetBoolArg("-testnetaccel", false))
-        {
-            hash_city(BEGIN(nVersion), thash);
-        }
-        else
-        {
-            char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-            scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
-        }
-        return ArithToUint256(thash);
+    if (!cachedPOWHash.IsNull())
+        return cachedPOWHash;
+    
+    arith_uint256 thash;
+    //fixme: (FUT) (1.6.1) - put testnet on city hash.
+    if (GetBoolArg("-testnetaccel", false))
+    {
+        hash_city(BEGIN(nVersion), thash);
+    }
+    else
+    {
+        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
+    }
+    cachedPOWHash = ArithToUint256(thash);
+    return cachedPOWHash;
 }
 
 
