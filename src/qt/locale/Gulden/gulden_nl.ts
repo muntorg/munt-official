@@ -52,26 +52,6 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Private</source>
-        <translation type="unfinished">Prive</translation>
-    </message>
-    <message>
-        <source>20 000</source>
-        <translation type="unfinished">20 000</translation>
-    </message>
-    <message>
-        <source>(€ 200.00)</source>
-        <translation type="unfinished">(€ 200.00)</translation>
-    </message>
-    <message>
-        <source>ï</source>
-        <translation type="unfinished">ï</translation>
-    </message>
-    <message>
-        <source>(â¬ 200.00)</source>
-        <translation type="unfinished">(â¬ 200.00)</translation>
-    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -323,10 +303,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Save to file</source>
         <translation type="unfinished">Bewaar als bestand</translation>
-    </message>
-    <message>
-        <source>Delete account</source>
-        <translation type="unfinished">Verwijder account</translation>
     </message>
     <message>
         <source>No recovery phrases present for this wallet.</source>
@@ -1105,6 +1081,46 @@ The account will continue to be monitored and will be restored should it receive
         <source>Add account</source>
         <translation type="unfinished">Account toevoegen</translation>
     </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error importing private key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid private key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet already contains key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imported legacy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to add key to wallet.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuldenNewAccountDialog</name>
@@ -1275,14 +1291,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Mijn accounts</translation>
     </message>
     <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">Dit is een normale betaling.</translation>
-    </message>
-    <message>
-        <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
-        <translation type="unfinished">Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation type="unfinished">Weet je zeker dat je %1 wil verwijderen uit het adresboek?</translation>
     </message>
@@ -1295,12 +1303,16 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Annuleer</translation>
     </message>
     <message>
-        <source>ï</source>
-        <translation type="unfinished">ï</translation>
-    </message>
-    <message>
         <source>Delete</source>
         <translation type="unfinished">Verwijder</translation>
+    </message>
+    <message>
+        <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -1356,6 +1368,29 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation type="unfinished">Herstel alle instellingen van de interface</translation>
+    </message>
+</context>
+<context>
+    <name>ImportPrivKeyDialog</name>
+    <message>
+        <source>Edit Address</source>
+        <translation type="unfinished">Adres bewerken</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a private key to import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuleer</translation>
     </message>
 </context>
 <context>
@@ -1790,14 +1825,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <source>Save</source>
         <translation type="unfinished">Opslaan</translation>
     </message>
-    <message>
-        <source>Delete account</source>
-        <translation type="unfinished">Verwijder account</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
-    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1957,6 +1984,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Enter an address (e.g. %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a private key</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3683,10 +3714,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Restore wallet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The below words are your recovery phrase, which are needed to restore access to your funds if your wallet is ever lost/damaged. Please ensure that you write this phrase down and store it in a secure location.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
