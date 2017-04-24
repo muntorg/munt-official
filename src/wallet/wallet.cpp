@@ -104,14 +104,14 @@ void ThreadShadowPoolManager()
                             }
                         }
                     }
-                    if (numShadow < 10)
+                    if (numShadow < GetArg("-accountpool", 10))
                     {
                         dolock=false;
                         if (!pwalletMain->IsLocked())
                         {
                             pwalletMain->delayLock = true;
                             CWalletDB db(pwalletMain->strWalletFile);
-                            while (numShadow < 10)
+                            while (numShadow < GetArg("-accountpool", 10))
                             {
                                 ++numShadow;
                                 ++numNew;
@@ -4002,6 +4002,7 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
     strUsage += HelpMessageOpt("-disablewallet", _("Do not load the wallet and disable wallet RPC calls"));
     strUsage += HelpMessageOpt("-keypool=<n>", strprintf(_("Set key pool size to <n> (default: %u)"), DEFAULT_KEYPOOL_SIZE));
+    strUsage += HelpMessageOpt("-accountpool=<n>", strprintf(_("Set account pool size to <n> (default: %u)"), 10));
     strUsage += HelpMessageOpt("-fallbackfee=<amt>", strprintf(_("A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)"),
                                                                CURRENCY_UNIT, FormatMoney(DEFAULT_FALLBACK_FEE)));
     strUsage += HelpMessageOpt("-mintxfee=<amt>", strprintf(_("Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)"),

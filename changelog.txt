@@ -3,7 +3,8 @@
 Support for read only (watch) HD accounts.
 Support for read only (watch) HD seeds.
 Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message)
-Add new command line flag '-coinbasesignature=' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
+CMDFLAG - Add new command line flag '-coinbasesignature' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
+CMDFLAG - Add new command line flag '-accountpool' to increase the default account look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)
 UI - Improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
 UI - New menu item for importing private keys.
 UI - New menu item to allow users to easily rescan without having to use command line flags or mess around in RPC console.
