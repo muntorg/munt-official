@@ -50,7 +50,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>AccountSummaryWidget</name>
     <message utf8="both">
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -621,12 +621,9 @@ The account will continue to be monitored and will be restored should it receive
         <source>Processing blocks on disk...</source>
         <translation>Verwerken van blokken op de schijf...</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation type="unfinished">Processed %n block(s) of transaction history.</translation>
     </message>
     <message>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
@@ -1029,7 +1026,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>20 000</source>
@@ -1063,15 +1060,15 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Backup wallet</source>
-        <translation>Maak backup van portemonnee</translation>
+        <translation>Maak een backup van portemonnee</translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachten op bevestiging: %1</translation>
     </message>
     <message>
         <source>Pending maturity: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachten op veroudering: %1</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1083,43 +1080,43 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Tools</translation>
     </message>
     <message>
         <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
+        <translation>Sleutel importeren</translation>
     </message>
     <message>
         <source>Import a private key address</source>
-        <translation type="unfinished"></translation>
+        <translation>Prive sleutel importeren</translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
-        <translation type="unfinished"></translation>
+        <translation>Opnieuw scannen naar transacties</translation>
     </message>
     <message>
         <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished"></translation>
+        <translation>Blockchain opnieuw scannen naar missende transacties</translation>
     </message>
     <message>
         <source>Error importing private key</source>
-        <translation type="unfinished"></translation>
+        <translation>Error opgetreden tijdens het importeren van de prive sleutel</translation>
     </message>
     <message>
         <source>Invalid private key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ongeldige prive sleutel</translation>
     </message>
     <message>
         <source>Wallet already contains key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Portemonee bevat al een sleutel</translation>
     </message>
     <message>
         <source>Imported legacy</source>
-        <translation type="unfinished"></translation>
+        <translation>Importeer legacy account</translation>
     </message>
     <message>
         <source>Failed to add key to wallet.</source>
-        <translation type="unfinished"></translation>
+        <translation>Toevoegen van een sleutel aan de portemonee mislukt.</translation>
     </message>
 </context>
 <context>
@@ -1153,7 +1150,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation type="unfinished">GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
+        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
     </message>
     <message>
         <source>QR code</source>
@@ -1378,11 +1375,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Private key</source>
-        <translation type="unfinished"></translation>
+        <translation>Prive sleutel</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer prive sleutel in om te importeren</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -4269,7 +4266,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The %s developers</source>
-        <translation>The %s Ontwikkelaars</translation>
+        <translation>De %s Ontwikkelaars</translation>
     </message>
     <message>
         <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
@@ -4655,7 +4652,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Spacer  toolbar</source>
+        <source>Spacer toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
