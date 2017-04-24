@@ -92,7 +92,7 @@ void AccountSettingsDialog::showSyncQr()
             return;
         payoutAddress = CBitcoinAddress(vchPubKey.GetID()).ToString();
 
-        QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString(QString::number(currentTime).toStdString(), payoutAddress));
+        QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString(QString::number(currentTime).toStdString(), payoutAddress));
         ui->addressQRImage->setCode(qrString);
 
         disconnect(this, SLOT(showSyncQr()));
@@ -116,7 +116,7 @@ void AccountSettingsDialog::deleteAccount()
 {
     if (activeAccount) {
         CAmount balance = pwalletMain->GetAccountBalance(activeAccount->getUUID(), 0, ISMINE_SPENDABLE, true);
-        if (balance > MINIMUM_VALUABLE_AMOUNT) {
+        if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT) {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");
             QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), QString(""), 400, 180);
             d->exec();

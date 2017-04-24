@@ -158,7 +158,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel* model)
 
 void GuldenSendCoinsEntry::addressChanged()
 {
-    SendCoinsRecipient val = getValue();
+    SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment) {
     } else {
         ui->receivingAddress->setProperty("valid", true);
@@ -237,7 +237,7 @@ bool GuldenSendCoinsEntry::validate()
     if (recipient.paymentRequest.IsInitialized())
         return retval;
 
-    SendCoinsRecipient val = getValue();
+    SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment) {
         ui->receivingAddress->setProperty("valid", false);
         retval = false;
@@ -300,7 +300,7 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
     return ret;
 }
 
-SendCoinsRecipient GuldenSendCoinsEntry::getValue()
+SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 {
 
     if (recipient.paymentRequest.IsInitialized())
@@ -309,6 +309,17 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue()
     recipient.addToAddressBook = false;
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->valueForCurrency();
+
+    if (recipient.amount >= (pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount()))) {
+        if (showWarningDialogs) {
+            QString message = tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
+            QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), "", 400, 180);
+            d->exec();
+        }
+
+        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount());
+        recipient.fSubtractFeeFromAmount = true;
+    }
 
     switch (ui->sendCoinsRecipientBook->currentIndex()) {
     case 0: {
@@ -339,7 +350,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue()
 
                 CReserveKey key(pwalletMain, pwalletMain->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
                 CPubKey pubKey;
-                key.GetReservedKey(pubKey);
+                if (!key.GetReservedKey(pubKey)) {
+
+                    recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                    recipient.address = QString("error");
+                    return recipient;
+                }
                 key.KeepKey();
                 CKeyID keyID = pubKey.GetID();
                 recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());

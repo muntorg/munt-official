@@ -95,7 +95,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "importprivkey \"bitcoinprivkey\" ( \"label\" rescan )\n"
+            "importprivkey \"bitcoinprivkey\" \"account\" ( \"label\" rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
             "1. \"bitcoinprivkey\"   (string, required) The private key (see dumpprivkey)\n"
@@ -415,7 +415,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
 
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "importwallet \"filename\"\n"
+            "importwallet \"filename\" \"account\"\n"
             "\nImports keys from a wallet dump file (see dumpwallet).\n"
             "\nArguments:\n"
             "1. \"filename\"    (string, required) The wallet file\n"
@@ -635,6 +635,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
             } else {
                 file << "change=1";
             }
+            file << strprintf(" # addr=%s\n", strAddr);
         }
     }
     file << "\n";

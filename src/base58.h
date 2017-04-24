@@ -141,22 +141,70 @@ public:
 
 /**
  * A combination base58 and hex encoded secret extended key
- * Key portion is base58 chaincode is hex
  */
+template <typename KeyType>
 class CBitcoinSecretExt {
 public:
-    void SetKey(const CExtKey& vchSecret);
+    void SetKey(const KeyType& vchSecret) { key = vchSecret; }
+    KeyType GetKey()
+    {
 
-    bool SetString(const char* pszSecret);
-    bool SetString(const std::string& strSecret);
-    std::string ToString(std::string creationtime, std::string payAccount) const;
+        KeyType retExt;
 
-    CBitcoinSecretExt(const CExtKey& vchSecret) { SetKey(vchSecret); }
+        SecureString secretKey = SecureString(secret.begin(), secret.begin() + secret.find('-'));
+        SecureString secretCode = SecureString(secret.begin() + secret.find('-') + 1, secret.end());
+
+        std::vector<unsigned char> vchSecretKey;
+        std::vector<unsigned char> vchSecretCode;
+        DecodeBase58(secretKey.c_str(), vchSecretKey);
+        DecodeBase58(secretCode.c_str(), vchSecretCode);
+
+        if (vchSecretCode.size() == 32) {
+            retExt.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end());
+            retExt.chaincode = uint256(vchSecretCode);
+        }
+
+        return retExt;
+    }
+
+    bool SetString(const char* pszSecret)
+    {
+        secret = pszSecret;
+        return true;
+    }
+
+    bool SetString(const std::string& strSecret)
+    {
+        secret = strSecret;
+        return true;
+    }
+
+    std::string ToString(std::string creationtime, std::string payAccount) const
+    {
+        std::string ret = ToString();
+
+        const unsigned char* creationTimeRaw = (const unsigned char*)creationtime.c_str();
+        ret = ret + ":" + EncodeBase58(creationTimeRaw, creationTimeRaw + creationtime.length());
+
+        ret = ret + ";" + payAccount;
+
+        return ret;
+    }
+
+    std::string ToString() const
+    {
+        std::string ret = EncodeBase58((const unsigned char*)key.GetKey().begin(), (const unsigned char*)key.GetKey().end());
+        ret = ret + "-" + EncodeBase58(key.chaincode.begin(), key.chaincode.end());
+
+        return ret;
+    }
+
+    CBitcoinSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
     CBitcoinSecretExt(const std::string& strSecret) { SetString(strSecret); }
     CBitcoinSecretExt() {}
 
 private:
-    CExtKey key;
+    KeyType key;
     std::string secret;
 };
 

@@ -81,6 +81,7 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/Common/scrypt.h \
   Gulden/translate.h \
   Gulden/mnemonic.h \
+  Gulden/util.h \
   Gulden/auto_checkpoints.h \
   alert.h \
   Gulden/guldenapplication.h \
@@ -101,6 +102,7 @@ GDN_CONSENSUS_SRCS = \
 
 GDN_WALLET_SRCS = account.cpp \
    Gulden/mnemonic.cpp \
+   Gulden/util.cpp \
    Gulden/guldenapplication.cpp
 
 # bitcoin core #

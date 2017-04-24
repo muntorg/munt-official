@@ -25,7 +25,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-
 #define AUTO_CHECKPOINT_DEPTH 4
 
 namespace Checkpoints {

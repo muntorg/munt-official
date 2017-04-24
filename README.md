@@ -1,9 +1,9 @@
-#Gulden#
+# Gulden
 
-###About###
+### About
 Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
 
-###Community###
+### Community
 
 Connect with the community through one or more of the following:
 
@@ -15,7 +15,7 @@ Connect with the community through one or more of the following:
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
 
 
-###Building###
+### Building
 First, reconsider whether it is actually necessary for you to build. Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer. https://github.com/Gulden/gulden-official/releases
 
 Should you disregard the above and decide to build the software for yourself anyway, please make sure that you thoroughly read all of the extra information below before requesting assistance.
@@ -25,8 +25,8 @@ Distro specific instructions:
 
 |Distro|Version|Instructions|
 |:-----------|:-------|:-------|
-|Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d|
-|Ubuntu|14.04.4|https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76|
+|Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d |
+|Ubuntu|14.04.4|https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76 |
 
 
 Generic instructions:
@@ -88,30 +88,23 @@ Binaries are output as follows by the build process:
 Alternatively binaries are also available https://developer.gulden.com/apps/
 
 
-###Additional technical information###
+### Additional technical information
 
 
-|Technical specifications - Main network||
-|:-----------|:---------|
-|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment|
-|Transaction confirmations:|6|
-|Total coins:|1680M|
-|Premine reserved for development, marketing and funding of community projects:|170M (10%)|
-|Starting diff:|0.00244|
-|Block reward:|100 NLG|
-|Block time:|150 seconds|
-|P2P Port|9231|
-|RPC Port|9232|
-|P2P Network Header|fcfef7e0|
-|Address version byte|38|
-|BIP44 coin type|87 0x80000057|
-
-|Technical specifications - Testnet||
-|:-----------|:---------|
-|P2P Port|9923|
-|RPC Port|9924|
-|P2P Network Header|fcfef700|
-|Address version byte|98|
+|Technical specifications|Main network|Testnet|
+|:-----------|:---------|:---------|
+|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment||
+|Transaction confirmations:|6||
+|Total coins:|1680M||
+|Premine reserved for development, marketing and funding of community projects:|170M (10%)||
+|Block reward:|100 NLG||
+|Block time:|150 seconds||
+|P2P Port|9231|9923|
+|RPC Port|9232|9924|
+|P2P Network Header|fcfef7e0|fcfef702|
+|Address version byte|38 (G)|65 (T)|
+|P2SH version byte|98 (g)|127 (t)|
+|BIP44 coin type|87 0x80000057||
 
 |Infrastructure||
 |:-----------|:---------|
@@ -127,4 +120,3 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |Testnet DNS Seed 1|testseed.gulden.blue|
 |Testnet DNS Seed 2|testseed.gulden.network|
 |Testnet DNS Seed 3|testseed.coinpool.nl|
-

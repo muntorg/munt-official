@@ -186,6 +186,9 @@ struct CExtPubKey {
     ChainCode chaincode;
     CPubKey pubkey;
 
+    const CPubKey& GetKey() const { return pubkey; };
+    CPubKey& GetMutableKey() { return pubkey; };
+
     friend bool operator==(const CExtPubKey& a, const CExtPubKey& b)
     {
         return a.nDepth == b.nDepth && memcmp(&a.vchFingerprint[0], &b.vchFingerprint[0], 4) == 0 && a.nChild == b.nChild && a.chaincode == b.chaincode && a.pubkey == b.pubkey;

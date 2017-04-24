@@ -240,10 +240,10 @@ UniValue stop(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop Bitcoin server.");
+            "\nStop Gulden server.");
 
     StartShutdown();
-    return "Bitcoin server stopping";
+    return "Gulden server stopping";
 }
 
 /**

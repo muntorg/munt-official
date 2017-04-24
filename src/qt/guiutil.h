@@ -46,6 +46,7 @@ QString dateTimeStr(qint64 nTime);
 QFont fixedPitchFont();
 
 void setupAddressWidget(QValidatedLineEdit* widget, QWidget* parent);
+void setupPrivKeyWidget(QValidatedLineEdit* widget, QWidget* parent);
 void setupAmountWidget(QLineEdit* widget, QWidget* parent);
 
 bool parseBitcoinURI(const QUrl& uri, SendCoinsRecipient* out);

@@ -263,6 +263,8 @@ void TransactionView::setModel(WalletModel* model)
         updateWatchOnlyColumn(model->haveWatchOnly());
 
         connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyColumn(bool)));
+
+        activeAccountChanged(model->getActiveAccount());
     }
 }
 

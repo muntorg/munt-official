@@ -409,24 +409,25 @@ am__libgulden_util_a_SOURCES_DIST = support/pagelocker.cpp \
 	Gulden/Common/diff_common.h Gulden/Common/hash/hash.h \
 	Gulden/Common/hash/city.h Gulden/Common/hash/cityconfig.h \
 	Gulden/Common/scrypt.h Gulden/translate.h Gulden/mnemonic.h \
-	Gulden/auto_checkpoints.h alert.h Gulden/guldenapplication.h \
-	account.h addrman.h base58.h bloom.h blockencodings.h chain.h \
-	chainparams.h chainparamsbase.h chainparamsseeds.h \
-	checkpoints.h checkqueue.h clientversion.h coincontrol.h \
-	coins.h compat.h compat/byteswap.h compat/endian.h \
-	compat/sanity.h compressor.h consensus/consensus.h core_io.h \
-	core_memusage.h httprpc.h httpserver.h indirectmap.h init.h \
-	key.h keystore.h dbwrapper.h limitedmap.h main.h memusage.h \
-	merkleblock.h miner.h net.h netbase.h noui.h policy/fees.h \
-	policy/policy.h policy/rbf.h pow.h protocol.h random.h \
-	reverselock.h rpc/client.h rpc/protocol.h rpc/server.h \
-	rpc/register.h scheduler.h script/sigcache.h script/sign.h \
-	script/standard.h script/ismine.h streams.h \
-	support/allocators/secure.h support/allocators/zeroafterfree.h \
-	support/cleanse.h support/pagelocker.h sync.h threadsafety.h \
-	timedata.h torcontrol.h txdb.h txmempool.h ui_interface.h \
-	undo.h util.h utilmoneystr.h utiltime.h validationinterface.h \
-	versionbits.h wallet/crypter.h wallet/db.h wallet/rpcwallet.h \
+	Gulden/util.h Gulden/auto_checkpoints.h alert.h \
+	Gulden/guldenapplication.h account.h addrman.h base58.h \
+	bloom.h blockencodings.h chain.h chainparams.h \
+	chainparamsbase.h chainparamsseeds.h checkpoints.h \
+	checkqueue.h clientversion.h coincontrol.h coins.h compat.h \
+	compat/byteswap.h compat/endian.h compat/sanity.h compressor.h \
+	consensus/consensus.h core_io.h core_memusage.h httprpc.h \
+	httpserver.h indirectmap.h init.h key.h keystore.h dbwrapper.h \
+	limitedmap.h main.h memusage.h merkleblock.h miner.h net.h \
+	netbase.h noui.h policy/fees.h policy/policy.h policy/rbf.h \
+	pow.h protocol.h random.h reverselock.h rpc/client.h \
+	rpc/protocol.h rpc/server.h rpc/register.h scheduler.h \
+	script/sigcache.h script/sign.h script/standard.h \
+	script/ismine.h streams.h support/allocators/secure.h \
+	support/allocators/zeroafterfree.h support/cleanse.h \
+	support/pagelocker.h sync.h threadsafety.h timedata.h \
+	torcontrol.h txdb.h txmempool.h ui_interface.h undo.h util.h \
+	utilmoneystr.h utiltime.h validationinterface.h versionbits.h \
+	wallet/crypter.h wallet/db.h wallet/rpcwallet.h \
 	wallet/wallet.h wallet/walletdb.h wallet/walletdberrors.h \
 	zmq/zmqabstractnotifier.h zmq/zmqconfig.h \
 	zmq/zmqnotificationinterface.h zmq/zmqpublishnotifier.h \
@@ -455,6 +456,7 @@ libgulden_wallet_a_AR = $(AR) $(ARFLAGS)
 libgulden_wallet_a_LIBADD =
 am__objects_9 = libgulden_wallet_a-account.$(OBJEXT) \
 	Gulden/libgulden_wallet_a-mnemonic.$(OBJEXT) \
+	Gulden/libgulden_wallet_a-util.$(OBJEXT) \
 	Gulden/libgulden_wallet_a-guldenapplication.$(OBJEXT)
 am_libgulden_wallet_a_OBJECTS = $(am__objects_9) \
 	wallet/libgulden_wallet_a-crypter.$(OBJEXT) \
@@ -487,6 +489,7 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 	qt/_Gulden/passwordmodifydialog.cpp \
 	qt/_Gulden/backupdialog.cpp qt/_Gulden/welcomedialog.cpp \
 	qt/_Gulden/exchangeratedialog.cpp \
+	qt/_Gulden/importprivkeydialog.cpp \
 	qt/_Gulden/accounttablemodel.cpp qt/bantablemodel.cpp \
 	qt/bitcoinaddressvalidator.cpp qt/bitcoinamountfield.cpp \
 	qt/bitcoingui.cpp qt/bitcoinunits.cpp qt/clientmodel.cpp \
@@ -519,6 +522,7 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 	qt/_Gulden/accountsettingsdialog.h \
 	qt/_Gulden/passwordmodifydialog.h qt/_Gulden/backupdialog.h \
 	qt/_Gulden/welcomedialog.h qt/_Gulden/exchangeratedialog.h \
+	qt/_Gulden/importprivkeydialog.h \
 	qt/_Gulden/accounttablemodel.h qt/addressbookpage.h \
 	qt/addresstablemodel.h qt/askpassphrasedialog.h \
 	qt/bantablemodel.h qt/bitcoinaddressvalidator.h \
@@ -550,6 +554,7 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 	qt/_Gulden/forms/backupdialog.ui \
 	qt/_Gulden/forms/welcomedialog.ui \
 	qt/_Gulden/forms/exchangeratedialog.ui \
+	qt/_Gulden/forms/importprivkeydialog.ui \
 	qt/forms/addressbookpage.ui qt/forms/askpassphrasedialog.ui \
 	qt/forms/coincontroldialog.ui qt/forms/editaddressdialog.ui \
 	qt/forms/helpmessagedialog.ui qt/forms/intro.ui \
@@ -639,20 +644,21 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 	qt/_Gulden/res/AngleDownBlue.png \
 	qt/_Gulden/res/AngleUpBlue.png \
 	qt/_Gulden/res/AngleDownGrey.png \
-	qt/_Gulden/res/AngleUpGrey.png qt/_Gulden/res/LogoBlue.png \
-	qt/_Gulden/res/LoadingAnimation.gif qt/_Gulden/res/Lock.png \
-	qt/_Gulden/res/Lock@2x.png qt/_Gulden/res/MainBackground.png \
+	qt/_Gulden/res/AngleUpGrey.png \
 	qt/_Gulden/res/DialogBackground.png \
 	qt/_Gulden/fonts/FontAwesome.otf \
-	qt/_Gulden/fonts/guldensign.ttf \
-	qt/_Gulden/fonts/Lato-Black.ttf \
+	qt/_Gulden/fonts/guldensign.ttf qt/_Gulden/res/Import.png \
+	qt/_Gulden/res/Rescan.png qt/_Gulden/fonts/Lato-Black.ttf \
 	qt/_Gulden/fonts/Lato-BlackItalic.ttf \
 	qt/_Gulden/fonts/Lato-Bold.ttf \
 	qt/_Gulden/fonts/Lato-BoldItalic.ttf \
 	qt/_Gulden/fonts/Lato-Italic.ttf \
 	qt/_Gulden/fonts/Lato-Medium.ttf \
 	qt/_Gulden/fonts/Lato-MediumItalic.ttf \
-	qt/_Gulden/fonts/Lato-Regular.ttf
+	qt/_Gulden/fonts/Lato-Regular.ttf \
+	qt/_Gulden/res/LoadingAnimation.gif qt/_Gulden/res/Lock.png \
+	qt/_Gulden/res/Lock@2x.png qt/_Gulden/res/LogoBlue.png \
+	qt/_Gulden/res/MainBackground.png
 @ENABLE_QT_TRUE@am__objects_10 = qt/_Gulden/qt_libguldenqt_a-GuldenTranslator.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-guldensendcoinsentry.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-accountsummarywidget.$(OBJEXT) \
@@ -669,6 +675,7 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-backupdialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-welcomedialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-exchangeratedialog.$(OBJEXT) \
+@ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-accounttablemodel.$(OBJEXT)
 @ENABLE_QT_TRUE@@TARGET_WINDOWS_TRUE@am__objects_11 = qt/qt_libguldenqt_a-winshutdownmonitor.$(OBJEXT)
 @ENABLE_QT_TRUE@@ENABLE_WALLET_TRUE@am__objects_12 = qt/qt_libguldenqt_a-addressbookpage.$(OBJEXT) \
@@ -743,6 +750,7 @@ am__qt_libguldenqt_a_SOURCES_DIST = qt/_Gulden/GuldenTranslator.cpp \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-moc_backupdialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-moc_welcomedialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-moc_exchangeratedialog.$(OBJEXT) \
+@ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.$(OBJEXT) \
 @ENABLE_QT_TRUE@	qt/_Gulden/qt_libguldenqt_a-moc_accounttablemodel.$(OBJEXT)
 @ENABLE_QT_TRUE@am__objects_16 = $(am__objects_15) \
 @ENABLE_QT_TRUE@	qt/qt_libguldenqt_a-moc_addressbookpage.$(OBJEXT) \
@@ -1672,6 +1680,7 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/Common/scrypt.h \
   Gulden/translate.h \
   Gulden/mnemonic.h \
+  Gulden/util.h \
   Gulden/auto_checkpoints.h \
   alert.h \
   Gulden/guldenapplication.h \
@@ -1691,6 +1700,7 @@ GDN_CONSENSUS_SRCS = \
 
 GDN_WALLET_SRCS = account.cpp \
    Gulden/mnemonic.cpp \
+   Gulden/util.cpp \
    Gulden/guldenapplication.cpp
 
 
@@ -2119,14 +2129,11 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/res/AngleUpBlue.png \
 @ENABLE_QT_TRUE@qt/_Gulden/res/AngleDownGrey.png \
 @ENABLE_QT_TRUE@qt/_Gulden/res/AngleUpGrey.png \
-@ENABLE_QT_TRUE@qt/_Gulden/res/LogoBlue.png \
-@ENABLE_QT_TRUE@qt/_Gulden/res/LoadingAnimation.gif \
-@ENABLE_QT_TRUE@qt/_Gulden/res/Lock.png \
-@ENABLE_QT_TRUE@qt/_Gulden/res/Lock@2x.png \
-@ENABLE_QT_TRUE@qt/_Gulden/res/MainBackground.png \
 @ENABLE_QT_TRUE@qt/_Gulden/res/DialogBackground.png \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/FontAwesome.otf \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/guldensign.ttf \
+@ENABLE_QT_TRUE@qt/_Gulden/res/Import.png \
+@ENABLE_QT_TRUE@qt/_Gulden/res/Rescan.png \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Black.ttf \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-BlackItalic.ttf \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Bold.ttf \
@@ -2134,7 +2141,12 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Italic.ttf \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Medium.ttf \
 @ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-MediumItalic.ttf \
-@ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Regular.ttf 
+@ENABLE_QT_TRUE@qt/_Gulden/fonts/Lato-Regular.ttf \
+@ENABLE_QT_TRUE@qt/_Gulden/res/LoadingAnimation.gif \
+@ENABLE_QT_TRUE@qt/_Gulden/res/Lock.png \
+@ENABLE_QT_TRUE@qt/_Gulden/res/Lock@2x.png \
+@ENABLE_QT_TRUE@qt/_Gulden/res/LogoBlue.png \
+@ENABLE_QT_TRUE@qt/_Gulden/res/MainBackground.png
 
 @ENABLE_QT_TRUE@GDN_MOCS = qt/_Gulden/moc_GuldenTranslator.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/moc_guldensendcoinsentry.cpp \
@@ -2152,6 +2164,7 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/moc_backupdialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/moc_welcomedialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/moc_exchangeratedialog.cpp \
+@ENABLE_QT_TRUE@qt/_Gulden/moc_importprivkeydialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/moc_accounttablemodel.cpp
 
 @ENABLE_QT_TRUE@GDN_FORMS = qt/_Gulden/forms/guldensendcoinsentry.ui \
@@ -2162,7 +2175,8 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/forms/passwordmodifydialog.ui \
 @ENABLE_QT_TRUE@qt/_Gulden/forms/backupdialog.ui \
 @ENABLE_QT_TRUE@qt/_Gulden/forms/welcomedialog.ui \
-@ENABLE_QT_TRUE@qt/_Gulden/forms/exchangeratedialog.ui 
+@ENABLE_QT_TRUE@qt/_Gulden/forms/exchangeratedialog.ui \
+@ENABLE_QT_TRUE@qt/_Gulden/forms/importprivkeydialog.ui
 
 @ENABLE_QT_TRUE@GDN_QT_H = qt/_Gulden/GuldenTranslator.h \
 @ENABLE_QT_TRUE@qt/_Gulden/guldensendcoinsentry.h \
@@ -2180,6 +2194,7 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/backupdialog.h \
 @ENABLE_QT_TRUE@qt/_Gulden/welcomedialog.h \
 @ENABLE_QT_TRUE@qt/_Gulden/exchangeratedialog.h \
+@ENABLE_QT_TRUE@qt/_Gulden/importprivkeydialog.h \
 @ENABLE_QT_TRUE@qt/_Gulden/accounttablemodel.h
 
 @ENABLE_QT_TRUE@GDN_QT_SRCS = qt/_Gulden/GuldenTranslator.cpp \
@@ -2198,6 +2213,7 @@ EXTRA_DIST = $(CTAES_DIST)
 @ENABLE_QT_TRUE@qt/_Gulden/backupdialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/welcomedialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/exchangeratedialog.cpp \
+@ENABLE_QT_TRUE@qt/_Gulden/importprivkeydialog.cpp \
 @ENABLE_QT_TRUE@qt/_Gulden/accounttablemodel.cpp
 
 @ENABLE_QT_TRUE@GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
@@ -2993,6 +3009,8 @@ libgulden_util.a: $(libgulden_util_a_OBJECTS) $(libgulden_util_a_DEPENDENCIES) $
 	$(AM_V_at)$(RANLIB) libgulden_util.a
 Gulden/libgulden_wallet_a-mnemonic.$(OBJEXT): Gulden/$(am__dirstamp) \
 	Gulden/$(DEPDIR)/$(am__dirstamp)
+Gulden/libgulden_wallet_a-util.$(OBJEXT): Gulden/$(am__dirstamp) \
+	Gulden/$(DEPDIR)/$(am__dirstamp)
 Gulden/libgulden_wallet_a-guldenapplication.$(OBJEXT):  \
 	Gulden/$(am__dirstamp) Gulden/$(DEPDIR)/$(am__dirstamp)
 wallet/$(am__dirstamp):
@@ -3089,6 +3107,9 @@ qt/_Gulden/qt_libguldenqt_a-welcomedialog.$(OBJEXT):  \
 	qt/_Gulden/$(am__dirstamp) \
 	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
 qt/_Gulden/qt_libguldenqt_a-exchangeratedialog.$(OBJEXT):  \
+	qt/_Gulden/$(am__dirstamp) \
+	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
+qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.$(OBJEXT):  \
 	qt/_Gulden/$(am__dirstamp) \
 	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
 qt/_Gulden/qt_libguldenqt_a-accounttablemodel.$(OBJEXT):  \
@@ -3242,6 +3263,9 @@ qt/_Gulden/qt_libguldenqt_a-moc_welcomedialog.$(OBJEXT):  \
 	qt/_Gulden/$(am__dirstamp) \
 	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
 qt/_Gulden/qt_libguldenqt_a-moc_exchangeratedialog.$(OBJEXT):  \
+	qt/_Gulden/$(am__dirstamp) \
+	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
+qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.$(OBJEXT):  \
 	qt/_Gulden/$(am__dirstamp) \
 	qt/_Gulden/$(DEPDIR)/$(am__dirstamp)
 qt/_Gulden/qt_libguldenqt_a-moc_accounttablemodel.$(OBJEXT):  \
@@ -3627,6 +3651,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/$(DEPDIR)/libgulden_server_a-rpcgulden.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/$(DEPDIR)/libgulden_wallet_a-guldenapplication.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/$(DEPDIR)/libgulden_wallet_a-mnemonic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@Gulden/$(DEPDIR)/libgulden_wallet_a-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/Common/$(DEPDIR)/libgulden_consensus_a-diff_common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/Common/$(DEPDIR)/libgulden_consensus_a-diff_delta.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@Gulden/Common/$(DEPDIR)/libgulden_consensus_a-diff_old.Po@am__quote@
@@ -3815,6 +3840,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-clickableqrimage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-exchangeratedialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-guldensendcoinsentry.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_GuldenGUI.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_GuldenTranslator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_accountsettingsdialog.Po@am__quote@
@@ -3825,6 +3851,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_clickableqrimage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_exchangeratedialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_guldensendcoinsentry.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_newaccountdialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_nocksrequest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_nockssettings.Po@am__quote@
@@ -5776,6 +5803,20 @@ Gulden/libgulden_wallet_a-mnemonic.obj: Gulden/mnemonic.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -c -o Gulden/libgulden_wallet_a-mnemonic.obj `if test -f 'Gulden/mnemonic.cpp'; then $(CYGPATH_W) 'Gulden/mnemonic.cpp'; else $(CYGPATH_W) '$(srcdir)/Gulden/mnemonic.cpp'; fi`
 
+Gulden/libgulden_wallet_a-util.o: Gulden/util.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -MT Gulden/libgulden_wallet_a-util.o -MD -MP -MF Gulden/$(DEPDIR)/libgulden_wallet_a-util.Tpo -c -o Gulden/libgulden_wallet_a-util.o `test -f 'Gulden/util.cpp' || echo '$(srcdir)/'`Gulden/util.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) Gulden/$(DEPDIR)/libgulden_wallet_a-util.Tpo Gulden/$(DEPDIR)/libgulden_wallet_a-util.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Gulden/util.cpp' object='Gulden/libgulden_wallet_a-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -c -o Gulden/libgulden_wallet_a-util.o `test -f 'Gulden/util.cpp' || echo '$(srcdir)/'`Gulden/util.cpp
+
+Gulden/libgulden_wallet_a-util.obj: Gulden/util.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -MT Gulden/libgulden_wallet_a-util.obj -MD -MP -MF Gulden/$(DEPDIR)/libgulden_wallet_a-util.Tpo -c -o Gulden/libgulden_wallet_a-util.obj `if test -f 'Gulden/util.cpp'; then $(CYGPATH_W) 'Gulden/util.cpp'; else $(CYGPATH_W) '$(srcdir)/Gulden/util.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) Gulden/$(DEPDIR)/libgulden_wallet_a-util.Tpo Gulden/$(DEPDIR)/libgulden_wallet_a-util.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Gulden/util.cpp' object='Gulden/libgulden_wallet_a-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -c -o Gulden/libgulden_wallet_a-util.obj `if test -f 'Gulden/util.cpp'; then $(CYGPATH_W) 'Gulden/util.cpp'; else $(CYGPATH_W) '$(srcdir)/Gulden/util.cpp'; fi`
+
 Gulden/libgulden_wallet_a-guldenapplication.o: Gulden/guldenapplication.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgulden_wallet_a_CPPFLAGS) $(CPPFLAGS) $(libgulden_wallet_a_CXXFLAGS) $(CXXFLAGS) -MT Gulden/libgulden_wallet_a-guldenapplication.o -MD -MP -MF Gulden/$(DEPDIR)/libgulden_wallet_a-guldenapplication.Tpo -c -o Gulden/libgulden_wallet_a-guldenapplication.o `test -f 'Gulden/guldenapplication.cpp' || echo '$(srcdir)/'`Gulden/guldenapplication.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) Gulden/$(DEPDIR)/libgulden_wallet_a-guldenapplication.Tpo Gulden/$(DEPDIR)/libgulden_wallet_a-guldenapplication.Po
@@ -6153,6 +6194,20 @@ qt/_Gulden/qt_libguldenqt_a-exchangeratedialog.obj: qt/_Gulden/exchangeratedialo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/exchangeratedialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-exchangeratedialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-exchangeratedialog.obj `if test -f 'qt/_Gulden/exchangeratedialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/exchangeratedialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/exchangeratedialog.cpp'; fi`
+
+qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.o: qt/_Gulden/importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.o -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.o `test -f 'qt/_Gulden/importprivkeydialog.cpp' || echo '$(srcdir)/'`qt/_Gulden/importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Tpo qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/importprivkeydialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.o `test -f 'qt/_Gulden/importprivkeydialog.cpp' || echo '$(srcdir)/'`qt/_Gulden/importprivkeydialog.cpp
+
+qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.obj: qt/_Gulden/importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.obj -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.obj `if test -f 'qt/_Gulden/importprivkeydialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/importprivkeydialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/importprivkeydialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Tpo qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-importprivkeydialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/importprivkeydialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-importprivkeydialog.obj `if test -f 'qt/_Gulden/importprivkeydialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/importprivkeydialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/importprivkeydialog.cpp'; fi`
 
 qt/_Gulden/qt_libguldenqt_a-accounttablemodel.o: qt/_Gulden/accounttablemodel.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-accounttablemodel.o -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-accounttablemodel.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-accounttablemodel.o `test -f 'qt/_Gulden/accounttablemodel.cpp' || echo '$(srcdir)/'`qt/_Gulden/accounttablemodel.cpp
@@ -7063,6 +7118,20 @@ qt/_Gulden/qt_libguldenqt_a-moc_exchangeratedialog.obj: qt/_Gulden/moc_exchanger
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/moc_exchangeratedialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-moc_exchangeratedialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-moc_exchangeratedialog.obj `if test -f 'qt/_Gulden/moc_exchangeratedialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/moc_exchangeratedialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/moc_exchangeratedialog.cpp'; fi`
+
+qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.o: qt/_Gulden/moc_importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.o -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.o `test -f 'qt/_Gulden/moc_importprivkeydialog.cpp' || echo '$(srcdir)/'`qt/_Gulden/moc_importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Tpo qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/moc_importprivkeydialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.o `test -f 'qt/_Gulden/moc_importprivkeydialog.cpp' || echo '$(srcdir)/'`qt/_Gulden/moc_importprivkeydialog.cpp
+
+qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.obj: qt/_Gulden/moc_importprivkeydialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.obj -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.obj `if test -f 'qt/_Gulden/moc_importprivkeydialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/moc_importprivkeydialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/moc_importprivkeydialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Tpo qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_importprivkeydialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='qt/_Gulden/moc_importprivkeydialog.cpp' object='qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -c -o qt/_Gulden/qt_libguldenqt_a-moc_importprivkeydialog.obj `if test -f 'qt/_Gulden/moc_importprivkeydialog.cpp'; then $(CYGPATH_W) 'qt/_Gulden/moc_importprivkeydialog.cpp'; else $(CYGPATH_W) '$(srcdir)/qt/_Gulden/moc_importprivkeydialog.cpp'; fi`
 
 qt/_Gulden/qt_libguldenqt_a-moc_accounttablemodel.o: qt/_Gulden/moc_accounttablemodel.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(qt_libguldenqt_a_CPPFLAGS) $(CPPFLAGS) $(qt_libguldenqt_a_CXXFLAGS) $(CXXFLAGS) -MT qt/_Gulden/qt_libguldenqt_a-moc_accounttablemodel.o -MD -MP -MF qt/_Gulden/$(DEPDIR)/qt_libguldenqt_a-moc_accounttablemodel.Tpo -c -o qt/_Gulden/qt_libguldenqt_a-moc_accounttablemodel.o `test -f 'qt/_Gulden/moc_accounttablemodel.cpp' || echo '$(srcdir)/'`qt/_Gulden/moc_accounttablemodel.cpp

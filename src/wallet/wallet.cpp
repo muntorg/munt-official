@@ -34,6 +34,7 @@
 #include "ui_interface.h"
 #include "utilmoneystr.h"
 #include "account.h"
+#include "init.h"
 
 #include <assert.h>
 #include "script/ismine.h"
@@ -41,6 +42,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include <boost/uuid/nil_generator.hpp>
 
 #include <Gulden/Common/scrypt.h>
 #include <Gulden/guldenapplication.h>
@@ -75,7 +77,7 @@ void ThreadShadowPoolManager()
             bool dolock = true;
             for (const auto& seedIter : pwalletMain->mapSeeds) {
 
-                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44)
+                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
                     continue;
 
                 for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi }) {
@@ -91,12 +93,12 @@ void ThreadShadowPoolManager()
                             }
                         }
                     }
-                    if (numShadow < 10) {
+                    if (numShadow < GetArg("-accountpool", 10)) {
                         dolock = false;
                         if (!pwalletMain->IsLocked()) {
                             pwalletMain->delayLock = true;
                             CWalletDB db(pwalletMain->strWalletFile);
-                            while (numShadow < 10) {
+                            while (numShadow < GetArg("-accountpool", 10)) {
                                 ++numShadow;
                                 ++numNew;
                                 depth = 1;
@@ -674,6 +676,13 @@ bool CWallet::Verify()
     }
 
     if (boost::filesystem::exists(GetDataDir() / walletFile)) {
+
+        {
+            std::fstream testPerms((GetDataDir() / walletFile).string(), ios::in | ios::out | ios::app);
+            if (!testPerms.is_open())
+                return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+        }
+
         CDBEnv::VerifyResult r = bitdb.Verify(walletFile, CWalletDB::Recover);
         if (r == CDBEnv::RECOVER_OK) {
             InitWarning(strprintf(_("Warning: Wallet file corrupt, data salvaged!"
@@ -980,8 +989,12 @@ CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type
         for (const auto& accountPair : mapAccounts) {
             if (accountPair.second->m_SubType == subType) {
                 if (accountPair.second->m_Type == AccountType::Shadow) {
-                    if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex())
-                        newAccount = (CAccountHD*)accountPair.second;
+                    if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex()) {
+                        if (((CAccountHD*)accountPair.second)->getSeedUUID() == getActiveSeed()->getUUID()) {
+
+                            newAccount = (CAccountHD*)accountPair.second;
+                        }
+                    }
                 }
             }
         }
@@ -1012,6 +1025,37 @@ CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type
 
     if (activeAccount) ///
         TopUpKeyPool(2); //We only assign the bare minimum addresses here - and let the background thread do the rest
+
+    return newAccount;
+}
+
+CAccount* CWallet::GenerateNewLegacyAccount(std::string strAccount)
+{
+    CAccount* newAccount = new CAccount();
+    addAccount(newAccount, strAccount);
+
+    return newAccount;
+}
+
+CAccountHD* CWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)
+{
+    CAccountHD* newAccount = NULL;
+
+    CExtPubKey pubkey;
+    try {
+        CBitcoinSecretExt<CExtPubKey> secretExt;
+        secretExt.SetString(encExtPubKey.c_str());
+        pubkey = secretExt.GetKey();
+    }
+    catch (...) {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+
+    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
+
+    addAccount(newAccount, strAccount);
+
+    TopUpKeyPool(2);
 
     return newAccount;
 }
@@ -1361,7 +1405,7 @@ isminetype CWallet::IsMine(const CKeyStore& keystore, const CTxIn& txin) const
     return ISMINE_NO;
 }
 
-bool IsMine(CAccount* forAccount, const CWalletTx& tx)
+bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
 {
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& txout : tx.vout) {
@@ -1628,12 +1672,17 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
         double dProgressStart = Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), pindex, false);
         double dProgressTip = Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), chainActive.Tip(), false);
         while (pindex) {
+            LEAVE_CRITICAL_SECTION(cs_main)
+            LEAVE_CRITICAL_SECTION(cs_wallet)
             if (pindex->nHeight % 100 == 0 && dProgressTip - dProgressStart > 0.0) {
 
-                LEAVE_CRITICAL_SECTION(cs_wallet)
                 ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), pindex, false) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
-                ENTER_CRITICAL_SECTION(cs_wallet)
             }
+            ENTER_CRITICAL_SECTION(cs_main)
+            ENTER_CRITICAL_SECTION(cs_wallet)
+
+            if (ShutdownRequested())
+                return ret;
 
             CBlock block;
             ReadBlockFromDisk(block, pindex, Params().GetConsensus());
@@ -1760,7 +1809,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
     return credit;
 }
 
-CAmount CWalletTx::GetImmatureCredit(bool fUseCache) const
+CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount) const
 {
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain()) {
         if (fUseCache && fImmatureCreditCached)
@@ -1773,7 +1822,7 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache) const
     return 0;
 }
 
-CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
+CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount) const
 {
     if (pwallet == 0)
         return 0;
@@ -1782,21 +1831,28 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
         return 0;
 
     if (fUseCache && fAvailableCreditCached)
-        return nAvailableCreditCached;
+        if (!forAccount)
+            return nAvailableCreditCached;
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
     for (unsigned int i = 0; i < vout.size(); i++) {
         if (!pwallet->IsSpent(hashTx, i)) {
             const CTxOut& txout = vout[i];
-            nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-            if (!MoneyRange(nCredit))
-                throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            if (!forAccount || IsMine(*forAccount, txout.scriptPubKey)) {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            }
         }
     }
 
-    nAvailableCreditCached = nCredit;
-    fAvailableCreditCached = true;
+    if (forAccount) {
+
+    } else {
+        nAvailableCreditCached = nCredit;
+        fAvailableCreditCached = true;
+    }
     return nCredit;
 }
 
@@ -1944,7 +2000,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime)
  * @{
  */
 
-CAmount CWallet::GetBalance(CAccount* forAccount) const
+CAmount CWallet::GetBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
@@ -1954,7 +2010,7 @@ CAmount CWallet::GetBalance(CAccount* forAccount) const
 
             if (!forAccount || ::IsMine(forAccount, *pcoin)) {
                 if (pcoin->IsTrusted())
-                    nTotal += pcoin->GetAvailableCredit();
+                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
             }
         }
     }
@@ -1962,7 +2018,7 @@ CAmount CWallet::GetBalance(CAccount* forAccount) const
     return nTotal;
 }
 
-CAmount CWallet::GetUnconfirmedBalance(CAccount* forAccount) const
+CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
@@ -1972,21 +2028,23 @@ CAmount CWallet::GetUnconfirmedBalance(CAccount* forAccount) const
 
             if (!forAccount || ::IsMine(forAccount, *pcoin)) {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
-                    nTotal += pcoin->GetAvailableCredit();
+                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
             }
         }
     }
     return nTotal;
 }
 
-CAmount CWallet::GetImmatureBalance() const
+CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
-            nTotal += pcoin->GetImmatureCredit();
+            if (!forAccount || ::IsMine(forAccount, *pcoin)) {
+                nTotal += pcoin->GetImmatureCredit(true, forAccount);
+            }
         }
     }
     return nTotal;
@@ -2287,6 +2345,11 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
 bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
+    if (forAccount->IsReadOnly()) {
+        strFailReason = _("Can't send from read only (watch) account.");
+        return false;
+    }
+
     CAmount nValue = 0;
     int nChangePosRequest = nChangePosInOut;
     unsigned int nSubtractFeeFromAmount = 0;
@@ -3060,7 +3123,7 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
             CAmount nReceived, nSent, nFee;
             wtx.GetAccountAmounts(strAccount, nReceived, nSent, nFee, filter);
 
-            if (nReceived != 0 && wtx.GetDepthInMainChain() >= nMinDepth) {
+            if (wtx.GetDepthInMainChain() >= nMinDepth) {
                 nBalance += nReceived;
                 nBalance -= nSent /*+ nFee*/;
             }
@@ -3347,6 +3410,7 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
     strUsage += HelpMessageOpt("-disablewallet", _("Do not load the wallet and disable wallet RPC calls"));
     strUsage += HelpMessageOpt("-keypool=<n>", strprintf(_("Set key pool size to <n> (default: %u)"), DEFAULT_KEYPOOL_SIZE));
+    strUsage += HelpMessageOpt("-accountpool=<n>", strprintf(_("Set account pool size to <n> (default: %u)"), 10));
     strUsage += HelpMessageOpt("-fallbackfee=<amt>", strprintf(_("A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)"),
                                                                CURRENCY_UNIT, FormatMoney(DEFAULT_FALLBACK_FEE)));
     strUsage += HelpMessageOpt("-mintxfee=<amt>", strprintf(_("Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)"),
@@ -3838,7 +3902,7 @@ void CWallet::setActiveSeed(CHDSeed* newActiveSeed)
     }
 }
 
-CHDSeed* CWallet::GenerateHDSeed()
+CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
 {
     if (IsCrypted() && (!activeAccount || IsLocked())) {
         throw runtime_error("Generating seed requires unlocked wallet");
@@ -3846,7 +3910,65 @@ CHDSeed* CWallet::GenerateHDSeed()
 
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size() * 8).c_str(), CHDSeed::CHDSeed::BIP44);
+    CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size() * 8).c_str(), seedType);
+    if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed)) {
+        throw runtime_error("Writing seed failed");
+    }
+    if (IsCrypted()) {
+        if (!newSeed->Encrypt(activeAccount->vMasterKey)) {
+            throw runtime_error("Encrypting seed failed");
+        }
+    }
+    mapSeeds[newSeed->getUUID()] = newSeed;
+
+    return newSeed;
+}
+
+void CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
+{
+    mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
+    if (!CWalletDB(strWalletFile).DeleteHDSeed(*deleteSeed)) {
+        throw runtime_error("Deleting seed failed");
+    }
+
+    for (const auto& accountPair : pwalletMain->mapAccounts) {
+        if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID()) {
+
+            deleteAccount(accountPair.second);
+        }
+    }
+
+    if (activeSeed == deleteSeed) {
+        if (mapSeeds.empty())
+            setActiveSeed(NULL);
+        else
+            setActiveSeed(mapSeeds.begin()->second);
+    }
+
+    delete deleteSeed;
+}
+
+CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
+{
+    if (IsCrypted() && (!activeAccount || IsLocked())) {
+        throw runtime_error("Generating seed requires unlocked wallet");
+    }
+
+    CExtPubKey pubkey;
+    try {
+        CBitcoinSecretExt<CExtPubKey> secretExt;
+        secretExt.SetString(pubKeyString.c_str());
+        pubkey = secretExt.GetKey();
+    }
+    catch (...) {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+
+    if (!pubkey.pubkey.IsValid()) {
+        throw runtime_error("Not a valid Gulden extended public key");
+    }
+
+    CHDSeed* newSeed = new CHDSeed(pubkey, CHDSeed::CHDSeed::BIP44NoHardening);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed)) {
         throw runtime_error("Writing seed failed");
     }
