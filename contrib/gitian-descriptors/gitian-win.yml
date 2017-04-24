@@ -110,7 +110,8 @@ script: |
   export PATH=${WRAP_DIR}:${PATH}
 
   tar xf osslsigncode-1.4.tar.gz | true
-  mkdir osslsigncode-1.4 | cd osslsigncode-1.4 | true
+  mkdir osslsigncode-1.4 | true
+  cd osslsigncode-1.4 | true
   ./configure --without-gsf --without-curl --disable-dependency-tracking | true
   make | true
   cd ..
