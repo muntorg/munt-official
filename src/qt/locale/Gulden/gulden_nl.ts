@@ -50,7 +50,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>AccountSummaryWidget</name>
     <message utf8="both">
         <source></source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1029,7 +1029,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source></source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>20 000</source>
@@ -1153,7 +1153,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
     </message>
     <message>
         <source>QR code</source>
@@ -1439,7 +1439,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2402,7 +2402,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation type="unfinished"></translation>
+        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -2410,7 +2410,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Request %1 Gulden</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanvraag voor %1 Gulden</translation>
     </message>
     <message>
         <source>Payment request URI</source>
@@ -2446,7 +2446,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>New request</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe aanvraag</translation>
     </message>
     <message>
         <source>Buy Gulden</source>
@@ -2526,19 +2526,19 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Copy request to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopieer aanvraag naar clipboard</translation>
     </message>
     <message>
         <source>Request Gulden</source>
-        <translation type="unfinished"></translation>
+        <translation>betalingsaanvraag</translation>
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
-        <translation type="unfinished"></translation>
+        <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
     </message>
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
     </message>
 </context>
 <context>
@@ -2612,11 +2612,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>(no amount requested)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Geen hoeveelheid gevraagd)</translation>
     </message>
     <message>
         <source>Requested</source>
-        <translation type="unfinished"></translation>
+        <translation>Gevraagd</translation>
     </message>
 </context>
 <context>
@@ -2855,24 +2855,24 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbergen</translation>
     </message>
     <message>
         <source>Total Amount %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Totaal bedrag %1</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit ontvangstadres is niet geld, controleer het adres</translation>
     </message>
     <message>
         <source>The amount exceeds your balance.
 If you  have recently received funds you may need to wait for them to clear before spending them.</source>
-        <translation type="unfinished"></translation>
+        <translation>Als u recentelijk guldens hebt ontvangen, moet u even wachten voor u deze kunt uitgeven</translation>
     </message>
     <message>
         <source>Duplicate address found: addresses should only be used once each.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dubbel adres gevonden: Elk adres zou 1 keer gebruikt moeten worden</translation>
     </message>
     <message>
         <source>Payment request expired.</source>
@@ -2880,11 +2880,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Nocks request failed [%1]</source>
-        <translation type="unfinished"></translation>
+        <translation>Nocks aanvraag mislukt</translation>
     </message>
     <message>
         <source>Pay only the required fee of %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Betaal alleen de benodigde fee van %1</translation>
     </message>
 </context>
 <context>
@@ -2963,11 +2963,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit is een ongeverifieerde betalingsverzoek </translation>
     </message>
     <message>
         <source>This is an authenticated payment request.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit is een geverifieerde betalingsverzoek</translation>
     </message>
 </context>
 <context>
@@ -2985,7 +2985,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>%1 is shutting down...</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sluit nu af...</translation>
     </message>
 </context>
 <context>
@@ -3298,31 +3298,31 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
-        <translation type="unfinished"></translation>
+        <translation>In conflict met transactie met %1 bevestiging</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
-        <translation type="unfinished"></translation>
+        <translation>0/onbevestigd, %1</translation>
     </message>
     <message>
         <source>in memory pool</source>
-        <translation type="unfinished"></translation>
+        <translation>In geheugenpool</translation>
     </message>
     <message>
         <source>not in memory pool</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet in geheugenpool</translation>
     </message>
     <message>
         <source>abandoned</source>
-        <translation type="unfinished"></translation>
+        <translation>Verlaten</translation>
     </message>
     <message>
         <source>Total moved</source>
-        <translation type="unfinished"></translation>
+        <translation>Totaal verplaatst</translation>
     </message>
     <message>
         <source>Output index</source>
-        <translation type="unfinished"></translation>
+        <translation>Output index</translation>
     </message>
 </context>
 <context>
@@ -3431,7 +3431,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation>Omschrijving</translation>
     </message>
     <message>
         <source>Received</source>
@@ -3443,43 +3443,43 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Abandoned</source>
-        <translation type="unfinished"></translation>
+        <translation>Afbreken</translation>
     </message>
     <message>
         <source>External payee</source>
-        <translation type="unfinished"></translation>
+        <translation>Externe</translation>
     </message>
     <message>
         <source>Multiple addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Meerdere adressen</translation>
     </message>
     <message>
         <source>Internal transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Interne transactie</translation>
     </message>
     <message>
         <source>Internal transfer from: </source>
-        <translation type="unfinished"></translation>
+        <translation>Interne transactie van:</translation>
     </message>
     <message>
         <source>Internal transfer to: </source>
-        <translation type="unfinished"></translation>
+        <translation>Interne transactie naar:</translation>
     </message>
     <message>
         <source>Payment from: </source>
-        <translation type="unfinished"></translation>
+        <translation>Betaling van:</translation>
     </message>
     <message>
         <source>Paid to: </source>
-        <translation type="unfinished"></translation>
+        <translation>Betaald aan:</translation>
     </message>
     <message>
         <source>Internal account movement</source>
-        <translation type="unfinished"></translation>
+        <translation>Verplaatsing interne account</translation>
     </message>
     <message>
         <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished"></translation>
+        <translation>Complexe transactie, bekijk transactie details</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3487,15 +3487,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>User-defined intent/purpose of the transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation>Doel van de transactie</translation>
     </message>
     <message>
         <source>Amount added to balance.</source>
-        <translation type="unfinished"></translation>
+        <translation>toegevoegd aan totaal bedrag</translation>
     </message>
     <message>
         <source>Amount removed from balance.</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwijderd van totaal bedrag</translation>
     </message>
 </context>
 <context>
@@ -3626,35 +3626,35 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>All dates</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle data</translation>
     </message>
     <message>
         <source>Select range</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecteer range</translation>
     </message>
     <message>
         <source>All transaction types</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle transactie types</translation>
     </message>
     <message>
         <source>Internal transfer</source>
-        <translation type="unfinished"></translation>
+        <translation>Interne transactie</translation>
     </message>
     <message>
         <source>Search label</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoek op Label</translation>
     </message>
     <message>
         <source>Abandon transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Transactie afbreken</translation>
     </message>
     <message>
         <source>Copy raw transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopieer ruwe transactie</translation>
     </message>
     <message>
         <source>Copy full transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopieer volledige transactie details</translation>
     </message>
 </context>
 <context>
@@ -3710,11 +3710,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     <name>WelcomeDialog</name>
     <message>
         <source>New wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe portemonee</translation>
     </message>
     <message>
         <source>Restore wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Portemonee herstellen</translation>
     </message>
     <message>
         <source>I wrote it down</source>
@@ -3730,11 +3730,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Please enter a recovery phrase</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer herstelzin in</translation>
     </message>
     <message>
         <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
-        <translation type="unfinished"></translation>
+        <translation>De herstelzin die u heeft ingevoerd is geen geldige gulden herstelzin. Als u zeker bent dat de zin correct is dan kan het programma proberen deze zin te gebruiken. Besef dat de zin gebruikt word zoals ingevoerd, let op dubbele spaties en grammaticale fouten worden niet hersteld. Het zelf bedenken van een zin kan de veiligheid drastisch verlagen, er kan geen support worden aangeboden voor ongeldige herstelzinnen</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -3742,15 +3742,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Proceed with invalid phrase</source>
-        <translation type="unfinished"></translation>
+        <translation>Ga door met ongeldige zin</translation>
     </message>
     <message>
         <source>Generating wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Wallet word aangemaakt</translation>
     </message>
     <message>
         <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonder herstelzin kunt u uw guldens verliezen wanneer u geen toegang meer hebt tot uw portemonee</translation>
     </message>
     <message>
         <source>I understand</source>
@@ -3758,15 +3758,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
+        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer uw herstelzin in van een vorige instalatie, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Als u de guldenapp gebruikt gaat u accoord met de voorwaarden en stemt u in dat alleen u verantwoordlijk bent voor het beheren en opslag van uw guldens. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -4269,363 +4269,363 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The %s developers</source>
-        <translation type="unfinished"></translation>
+        <translation>The %s Ontwikkelaars</translation>
     </message>
     <message>
         <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
-        <translation type="unfinished"></translation>
+        <translation>De -fallbackfee is zeer hoog, deze transactie fee betaald u wanneer de fee schatting niet toerijkend is </translation>
     </message>
     <message>
         <source>-maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation>De maximum transactie fee is zeer hoog! Fee&apos;s van deze grootte zijn voldoende genoeg voor een enkele betaling</translation>
     </message>
     <message>
         <source>-paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation>De fee voor deze transactie is zeer hoog. Weet u zeker dat u deze fee wil betalen?</translation>
     </message>
     <message>
         <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Een fee van (in %s/kB) zal gebruikt worden als er voor de fee schatting onvoldoende data beschikbaar is(standaard: %s)</translation>
     </message>
     <message>
         <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>Accepteer doorgestuurde transacties ontvangen van gevalideerde bronnen, ook wanneer er geen transacties worden door gestuurd (standaard: %d)</translation>
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan de data directory niet vergrendelen, %s. %s is waarschijnlijk al in gebruik</translation>
     </message>
     <message>
         <source>Do not keep transactions in the mempool longer than &lt;n&gt; hours (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewaar geen transacties in de mempool langer dan &lt;n&gt; uur (standaard: %u)</translation>
     </message>
     <message>
         <source>Equivalent bytes per sigop in transactions for relay and mining (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bytes per sigop in transacties voor doorsturen en minen (standaard: %u)</translation>
     </message>
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error tijdens het lezen van %s! Alle toetsen zijn correct gelezen, maar de transactie details of de adresboekgevens zijn incorrect of missen</translation>
     </message>
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fee&apos;s (in %s/kB) kleiner dan dit worden gezien als zero fee&apos;s voor het doorsturen, delven of het creeren van een transactie (standaard: %s)</translation>
     </message>
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fee&apos;s (in %s/kB) kleiner dan dit worden gezien als zero fee&apos;s voor het creeren van een transactie (standaard: %s)</translation>
     </message>
     <message>
         <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>Forceer het doorsturen van transacties van gevalideerde bronnen zelfs als deze in overtreding zijn van het locale doorstuur protocol (standaard: %d)</translation>
     </message>
     <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
-        <translation type="unfinished"></translation>
+        <translation>Als &lt;category&gt; niet word aangeleverd of als &lt;category&gt; = 1, Geef alle debugging informatie weer</translation>
     </message>
     <message>
         <source>Maximum allowed median peer time offset adjustment. Local perspective of time may be influenced by peers forward or backward by this amount. (default: %u seconds)</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanpassing aan het brontijd differentiaal. De locale tijd zal worden beinvloed door de bronnen (voor of achteruit) met (standaard %u seconden)</translation>
     </message>
     <message>
         <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximum transactie fee te gebruiken in een enkele transactie. Indien te laag, kan dit resulteren in het afbreken van een transactie (standaard: %s)</translation>
     </message>
     <message>
         <source>Please check that your computer&apos;s date and time are correct! If your clock is wrong, %s will not work properly.</source>
-        <translation type="unfinished"></translation>
+        <translation>Controleer de locale tijd van de computer! Als deze incorrect is zal %s niet goed functioneren</translation>
     </message>
     <message>
         <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
-        <translation type="unfinished"></translation>
+        <translation>Als u dit handig vond, bezoek dan %s voor meer informatie over de software</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prune configuratie onder een minimum van %d MiB. Gebruik een hoger getal</translation>
     </message>
     <message>
         <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
-        <translation type="unfinished"></translation>
+        <translation>Prune: Laatste synchronisatie is van voor de ge&apos;prunede data. U dient doormiddel van -reindex de gehele blockchain te downloaden</translation>
     </message>
     <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Randomiseer de credenties voor elke proxy verbinding. Dit zorgt voor Tor stream isolatie (standaard: %u)</translation>
     </message>
     <message>
         <source>Reduce storage requirements by pruning (deleting) old blocks. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, &gt;%u = target size in MiB to use for block files)</source>
-        <translation type="unfinished"></translation>
+        <translation>Reduceer de benodigde schijfruimte door oude blokken te verwijderen. Deze modus is niet compatible met -txindex en -rescan. Waarschuwing, voor het omkeren van deze setting is het nodig de gehele blockchain opnieuw te downloaden</translation>
     </message>
     <message>
         <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Een rescan is niet mogelijk in pruned modus. Gebruik -reindex om de gehele blockchain opnieuw te downloaden</translation>
     </message>
     <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ondersteun het filteren van blokken en transactie met bloom filters (standaard: %u)</translation>
     </message>
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer&apos;s date and time being set incorrectly. Only rebuild the block database if you are sure that your computer&apos;s date and time are correct</source>
-        <translation type="unfinished"></translation>
+        <translation>De blok database bevat een blok dat uit het de toekomst lijkt te komen. Dit kan komen door dat uw tijd niet goed is ingesteld. Herbouw de block database alleen als u zeker bent, dat te tijd en datum goed zijn ingesteld</translation>
     </message>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
-        <translation type="unfinished"></translation>
+        <translation>De totale lengte van de netwerk versie string (%i) is langer dan toegestaan. Verklein het aantal of de grote van de uacomments</translation>
     </message>
     <message>
         <source>Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>Probeer uitgaand verkeer onder (in MiB per 24h) te houden, 0 = geen limiet</translation>
     </message>
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet gelukt om de database terug te draaien naar een pre-fork staat. U zult de gehele blockchain opnieuw moeten downloaden</translation>
     </message>
     <message>
         <source>Unsupported argument -socks found. Setting SOCKS version isn&apos;t possible anymore, only SOCKS5 proxies are supported.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet ondersteund argument -socks gevonden. Setting SOCKS versie is niet meer mogelijk. Alleen SOCKS5 proxies worden ondersteund</translation>
     </message>
     <message>
         <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet ondersteund argument -whitelistalwaysrelay word genegeerd, gebruik -whitelistrelay en/of -whitelistforcerelay</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruik UPnP om de luisterpoorten in kaart te brengen (standaard: 1 wanneer er geluisterd word zonder -proxy)</translation>
     </message>
     <message>
         <source>Use hierarchical deterministic key generation (HD) after BIP32. Only has effect during wallet creation/first start</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruik hierarchical deterministic sleutelgeneratie (HD) na BIP32. Heeft alleen effect tijdens de eerste keer opstarten of het creeren van een portemonee</translation>
     </message>
     <message>
         <source>Username and hashed password for JSON-RPC connections. The field &lt;userpw&gt; comes in the format: &lt;USERNAME&gt;:&lt;SALT&gt;$&lt;HASH&gt;. A canonical python script is included in share/rpcuser. This option can be specified multiple times</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruikersnaam en de wachtwoord-hash voor JSON-RPC verbindingen. Het veld &lt;gebruikerswachtwoord&gt; word weergegeven als &lt;GEBRUIKERSNAAM&gt;:&lt;SALT&gt;$&lt;HASH&gt;. Een python script word toegevoegd aan share/rpcuser. Deze optie kan later worden aangepast</translation>
     </message>
     <message>
         <source>Warning: Unknown block versions being mined! It&apos;s possible unknown rules are in effect</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwing: Er worden onbekende blokversies worden gedolven! Het is mogelijk dat er onbekende regels optreden</translation>
     </message>
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwing: Het portemonee bestand is corrupt, de data word opgehaald! Het origineel %s word opgeslagen als %s in %s, als de transacties of balans niet klopt, dient u de gehele wallet te herstellen vanaf uw backup</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
-        <translation type="unfinished"></translation>
+        <translation>U dient de database opnieuw op te bouwen door doormiddel van -reindex de gehele blockchain opnieuw te downloaden</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation type="unfinished"></translation>
+        <translation>U dient de database opnieuw op te bouwen door doormiddel van -reindex-chainstate de -txindex te veranderen</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
-        <translation type="unfinished"></translation>
+        <translation>%corrupt, ophalen date mislukt</translation>
     </message>
     <message>
         <source>(default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>(standaard: %u)</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
-        <translation type="unfinished"></translation>
+        <translation>-maxmempool moet tenminste %d MB zijn</translation>
     </message>
     <message>
         <source>Append comment to the user agent string</source>
-        <translation type="unfinished"></translation>
+        <translation>Voeg omschrijving to aan de Gebruikers string</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Poging om private keys te herstellen van een corrupte wallet tijdens het opstarten</translation>
     </message>
     <message>
         <source>Automatically create Tor hidden service (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>Creer automatisch Tor hidden service (standaard: %d)</translation>
     </message>
     <message>
         <source>Cannot resolve -%s address: &apos;%s&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan -%s adres niet oplossen: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Change index out of range</source>
-        <translation type="unfinished"></translation>
+        <translation>Verandering van index buiten bereik</translation>
     </message>
     <message>
         <source>Copyright (C) %i-%i</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright (C) %i-%i</translation>
     </message>
     <message>
         <source>Enable publish hash block in &lt;address&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Publiseren van hash blok in &lt;address&gt; toestaan</translation>
     </message>
     <message>
         <source>Enable publish hash transaction in &lt;address&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Publiseren hash transactie in &lt;address&gt; toestaan</translation>
     </message>
     <message>
         <source>Enable publish raw block in &lt;address&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Publiseren ruw blok in &lt;address&gt; toestaan</translation>
     </message>
     <message>
         <source>Enable publish raw transaction in &lt;address&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Publiseren ruwe transactie in &lt;address&gt; toestaan</translation>
     </message>
     <message>
         <source>Enable transaction replacement in the memory pool (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vervangen van transactie in mempool toestaan (standaard: %u)</translation>
     </message>
     <message>
         <source>Error loading %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Error tijdens laden %s</translation>
     </message>
     <message>
         <source>Error loading %s: Wallet corrupted</source>
-        <translation type="unfinished"></translation>
+        <translation>Error tijdens laden %s: Portemonnee corrupt</translation>
     </message>
     <message>
         <source>Error loading %s: Wallet requires newer version of %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Error tijdens laden %s: Nieuwe versie portemonnee benodigd</translation>
     </message>
     <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
-        <translation type="unfinished"></translation>
+        <translation>Er is een interne error opgetreden, zie debug.log voor details</translation>
     </message>
     <message>
         <source>Fee (in %s/kB) to add to transactions you send (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fee (in %s/kB) toevoegen aan de te verzenden transactie (standaard: %s)</translation>
     </message>
     <message>
         <source>Imports blocks from external blk000??.dat file on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokken importeren vanuit externe blk000???.dat bestand tijdens opstarten</translation>
     </message>
     <message>
         <source>Initialization sanity check failed. %s is shutting down.</source>
-        <translation type="unfinished"></translation>
+        <translation>Initiatie gezondheidscheck mislukt, %s Sluit nu af.</translation>
     </message>
     <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: &apos;%s&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet toegestaande hoeveelheid voor -%s=&lt;amount&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: &apos;%s&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet toegestaande hoeveelheid voor -fallbackfee=&lt;amount&gt;: &apos;%s&apos;</translation>
     </message>
     <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Houdt transactie in de geheugenpool onder &lt;n&gt; megabytes (default: %u)</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Laden banlijst...</translation>
     </message>
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie van de authorisatie cookie (standaard: data dir)</translation>
     </message>
     <message>
         <source>Make the wallet broadcast transactions</source>
-        <translation type="unfinished"></translation>
+        <translation>Laat portemonee transacties versturen</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Print bericht en sluit af</translation>
     </message>
     <message>
         <source>Print version and exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Print versie en sluit af</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prune kan niet worden geconfigureerd met een negatieve waarde</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -txindex.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prune modus is niet compatible met -txindex</translation>
     </message>
     <message>
         <source>Pruning blockstore...</source>
-        <translation type="unfinished"></translation>
+        <translation>Prunen van blockstore...</translation>
     </message>
     <message>
         <source>Rebuild chain state and block index from the blk*.dat files on disk</source>
-        <translation type="unfinished"></translation>
+        <translation>Herbouwen van de chainstate en blok index van blk*.dat bestanden op de schijf</translation>
     </message>
     <message>
         <source>Rebuild chain state from the currently indexed blocks</source>
-        <translation type="unfinished"></translation>
+        <translation>Herbouwen chainstate van de huidige geindexeerde blokken</translation>
     </message>
     <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
-        <translation type="unfinished"></translation>
+        <translation>Reduceren van -maxconnections van %d tot %d, vanwege systeem limitaties</translation>
     </message>
     <message>
         <source>Rescan the block chain for missing wallet transactions on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Herscannen van de blockchain voor missende wallet transacties tijdens het opstarten</translation>
     </message>
     <message>
         <source>Rewinding blocks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Terug draaien van blokken</translation>
     </message>
     <message>
         <source>Set maximum BIP141 block weight (default: %d)</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellen maximum BIP141 blok gewicht (standaard: %d)</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
-        <translation type="unfinished"></translation>
+        <translation>De broncode is beschikbaar op %s</translation>
     </message>
     <message>
         <source>Tor control port password (default: empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tor controle poort wachtwoord (standaard: Leeg)</translation>
     </message>
     <message>
         <source>Tor control port to use if onion listening enabled (default: %s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Alleen Tor controle poort gebruiken als onion luisteren is ingesteld</translation>
     </message>
     <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet mogelijk om %s te binden op deze computer. %S is waarschijnlijk al in gebruik</translation>
     </message>
     <message>
         <source>Unable to start HTTP server. See debug log for details.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet mogelijk om HTTP server te starten. Zie debug log voor details</translation>
     </message>
     <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet ondersteund argument -benchmark genegeerd, gebruik -debug=bench</translation>
     </message>
     <message>
         <source>Unsupported argument -debugnet ignored, use -debug=net.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet ondersteund argument -debugnet genegeerd, gebruik -debug=net</translation>
     </message>
     <message>
         <source>Unsupported argument -tor found, use -onion.</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet ondersteund argument -tor genegeerd, gebruik -onion</translation>
     </message>
     <message>
         <source>Upgrade wallet to latest format on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Update portemonee naar laatste versie tijdens opstarten</translation>
     </message>
     <message>
         <source>User Agent comment (%s) contains unsafe characters.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gebruiker omschrijving bevat onveilige tekens</translation>
     </message>
     <message>
         <source>Wallet debugging/testing options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Portemonnee debugging/test opties</translation>
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart %s to complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Portemonnee dient herschreven te worden: Herstart portemonee</translation>
     </message>
     <message>
         <source>Warning: unknown new rules activated (versionbit %i)</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwing: onbekende nieuwe regels geactiveerd</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
-        <translation type="unfinished"></translation>
+        <translation>Moet de portemonee in een block only modus draaien (standaard: %u_)</translation>
     </message>
     <message>
         <source>ZeroMQ notification options:</source>
-        <translation type="unfinished"></translation>
+        <translation>ZeroMQ notificatie opties</translation>
     </message>
     <message>
         <source>Error loading %s: You can&apos;t enable HD on an already existing non-HD wallet</source>
