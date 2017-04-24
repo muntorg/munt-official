@@ -319,7 +319,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     bool allFailed = true;
     bool didShowError = false;
     for (auto& account : accountsToTry) {
-        if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) > currentTransaction.getTotalTransactionAmount()) {
+
+        if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) >= currentTransaction.getTotalTransactionAmount()) {
             if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
                 prepareStatus = model->prepareTransaction(account, currentTransaction, CoinControlDialog::coinControl);
             else

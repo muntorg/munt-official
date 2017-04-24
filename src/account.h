@@ -56,13 +56,20 @@ public:
     enum SeedType {
         BIP44 = 0, // New Gulden standard based on BIP44 for /all/ Gulden wallets (desktop/iOS/android)
         BIP32 = 1, // Old Gulden android/iOS wallets
-        BIP32Legacy = 2, // Old 'guldencoin' wallets
-        BIP44External = 3 //External BIP44 wallets like 'coinomi'
+        BIP32Legacy = 2, // Very old 'guldencoin' wallets
+        BIP44External = 3, //External BIP44 wallets like 'coinomi' (uses a different hash that Gulden BIP44)
+        BIP44NoHardening = 4 // Same as BIP44 however with no hardening on accounts (Users have to be more careful with key security but allows for synced read only wallets... whereas with normal BIP44 only accounts are possible)
     };
 
     CHDSeed();
     CHDSeed(SecureString mnemonic, SeedType type);
+    CHDSeed(CExtPubKey& pubkey, SeedType type);
+    virtual ~CHDSeed()
+    {
+    }
+
     void Init();
+    void InitReadOnly();
     CAccountHD* GenerateAccount(AccountSubType type, CWalletDB* Db);
 
     ADD_SERIALIZE_METHODS;
@@ -106,16 +113,24 @@ public:
             READWRITE(purposeKeyPriv);
             READWRITE(cointypeKeyPriv);
         }
+
+        try {
+            READWRITE(m_readOnly);
+        }
+        catch (...) {
+        }
     }
 
     std::string getUUID() const;
     SecureString getMnemonic();
+    SecureString getPubkey();
 
     virtual bool IsLocked() const;
     virtual bool IsCrypted() const;
     virtual bool Lock();
     virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn);
     virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn);
+    virtual bool IsReadOnly() { return m_readOnly; };
 
     SeedType m_type;
 
@@ -139,6 +154,8 @@ protected:
     CExtKey purposeKeyPriv; //key at m/44'           - BIP44 only
     CExtKey cointypeKeyPriv; //key at m/44'/87'       - BIP44 only
     CKeyingMaterial vMasterKey; //Memory only.
+
+    bool m_readOnly;
 
     std::vector<unsigned char> encryptedMnemonic;
     std::vector<unsigned char> masterKeyPrivEncrypted;
@@ -190,6 +207,12 @@ public:
             }
         }
         READWRITE(earliestPossibleCreationTime);
+
+        try {
+            READWRITE(m_readOnly);
+        }
+        catch (...) {
+        }
     }
 
     template <typename Stream, typename Operation>
@@ -236,6 +259,8 @@ public:
     void setUUID(const std::string& stringUUID);
     std::string getParentUUID() const;
 
+    bool IsReadOnly() { return m_readOnly; };
+
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
     mutable CCriticalSection cs_keypool;
@@ -253,6 +278,8 @@ protected:
     std::string accountLabel;
     uint64_t earliestPossibleCreationTime;
 
+    bool m_readOnly;
+
     CKeyingMaterial vMasterKey; //Memory only.
     friend class CWallet;
 };
@@ -260,6 +287,8 @@ protected:
 class CAccountHD : public CAccount {
 public:
     CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID);
+
+    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID);
 
     CAccountHD(){};
 
@@ -281,6 +310,7 @@ public:
     uint32_t getIndex();
     std::string getSeedUUID() const;
     CExtKey* GetAccountMasterPrivKey();
+    SecureString GetAccountMasterPubKeyEncoded();
 
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>

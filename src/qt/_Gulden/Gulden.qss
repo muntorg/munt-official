@@ -722,7 +722,7 @@ QHeaderView::up-arrow:hover
     border-left: 0px;
 }
 
-#receivingAddress, #receivingAddressLabel, #receivingAddress_dialog, #receivingAddressLabel_dialog, #newAccountName, #requestLabel, #buyEmailAddress, #buyBank, #lineEditChangeAccountName, #lineEditOldPassword, #lineEditNewPassword, #lineEditNewPasswordRepeat, #labelBackupPhrase, #edittextEnterRecoveryPhrase, #passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit
+#receivingAddress, #receivingAddressLabel, #receivingAddress_dialog, #receivingAddressLabel_dialog, #newAccountName, #requestLabel, #buyEmailAddress, #buyBank, #lineEditChangeAccountName, #lineEditOldPassword, #lineEditNewPassword, #lineEditNewPasswordRepeat, #labelBackupPhrase, #edittextEnterRecoveryPhrase, #passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit, #privKeyEdit
 {
     font-size: BUTTON_FONT_SIZE;
     height: 28px;
@@ -771,7 +771,7 @@ QHeaderView::up-arrow:hover
     color: black;
 }
 
-#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading2, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation
+#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading2, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey
 {
     color: #999;
 }

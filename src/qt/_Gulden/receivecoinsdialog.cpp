@@ -326,8 +326,10 @@ void ReceiveCoinsDialog::generateRequest()
 
     CReserveKey reservekey(pwalletMain, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
-    if (!reservekey.GetReservedKey(vchPubKey))
+    if (!reservekey.GetReservedKey(vchPubKey)) {
+
         return;
+    }
     reservekey.KeepKey();
 
     ui->receiveCoinsStackedWidget->setCurrentIndex(3);
@@ -423,10 +425,15 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
 
         buyReceiveAddress = new CReserveKey(pwalletMain, currentAccount, KEYCHAIN_EXTERNAL);
         CPubKey pubKey;
-        buyReceiveAddress->GetReservedKey(pubKey);
-        CKeyID keyID = pubKey.GetID();
+        QString guldenAddress;
 
-        QString guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        if (!buyReceiveAddress->GetReservedKey(pubKey)) {
+
+            guldenAddress = "error";
+        } else {
+            CKeyID keyID = pubKey.GetID();
+            guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        }
 
         QString emailAddress = QString("");
         QString paymentMethod = QString("");

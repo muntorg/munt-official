@@ -149,6 +149,9 @@ struct CExtKey {
     ChainCode chaincode;
     CKey key;
 
+    const CKey& GetKey() const { return key; };
+    CKey& GetMutableKey() { return key; };
+
     friend bool operator==(const CExtKey& a, const CExtKey& b)
     {
         return a.nDepth == b.nDepth && memcmp(&a.vchFingerprint[0], &b.vchFingerprint[0], 4) == 0 && a.nChild == b.nChild && a.chaincode == b.chaincode && a.key == b.key;

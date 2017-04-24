@@ -136,6 +136,7 @@ public:
     bool WriteHDChain(const CHDChain& chain);
 
     bool WriteHDSeed(const CHDSeed& seed);
+    bool DeleteHDSeed(const CHDSeed& seed);
 
     bool WritePrimarySeed(const CHDSeed& seed);
     bool WritePrimaryAccount(const CAccount* account);

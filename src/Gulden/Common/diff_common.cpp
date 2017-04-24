@@ -10,6 +10,10 @@
 #include "diff_delta.h"
 #include "diff_old.h"
 
+#ifdef BUILD_IOS
+#include "BRMerkleBlock.h"
+#endif
+
 #ifdef __JAVA__
 package org.bitcoinj.core;
 import org.bitcoinj.store.BlockStore;

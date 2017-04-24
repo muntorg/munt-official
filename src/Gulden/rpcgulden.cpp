@@ -15,8 +15,8 @@
 
 #include <univalue.h>
 
-#include "wallet/wallet.h"
 #include <Gulden/translate.h>
+#include <Gulden/util.h>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/median.hpp>
@@ -219,7 +219,7 @@ UniValue deleteaccount(const UniValue& params, bool fHelp)
 
     if (params.size() == 1 || params[1].get_str() != "force") {
         CAmount balance = pwalletMain->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true);
-        if (balance > MINIMUM_VALUABLE_AMOUNT) {
+        if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly()) {
             throw runtime_error("Account not empty, please first empty your account before trying to delete it.");
         }
     }
@@ -233,13 +233,13 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
-    if (fHelp || params.size() != 1)
+    if (fHelp || params.size() == 0 || params.size() > 2)
         throw std::runtime_error(
             "createaccount \"name\"\n"
-            "Create an account.\n"
+            "Create an account, for HD accounts the currently active seed will be used to create the account.\n"
             "\nArguments:\n"
-
             "1. \"name\"       (string) Specify the label for the account.\n"
+            "2. \"type\"       (string, optional) Type of account to create (HD; Mobile; Legacy)\n"
             "\nExamples:\n"
             + HelpExampleCli("createaccount", "")
             + HelpExampleRpc("createaccount", ""));
@@ -247,7 +247,23 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
 
-    CAccount* account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+    std::string accountType = "HD";
+    if (params.size() > 1) {
+        accountType = params[1].get_str();
+        if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy")
+            throw runtime_error("Invalid account type");
+    }
+
+    CAccount* account = NULL;
+
+    if (accountType == "HD")
+        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+    else if (accountType == "Mobile")
+        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
+    else if (accountType == "Legacy") {
+        EnsureWalletIsUnlocked();
+        account = pwalletMain->GenerateNewLegacyAccount(params[0].get_str());
+    }
 
     if (!account)
         throw runtime_error("Unable to create account.");
@@ -276,6 +292,71 @@ UniValue getactiveaccount(const UniValue& params, bool fHelp)
         throw runtime_error("No account active");
 
     return pwalletMain->activeAccount->getUUID();
+}
+
+UniValue getreadonlyaccount(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+            "getreadonlyaccount \"account\" \n"
+            "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
+            "1. \"account\"        (string, required) The unique UUID or label for the account or \"\" for the active account.\n"
+            "\nResult:\n"
+            "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
+            "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getreadonlyaccount", "")
+            + HelpExampleRpc("getreadonlyaccount", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+
+    CAccount* account = AccountFromValue(params[0], false);
+
+    if (!account->IsHD())
+        throw runtime_error("Can only be used on a HD account.");
+
+    CAccountHD* accountHD = dynamic_cast<CAccountHD*>(account);
+
+    EnsureWalletIsUnlocked();
+
+    return accountHD->GetAccountMasterPubKeyEncoded().c_str();
+}
+
+UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 2)
+        throw std::runtime_error(
+            "importreadonlyaccount \"name\" \"encodedkey\" \n"
+            "\nImport a read only account from an \"encodedkey\" which has been obtained by using \"getreadonlyaccount\"\n"
+            "1. \"name\"       (string) Name to assign to the new account.\n"
+            "1. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
+            "\nResult:\n"
+            "\nReturn the UUID of the new account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", "")
+            + HelpExampleRpc("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+
+    EnsureWalletIsUnlocked();
+
+    CAccount* account = pwalletMain->CreateReadOnlyAccount(params[0].get_str().c_str(), params[1].get_str().c_str());
+
+    if (!account)
+        throw runtime_error("Unable to create account.");
+
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
+
+    return account->getUUID();
 }
 
 UniValue getactiveseed(const UniValue& params, bool fHelp)
@@ -375,10 +456,17 @@ UniValue createseed(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
-    if (fHelp || params.size() != 0)
+    if (fHelp || params.size() > 1)
         throw std::runtime_error(
             "createseed \n"
             "\nCreate a new seed using random entropy.\n"
+            "1. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
+            "\nThe default is correct in almost all cases, only experts should work with the other types\n"
+            "\nBIP44 - This is the standard Gulden seed type that should be used in almost all cases.\n"
+            "\nBIP44NH - (No Hardening) This is the same as above, however with weakened security required for \"read only\" (watch) seed capability, use this only if you understand the implications and if you want to share your seed with another read only wallet.\n"
+            "\nBIP44E - This is a modified BIP44 with a different hash value, required for compatibility with some external wallets (e.g. Coinomi).\n"
+            "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
+            "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -390,7 +478,12 @@ UniValue createseed(const UniValue& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    CHDSeed* newSeed = pwalletMain->GenerateHDSeed();
+    CHDSeed::SeedType seedType = CHDSeed::CHDSeed::BIP44;
+    if (params.size() > 0) {
+        seedType = SeedTypeFromString(params[0].get_str());
+    }
+
+    CHDSeed* newSeed = pwalletMain->GenerateHDSeed(seedType);
 
     if (!newSeed)
         throw runtime_error("Failed to generate seed");
@@ -398,16 +491,46 @@ UniValue createseed(const UniValue& params, bool fHelp)
     return newSeed->getUUID();
 }
 
-UniValue importseed(const UniValue& params, bool fHelp)
+UniValue deleteseed(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
     if (fHelp || params.size() != 1)
         throw std::runtime_error(
-            "importseed \"mnemonic\" \n"
+            "deleteseed \"seed\" \n"
+            "\nDelete a HD seed.\n"
+            "1. \"seed\"        (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
+            "\nResult:\n"
+            "\ntrue on success.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("deleteseed", "")
+            + HelpExampleRpc("deleteseed", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+
+    CHDSeed* seed = SeedFromValue(params[0], true);
+
+    EnsureWalletIsUnlocked();
+
+    pwalletMain->DeleteSeed(seed, false);
+
+    return true;
+}
+
+UniValue importseed(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() < 1 || params.size() > 2)
+        throw std::runtime_error(
+            "importseed \"mnemonic or pubkey\" \"read only\" \n"
             "\nSet the currently active seed by UUID.\n"
-            "1. \"mnemonic\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "1. \"mnemonic or pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
+            "2. \"read only\"      (boolean, optional, default=false) Rescan the wallet for transactions\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -419,10 +542,21 @@ UniValue importseed(const UniValue& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    SecureString mnemonic = params[0].get_str().c_str();
-    CHDSeed* newSeed = pwalletMain->ImportHDSeed(mnemonic);
+    bool fReadOnly = false;
+    if (params.size() > 1)
+        fReadOnly = params[1].get_bool();
 
-    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    CHDSeed* newSeed = NULL;
+    if (fReadOnly) {
+        SecureString pubkeyString = params[0].get_str().c_str();
+        newSeed = pwalletMain->ImportHDSeedFromPubkey(pubkeyString);
+    } else {
+        SecureString mnemonic = params[0].get_str().c_str();
+        newSeed = pwalletMain->ImportHDSeed(mnemonic);
+    }
+
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
 
     return newSeed->getUUID();
 }
@@ -491,7 +625,7 @@ UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
             "1. \"seed\"        (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
             "\nResult:\n"
             "\nReturn the mnemonic as a string.\n"
-            "\nNote it is important to ensure that nobdy gets access to this mnemonic or all funds in accounts made from the seed can be compromised.\n"
+            "\nNote it is important to ensure that nobody gets access to this mnemonic or all funds in accounts made from the seed can be compromised.\n"
             "\nExamples:\n"
             + HelpExampleCli("getmnemonicfromseed", "")
             + HelpExampleRpc("getmnemonicfromseed", ""));
@@ -506,19 +640,35 @@ UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
     return seed->getMnemonic().c_str();
 }
 
-std::string StringFromSeedType(CHDSeed* seed)
+UniValue getreadonlyseed(const UniValue& params, bool fHelp)
 {
-    switch (seed->m_type) {
-    case CHDSeed::CHDSeed::BIP32:
-        return "BIP32";
-    case CHDSeed::CHDSeed::BIP32Legacy:
-        return "BIP32 Legacy";
-    case CHDSeed::CHDSeed::BIP44:
-        return "BIP44";
-    case CHDSeed::CHDSeed::BIP44External:
-        return "BIP44 External";
-    }
-    return "unknown";
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+            "getreadonlyseed \"seed\" \n"
+            "\nGet the public key of an HD seed, this can be used to import the seed as a read only seed in another wallet.\n"
+            "1. \"seed\"        (string, required) The unique UUID for the seed that we want the public key of, or \"\" for the active seed.\n"
+            "\nNote the seed must be a 'non hardened' BIP44NH seed and not a regular seed.\n"
+            "\nResult:\n"
+            "\nReturn the public key as a string.\n"
+            "\nNote it is important to be careful with and protect access to this public key as if it is compromised it can weaken security in cases where private keys are also compromised.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getreadonlyseed", "")
+            + HelpExampleRpc("getreadonlyseed", ""));
+
+    if (!pwalletMain)
+        throw runtime_error("Cannot use command without an active wallet");
+
+    CHDSeed* seed = SeedFromValue(params[0], true);
+
+    if (seed->m_type != CHDSeed::SeedType::BIP44NoHardening)
+        throw runtime_error("Can only use command with a non-hardened BIP44 seed");
+
+    EnsureWalletIsUnlocked();
+
+    return seed->getPubkey().c_str();
 }
 
 UniValue listseeds(const UniValue& params, bool fHelp)
@@ -543,6 +693,8 @@ UniValue listseeds(const UniValue& params, bool fHelp)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", seedPair.first));
         rec.push_back(Pair("type", StringFromSeedType(seedPair.second)));
+        if (seedPair.second->IsReadOnly())
+            rec.push_back(Pair("readonly", "true"));
         AllSeeds.push_back(rec);
     }
 
@@ -554,22 +706,26 @@ static const CRPCCommand commands[] = { //  category              name          
     { "mining", "gethashps", &gethashps, true },
     { "mining", "sethashlimit", &sethashlimit, true },
 
-    { "developer", "dumpdiffarray", &dumpdiffarray, true },
     { "developer", "dumpblockgaps", &dumpblockgaps, true },
+    { "developer", "dumpdiffarray", &dumpdiffarray, true },
 
     { "accounts", "changeaccountname", &changeaccountname, true },
     { "accounts", "createaccount", &createaccount, true },
     { "accounts", "deleteaccount", &deleteaccount, true },
     { "accounts", "getactiveaccount", &getactiveaccount, true },
+    { "accounts", "getreadonlyaccount", &getreadonlyaccount, true },
+    { "accounts", "importreadonlyaccount", &importreadonlyaccount, true },
     { "accounts", "listaccounts", &listallaccounts, true },
     { "accounts", "setactiveaccount", &setactiveaccount, true },
 
-    { "mnemonics", "getactiveseed", &getactiveseed, true },
-    { "mnemonics", "setactiveseed", &setactiveseed, true },
-    { "mnemonics", "listseeds", &listseeds, true },
     { "mnemonics", "createseed", &createseed, true },
-    { "mnemonics", "importseed", &importseed, true },
+    { "mnemonics", "deleteseed", &deleteseed, true },
+    { "mnemonics", "getactiveseed", &getactiveseed, true },
     { "mnemonics", "getmnemonicfromseed", &getmnemonicfromseed, true },
+    { "mnemonics", "getreadonlyseed", &getreadonlyseed, true },
+    { "mnemonics", "setactiveseed", &setactiveseed, true },
+    { "mnemonics", "importseed", &importseed, true },
+    { "mnemonics", "listseeds", &listseeds, true },
 };
 
 void RegisterGuldenRPCCommands(CRPCTable& tableRPC)

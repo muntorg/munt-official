@@ -19,6 +19,7 @@ CHDSeed::CHDSeed()
     : m_nAccountIndex(HDDesktopStartIndex)
     , m_nAccountIndexMobi(HDMobileStartIndex)
     , encrypted(false)
+    , m_readOnly(false)
 {
 }
 
@@ -28,10 +29,30 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
     , m_nAccountIndex(HDDesktopStartIndex)
     , m_nAccountIndexMobi(HDMobileStartIndex)
     , encrypted(false)
+    , m_readOnly(false)
 {
 
     unencryptedMnemonic = mnemonic;
     Init();
+}
+
+CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
+    : m_type(type)
+    , m_UUID(boost::uuids::nil_generator()())
+    , m_nAccountIndex(HDDesktopStartIndex)
+    , m_nAccountIndexMobi(HDMobileStartIndex)
+    , encrypted(false)
+    , m_readOnly(true)
+{
+    unencryptedMnemonic = "";
+    masterKeyPub = pubkey;
+
+    masterKeyPriv.GetMutableKey().MakeNewKey(true);
+    assert(masterKeyPriv.key.IsValid());
+    cointypeKeyPriv.GetMutableKey().MakeNewKey(true);
+    purposeKeyPriv.GetMutableKey().MakeNewKey(true);
+
+    InitReadOnly();
 }
 
 void CHDSeed::Init()
@@ -56,12 +77,27 @@ void CHDSeed::Init()
         masterKeyPriv.Derive(purposeKeyPriv, 44 | BIP32_HARDENED_KEY_LIMIT); //m/44'
         purposeKeyPriv.Derive(cointypeKeyPriv, 87 | BIP32_HARDENED_KEY_LIMIT); //m/44'/87'
     } break;
+    case BIP44NoHardening: {
+        masterKeyPriv.Derive(purposeKeyPriv, 44); //m/44
+        purposeKeyPriv.Derive(cointypeKeyPriv, 87); //m/44/87
+    } break;
     default:
         assert(0);
     }
     masterKeyPub = masterKeyPriv.Neuter();
     purposeKeyPub = purposeKeyPriv.Neuter();
     cointypeKeyPub = cointypeKeyPriv.Neuter();
+
+    if (m_UUID.is_nil()) {
+        m_UUID = boost::uuids::random_generator()();
+    }
+}
+
+void CHDSeed::InitReadOnly()
+{
+    assert(m_type == BIP44NoHardening);
+    masterKeyPub.Derive(purposeKeyPub, 44); //m/44
+    purposeKeyPub.Derive(cointypeKeyPub, 87); //m/44/87
 
     if (m_UUID.is_nil()) {
         m_UUID = boost::uuids::random_generator()();
@@ -105,20 +141,28 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
         return NULL;
 
     CExtKey accountKey;
-    switch (m_type) {
-    case BIP32:
-    case BIP32Legacy:
-        masterKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT); // m/n' (BIP32)
-        break;
-    case BIP44:
-    case BIP44External:
-        cointypeKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT); // m/44'/87'/n' (BIP44)
-        break;
-    default:
-        assert(0);
+    if (IsReadOnly()) {
+        CExtPubKey accountKeyPub;
+        cointypeKeyPub.Derive(accountKeyPub, nAccountIndex); // m/44/87/n (BIP44)
+        return new CAccountHD(accountKeyPub, m_UUID);
+    } else {
+        switch (m_type) {
+        case BIP32:
+        case BIP32Legacy:
+            masterKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT); // m/n' (BIP32)
+            break;
+        case BIP44:
+        case BIP44External:
+            cointypeKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT); // m/44'/87'/n' (BIP44)
+            break;
+        case BIP44NoHardening:
+            cointypeKeyPriv.Derive(accountKey, nAccountIndex); // m/44'/87'/n (BIP44 without hardening (for read only sync))
+            break;
+        default:
+            assert(0);
+        }
+        return new CAccountHD(accountKey, m_UUID);
     }
-
-    return new CAccountHD(accountKey, m_UUID);
 }
 
 std::string CHDSeed::getUUID() const
@@ -131,9 +175,14 @@ SecureString CHDSeed::getMnemonic()
     return unencryptedMnemonic;
 }
 
+SecureString CHDSeed::getPubkey()
+{
+    return CBitcoinSecretExt<CExtPubKey>(masterKeyPub).ToString().c_str();
+}
+
 bool CHDSeed::IsLocked() const
 {
-    if (unencryptedMnemonic.size() > 0) {
+    if (unencryptedMnemonic.size() > 0 || m_readOnly) {
         return false;
     }
     return true;
@@ -231,8 +280,27 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
     changeChainKeyPub = changeChainKeyPriv.Neuter();
 }
 
+CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
+    : CAccount()
+    , m_SeedID(seedID)
+    , m_nIndex(accountKey_.nChild)
+    , m_nNextChildIndex(0)
+    , m_nNextChangeIndex(0)
+    , encrypted(false)
+{
+
+    accountKeyPriv.GetMutableKey().MakeNewKey(true);
+    primaryChainKeyPriv.GetMutableKey().MakeNewKey(true);
+    changeChainKeyPriv.GetMutableKey().MakeNewKey(true);
+
+    accountKey_.Derive(primaryChainKeyPub, 0); //a/0
+    accountKey_.Derive(changeChainKeyPub, 1); //a/1
+    m_readOnly = true;
+}
+
 void CAccountHD::GetKey(CExtKey& childKey, int nChain)
 {
+    assert(!m_readOnly);
     if (nChain == KEYCHAIN_EXTERNAL) {
         primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
     } else {
@@ -244,6 +312,8 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
     if (IsLocked())
         return false;
+
+    assert(!m_readOnly);
 
     int64_t nKeyIndex = -1;
     CExtKey privKey;
@@ -403,6 +473,14 @@ CExtKey* CAccountHD::GetAccountMasterPrivKey()
     return &accountKeyPriv;
 }
 
+SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
+{
+    if (IsLocked())
+        return NULL;
+
+    return CBitcoinSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
+}
+
 std::string CAccountHD::getSeedUUID() const
 {
     return boost::uuids::to_string(m_SeedID);
@@ -422,6 +500,7 @@ CAccount::CAccount()
     parentUUID = boost::uuids::nil_generator()();
     m_Type = AccountType::Normal;
     m_SubType = AccountSubType::Desktop;
+    m_readOnly = false;
 }
 
 void CAccount::SetNull()

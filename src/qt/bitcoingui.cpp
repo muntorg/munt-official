@@ -434,6 +434,8 @@ void BitcoinGUI::createMenuBar()
     }
     settingsMenu->addAction(optionsAction);
 
+    m_pGuldenImpl->createMenusGulden();
+
     QMenu* help = appMenuBar->addMenu(tr("&Help"));
     if (walletFrame) {
         help->addAction(openRPCConsoleAction);
@@ -513,6 +515,7 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel* walletModel)
     setWalletActionsEnabled(true);
 
     connect(walletModel, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this, SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
+    connect(walletModel, SIGNAL(showProgress(QString, int)), this, SLOT(showProgress(QString, int)));
 
     return walletFrame->addWallet(name, walletModel);
 }
@@ -1076,20 +1079,26 @@ void BitcoinGUI::detectShutdown()
 
 void BitcoinGUI::showProgress(const QString& title, int nProgress)
 {
-    if (nProgress == 0) {
-        progressDialog = new QProgressDialog(title, "", 0, 100);
-        progressDialog->setWindowModality(Qt::ApplicationModal);
-        progressDialog->setMinimumDuration(0);
-        progressDialog->setCancelButton(0);
-        progressDialog->setAutoClose(false);
-        progressDialog->setValue(0);
-    } else if (nProgress == 100) {
-        if (progressDialog) {
-            progressDialog->close();
-            progressDialog->deleteLater();
+    if (nProgress == 100) {
+        if (progressBarLabel->text() == title) {
+            progressBarLabel->setVisible(false);
+            progressBar->setVisible(false);
+            m_pGuldenImpl->hideProgressBarLabel();
         }
-    } else if (progressDialog)
-        progressDialog->setValue(nProgress);
+    } else {
+        if (!progressBar->isVisible() || progressBarLabel->text() == title) {
+            progressBarLabel->setText(title);
+            progressBar->setMaximum(1000000000);
+            progressBar->setValue(nProgress * 10000000.0 + 0.5);
+            progressBarLabel->setVisible(true);
+            progressBar->setVisible(true);
+            m_pGuldenImpl->showProgressBarLabel();
+
+            QString tooltip = title + "<br>" + QString("%1% complete.").arg(nProgress);
+            progressBarLabel->setToolTip(tooltip);
+            progressBar->setToolTip(tooltip);
+        }
+    }
 }
 
 void BitcoinGUI::setTrayIconVisible(bool fHideTrayIcon)

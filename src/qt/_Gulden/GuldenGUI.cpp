@@ -46,8 +46,10 @@
 
 #include <_Gulden/accountsummarywidget.h>
 #include <_Gulden/newaccountdialog.h>
+#include <_Gulden/importprivkeydialog.h>
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
+#include <Gulden/util.h>
 #include "wallet/wallet.h"
 #include "walletframe.h"
 #include "walletview.h"
@@ -154,6 +156,9 @@ GuldenGUI::GuldenGUI(BitcoinGUI* pImpl)
     , balanceContainer(NULL)
     , welcomeScreen(NULL)
     , accountScrollArea(NULL)
+    , toolsMenu(NULL)
+    , importPrivateKeyAction(NULL)
+    , rescanAction(NULL)
     , accountSummaryWidget(NULL)
     , dialogNewAccount(NULL)
     , dialogAccountSettings(NULL)
@@ -264,6 +269,23 @@ void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
     accountSummaryWidget->setOptionsModel(optionsModel);
     connect(optionsModel->guldenSettings, SIGNAL(localCurrencyChanged(QString)), this, SLOT(updateExchangeRates()));
     updateExchangeRates();
+}
+
+void GuldenGUI::createMenusGulden()
+{
+    toolsMenu = m_pImpl->appMenuBar->addMenu(tr("&Tools"));
+
+    importPrivateKeyAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
+    importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
+    importPrivateKeyAction->setCheckable(false);
+    toolsMenu->addAction(importPrivateKeyAction);
+    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
+
+    rescanAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
+    rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    rescanAction->setCheckable(false);
+    toolsMenu->addAction(rescanAction);
+    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
 }
 
 void GuldenGUI::createToolBarsGulden()
@@ -822,16 +844,19 @@ QString getAccountLabel(CAccount* account)
     } else if (!account->IsHD()) {
         accountName.append(QString::fromUtf8(" \uf187"));
     }
-    /*else
-    {
-        accountName.append(QString("%1").arg(((CAccountHD*)account)->getIndex()));
-    }*/
+    if (account->IsReadOnly()) {
+        accountName.append(QString::fromUtf8(" \uf06e"));
+    }
+
     return limitString(accountName, 28);
 }
 
 void GuldenGUI::refreshAccountControls()
 {
     LogPrintf("GuldenGUI::refreshAccountControls\n");
+
+    if (pwalletMain->getActiveAccount()->IsReadOnly())
+        m_pImpl->sendCoinsAction->setVisible(false);
 
     for (const auto& controlPair : m_accountMap) {
         controlPair.first->deleteLater();
@@ -922,9 +947,12 @@ void GuldenGUI::updateAccount(CAccount* account)
 
     receiveAddress = new CReserveKey(pwalletMain, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
-    receiveAddress->GetReservedKey(pubKey);
-    CKeyID keyID = pubKey.GetID();
-    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress(QString::fromStdString(CBitcoinAddress(keyID).ToString()));
+    if (receiveAddress->GetReservedKey(pubKey)) {
+        CKeyID keyID = pubKey.GetID();
+        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress(QString::fromStdString(CBitcoinAddress(keyID).ToString()));
+    } else {
+        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress("error");
+    }
     m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount(account);
 }
 
@@ -977,8 +1005,55 @@ void GuldenGUI::accountButtonPressed()
 {
     QObject* sender = this->sender();
     ClickableLabel* accButton = qobject_cast<ClickableLabel*>(sender);
-    restoreCachedWidgetIfNeeded();
     setActiveAccountButton(accButton);
+    restoreCachedWidgetIfNeeded();
+}
+
+void GuldenGUI::promptImportPrivKey()
+{
+    ImportPrivKeyDialog dlg(this->m_pImpl);
+    dlg.exec();
+
+    CBitcoinSecret vchSecret;
+    bool fGood = vchSecret.SetString(dlg.getPrivKey().c_str());
+
+    if (fGood) {
+        LOCK2(cs_main, pwalletMain->cs_wallet);
+
+        CKey key = vchSecret.GetKey();
+        if (!key.IsValid()) {
+            m_pImpl->message(tr("Error importing private key"), tr("Invalid private key."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+
+        CPubKey pubkey = key.GetPubKey();
+        assert(key.VerifyPubKey(pubkey));
+        CKeyID vchAddress = pubkey.GetID();
+
+        if (pwalletMain->HaveKey(vchAddress)) {
+            m_pImpl->message(tr("Error importing private key"), tr("Wallet already contains key."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+
+        CAccount* pAccount = pwalletMain->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
+        pwalletMain->MarkDirty();
+        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+        if (!pwalletMain->AddKeyPubKey(key, pubkey, *pAccount, KEYCHAIN_EXTERNAL)) {
+            m_pImpl->message(tr("Error importing private key"), tr("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR, NULL);
+            return;
+        }
+
+        pwalletMain->nTimeFirstKey = 1;
+        boost::thread t(rescanThread); // thread runs free
+    }
+}
+
+void GuldenGUI::promptRescan()
+{
+
+    pwalletMain->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
 }
 
 void GuldenGUI::gotoWebsite()
@@ -989,7 +1064,14 @@ void GuldenGUI::gotoWebsite()
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
     m_pImpl->receiveCoinsAction->setVisible(true);
-    m_pImpl->sendCoinsAction->setVisible(true);
+    if (pwalletMain->getActiveAccount()->IsReadOnly()) {
+        m_pImpl->sendCoinsAction->setVisible(false);
+        if (m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage) {
+            m_pImpl->gotoReceiveCoinsPage();
+        }
+    } else {
+        m_pImpl->sendCoinsAction->setVisible(true);
+    }
     m_pImpl->historyAction->setVisible(true);
     passwordAction->setVisible(false);
     backupAction->setVisible(false);
