@@ -5,52 +5,52 @@
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
-        <translation type="unfinished">Wijzig naam van account</translation>
+        <translation>Wijzig naam van account</translation>
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished">Voer naam in van account</translation>
+        <translation>Voer naam in van account</translation>
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR code om te linken met je mobiele Gulden app</translation>
+        <translation>Scan QR code om te linken met je mobiele Gulden app</translation>
     </message>
     <message>
         <source>Delete account</source>
-        <translation type="unfinished">Verwijder account</translation>
+        <translation>Verwijder account</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation>Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished">Account is niet leeg. Transfer eerst je Guldens voor je deze account verwijderd</translation>
+        <translation>Account is niet leeg. Transfer eerst je Guldens voor je deze account verwijderd</translation>
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished">Weet je zeker dat je %1 van je account lijst wil verwijderen? De adressen van deze account blijven actief.</translation>
+        <translation>Weet je zeker dat je %1 van je account lijst wil verwijderen? De adressen van deze account blijven actief.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
 </context>
 <context>
     <name>AccountSummaryWidget</name>
     <message utf8="both">
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -267,42 +267,42 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation type="unfinished">Voer de oude herstelzin in en de nieuwe herstelzin.</translation>
+        <translation>Voer de oude herstelzin in en de nieuwe herstelzin.</translation>
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">%1 wordt nu afgesloten om de encryptie te voltooien.</translation>
+        <translation>%1 wordt nu afgesloten om de encryptie te voltooien.</translation>
     </message>
 </context>
 <context>
     <name>BackupDialog</name>
     <message>
         <source>Backup phrase</source>
-        <translation type="unfinished">Herstelzin</translation>
+        <translation>Herstelzin</translation>
     </message>
     <message>
         <source>Show backup phrase</source>
-        <translation type="unfinished">Toon herstelzin</translation>
+        <translation>Toon herstelzin</translation>
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation type="unfinished">Het is aangeraden om ook een beveiligde backup van je portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+        <translation>Het is aangeraden om ook een beveiligde backup van je portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <source>Save to file</source>
-        <translation type="unfinished">Bewaar als bestand</translation>
+        <translation>Bewaar als bestand</translation>
     </message>
     <message>
         <source>No recovery phrases present for this wallet.</source>
@@ -325,26 +325,26 @@ The account will continue to be monitored and will be restored should it receive
     <name>BanTableModel</name>
     <message>
         <source>IP/Netmask</source>
-        <translation type="unfinished">IP/Netmask</translation>
+        <translation>IP/Netmask</translation>
     </message>
     <message>
         <source>Banned Until</source>
-        <translation type="unfinished">Verbannen tot</translation>
+        <translation>Verbannen tot</translation>
     </message>
 </context>
 <context>
     <name>BitcoinAmountField</name>
     <message>
         <source>Gulden</source>
-        <translation type="unfinished">Gulden</translation>
+        <translation>Gulden</translation>
     </message>
     <message>
         <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximaal toegestaan %1 bedrag is %2.</translation>
+        <translation>Maximaal toegestaan %1 bedrag is %2.</translation>
     </message>
     <message>
         <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimaal toegestaan %1 bedrag is %2.</translation>
+        <translation>Minimaal toegestaan %1 bedrag is %2.</translation>
     </message>
 </context>
 <context>
@@ -591,35 +591,35 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>A fatal error occurred. Bitcoin can no longer continue safely and will quit.</source>
-        <translation type="unfinished">Fatale error. Gulden wordt afgesloten.</translation>
+        <translation>Fatale error. Gulden wordt afgesloten.</translation>
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation type="unfinished">Over %1</translation>
+        <translation>Over %1</translation>
     </message>
     <message>
         <source>Show information about %1</source>
-        <translation type="unfinished">Laat informatie zien over %1</translation>
+        <translation>Laat informatie zien over %1</translation>
     </message>
     <message>
         <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Wijzig configuratie voor %1</translation>
+        <translation>Wijzig configuratie voor %1</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Laat het 1% bericht zien om een lijst met mogelijke Gulden command-line opties te tonen.</translation>
+        <translation>Laat het 1% bericht zien om een lijst met mogelijke Gulden command-line opties te tonen.</translation>
     </message>
     <message>
         <source>%1 client</source>
-        <translation type="unfinished">1% client</translation>
+        <translation>1% client</translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Blokken indexeren op de schijf...</translation>
+        <translation>Blokken indexeren op de schijf...</translation>
     </message>
     <message>
         <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Verwerken van blokken op de schijf...</translation>
+        <translation>Verwerken van blokken op de schijf...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -630,72 +630,72 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished">Ophalen... %1% compleet.&lt;br&gt;</translation>
+        <translation>Ophalen... %1% compleet.&lt;br&gt;</translation>
     </message>
     <message>
         <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished">Transacties en balans niet zichtbaar of compleet tot synchronisatie voltooid is.</translation>
+        <translation>Transacties en balans niet zichtbaar of compleet tot synchronisatie voltooid is.</translation>
     </message>
     <message>
         <source>Date: %1
 </source>
-        <translation type="unfinished">Datum: %1</translation>
+        <translation>Datum: %1</translation>
     </message>
     <message>
         <source>Received: %1
 </source>
-        <translation type="unfinished">Ontvangen: %1</translation>
+        <translation>Ontvangen: %1</translation>
     </message>
     <message>
         <source>Sent: %1
 </source>
-        <translation type="unfinished">Verstuurd: %1</translation>
+        <translation>Verstuurd: %1</translation>
     </message>
     <message>
         <source>Type: %1
 </source>
-        <translation type="unfinished">Soort: %1</translation>
+        <translation>Soort: %1</translation>
     </message>
     <message>
         <source>Label: %1
 </source>
-        <translation type="unfinished">Omschrijving: %1</translation>
+        <translation>Omschrijving: %1</translation>
     </message>
     <message>
         <source>Address: %1
 </source>
-        <translation type="unfinished">Adres: 1%</translation>
+        <translation>Adres: 1%</translation>
     </message>
     <message>
         <source>Sent funds%1</source>
-        <translation type="unfinished">Verstuurd bedrag: %1</translation>
+        <translation>Verstuurd bedrag: %1</translation>
     </message>
     <message>
         <source>Incoming funds%1</source>
-        <translation type="unfinished">Ontvangen bedrag: %1</translation>
+        <translation>Ontvangen bedrag: %1</translation>
     </message>
 </context>
 <context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
-        <translation type="unfinished">Bewaar afbeelding</translation>
+        <translation>Bewaar afbeelding</translation>
     </message>
     <message>
         <source>&amp;Copy Image</source>
-        <translation type="unfinished">&amp;Afbeelding kopiëren</translation>
+        <translation>&amp;Afbeelding kopiëren</translation>
     </message>
     <message>
         <source>Error encoding URI into QR Code.</source>
-        <translation type="unfinished">Fout tijdens encoderen URI in QR-code</translation>
+        <translation>Fout tijdens encoderen URI in QR-code</translation>
     </message>
     <message>
         <source>Save QR Code</source>
-        <translation type="unfinished">QR-code opslaan</translation>
+        <translation>QR-code opslaan</translation>
     </message>
     <message>
         <source>PNG Image (*.png)</source>
-        <translation type="unfinished">PNG afbeelding (*.png)</translation>
+        <translation>PNG afbeelding (*.png)</translation>
     </message>
 </context>
 <context>
@@ -917,15 +917,15 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>This label turns red if the transaction size is greater than 1000 bytes.</source>
-        <translation type="unfinished">Deze omschrijving wordt rood als de transactie groter is dan 1000 bytes.</translation>
+        <translation>Deze omschrijving wordt rood als de transactie groter is dan 1000 bytes.</translation>
     </message>
     <message>
         <source>This label turns red if the priority is smaller than &quot;medium&quot;.</source>
-        <translation type="unfinished">De omschrijving wordt rood als de prioriteit kleiner is dan &quot;medium&quot;.</translation>
+        <translation>De omschrijving wordt rood als de prioriteit kleiner is dan &quot;medium&quot;.</translation>
     </message>
     <message>
         <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation type="unfinished">De omschrijving wordt rood als een ontvanger een bedrag ontvangt kleiner dan de huidige dust treshold.</translation>
+        <translation>De omschrijving wordt rood als een ontvanger een bedrag ontvangt kleiner dan de huidige dust treshold.</translation>
     </message>
 </context>
 <context>
@@ -984,18 +984,18 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
 </context>
 <context>
     <name>ExchangeRateDialog</name>
     <message>
         <source>Select currency</source>
-        <translation type="unfinished">Selecteer valuta</translation>
+        <translation>Selecteer valuta</translation>
     </message>
 </context>
 <context>
@@ -1025,45 +1025,45 @@ The account will continue to be monitored and will be restored should it receive
     <name>GuldenAccountSummaryWidget</name>
     <message>
         <source>Private</source>
-        <translation type="unfinished">Prive</translation>
+        <translation>Prive</translation>
     </message>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>20 000</source>
-        <translation type="unfinished">20 000</translation>
+        <translation>20 000</translation>
     </message>
     <message>
         <source>(€ 200.00)</source>
-        <translation type="unfinished">(€ 200.00)</translation>
+        <translation>(€ 200.00)</translation>
     </message>
 </context>
 <context>
     <name>GuldenExchangeRateDialog</name>
     <message>
         <source>Select currency</source>
-        <translation type="unfinished">Selecteer valuta</translation>
+        <translation>Selecteer valuta</translation>
     </message>
 </context>
 <context>
     <name>GuldenGUI</name>
     <message>
         <source>&amp;Password</source>
-        <translation type="unfinished">Wachtwoord</translation>
+        <translation>Wachtwoord</translation>
     </message>
     <message>
         <source>Change wallet password</source>
-        <translation type="unfinished">Wijzig portemonnee wachtwoord</translation>
+        <translation>Wijzig portemonnee wachtwoord</translation>
     </message>
     <message>
         <source>&amp;Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Backup</translation>
     </message>
     <message>
         <source>Backup wallet</source>
-        <translation type="unfinished">Maak backup van portemonnee</translation>
+        <translation>Maak backup van portemonnee</translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
@@ -1075,11 +1075,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>My accounts</source>
-        <translation type="unfinished">Mijn accounts</translation>
+        <translation>Mijn accounts</translation>
     </message>
     <message>
         <source>Add account</source>
-        <translation type="unfinished">Account toevoegen</translation>
+        <translation>Account toevoegen</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
@@ -1126,30 +1126,30 @@ The account will continue to be monitored and will be restored should it receive
     <name>GuldenNewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished">Voer naam in van account.</translation>
+        <translation>Voer naam in van account.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
-        <translation type="unfinished">Link met je mobiele Gulden app</translation>
+        <translation>Link met je mobiele Gulden app</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR om te verbinden met je mobiele Gulden app</translation>
+        <translation>Scan QR om te verbinden met je mobiele Gulden app</translation>
     </message>
 </context>
 <context>
     <name>GuldenReceiveCoinsDialog</name>
     <message>
         <source>My receiving address</source>
-        <translation type="unfinished">Mijn ontvangstadres</translation>
+        <translation>Mijn ontvangstadres</translation>
     </message>
     <message>
         <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
@@ -1157,154 +1157,154 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>QR code</source>
-        <translation type="unfinished">QR code</translation>
+        <translation>QR code</translation>
     </message>
     <message>
         <source>Choose amount</source>
-        <translation type="unfinished">Kies bedrag</translation>
+        <translation>Kies bedrag</translation>
     </message>
     <message>
         <source>1000</source>
-        <translation type="unfinished">1000</translation>
+        <translation>1000</translation>
     </message>
     <message>
         <source>€ 10.00</source>
-        <translation type="unfinished">€ 10.00</translation>
+        <translation>€ 10.00</translation>
     </message>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2500</source>
-        <translation type="unfinished">2500</translation>
+        <translation>2500</translation>
     </message>
     <message>
         <source>€ 25.00</source>
-        <translation type="unfinished">€ 25.00</translation>
+        <translation>€ 25.00</translation>
     </message>
     <message>
         <source>5000</source>
-        <translation type="unfinished">5000</translation>
+        <translation>5000</translation>
     </message>
     <message>
         <source>€ 50.00</source>
-        <translation type="unfinished">€ 50.00</translation>
+        <translation>€ 50.00</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished">Meer</translation>
+        <translation>Meer</translation>
     </message>
     <message>
         <source>Your details</source>
-        <translation type="unfinished">Jouw gegevens</translation>
+        <translation>Jouw gegevens</translation>
     </message>
     <message>
         <source>Enter email address</source>
-        <translation type="unfinished">Voer e-mailadres in</translation>
+        <translation>Voer e-mailadres in</translation>
     </message>
     <message>
         <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation type="unfinished">Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
+        <translation>Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished">Ja</translation>
+        <translation>Ja</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished">Nee</translation>
+        <translation>Nee</translation>
     </message>
     <message>
         <source>Enter label</source>
-        <translation type="unfinished">Voer beschrijving in</translation>
+        <translation>Voer beschrijving in</translation>
     </message>
     <message>
         <source>Request 10 000 Gulden</source>
-        <translation type="unfinished">Verzoek 10 000 Gulden</translation>
+        <translation>Verzoek 10 000 Gulden</translation>
     </message>
     <message>
         <source>Payment request URI</source>
-        <translation type="unfinished">Betaalverzoek URI</translation>
+        <translation>Betaalverzoek URI</translation>
     </message>
     <message>
         <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation type="unfinished">Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
+        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Copy address to clipboard</source>
-        <translation type="unfinished">Kopieer adres naar klembord</translation>
+        <translation>Kopieer adres naar klembord</translation>
     </message>
     <message>
         <source>Save QR as image</source>
-        <translation type="unfinished">Bewaar QR als afbeelding</translation>
+        <translation>Bewaar QR als afbeelding</translation>
     </message>
     <message>
         <source>Request payment</source>
-        <translation type="unfinished">Verzoek betaling</translation>
+        <translation>Verzoek betaling</translation>
     </message>
     <message>
         <source>Generate request</source>
-        <translation type="unfinished">Genereer verzoek</translation>
+        <translation>Genereer verzoek</translation>
     </message>
     <message>
         <source>Buy Gulden</source>
-        <translation type="unfinished">Koop Gulden</translation>
+        <translation>Koop Gulden</translation>
     </message>
     <message>
         <source>Buy</source>
-        <translation type="unfinished">Koop</translation>
+        <translation>Koop</translation>
     </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>Receiving address</source>
-        <translation type="unfinished">Ontvangstadres</translation>
+        <translation>Ontvangstadres</translation>
     </message>
     <message>
         <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
-        <translation type="unfinished">Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
+        <translation>Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
-        <translation type="unfinished">Voer beschrijving in</translation>
+        <translation>Voer beschrijving in</translation>
     </message>
     <message>
         <source>Add to address book</source>
-        <translation type="unfinished">Voeg toe aan adresboek</translation>
+        <translation>Voeg toe aan adresboek</translation>
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished">Adresboek</translation>
+        <translation>Adresboek</translation>
     </message>
     <message utf8="both">
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>My accounts</source>
-        <translation type="unfinished">Mijn accounts</translation>
+        <translation>Mijn accounts</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
-        <translation type="unfinished">Weet je zeker dat je %1 wil verwijderen uit het adresboek?</translation>
+        <translation>Weet je zeker dat je %1 wil verwijderen uit het adresboek?</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Opslaan</translation>
+        <translation>Opslaan</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Verwijder</translation>
+        <translation>Verwijder</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1312,7 +1312,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
@@ -1339,42 +1339,42 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>About %1</source>
-        <translation type="unfinished">Over %1</translation>
+        <translation>Over %1</translation>
     </message>
     <message>
         <source>UI Options:</source>
-        <translation type="unfinished">Gebruikersinterfaceopties:</translation>
+        <translation>Gebruikersinterfaceopties:</translation>
     </message>
     <message>
         <source>Choose data directory on startup (default: %u)</source>
-        <translation type="unfinished">Kies data locatie bij opstarten (standaard: %u)</translation>
+        <translation>Kies data locatie bij opstarten (standaard: %u)</translation>
     </message>
     <message>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation type="unfinished">Stel taal in, bijvoorbeeld &quot;de_DE&quot; (standaard: systeeminstelling)</translation>
+        <translation>Stel taal in, bijvoorbeeld &quot;de_DE&quot; (standaard: systeeminstelling)</translation>
     </message>
     <message>
         <source>Start minimized</source>
-        <translation type="unfinished">Geminimaliseerd starten</translation>
+        <translation>Geminimaliseerd starten</translation>
     </message>
     <message>
         <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation type="unfinished">Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
+        <translation>Zet SSL root certificaten voor betalingsverzoek (standaard: -sytem-)</translation>
     </message>
     <message>
         <source>Show splash screen on startup (default: %u)</source>
-        <translation type="unfinished">Laat startscherm zien bij opstarten (standaard: %u)</translation>
+        <translation>Laat startscherm zien bij opstarten (standaard: %u)</translation>
     </message>
     <message>
         <source>Reset all settings changed in the GUI</source>
-        <translation type="unfinished">Herstel alle instellingen van de interface</translation>
+        <translation>Herstel alle instellingen van de interface</translation>
     </message>
 </context>
 <context>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Edit Address</source>
-        <translation type="unfinished">Adres bewerken</translation>
+        <translation>Adres bewerken</translation>
     </message>
     <message>
         <source>Private key</source>
@@ -1386,11 +1386,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
 </context>
 <context>
@@ -1431,43 +1431,43 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Welcome to %1.</source>
-        <translation type="unfinished">Welcome bij %1</translation>
+        <translation>Welcome bij %1</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation type="unfinished">Je kan kiezen waar %1 de data moet opslaan.</translation>
+        <translation>Je kan kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>NewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished">Voer naam in van account</translation>
+        <translation>Voer naam in van account</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message utf8="both">
         <source> Connect to mobile Gulden app</source>
-        <translation type="unfinished"> Verbind met je mobiele Gulden app</translation>
+        <translation> Verbind met je mobiele Gulden app</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
-        <translation type="unfinished">Verbind met je mobiele Gulden app</translation>
+        <translation>Verbind met je mobiele Gulden app</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation>Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
     </message>
 </context>
 <context>
@@ -1819,11 +1819,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Opslaan</translation>
+        <translation>Opslaan</translation>
     </message>
 </context>
 <context>
@@ -2307,11 +2307,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished">Ja</translation>
+        <translation>Ja</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished">Nee</translation>
+        <translation>Nee</translation>
     </message>
 </context>
 <context>
@@ -2398,7 +2398,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>My receiving address</source>
-        <translation type="unfinished">Mijn ontvangstadres</translation>
+        <translation>Mijn ontvangstadres</translation>
     </message>
     <message>
         <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
@@ -2406,7 +2406,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Enter label</source>
-        <translation type="unfinished">Voer beschrijving in</translation>
+        <translation>Voer beschrijving in</translation>
     </message>
     <message>
         <source>Request %1 Gulden</source>
@@ -2414,15 +2414,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Payment request URI</source>
-        <translation type="unfinished">Betaalverzoek URI</translation>
+        <translation>Betaalverzoek URI</translation>
     </message>
     <message>
         <source>QR code</source>
-        <translation type="unfinished">QR code</translation>
+        <translation>QR code</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Close</source>
@@ -2430,19 +2430,19 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Copy address to clipboard</source>
-        <translation type="unfinished">Kopieer adres naar klembord</translation>
+        <translation>Kopieer adres naar klembord</translation>
     </message>
     <message>
         <source>Save QR as image</source>
-        <translation type="unfinished">Bewaar QR als afbeelding</translation>
+        <translation>Bewaar QR als afbeelding</translation>
     </message>
     <message>
         <source>Request payment</source>
-        <translation type="unfinished">Verzoek betaling</translation>
+        <translation>Verzoek betaling</translation>
     </message>
     <message>
         <source>Generate request</source>
-        <translation type="unfinished">Genereer verzoek</translation>
+        <translation>Genereer verzoek</translation>
     </message>
     <message>
         <source>New request</source>
@@ -2450,79 +2450,79 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Buy Gulden</source>
-        <translation type="unfinished">Koop Gulden</translation>
+        <translation>Koop Gulden</translation>
     </message>
     <message>
         <source>Buy</source>
-        <translation type="unfinished">Koop</translation>
+        <translation>Koop</translation>
     </message>
     <message>
         <source>Choose amount</source>
-        <translation type="unfinished">Kies bedrag</translation>
+        <translation>Kies bedrag</translation>
     </message>
     <message>
         <source>1000</source>
-        <translation type="unfinished">1000</translation>
+        <translation>1000</translation>
     </message>
     <message utf8="true">
         <source>€ 10.00</source>
-        <translation type="unfinished">€ 10.00</translation>
+        <translation>€ 10.00</translation>
     </message>
     <message utf8="true">
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2500</source>
-        <translation type="unfinished">2500</translation>
+        <translation>2500</translation>
     </message>
     <message utf8="true">
         <source>€ 25.00</source>
-        <translation type="unfinished">€ 25.00</translation>
+        <translation>€ 25.00</translation>
     </message>
     <message>
         <source>5000</source>
-        <translation type="unfinished">5000</translation>
+        <translation>5000</translation>
     </message>
     <message utf8="true">
         <source>€ 50.00</source>
-        <translation type="unfinished">€ 50.00</translation>
+        <translation>€ 50.00</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished">Meer</translation>
+        <translation>Meer</translation>
     </message>
     <message>
         <source>Your details</source>
-        <translation type="unfinished">Jouw gegevens</translation>
+        <translation>Jouw gegevens</translation>
     </message>
     <message>
         <source>Enter email address</source>
-        <translation type="unfinished">Voer e-mailadres in</translation>
+        <translation>Voer e-mailadres in</translation>
     </message>
     <message>
         <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation type="unfinished">Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
+        <translation>Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished">Ja</translation>
+        <translation>Ja</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished">Nee</translation>
+        <translation>Nee</translation>
     </message>
     <message>
         <source>Request 10 000 Gulden</source>
-        <translation type="unfinished">Verzoek 10 000 Gulden</translation>
+        <translation>Verzoek 10 000 Gulden</translation>
     </message>
     <message>
         <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation type="unfinished">Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
+        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation type="unfinished">Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
+        <translation>Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
     </message>
     <message>
         <source>Copy request to clipboard</source>
@@ -2876,7 +2876,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Payment request expired.</source>
-        <translation type="unfinished">Betalingsverzoek verlopen.</translation>
+        <translation>Betalingsverzoek verlopen.</translation>
     </message>
     <message>
         <source>Nocks request failed [%1]</source>
@@ -2974,7 +2974,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
-        <translation type="unfinished">Ja</translation>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3435,11 +3435,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Received</source>
-        <translation type="unfinished">Ontvangen</translation>
+        <translation>Ontvangen</translation>
     </message>
     <message>
         <source>Sent</source>
-        <translation type="unfinished">Verstuurd</translation>
+        <translation>Verstuurd</translation>
     </message>
     <message>
         <source>Abandoned</source>
@@ -3483,7 +3483,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>(no label)</source>
-        <translation type="unfinished">(geen label)</translation>
+        <translation>(geen label)</translation>
     </message>
     <message>
         <source>User-defined intent/purpose of the transaction.</source>
@@ -3718,15 +3718,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>I wrote it down</source>
-        <translation type="unfinished">Ik heb het opgeschreven</translation>
+        <translation>Ik heb het opgeschreven</translation>
     </message>
     <message>
         <source>Recover wallet</source>
-        <translation type="unfinished">Herstel portemonnee</translation>
+        <translation>Herstel portemonnee</translation>
     </message>
     <message>
         <source>Create wallet</source>
-        <translation type="unfinished">Start nieuwe portemonnee</translation>
+        <translation>Start nieuwe portemonnee</translation>
     </message>
     <message>
         <source>Please enter a recovery phrase</source>
@@ -3738,7 +3738,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation>Annuleer</translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>
@@ -3754,11 +3754,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>I understand</source>
-        <translation type="unfinished">Ik begrijp het</translation>
+        <translation>Ik begrijp het</translation>
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
+        <translation>Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
@@ -4265,7 +4265,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Bitcoin Core</source>
-        <translation type="unfinished">Bitcoin Core</translation>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>The %s developers</source>
@@ -4301,10 +4301,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Equivalent bytes per sigop in transactions for relay and mining (default: %u)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error loading %s: You can&apos;t enable HD on a already existing non-HD wallet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4488,10 +4484,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error loading %s: You can&apos;t disable HD on a already existing HD wallet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4633,6 +4625,14 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>ZeroMQ notification options:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can&apos;t enable HD on an already existing non-HD wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can&apos;t disable HD on an already existing HD wallet</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
