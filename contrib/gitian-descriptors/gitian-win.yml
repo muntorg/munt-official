@@ -109,15 +109,15 @@ script: |
   create_per-host_linker_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  tar xf osslsigncode-1.4.tar.gz | true
-  mkdir osslsigncode-1.4 | true
+  tar xf osslsigncode-1.4.tar.gz || true
+  mkdir osslsigncode-1.4 || true
   cd osslsigncode-1.4
-  ./configure --without-gsf --without-curl --disable-dependency-tracking | true
-  make | true
+  ./configure --without-gsf --without-curl --disable-dependency-tracking || true
+  make || true
   cd ..
 
-  tar -xf codesign.tar.gz | true
-  mkdir codesign | true
+  tar -xf codesign.tar.gz || true
+  mkdir codesign || true
 
   cd bitcoin
   BASEPREFIX=`pwd`/depends
@@ -173,14 +173,14 @@ script: |
     make strip
 
     find . -name "*.exe" | while read i; do
-      (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i}) | true
+      (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i}) || true
     done
 
     make deploy
     make install DESTDIR=${INSTALLPATH}
 
     find . -name "*setup*.exe" | while read i; do
-     (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i}) | true
+     (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i}) || true
     done
 
     cp -f bitcoin-*setup*.exe $OUTDIR/
