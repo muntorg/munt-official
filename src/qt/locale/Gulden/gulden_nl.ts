@@ -1108,7 +1108,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Wallet already contains key.</source>
-        <translation>Portemonee bevat al een sleutel</translation>
+        <translation>Portemonnee bevat al een sleutel</translation>
     </message>
     <message>
         <source>Imported legacy</source>
@@ -1116,7 +1116,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Failed to add key to wallet.</source>
-        <translation>Toevoegen van een sleutel aan de portemonee mislukt.</translation>
+        <translation>Toevoegen van een sleutel aan de portemonnee mislukt.</translation>
     </message>
 </context>
 <context>
@@ -1634,7 +1634,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Reset all client options to default.</source>
-        <translation>Herinitialiseer alle portemoneeopties naar de standaardinstellingen.</translation>
+        <translation>Herinitialiseer alle portemonneeopties naar de standaardinstellingen.</translation>
     </message>
     <message>
         <source>&amp;Reset Options</source>
@@ -3707,11 +3707,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     <name>WelcomeDialog</name>
     <message>
         <source>New wallet</source>
-        <translation>Nieuwe portemonee</translation>
+        <translation>Nieuwe portemonnee</translation>
     </message>
     <message>
         <source>Restore wallet</source>
-        <translation>Portemonee herstellen</translation>
+        <translation>Portemonnee herstellen</translation>
     </message>
     <message>
         <source>I wrote it down</source>
@@ -3747,7 +3747,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
-        <translation>Zonder herstelzin kunt u uw guldens verliezen wanneer u geen toegang meer hebt tot uw portemonee</translation>
+        <translation>Zonder herstelzin kunt u uw guldens verliezen wanneer u geen toegang meer hebt tot uw portemonnee</translation>
     </message>
     <message>
         <source>I understand</source>
@@ -3790,11 +3790,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
-        <translation>Maak nieuwe bestanden aan met standaard systeempermissies, in plaats van een umask 077 (alleen effectief met portemonee functionaliteit uit)</translation>
+        <translation>Maak nieuwe bestanden aan met standaard systeempermissies, in plaats van een umask 077 (alleen effectief met portemonnee functionaliteit uit)</translation>
     </message>
     <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
-        <translation>Verwijder alle portemoneetransacties en herstel alleen die delen van de blokketting door -rescan tijdens opstarten</translation>
+        <translation>Verwijder alle portemonneetransacties en herstel alleen die delen van de blokketting door -rescan tijdens opstarten</translation>
     </message>
     <message>
         <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
@@ -3962,7 +3962,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Do not load the wallet and disable wallet RPC calls</source>
-        <translation>Laad de portemonee niet en schakel portemonee RPC oproepen uit</translation>
+        <translation>Laad de portemonnee niet en schakel portemonnee RPC oproepen uit</translation>
     </message>
     <message>
         <source>Do you want to rebuild the block database now?</source>
@@ -4390,7 +4390,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Use hierarchical deterministic key generation (HD) after BIP32. Only has effect during wallet creation/first start</source>
-        <translation>Gebruik hierarchical deterministic sleutelgeneratie (HD) na BIP32. Heeft alleen effect tijdens de eerste keer opstarten of het creeren van een portemonee</translation>
+        <translation>Gebruik hierarchical deterministic sleutelgeneratie (HD) na BIP32. Heeft alleen effect tijdens de eerste keer opstarten of het creeren van een portemonnee</translation>
     </message>
     <message>
         <source>Username and hashed password for JSON-RPC connections. The field &lt;userpw&gt; comes in the format: &lt;USERNAME&gt;:&lt;SALT&gt;$&lt;HASH&gt;. A canonical python script is included in share/rpcuser. This option can be specified multiple times</source>
@@ -4402,7 +4402,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
-        <translation>Waarschuwing: Het portemonee bestand is corrupt, de data word opgehaald! Het origineel %s word opgeslagen als %s in %s, als de transacties of balans niet klopt, dient u de gehele wallet te herstellen vanaf uw backup</translation>
+        <translation>Waarschuwing: Het portemonnee bestand is corrupt, de data word opgehaald! Het origineel %s word opgeslagen als %s in %s, als de transacties of balans niet klopt, dient u de gehele wallet te herstellen vanaf uw backup</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
@@ -4518,7 +4518,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Make the wallet broadcast transactions</source>
-        <translation>Laat portemonee transacties versturen</translation>
+        <translation>Laat portemonnee transacties versturen</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>
@@ -4598,7 +4598,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Upgrade wallet to latest format on startup</source>
-        <translation>Update portemonee naar laatste versie tijdens opstarten</translation>
+        <translation>Update portemonnee naar laatste versie tijdens opstarten</translation>
     </message>
     <message>
         <source>User Agent comment (%s) contains unsafe characters.</source>
@@ -4610,7 +4610,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart %s to complete</source>
-        <translation>Portemonnee dient herschreven te worden: Herstart portemonee</translation>
+        <translation>Portemonnee dient herschreven te worden: Herstart portemonnee</translation>
     </message>
     <message>
         <source>Warning: unknown new rules activated (versionbit %i)</source>
@@ -4618,7 +4618,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
-        <translation>Moet de portemonee in een block only modus draaien (standaard: %u_)</translation>
+        <translation>Moet de portemonnee in een block only modus draaien (standaard: %u_)</translation>
     </message>
     <message>
         <source>ZeroMQ notification options:</source>
