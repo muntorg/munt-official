@@ -644,6 +644,8 @@ UniValue listallaccounts(const UniValue& params, bool fHelp)
         rec.push_back(Pair("UUID", accountPair.first));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
         rec.push_back(Pair("type", "HD"));
+        rec.push_back(Pair("HDindex", (uint64_t) dynamic_cast<CAccountHD*>(accountPair.second)->getIndex()));
+        
         allAccounts.push_back(rec);
     }
     
