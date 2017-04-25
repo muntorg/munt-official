@@ -70,20 +70,20 @@ Minor bugfix release.
 1.5.2
 
 Minor bugfix release.
-Updated to new seed nodes.
-Fixed an issue with some external URIs not working on OSX machines.
-Add the KGW fix to all platforms.
+CORE - Updated to new seed nodes.
+UI - Fixed an issue with some external URIs not working on OSX machines.
+CORE - Add the KGW fix to all platforms.
 
 
 
 1.5.1
 
-Rebrand to Gulden, updated UI.
-Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
+UI - Rebrand to Gulden, updated UI.
+CORE - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
 
 
 
 1.5.0
 
-New updated codebase based on bitcoin 0.10/0.11
-Impement a new difficulty adjustment algorithm named DELTA.
+CORE- New updated codebase based on bitcoin 0.10/0.11
+CORE - Impement a new difficulty adjustment algorithm named DELTA.
