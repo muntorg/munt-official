@@ -71,7 +71,12 @@ public:
         return (nBits == 0);
     }
 
-    mutable uint256 cachedHash;
+    //fixme: SBSU - this gives speed boost
+    //but causes issues for mining
+    //Disabled out of concern it may cause issues for others as well
+    //re-enable once carefully looking into the below assertion.
+    //GuldenD: main.cpp:2341: bool ConnectBlock(const CBlock&, CValidationState&, CBlockIndex*, CCoinsViewCache&, const CChainParams&, bool): Assertion `hashPrevBlock == view.GetBestBlock()' failed.
+    //mutable uint256 cachedHash;
     uint256 GetHash() const;
 
     int64_t GetBlockTime() const
@@ -114,10 +119,11 @@ public:
         CBlockHeader::SetNull();
         vtx.clear();
         fChecked = false;
-        cachedHash = uint256();
+        //cachedHash = uint256();
+        //cachedPOWHash = uint256();
     }
 
-    mutable uint256 cachedPOWHash;
+    //mutable uint256 cachedPOWHash;
     uint256 GetPoWHash() const;
 
     CBlockHeader GetBlockHeader() const
