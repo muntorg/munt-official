@@ -413,10 +413,15 @@ bool CAccountHD::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
 
 bool CAccountHD::Lock()
 {
+    if (!IsReadOnly())
+    {
+        return true;
+    }
+    
     // We can't lock if we are not encrypted, nothing to do.
     if (!encrypted)
         return false;
-    
+        
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Lock())
         //return false;
@@ -436,6 +441,11 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Unlock(vMasterKeyIn))
     //    return false;
+    
+    if (IsReadOnly())
+    {
+        return true;
+    }
     
     // Decrypt account key
     CKeyingMaterial vchAccountKeyPrivEncoded;
@@ -461,6 +471,11 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
 bool CAccountHD::Encrypt(CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
+    
+    if (IsReadOnly())
+    {
+        return true;
+    }
     
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Encrypt(vMasterKeyIn))
