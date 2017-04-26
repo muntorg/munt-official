@@ -92,6 +92,9 @@ public:
     /** Number of network connections changed. */
     boost::signals2::signal<void (int newNumConnections)> NotifyNumConnectionsChanged;
 
+    /** Network activity state changed. */
+    boost::signals2::signal<void (bool networkActive)> NotifyNetworkActiveChanged;
+
     /**
      * Status bar alerts changed.
      */
@@ -121,6 +124,8 @@ void InitWarning(const std::string& str);
 
 /** Show error message **/
 bool InitError(const std::string& str);
+
+std::string AmountHighWarn(const std::string& optname);
 
 std::string AmountErrMsg(const char* const optname, const std::string& strValue);
 

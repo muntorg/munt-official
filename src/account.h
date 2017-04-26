@@ -83,10 +83,8 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        if (!(nType & SER_GETHASH))
-            READWRITE(nVersion);
-               
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {               
         if (ser_action.ForRead())
         {
             int type;
@@ -205,8 +203,10 @@ public:
        
     ADD_SERIALIZE_METHODS;
 
+    //fixme: (GULDEN) (MERGE) something went odd here.
     template <typename Stream, typename Operation>
-     void SerializationOpBase(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         if (ser_action.ForRead())
         {
             int nType;
@@ -245,15 +245,7 @@ public:
         {
         }
     }
-    
-    template <typename Stream, typename Operation>
-     void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        if (!(nType & SER_GETHASH))
-            READWRITE(nVersion);
-        READWRITE(vchPubKey);
-        SerializationOpBase(s, ser_action, nType, nVersion);
-    }
-    
+        
     
     virtual bool HaveKey(const CKeyID &address) const override;
     virtual bool HaveWatchOnly(const CScript &dest) const override;
@@ -350,43 +342,44 @@ public:
     
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        if (!(nType & SER_GETHASH))
-            READWRITE(nVersion);
-            if (ser_action.ForRead())
-            {
-                std::string sUUID;
-                READWRITE(sUUID);
-                m_SeedID = boost::lexical_cast<boost::uuids::uuid>(sUUID);
-            }
-            else
-            {
-                std::string sUUID = boost::uuids::to_string(m_SeedID);
-                READWRITE(sUUID);
-            }
-            READWRITE(m_nIndex);
-            READWRITE(m_nNextChildIndex);
-            READWRITE(m_nNextChangeIndex);
-            
-            READWRITE(primaryChainKeyPub);
-            READWRITE(changeChainKeyPub);
-            
-            READWRITE(encrypted);
-            
-            if ( IsCrypted() )
-            {
-                READWRITE(accountKeyPrivEncrypted);
-                READWRITE(primaryChainKeyEncrypted);
-                READWRITE(changeChainKeyEncrypted);
-            }
-            else
-            {
-                READWRITE(accountKeyPriv);
-                READWRITE(primaryChainKeyPriv);
-                READWRITE(changeChainKeyPriv);
-            }
-            
-            SerializationOpBase(s, ser_action, nType, nVersion);
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        int nVersion;
+        READWRITE(nVersion);
+        if (ser_action.ForRead())
+        {
+            std::string sUUID;
+            READWRITE(sUUID);
+            m_SeedID = boost::lexical_cast<boost::uuids::uuid>(sUUID);
+        }
+        else
+        {
+            std::string sUUID = boost::uuids::to_string(m_SeedID);
+            READWRITE(sUUID);
+        }
+        READWRITE(m_nIndex);
+        READWRITE(m_nNextChildIndex);
+        READWRITE(m_nNextChangeIndex);
+
+        READWRITE(primaryChainKeyPub);
+        READWRITE(changeChainKeyPub);
+
+        READWRITE(encrypted);
+
+        if ( IsCrypted() )
+        {
+            READWRITE(accountKeyPrivEncrypted);
+            READWRITE(primaryChainKeyEncrypted);
+            READWRITE(changeChainKeyEncrypted);
+        }
+        else
+        {
+            READWRITE(accountKeyPriv);
+            READWRITE(primaryChainKeyPriv);
+            READWRITE(changeChainKeyPriv);
+        }
+
+        CAccount::SerializationOp(s, ser_action);
     }
 private:
     boost::uuids::uuid m_SeedID;

@@ -1,6 +1,6 @@
 package=boost
 $(package)_version=1_61_0
-$(package)_download_path=http://sourceforge.net/projects/boost/files/boost/1.61.0
+$(package)_download_path=https://sourceforge.net/projects/boost/files/boost/1.61.0
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
 $(package)_sha256_hash=a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640
 

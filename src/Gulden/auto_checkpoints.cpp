@@ -257,10 +257,9 @@ namespace Checkpoints
             // relay the checkpoint
             if (!checkpointMessage.IsNull())
             {
-                BOOST_FOREACH(CNode* pnode, vNodes)
-                {
+                g_connman->ForEachNode([](CNode* pnode) {
                     checkpointMessage.RelayTo(pnode);
-                }
+                });
             }
             return true;
         }
@@ -473,11 +472,9 @@ namespace Checkpoints
 
         // Relay checkpoint
         {
-            LOCK(cs_vNodes);
-            BOOST_FOREACH(CNode* pnode, vNodes)
-            {
-                checkpoint.RelayTo(pnode);
-            }
+            g_connman->ForEachNode([&checkpoint](CNode* pnode) {
+                    checkpoint.RelayTo(pnode);
+                });
         }
         return true;
     }
@@ -542,11 +539,12 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
         Checkpoints::hashPendingCheckpoint = hashCheckpoint;
         Checkpoints::checkpointMessagePending = *this;
         LogPrintf("ProcessSyncCheckpoint: pending for sync-checkpoint %s\n", hashCheckpoint.ToString().c_str());
+        //fixme: (GULDEN) (MERGE) - IDONTTHINKWENEEDTHIS - CAN WE REMOVE? DOUBLE CHECK
         // Ask this guy to fill in what we're missing
-        if (pfrom)
+        /*if (pfrom)
         {
-            pfrom->PushMessage("getheaders", chainActive.GetLocator(chainActive.Tip()), uint256());
-        }
+            PushMessage(pfrom, "getheaders", chainActive.GetLocator(chainActive.Tip()), uint256());
+        }*/
         return false;
     }
 
@@ -630,7 +628,7 @@ bool CSyncCheckpoint::RelayTo(CNode* pnode) const
     if (pnode->hashCheckpointKnown != hashCheckpoint)
     {
         pnode->hashCheckpointKnown = hashCheckpoint;
-        pnode->PushMessage("checkpoint", *this);
+        g_connman->PushMessage(pnode, "checkpoint", *this);
         return true;
     }
     return false;

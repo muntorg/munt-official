@@ -55,12 +55,12 @@ bool CCrypter::SetKeyFromPassphrase(const SecureString& strKeyData, const std::v
 
     int i = 0;
     if (nDerivationMethod == 0)
-        i = BytesToKeySHA512AES(chSalt, strKeyData, nRounds, chKey, chIV);
+        i = BytesToKeySHA512AES(chSalt, strKeyData, nRounds, vchKey.data(), vchIV.data());
 
     if (i != (int)WALLET_CRYPTO_KEY_SIZE)
     {
-        memory_cleanse(chKey, sizeof(chKey));
-        memory_cleanse(chIV, sizeof(chIV));
+        memory_cleanse(vchKey.data(), vchKey.size());
+        memory_cleanse(vchIV.data(), vchIV.size());
         return false;
     }
 
@@ -73,8 +73,8 @@ bool CCrypter::SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigne
     if (chNewKey.size() != WALLET_CRYPTO_KEY_SIZE || chNewIV.size() != WALLET_CRYPTO_IV_SIZE)
         return false;
 
-    memcpy(&chKey[0], &chNewKey[0], sizeof chKey);
-    memcpy(&chIV[0], &chNewIV[0], sizeof chIV);
+    memcpy(vchKey.data(), chNewKey.data(), chNewKey.size());
+    memcpy(vchIV.data(), chNewIV.data(), chNewIV.size());
 
     fKeySet = true;
     return true;
@@ -89,7 +89,7 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     // n + AES_BLOCKSIZE bytes
     vchCiphertext.resize(vchPlaintext.size() + AES_BLOCKSIZE);
 
-    AES256CBCEncrypt enc(chKey, chIV, true);
+    AES256CBCEncrypt enc(vchKey.data(), vchIV.data(), true);
     size_t nLen = enc.Encrypt(&vchPlaintext[0], vchPlaintext.size(), &vchCiphertext[0]);
     if(nLen < vchPlaintext.size())
         return false;
@@ -108,7 +108,7 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 
     vchPlaintext.resize(nLen);
 
-    AES256CBCDecrypt dec(chKey, chIV, true);
+    AES256CBCDecrypt dec(vchKey.data(), vchIV.data(), true);
     nLen = dec.Decrypt(&vchCiphertext[0], vchCiphertext.size(), &vchPlaintext[0]);
     if(nLen == 0)
         return false;
@@ -194,33 +194,30 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
         if (!SetCrypted())
             return false;
 
-        if (!mapCryptedKeys.empty())
+        bool keyPass = false;
+        bool keyFail = false;
+        CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
+        for (; mi != mapCryptedKeys.end(); ++mi)
         {
-            bool keyPass = false;
-            bool keyFail = false;
-            CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
-            for (; mi != mapCryptedKeys.end(); ++mi)
+            const CPubKey &vchPubKey = (*mi).second.first;
+            const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
+            CKey key;
+            if (!DecryptKey(vMasterKeyIn, vchCryptedSecret, vchPubKey, key))
             {
-                const CPubKey &vchPubKey = (*mi).second.first;
-                const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
-                CKey key;
-                if (!DecryptKey(vMasterKeyIn, vchCryptedSecret, vchPubKey, key))
-                {
-                    keyFail = true;
-                    break;
-                }
-                keyPass = true;
-                if (fDecryptionThoroughlyChecked)
-                    break;
+                keyFail = true;
+                break;
             }
-            if (keyPass && keyFail)
-            {
-                LogPrintf("The wallet is probably corrupted: Some keys decrypt but not all.\n");
-                assert(false);
-            }
-            if (keyFail || !keyPass)
-                return false;
+            keyPass = true;
+            if (fDecryptionThoroughlyChecked)
+                break;
         }
+        if (keyPass && keyFail)
+        {
+            LogPrintf("The wallet is probably corrupted: Some keys decrypt but not all.\n");
+            assert(false);
+        }
+        if (keyFail || !keyPass)
+            return false;
         vMasterKey = vMasterKeyIn;
         fDecryptionThoroughlyChecked = true;
     }

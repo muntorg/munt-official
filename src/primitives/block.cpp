@@ -41,14 +41,23 @@ std::string CBlock::ToString() const
         vtx.size());
     for (unsigned int i = 0; i < vtx.size(); i++)
     {
-        s << "  " << vtx[i].ToString() << "\n";
+        s << "  " << vtx[i]->ToString() << "\n";
     }
     return s.str();
 }
 
+int64_t GetBlockWeight(const CBlock& block)
+{
+    // This implements the weight = (stripped_size * 4) + witness_size formula,
+    // using only serialization with and without witness data. As witness_size
+    // is equal to total_size - stripped_size, this formula is identical to:
+    // weight = (stripped_size * 3) + total_size.
+    return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR - 1) + ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
+}
+
 uint256 CBlock::GetPoWHash() const
 {
-    //if (!cachedPOWHash.IsNull())
+    // This implements the weight = (stripped_size * 4) + witness_size formula,
         //return cachedPOWHash;
     
     arith_uint256 thash;
@@ -65,14 +74,4 @@ uint256 CBlock::GetPoWHash() const
     //cachedPOWHash = ArithToUint256(thash);
     //return cachedPOWHash;
     return ArithToUint256(thash);
-}
-
-
-int64_t GetBlockWeight(const CBlock& block)
-{
-    // This implements the weight = (stripped_size * 4) + witness_size formula,
-    // using only serialization with and without witness data. As witness_size
-    // is equal to total_size - stripped_size, this formula is identical to:
-    // weight = (stripped_size * 3) + total_size.
-    return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR - 1) + ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
 }

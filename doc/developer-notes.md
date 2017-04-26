@@ -14,6 +14,7 @@ gradually.
   - No indentation for public/protected/private or for namespaces.
   - No extra spaces inside parenthesis; don't do ( this )
   - No space after function names; one space after if, for and while.
+  - `++i` is preferred over `i++`.
 
 Block style example:
 ```c++
@@ -24,7 +25,7 @@ class Class
     bool Function(char* psz, int n)
     {
         // Comment summarising what this section of code does
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; ++i) {
             // When something fails, return early
             if (!Something())
                 return false;
@@ -231,9 +232,9 @@ General Bitcoin Core
   - *Rationale*: Makes sure that they pass thorough testing, and that the tester will keep passing
      on the master branch. Otherwise all new pull requests will start failing the tests, resulting in
      confusion and mayhem
- 
+
   - *Explanation*: If the test suite is to be updated for a change, this has to
-    be done first 
+    be done first
 
 Wallet
 -------
@@ -329,6 +330,32 @@ Strings and formatting
 - For `strprintf`, `LogPrint`, `LogPrintf` formatting characters don't need size specifiers
 
   - *Rationale*: Bitcoin Core uses tinyformat, which is type safe. Leave them out to avoid confusion
+
+Variable names
+--------------
+
+The shadowing warning (`-Wshadow`) is enabled by default. It prevents issues rising
+from using a different variable with the same name.
+
+Please name variables so that their names do not shadow variables defined in the source code.
+
+E.g. in member initializers, prepend `_` to the argument name shadowing the
+member name:
+
+```c++
+class AddressBookPage
+{
+    Mode mode;
+}
+
+AddressBookPage::AddressBookPage(Mode _mode) :
+      mode(_mode)
+...
+```
+
+When using nested cycles, do not name the inner cycle variable the same as in
+upper cycle etc.
+
 
 Threads and synchronization
 ----------------------------

@@ -146,7 +146,7 @@ bool CAlert::RelayTo(CNode* pnode) const
             AppliesToMe() ||
             GetAdjustedTime() < nRelayUntil)
         {
-            pnode->PushMessage(NetMsgType::ALERT, *this);
+            g_connman->PushMessage(pnode, NetMsgType::ALERT, *this);
             return true;
         }
     }

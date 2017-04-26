@@ -31,9 +31,9 @@ using namespace std;
 
 bool EnsureWalletIsAvailable(bool avoidException);
 
-UniValue gethashps(const UniValue& params, bool fHelp)
+UniValue gethashps(const JSONRPCRequest& request)
 {
-    if (fHelp)
+    if (request.fHelp)
         throw std::runtime_error(
             "gethashps\n"
             "\nReturns the estimated hashes per second that this computer is mining at.\n");
@@ -46,9 +46,9 @@ UniValue gethashps(const UniValue& params, bool fHelp)
         return strprintf("%lf h/s (%lf)", dHashesPerSec, dBestHashesPerSec);
 }
 
-UniValue sethashlimit(const UniValue& params, bool fHelp)
+UniValue sethashlimit(const JSONRPCRequest& request)
 {
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "sethashlimit  ( limit )\n"
             "\nSet the maximum number of hashes to calculate per second when mining.\n"
@@ -59,21 +59,21 @@ UniValue sethashlimit(const UniValue& params, bool fHelp)
             + HelpExampleCli("sethashlimit 500000", "")
             + HelpExampleRpc("sethashlimit 500000", ""));
 
-    RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
+    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VNUM));
 
-    nHashThrottle = params[0].get_int();
+    nHashThrottle = request.params[0].get_int();
 
     LogPrintf("<DELTA> hash throttle %ld\n", nHashThrottle);
 
     return nHashThrottle;
 }
 
-UniValue dumpdiffarray(const UniValue& params, bool fHelp)
+UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "dumpdiffarray  ( height )\n"
             "\nDump code for a c++ array containing 'height' integers, where each integer represents the difficulty (nBits) of a block.\n"
@@ -83,11 +83,11 @@ UniValue dumpdiffarray(const UniValue& params, bool fHelp)
             "\nExamples:\n"
             + HelpExampleCli("dumpdiffarray 260000", ""));
 
-    RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
+    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VNUM));
 
     std::string reverseOutBuffer;
     std::string scratchBuffer;
-    int nNumToOutput = params[0].get_int();
+    int nNumToOutput = request.params[0].get_int();
     reverseOutBuffer.reserve(16*nNumToOutput);
 
     CBlockIndex* pBlock = chainActive.Tip();
@@ -116,12 +116,12 @@ UniValue dumpdiffarray(const UniValue& params, bool fHelp)
 }
 
 
-UniValue dumpblockgaps(const UniValue& params, bool fHelp)
+UniValue dumpblockgaps(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 2)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "dumpblockgaps  startheight count\n"
             "\nDump the block gaps for the last n blocks.\n"
@@ -131,10 +131,10 @@ UniValue dumpblockgaps(const UniValue& params, bool fHelp)
             "\nExamples:\n"
             + HelpExampleCli("dumpblockgaps 50", ""));
 
-    RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
+    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VNUM));
     
-    int nStart = params[0].get_int();
-    int nNumToOutput = params[1].get_int();
+    int nStart = request.params[0].get_int();
+    int nNumToOutput = request.params[1].get_int();
 
     CBlockIndex* pBlock = chainActive.Tip();
 
@@ -173,12 +173,12 @@ UniValue dumpblockgaps(const UniValue& params, bool fHelp)
 
 
 
-UniValue changeaccountname(const UniValue& params, bool fHelp)
+UniValue changeaccountname(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 2)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "changeaccountname \"account\" \"name\"\n"
             "\nChange the name of an account.\n"
@@ -196,8 +196,8 @@ UniValue changeaccountname(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(params[0], false);
-    std::string label = params[1].get_str();
+    CAccount* account = AccountFromValue(request.params[0], false);
+    std::string label = request.params[1].get_str();
     
     pwalletMain->changeAccountName(account, label);
     
@@ -205,12 +205,12 @@ UniValue changeaccountname(const UniValue& params, bool fHelp)
 }
 
 #define MINIMUM_VALUABLE_AMOUNT 1000000000 
-UniValue deleteaccount(const UniValue& params, bool fHelp)
+UniValue deleteaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
             "deleteaccount \"account\" (force)\n"
             "\nDelete an account.\n"
@@ -225,9 +225,9 @@ UniValue deleteaccount(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(params[0], false);
+    CAccount* account = AccountFromValue(request.params[0], false);
     
-    if (params.size() == 1 || params[1].get_str() != "force")
+    if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
         CAmount balance = pwalletMain->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
@@ -242,12 +242,12 @@ UniValue deleteaccount(const UniValue& params, bool fHelp)
 
 
 
-UniValue createaccount(const UniValue& params, bool fHelp)
+UniValue createaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() == 0 || params.size() > 2)
+    if (request.fHelp || request.params.size() == 0 || request.params.size() > 2)
         throw std::runtime_error(
             "createaccount \"name\"\n"
             "Create an account, for HD accounts the currently active seed will be used to create the account.\n"
@@ -264,9 +264,9 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     
     
     std::string accountType = "HD";
-    if (params.size() > 1)
+    if (request.params.size() > 1)
     {
-        accountType = params[1].get_str();
+        accountType = request.params[1].get_str();
         if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy")
             throw runtime_error("Invalid account type");    
     }
@@ -274,13 +274,13 @@ UniValue createaccount(const UniValue& params, bool fHelp)
     CAccount* account = NULL;
     
     if (accountType == "HD")
-        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+        account = pwalletMain->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
     else if (accountType == "Mobile")
-        account = pwalletMain->GenerateNewAccount(params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
+        account = pwalletMain->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
     else if (accountType == "Legacy")
     {
         EnsureWalletIsUnlocked();
-        account = pwalletMain->GenerateNewLegacyAccount(params[0].get_str());
+        account = pwalletMain->GenerateNewLegacyAccount(request.params[0].get_str());
     }
     
     if (!account)
@@ -291,12 +291,12 @@ UniValue createaccount(const UniValue& params, bool fHelp)
 
 
 
-UniValue getactiveaccount(const UniValue& params, bool fHelp)
+UniValue getactiveaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 0)
+    if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "getactiveaccount \n"
             "\nReturn the UUID for the currently active account.\n"
@@ -315,12 +315,12 @@ UniValue getactiveaccount(const UniValue& params, bool fHelp)
     return pwalletMain->activeAccount->getUUID();
 }
 
-UniValue getreadonlyaccount(const UniValue& params, bool fHelp)
+UniValue getreadonlyaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getreadonlyaccount \"account\" \n"
             "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
@@ -335,7 +335,7 @@ UniValue getreadonlyaccount(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(params[0], false);
+    CAccount* account = AccountFromValue(request.params[0], false);
     
     if (!account->IsHD())
         throw runtime_error("Can only be used on a HD account.");
@@ -347,12 +347,12 @@ UniValue getreadonlyaccount(const UniValue& params, bool fHelp)
     return accountHD->GetAccountMasterPubKeyEncoded().c_str();
 }
 
-UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
+UniValue importreadonlyaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 2)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "importreadonlyaccount \"name\" \"encodedkey\" \n"
             "\nImport a read only account from an \"encodedkey\" which has been obtained by using \"getreadonlyaccount\"\n"
@@ -369,7 +369,7 @@ UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
     
     EnsureWalletIsUnlocked();
        
-    CAccount* account = pwalletMain->CreateReadOnlyAccount(params[0].get_str().c_str(), params[1].get_str().c_str());
+    CAccount* account = pwalletMain->CreateReadOnlyAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
     
     if (!account)
         throw runtime_error("Unable to create account.");
@@ -382,12 +382,12 @@ UniValue importreadonlyaccount(const UniValue& params, bool fHelp)
     return account->getUUID();
 }
 
-UniValue getactiveseed(const UniValue& params, bool fHelp)
+UniValue getactiveseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 0)
+    if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "getactiveseed \n"
             "\nReturn the UUID for the currently active account.\n"
@@ -406,12 +406,12 @@ UniValue getactiveseed(const UniValue& params, bool fHelp)
     return pwalletMain->activeSeed->getUUID();
 }
 
-UniValue setactiveaccount(const UniValue& params, bool fHelp)
+UniValue setactiveaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "setactiveaccount \n"
             "\nSet the currently active account based on name or uuid.\n"
@@ -422,7 +422,7 @@ UniValue setactiveaccount(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(params[0], false);  
+    CAccount* account = AccountFromValue(request.params[0], false);  
 
     pwalletMain->setActiveAccount(account);
     return account->getUUID();
@@ -456,12 +456,12 @@ CHDSeed* SeedFromValue(const UniValue& value, bool useDefaultIfEmpty)
     return foundSeed;
 }
 
-UniValue setactiveseed(const UniValue& params, bool fHelp)
+UniValue setactiveseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "setactiveseed \n"
             "\nSet the currently active seed by UUID.\n"
@@ -472,19 +472,19 @@ UniValue setactiveseed(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(params[0], false);  
+    CHDSeed* seed = SeedFromValue(request.params[0], false);  
 
     pwalletMain->setActiveSeed(seed);
     return seed->getUUID();
 }
 
            
-UniValue createseed(const UniValue& params, bool fHelp)
+UniValue createseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() > 1)
+    if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "createseed \n"
             "\nCreate a new seed using random entropy.\n"
@@ -507,9 +507,9 @@ UniValue createseed(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
     
     CHDSeed::SeedType seedType = CHDSeed::CHDSeed::BIP44;
-    if (params.size() > 0)
+    if (request.params.size() > 0)
     {
-        seedType = SeedTypeFromString(params[0].get_str());
+        seedType = SeedTypeFromString(request.params[0].get_str());
     }
     
     CHDSeed* newSeed = pwalletMain->GenerateHDSeed(seedType);
@@ -520,12 +520,12 @@ UniValue createseed(const UniValue& params, bool fHelp)
     return newSeed->getUUID();
 }
 
-UniValue deleteseed(const UniValue& params, bool fHelp)
+UniValue deleteseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "deleteseed \"seed\" \n"
             "\nDelete a HD seed.\n"
@@ -539,7 +539,7 @@ UniValue deleteseed(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(params[0], true);  
+    CHDSeed* seed = SeedFromValue(request.params[0], true);  
     
     EnsureWalletIsUnlocked();
     
@@ -548,12 +548,12 @@ UniValue deleteseed(const UniValue& params, bool fHelp)
     return true;
 }
 
-UniValue importseed(const UniValue& params, bool fHelp)
+UniValue importseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
             "importseed \"mnemonic or pubkey\" \"read only\" \n"
             "\nSet the currently active seed by UUID.\n"
@@ -572,18 +572,18 @@ UniValue importseed(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
     
     bool fReadOnly = false;
-    if (params.size() > 1)
-        fReadOnly = params[1].get_bool();
+    if (request.params.size() > 1)
+        fReadOnly = request.params[1].get_bool();
     
     CHDSeed* newSeed = NULL;
     if (fReadOnly)
     {
-        SecureString pubkeyString = params[0].get_str().c_str();
+        SecureString pubkeyString = request.params[0].get_str().c_str();
         newSeed = pwalletMain->ImportHDSeedFromPubkey(pubkeyString);
     }
     else
     {
-        SecureString mnemonic = params[0].get_str().c_str();
+        SecureString mnemonic = request.params[0].get_str().c_str();
         newSeed = pwalletMain->ImportHDSeed(mnemonic);
     }
 
@@ -595,12 +595,12 @@ UniValue importseed(const UniValue& params, bool fHelp)
     return newSeed->getUUID();
 }
 
-UniValue listallaccounts(const UniValue& params, bool fHelp)
+UniValue listallaccounts(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() > 1)
+    if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "listaccounts ( forseed )\n"
             "\nArguments:\n"
@@ -613,8 +613,8 @@ UniValue listallaccounts(const UniValue& params, bool fHelp)
             + HelpExampleRpc("listaccounts", ""));
 
     CHDSeed* forSeed = NULL;
-    if (params.size() > 0)
-        forSeed = SeedFromValue(params[0], false);
+    if (request.params.size() > 0)
+        forSeed = SeedFromValue(request.params[0], false);
 
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
@@ -652,12 +652,12 @@ UniValue listallaccounts(const UniValue& params, bool fHelp)
     return allAccounts;
 }
 
-UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
+UniValue getmnemonicfromseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getmnemonicfromseed \"seed\" \n"
             "\nGet the mnemonic of a HD seed.\n"
@@ -672,19 +672,19 @@ UniValue getmnemonicfromseed(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(params[0], true);  
+    CHDSeed* seed = SeedFromValue(request.params[0], true);  
     
     EnsureWalletIsUnlocked();
 
     return seed->getMnemonic().c_str();
 }
 
-UniValue getreadonlyseed(const UniValue& params, bool fHelp)
+UniValue getreadonlyseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getreadonlyseed \"seed\" \n"
             "\nGet the public key of an HD seed, this can be used to import the seed as a read only seed in another wallet.\n"
@@ -700,7 +700,7 @@ UniValue getreadonlyseed(const UniValue& params, bool fHelp)
     if (!pwalletMain)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(params[0], true);
+    CHDSeed* seed = SeedFromValue(request.params[0], true);
     
     if (seed->m_type != CHDSeed::SeedType::BIP44NoHardening)
         throw runtime_error("Can only use command with a non-hardened BIP44 seed");
@@ -710,12 +710,12 @@ UniValue getreadonlyseed(const UniValue& params, bool fHelp)
     return seed->getPubkey().c_str();
 }
 
-UniValue listseeds(const UniValue& params, bool fHelp)
+UniValue listseeds(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
     
-    if (fHelp || params.size() != 0)
+    if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "listseeds \n"
             "\nReturn the UUID for all wallet seeds.\n"

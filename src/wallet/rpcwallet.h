@@ -17,6 +17,6 @@ class CAccount;
 class UniValue;
 
 CAccount* AccountFromValue(const UniValue& value, bool useDefaultIfEmpty);
-void RegisterWalletRPCCommands(CRPCTable &tableRPC);
+void RegisterWalletRPCCommands(CRPCTable &t);
 
 #endif //BITCOIN_WALLET_RPCWALLET_H

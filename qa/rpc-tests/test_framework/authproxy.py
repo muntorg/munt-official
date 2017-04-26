@@ -1,6 +1,6 @@
 
 """
-  Copyright 2011 Jeff Garzik
+  Copyright (c) 2011 Jeff Garzik
 
   AuthServiceProxy has the following improvements over python-jsonrpc's
   ServiceProxy class:
@@ -42,6 +42,7 @@ import base64
 import decimal
 import json
 import logging
+import socket
 try:
     import urllib.parse as urlparse
 except ImportError:
@@ -55,7 +56,11 @@ log = logging.getLogger("BitcoinRPC")
 
 class JSONRPCException(Exception):
     def __init__(self, rpc_error):
-        Exception.__init__(self)
+        try:
+            errmsg = '%(message)s (%(code)i)' % rpc_error
+        except (KeyError, TypeError):
+            errmsg = ''
+        Exception.__init__(self, errmsg)
         self.error = rpc_error
 
 
@@ -126,8 +131,9 @@ class AuthServiceProxy(object):
                 return self._get_response()
             else:
                 raise
-        except BrokenPipeError:
-            # Python 3.5+ raises this instead of BadStatusLine when the connection was reset
+        except (BrokenPipeError,ConnectionResetError):
+            # Python 3.5+ raises BrokenPipeError instead of BadStatusLine when the connection was reset
+            # ConnectionResetError happens on FreeBSD with Python 3.4
             self.__conn.close()
             self.__conn.request(method, path, postdata, headers)
             return self._get_response()
@@ -156,7 +162,15 @@ class AuthServiceProxy(object):
         return self._request('POST', self.__url.path, postdata.encode('utf-8'))
 
     def _get_response(self):
-        http_response = self.__conn.getresponse()
+        try:
+            http_response = self.__conn.getresponse()
+        except socket.timeout as e:
+            raise JSONRPCException({
+                'code': -344,
+                'message': '%r RPC took longer than %f seconds. Consider '
+                           'using larger timeout for calls that take '
+                           'longer to return.' % (self._service_name,
+                                                  self.__conn.timeout)})
         if http_response is None:
             raise JSONRPCException({
                 'code': -342, 'message': 'missing HTTP response from server'})

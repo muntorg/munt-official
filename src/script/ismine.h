@@ -36,21 +36,21 @@ enum isminetype
 /** used for bitflags of isminetype */
 typedef uint8_t isminefilter;
 
-isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CScript& scriptPubKey, uint64_t time);
+/* isInvalid becomes true when the script is found invalid by consensus or policy. This will terminate the recursion
+ * and return a ISMINE_NO immediately, as an invalid script should never be considered as "mine". This is needed as
+ * different SIGVERSION may have different network rules. Currently the only use of isInvalid is indicate uncompressed
+ * keys in SIGVERSION_WITNESS_V0 script, but could also be used in similar cases in the future
+ */
+isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey, bool& isInvalid, SigVersion = SIGVERSION_BASE);
+isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey, SigVersion = SIGVERSION_BASE);
+isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest, bool& isInvalid, SigVersion = SIGVERSION_BASE);
+isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest, SigVersion = SIGVERSION_BASE);
+isminetype IsMine(const CKeyStore& keystore, const CTxOut& txout);
 
-isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CTxDestination& dest, uint64_t time);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CTxDestination& dest, uint64_t time);
-
-isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CTxOut& txout, uint64_t time);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CKeyStore& keystore, const CTxOut& txout, uint64_t time);
-
-
-
-
-
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, bool& isInvalid, SigVersion = SIGVERSION_BASE);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, SigVersion = SIGVERSION_BASE);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, bool& isInvalid, SigVersion = SIGVERSION_BASE);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, SigVersion = SIGVERSION_BASE);
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txout, uint64_t time);
 
 #endif // BITCOIN_SCRIPT_ISMINE_H

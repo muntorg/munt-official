@@ -2,13 +2,6 @@
 // Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-//
-// File contains modifications by: The Gulden developers
-// All modifications:
-// Copyright (c) 2016 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
-// Distributed under the GULDEN software license, see the accompanying
-// file COPYING
 
 #ifndef BITCOIN_TXDB_H
 #define BITCOIN_TXDB_H
@@ -50,7 +43,7 @@ struct CDiskTxPos : public CDiskBlockPos
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(*(CDiskBlockPos*)this);
         READWRITE(VARINT(nTxOffset));
     }
@@ -99,12 +92,11 @@ public:
 private:
     CCoinsViewDBCursor(CDBIterator* pcursorIn, const uint256 &hashBlockIn):
         CCoinsViewCursor(hashBlockIn), pcursor(pcursorIn) {}
-    boost::scoped_ptr<CDBIterator> pcursor;
+    std::unique_ptr<CDBIterator> pcursor;
     std::pair<char, uint256> keyTmp;
 
     friend class CCoinsViewDB;
 };
-
 
 /** Access to the block database (blocks/index/) */
 class CBlockTreeDB : public CDBWrapper
