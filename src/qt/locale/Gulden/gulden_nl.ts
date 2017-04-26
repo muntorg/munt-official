@@ -621,9 +621,12 @@ The account will continue to be monitored and will be restored should it receive
         <source>Processing blocks on disk...</source>
         <translation>Verwerken van blokken op de schijf...</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">Processed %n block(s) of transaction history.</translation>
+        <translation type="unfinished">
+            <numerusform>Processed %n block(s) of transaction history.</numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
@@ -4652,15 +4655,15 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Spacer toolbar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Account info toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Status toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spacer  toolbar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
