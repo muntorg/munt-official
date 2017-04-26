@@ -1,3 +1,10 @@
+1.6.4.1
+
+Minor bugfix release.
+UI - Some small translation changes
+RPC - Add an HDIndex flag to 'listaccounts' RPC output, useful for debugging HD wallet issues.
+CORE - Speed up address allocation when -keypool is set to a larger than default size.
+
 1.6.4
 
 CMDFLAG - Add new command line flag '-coinbasesignature' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
