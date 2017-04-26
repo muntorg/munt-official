@@ -150,25 +150,38 @@ void ThreadShadowPoolManager()
             
             if (numNew == 0)
             {
-                if (pwalletMain->TopUpKeyPool(depth, 5))
+                int targetPoolDepth = GetArg("-keypool", 40);
+                int numToAllocatePerRound = 5;
+                if (targetPoolDepth > 40)
+                    numToAllocatePerRound = 20;
+                int numAllocated = pwalletMain->TopUpKeyPool(depth, numToAllocatePerRound);
+                if (numAllocated >= 0)
                 {
-                    if (depth < GetArg("-keypool", 40))
+                    if (depth <= targetPoolDepth)
                     {
                         ++depth;
                     }
-                    if (depth < 10)
+                    if (targetPoolDepth > 40 || numAllocated == 0)
                     {
-                        milliSleep = 100;
-                        dolock = false;
-                    }
-                    else if (depth < 20)
-                    {
-                        dolock = false;
-                        milliSleep = 300;
+                        milliSleep = 1;
                     }
                     else
                     {
-                        milliSleep = 600;
+                        //fixme: Look some more into these times - probably a bit slower than it needs to be
+                        if (depth < 10)
+                        {
+                            milliSleep = 80;
+                            dolock = false;
+                        }
+                        else if (depth < 20)
+                        {
+                            dolock = false;
+                            milliSleep = 100;
+                        }
+                        else
+                        {
+                            milliSleep = 300;
+                        }
                     }
                 }
             }
@@ -1403,7 +1416,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet, CWalletD
  * If fUpdate is true, existing transactions will be updated.
  */
 bool CWallet::AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlock* pblock, bool fUpdate)
-{    
+{       
     {
         AssertLockHeld(cs_wallet);
 
@@ -3302,14 +3315,14 @@ bool CWallet::NewKeyPool()
 }
 
 //fixme: (FUT)) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
-bool CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
+int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
 {
     unsigned int nNew = 0;
     {
         LOCK(cs_wallet);
 
         if (IsLocked())
-            return false;
+            return -1;
 
         CWalletDB walletdb(strWalletFile);
 
@@ -3348,12 +3361,12 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
                     // Limit generation for this loop - rest will be generated later
                     ++nNew;
                     if (maxNew != 0 && nNew >= maxNew)
-                        return false;
+                        return nNew;
                 }
             }
         }
     }
-    return true;
+    return nNew;
 }
 
 void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAccount* forAccount, int64_t keyChain)

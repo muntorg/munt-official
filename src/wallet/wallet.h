@@ -1029,8 +1029,7 @@ public:
     static CAmount GetRequiredFee(unsigned int nTxBytes);
 
     bool NewKeyPool();
-    bool TopUpKeyPool(unsigned int kpSize = 0, unsigned int maxNew = 0);
-    bool TopUpKeyPool(CAccount* forAccount, unsigned int kpSize = 0);
+    int TopUpKeyPool(unsigned int kpSize = 0, unsigned int maxNew = 0);
     void ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool, CAccount* forAccount, int64_t keyChain);
     void KeepKey(int64_t nIndex);
     void MarkKeyUsed(CKeyID keyID, uint64_t usageTime);
