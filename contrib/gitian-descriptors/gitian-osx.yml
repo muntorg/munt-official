@@ -1,5 +1,5 @@
 ---
-name: "Gulden-osx-0.13"
+name: "Gulden-osx-1.6.4"
 enable_cache: true
 suites:
 - "trusty"

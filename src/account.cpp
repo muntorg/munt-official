@@ -368,6 +368,9 @@ bool CAccountHD::GetPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const
 
 bool CAccountHD::Lock()
 {
+    if (!IsReadOnly()) {
+        return true;
+    }
 
     if (!encrypted)
         return false;
@@ -382,6 +385,10 @@ bool CAccountHD::Lock()
 bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
+
+    if (IsReadOnly()) {
+        return true;
+    }
 
     CKeyingMaterial vchAccountKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, accountKeyPrivEncrypted, std::vector<unsigned char>(accountUUID.begin(), accountUUID.end()), vchAccountKeyPrivEncoded))
@@ -404,6 +411,10 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
 bool CAccountHD::Encrypt(CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
+
+    if (IsReadOnly()) {
+        return true;
+    }
 
     SecureUnsignedCharVector accountKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     accountKeyPriv.Encode(accountKeyPrivEncoded.data());

@@ -128,18 +128,28 @@ void ThreadShadowPoolManager()
             }
 
             if (numNew == 0) {
-                if (pwalletMain->TopUpKeyPool(depth, 5)) {
-                    if (depth < GetArg("-keypool", 40)) {
+                int targetPoolDepth = GetArg("-keypool", 40);
+                int numToAllocatePerRound = 5;
+                if (targetPoolDepth > 40)
+                    numToAllocatePerRound = 20;
+                int numAllocated = pwalletMain->TopUpKeyPool(depth, numToAllocatePerRound);
+                if (numAllocated >= 0) {
+                    if (depth <= targetPoolDepth) {
                         ++depth;
                     }
-                    if (depth < 10) {
-                        milliSleep = 100;
-                        dolock = false;
-                    } else if (depth < 20) {
-                        dolock = false;
-                        milliSleep = 300;
+                    if (targetPoolDepth > 40 || numAllocated == 0) {
+                        milliSleep = 1;
                     } else {
-                        milliSleep = 600;
+
+                        if (depth < 10) {
+                            milliSleep = 80;
+                            dolock = false;
+                        } else if (depth < 20) {
+                            dolock = false;
+                            milliSleep = 100;
+                        } else {
+                            milliSleep = 300;
+                        }
                     }
                 }
             }
@@ -2795,14 +2805,14 @@ bool CWallet::NewKeyPool()
     return true;
 }
 
-bool CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
+int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
 {
     unsigned int nNew = 0;
     {
         LOCK(cs_wallet);
 
         if (IsLocked())
-            return false;
+            return -1;
 
         CWalletDB walletdb(strWalletFile);
 
@@ -2833,12 +2843,12 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
 
                     ++nNew;
                     if (maxNew != 0 && nNew >= maxNew)
-                        return false;
+                        return nNew;
                 }
             }
         }
     }
-    return true;
+    return nNew;
 }
 
 void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAccount* forAccount, int64_t keyChain)

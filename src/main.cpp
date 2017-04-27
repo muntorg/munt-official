@@ -3358,9 +3358,9 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, C
 
         if (!CSyncCheckpoint::strMasterPrivKey.empty())
             Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint(), chainparams);
-    }
 
-    Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
+        Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
+    }
 
     return true;
 }
@@ -4245,9 +4245,12 @@ std::string GetWarnings(const std::string& strFor)
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
     }
 
-    if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60)) {
-        nPriority = 100;
-        strStatusBar = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
+    if (!IsInitialBlockDownload()) {
+
+        if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60)) {
+            nPriority = 100;
+            strStatusBar = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
+        }
     }
 
     if (Checkpoints::hashInvalidCheckpoint != uint256()) {
@@ -5451,15 +5454,17 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     }
 
     else if (strCommand == "checkpoint") {
-        CSyncCheckpoint checkpoint;
-        vRecv >> checkpoint;
+        if (!IsInitialBlockDownload()) {
+            CSyncCheckpoint checkpoint;
+            vRecv >> checkpoint;
 
-        if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams)) {
+            if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams)) {
 
-            pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
-            LOCK(cs_vNodes);
-            BOOST_FOREACH (CNode* pnode, vNodes)
-                checkpoint.RelayTo(pnode);
+                pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
+                LOCK(cs_vNodes);
+                BOOST_FOREACH (CNode* pnode, vNodes)
+                    checkpoint.RelayTo(pnode);
+            }
         }
     }
 
