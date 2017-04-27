@@ -1,6 +1,0 @@
-usr/local/bin/Gulden usr/bin
-share/pixmaps/gulden32.xpm usr/share/pixmaps
-share/pixmaps/gulden16.xpm usr/share/pixmaps
-share/pixmaps/gulden128.png usr/share/pixmaps
-debian/Gulden.desktop usr/share/applications
-debian/Gulden.protocol usr/share/kde4/services/
