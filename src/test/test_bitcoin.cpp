@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -17,8 +17,9 @@
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
 #include "key.h"
-#include "main.h"
+#include "validation.h"
 #include "miner.h"
+#include "net_processing.h"
 #include "pubkey.h"
 #include "random.h"
 #include "txdb.h"
@@ -133,7 +134,8 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
 
     while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())) ++block.nNonce;
 
-    ProcessNewBlock(chainparams, &block, true, NULL, NULL);
+    std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+    ProcessNewBlock(chainparams, shared_pblock, true, NULL, NULL);
 
     CBlock result = block;
     return result;

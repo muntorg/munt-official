@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -35,7 +35,6 @@ class PlatformStyle;
 class RPCConsole;
 class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
-class NetworkToggleStatusBarControl;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
@@ -97,7 +96,7 @@ private:
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelWalletEncryptionIcon;
     QLabel *labelWalletHDStatusIcon;
-    NetworkToggleStatusBarControl *connectionsControl;
+    QLabel *connectionsControl;
     QLabel *labelBlocksIcon;
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
@@ -257,6 +256,9 @@ private Q_SLOTS:
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);
 
+    /** Toggle networking */
+    void toggleNetworkActive();
+
     void showModalOverlay();
 };
 
@@ -287,19 +289,6 @@ private Q_SLOTS:
     void updateDisplayUnit(int newUnits);
     /** Tells underlying optionsModel to update its current display unit. */
     void onMenuSelection(QAction* action);
-};
-
-class NetworkToggleStatusBarControl : public QLabel
-{
-    Q_OBJECT
-    
-public:
-    void setClientModel(ClientModel *clientModel);
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    
-private:
-    ClientModel *clientModel;
 };
 
 #endif // BITCOIN_QT_BITCOINGUI_H

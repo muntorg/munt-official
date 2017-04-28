@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -21,6 +21,7 @@
 #include <QProgressBar>
 #include <QString>
 #include <QTableView>
+#include <QLabel>
 
 #include <boost/filesystem.hpp>
 
@@ -222,6 +223,19 @@ namespace GUIUtil
 #else
     typedef QProgressBar ProgressBar;
 #endif
+
+    class ClickableLabel : public QLabel
+    {
+        Q_OBJECT
+
+    Q_SIGNALS:
+        /** Emitted when the label is clicked. The relative mouse coordinates of the click are
+         * passed to the signal.
+         */
+        void clicked(const QPoint& point);
+    protected:
+        void mousePressEvent(QMouseEvent *event);
+    };
 
 } // namespace GUIUtil
 

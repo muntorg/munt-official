@@ -12,7 +12,7 @@
 #include "auto_checkpoints.h"
 
 #include "chainparams.h"
-#include "main.h"
+#include "validation.h"
 #include "uint256.h"
 #include "util.h"
 #include "key.h"
@@ -239,7 +239,7 @@ namespace Checkpoints
                     return error("AcceptPendingSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
                 }
                 CValidationState State;
-                if (!ActivateBestChain(State, chainparams, &block))
+                if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
                 {
                     hashInvalidCheckpoint = hashPendingCheckpoint;
                     return error("AcceptPendingSyncCheckpoint: SetBestChain failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
@@ -367,7 +367,7 @@ namespace Checkpoints
                 return error("ResetSyncCheckpoint: ReadBlockFromDisk failed for hardened checkpoint %s", hash.ToString().c_str());
             }
             CValidationState State;
-            if (!ActivateBestChain(State, chainparams, &block))
+            if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
             {
                 return error("ResetSyncCheckpoint: ActivateBestChain failed for hardened checkpoint %s", hash.ToString().c_str());
             }
@@ -565,7 +565,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
         }
 
         CValidationState State;
-        if (!ActivateBestChain(State, chainparams, &block))
+        if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
         {
             Checkpoints::hashInvalidCheckpoint = hashCheckpoint;
             return error("ProcessSyncCheckpoint: ActivateBestChain failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());

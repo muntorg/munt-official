@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -13,7 +13,7 @@
 #include "chain.h"
 #include "rpc/server.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "sync.h"
@@ -288,11 +288,11 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
             "2. \"txoutproof\"     (string, required) The hex output from gettxoutproof that contains the transaction\n"
         );
 
-    CTransaction tx;
+    CMutableTransaction tx;
     if (!DecodeHexTx(tx, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     uint256 hashTx = tx.GetHash();
-    CWalletTx wtx(pwalletMain,tx);
+    CWalletTx wtx(pwalletMain, MakeTransactionRef(std::move(tx)));
 
     CDataStream ssMB(ParseHexV(request.params[1], "proof"), SER_NETWORK, PROTOCOL_VERSION);
     CMerkleBlock merkleBlock;
@@ -325,7 +325,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if (pwalletMain->IsMine(tx)) {
+    if (pwalletMain->IsMine(wtx)) {
         pwalletMain->AddToWallet(wtx, false);
         return NullUniValue;
     }

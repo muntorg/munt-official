@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -630,9 +630,9 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
         if (mi != pwalletMain->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.vout.size())
+            if (txin.prevout.n < prev.tx->vout.size())
             {
-                for(const CTxOut& txout : prev.vout)
+                for(const CTxOut& txout : prev.tx->vout)
                 {
                     for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
                     {

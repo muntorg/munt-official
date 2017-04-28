@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -22,7 +22,7 @@
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
 #include "hash.h"
-#include "main.h"
+#include "validation.h"
 #include "net.h"
 #include "policy/policy.h"
 #include "pow.h"
@@ -729,7 +729,7 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
     GetMainSignals().BlockFound(pblock->GetHash());
 
     // Process this block the same as if we had received it from another node
-    if (!ProcessNewBlock(chainparams, pblock, true, NULL, NULL))
+    if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(pblock), true, NULL, NULL))
         return error("GuldenMiner: ProcessNewBlock, block not accepted");
 
     return true;

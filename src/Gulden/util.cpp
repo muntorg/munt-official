@@ -5,7 +5,7 @@
 
 #include "util.h"
 #include "wallet/wallet.h"
-#include "main.h"
+#include "validation.h"
 
 static bool alreadyInRescan = false;
 void rescanThread()

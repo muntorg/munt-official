@@ -13,7 +13,7 @@
 #include "bitcoinunits.h"
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
-#include "main.h"
+#include "validation.h"
 
 #include <QAction>
 #include <QApplication>

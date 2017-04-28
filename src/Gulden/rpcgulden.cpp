@@ -7,7 +7,7 @@
 #include "../miner.h"
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
-#include "main.h"
+#include "validation.h"
 
 #include <boost/assign/list_of.hpp>
 

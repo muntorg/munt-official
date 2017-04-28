@@ -299,6 +299,7 @@ void CBlockPolicyEstimator::removeTx(uint256 hash)
 CBlockPolicyEstimator::CBlockPolicyEstimator(const CFeeRate& _minRelayFee)
     : nBestSeenHeight(0)
 {
+    static_assert(MIN_FEERATE > 0, "Min feerate must be nonzero");
     minTrackedFee = _minRelayFee < CFeeRate(MIN_FEERATE) ? CFeeRate(MIN_FEERATE) : _minRelayFee;
     std::vector<double> vfeelist;
     for (double bucketBoundary = minTrackedFee.GetFeePerK(); bucketBoundary <= MAX_FEERATE; bucketBoundary *= FEE_SPACING) {
@@ -404,7 +405,8 @@ void CBlockPolicyEstimator::processBlock(unsigned int nBlockHeight,
 CFeeRate CBlockPolicyEstimator::estimateFee(int confTarget)
 {
     // Return failure if trying to analyze a target we're not tracking
-    if (confTarget <= 0 || (unsigned int)confTarget > feeStats.GetMaxConfirms())
+    // It's not possible to get reasonable estimates for confTarget of 1
+    if (confTarget <= 1 || (unsigned int)confTarget > feeStats.GetMaxConfirms())
         return CFeeRate(0);
 
     double median = feeStats.EstimateMedianVal(confTarget, SUFFICIENT_FEETXS, MIN_SUCCESS_PCT, true, nBestSeenHeight);
@@ -422,6 +424,10 @@ CFeeRate CBlockPolicyEstimator::estimateSmartFee(int confTarget, int *answerFoun
     // Return failure if trying to analyze a target we're not tracking
     if (confTarget <= 0 || (unsigned int)confTarget > feeStats.GetMaxConfirms())
         return CFeeRate(0);
+
+    // It's not possible to get reasonable estimates for confTarget of 1
+    if (confTarget == 1)
+        confTarget = 2;
 
     double median = -1;
     while (median < 0 && (unsigned int)confTarget <= feeStats.GetMaxConfirms()) {
@@ -480,7 +486,7 @@ void CBlockPolicyEstimator::Read(CAutoFile& filein, int nFileVersion)
 
 FeeFilterRounder::FeeFilterRounder(const CFeeRate& minIncrementalFee)
 {
-    CAmount minFeeLimit = minIncrementalFee.GetFeePerK() / 2;
+    CAmount minFeeLimit = std::max(CAmount(1), minIncrementalFee.GetFeePerK() / 2);
     feeset.insert(0);
     for (double bucketBoundary = minFeeLimit; bucketBoundary <= MAX_FEERATE; bucketBoundary *= FEE_SPACING) {
         feeset.insert(bucketBoundary);

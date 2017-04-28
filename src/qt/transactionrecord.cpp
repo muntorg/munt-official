@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016 The Gulden developers
+// Copyright (c) 2016-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -13,7 +13,7 @@
 
 #include "base58.h"
 #include "consensus/consensus.h"
-#include "main.h"
+#include "validation.h"
 #include "timedata.h"
 #include <Gulden/auto_checkpoints.h>
 #include "wallet/wallet.h"
@@ -62,7 +62,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
-            BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+            BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
             {
                 
                 isminetype mine = IsMine(*account, txout);
@@ -76,7 +76,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     sub.credit = txout.nValue;
                     // Payment could partially be coming from us - deduct that from amount.
                     std::string addressIn;
-                    for (const CTxIn& txin : wtx.vin)
+                    for (const CTxIn& txin : wtx.tx->vin)
                     {
                         //fixme: rather just have a CAccount::GetDebit function?
                         isminetype mine = wallet->IsMine(*account, txin);
@@ -90,7 +90,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (parent != NULL)
                         {
                             CTxDestination senderAddress;
-                            if (ExtractDestination(parent->vout[txin.prevout.n].scriptPubKey, senderAddress))
+                            if (ExtractDestination(parent->tx->vout[txin.prevout.n].scriptPubKey, senderAddress))
                             {
                                 if (!addressIn.empty())
                                     addressIn += ", ";
@@ -133,7 +133,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             CAccount* account = accountPair.second;
             bool involvesWatchAddress = false;
             isminetype fAllFromMe = ISMINE_SPENDABLE;
-            BOOST_FOREACH(const CTxIn& txin, wtx.vin)
+            BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin)
             {
                 isminetype mine = wallet->IsMine(*account, txin);
                 if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
@@ -142,7 +142,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
             isminetype fAllToMe = ISMINE_SPENDABLE;
             std::vector<CTxOut> vNotToMe;
-            BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+            BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);
                 if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
@@ -180,9 +180,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 sub.involvesWatchAddress = involvesWatchAddress;
                 sub.credit = sub.debit = 0;
                 bool anyAreMine = false;
-                for (unsigned int nOut = 0; nOut < wtx.vout.size(); nOut++)
+                for (unsigned int nOut = 0; nOut < wtx.tx->vout.size(); nOut++)
                 {
-                    const CTxOut& txout = wtx.vout[nOut];
+                    const CTxOut& txout = wtx.tx->vout[nOut];
                     if(!IsMine(*account, txout))
                     {
                         continue;
@@ -200,11 +200,11 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 //
                 // Debit
                 //
-                CAmount nTxFee = nDebit - wtx.GetValueOut();
+                CAmount nTxFee = nDebit - wtx.tx->GetValueOut();
 
-                for (unsigned int nOut = 0; nOut < wtx.vout.size(); nOut++)
+                for (unsigned int nOut = 0; nOut < wtx.tx->vout.size(); nOut++)
                 {
-                    const CTxOut& txout = wtx.vout[nOut];
+                    const CTxOut& txout = wtx.tx->vout[nOut];
                     TransactionRecord sub(hash, nTime);
                     sub.actionAccountUUID = sub.fromAccountUUID = account->getUUID();
                     sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
@@ -250,7 +250,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 //fixme: GULDEN HIGH - This can be displayed better...
                 CAmount nNetMixed = 0;
-                for (const CTxOut& txout : wtx.vout)
+                for (const CTxOut& txout : wtx.tx->vout)
                 {
                     isminetype mine = IsMine(*account, txout);
                     if (mine == ISMINE_SPENDABLE)
@@ -258,7 +258,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         nNetMixed += txout.nValue;
                     }
                 }
-                for (const CTxIn& txin : wtx.vin)
+                for (const CTxIn& txin : wtx.tx->vin)
                 {
                     //fixme: rather just have a CAccount::GetDebit function?
                     isminetype mine = wallet->IsMine(*account, txin);
@@ -372,15 +372,15 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
 
     if (!CheckFinalTx(wtx))
     {
-        if (wtx.nLockTime < LOCKTIME_THRESHOLD)
+        if (wtx.tx->nLockTime < LOCKTIME_THRESHOLD)
         {
             status.status = TransactionStatus::OpenUntilBlock;
-            status.open_for = wtx.nLockTime - chainActive.Height();
+            status.open_for = wtx.tx->nLockTime - chainActive.Height();
         }
         else
         {
             status.status = TransactionStatus::OpenUntilDate;
-            status.open_for = wtx.nLockTime;
+            status.open_for = wtx.tx->nLockTime;
         }
     }
     // For generated transactions, determine maturity
