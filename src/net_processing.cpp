@@ -789,7 +789,7 @@ static uint256 most_recent_block_hash;
 
 void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock) {
     std::shared_ptr<const CBlockHeaderAndShortTxIDs> pcmpctblock = std::make_shared<const CBlockHeaderAndShortTxIDs> (*pblock, true);
-    CNetMsgMaker msgMaker(PROTOCOL_VERSION);
+    const CNetMsgMaker msgMaker(PROTOCOL_VERSION);
 
     LOCK(cs_main);
 
@@ -874,7 +874,15 @@ void PeerLogicValidation::BlockChecked(const CBlock& block, const CValidationSta
                 Misbehaving(it->second.first, nDoS);
         }
     }
-    else if (state.IsValid() && !IsInitialBlockDownload() && mapBlocksInFlight.count(hash) == mapBlocksInFlight.size()) {
+    // Check that:
+    // 1. The block is valid
+    // 2. We're not in initial block download
+    // 3. This is currently the best block we're aware of. We haven't updated
+    //    the tip yet so we have no way to check this directly here. Instead we
+    //    just check that there are currently no other blocks in flight.
+    else if (state.IsValid() &&
+             !IsInitialBlockDownload() &&
+             mapBlocksInFlight.count(hash) == mapBlocksInFlight.size()) {
         if (it != mapBlockSource.end()) {
             MaybeSetPeerAsAnnouncingHeaderAndIDs(it->second.first, *connman);
         }
@@ -967,11 +975,11 @@ static void RelayAddress(const CAddress& addr, bool fReachable, CConnman& connma
     connman.ForEachNodeThen(std::move(sortfunc), std::move(pushfunc));
 }
 
-void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParams, CConnman& connman, std::atomic<bool>& interruptMsgProc)
+void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     std::deque<CInv>::iterator it = pfrom->vRecvGetData.begin();
     std::vector<CInv> vNotFound;
-    CNetMsgMaker msgMaker(pfrom->GetSendVersion());
+    const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     LOCK(cs_main);
 
     while (it != pfrom->vRecvGetData.end()) {
@@ -1164,12 +1172,12 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
         resp.txn[i] = block.vtx[req.indexes[i]];
     }
     LOCK(cs_main);
-    CNetMsgMaker msgMaker(pfrom->GetSendVersion());
+    const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     int nSendFlags = State(pfrom->GetId())->fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
-bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, std::atomic<bool>& interruptMsgProc)
+bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     LogPrint("net", "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->id);
     if (IsArgSet("-dropmessagestest") && GetRand(GetArg("-dropmessagestest", 0)) == 0)
@@ -1210,50 +1218,51 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         CAddress addrFrom;
         uint64_t nNonce = 1;
         uint64_t nServiceInt;
-        vRecv >> pfrom->nVersion >> nServiceInt >> nTime >> addrMe;
-        pfrom->nServices = ServiceFlags(nServiceInt);
+        ServiceFlags nServices;
+        int nVersion;
+        int nSendVersion;
+        std::string strSubVer;
+        int nStartingHeight = -1;
+        bool fRelay = true;
+
+        vRecv >> nVersion >> nServiceInt >> nTime >> addrMe;
+        nSendVersion = std::min(nVersion, PROTOCOL_VERSION);
+        nServices = ServiceFlags(nServiceInt);
         if (!pfrom->fInbound)
         {
-            connman.SetServices(pfrom->addr, pfrom->nServices);
+            connman.SetServices(pfrom->addr, nServices);
         }
-        if (pfrom->nServicesExpected & ~pfrom->nServices)
+        if (pfrom->nServicesExpected & ~nServices)
         {
-            LogPrint("net", "peer=%d does not offer the expected services (%08x offered, %08x expected); disconnecting\n", pfrom->id, pfrom->nServices, pfrom->nServicesExpected);
+            LogPrint("net", "peer=%d does not offer the expected services (%08x offered, %08x expected); disconnecting\n", pfrom->id, nServices, pfrom->nServicesExpected);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_NONSTANDARD,
                                strprintf("Expected to offer services %08x", pfrom->nServicesExpected)));
             pfrom->fDisconnect = true;
             return false;
         }
 
-        if (pfrom->nVersion < MIN_PEER_PROTO_VERSION)
+        if (nVersion < MIN_PEER_PROTO_VERSION)
         {
             // disconnect from peers older than this proto version
-            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
                                strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             pfrom->fDisconnect = true;
             return false;
         }
 
-        if (pfrom->nVersion == 10300)
-            pfrom->nVersion = 300;
+        if (nVersion == 10300)
+            nVersion = 300;
         if (!vRecv.empty())
             vRecv >> addrFrom >> nNonce;
         if (!vRecv.empty()) {
-            vRecv >> LIMITED_STRING(pfrom->strSubVer, MAX_SUBVERSION_LENGTH);
-            pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
+            vRecv >> LIMITED_STRING(strSubVer, MAX_SUBVERSION_LENGTH);
         }
         if (!vRecv.empty()) {
-            vRecv >> pfrom->nStartingHeight;
+            vRecv >> nStartingHeight;
         }
-        {
-            LOCK(pfrom->cs_filter);
-            if (!vRecv.empty())
-                vRecv >> pfrom->fRelayTxes; // set to true after we get the first filter* message
-            else
-                pfrom->fRelayTxes = true;
-        }
-
+        if (!vRecv.empty())
+            vRecv >> fRelay;
         // Disconnect if we connected to ourself
         if (pfrom->fInbound && !connman.CheckIncomingNonce(nNonce))
         {
@@ -1262,7 +1271,6 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
             return true;
         }
 
-        pfrom->addrLocal = addrMe;
         if (pfrom->fInbound && addrMe.IsRoutable())
         {
             SeenLocal(addrMe);
@@ -1272,9 +1280,24 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         if (pfrom->fInbound)
             PushNodeVersion(pfrom, connman, GetAdjustedTime());
 
-        pfrom->fClient = !(pfrom->nServices & NODE_NETWORK);
+        connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERACK));
 
-        if((pfrom->nServices & NODE_WITNESS))
+        pfrom->nServices = nServices;
+        pfrom->addrLocal = addrMe;
+        pfrom->strSubVer = strSubVer;
+        pfrom->cleanSubVer = SanitizeString(strSubVer);
+        pfrom->nStartingHeight = nStartingHeight;
+        pfrom->fClient = !(nServices & NODE_NETWORK);
+        {
+            LOCK(pfrom->cs_filter);
+            pfrom->fRelayTxes = fRelay; // set to true after we get the first filter* message
+        }
+
+        // Change version
+        pfrom->SetSendVersion(nSendVersion);
+        pfrom->nVersion = nVersion;
+
+        if((nServices & NODE_WITNESS))
         {
             LOCK(cs_main);
             State(pfrom->GetId())->fHaveWitness = true;
@@ -1285,11 +1308,6 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         LOCK(cs_main);
         UpdatePreferredDownload(pfrom, State(pfrom->GetId()));
         }
-
-        // Change version
-        connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERACK));
-        int nSendVersion = std::min(pfrom->nVersion, PROTOCOL_VERSION);
-        pfrom->SetSendVersion(nSendVersion);
 
         if (!pfrom->fInbound)
         {
@@ -1317,8 +1335,6 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
             }
             connman.MarkAddressGood(pfrom->addr);
         }
-
-        pfrom->fSuccessfullyConnected = true;
 
         std::string remoteAddr;
         if (fLogIPs)
@@ -1420,11 +1436,11 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
     }
 
     // At this point, the outgoing message serialization version can't change.
-    CNetMsgMaker msgMaker(pfrom->GetSendVersion());
+    const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
 
     if (strCommand == NetMsgType::VERACK)
     {
-        pfrom->SetRecvVersion(std::min(pfrom->nVersion, PROTOCOL_VERSION));
+        pfrom->SetRecvVersion(std::min(pfrom->nVersion.load(), PROTOCOL_VERSION));
 
         if (!pfrom->fInbound) {
             // Mark this node as currently connected, so we update its timestamp later.
@@ -1452,6 +1468,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
             nCMPCTBLOCKVersion = 1;
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion));
         }
+        pfrom->fSuccessfullyConnected = true;
     }
 
 
@@ -2653,7 +2670,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
     return true;
 }
 
-bool ProcessMessages(CNode* pfrom, CConnman& connman, std::atomic<bool>& interruptMsgProc)
+bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     const CChainParams& chainparams = Params();
     //
@@ -2786,16 +2803,16 @@ public:
     }
 };
 
-bool SendMessages(CNode* pto, CConnman& connman, std::atomic<bool>& interruptMsgProc)
+bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     const Consensus::Params& consensusParams = Params().GetConsensus();
     {
-        // Don't send anything until we get its version message
-        if (pto->nVersion == 0 || pto->fDisconnect)
+        // Don't send anything until the version handshake is complete
+        if (!pto->fSuccessfullyConnected || pto->fDisconnect)
             return true;
 
         // If we get here, the outgoing message serialization version is set and can't change.
-        CNetMsgMaker msgMaker(pto->GetSendVersion());
+        const CNetMsgMaker msgMaker(pto->GetSendVersion());
 
         //
         // Message: ping

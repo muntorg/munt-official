@@ -169,75 +169,33 @@ public:
     void PushMessage(CNode* pnode, CSerializedNetMsg&& msg);
 
     template<typename Callable>
-    bool ForEachNodeContinueIf(Callable&& func)
-    {
-        LOCK(cs_vNodes);
-        for (auto&& node : vNodes)
-            if(!func(node))
-                return false;
-        return true;
-    };
-
-    template<typename Callable>
-    bool ForEachNodeContinueIf(Callable&& func) const
-    {
-        LOCK(cs_vNodes);
-        for (const auto& node : vNodes)
-            if(!func(node))
-                return false;
-        return true;
-    };
-
-    template<typename Callable, typename CallableAfter>
-    bool ForEachNodeContinueIfThen(Callable&& pre, CallableAfter&& post)
-    {
-        bool ret = true;
-        LOCK(cs_vNodes);
-        for (auto&& node : vNodes)
-            if(!pre(node)) {
-                ret = false;
-                break;
-            }
-        post();
-        return ret;
-    };
-
-    template<typename Callable, typename CallableAfter>
-    bool ForEachNodeContinueIfThen(Callable&& pre, CallableAfter&& post) const
-    {
-        bool ret = true;
-        LOCK(cs_vNodes);
-        for (const auto& node : vNodes)
-            if(!pre(node)) {
-                ret = false;
-                break;
-            }
-        post();
-        return ret;
-    };
-
-    template<typename Callable>
     void ForEachNode(Callable&& func)
     {
         LOCK(cs_vNodes);
-        for (auto&& node : vNodes)
-            func(node);
+        for (auto&& node : vNodes) {
+            if (NodeFullyConnected(node))
+                func(node);
+        }
     };
 
     template<typename Callable>
     void ForEachNode(Callable&& func) const
     {
         LOCK(cs_vNodes);
-        for (const auto& node : vNodes)
-            func(node);
+        for (auto&& node : vNodes) {
+            if (NodeFullyConnected(node))
+                func(node);
+        }
     };
 
     template<typename Callable, typename CallableAfter>
     void ForEachNodeThen(Callable&& pre, CallableAfter&& post)
     {
         LOCK(cs_vNodes);
-        for (auto&& node : vNodes)
-            pre(node);
+        for (auto&& node : vNodes) {
+            if (NodeFullyConnected(node))
+                pre(node);
+        }
         post();
     };
 
@@ -245,8 +203,10 @@ public:
     void ForEachNodeThen(Callable&& pre, CallableAfter&& post) const
     {
         LOCK(cs_vNodes);
-        for (const auto& node : vNodes)
-            pre(node);
+        for (auto&& node : vNodes) {
+            if (NodeFullyConnected(node))
+                pre(node);
+        }
         post();
     };
 
@@ -328,7 +288,7 @@ public:
     int GetBestHeight() const;
 
     /** Get a unique deterministic randomizer. */
-    CSipHasher GetDeterministicRandomizer(uint64_t id);
+    CSipHasher GetDeterministicRandomizer(uint64_t id) const;
 
     unsigned int GetReceiveFloodSize() const;
 
@@ -349,7 +309,7 @@ private:
     void ThreadSocketHandler();
     void ThreadDNSAddressSeed();
 
-    uint64_t CalculateKeyedNetGroup(const CAddress& ad);
+    uint64_t CalculateKeyedNetGroup(const CAddress& ad) const;
 
     CNode* FindNode(const CNetAddr& ip);
     CNode* FindNode(const CSubNet& subNet);
@@ -364,7 +324,7 @@ private:
 
     NodeId GetNewNodeId();
 
-    size_t SocketSendData(CNode *pnode);
+    size_t SocketSendData(CNode *pnode) const;
     //!check is the banlist has unwritten changes
     bool BannedSetIsDirty();
     //!set the "dirty" flag for the banlist
@@ -378,6 +338,9 @@ private:
     // Network stats
     void RecordBytesRecv(uint64_t bytes);
     void RecordBytesSent(uint64_t bytes);
+
+    // Whether the node should be passed out in ForEach* callbacks
+    static bool NodeFullyConnected(const CNode* pnode);
 
     // Network usage totals
     CCriticalSection cs_totalBytesRecv;
@@ -634,7 +597,7 @@ public:
     const CAddress addr;
     std::string addrName;
     CService addrLocal;
-    int nVersion;
+    std::atomic<int> nVersion;
     // strSubVer is whatever byte array we read from the wire. However, this field is intended
     // to be printed out, displayed to humans in various forms and so on. So we sanitize it and
     // store the sanitized version in cleanSubVer. The original should be used when dealing with
@@ -646,7 +609,7 @@ public:
     bool fAddnode;
     bool fClient;
     const bool fInbound;
-    bool fSuccessfullyConnected;
+    std::atomic_bool fSuccessfullyConnected;
     std::atomic_bool fDisconnect;
     // We use fRelayTxes for two purposes -
     // a) it allows us to not relay tx invs before receiving the peer's version message
@@ -768,25 +731,8 @@ public:
     {
         return nRecvVersion;
     }
-    void SetSendVersion(int nVersionIn)
-    {
-        // Send version may only be changed in the version message, and
-        // only one version message is allowed per session. We can therefore
-        // treat this value as const and even atomic as long as it's only used
-        // once the handshake is complete. Any attempt to set this twice is an
-        // error.
-        assert(nSendVersion == 0);
-        nSendVersion = nVersionIn;
-    }
-
-    int GetSendVersion() const
-    {
-        // The send version should always be explicitly set to
-        // INIT_PROTO_VERSION rather than using this value until the handshake
-        // is complete.
-        assert(nSendVersion != 0);
-        return nSendVersion;
-    }
+    void SetSendVersion(int nVersionIn);
+    int GetSendVersion() const;
 
     CNode* AddRef()
     {

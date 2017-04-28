@@ -190,10 +190,11 @@ public:
     bool WritePrimarySeed(const CHDSeed& seed);
     bool WritePrimaryAccount(const CAccount* account);
 
+    static void IncrementUpdateCounter();
+    static unsigned int GetUpdateCounter();
 private:
     CWalletDB(const CWalletDB&);
     void operator=(const CWalletDB&);
-
 };
 
 void ThreadFlushWalletDB();
