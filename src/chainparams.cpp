@@ -106,6 +106,9 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000002cb971dd56d1c583c20f90");
 
+        // By default assume that the signatures in ancestors of this block are valid.
+        consensus.defaultAssumeValid = uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb"); //505000
+
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
@@ -173,11 +176,14 @@ public:
             ( 450000, uint256S("0xfa4f46c846b053104ce5956578d72f9a5fa87c4ae49a6450e5d66c4fd37d6d66"))
             ( 475000, uint256S("0xa730a89a11332ee0133c458c5feccbda857ace9572ab5a048701cccb0239cf4c"))
             ( 500000, uint256S("0xd30e19c8b8c567b23c09fc022b4f5ca8014a8cb3c1504782e9a68af349757afa"))
-            ( 505000, uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb")),
+            ( 505000, uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb"))
+            };
+            
+            chainTxData = ChainTxData{
             1491810603, // * UNIX timestamp of last checkpoint block
-            1208446,   // * total number of transactions between genesis and last checkpoint
+            1208446,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            1700.0     // * estimated number of transactions per day after checkpoint
+            0.1         // * estimated number of transactions per second after that timestamp
         };
     }
 };
@@ -219,6 +225,9 @@ public:
         // The best chain should have at least this much work.
         //fixme: (GULDEN) (MERGE) (CHECKME)
         //consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000198b4def2baa9338d6");
+
+        // By default assume that the signatures in ancestors of this block are valid.
+        consensus.defaultAssumeValid = uint256S("0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7"); //350000
 
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
@@ -286,10 +295,14 @@ public:
             ( 200000, uint256S("0x7e35577b14b39f90532fec7912d70153a89f3f27e63aa295d76156547f7f1e73"))
             ( 250000, uint256S("0xbc0f4759be0232cfda9d70747313bc552712e7d27688cb2fa3f260c242ae246d"))
             ( 300000, uint256S("0x52d735ffd4e679662754465e63b226e10a31d8eee708c0f703ea2a899381ebbe"))
-            ( 350000, uint256S("0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7")),
+            ( 350000, uint256S("0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7"))
+        };
+
+        chainTxData = ChainTxData{
+            // Data as of block 0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7 (height 350000)
             1491612899,
             350019,
-            700.0
+            0.1
         };
 
     }
@@ -329,6 +342,9 @@ public:
         //fixme: (GULDEN) (MERGE)
         //consensus.nMinimumChainWork = uint256S("0x00");
 
+        // By default assume that the signatures in ancestors of this block are valid.
+        consensus.defaultAssumeValid = uint256S("0x00");
+
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
         pchMessageStart[2] = 0xf7; // 'G' + 0xb0
@@ -351,7 +367,10 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")),
+            ( 0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"))
+        };
+
+        chainTxData = ChainTxData{
             0,
             0,
             0
