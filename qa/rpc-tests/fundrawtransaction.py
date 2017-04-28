@@ -2,6 +2,7 @@
 # Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+"""Test the fundrawtransaction RPC."""
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
@@ -469,7 +470,9 @@ class RawTransactionsTest(BitcoinTestFramework):
         # locked wallet test
         self.nodes[1].encryptwallet("test")
         self.nodes.pop(1)
-        stop_nodes(self.nodes)
+        stop_node(self.nodes[0], 0)
+        stop_node(self.nodes[1], 2)
+        stop_node(self.nodes[2], 3)
 
         self.nodes = start_nodes(self.num_nodes, self.options.tmpdir)
         # This test is not meant to test fee estimation and we'd like

@@ -187,7 +187,7 @@ testScriptsExt = [
     'replace-by-fee.py',
 ]
 
-
+    parser.add_argument('--exclude', '-x', help='specify a comma-seperated-list of scripts to exclude. Do not include the .py extension in the name.')
 def runtests():
     test_list = []
     if '-extended' in opts:
@@ -199,14 +199,23 @@ def runtests():
             if t in opts or re.sub(".py$", "", t) in opts:
                 test_list.append(t)
 
-    if print_help:
-        # Only print help of the first script and exit
-        subprocess.check_call((RPC_TESTS_DIR + test_list[0]).split() + ['-h'])
+    # Remove the test cases that the user has explicitly asked to exclude.
+    if args.exclude:
+        for exclude_test in args.exclude.split(','):
+            if exclude_test + ".py" in test_list:
+                test_list.remove(exclude_test + ".py")
+
+    if not test_list:
+        print("No valid test scripts specified. Check that your test is in one "
+              "of the test lists in rpc-tests.py, or run rpc-tests.py with no arguments to run all tests")
+        sys.exit(0)
+
         sys.exit(0)
 
     coverage = None
 
     if ENABLE_COVERAGE:
+    flags = ["--srcdir={}/src".format(build_dir)] + args
         coverage = RPCCoverage()
         print("Initializing coverage directory at %s\n" % coverage.dir)
     flags = ["--srcdir=%s/src" % BUILDDIR] + passon_args

@@ -2,6 +2,15 @@
 # Copyright (c) 2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+"""Test account RPCs.
+
+RPCs tested are:
+    - getaccountaddress
+    - getaddressesbyaccount
+    - setaccount
+    - sendfrom (with account arguments)
+    - move (with account arguments)
+"""
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -10,7 +19,6 @@ from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
 )
-
 
 class WalletAccountsTest(BitcoinTestFramework):
 

@@ -2,14 +2,12 @@
 # Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+"""Test the pruning code.
 
-#
-# Test pruning code
-# ********
-# WARNING:
-# This test uses 4GB of disk space.
-# This test takes 30 mins or more (up to 2 hours)
-# ********
+WARNING:
+This test uses 4GB of disk space.
+This test takes 30 mins or more (up to 2 hours)
+"""
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
@@ -17,6 +15,11 @@ import time
 import os
 
 MIN_BLOCKS_TO_KEEP = 288
+
+# Rescans start at the earliest block up to 2 hours before a key timestamp, so
+# the manual prune RPC avoids pruning blocks in the same window to be
+# compatible with pruning based on key creation time.
+RESCAN_WINDOW = 2 * 60 * 60
 
 
 def calc_usage(blockdir):
@@ -239,7 +242,7 @@ class PruneTest(BitcoinTestFramework):
 
         def height(index):
             if use_timestamp:
-                return node.getblockheader(node.getblockhash(index))["time"]
+                return node.getblockheader(node.getblockhash(index))["time"] + RESCAN_WINDOW
             else:
                 return index
 

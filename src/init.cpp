@@ -129,10 +129,6 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 // threads that should only be stopped after the main network-processing
 // threads have exited.
 //
-// Note that if running -daemon the parent process returns from AppInit2
-// before adding any threads to the threadGroup, so .join_all() returns
-// immediately and the parent exits from main().
-//
 // Shutdown for Qt is very similar, only it uses a QTimer to detect
 // fRequestShutdown getting set, and then does the normal Qt
 // shutdown thing.
@@ -200,7 +196,7 @@ void Shutdown()
     if (!lockShutdown)
         return;
 
-    /// Note: Shutdown() must be able to handle cases in which AppInit2() failed part of the way,
+    /// Note: Shutdown() must be able to handle cases in which initialization failed part of the way,
     /// for example if the data directory was found to be locked.
     /// Be sure that anything that writes files or flushes caches only does this if the respective
     /// module was initialized.
@@ -816,6 +812,19 @@ ServiceFlags nLocalServices = NODE_NETWORK;
 
 }
 
+[[noreturn]] static void new_handler_terminate()
+{
+    // Rather than throwing std::bad-alloc if allocation fails, terminate
+    // immediately to (try to) avoid chain corruption.
+    // Since LogPrintf may itself allocate memory, set the handler directly
+    // to terminate first.
+    std::set_new_handler(std::terminate);
+    LogPrintf("Error: Out of memory. Terminating.\n");
+
+    // The log was successful, terminate now.
+    std::terminate();
+};
+
 bool AppInitBasicSetup()
 {
     // ********************************************************* Step 1: setup
@@ -868,6 +877,9 @@ bool AppInitBasicSetup()
     // Ignore SIGPIPE, otherwise it will bring the daemon down if the client closes unexpectedly
     signal(SIGPIPE, SIG_IGN);
 #endif
+
+    std::set_new_handler(new_handler_terminate);
+
     return true;
 }
 
