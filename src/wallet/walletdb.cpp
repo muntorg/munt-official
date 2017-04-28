@@ -82,13 +82,13 @@ bool CWalletDB::EraseTx(uint256 hash)
 
 bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("key"), vchPubKey));
 }
 
 bool CWalletDB::EraseEncryptedKey(const CPubKey& vchPubKey)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("ckey"), vchPubKey));
 }
 
@@ -111,7 +111,7 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
 
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
 
     if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
                keyMeta, false))
@@ -203,7 +203,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     //fixme: GULDEN (FUT) (OPT) (CBSU)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
@@ -229,19 +229,19 @@ bool CWalletDB::WriteMinVersion(int nVersion)
 
 bool CWalletDB::WriteAccountLabel(const string& strUUID, const string& strLabel)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Write(std::make_pair(string("acclabel"), strUUID), strLabel);
 }
   
 bool CWalletDB::EraseAccountLabel(const string& strUUID)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Erase(std::make_pair(string("acclabel"), strUUID));
 }
     
 bool CWalletDB::WriteAccount(const string& strAccount, const CAccount* account)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     
     if (account->IsHD())
       return Write(make_pair(string("acchd"), strAccount), *((CAccountHD*)account));
@@ -1285,25 +1285,25 @@ unsigned int CWalletDB::GetUpdateCounter()
 
 bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Write(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
 }
 
 bool CWalletDB::DeleteHDSeed(const CHDSeed& seed)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Erase(std::make_pair(std::string("hdseed"), seed.getUUID()));
 }
 
 bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Write(std::string("primaryseed"), seed.getUUID());
 }
 
 bool CWalletDB::WritePrimaryAccount(const CAccount* account)
 {
-    nWalletDBUpdated++;
+    nWalletDBUpdateCounter++;
     return Write(std::string("primaryaccount"), account->getUUID());
 }
 
