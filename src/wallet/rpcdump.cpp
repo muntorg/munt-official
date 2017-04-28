@@ -1135,6 +1135,8 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                 // range, or if the import result already has an error set, let
                 // the result stand unmodified. Otherwise replace the result
                 // with an error message.
+		//fisme:(MERGE)
+/*
                 if (GetImportTimestamp(request, now) - 7200 >= scannedRange->GetBlockTimeMax() || results.at(i).exists("error")) {
                     response.push_back(results.at(i));
                 } else {
@@ -1142,7 +1144,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                     result.pushKV("success", UniValue(false));
                     result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %d, transactions may be missing.", scannedRange->GetBlockTimeMax())));
                     response.push_back(std::move(result));
-                }
+                }*/
             }
         }
     }
