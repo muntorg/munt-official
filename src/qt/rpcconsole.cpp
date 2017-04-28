@@ -137,6 +137,8 @@ bool RPCConsole::RPCExecuteCommandLine(std::string &strResult, const std::string
     enum CmdParseState
     {
         STATE_EATING_SPACES,
+        STATE_EATING_SPACES_IN_ARG,
+        STATE_EATING_SPACES_IN_BRACKETS,
         STATE_ARGUMENT,
         STATE_SINGLEQUOTED,
         STATE_DOUBLEQUOTED,
@@ -220,6 +222,8 @@ bool RPCConsole::RPCExecuteCommandLine(std::string &strResult, const std::string
                     break;
             }
             case STATE_ARGUMENT: // In or after argument
+            case STATE_EATING_SPACES_IN_ARG:
+            case STATE_EATING_SPACES_IN_BRACKETS:
             case STATE_EATING_SPACES: // Handle runs of whitespace
                 switch(ch)
             {
@@ -227,19 +231,20 @@ bool RPCConsole::RPCExecuteCommandLine(std::string &strResult, const std::string
                 case '\'': state = STATE_SINGLEQUOTED; break;
                 case '\\': state = STATE_ESCAPE_OUTER; break;
                 case '(': case ')': case '\n':
+                    if (state == STATE_EATING_SPACES_IN_ARG)
+                        throw std::runtime_error("Invalid Syntax");
                     if (state == STATE_ARGUMENT)
                     {
                         if (ch == '(' && stack.size() && stack.back().size() > 0)
                             stack.push_back(std::vector<std::string>());
-                        if (curarg.size())
-                        {
-                            // don't allow commands after executed commands on baselevel
-                            if (!stack.size())
-                                throw std::runtime_error("Invalid Syntax");
-                            stack.back().push_back(curarg);
-                        }
+
+                        // don't allow commands after executed commands on baselevel
+                        if (!stack.size())
+                            throw std::runtime_error("Invalid Syntax");
+
+                        stack.back().push_back(curarg);
                         curarg.clear();
-                        state = STATE_EATING_SPACES;
+                        state = STATE_EATING_SPACES_IN_BRACKETS;
                     }
                     if ((ch == ')' || ch == '\n') && stack.size() > 0)
                     {
@@ -256,11 +261,18 @@ bool RPCConsole::RPCExecuteCommandLine(std::string &strResult, const std::string
                     }
                     break;
                 case ' ': case ',': case '\t':
-                    if(state == STATE_ARGUMENT) // Space ends argument
+                    if(state == STATE_EATING_SPACES_IN_ARG && curarg.empty() && ch == ',')
+                        throw std::runtime_error("Invalid Syntax");
+
+                    else if(state == STATE_ARGUMENT) // Space ends argument
                     {
-                        if (curarg.size())
-                            stack.back().push_back(curarg);
+                        stack.back().push_back(curarg);
                         curarg.clear();
+                    }
+                    if ((state == STATE_EATING_SPACES_IN_BRACKETS || state == STATE_ARGUMENT) && ch == ',')
+                    {
+                        state = STATE_EATING_SPACES_IN_ARG;
+                        break;
                     }
                     state = STATE_EATING_SPACES;
                     break;
@@ -515,7 +527,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         // peer table signal handling - update peer details when new nodes are added to the model
         connect(model->getPeerTableModel(), SIGNAL(layoutChanged()), this, SLOT(peerLayoutChanged()));
         // peer table signal handling - cache selected node ids
-        connect(model->getPeerTableModel(), SIGNAL(layoutAboutToChange()), this, SLOT(peerLayoutAboutToChange()));
+        connect(model->getPeerTableModel(), SIGNAL(layoutAboutToBeChanged()), this, SLOT(peerLayoutAboutToChange()));
         
         // set up ban table
         ui->banlistWidget->setModel(model->getBanTableModel());
@@ -650,13 +662,18 @@ void RPCConsole::clear(bool clearHistory)
                 "td.message { font-family: %1; font-size: %2; white-space:pre-wrap; } "
                 "td.cmd-request { color: #006060; } "
                 "td.cmd-error { color: red; } "
+                ".secwarning { color: red; }"
                 "b { color: #006060; } "
             ).arg(fixedFontInfo.family(), QString("%1pt").arg(consoleFontSize))
         );
 
     message(CMD_REPLY, (tr("Welcome to the %1 RPC console.").arg(tr(PACKAGE_NAME)) + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +
-                        tr("Type <b>help</b> for an overview of available commands.")), true);
+                        tr("Type <b>help</b> for an overview of available commands.")) +
+                        "<br><span class=\"secwarning\">" +
+                        tr("WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.") +
+                        "</span>",
+                        true);
 }
 
 void RPCConsole::keyPressEvent(QKeyEvent *event)
@@ -778,7 +795,6 @@ void RPCConsole::startExecutor()
     connect(this, SIGNAL(stopExecutor()), &thread, SLOT(quit()));
     // - queue executor for deletion (in execution thread)
     connect(&thread, SIGNAL(finished()), executor, SLOT(deleteLater()), Qt::DirectConnection);
-    connect(&thread, SIGNAL(finished()), this, SLOT(test()), Qt::DirectConnection);
 
     // Default implementation of QThread::run() simply spins up an event loop in the thread,
     // which is what we want.
@@ -1008,11 +1024,11 @@ void RPCConsole::disconnectSelectedNode()
         return;
     
     // Get selected peer addresses
-    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, 0);
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
     for(int i = 0; i < nodes.count(); i++)
     {
         // Get currently selected peer address
-        NodeId id = nodes.at(i).data(PeerTableModel::NetNodeId).toInt();
+        NodeId id = nodes.at(i).data().toInt();
         // Find the node, disconnect it and clear the selected node
         if(g_connman->DisconnectNode(id))
             clearSelectedNode();
@@ -1025,11 +1041,11 @@ void RPCConsole::banSelectedNode(int bantime)
         return;
     
     // Get selected peer addresses
-    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, 0);
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
     for(int i = 0; i < nodes.count(); i++)
     {
         // Get currently selected peer address
-        NodeId id = nodes.at(i).data(PeerTableModel::NetNodeId).toInt();
+        NodeId id = nodes.at(i).data().toInt();
 
 	// Get currently selected peer address
 	int detailNodeRow = clientModel->getPeerTableModel()->getRowByNodeId(id);
@@ -1052,11 +1068,11 @@ void RPCConsole::unbanSelectedNode()
         return;
 
     // Get selected ban addresses
-    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->banlistWidget, 0);
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->banlistWidget, BanTableModel::Address);
     for(int i = 0; i < nodes.count(); i++)
     {
         // Get currently selected ban address
-        QString strNode = nodes.at(i).data(BanTableModel::Address).toString();
+        QString strNode = nodes.at(i).data().toString();
         CSubNet possibleSubnet;
 
         LookupSubNet(strNode.toStdString().c_str(), possibleSubnet);
@@ -1089,9 +1105,4 @@ void RPCConsole::showOrHideBanTableIfRequired()
 void RPCConsole::setTabFocus(enum TabTypes tabType)
 {
     ui->tabWidget->setCurrentIndex(tabType);
-}
-
-void RPCConsole::on_toggleNetworkActiveButton_clicked()
-{
-    clientModel->setNetworkActive(!clientModel->getNetworkActive());
 }

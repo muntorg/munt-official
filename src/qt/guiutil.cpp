@@ -124,7 +124,7 @@ static std::string DummyAddress(const CChainParams &params)
     std::vector<unsigned char> sourcedata = params.Base58Prefix(CChainParams::PUBKEY_ADDRESS);
     sourcedata.insert(sourcedata.end(), dummydata, dummydata + sizeof(dummydata));
     for(int i=0; i<256; ++i) { // Try every trailing byte
-        std::string s = EncodeBase58(begin_ptr(sourcedata), end_ptr(sourcedata));
+        std::string s = EncodeBase58(sourcedata.data(), sourcedata.data() + sourcedata.size());
         if (!CBitcoinAddress(s).IsValid())
             return s;
         sourcedata[sourcedata.size()-1] += 1;
@@ -1016,7 +1016,12 @@ QString formateNiceTimeOffset(qint64 secs)
     return timeBehindText;
 }
 
-void ClickableLabel::mousePressEvent(QMouseEvent *event)
+void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_EMIT clicked(event->pos());
+}
+    
+void ClickableProgressBar::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_EMIT clicked(event->pos());
 }

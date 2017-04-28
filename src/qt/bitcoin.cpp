@@ -37,6 +37,7 @@
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "warnings.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -281,7 +282,7 @@ BitcoinCore::BitcoinCore():
 void BitcoinCore::handleRunawayException(const std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
-    Q_EMIT runawayException(QString::fromStdString(strMiscWarning));
+    Q_EMIT runawayException(QString::fromStdString(GetWarnings("gui")));
 }
 
 void BitcoinCore::initialize()
@@ -744,10 +745,10 @@ int main(int argc, char *argv[])
         app.exec();
     } catch (const std::exception& e) {
         PrintExceptionContinue(&e, "Runaway exception");
-        app.handleRunawayException(QString::fromStdString(strMiscWarning));
+        app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
     } catch (...) {
         PrintExceptionContinue(NULL, "Runaway exception");
-        app.handleRunawayException(QString::fromStdString(strMiscWarning));
+        app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
     }
     return app.getReturnValue();
 }

@@ -18,6 +18,7 @@
 #include "rpcnestedtests.h"
 #include "util.h"
 #include "uritests.h"
+#include "compattests.h"
 
 #ifdef ENABLE_WALLET
 #include "paymentservertests.h"
@@ -67,6 +68,9 @@ int main(int argc, char *argv[])
 #endif
     RPCNestedTests test3;
     if (QTest::qExec(&test3) != 0)
+        fInvalid = true;
+    CompatTests test4;
+    if (QTest::qExec(&test4) != 0)
         fInvalid = true;
 
     ECC_Stop();

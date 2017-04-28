@@ -2031,7 +2031,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
     ListTransactions(wtx, "*", 0, false, details, filter, true);
     entry.push_back(Pair("details", details));
 
-    string strHex = EncodeHexTx(static_cast<CTransaction>(wtx));
+    string strHex = EncodeHexTx(static_cast<CTransaction>(wtx), RPCSerializationFlags());
     entry.push_back(Pair("hex", strHex));
 
     return entry;

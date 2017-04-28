@@ -25,6 +25,7 @@
 #include "wallet/walletdb.h"
 #endif
 #include "account.h"
+#include "warnings.h"
 
 #include <stdint.h>
 

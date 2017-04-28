@@ -729,7 +729,7 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
     GetMainSignals().BlockFound(pblock->GetHash());
 
     // Process this block the same as if we had received it from another node
-    if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(pblock), true, NULL, NULL))
+    if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(pblock), true, NULL))
         return error("GuldenMiner: ProcessNewBlock, block not accepted");
 
     return true;

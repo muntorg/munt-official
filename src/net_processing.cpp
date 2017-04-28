@@ -1598,7 +1598,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         }
 
         CBlock block;
-        assert(ReadBlockFromDisk(block, it->second, chainparams.GetConsensus()));
+        bool ret = ReadBlockFromDisk(block, it->second, chainparams.GetConsensus());
+        assert(ret);
 
         BlockTransactions resp(req);
         for (size_t i = 0; i < req.indexes.size(); i++) {
@@ -1861,6 +1862,11 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             }
         }
 
+        // Keep a CBlock for "optimistic" compactblock reconstructions (see
+        // below)
+        std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
+        bool fBlockReconstructed = false;
+
         LOCK(cs_main);
         // If AcceptBlockHeader returned true, it set pindex
         assert(pindex);
@@ -1949,6 +1955,23 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                     req.blockhash = pindex->GetBlockHash();
                     connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETBLOCKTXN, req));
                 }
+            } else {
+                // This block is either already in flight from a different
+                // peer, or this peer has too many blocks outstanding to
+                // download from.
+                // Optimistically try to reconstruct anyway since we might be
+                // able to without any round trips.
+                PartiallyDownloadedBlock tempBlock(&mempool);
+                ReadStatus status = tempBlock.InitData(cmpctblock);
+                if (status != READ_STATUS_OK) {
+                    // TODO: don't ignore failures
+                    return true;
+                }
+                std::vector<CTransactionRef> dummy;
+                status = tempBlock.FillBlock(*pblock, dummy);
+                if (status == READ_STATUS_OK) {
+                    fBlockReconstructed = true;
+                }
             }
         } else {
             if (fAlreadyInFlight) {
@@ -1968,6 +1991,29 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 return ProcessMessage(pfrom, NetMsgType::HEADERS, vHeadersMsg, nTimeReceived, chainparams, connman);
             }
         }
+
+        if (fBlockReconstructed) {
+            // If we got here, we were able to optimistically reconstruct a
+            // block that is in flight from some other peer.
+            {
+                LOCK(cs_main);
+                mapBlockSource.emplace(pblock->GetHash(), std::make_pair(pfrom->GetId(), false));
+            }
+            bool fNewBlock = false;
+            ProcessNewBlock(chainparams, pblock, true, &fNewBlock);
+            if (fNewBlock)
+                pfrom->nLastBlockTime = GetTime();
+
+            LOCK(cs_main); // hold cs_main for CBlockIndex::IsValid()
+            if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS)) {
+                // Clear download state for this block, which is in
+                // process from some other peer.  We do this after calling
+                // ProcessNewBlock so that a malleated cmpctblock announcement
+                // can't be used to interfere with block relay.
+                MarkBlockAsReceived(pblock->GetHash());
+            }
+        }
+
     }
 
     else if (strCommand == NetMsgType::BLOCKTXN && !fImporting && !fReindex) // Ignore blocks received while importing
@@ -2031,7 +2077,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             bool fNewBlock = false;
             // Since we requested this block (it was in mapBlocksInFlight), force it to be processed,
             // even if it would not be a candidate for new tip (missing previous block, chain not long enough, etc)
-            ProcessNewBlock(chainparams, pblock, true, NULL, &fNewBlock);
+            ProcessNewBlock(chainparams, pblock, true, &fNewBlock);
             if (fNewBlock)
                 pfrom->nLastBlockTime = GetTime();
         }
@@ -2213,7 +2259,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             mapBlockSource.emplace(hash, std::make_pair(pfrom->GetId(), true));
         }
         bool fNewBlock = false;
-        ProcessNewBlock(chainparams, pblock, forceProcessing, NULL, &fNewBlock);
+        ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock);
         if (fNewBlock)
             pfrom->nLastBlockTime = GetTime();
     }
@@ -2810,7 +2856,8 @@ bool SendMessages(CNode* pto, CConnman& connman)
                             vHeaders.front().GetHash().ToString(), pto->id);
                     //TODO: Shouldn't need to reload block from disk, but requires refactor
                     CBlock block;
-                    assert(ReadBlockFromDisk(block, pBestIndex, consensusParams));
+                    bool ret = ReadBlockFromDisk(block, pBestIndex, consensusParams);
+                    assert(ret);
                     CBlockHeaderAndShortTxIDs cmpctblock(block, state.fWantsCmpctWitness);
                     int nSendFlags = state.fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
                     connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
@@ -3075,8 +3122,12 @@ bool SendMessages(CNode* pto, CConnman& connman)
             CAmount currentFilter = mempool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFeePerK();
             int64_t timeNow = GetTimeMicros();
             if (timeNow > pto->nextSendTimeFeeFilter) {
-                static FeeFilterRounder filterRounder(::minRelayTxFee);
+                static CFeeRate default_feerate(DEFAULT_MIN_RELAY_TX_FEE);
+                static FeeFilterRounder filterRounder(default_feerate);
                 CAmount filterToSend = filterRounder.round(currentFilter);
+                // If we don't allow free transactions, then we always have a fee filter of at least minRelayTxFee
+                if (GetArg("-limitfreerelay", DEFAULT_LIMITFREERELAY) <= 0)
+                    filterToSend = std::max(filterToSend, ::minRelayTxFee.GetFeePerK());
                 if (filterToSend != pto->lastSentFeeFilter) {
                     connman.PushMessage(pto, msgMaker.Make(NetMsgType::FEEFILTER, filterToSend));
                     pto->lastSentFeeFilter = filterToSend;

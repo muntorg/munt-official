@@ -27,6 +27,7 @@
 #include "ui_interface.h"
 #include "rpc/server.h"
 #include "rpc/register.h"
+#include "script/sigcache.h"
 
 #include "test/testutil.h"
 
@@ -47,6 +48,7 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
         ECC_Start();
         SetupEnvironment();
         SetupNetworking();
+        InitSignatureCache();
         fPrintToDebugLog = false; // don't want to write to debug.log file
         fCheckBlockIndex = true;
         SelectParams(chainName);
@@ -135,7 +137,7 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
     while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())) ++block.nNonce;
 
     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-    ProcessNewBlock(chainparams, shared_pblock, true, NULL, NULL);
+    ProcessNewBlock(chainparams, shared_pblock, true, NULL);
 
     CBlock result = block;
     return result;
