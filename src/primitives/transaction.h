@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -464,8 +464,6 @@ struct CMutableTransaction
 typedef std::shared_ptr<const CTransaction> CTransactionRef;
 static inline CTransactionRef MakeTransactionRef() { return std::make_shared<const CTransaction>(); }
 template <typename Tx> static inline CTransactionRef MakeTransactionRef(Tx&& txIn) { return std::make_shared<const CTransaction>(std::forward<Tx>(txIn)); }
-static inline CTransactionRef MakeTransactionRef(const CTransactionRef& txIn) { return txIn; }
-static inline CTransactionRef MakeTransactionRef(CTransactionRef&& txIn) { return std::move(txIn); }
 
 /** Compute the weight of a transaction, as defined by BIP 141 */
 int64_t GetTransactionWeight(const CTransaction &tx);

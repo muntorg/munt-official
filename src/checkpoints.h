@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,8 +21,6 @@ namespace Checkpoints
 
 //! Returns last CBlockIndex* in mapBlockIndex that is a checkpoint
 CBlockIndex* GetLastCheckpoint(const CCheckpointData& data);
-
-double GuessVerificationProgress(const CCheckpointData& data, CBlockIndex* pindex, bool fSigchecks = true);
 
 } //namespace Checkpoints
 

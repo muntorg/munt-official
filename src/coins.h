@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -269,6 +269,11 @@ struct CCoinsCacheEntry
     enum Flags {
         DIRTY = (1 << 0), // This cache entry is potentially different from the version in the parent view.
         FRESH = (1 << 1), // The parent view does not have this entry (or it is pruned).
+        /* Note that FRESH is a performance optimization with which we can
+         * erase coins that are fully spent if we know we do not need to
+         * flush the changes to the parent cache.  It is always safe to
+         * not mark FRESH if that condition is not guaranteed.
+         */
     };
 
     CCoinsCacheEntry() : coins(), flags(0) {}

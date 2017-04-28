@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -31,11 +31,11 @@
 #include <boost/test/unit_test.hpp>
 
 // Tests this internal-to-main.cpp method:
-extern bool AddOrphanTx(const CTransaction& tx, NodeId peer);
+extern bool AddOrphanTx(const CTransactionRef& tx, NodeId peer);
 extern void EraseOrphansFor(NodeId peer);
 extern unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans);
 struct COrphanTx {
-    CTransaction tx;
+    CTransactionRef tx;
     NodeId fromPeer;
     int64_t nTimeExpire;
 };
@@ -54,6 +54,8 @@ BOOST_FIXTURE_TEST_SUITE(DoS_tests, TestingSetup)
 
 BOOST_AUTO_TEST_CASE(DoS_banning)
 {
+    std::atomic<bool> interruptDummy(false);
+
     connman->ClearBanned();
     CAddress addr1(ip(0xa0b0c001), NODE_NONE);
     CNode dummyNode1(id++, NODE_NETWORK, 0, INVALID_SOCKET, addr1, 0, 0, "", true);
@@ -61,7 +63,7 @@ BOOST_AUTO_TEST_CASE(DoS_banning)
     GetNodeSignals().InitializeNode(&dummyNode1, *connman);
     dummyNode1.nVersion = 1;
     Misbehaving(dummyNode1.GetId(), 100); // Should get banned
-    SendMessages(&dummyNode1, *connman);
+    SendMessages(&dummyNode1, *connman, interruptDummy);
     BOOST_CHECK(connman->IsBanned(addr1));
     BOOST_CHECK(!connman->IsBanned(ip(0xa0b0c001|0x0000ff00))); // Different IP, not banned
 
@@ -71,16 +73,18 @@ BOOST_AUTO_TEST_CASE(DoS_banning)
     GetNodeSignals().InitializeNode(&dummyNode2, *connman);
     dummyNode2.nVersion = 1;
     Misbehaving(dummyNode2.GetId(), 50);
-    SendMessages(&dummyNode2, *connman);
+    SendMessages(&dummyNode2, *connman, interruptDummy);
     BOOST_CHECK(!connman->IsBanned(addr2)); // 2 not banned yet...
     BOOST_CHECK(connman->IsBanned(addr1));  // ... but 1 still should be
     Misbehaving(dummyNode2.GetId(), 50);
-    SendMessages(&dummyNode2, *connman);
+    SendMessages(&dummyNode2, *connman, interruptDummy);
     BOOST_CHECK(connman->IsBanned(addr2));
 }
 
 BOOST_AUTO_TEST_CASE(DoS_banscore)
 {
+    std::atomic<bool> interruptDummy(false);
+
     connman->ClearBanned();
     ForceSetArg("-banscore", "111"); // because 11 is my favorite number
     CAddress addr1(ip(0xa0b0c001), NODE_NONE);
@@ -89,19 +93,21 @@ BOOST_AUTO_TEST_CASE(DoS_banscore)
     GetNodeSignals().InitializeNode(&dummyNode1, *connman);
     dummyNode1.nVersion = 1;
     Misbehaving(dummyNode1.GetId(), 100);
-    SendMessages(&dummyNode1, *connman);
+    SendMessages(&dummyNode1, *connman, interruptDummy);
     BOOST_CHECK(!connman->IsBanned(addr1));
     Misbehaving(dummyNode1.GetId(), 10);
-    SendMessages(&dummyNode1, *connman);
+    SendMessages(&dummyNode1, *connman, interruptDummy);
     BOOST_CHECK(!connman->IsBanned(addr1));
     Misbehaving(dummyNode1.GetId(), 1);
-    SendMessages(&dummyNode1, *connman);
+    SendMessages(&dummyNode1, *connman, interruptDummy);
     BOOST_CHECK(connman->IsBanned(addr1));
     ForceSetArg("-banscore", std::to_string(DEFAULT_BANSCORE_THRESHOLD));
 }
 
 BOOST_AUTO_TEST_CASE(DoS_bantime)
 {
+    std::atomic<bool> interruptDummy(false);
+
     connman->ClearBanned();
     int64_t nStartTime = GetTime();
     SetMockTime(nStartTime); // Overrides future calls to GetTime()
@@ -113,7 +119,7 @@ BOOST_AUTO_TEST_CASE(DoS_bantime)
     dummyNode.nVersion = 1;
 
     Misbehaving(dummyNode.GetId(), 100);
-    SendMessages(&dummyNode, *connman);
+    SendMessages(&dummyNode, *connman, interruptDummy);
     BOOST_CHECK(connman->IsBanned(addr));
 
     SetMockTime(nStartTime+60*60);
@@ -123,7 +129,7 @@ BOOST_AUTO_TEST_CASE(DoS_bantime)
     BOOST_CHECK(!connman->IsBanned(addr));
 }
 
-CTransaction RandomOrphan()
+CTransactionRef RandomOrphan()
 {
     std::map<uint256, COrphanTx>::iterator it;
     it = mapOrphanTransactions.lower_bound(GetRandHash());
@@ -151,30 +157,30 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         tx.vout[0].nValue = 1*CENT;
         tx.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
 
-        AddOrphanTx(tx, i);
+        AddOrphanTx(MakeTransactionRef(tx), i);
     }
 
     // ... and 50 that depend on other orphans:
 /*    for (int i = 0; i < 50; i++)
     {
-        CTransaction txPrev = RandomOrphan();
+        CTransactionRef txPrev = RandomOrphan();
 
         CMutableTransaction tx;
         tx.vin.resize(1);
         tx.vin[0].prevout.n = 0;
-        tx.vin[0].prevout.hash = txPrev.GetHash();
+        tx.vin[0].prevout.hash = txPrev->GetHash();
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
         tx.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
-        SignSignature(keystore, txPrev, tx, 0, SIGHASH_ALL);
+        SignSignature(keystore, *txPrev, tx, 0, SIGHASH_ALL);
 
-        AddOrphanTx(tx, i);
+        AddOrphanTx(MakeTransactionRef(tx), i);
     }*/
 
     // This really-big orphan should be ignored:
 /*    for (int i = 0; i < 10; i++)
     {
-        CTransaction txPrev = RandomOrphan();
+        CTransactionRef txPrev = RandomOrphan();
 
         CMutableTransaction tx;
         tx.vout.resize(1);
@@ -184,15 +190,15 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         for (unsigned int j = 0; j < tx.vin.size(); j++)
         {
             tx.vin[j].prevout.n = j;
-            tx.vin[j].prevout.hash = txPrev.GetHash();
+            tx.vin[j].prevout.hash = txPrev->GetHash();
         }
-        SignSignature(keystore, txPrev, tx, 0, SIGHASH_ALL);
+        SignSignature(keystore, *txPrev, tx, 0, SIGHASH_ALL);
         // Re-use same signature for other inputs
         // (they don't have to be valid for this test)
         for (unsigned int j = 1; j < tx.vin.size(); j++)
             tx.vin[j].scriptSig = tx.vin[0].scriptSig;
 
-        BOOST_CHECK(!AddOrphanTx(tx, i));
+        BOOST_CHECK(!AddOrphanTx(MakeTransactionRef(tx), i));
     }*/
 
     // Test EraseOrphansFor:

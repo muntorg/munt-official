@@ -1062,7 +1062,7 @@
                      <item>
                       <widget class="QLabel" name="confirmationTargetLabel">
                        <property name="text">
-                        <string>(count)</string>
+                        <string notr="true">(count)</string>
                        </property>
                       </widget>
                      </item>

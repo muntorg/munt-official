@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -27,6 +27,7 @@
 #include "account.h"
 
 #include <algorithm>
+#include <atomic>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -592,6 +593,8 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scri
 class CWallet : public CValidationInterface
 {
 private:
+    static std::atomic<bool> fFlushThreadRunning;
+
     /**
      * Select a set of coins such that nValueRet >= nTargetValue and at least
      * all coins from coinControl are selected; Never select unconfirmed coins
@@ -1158,6 +1161,7 @@ public:
     static std::string GetWalletHelpString(bool showDebug);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
+    static CWallet* CreateWalletFromFile(const std::string walletFile);
     static bool InitLoadWallet();
 
     /**

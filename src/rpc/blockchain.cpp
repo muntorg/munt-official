@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -1080,7 +1080,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("bestblockhash",         chainActive.Tip()->GetBlockHash().GetHex()));
     obj.push_back(Pair("difficulty",            (double)GetDifficulty()));
     obj.push_back(Pair("mediantime",            (int64_t)chainActive.Tip()->GetMedianTimePast(chainActive.Tip()->nHeight)));
-    obj.push_back(Pair("verificationprogress",  Checkpoints::GuessVerificationProgress(Params().Checkpoints(), chainActive.Tip())));
+    obj.push_back(Pair("verificationprogress",  GuessVerificationProgress(Params().Checkpoints(), chainActive.Tip())));
     obj.push_back(Pair("chainwork",             chainActive.Tip()->nChainWork.GetHex()));
     obj.push_back(Pair("pruned",                fPruneMode));
 

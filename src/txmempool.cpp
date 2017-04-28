@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,22 +20,22 @@
 
 using namespace std;
 
-CTxMemPoolEntry::CTxMemPoolEntry(const CTransaction& _tx, const CAmount& _nFee,
+CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
                                  int64_t _nTime, double _entryPriority, unsigned int _entryHeight,
                                  bool poolHasNoInputsOf, CAmount _inChainInputValue,
                                  bool _spendsCoinbase, int64_t _sigOpsCost, LockPoints lp):
-    tx(MakeTransactionRef(_tx)), nFee(_nFee), nTime(_nTime), entryPriority(_entryPriority), entryHeight(_entryHeight),
+    tx(_tx), nFee(_nFee), nTime(_nTime), entryPriority(_entryPriority), entryHeight(_entryHeight),
     hadNoDependencies(poolHasNoInputsOf), inChainInputValue(_inChainInputValue),
     spendsCoinbase(_spendsCoinbase), sigOpCost(_sigOpsCost), lockPoints(lp)
 {
-    nTxWeight = GetTransactionWeight(_tx);
-    nModSize = _tx.CalculateModifiedSize(GetTxSize());
+    nTxWeight = GetTransactionWeight(*tx);
+    nModSize = tx->CalculateModifiedSize(GetTxSize());
     nUsageSize = RecursiveDynamicUsage(*tx) + memusage::DynamicUsage(tx);
 
     nCountWithDescendants = 1;
     nSizeWithDescendants = GetTxSize();
     nModFeesWithDescendants = nFee;
-    CAmount nValueIn = _tx.GetValueOut()+nFee;
+    CAmount nValueIn = tx->GetValueOut()+nFee;
     assert(inChainInputValue <= nValueIn);
 
     feeDelta = 0;
