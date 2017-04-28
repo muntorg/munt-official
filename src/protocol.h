@@ -174,6 +174,10 @@ extern const char *PONG;
  * @see https://bitcoin.org/en/developer-reference#alert
  */
 extern const char *ALERT;
+ /**
+ * The checkpoint message relays the latest checkpoint message from a centralised checkpoint server
+ */
+extern const char *CHECKPOINT;
 /**
  * The notfound message is a reply to a getdata message which requested an
  * object the receiving node does not have available for relay.

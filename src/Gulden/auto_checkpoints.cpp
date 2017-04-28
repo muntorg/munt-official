@@ -18,6 +18,7 @@
 #include "key.h"
 #include "pubkey.h"
 #include "timedata.h"
+#include "netmessagemaker.h"
 
 #include <stdint.h>
 
@@ -628,7 +629,7 @@ bool CSyncCheckpoint::RelayTo(CNode* pnode) const
     if (pnode->hashCheckpointKnown != hashCheckpoint)
     {
         pnode->hashCheckpointKnown = hashCheckpoint;
-        g_connman->PushMessage(pnode, "checkpoint", *this);
+        g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::CHECKPOINT, *this));
         return true;
     }
     return false;
