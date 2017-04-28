@@ -29,8 +29,6 @@ using namespace std;
 
 #ifdef ENABLE_WALLET
 
-bool EnsureWalletIsAvailable(bool avoidException);
-
 UniValue gethashps(const JSONRPCRequest& request)
 {
     if (request.fHelp)
@@ -70,7 +68,8 @@ UniValue sethashlimit(const JSONRPCRequest& request)
 
 UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -118,7 +117,8 @@ UniValue dumpdiffarray(const JSONRPCRequest& request)
 
 UniValue dumpblockgaps(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 2)
@@ -175,7 +175,14 @@ UniValue dumpblockgaps(const JSONRPCRequest& request)
 
 UniValue changeaccountname(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 2)
@@ -192,14 +199,15 @@ UniValue changeaccountname(const JSONRPCRequest& request)
             + HelpExampleCli("changeaccountname", "")
             + HelpExampleRpc("changeaccountname", ""));
 
+   
 
-    if (!pwalletMain)
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(request.params[0], false);
+    CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     std::string label = request.params[1].get_str();
     
-    pwalletMain->changeAccountName(account, label);
+    pwallet->changeAccountName(account, label);
     
     return account->getLabel();
 }
@@ -207,7 +215,14 @@ UniValue changeaccountname(const JSONRPCRequest& request)
 #define MINIMUM_VALUABLE_AMOUNT 1000000000 
 UniValue deleteaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
@@ -221,22 +236,23 @@ UniValue deleteaccount(const JSONRPCRequest& request)
             + HelpExampleCli("deleteaccount", "")
             + HelpExampleRpc("deleteaccount", ""));
 
+    
 
-    if (!pwalletMain)
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(request.params[0], false);
+    CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
-        CAmount balance = pwalletMain->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
+        CAmount balance = pwallet->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
             throw runtime_error("Account not empty, please first empty your account before trying to delete it.");
         }
     }
             
-    pwalletMain->deleteAccount(account);
+    pwallet->deleteAccount(account);
     return true;
 }
 
@@ -244,7 +260,14 @@ UniValue deleteaccount(const JSONRPCRequest& request)
 
 UniValue createaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() == 0 || request.params.size() > 2)
@@ -258,8 +281,9 @@ UniValue createaccount(const JSONRPCRequest& request)
             + HelpExampleCli("createaccount", "")
             + HelpExampleRpc("createaccount", ""));
 
+    
 
-    if (!pwalletMain)
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
     
@@ -274,13 +298,13 @@ UniValue createaccount(const JSONRPCRequest& request)
     CAccount* account = NULL;
     
     if (accountType == "HD")
-        account = pwalletMain->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
+        account = pwallet->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
     else if (accountType == "Mobile")
-        account = pwalletMain->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
+        account = pwallet->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
     else if (accountType == "Legacy")
     {
-        EnsureWalletIsUnlocked();
-        account = pwalletMain->GenerateNewLegacyAccount(request.params[0].get_str());
+        EnsureWalletIsUnlocked(pwallet);
+        account = pwallet->GenerateNewLegacyAccount(request.params[0].get_str());
     }
     
     if (!account)
@@ -293,7 +317,14 @@ UniValue createaccount(const JSONRPCRequest& request)
 
 UniValue getactiveaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 0)
@@ -305,19 +336,27 @@ UniValue getactiveaccount(const JSONRPCRequest& request)
             + HelpExampleCli("getactiveaccount", "")
             + HelpExampleRpc("getactiveaccount", ""));
 
+    
 
-    if (!pwalletMain)
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    if (!pwalletMain->activeAccount)
+    if (!pwallet->activeAccount)
         throw runtime_error("No account active");
     
-    return pwalletMain->activeAccount->getUUID();
+    return pwallet->activeAccount->getUUID();
 }
 
 UniValue getreadonlyaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -332,24 +371,33 @@ UniValue getreadonlyaccount(const JSONRPCRequest& request)
             + HelpExampleCli("getreadonlyaccount", "")
             + HelpExampleRpc("getreadonlyaccount", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(request.params[0], false);
+    CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     
     if (!account->IsHD())
         throw runtime_error("Can only be used on a HD account.");
     
     CAccountHD* accountHD = dynamic_cast<CAccountHD*>(account);
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     return accountHD->GetAccountMasterPubKeyEncoded().c_str();
 }
 
 UniValue importreadonlyaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 2)
@@ -364,19 +412,21 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
             + HelpExampleCli("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", "")
             + HelpExampleRpc("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
        
-    CAccount* account = pwalletMain->CreateReadOnlyAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
+    CAccount* account = pwallet->CreateReadOnlyAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
     
     if (!account)
         throw runtime_error("Unable to create account.");
     
     //fixme: Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
-    pwalletMain->nTimeFirstKey = 1;
+    pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
     
     return account->getUUID();
@@ -384,7 +434,14 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
 
 UniValue getactiveseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 0)
@@ -396,19 +453,27 @@ UniValue getactiveseed(const JSONRPCRequest& request)
             + HelpExampleCli("getactiveseed", "")
             + HelpExampleRpc("getactiveseed", ""));
 
+    
 
-    if (!pwalletMain)
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    if (!pwalletMain->activeSeed)
+    if (!pwallet->activeSeed)
         throw runtime_error("No seed active");
     
-    return pwalletMain->activeSeed->getUUID();
+    return pwallet->activeSeed->getUUID();
 }
 
 UniValue setactiveaccount(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -420,35 +485,37 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
             + HelpExampleCli("setactiveaccount", "")
             + HelpExampleRpc("setactiveaccount", ""));
 
-    if (!pwalletMain)
+   
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CAccount* account = AccountFromValue(request.params[0], false);  
+    CAccount* account = AccountFromValue(pwallet, request.params[0], false);  
 
-    pwalletMain->setActiveAccount(account);
+    pwallet->setActiveAccount(account);
     return account->getUUID();
 }
 
-CHDSeed* SeedFromValue(const UniValue& value, bool useDefaultIfEmpty)
+CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
 {
     string strSeedUUID = value.get_str();
-          
-    if (!pwalletMain)
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
     if (strSeedUUID.empty())
     {
-        if (!pwalletMain->getActiveSeed())
+        if (!pwallet->getActiveSeed())
         {
             throw runtime_error("No seed identifier passed, and no active seed selected, please select an active seed or pass a valid identifier.");
         }
-        return pwalletMain->getActiveSeed();
+        return pwallet->getActiveSeed();
     }
     
     CHDSeed* foundSeed = NULL;
-    if (pwalletMain->mapSeeds.find(strSeedUUID) != pwalletMain->mapSeeds.end())
+    if (pwallet->mapSeeds.find(strSeedUUID) != pwallet->mapSeeds.end())
     {
-        foundSeed = pwalletMain->mapSeeds[strSeedUUID];
+        foundSeed = pwallet->mapSeeds[strSeedUUID];
     }
     
     if (!foundSeed)
@@ -459,7 +526,14 @@ CHDSeed* SeedFromValue(const UniValue& value, bool useDefaultIfEmpty)
 
 UniValue setactiveseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -470,19 +544,28 @@ UniValue setactiveseed(const JSONRPCRequest& request)
             + HelpExampleCli("setactiveseed", "")
             + HelpExampleRpc("setactiveseed", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(request.params[0], false);  
+    CHDSeed* seed = SeedFromValue(pwallet, request.params[0], false);  
 
-    pwalletMain->setActiveSeed(seed);
+    pwallet->setActiveSeed(seed);
     return seed->getUUID();
 }
 
            
 UniValue createseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() > 1)
@@ -502,10 +585,12 @@ UniValue createseed(const JSONRPCRequest& request)
             + HelpExampleCli("createseed", "")
             + HelpExampleRpc("createseed", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
     
     CHDSeed::SeedType seedType = CHDSeed::CHDSeed::BIP44;
     if (request.params.size() > 0)
@@ -513,7 +598,7 @@ UniValue createseed(const JSONRPCRequest& request)
         seedType = SeedTypeFromString(request.params[0].get_str());
     }
     
-    CHDSeed* newSeed = pwalletMain->GenerateHDSeed(seedType);
+    CHDSeed* newSeed = pwallet->GenerateHDSeed(seedType);
     
     if(!newSeed)
         throw runtime_error("Failed to generate seed");
@@ -523,7 +608,14 @@ UniValue createseed(const JSONRPCRequest& request)
 
 UniValue deleteseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -537,21 +629,30 @@ UniValue deleteseed(const JSONRPCRequest& request)
             + HelpExampleCli("deleteseed", "")
             + HelpExampleRpc("deleteseed", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(request.params[0], true);  
+    CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);  
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
     
-    pwalletMain->DeleteSeed(seed, false);
+    pwallet->DeleteSeed(seed, false);
 
     return true;
 }
 
 UniValue importseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
@@ -567,10 +668,12 @@ UniValue importseed(const JSONRPCRequest& request)
             + HelpExampleCli("importseed", "")
             + HelpExampleRpc("importseed", ""));
 
-    if (!pwalletMain)
+    
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
     
     bool fReadOnly = false;
     if (request.params.size() > 1)
@@ -580,27 +683,24 @@ UniValue importseed(const JSONRPCRequest& request)
     if (fReadOnly)
     {
         SecureString pubkeyString = request.params[0].get_str().c_str();
-        newSeed = pwalletMain->ImportHDSeedFromPubkey(pubkeyString);
+        newSeed = pwallet->ImportHDSeedFromPubkey(pubkeyString);
     }
     else
     {
         SecureString mnemonic = request.params[0].get_str().c_str();
-        newSeed = pwalletMain->ImportHDSeed(mnemonic);
+        newSeed = pwallet->ImportHDSeed(mnemonic);
     }
 
     //fixme: Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
-    pwalletMain->nTimeFirstKey = 1;
+    pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
     
     return newSeed->getUUID();
 }
 
 UniValue listallaccounts(const JSONRPCRequest& request)
-{
-    if (!EnsureWalletIsAvailable(request.fHelp))
-        return NullUniValue;
-    
+{    
     if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "listaccounts ( forseed )\n"
@@ -612,17 +712,28 @@ UniValue listallaccounts(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("listaccounts", "")
             + HelpExampleRpc("listaccounts", ""));
+    
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
 
     CHDSeed* forSeed = NULL;
     if (request.params.size() > 0)
-        forSeed = SeedFromValue(request.params[0], false);
-
-    if (!pwalletMain)
+        forSeed = SeedFromValue(pwallet, request.params[0], false);
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
     UniValue allAccounts(UniValue::VARR);
     
-    for (const auto& accountPair : pwalletMain->mapAccounts)
+    for (const auto& accountPair : pwallet->mapAccounts)
     {
         if (!accountPair.second->IsHD())
         {
@@ -655,7 +766,14 @@ UniValue listallaccounts(const JSONRPCRequest& request)
 
 UniValue getmnemonicfromseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -670,19 +788,27 @@ UniValue getmnemonicfromseed(const JSONRPCRequest& request)
             + HelpExampleCli("getmnemonicfromseed", "")
             + HelpExampleRpc("getmnemonicfromseed", ""));
 
-    if (!pwalletMain)
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(request.params[0], true);  
+    CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);  
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     return seed->getMnemonic().c_str();
 }
 
 UniValue getreadonlyseed(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 1)
@@ -697,23 +823,31 @@ UniValue getreadonlyseed(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("getreadonlyseed", "")
             + HelpExampleRpc("getreadonlyseed", ""));
-
-    if (!pwalletMain)
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
-    CHDSeed* seed = SeedFromValue(request.params[0], true);
+    CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);
     
     if (seed->m_type != CHDSeed::SeedType::BIP44NoHardening)
         throw runtime_error("Can only use command with a non-hardened BIP44 seed");
     
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     return seed->getPubkey().c_str();
 }
 
 UniValue listseeds(const JSONRPCRequest& request)
 {
-    if (!EnsureWalletIsAvailable(request.fHelp))
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
     if (request.fHelp || request.params.size() != 0)
@@ -723,13 +857,13 @@ UniValue listseeds(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("listseeds", "")
             + HelpExampleRpc("listseeds", ""));
-
-    if (!pwalletMain)
+    
+    if (!pwallet)
         throw runtime_error("Cannot use command without an active wallet");
     
     UniValue AllSeeds(UniValue::VARR);
     
-    for (const auto& seedPair : pwalletMain->mapSeeds)
+    for (const auto& seedPair : pwallet->mapSeeds)
     {
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", seedPair.first));
