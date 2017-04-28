@@ -62,7 +62,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
-            BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
+            for(const CTxOut& txout: wtx.tx->vout)
             {
                 
                 isminetype mine = IsMine(*account, txout);

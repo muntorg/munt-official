@@ -818,8 +818,19 @@ UniValue getbalance(const JSONRPCRequest& request)
             "If account is specified, returns the balance in the account.\n"
             "Note that the account \"\" is not the same as leaving the parameter out, but rather will use the currently selected account.\n"
             "\nArguments:\n"
-            "1. \"account\"      (string, optional). The selected account, or \"*\" for entire wallet. It may be the currently actibve account using \"\".\n"
-            "2. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
+            "1. \"account\"      (string, optional). The selected account, or \"*\" for entire wallet. It may be the currently active account using \"\".\n"
+            "                     specific account name to find the balance associated with wallet keys in\n"
+            "                     a named account, or as the empty string (\"\") to find the balance\n"
+            "                     associated with wallet keys not in any named account, or as \"*\" to find\n"
+            "                     the balance associated with all wallet keys regardless of account.\n"
+            "                     When this option is specified, it calculates the balance in a different\n"
+            "                     way than when it is not specified, and which can count spends twice when\n"
+            "                     there are conflicting pending transactions (such as those created by\n"
+            "                     the bumpfee command), temporarily resulting in low or even negative\n"
+            "                     balances. In general, account balance calculation is not considered\n"
+            "                     reliable and has resulted in confusing outcomes, so it is recommended to\n"
+            "                     avoid passing this argument.\n"
+            "2. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "3. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
             "\nResult:\n"
             "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
@@ -846,9 +857,12 @@ UniValue getbalance(const JSONRPCRequest& request)
             filter = filter | ISMINE_WATCH_ONLY;
 
     if (request.params[0].get_str() == "*") {
-        // Calculate total balance a different way from GetBalance()
-        // (GetBalance() sums up all unspent TxOuts)
-        // getbalance and "getbalance * 1 true" should return the same number
+        // Calculate total balance in a very different way from GetBalance().
+        // The biggest difference is that GetBalance() sums up all unspent
+        // TxOuts paying to the wallet, while this sums up both spent and
+        // unspent TxOuts paying to the wallet, and then subtracts the values of
+        // TxIns spending from the wallet. This also has fewer restrictions on
+        // which unconfirmed transactions are considered trusted.
         CAmount nBalance = 0;
         for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); ++it)
         {
@@ -1919,7 +1933,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    CBlockIndex *pindex = NULL;
+    const CBlockIndex *pindex = NULL;
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE;
 
@@ -1930,7 +1944,16 @@ UniValue listsinceblock(const JSONRPCRequest& request)
         blockId.SetHex(request.params[0].get_str());
         BlockMap::iterator it = mapBlockIndex.find(blockId);
         if (it != mapBlockIndex.end())
+        {
             pindex = it->second;
+            if (chainActive[pindex->nHeight] != pindex)
+            {
+                // the block being asked for is a part of a deactivated chain;
+                // we don't want to depend on its perceived height in the block
+                // chain, we want to instead use the last common ancestor
+                pindex = chainActive.FindFork(pindex);
+            }
+        }
     }
 
     if (request.params.size() > 1)
@@ -1941,9 +1964,10 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
     }
 
-    if(request.params.size() > 2)
-        if(request.params[2].get_bool())
-            filter = filter | ISMINE_WATCH_ONLY;
+    if (request.params.size() > 2 && request.params[2].get_bool())
+    {
+        filter = filter | ISMINE_WATCH_ONLY;
+    }
 
     int depth = pindex ? (1 + chainActive.Height() - pindex->nHeight) : -1;
 
@@ -2630,7 +2654,7 @@ UniValue listunspent(const JSONRPCRequest& request)
             "    \"address\" : \"address\",    (string) the bitcoin address\n"
             "    \"account\" : \"account\",    (string) The associated account."
             "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
-            "    \"amount\" : x.xxx,         (numeric) the transaction amount in " + CURRENCY_UNIT + "\n"
+            "    \"amount\" : x.xxx,         (numeric) the transaction output amount in " + CURRENCY_UNIT + "\n"
             "    \"confirmations\" : n,      (numeric) The number of confirmations\n"
             "    \"redeemScript\" : n        (string) The redeemScript if scriptPubKey is P2SH\n"
             "    \"spendable\" : xxx,        (bool) Whether we have the private keys to spend this output\n"
@@ -2905,6 +2929,33 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
 
 //fixme: (GULDEN) (MERGE)
 /*
+// Calculate the size of the transaction assuming all signatures are max size
+// Use DummySignatureCreator, which inserts 72 byte signatures everywhere.
+// TODO: re-use this in CWallet::CreateTransaction (right now
+// CreateTransaction uses the constructed dummy-signed tx to do a priority
+// calculation, but we should be able to refactor after priority is removed).
+// NOTE: this requires that all inputs must be in mapWallet (eg the tx should
+// be IsAllFromMe).
+int64_t CalculateMaximumSignedTxSize(const CTransaction &tx)
+{
+    CMutableTransaction txNew(tx);
+    std::vector<pair<CWalletTx *, unsigned int>> vCoins;
+    // Look up the inputs.  We should have already checked that this transaction
+    // IsAllFromMe(ISMINE_SPENDABLE), so every input should already be in our
+    // wallet, with a valid index into the vout array.
+    for (auto& input : tx.vin) {
+        const auto mi = pwalletMain->mapWallet.find(input.prevout.hash);
+        assert(mi != pwalletMain->mapWallet.end() && input.prevout.n < mi->second.tx->vout.size());
+        vCoins.emplace_back(make_pair(&(mi->second), input.prevout.n));
+    }
+    if (!pwalletMain->DummySignTx(txNew, vCoins)) {
+        // This should never happen, because IsAllFromMe(ISMINE_SPENDABLE)
+        // implies that we can sign for every input.
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction contains inputs that cannot be signed");
+    }
+    return GetVirtualTransactionSize(txNew);
+}
+
 UniValue bumpfee(const JSONRPCRequest& request)
 {
     if (!EnsureWalletIsAvailable(request.fHelp)) {
@@ -2923,8 +2974,8 @@ UniValue bumpfee(const JSONRPCRequest& request)
             "By default, the new fee will be calculated automatically using estimatefee.\n"
             "The user can specify a confirmation target for estimatefee.\n"
             "Alternatively, the user can specify totalFee, or use RPC setpaytxfee to set a higher fee rate.\n"
-            "At a minimum, the new fee rate must be high enough to pay a new relay fee (relay fee amount returned\n"
-            "by getnetworkinfo RPC) and to enter the node's mempool.\n"
+            "At a minimum, the new fee rate must be high enough to pay an additional new relay fee (incrementalfee\n"
+            "returned by getnetworkinfo) to enter the node's mempool.\n"
             "\nArguments:\n"
             "1. txid                  (string, required) The txid to be bumped\n"
             "2. options               (object, optional)\n"
@@ -2945,8 +2996,9 @@ UniValue bumpfee(const JSONRPCRequest& request)
             "\nResult:\n"
             "{\n"
             "  \"txid\":    \"value\",   (string)  The id of the new transaction\n"
-            "  \"oldfee\":  n,         (numeric) Fee of the replaced transaction\n"
-            "  \"fee\":     n,         (numeric) Fee of the new transaction\n"
+            "  \"origfee\":  n,         (numeric) Fee of the replaced transaction\n"
+            "  \"fee\":      n,         (numeric) Fee of the new transaction\n"
+            "  \"errors\":  [ str... ] (json array of strings) Errors encountered during processing (may be empty)\n"
             "}\n"
             "\nExamples:\n"
             "\nBump the fee, get the new transaction\'s txid\n" +
@@ -3010,6 +3062,10 @@ UniValue bumpfee(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction does not have a change output");
     }
 
+    // Calculate the expected size of the new transaction.
+    int64_t txSize = GetVirtualTransactionSize(*(wtx.tx));
+    const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(*wtx.tx);
+
     // optional parameters
     bool specifiedConfirmTarget = false;
     int newConfirmTarget = nTxConfirmTarget;
@@ -3035,10 +3091,11 @@ UniValue bumpfee(const JSONRPCRequest& request)
             }
         } else if (options.exists("totalFee")) {
             totalFee = options["totalFee"].get_int64();
-            if (totalFee <= 0) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid totalFee (cannot be <= 0)");
-            } else if (totalFee > maxTxFee) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid totalFee (cannot be higher than maxTxFee)");
+            CAmount requiredFee = CWallet::GetRequiredFee(maxNewTxSize);
+            if (totalFee < requiredFee ) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER,
+                                   strprintf("Insufficient totalFee (cannot be less than required fee %s)",
+                                             FormatMoney(requiredFee)));
             }
         }
 
@@ -3047,41 +3104,56 @@ UniValue bumpfee(const JSONRPCRequest& request)
         }
     }
 
-    // signature sizes can vary by a byte, so add 1 for each input when calculating the new fee
-    int64_t txSize = GetVirtualTransactionSize(*(wtx.tx));
-    const int64_t maxNewTxSize = txSize + wtx.tx->vin.size();
-
     // calculate the old fee and fee-rate
     CAmount nOldFee = wtx.GetDebit(ISMINE_SPENDABLE) - wtx.tx->GetValueOut();
     CFeeRate nOldFeeRate(nOldFee, txSize);
     CAmount nNewFee;
     CFeeRate nNewFeeRate;
+    // The wallet uses a conservative WALLET_INCREMENTAL_RELAY_FEE value to
+    // future proof against changes to network wide policy for incremental relay
+    // fee that our node may not be aware of.
+    CFeeRate walletIncrementalRelayFee = CFeeRate(WALLET_INCREMENTAL_RELAY_FEE);
+    if (::incrementalRelayFee > walletIncrementalRelayFee) {
+        walletIncrementalRelayFee = ::incrementalRelayFee;
+    }
 
     if (totalFee > 0) {
-        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + minRelayTxFee.GetFee(maxNewTxSize);
+        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + ::incrementalRelayFee.GetFee(maxNewTxSize);
         if (totalFee < minTotalFee) {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid totalFee, must be at least %s (oldFee %s + relayFee %s)", FormatMoney(minTotalFee), nOldFeeRate.GetFee(maxNewTxSize), minRelayTxFee.GetFee(maxNewTxSize)));
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Insufficient totalFee, must be at least %s (oldFee %s + incrementalFee %s)",
+                                                                FormatMoney(minTotalFee), FormatMoney(nOldFeeRate.GetFee(maxNewTxSize)), FormatMoney(::incrementalRelayFee.GetFee(maxNewTxSize))));
         }
         nNewFee = totalFee;
         nNewFeeRate = CFeeRate(totalFee, maxNewTxSize);
     } else {
-        // use the user-defined payTxFee if possible, otherwise use smartfee / fallbackfee
-        if (!specifiedConfirmTarget && payTxFee.GetFeePerK() != 0) {
-            nNewFeeRate = payTxFee;
-        } else {
-            nNewFeeRate = mempool.estimateSmartFee(newConfirmTarget);
+        // if user specified a confirm target then don't consider any global payTxFee
+        if (specifiedConfirmTarget) {
+            nNewFee = CWallet::GetMinimumFee(maxNewTxSize, newConfirmTarget, mempool, CAmount(0));
         }
-        if (nNewFeeRate.GetFeePerK() == 0) {
-            nNewFeeRate = CWallet::fallbackFee;
-        }
-
-        // new fee rate must be at least old rate + minimum relay rate
-        if (nNewFeeRate.GetFeePerK() < nOldFeeRate.GetFeePerK() + ::minRelayTxFee.GetFeePerK()) {
-            nNewFeeRate = CFeeRate(nOldFeeRate.GetFeePerK() + ::minRelayTxFee.GetFeePerK());
+        // otherwise use the regular wallet logic to select payTxFee or default confirm target
+        else {
+            nNewFee = CWallet::GetMinimumFee(maxNewTxSize, newConfirmTarget, mempool);
         }
 
-        nNewFee = nNewFeeRate.GetFee(maxNewTxSize);
+        nNewFeeRate = CFeeRate(nNewFee, maxNewTxSize);
+
+        // New fee rate must be at least old rate + minimum incremental relay rate
+        // walletIncrementalRelayFee.GetFeePerK() should be exact, because it's initialized
+        // in that unit (fee per kb).
+        // However, nOldFeeRate is a calculated value from the tx fee/size, so
+        // add 1 satoshi to the result, because it may have been rounded down.
+        if (nNewFeeRate.GetFeePerK() < nOldFeeRate.GetFeePerK() + 1 + walletIncrementalRelayFee.GetFeePerK()) {
+            nNewFeeRate = CFeeRate(nOldFeeRate.GetFeePerK() + 1 + walletIncrementalRelayFee.GetFeePerK());
+            nNewFee = nNewFeeRate.GetFee(maxNewTxSize);
+        }
     }
+
+    // Check that in all cases the new fee doesn't violate maxTxFee
+     if (nNewFee > maxTxFee) {
+         throw JSONRPCError(RPC_MISC_ERROR,
+                            strprintf("Specified or calculated fee %s is too high (cannot be higher than maxTxFee %s)",
+                                      FormatMoney(nNewFee), FormatMoney(maxTxFee)));
+     }
 
     // check that fee rate is higher than mempool's minimum fee
     // (no point in bumping fee if we know that the new tx won't be accepted to the mempool)
@@ -3105,7 +3177,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
 
     // If the output would become dust, discard it (converting the dust to fee)
     poutput->nValue -= nDelta;
-    if (poutput->nValue <= poutput->GetDustThreshold(::minRelayTxFee)) {
+    if (poutput->nValue <= poutput->GetDustThreshold(::dustRelayFee)) {
         LogPrint("rpc", "Bumping fee and discarding dust output\n");
         nNewFee += poutput->nValue;
         tx.vout.erase(tx.vout.begin() + nOutput);
@@ -3139,8 +3211,16 @@ UniValue bumpfee(const JSONRPCRequest& request)
     CWalletTx wtxBumped(pwalletMain, MakeTransactionRef(std::move(tx)));
     wtxBumped.mapValue["replaces_txid"] = hash.ToString();
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtxBumped, reservekey, g_connman.get(), state) || !state.IsValid()) {
+    if (!pwalletMain->CommitTransaction(wtxBumped, reservekey, g_connman.get(), state)) {
+        // NOTE: CommitTransaction never returns false, so this should never happen.
         throw JSONRPCError(RPC_WALLET_ERROR, strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason()));
+    }
+
+    UniValue vErrors(UniValue::VARR);
+    if (state.IsInvalid()) {
+        // This can happen if the mempool rejected the transaction.  Report
+        // what happened in the "errors" response.
+        vErrors.push_back(strprintf("Error: The transaction was rejected: %s", FormatStateMessage(state)));
     }
 
     // mark the original tx as bumped
@@ -3149,13 +3229,14 @@ UniValue bumpfee(const JSONRPCRequest& request)
         // along with an exception. It would be good to return information about
         // wtxBumped to the caller even if marking the original transaction
         // replaced does not succeed for some reason.
-        throw JSONRPCError(RPC_WALLET_ERROR, "Error: Created new bumpfee transaction but could not mark the original transaction as replaced.");
+        vErrors.push_back("Error: Created new bumpfee transaction but could not mark the original transaction as replaced.");
     }
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
-    result.push_back(Pair("oldfee", ValueFromAmount(nOldFee)));
+    result.push_back(Pair("origfee", ValueFromAmount(nOldFee)));
     result.push_back(Pair("fee", ValueFromAmount(nNewFee)));
+    result.push_back(Pair("errors", vErrors));
 
     return result;
 }*/
