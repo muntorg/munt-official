@@ -1038,7 +1038,6 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
             "                                                              or the string \"now\" to substitute the current synced blockchain time. The timestamp of the oldest\n"
             "                                                              key will determine how far back blockchain rescans need to begin for missing wallet transactions.\n"
             "                                                              \"now\" can be specified to bypass scanning, for keys which are known to never have been used, and\n"
-            "                                                            
             "                                                              0 can be specified to scan the entire blockchain. Blocks up to 2 hours before the earliest key\n"
             "                                                              creation time of all keys being imported by the importmulti call will be scanned.\n"
             "      \"redeemscript\": \"<script>\"                            , (string, optional) Allowed only if the scriptPubKey is a P2SH address or a P2SH scriptPubKey\n"
