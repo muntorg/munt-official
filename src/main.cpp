@@ -3679,7 +3679,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     return true;
 }
 
-static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex=NULL)
+static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex)
 {
     AssertLockHeld(cs_main);
     // Check for duplicate
@@ -3725,6 +3725,21 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
     CheckBlockIndex(chainparams.GetConsensus());
 
+    return true;
+}
+
+// Exposed wrapper for AcceptBlockHeader
+bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex)
+{
+    {
+        LOCK(cs_main);
+        for (const CBlockHeader& header : headers) {
+            if (!AcceptBlockHeader(header, state, chainparams, ppindex)) {
+                return false;
+            }
+        }
+    }
+    NotifyHeaderTip();
     return true;
 }
 
@@ -5886,6 +5901,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         CBlockHeaderAndShortTxIDs cmpctblock;
         vRecv >> cmpctblock;
 
+        {
         LOCK(cs_main);
 
         if (mapBlockIndex.find(cmpctblock.header.hashPrevBlock) == mapBlockIndex.end()) {
@@ -5894,19 +5910,23 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256()));
             return true;
         }
+        }
 
         CBlockIndex *pindex = NULL;
         CValidationState state;
-        if (!AcceptBlockHeader(cmpctblock.header, state, chainparams, &pindex)) {
+        if (!ProcessNewBlockHeaders({cmpctblock.header}, state, chainparams, &pindex)) {
             int nDoS;
             if (state.IsInvalid(nDoS)) {
-                if (nDoS > 0)
+                if (nDoS > 0) {
+                    LOCK(cs_main);
                     Misbehaving(pfrom->GetId(), nDoS);
+                }
                 LogPrintf("Peer %d sent us invalid header via cmpctblock\n", pfrom->id);
                 return true;
             }
         }
 
+        LOCK(cs_main);
         // If AcceptBlockHeader returned true, it set pindex
         assert(pindex);
         UpdateBlockAvailability(pfrom->GetId(), pindex->GetBlockHash());
@@ -6100,14 +6120,14 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             ReadCompactSize(vRecv); // ignore tx count; assume it is 0.
         }
 
-        {
-        LOCK(cs_main);
-
         if (nCount == 0) {
             // Nothing interesting. Stop asking this peers for more headers.
             return true;
         }
 
+        CBlockIndex *pindexLast = NULL;
+        {
+        LOCK(cs_main);
         CNodeState *nodestate = State(pfrom->GetId());
 
         // If this looks like it could be a block announcement (nCount <
@@ -6137,23 +6157,31 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             return true;
         }
 
-        CBlockIndex *pindexLast = NULL;
-        BOOST_FOREACH(const CBlockHeader& header, headers) {
-            CValidationState state;
-            if (pindexLast != NULL && header.hashPrevBlock != pindexLast->GetBlockHash()) {
+        uint256 hashLastBlock;
+        for (const CBlockHeader& header : headers) {
+            if (!hashLastBlock.IsNull() && header.hashPrevBlock != hashLastBlock) {
                 Misbehaving(pfrom->GetId(), 20);
                 return error("non-continuous headers sequence");
             }
-            if (!AcceptBlockHeader(header, state, chainparams, &pindexLast)) {
-                int nDoS;
-                if (state.IsInvalid(nDoS)) {
-                    if (nDoS > 0)
-                        Misbehaving(pfrom->GetId(), nDoS);
-                    return error("invalid header received");
+            hashLastBlock = header.GetHash();
+        }
+        }
+
+        CValidationState state;
+        if (!ProcessNewBlockHeaders(headers, state, chainparams, &pindexLast)) {
+            int nDoS;
+            if (state.IsInvalid(nDoS)) {
+                if (nDoS > 0) {
+                    LOCK(cs_main);
+                    Misbehaving(pfrom->GetId(), nDoS);
                 }
+                return error("invalid header received");
             }
         }
 
+        {
+        LOCK(cs_main);
+        CNodeState *nodestate = State(pfrom->GetId());
         if (nodestate->nUnconnectingHeaders > 0) {
             LogPrint("net", "peer=%d: resetting nUnconnectingHeaders (%d -> 0)\n", pfrom->id, nodestate->nUnconnectingHeaders);
         }
@@ -6225,8 +6253,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             }
         }
         }
-
-        NotifyHeaderTip();
     }
 
     else if (strCommand == NetMsgType::BLOCK && !fImporting && !fReindex) // Ignore blocks received while importing
