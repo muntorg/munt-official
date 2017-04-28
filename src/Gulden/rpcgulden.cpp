@@ -415,6 +415,7 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
         throw std::runtime_error(
             "setactiveaccount \n"
             "\nSet the currently active account based on name or uuid.\n"
+            "1. \"account\"        (string, required) The unique UUID or label for the account or \"\" for the active account.\n"
             "\nExamples:\n"
             + HelpExampleCli("setactiveaccount", "")
             + HelpExampleRpc("setactiveaccount", ""));
@@ -745,29 +746,29 @@ UniValue listseeds(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "mining",             "gethashps",              &gethashps,              true  },
-    { "mining",             "sethashlimit",           &sethashlimit,           true  },
+    { "mining",             "gethashps",              &gethashps,              true,    {} },
+    { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
 
-    { "developer",          "dumpblockgaps",          &dumpblockgaps,          true  },
-    { "developer",          "dumpdiffarray",          &dumpdiffarray,          true  },
+    { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
+    { "developer",          "dumpdiffarray",          &dumpdiffarray,          true,    {"height"} },
     
-    { "accounts",           "changeaccountname",      &changeaccountname,      true  },
-    { "accounts",           "createaccount",          &createaccount,          true  },
-    { "accounts",           "deleteaccount",          &deleteaccount,          true  },
-    { "accounts",           "getactiveaccount",       &getactiveaccount,       true  },
-    { "accounts",           "getreadonlyaccount",     &getreadonlyaccount,     true  },
-    { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true  },
-    { "accounts",           "listaccounts",           &listallaccounts,        true  },
-    { "accounts",           "setactiveaccount",       &setactiveaccount,       true  },
+    { "accounts",           "changeaccountname",      &changeaccountname,      true,    {"account", "name"} },
+    { "accounts",           "createaccount",          &createaccount,          true,    {"name", "type"} },
+    { "accounts",           "deleteaccount",          &deleteaccount,          true,    {"accout", "force"} },
+    { "accounts",           "getactiveaccount",       &getactiveaccount,       true,    {} },
+    { "accounts",           "getreadonlyaccount",     &getreadonlyaccount,     true,    {"account"} },
+    { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true,    {"name", "encodedkey"} },
+    { "accounts",           "listaccounts",           &listallaccounts,        true,    {"seed"} },
+    { "accounts",           "setactiveaccount",       &setactiveaccount,       true,    {"account"} },
     
-    { "mnemonics",          "createseed",             &createseed,             true  },
-    { "mnemonics",          "deleteseed",             &deleteseed,             true  },
-    { "mnemonics",          "getactiveseed",          &getactiveseed,          true  },
-    { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true  },
-    { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true  },
-    { "mnemonics",          "setactiveseed",          &setactiveseed,          true  },
-    { "mnemonics",          "importseed",             &importseed,             true  },
-    { "mnemonics",          "listseeds",              &listseeds,              true  },
+    { "mnemonics",          "createseed",             &createseed,             true,    {"type"} },
+    { "mnemonics",          "deleteseed",             &deleteseed,             true,    {"seed"} },
+    { "mnemonics",          "getactiveseed",          &getactiveseed,          true,    {} },
+    { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true,    {"seed"} },
+    { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true,    {"seed"} },
+    { "mnemonics",          "setactiveseed",          &setactiveseed,          true,    {"seed"} },
+    { "mnemonics",          "importseed",             &importseed,             true,    {"mnemonic or enckey", "read only"} },
+    { "mnemonics",          "listseeds",              &listseeds,              true,    {} },
 };
 
 void RegisterGuldenRPCCommands(CRPCTable &tableRPC)
