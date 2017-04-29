@@ -2,22 +2,20 @@
 # Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-"""
-Run Regression Test Suite
+"""Run regression test suite.
 
 This module calls down into individual test cases via subprocess. It will
 forward all unrecognized arguments onto the individual test scripts, other
 than:
 
-    - `-extended`: run the "extended" test suite in addition to the basic one.
+Functional tests are disabled on Windows by default. Use --force to run them anyway.
     - `-win`: signal that this is running in a Windows environment, and we
       should run the tests.
     - `--coverage`: this generates a basic coverage report for the RPC
       interface.
 
 For a description of arguments recognized by test scripts, see
-`qa/pull-tester/test_framework/test_framework.py:BitcoinTestFramework.main`.
+`test/functional/test_framework/test_framework.py:BitcoinTestFramework.main`.
 
 """
 
@@ -159,6 +157,7 @@ if ENABLE_ZMQ:
     testScripts.append('zmq_test.py')
 
 testScriptsExt = [
+    # call test_runner.py with -nozmq to explicitly exclude these tests.
     'pruning.py',
     # vv Tests less than 20m vv
     'smartfees.py',
@@ -194,6 +193,9 @@ def runtests():
         test_list = testScripts + testScriptsExt
     elif len(opts) == 0 or (len(opts) == 1 and "-win" in opts):
         test_list = testScripts
+    config.read_file(open(os.path.dirname(__file__) + "/config.ini"))
+        print("No functional tests to run. Wallet, utils, and bitcoind must all be enabled")
+                  "To run zmq tests, see dependency info in /test/README.md.")
     else:
         for t in testScripts + testScriptsExt:
             if t in opts or re.sub(".py$", "", t) in opts:
@@ -207,15 +209,19 @@ def runtests():
 
     if not test_list:
         print("No valid test scripts specified. Check that your test is in one "
-              "of the test lists in rpc-tests.py, or run rpc-tests.py with no arguments to run all tests")
+              "of the test lists in test_runner.py, or run test_runner.py with no arguments to run all tests")
         sys.exit(0)
 
+        # Print help for test_runner.py, then print help of the first script and exit.
+        subprocess.check_call((config["environment"]["SRCDIR"] + '/test/functional/' + test_list[0]).split() + ['-h'])
         sys.exit(0)
 
     coverage = None
 
     if ENABLE_COVERAGE:
+    tests_dir = src_dir + '/test/functional/'
     flags = ["--srcdir={}/src".format(build_dir)] + args
+    flags.append("--cachedir=%s/test/cache" % build_dir)
         coverage = RPCCoverage()
         print("Initializing coverage directory at %s\n" % coverage.dir)
     flags = ["--srcdir=%s/src" % BUILDDIR] + passon_args
@@ -232,6 +238,7 @@ def runtests():
     time_sum = 0
     time0 = time.time()
     job_queue = RPCTestHandler(run_parallel, test_list, flags)
+    job_queue = TestHandler(jobs, tests_dir, test_list, flags)
     results = BOLD[1] + "%s | %s | %s\n\n" % ("TEST".ljust(max_len_name), "PASSED", "DURATION") + BOLD[0]
     all_passed = True
     for _ in range(len(test_list)):
@@ -256,8 +263,7 @@ def runtests():
 
     sys.exit(not all_passed)
 
-
-class RPCTestHandler:
+class TestHandler:
     """
     Trigger the testscrips passed in via the list.
     """
@@ -310,7 +316,7 @@ class RPCTestHandler:
 
 class RPCCoverage(object):
     """
-    Coverage reporting utilities for pull-tester.
+    Coverage reporting utilities for test_runner.
 
     Coverage calculation works by having each test script subprocess write
     coverage files into a particular directory. These files contain the RPC
@@ -320,7 +326,7 @@ class RPCCoverage(object):
     After all tests complete, the commands run are combined and diff'd against
     the complete list to calculate uncovered RPC commands.
 
-    See also: qa/rpc-tests/test_framework/coverage.py
+    See also: test/functional/test_framework/coverage.py
 
     """
     def __init__(self):
@@ -348,7 +354,7 @@ class RPCCoverage(object):
         Return a set of currently untested RPC commands.
 
         """
-        # This is shared from `qa/rpc-tests/test-framework/coverage.py`
+        # This is shared from `test/functional/test-framework/coverage.py`
         REFERENCE_FILENAME = 'rpc_interface.txt'
         COVERAGE_FILE_PREFIX = 'coverage.'
 
