@@ -3017,7 +3017,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     // Check timestamp
     if (pindexPrev->nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
     {
-        if (block.GetBlockTime() > nAdjustedTime + 60)
+        if (block.GetBlockTime() > nAdjustedTime + MAX_FUTURE_BLOCK_TIME)
             return state.Invalid(false, REJECT_INVALID, "time-too-new", strprintf("block timestamp too far in the future block:%u adjusted:%u system:%u offset:%u", block.GetBlockTime(), nAdjustedTime, GetTime(), GetTimeOffset()));
     }
     else
