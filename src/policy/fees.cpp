@@ -298,13 +298,13 @@ bool CBlockPolicyEstimator::removeTx(uint256 hash)
     }
 }
 
-CBlockPolicyEstimator::CBlockPolicyEstimator(const CFeeRate& _minRelayFee)
+CBlockPolicyEstimator::CBlockPolicyEstimator()
     : nBestSeenHeight(0), trackedTxs(0), untrackedTxs(0)
 {
-    static_assert(MIN_FEERATE > 0, "Min feerate must be nonzero");
-    minTrackedFee = _minRelayFee < CFeeRate(MIN_FEERATE) ? CFeeRate(MIN_FEERATE) : _minRelayFee;
+    static_assert(MIN_BUCKET_FEERATE > 0, "Min feerate must be nonzero");
+    minTrackedFee = CFeeRate(MIN_BUCKET_FEERATE);
     std::vector<double> vfeelist;
-    for (double bucketBoundary = minTrackedFee.GetFeePerK(); bucketBoundary <= MAX_FEERATE; bucketBoundary *= FEE_SPACING) {
+    for (double bucketBoundary = minTrackedFee.GetFeePerK(); bucketBoundary <= MAX_BUCKET_FEERATE; bucketBoundary *= FEE_SPACING) {
         vfeelist.push_back(bucketBoundary);
     }
     vfeelist.push_back(INF_FEERATE);
@@ -452,24 +452,6 @@ CFeeRate CBlockPolicyEstimator::estimateSmartFee(int confTarget, int *answerFoun
     return CFeeRate(median);
 }
 
-double CBlockPolicyEstimator::estimatePriority(int confTarget)
-{
-    return -1;
-}
-
-double CBlockPolicyEstimator::estimateSmartPriority(int confTarget, int *answerFoundAtTarget, const CTxMemPool& pool)
-{
-    if (answerFoundAtTarget)
-        *answerFoundAtTarget = confTarget;
-
-    // If mempool is limiting txs, no priority txs are allowed
-    CAmount minPoolFee = pool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFeePerK();
-    if (minPoolFee > 0)
-        return INF_PRIORITY;
-
-    return -1;
-}
-
 void CBlockPolicyEstimator::Write(CAutoFile& fileout)
 {
     fileout << nBestSeenHeight;
@@ -489,7 +471,7 @@ FeeFilterRounder::FeeFilterRounder(const CFeeRate& minIncrementalFee)
 {
     CAmount minFeeLimit = std::max(CAmount(1), minIncrementalFee.GetFeePerK() / 2);
     feeset.insert(0);
-    for (double bucketBoundary = minFeeLimit; bucketBoundary <= MAX_FEERATE; bucketBoundary *= FEE_SPACING) {
+    for (double bucketBoundary = minFeeLimit; bucketBoundary <= MAX_BUCKET_FEERATE; bucketBoundary *= FEE_SPACING) {
         feeset.insert(bucketBoundary);
     }
 }

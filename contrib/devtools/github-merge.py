@@ -70,6 +70,14 @@ def ask_prompt(text):
     print("",file=stderr)
     return reply
 
+def get_symlink_files():
+    files = sorted(subprocess.check_output([GIT, 'ls-tree', '--full-tree', '-r', 'HEAD']).splitlines())
+    ret = []
+    for f in files:
+        if (int(f.decode('utf-8').split(" ")[0], 8) & 0o170000) == 0o120000:
+            ret.append(f.decode('utf-8').split("\t")[1])
+    return ret
+
 def tree_sha512sum():
     files = sorted(subprocess.check_output([GIT, 'ls-tree', '--full-tree', '-r', '--name-only', 'HEAD']).splitlines())
     overall = hashlib.sha512()
@@ -200,6 +208,12 @@ def main():
             print("ERROR: Creating merge failed (already merged?).",file=stderr)
             exit(4)
 
+        symlink_files = get_symlink_files()
+        for f in symlink_files:
+            print("ERROR: File %s was a symlink" % f)
+        if len(symlink_files) > 0:
+            exit(4)
+
         # Put tree SHA512 into the message
         try:
             first_sha512 = tree_sha512sum()
@@ -211,10 +225,6 @@ def main():
             subprocess.check_call([GIT,'commit','--amend','-m',message.encode('utf-8')])
         except subprocess.CalledProcessError as e:
             printf("ERROR: Cannot update message.",file=stderr)
-            exit(4)
-        second_sha512 = tree_sha512sum()
-        if first_sha512 != second_sha512:
-            print("ERROR: Tree hash changed unexpectedly",file=stderr)
             exit(4)
 
         print('%s#%s%s %s %sinto %s%s' % (ATTR_RESET+ATTR_PR,pull,ATTR_RESET,title,ATTR_RESET+ATTR_PR,branch,ATTR_RESET))
@@ -257,6 +267,11 @@ def main():
             else:
                 print("ERROR: Merge rejected.",file=stderr)
                 exit(7)
+
+        second_sha512 = tree_sha512sum()
+        if first_sha512 != second_sha512:
+            print("ERROR: Tree hash changed unexpectedly",file=stderr)
+            exit(8)
 
         # Sign the merge commit.
         reply = ask_prompt("Type 's' to sign off on the merge.")
