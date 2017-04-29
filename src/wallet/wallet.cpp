@@ -782,6 +782,14 @@ bool CWallet::Verify()
     uiInterface.InitMessage(_("Verifying wallet..."));
     std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
 
+    //fixme: (GULDEN) (MERGE)
+    // Check file permissions.
+    /*{
+        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
+        if (!testPerms.is_open())
+            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+    }*/
+    
     std::string strError;
     if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError))
         return InitError(strError);
@@ -794,36 +802,19 @@ bool CWallet::Verify()
             return false;
     }
 
-    
-    // Check file permissions.
-    {
-        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
-        if (!testPerms.is_open())
-            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
-    }
-    
-    CDBEnv::VerifyResult r = bitdb.Verify(walletFile, CWalletDB::Recover);
-    if (r == CDBEnv::RECOVER_OK)
-    {
-        InitWarning(strprintf(_("Warning: Wallet file corrupt, data salvaged!"
-                                        " Original %s saved as %s in %s; if"
-                                        " your balance or transactions are incorrect you should"
-                                        " restore from a backup."),
-            walletFile, "wallet.{timestamp}.bak", GetDataDir()));
-    }
-    if (r == CDBEnv::RECOVER_FAIL)
-        return InitError(strprintf(_("%s corrupt, salvage failed"), walletFile));
-
-
-    //fixme: (GULDEN) (MERGE)
-    /*std::string strWarning;
-    bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);        
+    std::string strWarning;
+    bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
+    if (!strWarning.empty())
+        InitWarning(strWarning);
+    if (!dbV)
     {
         InitError(strError);
         return false;
-    }*/
+    }
     return true;
 }
+
+
 
 void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> range)
 {
@@ -2637,7 +2628,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput>& vCoins,
     }
 }
 
-static void ApproximateBestSubset(std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > >vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
+static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > >& vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
                                   std::vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
 {
     std::vector<char> vfIncluded;
@@ -3510,7 +3501,7 @@ bool CWallet::DelAddressBook(const std::string& address)
 
 /**
  * Mark old keypool keys as used,
- * and generate all new keys 
+ * and generate all new keys
  */
 bool CWallet::NewKeyPool()
 {

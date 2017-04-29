@@ -233,13 +233,13 @@ namespace Checkpoints
             CBlockIndex* pindexCheckpoint = mapBlockIndex[hashPendingCheckpoint];
             if (! (chainActive.Contains(pindexCheckpoint)) )
             {
-                CBlock block;
-                if (!ReadBlockFromDisk(block, pindexCheckpoint, chainparams.GetConsensus()))
+                CBlock* pblock = new CBlock();
+                if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams.GetConsensus()))
                 {
                     return error("AcceptPendingSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
                 }
                 CValidationState State;
-                if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
+                if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(pblock)))
                 {
                     hashInvalidCheckpoint = hashPendingCheckpoint;
                     return error("AcceptPendingSyncCheckpoint: SetBestChain failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
@@ -361,13 +361,13 @@ namespace Checkpoints
         {
             // checkpoint block accepted but not yet in main chain
             LogPrintf("ResetSyncCheckpoint: SetBestChain to hardened checkpoint %s\n", hash.ToString().c_str());
-            CBlock block;
-            if (!ReadBlockFromDisk(block,mapBlockIndex[hash], chainparams.GetConsensus()))
+            CBlock* pblock = new CBlock();
+            if (!ReadBlockFromDisk(*pblock,mapBlockIndex[hash], chainparams.GetConsensus()))
             {
                 return error("ResetSyncCheckpoint: ReadBlockFromDisk failed for hardened checkpoint %s", hash.ToString().c_str());
             }
             CValidationState State;
-            if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
+            if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(pblock)))
             {
                 return error("ResetSyncCheckpoint: ActivateBestChain failed for hardened checkpoint %s", hash.ToString().c_str());
             }
@@ -558,14 +558,14 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
     if (!chainActive.Contains(pindexCheckpoint))
     {
         // checkpoint chain received but not yet main chain
-        CBlock block;
-        if (!ReadBlockFromDisk(block, pindexCheckpoint, chainparams.GetConsensus()))
+        CBlock* pblock = new CBlock();
+        if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams.GetConsensus()))
         {
             return error("ProcessSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());
         }
 
         CValidationState State;
-        if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(&block)))
+        if (!ActivateBestChain(State, chainparams, std::shared_ptr<CBlock>(pblock)))
         {
             Checkpoints::hashInvalidCheckpoint = hashCheckpoint;
             return error("ProcessSyncCheckpoint: ActivateBestChain failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());
