@@ -243,6 +243,8 @@ public:
 
     int getDefaultConfirmTarget() const;
     
+    bool getDefaultWalletRbf() const;
+
     //fixme: GULDEN (FUT) - Move this into a gulden specific subclass to keep diffs to a minimum
     void setActiveAccount( CAccount* account );
     CAccount* getActiveAccount();

@@ -550,7 +550,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
     return ret;
 }
 
-bool CWallet::AddWatchOnly(const CScript &dest)
+bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
 {
     AssertLockHeld(cs_wallet);
     
@@ -558,17 +558,21 @@ bool CWallet::AddWatchOnly(const CScript &dest)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
+        //fixme: (GULDEN) (MERGE) - nCreateTime should go here as well?
         if (accountPair.second->AddWatchOnly(dest))
             ret = true;
     }
     if (!ret)
         return false;
     
-    nTimeFirstKey = 1; // No birthday information for watch-only keys.
-    NotifyWatchonlyChanged(true);
-    if (!fFileBacked)
-        return true;
-    return CWalletDB(strWalletFile).WriteWatchOnly(dest);
+    const CKeyMetadata& meta = mapKeyMetadata[CScriptID(dest)];
+    UpdateTimeFirstKey(meta.nCreateTime);
+    
+     NotifyWatchonlyChanged(true);
+     if (!fFileBacked)
+         return true;
+    //fixme: (GULDEN) (MERGE)
+    return CWalletDB(strWalletFile).WriteWatchOnly(dest/*, meta*/);
 }
 
 bool CWallet::RemoveWatchOnly(const CScript &dest)
@@ -3134,9 +3138,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // to avoid conflicting with other possible uses of nSequence,
                 // and in the spirit of "smallest possible change from prior
                 // behavior."
+                bool rbf = coinControl ? coinControl->signalRbf : fWalletRbf;
                 for (const auto& coin : setCoins)
                     txNew.vin.push_back(CTxIn(coin.first->GetHash(),coin.second,CScript(),
-                                              std::numeric_limits<unsigned int>::max() - (fWalletRbf ? 2 : 1)));
+                                              std::numeric_limits<unsigned int>::max() - (rbf ? 2 : 1)));
 
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(txNew, setCoins)) {

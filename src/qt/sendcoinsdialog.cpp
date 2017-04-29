@@ -122,6 +122,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
     ui->groupCustomFee->button((int)std::max(0, std::min(1, settings.value("nCustomFeeRadio").toInt())))->setChecked(true);
     ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
     ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
+    ui->optInRBF->setCheckState(model->getDefaultWalletRbf() ? Qt::Checked : Qt::Unchecked);
     minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
     
     //Gulden
@@ -399,6 +400,9 @@ void SendCoinsDialog::on_sendButton_clicked()
         prepareStatus.status =  WalletModel::AmountExceedsBalance;
     }
     
+    //fixme: (GULDEN) (MERGE)
+    //ctrl.signalRbf = ui->optInRBF->isChecked();
+
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
@@ -496,6 +500,13 @@ void SendCoinsDialog::on_sendButton_clicked()
         .arg(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount)));
     questionString.append(QString("<span style='font-size:10pt;font-weight:normal;'><br />(=%2)</span>")
         .arg(alternativeUnits.join(" " + tr("or") + "<br />")));
+
+    if (ui->optInRBF->isChecked())
+    {
+        questionString.append("<hr /><span>");
+        questionString.append(tr("This transaction signals replaceability (optin-RBF)."));
+        questionString.append("</span>");
+    }
 
     
     QDialog* d = GuldenGUI::createDialog(this, questionString.arg(formatted.join("<br />")), "Send", "Cancel", 600, 360);
