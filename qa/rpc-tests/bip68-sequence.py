@@ -26,8 +26,8 @@ class BIP68Test(BitcoinTestFramework):
 
     def setup_network(self):
         self.nodes = []
-        self.nodes.append(start_node(0, self.options.tmpdir, ["-debug"]))
-        self.nodes.append(start_node(1, self.options.tmpdir, ["-debug", "-acceptnonstdtxn=0"]))
+        self.nodes.append(start_node(0, self.options.tmpdir))
+        self.nodes.append(start_node(1, self.options.tmpdir, ["-acceptnonstdtxn=0"]))
         self.is_network_split = False
         self.relayfee = self.nodes[0].getnetworkinfo()["relayfee"]
         connect_nodes(self.nodes[0], 1)
@@ -36,26 +36,26 @@ class BIP68Test(BitcoinTestFramework):
         # Generate some coins
         self.nodes[0].generate(110)
 
-        print("Running test disable flag")
+        self.log.info("Running test disable flag")
         self.test_disable_flag()
 
-        print("Running test sequence-lock-confirmed-inputs")
+        self.log.info("Running test sequence-lock-confirmed-inputs")
         self.test_sequence_lock_confirmed_inputs()
 
-        print("Running test sequence-lock-unconfirmed-inputs")
+        self.log.info("Running test sequence-lock-unconfirmed-inputs")
         self.test_sequence_lock_unconfirmed_inputs()
 
-        print("Running test BIP68 not consensus before versionbits activation")
+        self.log.info("Running test BIP68 not consensus before versionbits activation")
         self.test_bip68_not_consensus()
 
-        print("Activating BIP68 (and 112/113)")
+        self.log.info("Activating BIP68 (and 112/113)")
         self.activateCSV()
 
-        print("Verifying nVersion=2 transactions are standard.")
-        print("Note that with current versions of bitcoin software, nVersion=2 transactions are always standard (independent of BIP68 activation status).")
+        self.log.info("Verifying nVersion=2 transactions are standard.")
+        self.log.info("Note that nVersion=2 transactions are always standard (independent of BIP68 activation status).")
         self.test_version2_relay()
 
-        print("Passed\n")
+        self.log.info("Passed")
 
     # Test that BIP68 is not in effect if tx version is 1, or if
     # the first sequence bit is set.
@@ -92,12 +92,7 @@ class BIP68Test(BitcoinTestFramework):
         tx2.vout = [CTxOut(int(value-self.relayfee*COIN), CScript([b'a']))]
         tx2.rehash()
 
-        try:
-            self.nodes[0].sendrawtransaction(ToHex(tx2))
-        except JSONRPCException as exp:
-            assert_equal(exp.error["message"], NOT_FINAL_ERROR)
-        else:
-            assert(False)
+        assert_raises_jsonrpc(-26, NOT_FINAL_ERROR, self.nodes[0].sendrawtransaction, ToHex(tx2))
 
         # Setting the version back down to 1 should disable the sequence lock,
         # so this should be accepted.
@@ -192,14 +187,12 @@ class BIP68Test(BitcoinTestFramework):
             tx.vout.append(CTxOut(int(value-self.relayfee*tx_size*COIN/1000), CScript([b'a'])))
             rawtx = self.nodes[0].signrawtransaction(ToHex(tx))["hex"]
 
-            try:
-                self.nodes[0].sendrawtransaction(rawtx)
-            except JSONRPCException as exp:
-                assert(not should_pass and using_sequence_locks)
-                assert_equal(exp.error["message"], NOT_FINAL_ERROR)
+            if (using_sequence_locks and not should_pass):
+                # This transaction should be rejected
+                assert_raises_jsonrpc(-26, NOT_FINAL_ERROR, self.nodes[0].sendrawtransaction, rawtx)
             else:
-                assert(should_pass or not using_sequence_locks)
-                # Recalculate utxos if we successfully sent the transaction
+                # This raw transaction should be accepted
+                self.nodes[0].sendrawtransaction(rawtx)
                 utxos = self.nodes[0].listunspent()
 
     # Test that sequence locks on unconfirmed inputs must have nSequence
@@ -241,14 +234,13 @@ class BIP68Test(BitcoinTestFramework):
             tx.vout = [CTxOut(int(orig_tx.vout[0].nValue - relayfee*COIN), CScript([b'a']))]
             tx.rehash()
 
-            try:
-                node.sendrawtransaction(ToHex(tx))
-            except JSONRPCException as exp:
-                assert_equal(exp.error["message"], NOT_FINAL_ERROR)
-                assert(orig_tx.hash in node.getrawmempool())
+            if (orig_tx.hash in node.getrawmempool()):
+                # sendrawtransaction should fail if the tx is in the mempool
+                assert_raises_jsonrpc(-26, NOT_FINAL_ERROR, node.sendrawtransaction, ToHex(tx))
             else:
-                # orig_tx must not be in mempool
-                assert(orig_tx.hash not in node.getrawmempool())
+                # sendrawtransaction should succeed if the tx is not in the mempool
+                node.sendrawtransaction(ToHex(tx))
+
             return tx
 
         test_nonzero_locks(tx2, self.nodes[0], self.relayfee, use_height_lock=True)
@@ -297,12 +289,7 @@ class BIP68Test(BitcoinTestFramework):
         tx5.vout[0].nValue += int(utxos[0]["amount"]*COIN)
         raw_tx5 = self.nodes[0].signrawtransaction(ToHex(tx5))["hex"]
 
-        try:
-            self.nodes[0].sendrawtransaction(raw_tx5)
-        except JSONRPCException as exp:
-            assert_equal(exp.error["message"], NOT_FINAL_ERROR)
-        else:
-            assert(False)
+        assert_raises_jsonrpc(-26, NOT_FINAL_ERROR, self.nodes[0].sendrawtransaction, raw_tx5)
 
         # Test mempool-BIP68 consistency after reorg
         #
@@ -375,12 +362,7 @@ class BIP68Test(BitcoinTestFramework):
         tx3.vout = [CTxOut(int(tx2.vout[0].nValue - self.relayfee*COIN), CScript([b'a']))]
         tx3.rehash()
 
-        try:
-            self.nodes[0].sendrawtransaction(ToHex(tx3))
-        except JSONRPCException as exp:
-            assert_equal(exp.error["message"], NOT_FINAL_ERROR)
-        else:
-            assert(False)
+        assert_raises_jsonrpc(-26, NOT_FINAL_ERROR, self.nodes[0].sendrawtransaction, ToHex(tx3))
 
         # make a block that violates bip68; ensure that the tip updates
         tip = int(self.nodes[0].getbestblockhash(), 16)

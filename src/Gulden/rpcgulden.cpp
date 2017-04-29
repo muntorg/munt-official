@@ -25,8 +25,6 @@
 #include <boost/accumulators/statistics/max.hpp>
 
 
-using namespace std;
-
 #ifdef ENABLE_WALLET
 
 UniValue gethashps(const JSONRPCRequest& request)
@@ -202,7 +200,7 @@ UniValue changeaccountname(const JSONRPCRequest& request)
    
 
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     std::string label = request.params[1].get_str();
@@ -239,7 +237,7 @@ UniValue deleteaccount(const JSONRPCRequest& request)
     
 
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     
@@ -248,7 +246,7 @@ UniValue deleteaccount(const JSONRPCRequest& request)
         CAmount balance = pwallet->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
-            throw runtime_error("Account not empty, please first empty your account before trying to delete it.");
+            throw std::runtime_error("Account not empty, please first empty your account before trying to delete it.");
         }
     }
             
@@ -284,7 +282,7 @@ UniValue createaccount(const JSONRPCRequest& request)
     
 
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     
     std::string accountType = "HD";
@@ -292,7 +290,7 @@ UniValue createaccount(const JSONRPCRequest& request)
     {
         accountType = request.params[1].get_str();
         if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy")
-            throw runtime_error("Invalid account type");    
+            throw std::runtime_error("Invalid account type");    
     }
                        
     CAccount* account = NULL;
@@ -308,7 +306,7 @@ UniValue createaccount(const JSONRPCRequest& request)
     }
     
     if (!account)
-        throw runtime_error("Unable to create account.");
+        throw std::runtime_error("Unable to create account.");
     
     return account->getUUID();
 }
@@ -339,10 +337,10 @@ UniValue getactiveaccount(const JSONRPCRequest& request)
     
 
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     if (!pwallet->activeAccount)
-        throw runtime_error("No account active");
+        throw std::runtime_error("No account active");
     
     return pwallet->activeAccount->getUUID();
 }
@@ -363,7 +361,7 @@ UniValue getreadonlyaccount(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getreadonlyaccount \"account\" \n"
             "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
-            "1. \"account\"        (string, required) The unique UUID or label for the account or \"\" for the active account.\n"
+            "1. \"account\"        (, required) The unique UUID or label for the account or \"\" for the active account.\n"
             "\nResult:\n"
             "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
             "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
@@ -374,12 +372,12 @@ UniValue getreadonlyaccount(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
     
     if (!account->IsHD())
-        throw runtime_error("Can only be used on a HD account.");
+        throw std::runtime_error("Can only be used on a HD account.");
     
     CAccountHD* accountHD = dynamic_cast<CAccountHD*>(account);
     
@@ -415,14 +413,14 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     EnsureWalletIsUnlocked(pwallet);
        
     CAccount* account = pwallet->CreateReadOnlyAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
     
     if (!account)
-        throw runtime_error("Unable to create account.");
+        throw std::runtime_error("Unable to create account.");
     
     //fixme: Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
@@ -456,10 +454,10 @@ UniValue getactiveseed(const JSONRPCRequest& request)
     
 
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     if (!pwallet->activeSeed)
-        throw runtime_error("No seed active");
+        throw std::runtime_error("No seed active");
     
     return pwallet->activeSeed->getUUID();
 }
@@ -488,7 +486,7 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
    
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);  
 
@@ -498,16 +496,16 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
 
 CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
 {
-    string strSeedUUID = value.get_str();
+    std::string strSeedUUID = value.get_str();
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     if (strSeedUUID.empty())
     {
         if (!pwallet->getActiveSeed())
         {
-            throw runtime_error("No seed identifier passed, and no active seed selected, please select an active seed or pass a valid identifier.");
+            throw std::runtime_error("No seed identifier passed, and no active seed selected, please select an active seed or pass a valid identifier.");
         }
         return pwallet->getActiveSeed();
     }
@@ -547,7 +545,7 @@ UniValue setactiveseed(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], false);  
 
@@ -588,7 +586,7 @@ UniValue createseed(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     EnsureWalletIsUnlocked(pwallet);
     
@@ -601,7 +599,7 @@ UniValue createseed(const JSONRPCRequest& request)
     CHDSeed* newSeed = pwallet->GenerateHDSeed(seedType);
     
     if(!newSeed)
-        throw runtime_error("Failed to generate seed");
+        throw std::runtime_error("Failed to generate seed");
 
     return newSeed->getUUID();
 }
@@ -632,7 +630,7 @@ UniValue deleteseed(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);  
     
@@ -671,7 +669,7 @@ UniValue importseed(const JSONRPCRequest& request)
     
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     EnsureWalletIsUnlocked(pwallet);
     
@@ -729,7 +727,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
         forSeed = SeedFromValue(pwallet, request.params[0], false);
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     UniValue allAccounts(UniValue::VARR);
     
@@ -790,7 +788,7 @@ UniValue getmnemonicfromseed(const JSONRPCRequest& request)
 
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);  
     
@@ -825,12 +823,12 @@ UniValue getreadonlyseed(const JSONRPCRequest& request)
             + HelpExampleRpc("getreadonlyseed", ""));
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], true);
     
     if (seed->m_type != CHDSeed::SeedType::BIP44NoHardening)
-        throw runtime_error("Can only use command with a non-hardened BIP44 seed");
+        throw std::runtime_error("Can only use command with a non-hardened BIP44 seed");
     
     EnsureWalletIsUnlocked(pwallet);
 
@@ -859,7 +857,7 @@ UniValue listseeds(const JSONRPCRequest& request)
             + HelpExampleRpc("listseeds", ""));
     
     if (!pwallet)
-        throw runtime_error("Cannot use command without an active wallet");
+        throw std::runtime_error("Cannot use command without an active wallet");
     
     UniValue AllSeeds(UniValue::VARR);
     

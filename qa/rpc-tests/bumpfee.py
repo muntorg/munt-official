@@ -28,7 +28,7 @@ class BumpFeeTest(BitcoinTestFramework):
         self.setup_clean_chain = True
 
     def setup_network(self, split=False):
-        extra_args = [["-debug", "-prematurewitness", "-walletprematurewitness", "-walletrbf={}".format(i)]
+        extra_args = [["-prematurewitness", "-walletprematurewitness", "-walletrbf={}".format(i)]
                       for i in range(self.num_nodes)]
         self.nodes = start_nodes(self.num_nodes, self.options.tmpdir, extra_args)
 
@@ -47,7 +47,7 @@ class BumpFeeTest(BitcoinTestFramework):
         rbf_node_address = rbf_node.getnewaddress()
 
         # fund rbf node with 10 coins of 0.001 btc (100,000 satoshis)
-        print("Mining blocks...")
+        self.log.info("Mining blocks...")
         peer_node.generate(110)
         self.sync_all()
         for i in range(25):
@@ -57,7 +57,7 @@ class BumpFeeTest(BitcoinTestFramework):
         self.sync_all()
         assert_equal(rbf_node.getbalance(), Decimal("0.025"))
 
-        print("Running tests")
+        self.log.info("Running tests")
         dest_address = peer_node.getnewaddress()
         test_small_output_fails(rbf_node, dest_address)
         test_dust_to_fee(rbf_node, dest_address)
@@ -72,7 +72,7 @@ class BumpFeeTest(BitcoinTestFramework):
         test_unconfirmed_not_spendable(rbf_node, rbf_node_address)
         test_bumpfee_metadata(rbf_node, dest_address)
         test_locked_wallet_fails(rbf_node, dest_address)
-        print("Success")
+        self.log.info("Success")
 
 
 def test_simple_bumpfee_succeeds(rbf_node, peer_node, dest_address):
@@ -104,7 +104,7 @@ def test_segwit_bumpfee_succeeds(rbf_node, dest_address):
     segwit_out = rbf_node.validateaddress(rbf_node.getnewaddress())
     rbf_node.addwitnessaddress(segwit_out["address"])
     segwitid = send_to_witness(
-        version=0,
+        use_p2wsh=False,
         node=rbf_node,
         utxo=segwit_in,
         pubkey=segwit_out["pubkey"],

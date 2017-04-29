@@ -51,8 +51,6 @@
 #include <Gulden/mnemonic.h>
 
 
-using namespace std;
-
 CWallet* pwalletMain = NULL;
 /** Transaction fee set by the user */
 CFeeRate payTxFee(DEFAULT_TRANSACTION_FEE);
@@ -230,8 +228,8 @@ const uint256 CMerkleTx::ABANDON_HASH(uint256S("00000000000000000000000000000000
 
 struct CompareValueOnly
 {
-    bool operator()(const pair<CAmount, pair<const CWalletTx*, unsigned int> >& t1,
-                    const pair<CAmount, pair<const CWalletTx*, unsigned int> >& t2) const
+    bool operator()(const std::pair<CAmount, std::pair<const CWalletTx*, unsigned int> >& t1,
+                    const std::pair<CAmount, std::pair<const CWalletTx*, unsigned int> >& t2) const
     {
         return t1.first < t2.first;
     }
@@ -379,12 +377,12 @@ void CWallet::ForceRewriteKeys(CAccount& forAccount)
                 CKey keyPair;
                 if (!GetKey(keyID, keyPair))
                 {
-                    throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade all keys");
+                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all keys");
                 }
                 walletDB.EraseKey(keyPair.GetPubKey());
                 if (!walletDB.WriteKey(keyPair.GetPubKey(), keyPair.GetPrivKey(), mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
                 {
-                    throw runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
+                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
                 }
             }
             else
@@ -392,17 +390,17 @@ void CWallet::ForceRewriteKeys(CAccount& forAccount)
                 CPubKey pubKey;
                 if (!GetPubKey(keyID, pubKey))
                 { 
-                    throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
+                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
                 }
                 walletDB.EraseEncryptedKey(pubKey);
                 std::vector<unsigned char> secret;
                 if (!forAccount.GetKey(keyID, secret))
                 { 
-                    throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
+                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
                 }
                 if (!walletDB.WriteCryptedKey(pubKey, secret, mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
                 {
-                    throw runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
+                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
                 }
             }
         }
@@ -415,17 +413,17 @@ void CWallet::ForceRewriteKeys(CAccount& forAccount)
         CKeyPool keypoolentry;
         if (!walletDB.ReadPool(nIndex, keypoolentry))
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
         if (!walletDB.ErasePool( this, nIndex ))
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
         keypoolentry.accountName = forAccount.getUUID();
         keypoolentry.nChain = KEYCHAIN_CHANGE;
         if ( !walletDB.WritePool( nIndex, keypoolentry ) )
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
     }
     BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolExternal)
@@ -433,17 +431,17 @@ void CWallet::ForceRewriteKeys(CAccount& forAccount)
         CKeyPool keypoolentry;
         if (!walletDB.ReadPool(nIndex, keypoolentry))
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
         if (!walletDB.ErasePool( this, nIndex ))
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
         keypoolentry.accountName = forAccount.getUUID();
         keypoolentry.nChain = KEYCHAIN_EXTERNAL;
         if ( !walletDB.WritePool( nIndex, keypoolentry ) )
         {
-            throw runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
+            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
     }
         
@@ -737,9 +735,9 @@ bool CWallet::SetMaxVersion(int nVersion)
     return true;
 }
 
-set<uint256> CWallet::GetConflicts(const uint256& txid) const
+std::set<uint256> CWallet::GetConflicts(const uint256& txid) const
 {
-    set<uint256> result;
+    std::set<uint256> result;
     AssertLockHeld(cs_wallet);
 
     std::map<uint256, CWalletTx>::const_iterator it = mapWallet.find(txid);
@@ -795,7 +793,7 @@ bool CWallet::Verify()
     
     // Check file permissions.
     {
-        std::fstream testPerms((GetDataDir() / walletFile).string(), ios::in | ios::out | ios::app);
+        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
         if (!testPerms.is_open())
             return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
     }
@@ -823,7 +821,7 @@ bool CWallet::Verify()
     return true;
 }
 
-void CWallet::SyncMetaData(pair<TxSpends::iterator, TxSpends::iterator> range)
+void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> range)
 {
     // We want all the wallet transactions in range to have the same metadata as
     // the oldest (smallest nOrderPos).
@@ -867,7 +865,7 @@ void CWallet::SyncMetaData(pair<TxSpends::iterator, TxSpends::iterator> range)
 bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
 {
     const COutPoint outpoint(hash, n);
-    pair<TxSpends::const_iterator, TxSpends::const_iterator> range;
+    std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range;
     range = mapTxSpends.equal_range(outpoint);
 
     for (TxSpends::const_iterator it = range.first; it != range.second; ++it)
@@ -885,9 +883,9 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
 
 void CWallet::AddToSpends(const COutPoint& outpoint, const uint256& wtxid)
 {
-    mapTxSpends.insert(make_pair(outpoint, wtxid));
+    mapTxSpends.insert(std::make_pair(outpoint, wtxid));
 
-    pair<TxSpends::iterator, TxSpends::iterator> range;
+    std::pair<TxSpends::iterator, TxSpends::iterator> range;
     range = mapTxSpends.equal_range(outpoint);
     SyncMetaData(range);
 }
@@ -1048,20 +1046,20 @@ DBErrors CWallet::ReorderTransactions()
     // Probably a bad idea to change the output of this
 
     // First: get all CWalletTx and CAccountingEntry into a sorted-by-time multimap.
-    typedef pair<CWalletTx*, CAccountingEntry*> TxPair;
-    typedef multimap<int64_t, TxPair > TxItems;
+    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
+    typedef std::multimap<int64_t, TxPair > TxItems;
     TxItems txByTime;
 
-    for (map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+    for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
     {
         CWalletTx* wtx = &((*it).second);
-        txByTime.insert(make_pair(wtx->nTimeReceived, TxPair(wtx, (CAccountingEntry*)0)));
+        txByTime.insert(std::make_pair(wtx->nTimeReceived, TxPair(wtx, (CAccountingEntry*)0)));
     }
-    list<CAccountingEntry> acentries;
+    std::list<CAccountingEntry> acentries;
     walletdb.ListAccountCreditDebit("", acentries);
     BOOST_FOREACH(CAccountingEntry& entry, acentries)
     {
-        txByTime.insert(make_pair(entry.nTime, TxPair((CWalletTx*)0, &entry)));
+        txByTime.insert(std::make_pair(entry.nTime, TxPair((CWalletTx*)0, &entry)));
     }
 
     nOrderPosNext = 0;
@@ -1189,7 +1187,7 @@ bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bFo
         else {
             // Check if the current key has been used
             CScript scriptPubKey = GetScriptForDestination(account->vchPubKey.GetID());
-            for (map<uint256, CWalletTx>::iterator it = mapWallet.begin();
+            for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin();
                  it != mapWallet.end() && account->vchPubKey.IsValid();
                  ++it)
                 BOOST_FOREACH(const CTxOut& txout, (*it).second.tx->vout)
@@ -1322,7 +1320,7 @@ CAccountHD* CWallet::CreateReadOnlyAccount(std::string strAccount, SecureString 
     }
     catch(...)
     {
-        throw runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid Gulden extended public key");
     }
     
     newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
@@ -1398,7 +1396,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     //Mark address as used
         
     // Inserts only if not already there, returns tx inserted or tx found
-    pair<map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(make_pair(hash, wtxIn));
+    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
     CWalletTx& wtx = (*ret.first).second;
     wtx.BindWallet(this);
     bool fInsertedNew = ret.second;
@@ -1406,7 +1404,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     {
         wtx.nTimeReceived = GetAdjustedTime();
         wtx.nOrderPos = IncOrderPosNext(&walletdb);
-        wtxOrdered.insert(make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
+        wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
         wtx.nTimeSmart = ComputeTimeSmart(wtx);
         AddToSpends(hash);
     }
@@ -1471,7 +1469,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     mapWallet[hash] = wtxIn;
     CWalletTx& wtx = mapWallet[hash];
     wtx.BindWallet(this);
-    wtxOrdered.insert(make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
+    wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
     AddToSpends(hash);
     BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin) {
         if (mapWallet.count(txin.prevout.hash)) {
@@ -1687,7 +1685,7 @@ void CWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
 {
     {
         LOCK(cs_wallet);
-        map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -1701,7 +1699,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
 {
     {
         LOCK(cs_wallet);
-        map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -1716,7 +1714,7 @@ isminetype CWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
 {
     {
         LOCK(cs_wallet);
-        map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end())
         {
             //fixme: (GULDEN) (MERGE)
@@ -1753,7 +1751,7 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
 {
     {
         LOCK(cs_wallet);
-        map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -1912,7 +1910,7 @@ int CWalletTx::GetRequestCount() const
             // Generated block
             if (!hashUnset())
             {
-                map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(hashBlock);
+                std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(hashBlock);
                 if (mi != pwallet->mapRequestCount.end())
                     nRequests = (*mi).second;
             }
@@ -1920,7 +1918,7 @@ int CWalletTx::GetRequestCount() const
         else
         {
             // Did anyone request this transaction?
-            map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(GetHash());
+            std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(GetHash());
             if (mi != pwallet->mapRequestCount.end())
             {
                 nRequests = (*mi).second;
@@ -1928,7 +1926,7 @@ int CWalletTx::GetRequestCount() const
                 // How about the block it's in?
                 if (nRequests == 0 && !hashUnset())
                 {
-                    map<uint256, int>::const_iterator _mi = pwallet->mapRequestCount.find(hashBlock);
+                    std::map<uint256, int>::const_iterator _mi = pwallet->mapRequestCount.find(hashBlock);
                     if (_mi != pwallet->mapRequestCount.end())
                         nRequests = (*_mi).second;
                     else
@@ -1940,7 +1938,8 @@ int CWalletTx::GetRequestCount() const
     return nRequests;
 }
 
-void CWalletTx::GetAmounts(list<COutputEntry>& listReceived, list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from) const
+void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
+                           std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from) const
 {
     if (!from)
         from = pwallet->activeAccount;
@@ -1962,7 +1961,7 @@ void CWalletTx::GetAmounts(list<COutputEntry>& listReceived, list<COutputEntry>&
     {
         const CTxIn& txin = tx->vin[i];
 
-        map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.hash);
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -2017,7 +2016,7 @@ void CWalletTx::GetAmounts(list<COutputEntry>& listReceived, list<COutputEntry>&
 
 }
 
-void CWalletTx::GetAccountAmounts(const string& strAccount, CAmount& nReceived,
+void CWalletTx::GetAccountAmounts(const std::string& strAccount, CAmount& nReceived,
                                   CAmount& nSent, CAmount& nFee, const isminefilter& filter) const
 {
     LOCK(pwalletMain->cs_wallet);
@@ -2025,8 +2024,8 @@ void CWalletTx::GetAccountAmounts(const string& strAccount, CAmount& nReceived,
     nReceived = nSent = nFee = 0;
 
     CAmount allFee;
-    list<COutputEntry> listReceived;
-    list<COutputEntry> listSent;
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
     GetAmounts(listReceived, listSent, allFee, filter, pwalletMain->mapAccounts[strAccount]);
 
     BOOST_FOREACH(const COutputEntry& s, listSent)
@@ -2160,9 +2159,9 @@ bool CWalletTx::RelayWalletTransaction(CConnman* connman)
     return false;
 }
 
-set<uint256> CWalletTx::GetConflicts() const
+std::set<uint256> CWalletTx::GetConflicts() const
 {
-    set<uint256> result;
+    std::set<uint256> result;
     if (pwallet != NULL)
     {
         uint256 myHash = GetHash();
@@ -2400,14 +2399,14 @@ std::vector<uint256> CWallet::ResendWalletTransactionsBefore(int64_t nTime, CCon
 
     LOCK(cs_wallet);
     // Sort them in chronological order
-    multimap<unsigned int, CWalletTx*> mapSorted;
+    std::multimap<unsigned int, CWalletTx*> mapSorted;
     BOOST_FOREACH(PAIRTYPE(const uint256, CWalletTx)& item, mapWallet)
     {
         CWalletTx& wtx = item.second;
         // Don't rebroadcast if newer than nTime:
         if (wtx.nTimeReceived > nTime)
             continue;
-        mapSorted.insert(make_pair(wtx.nTimeReceived, &wtx));
+        mapSorted.insert(std::make_pair(wtx.nTimeReceived, &wtx));
     }
     BOOST_FOREACH(PAIRTYPE(const unsigned int, CWalletTx*)& item, mapSorted)
     {
@@ -2457,7 +2456,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount) const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             //fixme: GULDEN (FUT) - is this okay? Should it be cached or something? (CBSU?)
@@ -2477,7 +2476,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount) const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             //fixme: GULDEN (FUT) (1.6.1) - is this okay? Should it be cached or something? (CBSU?)
@@ -2496,7 +2495,7 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             if (!forAccount || ::IsMine(forAccount, *pcoin))
@@ -2513,7 +2512,7 @@ CAmount CWallet::GetWatchOnlyBalance() const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             if (pcoin->IsTrusted())
@@ -2529,7 +2528,7 @@ CAmount CWallet::GetUnconfirmedWatchOnlyBalance() const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
@@ -2544,7 +2543,7 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
             nTotal += pcoin->GetImmatureWatchOnlyCredit();
@@ -2553,13 +2552,13 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     return nTotal;
 }
 
-void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool fOnlyConfirmed, const CCoinControl *coinControl, bool fIncludeZeroValue) const
+void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput>& vCoins, bool fOnlySafe, const CCoinControl *coinControl, bool fIncludeZeroValue) const
 {
     vCoins.clear();
 
     {
         LOCK2(cs_main, cs_wallet);
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
@@ -2568,9 +2567,6 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
                 continue;
             
             if (!CheckFinalTx(*pcoin))
-                continue;
-
-            if (fOnlyConfirmed && !pcoin->IsTrusted())
                 continue;
 
             if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity() > 0)
@@ -2584,6 +2580,8 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
             // It's possible for these to be conflicted via ancestors which we may never be able to detect
             if (nDepth == 0 && !pcoin->InMempool())
                 continue;
+
+            bool safeTx = pcoin->IsTrusted();
 
             // We should not consider coins from transactions that are replacing
             // other transactions.
@@ -2600,8 +2598,8 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
             // be a 1-block reorg away from the chain where transactions A and C
             // were accepted to another chain where B, B', and C were all
             // accepted.
-            if (nDepth == 0 && fOnlyConfirmed && pcoin->mapValue.count("replaces_txid")) {
-                continue;
+            if (nDepth == 0 && pcoin->mapValue.count("replaces_txid")) {
+                safeTx = false;
             }
 
             // Similarly, we should not consider coins from transactions that
@@ -2612,7 +2610,11 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
             // intending to replace A', but potentially resulting in a scenario
             // where A, A', and D could all be accepted (instead of just B and
             // D, or just A and A' like the user would want).
-            if (nDepth == 0 && fOnlyConfirmed && pcoin->mapValue.count("replaced_y_txid")) {
+            if (nDepth == 0 && fOnlySafe && pcoin->mapValue.count("replaced_y_txid")) {
+                safeTx = false;
+            }
+
+            if (fOnlySafe && !safeTx) {
                 continue;
             }
 
@@ -2625,16 +2627,16 @@ void CWallet::AvailableCoins(CAccount* forAccount, vector<COutput>& vCoins, bool
                         vCoins.push_back(COutput(pcoin, i, nDepth,
                                                  ((mine & ISMINE_SPENDABLE) != ISMINE_NO) ||
                                                   (coinControl && coinControl->fAllowWatchOnly && (mine & ISMINE_WATCH_SOLVABLE) != ISMINE_NO),
-                                                 (mine & (ISMINE_SPENDABLE | ISMINE_WATCH_SOLVABLE)) != ISMINE_NO));
+                                                 (mine & (ISMINE_SPENDABLE | ISMINE_WATCH_SOLVABLE)) != ISMINE_NO, safeTx));
             }
         }
     }
 }
 
-static void ApproximateBestSubset(vector<pair<CAmount, pair<const CWalletTx*,unsigned int> > >vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
-                                  vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
+static void ApproximateBestSubset(std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > >vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
+                                  std::vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
 {
-    vector<char> vfIncluded;
+    std::vector<char> vfIncluded;
 
     vfBest.assign(vValue.size(), true);
     nBest = nTotalLower;
@@ -2677,17 +2679,17 @@ static void ApproximateBestSubset(vector<pair<CAmount, pair<const CWalletTx*,uns
     }
 }
 
-bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const uint64_t nMaxAncestors, vector<COutput> vCoins,
-                                 set<pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet) const
+bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const uint64_t nMaxAncestors, std::vector<COutput> vCoins,
+                                 std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet) const
 {
     setCoinsRet.clear();
     nValueRet = 0;
 
     // List of values less than target
-    pair<CAmount, pair<const CWalletTx*,unsigned int> > coinLowestLarger;
+    std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > coinLowestLarger;
     coinLowestLarger.first = std::numeric_limits<CAmount>::max();
     coinLowestLarger.second.first = NULL;
-    vector<pair<CAmount, pair<const CWalletTx*,unsigned int> > > vValue;
+    std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > > vValue;
     CAmount nTotalLower = 0;
 
     random_shuffle(vCoins.begin(), vCoins.end(), GetRandInt);
@@ -2708,7 +2710,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
         int i = output.i;
         CAmount n = pcoin->tx->vout[i].nValue;
 
-        pair<CAmount,pair<const CWalletTx*,unsigned int> > coin = make_pair(n,make_pair(pcoin, i));
+        std::pair<CAmount,std::pair<const CWalletTx*,unsigned int> > coin = std::make_pair(n,std::make_pair(pcoin, i));
 
         if (n == nTargetValue)
         {
@@ -2749,7 +2751,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     // Solve subset sum by stochastic approximation
     std::sort(vValue.begin(), vValue.end(), CompareValueOnly());
     std::reverse(vValue.begin(), vValue.end());
-    vector<char> vfBest;
+    std::vector<char> vfBest;
     CAmount nBest;
 
     ApproximateBestSubset(vValue, nTotalLower, nTargetValue, vfBest, nBest);
@@ -2782,9 +2784,9 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     return true;
 }
 
-bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, set<pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl) const
+bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl) const
 {
-    vector<COutput> vCoins(vAvailableCoins);
+    std::vector<COutput> vCoins(vAvailableCoins);
 
     // coin control -> return all selected outputs (we want all selected to go into the transaction for sure)
     if (coinControl && coinControl->HasSelected() && !coinControl->fAllowOtherInputs)
@@ -2794,13 +2796,13 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
             if (!out.fSpendable)
                  continue;
             nValueRet += out.tx->tx->vout[out.i].nValue;
-            setCoinsRet.insert(make_pair(out.tx, out.i));
+            setCoinsRet.insert(std::make_pair(out.tx, out.i));
         }
         return (nValueRet >= nTargetValue);
     }
 
     // calculate value from preset inputs and store them
-    set<pair<const CWalletTx*, uint32_t> > setPresetCoins;
+    std::set<std::pair<const CWalletTx*, uint32_t> > setPresetCoins;
     CAmount nValueFromPresetInputs = 0;
 
     std::vector<COutPoint> vPresetInputs;
@@ -2808,7 +2810,7 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
         coinControl->ListSelected(vPresetInputs);
     BOOST_FOREACH(const COutPoint& outpoint, vPresetInputs)
     {
-        map<uint256, CWalletTx>::const_iterator it = mapWallet.find(outpoint.hash);
+        std::map<uint256, CWalletTx>::const_iterator it = mapWallet.find(outpoint.hash);
         if (it != mapWallet.end())
         {
             const CWalletTx* pcoin = &it->second;
@@ -2816,15 +2818,15 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
             if (pcoin->tx->vout.size() <= outpoint.n)
                 return false;
             nValueFromPresetInputs += pcoin->tx->vout[outpoint.n].nValue;
-            setPresetCoins.insert(make_pair(pcoin, outpoint.n));
+            setPresetCoins.insert(std::make_pair(pcoin, outpoint.n));
         } else
             return false; // TODO: Allow non-wallet inputs
     }
 
     // remove preset inputs from vCoins
-    for (vector<COutput>::iterator it = vCoins.begin(); it != vCoins.end() && coinControl && coinControl->HasSelected();)
+    for (std::vector<COutput>::iterator it = vCoins.begin(); it != vCoins.end() && coinControl && coinControl->HasSelected();)
     {
-        if (setPresetCoins.count(make_pair(it->tx, it->i)))
+        if (setPresetCoins.count(std::make_pair(it->tx, it->i)))
             it = vCoins.erase(it);
         else
             ++it;
@@ -2853,7 +2855,7 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
 
 bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CAmount& nFeeRet, bool overrideEstimatedFeeRate, const CFeeRate& specificFeeRate, int& nChangePosInOut, std::string& strFailReason, bool includeWatching, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, bool keepReserveKey, const CTxDestination& destChange)
 {
-    vector<CRecipient> vecSend;
+    std::vector<CRecipient> vecSend;
 
     // Turn the txout set into a CRecipient vector
     for (size_t idx = 0; idx < tx.vout.size(); idx++)
@@ -2907,7 +2909,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     return true;
 }
 
-bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
+bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
     if (forAccount->IsReadOnly())
@@ -2974,7 +2976,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& 
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
 
     {
-        set<pair<const CWalletTx*,unsigned int> > setCoins;
+        std::set<std::pair<const CWalletTx*,unsigned int> > setCoins;
         LOCK2(cs_main, cs_wallet);
         {
             std::vector<COutput> vAvailableCoins;
@@ -3115,7 +3117,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& 
                             return false;
                         }
 
-                        vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosInOut;
+                        std::vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosInOut;
                         txNew.vout.insert(position, newTxOut);
                     }
                 }
@@ -3187,7 +3189,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& 
                     // to be addressed so we avoid creating too small an output.
                     if (nFeeRet > nFeeNeeded && nChangePosInOut != -1 && nSubtractFeeFromAmount == 0) {
                         CAmount extraFeePaid = nFeeRet - nFeeNeeded;
-                        vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePosInOut;
+                        std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePosInOut;
                         change_position->nValue += extraFeePaid;
                         nFeeRet -= extraFeePaid;
                     }
@@ -3197,7 +3199,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const vector<CRecipient>& 
                 // Try to reduce change to include necessary fee
                 if (nChangePosInOut != -1 && nSubtractFeeFromAmount == 0) {
                     CAmount additionalFeeNeeded = nFeeNeeded - nFeeRet;
-                    vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePosInOut;
+                    std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePosInOut;
                     // Only reduce change if remaining amount is still a large enough output.
                     if (change_position->nValue >= MIN_FINAL_CHANGE + additionalFeeNeeded) {
                         change_position->nValue -= additionalFeeNeeded;
@@ -3323,7 +3325,7 @@ bool CWallet::AddAccountingEntry(const CAccountingEntry& acentry, CWalletDB *pwa
 
     laccentries.push_back(acentry);
     CAccountingEntry & entry = laccentries.back();
-    wtxOrdered.insert(make_pair(entry.nOrderPos, TxPair((CWalletTx*)0, &entry)));
+    wtxOrdered.insert(std::make_pair(entry.nOrderPos, TxPair((CWalletTx*)0, &entry)));
 
     return true;
 }
@@ -3392,7 +3394,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     return DB_LOAD_OK;
 }
 
-DBErrors CWallet::ZapSelectTx(vector<uint256>& vHashIn, vector<uint256>& vHashOut)
+DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut)
 {
     if (!fFileBacked)
         return DB_LOAD_OK;
@@ -3457,7 +3459,7 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
 }
 
 
-bool CWallet::SetAddressBook(const std::string& address, const string& strName, const string& strPurpose)
+bool CWallet::SetAddressBook(const std::string& address, const std::string& strName, const std::string& strPurpose)
 {
     bool fUpdated = false;
     {
@@ -3485,7 +3487,7 @@ bool CWallet::DelAddressBook(const std::string& address)
         if(fFileBacked)
         {
             // Delete destdata tuples associated with address
-            BOOST_FOREACH(const PAIRTYPE(string, string) &item, mapAddressBook[address].destdata)
+            BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, mapAddressBook[address].destdata)
             {
                 CWalletDB(strWalletFile).EraseDestData(address, item.first);
             }
@@ -3574,7 +3576,7 @@ int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
                 while (keyPool.size() < (accountTargetSize + 1))
                 {
                     if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), accountPair.first, keyChain ) ) )
-                        throw runtime_error(std::string(__func__) + ": writing generated key failed");
+                        throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
                     keyPool.insert(nIndex);
                     LogPrintf("keypool [%s:%s] added key %d, size=%u\n", accountPair.second->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
                     
@@ -3610,9 +3612,9 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         nIndex = *(keyPool.begin());
         keyPool.erase(keyPool.begin());
         if (!walletdb.ReadPool(nIndex, keypoolentry))
-            throw runtime_error(std::string(__func__) + ": read failed");
+            throw std::runtime_error(std::string(__func__) + ": read failed");
         if (!forAccount->HaveKey(keypoolentry.vchPubKey.GetID()))
-            throw runtime_error(std::string(__func__) + ": unknown key in key pool");
+            throw std::runtime_error(std::string(__func__) + ": unknown key in key pool");
         assert(keypoolentry.vchPubKey.IsValid());
         LogPrintf("keypool reserve %d\n", nIndex);
     }
@@ -3766,7 +3768,7 @@ int64_t CWallet::GetOldestKeyPoolTime()
             {
                 int64_t nIndex = *(keyPool.begin());
                 if (!walletdb.ReadPool(nIndex, keypoolentry))
-                throw runtime_error(std::string(__func__) + ": read oldest key in keypool failed");
+                throw std::runtime_error(std::string(__func__) + ": read oldest key in keypool failed");
                 assert(keypoolentry.vchPubKey.IsValid());
                 nTime = std::min(nTime, keypoolentry.nTime);
             }
@@ -3777,7 +3779,7 @@ int64_t CWallet::GetOldestKeyPoolTime()
 
 std::map<CTxDestination, CAmount> CWallet::GetAddressBalances()
 {
-    map<CTxDestination, CAmount> balances;
+    std::map<CTxDestination, CAmount> balances;
 
     {
         LOCK(cs_wallet);
@@ -3815,11 +3817,11 @@ std::map<CTxDestination, CAmount> CWallet::GetAddressBalances()
     return balances;
 }
 
-set< set<CTxDestination> > CWallet::GetAddressGroupings()
+std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
 {
     AssertLockHeld(cs_wallet); // mapWallet
-    set< set<CTxDestination> > groupings;
-    set<CTxDestination> grouping;
+    std::set< std::set<CTxDestination> > groupings;
+    std::set<CTxDestination> grouping;
 
     BOOST_FOREACH(PAIRTYPE(uint256, CWalletTx) walletEntry, mapWallet)
     {
@@ -3872,20 +3874,20 @@ set< set<CTxDestination> > CWallet::GetAddressGroupings()
             }
     }
 
-    set< set<CTxDestination>* > uniqueGroupings; // a set of pointers to groups of addresses
-    map< CTxDestination, set<CTxDestination>* > setmap;  // map addresses to the unique group containing it
-    BOOST_FOREACH(set<CTxDestination> _grouping, groupings)
+    std::set< std::set<CTxDestination>* > uniqueGroupings; // a set of pointers to groups of addresses
+    std::map< CTxDestination, std::set<CTxDestination>* > setmap;  // map addresses to the unique group containing it
+    BOOST_FOREACH(std::set<CTxDestination> _grouping, groupings)
     {
         // make a set of all the groups hit by this new group
-        set< set<CTxDestination>* > hits;
-        map< CTxDestination, set<CTxDestination>* >::iterator it;
+        std::set< std::set<CTxDestination>* > hits;
+        std::map< CTxDestination, std::set<CTxDestination>* >::iterator it;
         BOOST_FOREACH(CTxDestination address, _grouping)
             if ((it = setmap.find(address)) != setmap.end())
                 hits.insert((*it).second);
 
         // merge all hit groups into a new single group and delete old groups
-        set<CTxDestination>* merged = new set<CTxDestination>(_grouping);
-        BOOST_FOREACH(set<CTxDestination>* hit, hits)
+        std::set<CTxDestination>* merged = new std::set<CTxDestination>(_grouping);
+        BOOST_FOREACH(std::set<CTxDestination>* hit, hits)
         {
             merged->insert(hit->begin(), hit->end());
             uniqueGroupings.erase(hit);
@@ -3898,8 +3900,8 @@ set< set<CTxDestination> > CWallet::GetAddressGroupings()
             setmap[element] = merged;
     }
 
-    set< set<CTxDestination> > ret;
-    BOOST_FOREACH(set<CTxDestination>* uniqueGrouping, uniqueGroupings)
+    std::set< std::set<CTxDestination> > ret;
+    BOOST_FOREACH(std::set<CTxDestination>* uniqueGrouping, uniqueGroupings)
     {
         ret.insert(*uniqueGrouping);
         delete uniqueGrouping;
@@ -3923,7 +3925,7 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
         LOCK2(cs_main, cs_wallet);
     
         // Tally wallet transactions
-        for (map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx& wtx = (*it).second;
             if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || wtx.GetDepthInMainChain() < 0)
@@ -3965,11 +3967,11 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
 std::set<CTxDestination> CWallet::GetAccountAddresses(const std::string& strAccount) const
 {
     LOCK(cs_wallet);
-    set<CTxDestination> result;
+    std::set<CTxDestination> result;
     BOOST_FOREACH(const PAIRTYPE(std::string, CAddressBookData)& item, mapAddressBook)
     {
         const std::string& address = item.first;
-        const string& strName = item.second.name;
+        const std::string& strName = item.second.name;
         if (strName == strAccount)
             result.insert(CBitcoinAddress(address).Get());
     }
@@ -4009,7 +4011,7 @@ void CReserveKey::ReturnKey()
     vchPubKey = CPubKey();
 }
 
-void CWallet::GetAllReserveKeys(set<CKeyID>& setAddress) const
+void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 {
     setAddress.clear();
 
@@ -4025,11 +4027,11 @@ void CWallet::GetAllReserveKeys(set<CKeyID>& setAddress) const
             {
                 CKeyPool keypoolentry;
                 if (!walletdb.ReadPool(id, keypoolentry))
-                throw runtime_error(std::string(__func__) + ": read failed");
+                throw std::runtime_error(std::string(__func__) + ": read failed");
                 assert(keypoolentry.vchPubKey.IsValid());
                 CKeyID keyID = keypoolentry.vchPubKey.GetID();
                 if (!HaveKey(keyID))
-                    throw runtime_error(std::string(__func__) + ": unknown key in key pool");
+                    throw std::runtime_error(std::string(__func__) + ": unknown key in key pool");
                 setAddress.insert(keyID);
             }
         }
@@ -4041,7 +4043,7 @@ void CWallet::UpdatedTransaction(const uint256 &hashTx)
     {
         LOCK(cs_wallet);
         // Only notify UI if this transaction is in this wallet
-        map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(hashTx);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(hashTx);
         if (mi != mapWallet.end())
             NotifyTransactionChanged(this, hashTx, CT_UPDATED);
     }
@@ -4390,7 +4392,7 @@ void CWallet::deleteAccount(CAccount* account)
         mapAccountLabels[account->getUUID()] = newLabel;
         if (!db.WriteAccount(account->getUUID(), account))
         {
-            throw runtime_error("Writing account failed");
+            throw std::runtime_error("Writing account failed");
         }
     }
     NotifyAccountDeleted(this, account);
@@ -4404,7 +4406,7 @@ void CWallet::addAccount(CAccount* account, const std::string& newName)
         CWalletDB walletdb(strWalletFile);
         if (!walletdb.WriteAccount(account->getUUID(), account))
         {
-            throw runtime_error("Writing account failed");
+            throw std::runtime_error("Writing account failed");
         }
         mapAccounts[account->getUUID()] = account;
         changeAccountName(account, newName, false);
@@ -4504,7 +4506,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             walletInstance->activeSeed = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
             if (!CWalletDB(walletFile).WriteHDSeed(*walletInstance->activeSeed))
             {
-                throw runtime_error("Writing seed failed");
+                throw std::runtime_error("Writing seed failed");
             }
             walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
             walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountType::Normal, AccountSubType::Desktop);
@@ -4516,12 +4518,12 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 CHDSeed* seedBip32 = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
                 if (!CWalletDB(walletFile).WriteHDSeed(*seedBip32))
                 {
-                    throw runtime_error("Writing bip32 seed failed");
+                    throw std::runtime_error("Writing bip32 seed failed");
                 }
                 CHDSeed* seedBip32Legacy = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
                 if (!CWalletDB(walletFile).WriteHDSeed(*seedBip32Legacy))
                 {
-                    throw runtime_error("Writing bip32 legacy seed failed");
+                    throw std::runtime_error("Writing bip32 legacy seed failed");
                 }
                 walletInstance->mapSeeds[seedBip32->getUUID()] = seedBip32;
                 walletInstance->mapSeeds[seedBip32Legacy->getUUID()] = seedBip32Legacy;
@@ -4577,7 +4579,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             {
                 if (IsArgSet("-usehd"))
                 {
-                    throw runtime_error("Must specify -usehd=1 or -usehd=0, in order to allow or refuse HD upgrade.");
+                    throw std::runtime_error("Must specify -usehd=1 or -usehd=0, in order to allow or refuse HD upgrade.");
                 }
             }
         }
@@ -4608,7 +4610,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                         walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
                         if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
                         {
-                            throw runtime_error("Writing legacy account failed");
+                            throw std::runtime_error("Writing legacy account failed");
                         }
                         if (walletWasCrypted && !walletInstance->activeAccount->internalKeyStore.IsCrypted())
                         {
@@ -4624,13 +4626,13 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     walletInstance->activeSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), CHDSeed::CHDSeed::BIP44);
                     if (!CWalletDB(walletFile).WriteHDSeed(*walletInstance->activeSeed))
                     {
-                        throw runtime_error("Writing seed failed");
+                        throw std::runtime_error("Writing seed failed");
                     }
                     if (walletWasCrypted)
                     {
                         if (!walletInstance->activeSeed->Encrypt(walletInstance->activeAccount->vMasterKey))
                         {
-                            throw runtime_error("Encrypting seed failed");
+                            throw std::runtime_error("Encrypting seed failed");
                         }
                     }
                     walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
@@ -4670,7 +4672,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
                     if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
                     {
-                        throw runtime_error("Writing legacy account failed");
+                        throw std::runtime_error("Writing legacy account failed");
                     }
                     if (walletWasCrypted && !walletInstance->activeAccount->internalKeyStore.IsCrypted())
                     {
@@ -4962,7 +4964,7 @@ CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
-        throw runtime_error("Generating seed requires unlocked wallet");
+        throw std::runtime_error("Generating seed requires unlocked wallet");
     }
     
     std::vector<unsigned char> entropy(16);
@@ -4970,13 +4972,13 @@ CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), seedType);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
     {
-        throw runtime_error("Writing seed failed");
+        throw std::runtime_error("Writing seed failed");
     }
     if (IsCrypted())
     {
         if (!newSeed->Encrypt(activeAccount->vMasterKey))
         {
-            throw runtime_error("Encrypting seed failed");
+            throw std::runtime_error("Encrypting seed failed");
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
@@ -4989,7 +4991,7 @@ void CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
     mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
     if (!CWalletDB(strWalletFile).DeleteHDSeed(*deleteSeed))
     {
-        throw runtime_error("Deleting seed failed");
+        throw std::runtime_error("Deleting seed failed");
     }
     
     //fixme: purge accounts completely if empty?
@@ -5017,7 +5019,7 @@ CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
-        throw runtime_error("Generating seed requires unlocked wallet");
+        throw std::runtime_error("Generating seed requires unlocked wallet");
     }
     
     CExtPubKey pubkey;
@@ -5029,24 +5031,24 @@ CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     }
     catch(...)
     {
-        throw runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid Gulden extended public key");
     }
     
     if (!pubkey.pubkey.IsValid())
     {
-        throw runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid Gulden extended public key");
     }
 
     CHDSeed* newSeed = new CHDSeed(pubkey, CHDSeed::CHDSeed::BIP44NoHardening);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
     {
-        throw runtime_error("Writing seed failed");
+        throw std::runtime_error("Writing seed failed");
     }
     if (IsCrypted())
     {
         if (!newSeed->Encrypt(activeAccount->vMasterKey))
         {
-            throw runtime_error("Encrypting seed failed");
+            throw std::runtime_error("Encrypting seed failed");
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
@@ -5058,12 +5060,12 @@ CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
-        throw runtime_error("Generating seed requires unlocked wallet");
+        throw std::runtime_error("Generating seed requires unlocked wallet");
     }
     
     if (!checkMnemonic(mnemonic))
     {
-        throw runtime_error("Not a valid Gulden mnemonic");
+        throw std::runtime_error("Not a valid Gulden mnemonic");
     }
         
     std::vector<unsigned char> entropy(16);
@@ -5071,13 +5073,13 @@ CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic)
     CHDSeed* newSeed = new CHDSeed(mnemonic, CHDSeed::CHDSeed::BIP44);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
     {
-        throw runtime_error("Writing seed failed");
+        throw std::runtime_error("Writing seed failed");
     }
     if (IsCrypted())
     {
         if (!newSeed->Encrypt(activeAccount->vMasterKey))
         {
-            throw runtime_error("Encrypting seed failed");
+            throw std::runtime_error("Encrypting seed failed");
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
@@ -5143,7 +5145,7 @@ int CMerkleTx::GetBlocksToMaturity() const
 {
     if (!IsCoinBase())
         return 0;
-    return max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
+    return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
 }
 
 
