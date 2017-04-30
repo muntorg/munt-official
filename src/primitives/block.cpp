@@ -57,9 +57,9 @@ int64_t GetBlockWeight(const CBlock& block)
 
 uint256 CBlock::GetPoWHash() const
 {
-    // This implements the weight = (stripped_size * 4) + witness_size formula,
+    //if (!cachedPOWHash.IsNull())
         //return cachedPOWHash;
-    
+
     arith_uint256 thash;
     //fixme: (FUT) (1.6.1) - put testnet on city hash.
     if (GetBoolArg("-testnetaccel", false))
