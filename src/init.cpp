@@ -458,8 +458,7 @@ std::string HelpMessage(HelpMessageMode mode)
     }
     strUsage += HelpMessageOpt("-debug=<category>", strprintf(_("Output debugging information (default: %u, supplying <category> is optional)"), 0) + ". " +
         _("If <category> is not supplied or if <category> = 1, output all debugging information.") + " " + _("<category> can be:") + " " + ListLogCategories() + ".");
-    if (showDebug)
-        strUsage += HelpMessageOpt("-nodebug", "Turn off debugging messages, same as -debug=0");
+    strUsage += HelpMessageOpt("-debugexclude=<category>", strprintf(_("Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.")));
     strUsage += HelpMessageOpt("-gen", strprintf(_("Generate coins (default: %u)"), DEFAULT_GENERATE));
     strUsage += HelpMessageOpt("-genproclimit=<n>", strprintf(_("Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)"), DEFAULT_GENERATE_THREADS));
     strUsage += HelpMessageOpt("-help-debug", _("Show all debugging options (usage: --help -help-debug)"));
@@ -920,19 +919,32 @@ bool AppInitParameterInteraction()
         InitWarning(strprintf(_("Reducing -maxconnections from %d to %d, because of system limitations."), nUserMaxConnections, nMaxConnections));
 
     // ********************************************************* Step 3: parameter-to-internal-flags
-
     if (mapMultiArgs.count("-debug") > 0) {
         // Special-case: if -debug=0/-nodebug is set, turn off debugging messages
         const std::vector<std::string>& categories = mapMultiArgs.at("-debug");
 
-        if (!(GetBoolArg("-nodebug", false) || find(categories.begin(), categories.end(), std::string("0")) != categories.end())) {
+        if (find(categories.begin(), categories.end(), std::string("0")) == categories.end()) {
             for (const auto& cat : categories) {
-                uint32_t flag;
+                uint32_t flag = 0;
                 if (!GetLogCategory(&flag, &cat)) {
-                    InitWarning(strprintf(_("Unsupported logging category %s.\n"), cat));
+                    InitWarning(strprintf(_("Unsupported logging category %s=%s."), "-debug", cat));
+                    continue;
                 }
                 logCategories |= flag;
             }
+        }
+    }
+
+    // Now remove the logging categories which were explicitly excluded
+    if (mapMultiArgs.count("-debugexclude") > 0) {
+        const std::vector<std::string>& excludedCategories = mapMultiArgs.at("-debugexclude");
+        for (const auto& cat : excludedCategories) {
+            uint32_t flag = 0;
+            if (!GetLogCategory(&flag, &cat)) {
+                InitWarning(strprintf(_("Unsupported logging category %s=%s."), "-debugexclude", cat));
+                continue;
+            }
+            logCategories &= ~flag;
         }
     }
 
@@ -1201,7 +1213,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 #ifndef WIN32
     CreatePidFile(GetPidFile(), getpid());
 #endif
-    if (GetBoolArg("-shrinkdebugfile", logCategories != BCLog::NONE)) {
+    if (GetBoolArg("-shrinkdebugfile", logCategories == BCLog::NONE)) {
         // Do this first since it both loads a bunch of debug.log into memory,
         // and because this needs to happen before any other debug.log printing
         ShrinkDebugFile();
