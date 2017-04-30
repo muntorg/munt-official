@@ -14,6 +14,7 @@
 
 #include "alert.h"
 #include "arith_uint256.h"
+#include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
 #include "Gulden/auto_checkpoints.h"
@@ -94,7 +95,8 @@ uint256 hashAssumeValid;
 CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 
-CTxMemPool mempool;
+CBlockPolicyEstimator feeEstimator;
+CTxMemPool mempool(&feeEstimator);
 
 static void CheckBlockIndex(const Consensus::Params& consensusParams);
 

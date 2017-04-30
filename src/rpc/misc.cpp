@@ -11,6 +11,7 @@
 // file COPYING
 
 #include "base58.h"
+#include "chain.h"
 #include "clientversion.h"
 #include "init.h"
 #include "validation.h"
