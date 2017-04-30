@@ -76,8 +76,6 @@ public:
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
-    // Only used by testnets.
-    virtual void ParseCommandLine(){};
 protected:
     CChainParams() {}
 

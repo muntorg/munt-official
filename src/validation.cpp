@@ -1428,7 +1428,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
         // Helps prevent CPU exhaustion attacks.
 
         // Skip script verification when connecting blocks under the
-        // assumedvalid block. Assuming the assumedvalid block is valid this
+        // assumevalid block. Assuming the assumevalid block is valid this
         // is safe because block merkle hashes are still computed and checked,
         // Of course, if an assumed valid block is invalid due to false scriptSigs
         // this optimization would allow an invalid chain to be accepted.
@@ -1773,7 +1773,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                 pindexBestHeader->GetAncestor(pindex->nHeight) == pindex &&
                 pindexBestHeader->nChainWork >= UintToArith256(chainparams.GetConsensus().nMinimumChainWork)) {
                 // This block is a member of the assumed verified chain and an ancestor of the best header.
-                // The equivalent time check discourages hashpower from extorting the network via DOS attack
+                // The equivalent time check discourages hash power from extorting the network via DOS attack
                 //  into accepting an invalid block through telling users they must manually set assumevalid.
                 //  Requiring a software change or burying the invalid block, regardless of the setting, makes
                 //  it hard to hide the implication of the demand.  This also avoids having release candidates
@@ -1803,6 +1803,11 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // initial block download.
     //Gulden: BIP30 always true for us.
     bool fEnforceBIP30 = true;
+/*
+    bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
+                          !((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
+                           (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
+*/
 
     // Once BIP34 activated it was not possible to create new duplicate coinbases and thus other than starting
     // with the 2 existing duplicate coinbase pairs, not possible to create overwriting txs.  But by the
@@ -2487,12 +2492,12 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         bool fInitialDownload;
         {
             LOCK(cs_main);
-            { // TODO: Tempoarily ensure that mempool removals are notified before
+            { // TODO: Temporarily ensure that mempool removals are notified before
               // connected transactions.  This shouldn't matter, but the abandoned
               // state of transactions in our wallet is currently cleared when we
               // receive another notification and there is a race condition where
               // notification of a connected conflict might cause an outside process
-              // to abandon a transaction and then have it inadvertantly cleared by
+              // to abandon a transaction and then have it inadvertently cleared by
               // the notification that the conflicted transaction was evicted.
             MemPoolConflictRemovalTracker mrt(mempool);
             CBlockIndex *pindexOldTip = chainActive.Tip();
@@ -3129,7 +3134,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         assert(pindexPrev);
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
-            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, FormatStateMessage(state));
+            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
         if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
@@ -3247,13 +3252,19 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
 bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock)
 {
     {
-        LOCK(cs_main);
-
-        // Store to disk
         CBlockIndex *pindex = NULL;
         if (fNewBlock) *fNewBlock = false;
         CValidationState state;
-        bool ret = AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, NULL, fNewBlock);
+        // Ensure that CheckBlock() passes before calling AcceptBlock, as
+        // belt-and-suspenders.
+        bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus());
+
+        LOCK(cs_main);
+
+        if (ret) {
+            // Store to disk
+            ret = AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, NULL, fNewBlock);
+        }
         CheckBlockIndex(chainparams.GetConsensus());
         if (!ret) {
             GetMainSignals().BlockChecked(*pblock, state);
@@ -3859,8 +3870,6 @@ bool InitBlockIndex(const CChainParams& chainparams)
     if (chainActive.Genesis() != NULL)
         return true;
 
-    LogPrintf("Wrote sync checkpoint...\n");
-
     // Use the provided setting for -txindex in the new database
     fTxIndex = GetBoolArg("-txindex", DEFAULT_TXINDEX);
     pblocktree->WriteFlag("txindex", fTxIndex);
@@ -3895,7 +3904,8 @@ bool InitBlockIndex(const CChainParams& chainparams)
                 if (!Checkpoints::ResetSyncCheckpoint(chainparams))
                     return error("LoadBlockIndex() : failed to reset sync-checkpoint");
             }
- 
+    LogPrintf("Wrote sync checkpoint...\n");
+
             // Force a chainstate write so that when we VerifyDB in a moment, it doesn't check stale data
             return FlushStateToDisk(state, FLUSH_STATE_ALWAYS);
         } catch (const std::runtime_error& e) {
@@ -4211,7 +4221,6 @@ std::string CBlockFileInfo::ToString() const
 {
     return strprintf("CBlockFileInfo(blocks=%u, size=%u, heights=%u...%u, time=%s...%s)", nBlocks, nSize, nHeightFirst, nHeightLast, DateTimeStrFormat("%Y-%m-%d", nTimeFirst), DateTimeStrFormat("%Y-%m-%d", nTimeLast));
 }
-
 
 CBlockFileInfo* GetBlockFileInfo(size_t n)
 {

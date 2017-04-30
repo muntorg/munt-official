@@ -50,7 +50,7 @@ protected:
 struct CMainSignals {
     /** Notifies listeners of updated block chain tip */
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
-    /** A posInBlock value for SyncTransaction calls for tranactions not
+    /** A posInBlock value for SyncTransaction calls for transactions not
      * included in connected blocks such as transactions removed from mempool,
      * accepted to mempool or appearing in disconnected blocks.*/
     static const int SYNC_TRANSACTION_NOT_IN_BLOCK = -1;
@@ -69,7 +69,12 @@ struct CMainSignals {
     boost::signals2::signal<void (const uint256 &)> Inventory;
     /** Tells listeners to broadcast their data. */
     boost::signals2::signal<void (int64_t nBestBlockTime, CConnman* connman)> Broadcast;
-    /** Notifies listeners of a block validation result */
+    /**
+     * Notifies listeners of a block validation result.
+     * If the provided CValidationState IsValid, the provided block
+     * is guaranteed to be the current best block at the time the
+     * callback was generated (not necessarily now)
+     */
     boost::signals2::signal<void (const CBlock&, const CValidationState&)> BlockChecked;
     /** Notifies listeners that a key for mining is required (coinbase) */
     boost::signals2::signal<void (boost::shared_ptr<CReserveScript>&)> ScriptForMining;

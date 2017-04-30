@@ -179,7 +179,13 @@ bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
     nWalletDBUpdateCounter++;
     return Write(std::string("orderposnext"), nOrderPosNext);
 }
-
+/*GULDEN - no default key (accounts)
+bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
+{
+    nWalletDBUpdateCounter++;
+    return Write(std::string("defaultkey"), vchPubKey);
+}
+*/
 bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 {
     return Read(std::make_pair(std::string("pool"), nPool), keypool);

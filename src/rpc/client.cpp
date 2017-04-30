@@ -29,7 +29,7 @@ public:
 };
 
 /**
- * Specifiy a (method, idx, name) here if the argument is a non-string RPC
+ * Specify a (method, idx, name) here if the argument is a non-string RPC
  * argument and needs to be converted from JSON.
  *
  * @note Parameter indexes start from 0.
@@ -39,8 +39,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setmocktime", 0, "timestamp" },
     { "generate", 0, "nblocks" },
     { "generate", 1, "maxtries" },
-    { "setgenerate", 0, "generate" },
-    { "setgenerate", 1, "genproclimit" },
     { "generatetoaddress", 0, "nblocks" },
     { "generatetoaddress", 2, "maxtries" },
     { "getnetworkhashps", 0, "nblocks" },
@@ -48,18 +46,12 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendtoaddress", 1, "amount" },
     { "sendtoaddress", 4, "subtractfeefromamount" },
     { "settxfee", 0, "amount" },
-    { "sethashlimit", 0, "limit" },
-    { "dumpdiffarray", 0, "height" },
-    { "dumpblockgaps", 0, "startheight" },
-    { "dumpblockgaps", 1, "count" },
     { "getreceivedbyaddress", 1, "minconf" },
     { "getreceivedbyaccount", 1, "minconf" },
     { "listreceivedbyaddress", 0, "minconf" },
     { "listreceivedbyaddress", 1, "include_empty" },
     { "listreceivedbyaddress", 2, "include_watchonly" },
     { "listreceivedbyaccount", 0, "minconf" },
-    { "sendtoaddressfromaccount", 2, "amount" },
-    { "sendtoaddressfromaccount", 5, "subtractfeefromamount" },
     { "listreceivedbyaccount", 1, "include_empty" },
     { "listreceivedbyaccount", 2, "include_watchonly" },
     { "getbalance", 1, "minconf" },
@@ -139,7 +131,15 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "echojson", 7, "arg7" },
     { "echojson", 8, "arg8" },
     { "echojson", 9, "arg9" },
+    { "setgenerate", 0, "generate" },
+    { "setgenerate", 1, "genproclimit" },
     { "importseed", 1, "read only" },
+    { "sethashlimit", 0, "limit" },
+    { "dumpdiffarray", 0, "height" },
+    { "dumpblockgaps", 0, "startheight" },
+    { "dumpblockgaps", 1, "count" },
+    { "sendtoaddressfromaccount", 2, "amount" },
+    { "sendtoaddressfromaccount", 5, "subtractfeefromamount" },
 };
 
 class CRPCConvertTable

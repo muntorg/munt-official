@@ -2,13 +2,6 @@
 // Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-//
-// File contains modifications by: The Gulden developers
-// All modifications:
-// Copyright (c) 2016-2017 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
-// Distributed under the GULDEN software license, see the accompanying
-// file COPYING
 
 #ifndef BITCOIN_TXMEMPOOL_H
 #define BITCOIN_TXMEMPOOL_H
@@ -559,12 +552,12 @@ public:
      *  new mempool entries may have children in the mempool (which is generally
      *  not the case when otherwise adding transactions).
      *  UpdateTransactionsFromBlock() will find child transactions and update the
-     *  descendant state for each transaction in hashesToUpdate (excluding any
-     *  child transactions present in hashesToUpdate, which are already accounted
-     *  for).  Note: hashesToUpdate should be the set of transactions from the
+     *  descendant state for each transaction in vHashesToUpdate (excluding any
+     *  child transactions present in vHashesToUpdate, which are already accounted
+     *  for).  Note: vHashesToUpdate should be the set of transactions from the
      *  disconnected block that have been accepted back into the mempool.
      */
-    void UpdateTransactionsFromBlock(const std::vector<uint256> &hashesToUpdate);
+    void UpdateTransactionsFromBlock(const std::vector<uint256> &vHashesToUpdate);
 
     /** Try to calculate all in-mempool ancestors of entry.
      *  (these are all calculated including the tx itself)

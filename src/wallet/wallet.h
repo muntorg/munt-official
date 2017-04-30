@@ -934,7 +934,9 @@ public:
     std::map<uint256, int> mapRequestCount;
 
     std::map<std::string, CAddressBookData> mapAddressBook;
-
+/* GULDEN - no default key (accounts)
+    CPubKey vchDefaultKey;
+*/
 
     std::set<COutPoint> setLockedCoins;
 
@@ -1160,10 +1162,15 @@ public:
         LOCK(cs_wallet);
         mapRequestCount[hash] = 0;
     };
-    
-    
+/*GULDEN - we don't use these (accounts)
+    unsigned int GetKeyPoolSize()
+    {
+        AssertLockHeld(cs_wallet); // setKeyPool
+        return setKeyPool.size();
+    }
 
-
+    bool SetDefaultKey(const CPubKey &vchPubKey);
+*/
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
     bool SetMinVersion(enum WalletFeature, CWalletDB* pwalletdbIn = NULL, bool fExplicit = false);
 
@@ -1308,11 +1315,13 @@ public:
     void KeepScript() { KeepKey(); }
 };
 
+
 /** 
  * Account information.
  * Stored in wallet with key "acc"+string account name.
  */
-/*class CAccount
+/* Gulden - we don't use this as we have our own real account system.
+class CAccount
 {
 public:
     CPubKey vchPubKey;
@@ -1336,7 +1345,8 @@ public:
             READWRITE(nVersion);
         READWRITE(vchPubKey);
     }
-};*/
+};
+*/
 // Helper for producing a bunch of max-sized low-S signatures (eg 72 bytes)
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.
@@ -1363,4 +1373,3 @@ bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins
     return true;
 }
 #endif // BITCOIN_WALLET_WALLET_H
-

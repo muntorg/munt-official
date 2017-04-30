@@ -177,7 +177,7 @@ bool AppInit(int argc, char* argv[])
             return false;
 #endif // HAVE_DECL_DAEMON
         }
-        
+
         fRet = AppInitMain(threadGroup, scheduler);
         fNoUI = true;
 

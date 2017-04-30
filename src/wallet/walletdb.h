@@ -40,6 +40,19 @@ class CWalletTx;
 class uint160;
 class uint256;
 
+/** Error statuses for the wallet database */
+//fixme: (GULDEN) check if this is still necesary or if we can fix this
+/* Gulden - we rather have these in dberrors.h due to a linking issue
+enum DBErrors
+{
+    DB_LOAD_OK,
+    DB_CORRUPT,
+    DB_NONCRITICAL_ERROR,
+    DB_TOO_NEW,
+    DB_LOAD_FAIL,
+    DB_NEED_REWRITE
+};
+*/
 
 /* simple HD chain data model */
 class CHDChain
@@ -146,7 +159,9 @@ public:
     bool ReadBestBlock(CBlockLocator& locator);
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
-
+/* GULDEN - no default key (accounts)
+    bool WriteDefaultKey(const CPubKey& vchPubKey);
+*/
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
     bool ErasePool(CWallet* pwallet, int64_t nPool);

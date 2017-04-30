@@ -108,7 +108,7 @@ void CTxMemPool::UpdateForDescendants(txiter updateIt, cacheMap &cachedDescendan
 
 // vHashesToUpdate is the set of transaction hashes from a disconnected block
 // which has been re-added to the mempool.
-// for each entry, look for descendants that are outside hashesToUpdate, and
+// for each entry, look for descendants that are outside vHashesToUpdate, and
 // add fee/size information for such descendants to the parent.
 // for each such descendant, also update the ancestor state to include the parent.
 void CTxMemPool::UpdateTransactionsFromBlock(const std::vector<uint256> &vHashesToUpdate)
@@ -380,7 +380,7 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
 {
     NotifyEntryAdded(entry.GetSharedTx());
     // Add to memory pool without checking anything.
-    // Used by main.cpp AcceptToMemoryPool(), which DOES do
+    // Used by AcceptToMemoryPool(), which DOES do
     // all the appropriate checks.
     LOCK(cs);
     indexed_transaction_set::iterator newit = mapTx.insert(entry).first;
