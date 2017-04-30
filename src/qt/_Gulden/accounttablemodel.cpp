@@ -40,10 +40,7 @@ int AccountTableModel::columnCount(const QModelIndex & parent) const
 }
 
 QVariant AccountTableModel::data(const QModelIndex& index, int role) const
-{
-    if (fDebug)
-        LogPrintf("AccountTableModel::data\n");
-    
+{    
     if (!m_wallet)
         return QVariant();
     
