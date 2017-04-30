@@ -229,10 +229,10 @@ const uint256 CMerkleTx::ABANDON_HASH(uint256S("00000000000000000000000000000000
 
 struct CompareValueOnly
 {
-    bool operator()(const std::pair<CAmount, std::pair<const CWalletTx*, unsigned int> >& t1,
-                    const std::pair<CAmount, std::pair<const CWalletTx*, unsigned int> >& t2) const
+    bool operator()(const CInputCoin& t1,
+                    const CInputCoin& t2) const
     {
-        return t1.first < t2.first;
+        return t1.txout.nValue < t2.txout.nValue;
     }
 };
 
@@ -1484,9 +1484,9 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
 /**
  * Add a transaction to the wallet, or update it.  pIndex and posInBlock should
  * be set when the transaction was known to be included in a block.  When
- * posInBlock = SYNC_TRANSACTION_NOT_IN_BLOCK (-1) , then wallet state is not
- * updated in AddToWallet, but notifications happen and cached balances are
- * marked dirty.
+ * pIndex == NULL, then wallet state is not updated in AddToWallet, but
+ * notifications happen and cached balances are marked dirty.
+ *
  * If fUpdate is true, existing transactions will be updated.
  * TODO: One exception to this is that the abandoned state is cleared under the
  * assumption that any further notification of a transaction that was considered
@@ -1500,7 +1500,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
     {
         AssertLockHeld(cs_wallet);
 
-        if (posInBlock != -1) {
+        if (pIndex != NULL) {
             BOOST_FOREACH(const CTxIn& txin, tx.vin) {
                 std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.prevout);
                 while (range.first != range.second) {
@@ -1520,7 +1520,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             CWalletTx wtx(this, ptx);
 
             // Get merkle branch if transaction was found in a block
-            if (posInBlock != -1)
+            if (pIndex != NULL)
                 wtx.SetMerkleBranch(pIndex, posInBlock);
 
             return AddToWallet(wtx, false);
@@ -1662,10 +1662,10 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
     }
 }
 
-void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pindexBlockConnected, int posInBlock) {
+void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pindex, int posInBlock) {
     const CTransaction& tx = *ptx;
     
-    if (!AddToWalletIfInvolvingMe(ptx, pindexBlockConnected, posInBlock, true))
+    if (!AddToWalletIfInvolvingMe(ptx, pindex, posInBlock, true))
         return; // Not one of ours
 
     // If a transaction changes 'conflicted' state, that changes the balance
@@ -1680,7 +1680,7 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pin
 
 void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
     LOCK2(cs_main, cs_wallet);
-    SyncTransaction(ptx, NULL, -1);
+    SyncTransaction(ptx);
 }
 
 void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) {
@@ -1694,18 +1694,45 @@ void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const 
     // the notification that the conflicted transaction was evicted.
 
     for (const CTransactionRef& ptx : vtxConflicted) {
-        SyncTransaction(ptx, NULL, -1);
+        SyncTransaction(ptx);
     }
     for (size_t i = 0; i < pblock->vtx.size(); i++) {
         SyncTransaction(pblock->vtx[i], pindex, i);
     }
+
+    // The GUI expects a NotifyTransactionChanged when a coinbase tx
+    // which is in our wallet moves from in-the-best-block to
+    // 2-confirmations (as it only displays them at that time).
+    // We do that here.
+    if (hashPrevBestCoinbase.IsNull()) {
+        // Immediately after restart we have no idea what the coinbase
+        // transaction from the previous block is.
+        // For correctness we scan over the entire wallet, looking for
+        // the previous block's coinbase, just in case it is ours, so
+        // that we can notify the UI that it should now be displayed.
+        if (pindex->pprev) {
+            for (const std::pair<uint256, CWalletTx>& p : mapWallet) {
+                if (p.second.IsCoinBase() && p.second.hashBlock == pindex->pprev->GetBlockHash()) {
+                    NotifyTransactionChanged(this, p.first, CT_UPDATED);
+                    break;
+                }
+            }
+        }
+    } else {
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(hashPrevBestCoinbase);
+        if (mi != mapWallet.end()) {
+            NotifyTransactionChanged(this, hashPrevBestCoinbase, CT_UPDATED);
+        }
+    }
+
+    hashPrevBestCoinbase = pblock->vtx[0]->GetHash();
 }
 
 void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
     LOCK2(cs_main, cs_wallet);
 
     for (const CTransactionRef& ptx : pblock->vtx) {
-        SyncTransaction(ptx, NULL, -1);
+        SyncTransaction(ptx);
     }
 }
 
@@ -2087,6 +2114,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
     CBlockIndex* pindex = pindexStart;
     {
         LOCK2(cs_main, cs_wallet);
+        fAbortRescan = false;
+        fScanningWallet = true;
 
         // no need to read and scan block, if block was created before
         // our wallet birthday (as adjusted for block time variability)
@@ -2096,7 +2125,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         ShowProgress(_("Rescanning..."), 0); // show rescan progress in GUI as dialog or on splashscreen, if -rescan on startup
         double dProgressStart = GuessVerificationProgress(chainParams.TxData(), pindex);
         double dProgressTip = GuessVerificationProgress(chainParams.TxData(), chainActive.Tip());
-        while (pindex)
+        while (pindex && !fAbortRescan)
         {
             // Temporarily release lock to allow shadow key allocation a chance to do it's thing
             LEAVE_CRITICAL_SECTION(cs_main)
@@ -2128,7 +2157,12 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
                 LogPrintf("Still rescanning. At block %d. Progress=%f\n", pindex->nHeight, GuessVerificationProgress(chainParams.TxData(), pindex));
             }
         }
+        if (pindex && fAbortRescan) {
+            LogPrintf("Rescan aborted at block %d. Progress=%f\n", pindex->nHeight, GuessVerificationProgress(chainParams.TxData(), pindex));
+        }
         ShowProgress(_("Rescanning..."), 100); // hide progress dialog in GUI
+
+        fScanningWallet = false;
     }
     return ret;
 }
@@ -2659,7 +2693,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput>& vCoins,
     }
 }
 
-static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > >& vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
+static void ApproximateBestSubset(const std::vector<CInputCoin>& vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
                                   std::vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
 {
     std::vector<char> vfIncluded;
@@ -2686,7 +2720,7 @@ static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair
                 //the selection random.
                 if (nPass == 0 ? insecure_rand.rand32()&1 : !vfIncluded[i])
                 {
-                    nTotal += vValue[i].first;
+                    nTotal += vValue[i].txout.nValue;
                     vfIncluded[i] = true;
                     if (nTotal >= nTargetValue)
                     {
@@ -2696,7 +2730,7 @@ static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair
                             nBest = nTotal;
                             vfBest = vfIncluded;
                         }
-                        nTotal -= vValue[i].first;
+                        nTotal -= vValue[i].txout.nValue;
                         vfIncluded[i] = false;
                     }
                 }
@@ -2706,16 +2740,14 @@ static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair
 }
 
 bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const uint64_t nMaxAncestors, std::vector<COutput> vCoins,
-                                 std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet) const
+                                 std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
 {
     setCoinsRet.clear();
     nValueRet = 0;
 
     // List of values less than target
-    std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > coinLowestLarger;
-    coinLowestLarger.first = std::numeric_limits<CAmount>::max();
-    coinLowestLarger.second.first = NULL;
-    std::vector<std::pair<CAmount, std::pair<const CWalletTx*,unsigned int> > > vValue;
+    boost::optional<CInputCoin> coinLowestLarger;
+    std::vector<CInputCoin> vValue;
     CAmount nTotalLower = 0;
 
     random_shuffle(vCoins.begin(), vCoins.end(), GetRandInt);
@@ -2734,22 +2766,21 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
             continue;
 
         int i = output.i;
-        CAmount n = pcoin->tx->vout[i].nValue;
 
-        std::pair<CAmount,std::pair<const CWalletTx*,unsigned int> > coin = std::make_pair(n,std::make_pair(pcoin, i));
+        CInputCoin coin = CInputCoin(pcoin, i);
 
-        if (n == nTargetValue)
+        if (coin.txout.nValue == nTargetValue)
         {
-            setCoinsRet.insert(coin.second);
-            nValueRet += coin.first;
+            setCoinsRet.insert(coin);
+            nValueRet += coin.txout.nValue;
             return true;
         }
-        else if (n < nTargetValue + MIN_CHANGE)
+        else if (coin.txout.nValue < nTargetValue + MIN_CHANGE)
         {
             vValue.push_back(coin);
-            nTotalLower += n;
+            nTotalLower += coin.txout.nValue;
         }
-        else if (n < coinLowestLarger.first)
+        else if (!coinLowestLarger || coin.txout.nValue < coinLowestLarger->txout.nValue)
         {
             coinLowestLarger = coin;
         }
@@ -2759,18 +2790,18 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     {
         for (unsigned int i = 0; i < vValue.size(); ++i)
         {
-            setCoinsRet.insert(vValue[i].second);
-            nValueRet += vValue[i].first;
+            setCoinsRet.insert(vValue[i]);
+            nValueRet += vValue[i].txout.nValue;
         }
         return true;
     }
 
     if (nTotalLower < nTargetValue)
     {
-        if (coinLowestLarger.second.first == NULL)
+        if (!coinLowestLarger)
             return false;
-        setCoinsRet.insert(coinLowestLarger.second);
-        nValueRet += coinLowestLarger.first;
+        setCoinsRet.insert(coinLowestLarger.get());
+        nValueRet += coinLowestLarger->txout.nValue;
         return true;
     }
 
@@ -2786,25 +2817,25 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
 
     // If we have a bigger coin and (either the stochastic approximation didn't find a good solution,
     //                                   or the next bigger coin is closer), return the bigger coin
-    if (coinLowestLarger.second.first &&
-        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger.first <= nBest))
+    if (coinLowestLarger &&
+        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger->txout.nValue <= nBest))
     {
-        setCoinsRet.insert(coinLowestLarger.second);
-        nValueRet += coinLowestLarger.first;
+        setCoinsRet.insert(coinLowestLarger.get());
+        nValueRet += coinLowestLarger->txout.nValue;
     }
     else {
         for (unsigned int i = 0; i < vValue.size(); i++)
             if (vfBest[i])
             {
-                setCoinsRet.insert(vValue[i].second);
-                nValueRet += vValue[i].first;
+                setCoinsRet.insert(vValue[i]);
+                nValueRet += vValue[i].txout.nValue;
             }
 
         if (LogAcceptCategory(BCLog::SELECTCOINS)) {
             LogPrint(BCLog::SELECTCOINS, "SelectCoins() best subset: ");
             for (unsigned int i = 0; i < vValue.size(); i++) {
                 if (vfBest[i]) {
-                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(vValue[i].first));
+                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(vValue[i].txout.nValue));
                 }
             }
             LogPrint(BCLog::SELECTCOINS, "total %s\n", FormatMoney(nBest));
@@ -2814,7 +2845,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     return true;
 }
 
-bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl) const
+bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl) const
 {
     std::vector<COutput> vCoins(vAvailableCoins);
 
@@ -2826,13 +2857,13 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
             if (!out.fSpendable)
                  continue;
             nValueRet += out.tx->tx->vout[out.i].nValue;
-            setCoinsRet.insert(std::make_pair(out.tx, out.i));
+            setCoinsRet.insert(CInputCoin(out.tx, out.i));
         }
         return (nValueRet >= nTargetValue);
     }
 
     // calculate value from preset inputs and store them
-    std::set<std::pair<const CWalletTx*, uint32_t> > setPresetCoins;
+    std::set<CInputCoin> setPresetCoins;
     CAmount nValueFromPresetInputs = 0;
 
     std::vector<COutPoint> vPresetInputs;
@@ -2848,7 +2879,7 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
             if (pcoin->tx->vout.size() <= outpoint.n)
                 return false;
             nValueFromPresetInputs += pcoin->tx->vout[outpoint.n].nValue;
-            setPresetCoins.insert(std::make_pair(pcoin, outpoint.n));
+            setPresetCoins.insert(CInputCoin(pcoin, outpoint.n));
         } else
             return false; // TODO: Allow non-wallet inputs
     }
@@ -2856,7 +2887,7 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
     // remove preset inputs from vCoins
     for (std::vector<COutput>::iterator it = vCoins.begin(); it != vCoins.end() && coinControl && coinControl->HasSelected();)
     {
-        if (setPresetCoins.count(std::make_pair(it->tx, it->i)))
+        if (setPresetCoins.count(CInputCoin(it->tx, it->i)))
             it = vCoins.erase(it);
         else
             ++it;
@@ -3031,7 +3062,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
 
     {
-        std::set<std::pair<const CWalletTx*,unsigned int> > setCoins;
+        std::set<CInputCoin> setCoins;
         LOCK2(cs_main, cs_wallet);
         {
             std::vector<COutput> vAvailableCoins;
@@ -3191,7 +3222,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // behavior."
                 bool rbf = coinControl ? coinControl->signalRbf : fWalletRbf;
                 for (const auto& coin : setCoins)
-                    txNew.vin.push_back(CTxIn(coin.first->GetHash(),coin.second,CScript(),
+                    txNew.vin.push_back(CTxIn(coin.outpoint,CScript(),
                                               std::numeric_limits<unsigned int>::max() - (rbf ? 2 : 1)));
 
                 // Fill in dummy signatures for fee calculation.
@@ -3276,10 +3307,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             int nIn = 0;
             for (const auto& coin : setCoins)
             {
-                const CScript& scriptPubKey = coin.first->tx->vout[coin.second].scriptPubKey;
+                const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.first->tx->vout[coin.second].nValue, SIGHASH_ALL), scriptPubKey, sigdata))
+                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL), scriptPubKey, sigdata))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
@@ -4091,17 +4122,6 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
                 setAddress.insert(keyID);
             }
         }
-    }
-}
-
-void CWallet::UpdatedTransaction(const uint256 &hashTx)
-{
-    {
-        LOCK(cs_wallet);
-        // Only notify UI if this transaction is in this wallet
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(hashTx);
-        if (mi != mapWallet.end())
-            NotifyTransactionChanged(this, hashTx, CT_UPDATED);
     }
 }
 

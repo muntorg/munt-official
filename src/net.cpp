@@ -1592,6 +1592,9 @@ void CConnman::ThreadDNSAddressSeed()
     LogPrintf("Loading addresses from DNS seeds (could take a while)\n");
 
     BOOST_FOREACH(const CDNSSeedData &seed, vSeeds) {
+        if (interruptNet) {
+            return;
+        }
         if (HaveNameProxy()) {
             AddOneShot(seed.host);
         } else {
@@ -1608,6 +1611,9 @@ void CConnman::ThreadDNSAddressSeed()
                     vAdd.push_back(addr);
                     found++;
                 }
+            }
+            if (interruptNet) {
+                return;
             }
             // TODO: The seed name resolve may fail, yielding an IP of [::], which results in
             // addrman assigning the same source to results from different seeds.
