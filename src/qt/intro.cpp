@@ -13,14 +13,13 @@
 #include "config/bitcoin-config.h"
 #endif
 
+#include "fs.h"
 #include "intro.h"
 #include "ui_intro.h"
 
 #include "guiutil.h"
 
 #include "util.h"
-
-#include <boost/filesystem.hpp>
 
 #include <QFileDialog>
 #include <QSettings>
@@ -77,7 +76,7 @@ FreespaceChecker::FreespaceChecker(Intro *_intro)
 
 void FreespaceChecker::check()
 {
-    namespace fs = boost::filesystem;
+    namespace fs = fs;
     QString dataDirStr = intro->getPathToCheck();
     fs::path dataDir = GUIUtil::qstringToBoostPath(dataDirStr);
     uint64_t freeBytesAvailable = 0;
@@ -197,7 +196,7 @@ QString Intro::getDefaultDataDirectory()
 
 bool Intro::pickDataDirectory()
 {
-    namespace fs = boost::filesystem;
+    namespace fs = fs;
     QSettings settings;
     /* If data directory provided on command line, no need to look at settings
        or show a picking dialog */

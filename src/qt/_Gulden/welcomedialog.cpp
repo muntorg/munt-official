@@ -74,7 +74,7 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
 void WelcomeDialog::showEvent(QShowEvent *ev)
 {
     std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
-    if (boost::filesystem::exists(GetDataDir() / walletFile))
+    if (fs::exists(GetDataDir() / walletFile))
     {
         ui->buttonFrame->setVisible(false);
         ui->labelDescribeRecoveryPhrase->setVisible(false);

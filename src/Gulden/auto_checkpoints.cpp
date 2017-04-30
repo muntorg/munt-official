@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 #include <boost/foreach.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 
@@ -121,12 +120,12 @@ namespace Checkpoints
 
     bool ReadCheckpointPubKey(std::string& strPubKey)
     {
-        if( !boost::filesystem::exists(GetDataDir() / "checkpoints") )
+        if( !fs::exists(GetDataDir() / "checkpoints") )
             return false;
 
         try
         {
-            boost::filesystem::ifstream checkpointFile( GetDataDir() / "checkpoints" / "curr_checkpoint_pubkey" );
+            fs::ifstream checkpointFile( GetDataDir() / "checkpoints" / "curr_checkpoint_pubkey" );
             checkpointFile >> strPubKey;
             checkpointFile.close();
         }
@@ -145,17 +144,17 @@ namespace Checkpoints
             //First write to a new file, then overwrite the checkpoint file with a move operation
             //This ensures that the operation happens in an atomic-like fashion and cannot leave us with a corrupted checkpoint file (on most sane filesystems at least)
             //NB! We do not bother to force a disk flush - checkpoints come frequently and it doesn't matter if we are slightly out of date.
-            if( !boost::filesystem::exists(GetDataDir() / "autocheckpoints") )
+            if( !fs::exists(GetDataDir() / "autocheckpoints") )
             {
-                if( !boost::filesystem::create_directory(GetDataDir() / "autocheckpoints") )
+                if( !fs::create_directory(GetDataDir() / "autocheckpoints") )
                     return false;
             }
 
-            boost::filesystem::ofstream checkpointFile( GetDataDir() / "autocheckpoints" / "new_checkpoint_pubkey" );
+            fs::ofstream checkpointFile( GetDataDir() / "autocheckpoints" / "new_checkpoint_pubkey" );
             checkpointFile << strPubKey;
             checkpointFile.close();
 
-            boost::filesystem::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint_pubkey", GetDataDir() / "autocheckpoints" / "curr_checkpoint_pubkey" );
+            fs::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint_pubkey", GetDataDir() / "autocheckpoints" / "curr_checkpoint_pubkey" );
         }
         catch (...)
         {
@@ -168,12 +167,12 @@ namespace Checkpoints
     // Read the current auto sync checkpoint from disk
     bool ReadSyncCheckpoint(uint256& hashCheckpoint)
     {
-        if( !boost::filesystem::exists(GetDataDir() / "autocheckpoints") )
+        if( !fs::exists(GetDataDir() / "autocheckpoints") )
             return false;
 
         try
         {
-            boost::filesystem::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
+            fs::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
             std::string temp;
             checkpointFile >> temp;
             hashCheckpoint = uint256S(temp);
@@ -196,17 +195,17 @@ namespace Checkpoints
             //First write to a new file, then overwrite the checkpoint file with a move operation
             //This ensures that the operation happens in an atomic-like fashion and cannot leave us with a corrupted checkpoint file (on most sane filesystems at least)
             //NB! We do not bother to force a disk flush - checkpoints come frequently and it doesn't matter if we are slightly out of date.
-            if( !boost::filesystem::exists(GetDataDir() / "autocheckpoints") )
+            if( !fs::exists(GetDataDir() / "autocheckpoints") )
             {
-                if( !boost::filesystem::create_directory(GetDataDir() / "autocheckpoints") )
+                if( !fs::create_directory(GetDataDir() / "autocheckpoints") )
                     return false;
             }
 
-            boost::filesystem::ofstream checkpointFile( GetDataDir() / "autocheckpoints" / "new_checkpoint" );
+            fs::ofstream checkpointFile( GetDataDir() / "autocheckpoints" / "new_checkpoint" );
             checkpointFile << hashCheckpoint.ToString();
             checkpointFile.close();
 
-            boost::filesystem::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint", GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
+            fs::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint", GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
         }
         catch (...)
         {

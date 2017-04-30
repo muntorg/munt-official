@@ -17,6 +17,7 @@
 #include "chainparams.h"
 #include "clientversion.h"
 #include "compat.h"
+#include "fs.h"
 #include "rpc/server.h"
 #include "init.h"
 #include "noui.h"
@@ -27,7 +28,6 @@
 #include "utilstrencodings.h"
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 
@@ -111,7 +111,7 @@ bool AppInit(int argc, char* argv[])
 
     try
     {
-        if (!boost::filesystem::is_directory(GetDataDir(false)))
+        if (!fs::is_directory(GetDataDir(false)))
         {
             fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", GetArg("-datadir", "").c_str());
             return false;
@@ -184,7 +184,7 @@ bool AppInit(int argc, char* argv[])
         
         //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
         // Make sure only a single Bitcoin process is using the data directory.
-        boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
+        fs::path pathLockFile = GetDataDir() / ".lock";
         FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
         if (file) fclose(file);
 

@@ -14,6 +14,7 @@
 
 #include "base58.h"
 #include "consensus/validation.h"
+#include "fs.h"
 #include "validation.h" // For CheckTransaction
 #include "protocol.h"
 #include "serialize.h"
@@ -25,7 +26,6 @@
 #include <atomic>
 
 #include <boost/version.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread.hpp>
 
@@ -849,11 +849,11 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
             {
                 try
                 {
-                    boost::filesystem::path oldPath = bitdb.strPath;
+                    fs::path oldPath = bitdb.strPath;
                     oldPath = oldPath / strFile;
-                    boost::filesystem::path backupPath = oldPath;
+                    fs::path backupPath = oldPath;
                     backupPath.replace_extension(".old.preHD");
-                    boost::filesystem::copy_file(oldPath, backupPath);
+                    fs::copy_file(oldPath, backupPath);
                 }
                 catch(...)
                 {
@@ -1170,12 +1170,12 @@ bool CWalletDB::RecoverKeysOnlyFilter(void *callbackData, CDataStream ssKey, CDa
     return true;
 }
 
-bool CWalletDB::VerifyEnvironment(const std::string& walletFile, const boost::filesystem::path& dataDir, std::string& errorStr)
+bool CWalletDB::VerifyEnvironment(const std::string& walletFile, const fs::path& dataDir, std::string& errorStr)
 {
     return CDB::VerifyEnvironment(walletFile, dataDir, errorStr);
 }
 
-bool CWalletDB::VerifyDatabaseFile(const std::string& walletFile, const boost::filesystem::path& dataDir, std::string& warningStr, std::string& errorStr)
+bool CWalletDB::VerifyDatabaseFile(const std::string& walletFile, const fs::path& dataDir, std::string& warningStr, std::string& errorStr)
 {
     return CDB::VerifyDatabaseFile(walletFile, dataDir, errorStr, warningStr, CWalletDB::Recover);
 }
