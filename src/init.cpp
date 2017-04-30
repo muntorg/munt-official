@@ -35,6 +35,7 @@
 #include "policy/policy.h"
 #include "rpc/server.h"
 #include "rpc/register.h"
+#include "rpc/blockchain.h"
 #include "script/standard.h"
 #include "script/sigcache.h"
 #include "scheduler.h"
