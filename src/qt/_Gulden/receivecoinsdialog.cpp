@@ -98,11 +98,11 @@ public:
 #endif
 
 
-ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidget *parent)
+ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWidget *parent)
 : QDialog( parent )
 , ui( new Ui::ReceiveCoinsDialog )
 , model( 0 )
-, platformStyle( platformStyle )
+, platformStyle( _platformStyle )
 #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
 , buyView( NULL )
 #endif
@@ -221,9 +221,9 @@ void ReceiveCoinsDialog::updateQRCode(const QString& uri)
     }
 }
 
-void ReceiveCoinsDialog::setModel(WalletModel *model)
+void ReceiveCoinsDialog::setModel(WalletModel *_model)
 {
-    this->model = model;
+    this->model = _model;
 
     connect(model, SIGNAL(activeAccountChanged()), this, SLOT(activeAccountChanged()));
     activeAccountChanged();

@@ -1275,10 +1275,7 @@ public:
     //CPubKey GenerateNewHDMasterKey();
     CAccount* activeAccount;
     CHDSeed* activeSeed;
-    
-    /* Set the current HD master key (will reset the chain child index counters) */
-    bool SetHDMasterKey(const CPubKey& key);
-    
+        
     friend class CAccount;
 };
 

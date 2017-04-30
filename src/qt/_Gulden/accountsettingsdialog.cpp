@@ -15,11 +15,11 @@
 #include "GuldenGUI.h"
 #include "walletmodel.h"
 
-AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *platformStyle, QWidget *parent, CAccount* activeAccount, WalletModel* model)
+AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
 : QFrame(parent)
 , walletModel(model)
 , ui(new Ui::AccountSettingsDialog)
-, platformStyle(platformStyle)
+, platformStyle(_platformStyle)
 , activeAccount( NULL )
 {
     ui->setupUi(this);
@@ -50,7 +50,7 @@ AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *platformStyle,
     connect(ui->buttonDone, SIGNAL( clicked() ), this, SLOT( applyChanges() ));
     
     // Set initial state.
-    activeAccountChanged(activeAccount);
+    activeAccountChanged(_activeAccount);
     
     LogPrintf("AccountSettingsDialog::AccountSettingsDialog\n");
 }

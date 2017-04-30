@@ -32,10 +32,10 @@ static void ShowProgress(WelcomeDialog* welcomeDialog, const std::string &messag
         );
 }
 
-WelcomeDialog::WelcomeDialog(const PlatformStyle* platformStyle, QWidget* parent)
+WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
 , ui( new Ui::WelcomeDialog )
-, platformStyle( platformStyle )
+, platformStyle( _platformStyle )
 {
     ui->setupUi(this);
     

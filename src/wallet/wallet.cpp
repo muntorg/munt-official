@@ -1009,7 +1009,9 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         /*if (IsHDEnabled()){
             CKey key;
             CPubKey masterPubKey = GenerateNewHDMasterKey();
-            if (!SetHDMasterKey(masterPubKey))
+            // preserve the old chains version to not break backward compatibility
+            CHDChain oldChain = GetHDChain();
+            if (!SetHDMasterKey(masterPubKey, &oldChain))
                 return false;
         }
 
@@ -1530,7 +1532,6 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlockIndex
             // Add all incoming transactions to the wallet as well - so that we can always get 'incoming' address details.
             for(const auto& txin : tx.vin)
             {
-                CTransaction tx;
                 uint256 hashBlock = uint256();
                 if (GetTransaction(txin.prevout.hash, wtx.tx, Params().GetConsensus(), hashBlock, true))
                 {

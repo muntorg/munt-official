@@ -11,10 +11,10 @@
 
 
 
-PasswordModifyDialog::PasswordModifyDialog(const PlatformStyle *platformStyle, QWidget *parent)
+PasswordModifyDialog::PasswordModifyDialog(const PlatformStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::PasswordModifyDialog )
-, platformStyle( platformStyle )
+, platformStyle( _platformStyle )
 {
     ui->setupUi(this);
     

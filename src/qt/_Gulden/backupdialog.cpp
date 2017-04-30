@@ -12,10 +12,10 @@
 
 
 
-BackupDialog::BackupDialog(const PlatformStyle* platformStyle, QWidget* parent, WalletModel* model)
+BackupDialog::BackupDialog(const PlatformStyle* _platformStyle, QWidget* parent, WalletModel* model)
 : QFrame( parent )
 , ui( new Ui::BackupDialog )
-, platformStyle( platformStyle )
+, platformStyle( _platformStyle )
 , walletModel(model)
 {
     ui->setupUi(this);

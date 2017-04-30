@@ -23,11 +23,11 @@
 #include <QPushButton>
 #include "GuldenGUI.h"
 
-GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *platformStyle, QWidget *parent) :
+GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *parent) :
     QFrame(parent),
     ui(new Ui::GuldenSendCoinsEntry),
     model(0),
-    platformStyle(platformStyle)
+    platformStyle(_platformStyle)
 {
     ui->setupUi(this);
 
@@ -88,9 +88,9 @@ void GuldenSendCoinsEntry::on_payTo_textChanged(const QString &address)
     updateLabel(address);
 }
 
-void GuldenSendCoinsEntry::setModel(WalletModel *model)
+void GuldenSendCoinsEntry::setModel(WalletModel *_model)
 {
-    this->model = model;
+    this->model = _model;
 
     if (model && model->getOptionsModel())
     {

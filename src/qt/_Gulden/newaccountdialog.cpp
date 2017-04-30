@@ -30,10 +30,10 @@
 #include <qrencode.h>
 #endif
 
-NewAccountDialog::NewAccountDialog(const PlatformStyle *platformStyle, QWidget *parent, WalletModel* model)
+NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget *parent, WalletModel* model)
 : QFrame(parent)
 , ui(new Ui::NewAccountDialog)
-, platformStyle(platformStyle)
+, platformStyle(_platformStyle)
 , newAccount( NULL )
 , walletModel( model )
 {
