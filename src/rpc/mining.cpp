@@ -36,7 +36,6 @@
 #include <stdint.h>
 
 #include <boost/assign/list_of.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <univalue.h>
 #ifdef ENABLE_WALLET
@@ -110,7 +109,7 @@ UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
-UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
+UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     static const int nInnerLoopCount = 0x10000;
     int nHeightStart = 0;
@@ -231,7 +230,7 @@ UniValue generate(const JSONRPCRequest& request)
         nMaxTries = request.params[1].get_int();
     }
 
-    boost::shared_ptr<CReserveScript> coinbaseScript;
+    std::shared_ptr<CReserveScript> coinbaseScript;
     GetMainSignals().ScriptForMining(coinbaseScript);
 
     // If the keypool is exhausted, no script is returned at all.  Catch this.
@@ -316,7 +315,7 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
 
-    boost::shared_ptr<CReserveScript> coinbaseScript(new CReserveScript());
+    std::shared_ptr<CReserveScript> coinbaseScript = std::make_shared<CReserveScript>();
     coinbaseScript->reserveScript = GetScriptForDestination(address.Get());
 
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, false);
@@ -845,7 +844,7 @@ public:
     submitblock_StateCatcher(const uint256 &hashIn) : hash(hashIn), found(false), state() {}
 
 protected:
-    virtual void BlockChecked(const CBlock& block, const CValidationState& stateIn) {
+    void BlockChecked(const CBlock& block, const CValidationState& stateIn) override {
         if (block.GetHash() != hash)
             return;
         found = true;

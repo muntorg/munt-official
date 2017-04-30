@@ -37,10 +37,8 @@
 #include <utility>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread.hpp>
-
 extern CWallet* pwalletMain;
 
 void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
@@ -1048,7 +1046,7 @@ public:
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
-    bool AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
+    bool AddToWalletIfInvolvingMe(const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
     CBlockIndex* ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
@@ -1162,12 +1160,7 @@ public:
         }
     }
 
-    void GetScriptForMining(boost::shared_ptr<CReserveScript> &script);
-    void ResetRequestCount(const uint256 &hash)
-    {
-        LOCK(cs_wallet);
-        mapRequestCount[hash] = 0;
-    };
+    void GetScriptForMining(std::shared_ptr<CReserveScript> &script) override;
 /*GULDEN - we don't use these (accounts)
     unsigned int GetKeyPoolSize()
     {
