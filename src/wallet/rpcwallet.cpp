@@ -2806,7 +2806,6 @@ UniValue listunspent(const JSONRPCRequest& request)
     }
 
     UniValue results(UniValue::VARR);
-    std::vector<COutput> vecOutputs;
     assert(pwallet != NULL);
     LOCK2(cs_main, pwallet->cs_wallet);
     

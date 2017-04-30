@@ -108,9 +108,9 @@ void TransactionFilterProxy::setWatchOnlyFilter(WatchOnlyFilter filter)
     invalidateFilter();
 }
 
-void TransactionFilterProxy::setAccountFilter(CAccount* account)
+void TransactionFilterProxy::setAccountFilter(CAccount* _account)
 {
-    this->account = account;
+    this->account = _account;
     invalidateFilter();
 }
 

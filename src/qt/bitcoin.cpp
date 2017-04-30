@@ -269,6 +269,7 @@ private:
 
     void startThread();
     
+    // GULDEN - rescan code needs this to tell if we try shut down midway throguh a rescan.
     bool shutDownRequested;
 };
 
@@ -402,8 +403,6 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
     pollShutdownTimer->start(200);
     
     window->show();
-    
-    
 }
 /*GULDEN - we don't use this as we have no splash screen
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
@@ -712,10 +711,12 @@ int main(int argc, char *argv[])
 
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
+
 /*GULDEN - no splash screen
     if (GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());
 */
+
     //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
     // Make sure only a single Bitcoin process is using the data directory.
     boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
@@ -737,7 +738,9 @@ int main(int argc, char *argv[])
     try
     {
         app.createWindow(networkStyle.data());
-        //app.requestInitialize();
+        /* GULDEN - we request initialization from elsewhere (welcome screen)
+        app.requestInitialize();
+        */
 #if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
         WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());
 #endif

@@ -19,7 +19,7 @@ MIN_BLOCKS_TO_KEEP = 288
 # Rescans start at the earliest block up to 2 hours before a key timestamp, so
 # the manual prune RPC avoids pruning blocks in the same window to be
 # compatible with pruning based on key creation time.
-TIMESTAMP_WINDOW = 60
+TIMESTAMP_WINDOW = 2 * 60 * 60
 
 
 def calc_usage(blockdir):

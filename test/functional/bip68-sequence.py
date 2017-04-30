@@ -6,8 +6,6 @@
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
-from test_framework.script import *
-from test_framework.mininode import *
 from test_framework.blocktools import *
 
 SEQUENCE_LOCKTIME_DISABLE_FLAG = (1<<31)
@@ -380,8 +378,8 @@ class BIP68Test(BitcoinTestFramework):
         # activation should happen at block height 432 (3 periods)
         min_activation_height = 432
         height = self.nodes[0].getblockcount()
-        assert(height < 432)
-        self.nodes[0].generate(432-height)
+        assert(height < min_activation_height)
+        self.nodes[0].generate(min_activation_height-height)
         assert(get_bip9_status(self.nodes[0], 'csv')['status'] == 'active')
         sync_blocks(self.nodes)
 

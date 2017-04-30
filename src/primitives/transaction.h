@@ -182,7 +182,8 @@ public:
         // need a CTxIn of at least 67 bytes to spend:
         // so dust is a spendable txout less than
         // 294*minRelayTxFee/1000 (in satoshis).
-        /*if (scriptPubKey.IsUnspendable())
+        /*
+        if (scriptPubKey.IsUnspendable())
             return 0;
 
         size_t nSize = GetSerializeSize(*this, SER_DISK, 0);

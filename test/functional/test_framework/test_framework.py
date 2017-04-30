@@ -12,7 +12,6 @@ import sys
 import shutil
 import tempfile
 import time
-import traceback
 
 from .util import (
     initialize_chain,

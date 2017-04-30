@@ -74,8 +74,8 @@ class GuldenEventFilter : public QObject
     Q_OBJECT
 
 public:
-    explicit GuldenEventFilter(QStyle* style, QWidget *parent, GuldenProxyStyle* guldenStyle, QObject* parentObject = 0)
-    : QObject(parentObject)
+    explicit GuldenEventFilter(QStyle* style, QWidget *parent, GuldenProxyStyle* guldenStyle, QObject* _parentObject = 0)
+    : QObject(_parentObject)
     , parentStyle(style)
     , parentObject(parent)
     , guldenProxyStyle(guldenStyle)

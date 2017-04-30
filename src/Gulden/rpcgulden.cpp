@@ -903,10 +903,10 @@ static const CRPCCommand commands[] =
     { "mnemonics",          "listseeds",              &listseeds,              true,    {} },
 };
 
-void RegisterGuldenRPCCommands(CRPCTable &tableRPC)
+void RegisterGuldenRPCCommands(CRPCTable &t)
 {
     for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
-        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
+        t.appendCommand(commands[vcidx].name, &commands[vcidx]);
 }
 
 #endif

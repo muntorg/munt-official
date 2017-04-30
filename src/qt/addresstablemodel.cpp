@@ -220,15 +220,17 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
             return rec->address;
         }
     }
-    /*else if (role == Qt::FontRole)
+    /* GULDEN - no fixed pitch font.
+    else if (role == Qt::FontRole)
     {
-        QFont font;fixedPitchFont
+        QFont font;
         if(index.column() == Address)
         {
             font = GUIUtil::fixedPitchFont();
         }
         return font;
-    }*/
+    }
+    */
     else if (role == TypeRole)
     {
         switch(rec->type)
@@ -240,6 +242,7 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
         default: break;
         }
     }
+    //Align address table to right, all other columns to left.
     else if(role == Qt::TextAlignmentRole)
     {
 	switch(index.column())
@@ -393,7 +396,6 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
         
         if(wallet->mapAccounts.count(strAccount) == 0)
             return QString();
-            
         
         if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[strAccount], KEYCHAIN_EXTERNAL))
         {

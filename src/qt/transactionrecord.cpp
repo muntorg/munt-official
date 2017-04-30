@@ -79,8 +79,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     for (const CTxIn& txin : wtx.tx->vin)
                     {
                         //fixme: rather just have a CAccount::GetDebit function?
-                        isminetype mine = wallet->IsMine(*account, txin);
-                        if (mine == ISMINE_SPENDABLE)
+                        isminetype txinMine = wallet->IsMine(*account, txin);
+                        if (txinMine == ISMINE_SPENDABLE)
                         {
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
                             //fixme: Add a 'payment to self' sub here as well.

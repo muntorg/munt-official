@@ -47,7 +47,7 @@
 # error "Bitcoin cannot be compiled without assertions."
 #endif
 
-int64_t nTimeBestReceived = 0; // Used only to inform the wallet of when we last received a block
+std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
 
 struct IteratorComparator
 {
@@ -275,7 +275,7 @@ void PushNodeVersion(CNode *pnode, CConnman& connman, int64_t nTime)
 
 void InitializeNode(CNode *pnode, CConnman& connman) {
     CAddress addr = pnode->addr;
-    std::string addrName = pnode->addrName;
+    std::string addrName = pnode->GetAddrName();
     NodeId nodeid = pnode->GetId();
     {
         LOCK(cs_main);
@@ -1245,6 +1245,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         int nVersion;
         int nSendVersion;
         std::string strSubVer;
+        std::string cleanSubVer;
         int nStartingHeight = -1;
         bool fRelay = true;
 
@@ -1280,6 +1281,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             vRecv >> addrFrom >> nNonce;
         if (!vRecv.empty()) {
             vRecv >> LIMITED_STRING(strSubVer, MAX_SUBVERSION_LENGTH);
+            cleanSubVer = SanitizeString(strSubVer);
         }
         if (!vRecv.empty()) {
             vRecv >> nStartingHeight;
@@ -1306,9 +1308,12 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERACK));
 
         pfrom->nServices = nServices;
-        pfrom->addrLocal = addrMe;
-        pfrom->strSubVer = strSubVer;
-        pfrom->cleanSubVer = SanitizeString(strSubVer);
+        pfrom->SetAddrLocal(addrMe);
+        {
+            LOCK(pfrom->cs_SubVer);
+            pfrom->strSubVer = strSubVer;
+            pfrom->cleanSubVer = cleanSubVer;
+        }
         pfrom->nStartingHeight = nStartingHeight;
         pfrom->fClient = !(nServices & NODE_NETWORK);
         {
@@ -1344,7 +1349,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     LogPrint("net", "ProcessMessages: advertising address %s\n", addr.ToString());
                     pfrom->PushAddress(addr, insecure_rand);
                 } else if (IsPeerAddrLocalGood(pfrom)) {
-                    addr.SetIP(pfrom->addrLocal);
+                    addr.SetIP(addrMe);
                     LogPrint("net", "ProcessMessages: advertising address %s\n", addr.ToString());
                     pfrom->PushAddress(addr, insecure_rand);
                 }
@@ -1364,13 +1369,21 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             remoteAddr = ", peeraddr=" + pfrom->addr.ToString();
 
         LogPrintf("receive version message: %s: version %d, blocks=%d, us=%s, peer=%d%s\n",
-                  pfrom->cleanSubVer, pfrom->nVersion,
+                  cleanSubVer, pfrom->nVersion,
                   pfrom->nStartingHeight, addrMe.ToString(), pfrom->id,
                   remoteAddr);
 
         int64_t nTimeOffset = nTime - GetTime();
         pfrom->nTimeOffset = nTimeOffset;
         AddTimeData(pfrom->addr, nTimeOffset);
+
+/*GULDEN - We still use the alert system, no 'final alert'
+        // If the peer is old enough to have the old alert system, send it the final alert.
+        if (pfrom->nVersion <= 70012) {
+            CDataStream finalAlert(ParseHex("60010000000000000000000000ffffff7f00000000ffffff7ffeffff7f01ffffff7f00000000ffffff7f00ffffff7f002f555247454e543a20416c657274206b657920636f6d70726f6d697365642c2075706772616465207265717569726564004630440220653febd6410f470f6bae11cad19c48413becb1ac2c17f908fd0fd53bdc3abd5202206d0e9c96fe88d4a0f01ed9dedae2b6f9e00da94cad0fecaae66ecf689bf71b50"), SER_NETWORK, PROTOCOL_VERSION);
+            connman.PushMessage(pfrom, CNetMsgMaker(nSendVersion).Make("alert", finalAlert));
+        }
+*/
 
         // Feeler connections exist only to verify if address is online.
         if (pfrom->fFeeler) {

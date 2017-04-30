@@ -12,7 +12,6 @@ from test_framework.mininode import *
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 from test_framework.blocktools import create_block, create_coinbase, add_witness_commitment
-from test_framework.siphash import siphash256
 from test_framework.script import CScript, OP_TRUE
 
 # TestNode: A peer we use to send messages to bitcoind, and store responses.

@@ -595,14 +595,13 @@ public:
     const int64_t nTimeConnected;
     std::atomic<int64_t> nTimeOffset;
     const CAddress addr;
-    std::string addrName;
-    CService addrLocal;
     std::atomic<int> nVersion;
     // strSubVer is whatever byte array we read from the wire. However, this field is intended
     // to be printed out, displayed to humans in various forms and so on. So we sanitize it and
     // store the sanitized version in cleanSubVer. The original should be used when dealing with
     // the network or wire types and the cleaned string used when displayed or logged.
     std::string strSubVer, cleanSubVer;
+    CCriticalSection cs_SubVer; // used for both cleanSubVer and strSubVer
     bool fWhitelisted; // This peer can bypass DoS banning.
     bool fFeeler; // If true this node is being used as a short lived feeler.
     bool fOneShot;
@@ -701,6 +700,12 @@ private:
     const int nMyStartingHeight;
     int nSendVersion;
     std::list<CNetMessage> vRecvMsg;  // Used only by SocketHandler thread
+
+    mutable CCriticalSection cs_addrName;
+    std::string addrName;
+
+    CService addrLocal;
+    mutable CCriticalSection cs_addrLocal;
 public:
 
     NodeId GetId() const {
@@ -733,6 +738,10 @@ public:
     }
     void SetSendVersion(int nVersionIn);
     int GetSendVersion() const;
+
+    CService GetAddrLocal() const;
+    //! May not be called more than once
+    void SetAddrLocal(const CService& addrLocalIn);
 
     CNode* AddRef()
     {
@@ -803,6 +812,10 @@ public:
     {
         return nLocalServices;
     }
+
+    std::string GetAddrName() const;
+    //! Sets the addrName only if it was not previously set
+    void MaybeSetAddrName(const std::string& addrNameIn);
 };
 
 

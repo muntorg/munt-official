@@ -67,7 +67,8 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
     }
 
     // Validation
-    /*QValidator::State state = QValidator::Acceptable;
+    QValidator::State state = QValidator::Acceptable;
+    /* GULDEN - we also allow bitcoin and IBAN addresses here, so for now we just disable this validation, in future we should improve this.
     for (int idx = 0; idx < input.size(); ++idx)
     {
         int ch = input.at(idx).unicode();
@@ -83,9 +84,10 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
         {
             state = QValidator::Invalid;
         }
-    }*/
+    }
+    */
 
-    return QValidator::Acceptable;
+    return state;
 }
 
 BitcoinAddressCheckValidator::BitcoinAddressCheckValidator(QObject *parent) :
