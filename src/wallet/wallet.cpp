@@ -3425,12 +3425,12 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
 
 
 
-DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
+DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
 {
     if (!fFileBacked)
         return DB_LOAD_OK;
-    fFirstRunRet = false;
-    DBErrors nLoadWalletRet = CWalletDB(strWalletFile,"cr+").LoadWallet(this, fFirstRunRet);
+    nExtraLoadState = NEW_WALLET;
+    DBErrors nLoadWalletRet = CWalletDB(strWalletFile,"cr+").LoadWallet(this, nExtraLoadState);
     if (nLoadWalletRet == DB_NEED_REWRITE)
     {
         if (CDB::Rewrite(strWalletFile, "\x04pool"))
@@ -4493,9 +4493,9 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     uiInterface.InitMessage(_("Loading wallet..."));
 
     int64_t nStart = GetTimeMillis();
-    bool fFirstRun = true;
+    WalletLoadState loadState = NEW_WALLET;
     CWallet *walletInstance = new CWallet(walletFile);
-    DBErrors nLoadWalletRet = walletInstance->LoadWallet(fFirstRun);
+    DBErrors nLoadWalletRet = walletInstance->LoadWallet(loadState);
     if (nLoadWalletRet != DB_LOAD_OK)
     {
         if (nLoadWalletRet == DB_CORRUPT) {
@@ -4523,7 +4523,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
     }
 
-    if (GetBoolArg("-upgradewallet", fFirstRun))
+    if (GetBoolArg("-upgradewallet", loadState == NEW_WALLET))
     {
         int nMaxVersion = GetArg("-upgradewallet", 0);
         if (nMaxVersion == 0) // the -upgradewallet without argument case
@@ -4542,7 +4542,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         walletInstance->SetMaxVersion(nMaxVersion);
     }
 
-    if (fFirstRun)
+    if (loadState == NEW_WALLET)
     {
         // Create new keyUser and set as default key
         if (GetBoolArg("-usehd", DEFAULT_USE_HD_WALLET))
@@ -4553,6 +4553,15 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 GetStrongRandBytes(&entropy[0], 16);
                 GuldenApplication::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
             }
+            
+            if (GuldenApplication::gApp->getRecoveryPhrase().size() == 0)
+            {
+                //Work around an issue with "non HD" wallets from older versions where active account may not be set in the wallet.
+                if (!walletInstance->mapAccounts.empty())
+                    walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+                throw std::runtime_error("Invalid seed mnemonic");
+            }
+            
             // Generate a new primary seed and account (BIP44)
             walletInstance->activeSeed = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
             if (!CWalletDB(walletFile).WriteHDSeed(*walletInstance->activeSeed))
@@ -4610,6 +4619,16 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             walletInstance->activeAccount->m_Type = AccountType::Normal;
             walletInstance->activeAccount->m_SubType = AccountSubType::Desktop;
             
+            // Write the primary account into wallet file
+            {
+                CWalletDB walletdb(walletFile);
+                if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
+                {
+                    throw std::runtime_error("Writing legacy account failed");
+                }
+                walletdb.WritePrimaryAccount(walletInstance->activeAccount);
+            }
+            
             //Assign the bare minimum keys here, let the rest take place in the bakcground thread
             walletInstance->TopUpKeyPool(2);
         }
@@ -4617,9 +4636,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         pwalletMain = walletInstance;
         walletInstance->SetBestChain(chainActive.GetLocator());
         
+        //fixme: (GULDEN) (MERGE)
         CWalletDB walletdb(walletFile);
     }
-    else
+    else if (loadState == EXISTING_WALLET_OLDACCOUNTSYSTEM)
     {
         // HD upgrade.
         // Only perform upgrade if usehd is present (default for UI)
@@ -4734,6 +4754,21 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 }
             }
         }
+    }
+    else if (loadState == EXISTING_WALLET)
+    {
+        //Clean up a slight issue in 1.6.0 -> 1.6.3 wallets where a "usehd=0" account was created but no active account set.
+        if (!walletInstance->activeAccount)
+        {
+            if (!walletInstance->mapAccounts.empty())
+                walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+            else
+                throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Unknown wallet load state.");
     }
 
     if (GuldenApplication::gApp->isRecovery)

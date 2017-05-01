@@ -739,7 +739,7 @@ bool CWalletDB::IsKeyType(const std::string& strType)
             strType == "mkey" || strType == "ckey");
 }
 
-DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
+DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadState)
 {
     CWalletScanState wss;
     bool fNoncriticalErrors = false;
@@ -759,6 +759,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
 
         
         bool isPreHDWallet=false;
+        bool haveAnyAccounts=false;
         // Accounts first
         {
             // Get cursor
@@ -786,6 +787,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 ssKey >> sKey;
                 if (sKey == "accleg" || sKey == "acchd")
                 {
+                    haveAnyAccounts = true;
                     CDataStream ssKey2(SER_DISK, CLIENT_VERSION);
                     std::string accountUUID;
                     ssKey >> accountUUID;
@@ -826,10 +828,10 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
         }
                 
         
-        firstRunRet = true;
+        nExtraLoadState = NEW_WALLET;
         if (!primaryAccountString.empty())
         {   
-            firstRunRet = false;
+            nExtraLoadState = EXISTING_WALLET;
             if (pwallet->mapAccounts.count(primaryAccountString) == 0)
             {
                 LogPrintf("Error - missing primary account for UUID [%s]\n", primaryAccountString);
@@ -840,9 +842,9 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
             }
         }
-        else if(isPreHDWallet)
+        else if (isPreHDWallet)
         {
-            firstRunRet = false;
+            nExtraLoadState = EXISTING_WALLET_OLDACCOUNTSYSTEM;
             
             //Upgrade old legacy wallet - set active account - all the old keys will just land up in this.
             if (pwallet->activeAccount == NULL && pwallet->activeSeed == NULL)
@@ -865,6 +867,10 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 pwallet->mapAccounts[pwallet->activeAccount->getUUID()] = pwallet->activeAccount;
                 pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] = "Legacy";
             }
+        }
+        else if (haveAnyAccounts)
+        {
+            nExtraLoadState = EXISTING_WALLET;
         }
         
         // Get cursor

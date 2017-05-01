@@ -102,7 +102,7 @@ void WelcomeDialog::showMessage(const QString& message, int alignment, const QCo
 void WelcomeDialog::showProgress(const QString& message, int nProgress)
 {
     
-    ui->labelWelcomeScreenProgressDisplay->setText( QString(message + "%1%%").arg(nProgress) );
+    ui->labelWelcomeScreenProgressDisplay->setText( QString(message + "%1%").arg(nProgress) );
 }
 
 
