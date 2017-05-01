@@ -106,7 +106,7 @@ public:
         */
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000002cb971dd56d1c583c20f90");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000ce2f8b3955e72b9");
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb"); //505000
@@ -226,8 +226,7 @@ public:
         */
 
         // The best chain should have at least this much work.
-        //fixme: (GULDEN) (MERGE) (CHECKME)
-        //consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000198b4def2baa9338d6");
+        consensus.nMinimumChainWork = uint256S("");
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0xba7b2580da00d6386a6519aac909881ac769341975e421a23298fbf14462cac7"); //350000
@@ -343,8 +342,7 @@ public:
         */
 
         // The best chain should have at least this much work.
-        //fixme: (GULDEN) (MERGE)
-        //consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x00");
