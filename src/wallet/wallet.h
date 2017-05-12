@@ -1299,7 +1299,7 @@ public:
     void setActiveSeed(CHDSeed* newActiveSeed);
     CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
     void DeleteSeed(CHDSeed* deleteSeed, bool purge);
-    CHDSeed* ImportHDSeed(SecureString mnemonic);
+    CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
     CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
     CHDSeed* getActiveSeed();
     

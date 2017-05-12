@@ -653,29 +653,40 @@ UniValue importseed(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
     
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
             "importseed \"mnemonic or pubkey\" \"read only\" \n"
             "\nSet the currently active seed by UUID.\n"
             "1. \"mnemonic or pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "2. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
+            "\nThe default is correct in almost all cases, only experts should work with the other types\n"
+            "\nBIP44 - This is the standard Gulden seed type that should be used in almost all cases.\n"
+            "\nBIP44NH - (No Hardening) This is the same as above, however with weakened security required for \"read only\" (watch) seed capability, use this only if you understand the implications and if you want to share your seed with another read only wallet.\n"
+            "\nBIP44E - This is a modified BIP44 with a different hash value, required for compatibility with some external wallets (e.g. Coinomi).\n"
+            "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
+            "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
-            "2. \"read only\"      (boolean, optional, default=false) Rescan the wallet for transactions\n"
+            "3. \"read only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
             + HelpExampleCli("importseed", "")
             + HelpExampleRpc("importseed", ""));
 
-    
-    
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
     
     EnsureWalletIsUnlocked(pwallet);
     
-    bool fReadOnly = false;
+    CHDSeed::SeedType seedType = CHDSeed::CHDSeed::BIP44;
     if (request.params.size() > 1)
-        fReadOnly = request.params[1].get_bool();
+    {
+        seedType = SeedTypeFromString(request.params[1].get_str());
+    }
+    
+    bool fReadOnly = false;
+    if (request.params.size() > 2)
+        fReadOnly = request.params[2].get_bool();
     
     CHDSeed* newSeed = NULL;
     if (fReadOnly)
@@ -686,7 +697,7 @@ UniValue importseed(const JSONRPCRequest& request)
     else
     {
         SecureString mnemonic = request.params[0].get_str().c_str();
-        newSeed = pwallet->ImportHDSeed(mnemonic);
+        newSeed = pwallet->ImportHDSeed(mnemonic, seedType);
     }
 
     //fixme: Use a timestamp here
@@ -899,7 +910,7 @@ static const CRPCCommand commands[] =
     { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true,    {"seed"} },
     { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true,    {"seed"} },
     { "mnemonics",          "setactiveseed",          &setactiveseed,          true,    {"seed"} },
-    { "mnemonics",          "importseed",             &importseed,             true,    {"mnemonic or enckey", "read only"} },
+    { "mnemonics",          "importseed",             &importseed,             true,    {"mnemonic or enckey", "type", "read only"} },
     { "mnemonics",          "listseeds",              &listseeds,              true,    {} },
 };
 

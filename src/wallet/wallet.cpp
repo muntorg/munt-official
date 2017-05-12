@@ -5142,7 +5142,7 @@ CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     return newSeed;
 }
 
-CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic)
+CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
@@ -5156,7 +5156,7 @@ CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic)
         
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    CHDSeed* newSeed = new CHDSeed(mnemonic, CHDSeed::CHDSeed::BIP44);
+    CHDSeed* newSeed = new CHDSeed(mnemonic, type);
     if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
     {
         throw std::runtime_error("Writing seed failed");
