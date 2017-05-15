@@ -106,17 +106,15 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057||
 
-|Infrastructure||
-|:-----------|:---------|
-|Official block explorer|blockchain.gulden.com|
-|Community block explorer|guldenchain.com|
-|Electrum server 1|electrum1.gulden.com:5038|
-|Electrum server 2|electrum2.gulden.com:5038|
-|DNS Seed 1|seed.gulden.com|
-|DNS Seed 2|amsterdam.gulden.com|
-|DNS Seed 3|seed.gulden.network|
-|DNS Seed 4|rotterdam.gulden.network|
-|DNS Seed 5|seed.gulden.blue|
-|Testnet DNS Seed 1|testseed.gulden.blue|
-|Testnet DNS Seed 2|testseed.gulden.network|
-|Testnet DNS Seed 3|testseed.coinpool.nl|
+|Infrastructure|Main network|Testnet|
+|:-----------|:---------|:---------|
+|Official block explorer|blockchain.gulden.com||
+|Community block explorer|guldenchain.com|testnet.guldenchain.com|
+|Electrum server 1|electrum1.gulden.com:5038||
+|Electrum server 2|electrum2.gulden.com:5038||
+|DNS Seed 1|seed.gulden.com|testseed.gulden.blue|
+|DNS Seed 2|amsterdam.gulden.com|testseed.coinpool.nl|
+|DNS Seed 3|seed.gulden.network|testseed.gulden.network|
+|DNS Seed 4|rotterdam.gulden.network||
+|DNS Seed 5|seed.gulden.blue||
+

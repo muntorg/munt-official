@@ -753,8 +753,7 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
     }
 
 #ifdef ENABLE_WALLET
-
-    const CKeyStore& keystore = ((fGivenKeys || !pwalletMain->activeAccount) ? tempKeystore : pwalletMain->activeAccount->externalKeyStore);
+    const CKeyStore& keystore = ((fGivenKeys || !pwalletMain->activeAccount) ? tempKeystore : *(pwalletMain->activeAccount));
 #else
     const CKeyStore& keystore = tempKeystore;
 #endif
