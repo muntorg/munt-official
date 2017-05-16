@@ -11,7 +11,6 @@
 // file COPYING
 
 #include "wallet/wallet.h"
-#include "wallet/walletdb.h"
 
 #include "base58.h"
 #include "checkpoints.h"
@@ -37,21 +36,16 @@
 #include "util.h"
 #include "ui_interface.h"
 #include "utilmoneystr.h"
-#include "account.h"
-#include "init.h"
 
 #include <assert.h>
-#include "script/ismine.h"
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/thread.hpp>
-#include <boost/uuid/nil_generator.hpp>
 
-
-#include <Gulden/Common/scrypt.h>
+//Gulden specific includes
+#include "init.h"
 #include <Gulden/guldenapplication.h>
 #include <Gulden/mnemonic.h>
-
 
 CWallet* pwalletMain = NULL;
 /** Transaction fee set by the user */
@@ -61,153 +55,7 @@ bool bSpendZeroConfChange = DEFAULT_SPEND_ZEROCONF_CHANGE;
 bool fWalletRbf = DEFAULT_WALLET_RBF;
 
 const char * DEFAULT_WALLET_DAT = "wallet.dat";
-
-
-void ThreadShadowPoolManager()
-{
-    boost::mutex condition_mutex;
-    boost::unique_lock<boost::mutex> lock(condition_mutex);
-
-    int depth = 1;
-    while (true)
-    {
-        long milliSleep = 100;
-        
-        if (pwalletMain)
-        {
-            LOCK(pwalletMain->cs_wallet);
-                      
-            milliSleep = 500;
-            // Top up 'shadow' pool
-            int numNew = 0;
-            bool dolock=true;
-            for (const auto& seedIter : pwalletMain->mapSeeds)
-            {
-                //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
-                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
-                    continue;
-                
-                for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi })
-                {
-                    int numShadow = 0;
-                    {                    
-                        for (const auto& accountPair : pwalletMain->mapAccounts)
-                        {
-                            if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
-                            {
-                                if (accountPair.second->m_SubType == shadowSubType)
-                                {
-                                    if (accountPair.second->m_Type == AccountType::Shadow)
-                                    {
-                                        ++numShadow;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (numShadow < GetArg("-accountpool", 10))
-                    {
-                        dolock=false;
-                        if (!pwalletMain->IsLocked())
-                        {
-                            pwalletMain->delayLock = true;
-                            CWalletDB db(pwalletMain->strWalletFile);
-                            while (numShadow < GetArg("-accountpool", 10))
-                            {
-                                ++numShadow;
-                                ++numNew;
-                                depth=1;
-                                
-                                // New shadow account
-                                CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
-                                
-                                if (newShadow == NULL)
-                                    break;
-                                
-                                newShadow->m_Type = AccountType::Shadow;
-                                
-                                // Write new account
-                                pwalletMain->addAccount(newShadow, "Shadow");
-                                
-                                if (numNew > 2)
-                                {
-                                    milliSleep = 100;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            pwalletMain->wantDelayLock = true;
-                            if (numShadow < 2)
-                            {
-                                uiInterface.RequestUnlock(pwalletMain, _("Wallet unlock required for account creation"));
-                            }
-                        }
-                    }
-                }
-            }
-
-            
-            if (numNew == 0)
-            {
-                int targetPoolDepth = GetArg("-keypool", 40);
-                int numToAllocatePerRound = 5;
-                if (targetPoolDepth > 40)
-                    numToAllocatePerRound = 20;
-                int numAllocated = pwalletMain->TopUpKeyPool(depth, numToAllocatePerRound);
-                if (numAllocated >= 0)
-                {
-                    if (depth <= targetPoolDepth)
-                    {
-                        ++depth;
-                    }
-                    if (targetPoolDepth > 40 || numAllocated == 0)
-                    {
-                        milliSleep = 1;
-                    }
-                    else
-                    {
-                        //fixme: Look some more into these times - probably a bit slower than it needs to be
-                        if (depth < 10)
-                        {
-                            milliSleep = 80;
-                            dolock = false;
-                        }
-                        else if (depth < 20)
-                        {
-                            dolock = false;
-                            milliSleep = 100;
-                        }
-                        else
-                        {
-                            milliSleep = 300;
-                        }
-                    }
-                }
-            }
-            if (dolock)
-            {
-                if(pwalletMain->didDelayLock)
-                {
-                    pwalletMain->delayLock = false;
-                    pwalletMain->wantDelayLock = false;
-                    pwalletMain->didDelayLock = false;
-                    pwalletMain->Lock();
-                }                
-            }
-        }
-            
-        boost::this_thread::interruption_point();
-        MilliSleep(milliSleep);
-    }
-}
-
-
-void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
-{
-    threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "shadowpoolmanager", &ThreadShadowPoolManager));
-}
+//const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 
 /**
  * Fees smaller than this (in satoshi) are considered zero fee (for transaction creation)
@@ -242,57 +90,6 @@ std::string COutput::ToString() const
     return strprintf("COutput(%s, %d, %d) [%s]", tx->GetHash().ToString(), i, nDepth, FormatMoney(tx->tx->vout[i].nValue));
 }
 
-
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
-{
-    LOCK(wallet.cs_wallet);
-    
-    isminetype ret = isminetype::ISMINE_NO;
-    for (const auto& accountItem : wallet.mapAccounts)
-    {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
-        {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
-            if (temp > ret)
-                ret = temp;
-        }
-    }
-    return ret;
-}
-
-
-
-
-
-
-
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey)
-{
-    LOCK(wallet.cs_wallet);
-    
-    isminetype ret = isminetype::ISMINE_NO;
-    for (const auto& accountItem : wallet.mapAccounts)
-    {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
-        {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, scriptPubKey) : IsMine(accountItem.second->internalKeyStore, scriptPubKey) );
-            if (temp > ret)
-                ret = temp;
-        }
-    }
-    return ret;
-}
-
-
-
-
-
-CWallet::~CWallet()
-{
-    delete pwalletdbEncryption;
-    pwalletdbEncryption = NULL;
-}
-
 const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
 {
     LOCK(cs_wallet);
@@ -302,19 +99,86 @@ const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
     return &(it->second);
 }
 
-bool fShowChildAccountsSeperately = false;
-
-CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
+/* GULDEN - we implement this completely differently
+CPubKey CWallet::GenerateNewKey(bool internal)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
-    
+    bool fCompressed = CanSupportFeature(FEATURE_COMPRPUBKEY); // default to compressed public keys if we want 0.6.0 wallets
+
+    CKey secret;
+
     // Create new metadata
     int64_t nCreationTime = GetTime();
     CKeyMetadata metadata(nCreationTime);
-    
-    //fixme: (GULDEN) (MERGE) (CHECKME)
-    return forAccount.GenerateNewKey(*this, keyChain);
+
+    // use HD key derivation if HD was enabled during wallet creation
+    if (IsHDEnabled()) {
+        DeriveNewChildKey(metadata, secret, (CanSupportFeature(FEATURE_HD_SPLIT) ? internal : false));
+    } else {
+        secret.MakeNewKey(fCompressed);
+    }
+
+    // Compressed public keys were introduced in version 0.6.0
+    if (fCompressed)
+        SetMinVersion(FEATURE_COMPRPUBKEY);
+
+    CPubKey pubkey = secret.GetPubKey();
+    assert(secret.VerifyPubKey(pubkey));
+
+    mapKeyMetadata[pubkey.GetID()] = metadata;
+    UpdateTimeFirstKey(nCreationTime);
+
+    if (!AddKeyPubKey(secret, pubkey))
+        throw std::runtime_error(std::string(__func__) + ": AddKey failed");
+    return pubkey;
 }
+
+void CWallet::DeriveNewChildKey(CKeyMetadata& metadata, CKey& secret, bool internal)
+{
+    // for now we use a fixed keypath scheme of m/0'/0'/k
+    CKey key;                      //master key seed (256bit)
+    CExtKey masterKey;             //hd master key
+    CExtKey accountKey;            //key at m/0'
+    CExtKey chainChildKey;         //key at m/0'/0' (external) or m/0'/1' (internal)
+    CExtKey childKey;              //key at m/0'/0'/<n>'
+
+    // try to get the master key
+    if (!GetKey(hdChain.masterKeyID, key))
+        throw std::runtime_error(std::string(__func__) + ": Master key not found");
+
+    masterKey.SetMaster(key.begin(), key.size());
+
+    // derive m/0'
+    // use hardened derivation (child keys >= 0x80000000 are hardened after bip32)
+    masterKey.Derive(accountKey, BIP32_HARDENED_KEY_LIMIT);
+
+    // derive m/0'/0' (external chain) OR m/0'/1' (internal chain)
+    assert(internal ? CanSupportFeature(FEATURE_HD_SPLIT) : true);
+    accountKey.Derive(chainChildKey, BIP32_HARDENED_KEY_LIMIT+(internal ? 1 : 0));
+
+    // derive child key at next index, skip keys already known to the wallet
+    do {
+        // always derive hardened keys
+        // childIndex | BIP32_HARDENED_KEY_LIMIT = derive childIndex in hardened child-index-range
+        // example: 1 | BIP32_HARDENED_KEY_LIMIT == 0x80000001 == 2147483649
+        if (internal) {
+            chainChildKey.Derive(childKey, hdChain.nInternalChainCounter | BIP32_HARDENED_KEY_LIMIT);
+            metadata.hdKeypath = "m/0'/1'/" + std::to_string(hdChain.nInternalChainCounter) + "'";
+            hdChain.nInternalChainCounter++;
+        }
+        else {
+            chainChildKey.Derive(childKey, hdChain.nExternalChainCounter | BIP32_HARDENED_KEY_LIMIT);
+            metadata.hdKeypath = "m/0'/0'/" + std::to_string(hdChain.nExternalChainCounter) + "'";
+            hdChain.nExternalChainCounter++;
+        }
+    } while (HaveKey(childKey.key.GetPubKey().GetID()));
+    secret = childKey.key;
+    metadata.hdMasterKeyID = hdChain.masterKeyID;
+    // update the chain model in the database
+    if (!CWalletDB(strWalletFile).WriteHDChain(hdChain))
+        throw std::runtime_error(std::string(__func__) + ": Writing HD chain model failed");
+}
+*/
 
 bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& forAccount, int nKeyChain)
 {
@@ -360,116 +224,28 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
     return true;
 }
 
-void CWallet::ForceRewriteKeys(CAccount& forAccount)
+/* GULDEN - we implement this completely differently
+bool CWallet::AddCryptedKey(const CPubKey &vchPubKey,
+                            const std::vector<unsigned char> &vchCryptedSecret)
 {
-    if (!fFileBacked)
-        return;
-        
-    {
-        LOCK(cs_wallet);
-        
-        std::set<CKeyID> setAddress;
-        forAccount.GetKeys(setAddress);
-        
-        CWalletDB walletDB(strWalletFile);
-        for (const auto& keyID : setAddress)
-        {
-            if (!IsCrypted())
-            {
-                CKey keyPair;
-                if (!GetKey(keyID, keyPair))
-                {
-                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all keys");
-                }
-                walletDB.EraseKey(keyPair.GetPubKey());
-                if (!walletDB.WriteKey(keyPair.GetPubKey(), keyPair.GetPrivKey(), mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
-                {
-                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
-                }
-            }
-            else
-            {
-                CPubKey pubKey;
-                if (!GetPubKey(keyID, pubKey))
-                { 
-                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
-                }
-                walletDB.EraseEncryptedKey(pubKey);
-                std::vector<unsigned char> secret;
-                if (!forAccount.GetKey(keyID, secret))
-                { 
-                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
-                }
-                if (!walletDB.WriteCryptedKey(pubKey, secret, mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
-                {
-                    throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
-                }
-            }
-        }
-    }
-    
-    
-    CWalletDB walletDB(strWalletFile);
-    BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolInternal)
-    {
-        CKeyPool keypoolentry;
-        if (!walletDB.ReadPool(nIndex, keypoolentry))
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-        if (!walletDB.ErasePool( this, nIndex ))
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-        keypoolentry.accountName = forAccount.getUUID();
-        keypoolentry.nChain = KEYCHAIN_CHANGE;
-        if ( !walletDB.WritePool( nIndex, keypoolentry ) )
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-    }
-    BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolExternal)
-    {
-        CKeyPool keypoolentry;
-        if (!walletDB.ReadPool(nIndex, keypoolentry))
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-        if (!walletDB.ErasePool( this, nIndex ))
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-        keypoolentry.accountName = forAccount.getUUID();
-        keypoolentry.nChain = KEYCHAIN_EXTERNAL;
-        if ( !walletDB.WritePool( nIndex, keypoolentry ) )
-        {
-            throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
-        }
-    }
-        
-}
-
-bool CWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain)
-{
-    AssertLockHeld(cs_wallet); // mapKeyMetadata
-    if (!forAccount.AddKeyPubKey(HDKeyIndex, pubkey, keyChain))
+    if (!CCryptoKeyStore::AddCryptedKey(vchPubKey, vchCryptedSecret))
         return false;
-
-    // check if we need to remove from watch-only
-    CScript script;
-    script = GetScriptForDestination(pubkey.GetID());
-    if (HaveWatchOnly(script))
-        RemoveWatchOnly(script);
-    script = GetScriptForRawPubKey(pubkey);
-    if (HaveWatchOnly(script))
-        RemoveWatchOnly(script);
-
-    //fixme: Account
     if (!fFileBacked)
         return true;
-    return CWalletDB(strWalletFile).WriteKeyHD(pubkey, HDKeyIndex, keyChain, mapKeyMetadata[pubkey.GetID()], forAccount.getUUID());    
+    {
+        LOCK(cs_wallet);
+        if (pwalletdbEncryption)
+            return pwalletdbEncryption->WriteCryptedKey(vchPubKey,
+                                                        vchCryptedSecret,
+                                                        mapKeyMetadata[vchPubKey.GetID()]);
+        else
+            return CWalletDB(strWalletFile).WriteCryptedKey(vchPubKey,
+                                                            vchCryptedSecret,
+                                                            mapKeyMetadata[vchPubKey.GetID()]);
+    }
+    return false;
 }
-
+*/
 
 bool CWallet::LoadKeyMetadata(const CPubKey &pubkey, const CKeyMetadata &meta)
 {
@@ -666,7 +442,7 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
                 return false;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 return false;
-            if (Unlock(_vMasterKey))
+            if (static_cast<CGuldenWallet*>(this)->Unlock(_vMasterKey))
             {
                 int64_t nStartTime = GetTimeMillis();
                 crypter.SetKeyFromPassphrase(strNewWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod);
@@ -784,13 +560,12 @@ bool CWallet::Verify()
     uiInterface.InitMessage(_("Verifying wallet..."));
     std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
 
-    //fixme: (GULDEN) (MERGE)
     // Check file permissions.
-    /*{
+    {
         std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
         if (!testPerms.is_open())
             return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
-    }*/
+    }
     
     std::string strError;
     if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError))
@@ -815,8 +590,6 @@ bool CWallet::Verify()
     }
     return true;
 }
-
-
 
 void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> range)
 {
@@ -1004,23 +777,22 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         }
         Unlock(strWalletPassphrase);
 
-        //fixme: Gulden HD - What to do here? We can't really throw the entire seed away...
         //fixme: (GULDEN) (FUT) (HD) (ACCOUNTS)
-        // Mark all the unecrypted keys that were already on disk as used and generate new ones (non HD accounts only)        
-        //fixme: (GULDEN) (MERGE)
-        /*if (IsHDEnabled()){
+        //fixme: Gulden HD - What to do here? We can't really throw the entire seed away...
+        /*
+        // if we are using HD, replace the HD master key (seed) with a new one
+        if (IsHDEnabled()) {
             CKey key;
             CPubKey masterPubKey = GenerateNewHDMasterKey();
             // preserve the old chains version to not break backward compatibility
             CHDChain oldChain = GetHDChain();
             if (!SetHDMasterKey(masterPubKey, &oldChain))
                 return false;
-        }
-
-        NewKeyPool();*/
         
+        */
         
-        
+        NewKeyPool();
+        Lock();
 
         // Need to completely rewrite the wallet file; if we don't, bdb might keep
         // bits of the unencrypted private key in slack space in the database file.
@@ -1125,7 +897,6 @@ int64_t CWallet::IncOrderPosNext(CWalletDB *pwalletdb)
     return nRet;
 }
 
-
 bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment)
 {
     assert(0);
@@ -1160,15 +931,6 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
 
     return true;
 }
-
-
-
-
-
-
-
-
-
 
 bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew)
 {
@@ -1219,120 +981,6 @@ bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bFo
     return false;
 }
 
-
-// Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect those.
-// So we keep these 'shadow' accounts, and if they ever receive a transaction we automatically 'convert' them into normal accounts in the UI.
-// If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
-CAccountHD* CWallet::GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType)
-{
-
-    assert(type != AccountType::ShadowChild);
-    assert(type != AccountType::Deleted);
-    CAccountHD* newAccount = NULL;
-    
-    // Grab account with lowest index from existing pool of shadow accounts and convert it into a new account.
-    if (type == AccountType::Normal || type == AccountType::Shadow)
-    {
-        LOCK(cs_wallet);
-        
-        for (const auto& accountPair : mapAccounts)
-        {
-            if (accountPair.second->m_SubType == subType)
-            {
-                if (accountPair.second->m_Type == AccountType::Shadow)
-                {
-                    if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex())
-                    {
-                        if (((CAccountHD*)accountPair.second)->getSeedUUID() == getActiveSeed()->getUUID())
-                        {
-                            //Only consider accounts that are
-                            //1) Of the required type
-                            //2) Marked as being shadow
-                            //3) From the active seed
-                            //4) Always take the lowest account index that we can find
-                            newAccount = (CAccountHD*)accountPair.second;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // Create a new account in the (unlikely) event there was no shadow type
-    if (!newAccount)
-    {
-        while (true)
-        {
-            //fixme: GULDEN (FUT) (1.6.1) - No way to cancel here...
-            {
-                LOCK(cs_wallet);
-                if (!IsLocked())
-                    break;
-                wantDelayLock = true;
-                uiInterface.RequestUnlock(this, _("Wallet unlock required for account creation"));
-            }
-            MilliSleep(5000);
-        }
-        if (!IsLocked())
-        {
-            CWalletDB db(strWalletFile);
-            newAccount = activeSeed->GenerateAccount(subType, &db);
-        }
-        else
-        {
-            return NULL;
-        }
-    }
-    newAccount->m_Type = type;
-        
-    // We don't top up the shadow pool here - we have a thread for that.
-    
-    // Write new account
-    //NB! We have to do this -after- we create the new shadow account, otherwise the shadow account ends up being the active account.
-    addAccount(newAccount, strAccount);
-    
-    // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
-    if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
-        TopUpKeyPool(2);//We only assign the bare minimum addresses here - and let the background thread do the rest
-    
-    return newAccount;
-}
-
-CAccount* CWallet::GenerateNewLegacyAccount(std::string strAccount)
-{
-    CAccount* newAccount = new CAccount();
-    addAccount(newAccount, strAccount);
-    
-    return newAccount;
-}
-
-CAccountHD* CWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)
-{
-    CAccountHD* newAccount = NULL;
-
-    CExtPubKey pubkey;
-    try
-    {
-        CBitcoinSecretExt<CExtPubKey> secretExt;
-        secretExt.SetString(encExtPubKey.c_str());
-        pubkey = secretExt.GetKey();
-    }
-    catch(...)
-    {
-        throw std::runtime_error("Not a valid Gulden extended public key");
-    }
-    
-    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
-        
-    // Write new account
-    addAccount(newAccount, strAccount);
-    
-    //We only assign the bare minimum addresses here - and let the background thread do the rest
-    TopUpKeyPool(2);
-    
-    return newAccount;
-}
-
 void CWallet::MarkDirty()
 {
     {
@@ -1379,24 +1027,20 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
 
     uint256 hash = wtxIn.GetHash();
 
-    //fixme: (GULDEN) (MERGE) - something weird happened here, double check it.
-    //Mark address as used
-    /*if (wtxIn.strFromAccount.empty())
+    // Inserts only if not already there, returns tx inserted or tx found
+    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
+    CWalletTx& wtx = (*ret.first).second;
+    if (wtx.strFromAccount.empty())
     {
         LOCK(cs_wallet);
         for (auto accountPair : mapAccounts)
         {
-            if (accountPair.second->HaveWalletTx(wtxIn))
+            if (accountPair.second->HaveWalletTx(wtx))
             {
-                wtxIn.strFromAccount = accountPair.first;
+                wtx.strFromAccount = accountPair.first;
             }
         }
-    }*/
-    //Mark address as used
-        
-    // Inserts only if not already there, returns tx inserted or tx found
-    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
-    CWalletTx& wtx = (*ret.first).second;
+    }
     wtx.BindWallet(this);
     bool fInsertedNew = ret.second;
     if (fInsertedNew)
@@ -1492,11 +1136,11 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
  * TODO: One exception to this is that the abandoned state is cleared under the
  * assumption that any further notification of a transaction that was considered
  * abandoned is an indication that it is not safe to be considered abandoned.
- * Abandoned state should probably be more carefuly tracked via different
+ * Abandoned state should probably be more carefully tracked via different
  * posInBlock signals or by checking mempool presence when necessary.
  */
 bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate)
-{       
+{
     const CTransaction& tx = *ptx;
     {
         AssertLockHeld(cs_wallet);
@@ -1524,7 +1168,6 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             if (pIndex != NULL)
                 wtx.SetMerkleBranch(pIndex, posInBlock);
 
-            return AddToWallet(wtx, false);
             RemoveAddressFromKeypoolIfIsMine(tx, pIndex ? pIndex->nTime : 0);
             //fixme: Is this even needed? Surely only checking the outputs is fine
             for(const auto& txin : wtx.tx->vin)
@@ -1542,6 +1185,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 }
             }
             
+            return AddToWallet(wtx, false);
         }
     }
     return false;
@@ -1665,7 +1309,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 
 void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pindex, int posInBlock) {
     const CTransaction& tx = *ptx;
-    
+
     if (!AddToWalletIfInvolvingMe(ptx, pindex, posInBlock, true))
         return; // Not one of ours
 
@@ -1711,19 +1355,6 @@ void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
 }
 
 
-void CWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
-{
-    {
-        LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
-        if (mi != mapWallet.end())
-        {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
-                RemoveAddressFromKeypoolIfIsMine(prev.tx->vout[txin.prevout.n], time);
-        }
-    }
-}
 
 isminetype CWallet::IsMine(const CTxIn &txin) const
 {
@@ -1740,43 +1371,8 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
     return ISMINE_NO;
 }
 
-isminetype CWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
-{
-    {
-        LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
-        if (mi != mapWallet.end())
-        {
-            //fixme: (GULDEN) (MERGE)
-            /*
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.vout.size())
-                return ::IsMine(keystore, prev.vout[txin.prevout.n]);
-            */
-        }
-    }
-    return ISMINE_NO;
-}
-
 // Note that this function doesn't distinguish between a 0-valued input,
 // and a not-"is mine" (according to the filter) input.
-bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
-{
-    isminetype ret = isminetype::ISMINE_NO;
-    for (const auto& txout : tx.tx->vout)
-    {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
-        {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(forAccount->externalKeyStore, txout.scriptPubKey) : IsMine(forAccount->internalKeyStore, txout.scriptPubKey) );
-            if (temp > ret)
-                ret = temp;
-        }
-        if (ret > isminetype::ISMINE_NO)
-            return true;
-    }
-    return false;
-}
-
 CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
 {
     {
@@ -1796,11 +1392,6 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
 isminetype CWallet::IsMine(const CTxOut& txout) const
 {
     return ::IsMine(*this, txout.scriptPubKey);
-}
-
-void CWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
-{
-    ::RemoveAddressFromKeypoolIfIsMine(*this, (CTxDestination)txout.scriptPubKey, time);
 }
 
 CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter) const
@@ -1845,20 +1436,6 @@ bool CWallet::IsMine(const CTransaction& tx) const
         if (IsMine(txout)  && txout.nValue >= nMinimumInputValue)
             return true;
     return false;
-}
-
-
-
-
-        
-        
-
-void CWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time)
-{
-    for(const CTxOut& txout : tx.vout)
-    {
-        RemoveAddressFromKeypoolIfIsMine(txout, time);
-    }
 }
 
 bool CWallet::IsFromMe(const CTransaction& tx) const
@@ -1922,6 +1499,70 @@ CAmount CWallet::GetChange(const CTransaction& tx) const
     }
     return nChange;
 }
+
+/* GULDEN - We don't use these
+CPubKey CWallet::GenerateNewHDMasterKey()
+{
+    CKey key;
+    key.MakeNewKey(true);
+
+    int64_t nCreationTime = GetTime();
+    CKeyMetadata metadata(nCreationTime);
+
+    // calculate the pubkey
+    CPubKey pubkey = key.GetPubKey();
+    assert(key.VerifyPubKey(pubkey));
+
+    // set the hd keypath to "m" -> Master, refers the masterkeyid to itself
+    metadata.hdKeypath     = "m";
+    metadata.hdMasterKeyID = pubkey.GetID();
+
+    {
+        LOCK(cs_wallet);
+
+        // mem store the metadata
+        mapKeyMetadata[pubkey.GetID()] = metadata;
+
+        // write the key&metadata to the database
+        if (!AddKeyPubKey(key, pubkey))
+            throw std::runtime_error(std::string(__func__) + ": AddKeyPubKey failed");
+    }
+
+    return pubkey;
+}
+
+bool CWallet::SetHDMasterKey(const CPubKey& pubkey, CHDChain *possibleOldChain)
+{
+    LOCK(cs_wallet);
+    // store the keyid (hash160) together with
+    // the child index counter in the database
+    // as a hdchain object
+    CHDChain newHdChain;
+    if (possibleOldChain) {
+        // preserve the old chains version
+        newHdChain.nVersion = possibleOldChain->nVersion;
+    }
+    newHdChain.masterKeyID = pubkey.GetID();
+    SetHDChain(newHdChain, false);
+
+    return true;
+}
+
+bool CWallet::SetHDChain(const CHDChain& chain, bool memonly)
+{
+    LOCK(cs_wallet);
+    if (!memonly && !CWalletDB(strWalletFile).WriteHDChain(chain))
+        throw std::runtime_error(std::string(__func__) + ": writing chain failed");
+
+    hdChain = chain;
+    return true;
+}
+
+bool CWallet::IsHDEnabled() const
+{
+    return !hdChain.masterKeyID.IsNull();
+}
+*/
 
 int64_t CWalletTx::GetTxTime() const
 {
@@ -2485,6 +2126,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman
  * @{
  */
 
+extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 
 CAmount CWallet::GetBalance(const CAccount* forAccount) const
 {
@@ -3460,8 +3102,8 @@ DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256
 {
     if (!fFileBacked)
         return DB_LOAD_OK;
-    //vchDefaultKey = CPubKey();//GULDEN - no default key.
     AssertLockHeld(cs_wallet); // mapWallet
+    //vchDefaultKey = CPubKey();//GULDEN - no default key.
     DBErrors nZapSelectTxRet = CWalletDB(strWalletFile,"cr+").ZapSelectTx(vHashIn, vHashOut);
     for (uint256 hash : vHashOut)
         mapWallet.erase(hash);
@@ -3564,6 +3206,19 @@ bool CWallet::DelAddressBook(const std::string& address)
     CWalletDB(strWalletFile).ErasePurpose(address);
     return CWalletDB(strWalletFile).EraseName(address);
 }
+
+/* GULDEN - no default key.
+bool CWallet::SetDefaultKey(const CPubKey &vchPubKey)
+{
+    if (fFileBacked)
+    {
+        if (!CWalletDB(strWalletFile).WriteDefaultKey(vchPubKey))
+            return false;
+    }
+    vchDefaultKey = vchPubKey;
+    return true;
+}
+*/
 
 /**
  * Mark old keypool keys as used,
@@ -3680,80 +3335,6 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         assert(keypoolentry.vchPubKey.IsValid());
         LogPrintf("keypool reserve %d\n", nIndex);
     }
-}
-
-void CWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
-{
-    // Remove from key pool
-    if (fFileBacked)
-    {
-        CWalletDB walletdb(strWalletFile);
-        //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
-        walletdb.ErasePool(this, keyID);
-    }
-    
-    //Update accounts if needed (creation time - shadow accounts etc.)
-    {
-        LOCK(cs_wallet);
-        for (const auto& accountItem : mapAccounts)
-        {
-            if (accountItem.second->HaveKey(keyID))
-            {
-                if (usageTime > 0)
-                {
-                    if (fFileBacked)
-                    {
-                        CWalletDB walletdb(strWalletFile);
-                        accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
-                    }
-                    else
-                    {
-                        accountItem.second->possiblyUpdateEarliestTime(usageTime, NULL);
-                    }
-                }
-                
-                // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
-                // 1) User empties account. 2) User deletes account 3) At a later point MarkKeyUsed is called subsequent times (new blocks) 4) The account user just deleted is now recovered.
-                
-                //fixme: (GULDEN) (FUT) (1.6.1) This is still not 100% right, if the user does the following there can still be issues:
-                //1) Send funds from account
-                //2) Immediately close wallet
-                //3) Reopen wallet, as the new blocks are processed this code will be called and the just deleted account will be restored.
-                //We will need a better way to detect this...
-                
-                //fixme: (GULDEN) (FUT) (1.6.1) 
-                //Another edge bug here
-                //1) User sends/receives from address
-                //2) User deleted account
-                //3) User receives on same address again
-                //Account will not reappear - NB! This happens IFF there is no wallet restart anywhere in this process, and the user can always rescan still so it's not a disaster.
-                static std::set<CKeyID> keyUsedSet;
-                if (keyUsedSet.find(keyID) == keyUsedSet.end())
-                {
-                    keyUsedSet.insert(keyID);
-                    if (accountItem.second->m_Type != AccountType::Normal && accountItem.second->m_Type != AccountType::ShadowChild)
-                    {
-                        accountItem.second->m_Type = AccountType::Normal;
-                        std::string name = accountItem.second->getLabel();
-                        if (name.find(_("[Deleted]")) != std::string::npos)
-                        {
-                            name = name.replace(name.find(_("[Deleted]")), _("[Deleted]").length(), _("[Restored]"));
-                        }
-                        else
-                        {
-                            name = _("Restored");
-                        }
-                        addAccount(accountItem.second, name);
-                        
-                        //fixme: Shadow accounts during rescan...
-                    }
-                }
-            }
-        }
-    }
-    
-    //Only assign the bare minimum keys - let the background thread do the rest.
-    TopUpKeyPool(10);
 }
 
 void CWallet::KeepKey(int64_t nIndex)
@@ -4386,91 +3967,6 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     return strUsage;
 }
 
-
-   
-void CWallet::changeAccountName(CAccount* account, const std::string& newName, bool notify)
-{
-    // Force names to be unique
-    std::string finalNewName = newName;
-    std::string oldName = account->getLabel();
-    {
-        LOCK(cs_wallet);
-        
-        CWalletDB db(strWalletFile);
-           
-        int nPrefix = 1;
-        bool possibleDuplicate = true;
-        while(possibleDuplicate)
-        {
-            possibleDuplicate = false;
-            for (const auto& labelIter : mapAccountLabels)
-            {
-                if (labelIter.second == finalNewName)
-                {
-                    finalNewName = newName + strprintf("_%d", nPrefix++);
-                    possibleDuplicate = true;
-                    continue;
-                }
-            }
-        }
-        
-        account->setLabel(finalNewName, &db);
-        mapAccountLabels[account->getUUID()] = finalNewName;
-    }
-    
-    if (notify && oldName != finalNewName)
-        NotifyAccountNameChanged(this, account);
-}
-
-void CWallet::deleteAccount(CAccount* account)
-{    
-    std::string newLabel = account->getLabel();
-    if (newLabel.find(_("[Restored]")) != std::string::npos)
-    {
-        newLabel = newLabel.replace(newLabel.find(_("[Restored]")), _("[Restored]").length(), _("[Deleted]"));
-    }
-    else
-    {
-        newLabel = newLabel + " " + _("[Deleted]");
-    }
-    
-    {
-        LOCK(cs_wallet);
-        
-        CWalletDB db(strWalletFile);
-        account->setLabel(newLabel, &db);
-        account->m_Type = AccountType::Deleted;
-        mapAccountLabels[account->getUUID()] = newLabel;
-        if (!db.WriteAccount(account->getUUID(), account))
-        {
-            throw std::runtime_error("Writing account failed");
-        }
-    }
-    NotifyAccountDeleted(this, account);
-}
-
-void CWallet::addAccount(CAccount* account, const std::string& newName)
-{
-    {
-        LOCK(cs_wallet);
-        
-        CWalletDB walletdb(strWalletFile);
-        if (!walletdb.WriteAccount(account->getUUID(), account))
-        {
-            throw std::runtime_error("Writing account failed");
-        }
-        mapAccounts[account->getUUID()] = account;
-        changeAccountName(account, newName, false);
-    }
-    
-    if (account->m_Type == AccountType::Normal)
-    {
-        NotifyAccountAdded(this, account);
-        NotifyAccountNameChanged(this, account);
-        NotifyUpdateAccountList(this, account);
-    }
-}
-    
 CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 {
     // needed to restore wallet transaction meta data after -zapwallettxes
@@ -4847,8 +4343,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     {
         LOCK(walletInstance->cs_wallet);
-        //fixme: (GULDEN) (MERGE)
-        //LogPrintf("setKeyPool.size() = %u\n",      walletInstance->GetKeyPoolSize());
+        //fixme: (GULDEN) - 'key pool size' concept for wallet doesn't really make sense anymore.
+        LogPrintf("setKeyPool.size() = %u\n",      walletInstance->GetKeyPoolSize());
         LogPrintf("mapWallet.size() = %u\n",       walletInstance->mapWallet.size());
         LogPrintf("mapAddressBook.size() = %u\n",  walletInstance->mapAddressBook.size());
     }
@@ -5016,169 +4512,6 @@ bool CWallet::BackupWallet(const std::string& strDest)
     return false;
 }
 
-void CWallet::setActiveAccount(CAccount* newActiveAccount)
-{
-    if (activeAccount != newActiveAccount)
-    {
-        activeAccount = newActiveAccount;
-        CWalletDB walletdb(strWalletFile);
-        walletdb.WritePrimaryAccount(activeAccount);
-        
-        NotifyActiveAccountChanged(this, newActiveAccount);
-    }
-}
-
-CAccount* CWallet::getActiveAccount()
-{
-    return activeAccount;
-}
-
-void CWallet::setActiveSeed(CHDSeed* newActiveSeed)
-{
-    if (activeSeed != newActiveSeed)
-    {
-        activeSeed = newActiveSeed;
-        CWalletDB walletdb(strWalletFile);
-        walletdb.WritePrimarySeed(*activeSeed);
-        
-        //fixme: (FUT) (1.6.1)
-        //NotifyActiveSeedChanged(this, newActiveAccount);
-    }
-}
-
-CHDSeed* CWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
-{
-    if (IsCrypted() && (!activeAccount || IsLocked()))
-    {
-        throw std::runtime_error("Generating seed requires unlocked wallet");
-    }
-    
-    std::vector<unsigned char> entropy(16);
-    GetStrongRandBytes(&entropy[0], 16);
-    CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), seedType);
-    if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
-    {
-        throw std::runtime_error("Writing seed failed");
-    }
-    if (IsCrypted())
-    {
-        if (!newSeed->Encrypt(activeAccount->vMasterKey))
-        {
-            throw std::runtime_error("Encrypting seed failed");
-        }
-    }
-    mapSeeds[newSeed->getUUID()] = newSeed;
-    
-    return newSeed;
-}
-
-void CWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
-{
-    mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
-    if (!CWalletDB(strWalletFile).DeleteHDSeed(*deleteSeed))
-    {
-        throw std::runtime_error("Deleting seed failed");
-    }
-    
-    //fixme: purge accounts completely if empty?
-    for (const auto& accountPair : pwalletMain->mapAccounts)
-    {
-        if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
-        {
-            //fixme: check balance
-            deleteAccount(accountPair.second);
-        }
-    }
-    
-    if (activeSeed == deleteSeed)
-    {
-        if (mapSeeds.empty())
-            setActiveSeed(NULL);
-        else
-            setActiveSeed(mapSeeds.begin()->second);
-    }
-    
-    delete deleteSeed;
-}
-
-CHDSeed* CWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
-{
-    if (IsCrypted() && (!activeAccount || IsLocked()))
-    {
-        throw std::runtime_error("Generating seed requires unlocked wallet");
-    }
-    
-    CExtPubKey pubkey;
-    try
-    {
-        CBitcoinSecretExt<CExtPubKey> secretExt;
-        secretExt.SetString(pubKeyString.c_str());
-        pubkey = secretExt.GetKey();
-    }
-    catch(...)
-    {
-        throw std::runtime_error("Not a valid Gulden extended public key");
-    }
-    
-    if (!pubkey.pubkey.IsValid())
-    {
-        throw std::runtime_error("Not a valid Gulden extended public key");
-    }
-
-    CHDSeed* newSeed = new CHDSeed(pubkey, CHDSeed::CHDSeed::BIP44NoHardening);
-    if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
-    {
-        throw std::runtime_error("Writing seed failed");
-    }
-    if (IsCrypted())
-    {
-        if (!newSeed->Encrypt(activeAccount->vMasterKey))
-        {
-            throw std::runtime_error("Encrypting seed failed");
-        }
-    }
-    mapSeeds[newSeed->getUUID()] = newSeed;
-    
-    return newSeed;
-}
-
-CHDSeed* CWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type)
-{
-    if (IsCrypted() && (!activeAccount || IsLocked()))
-    {
-        throw std::runtime_error("Generating seed requires unlocked wallet");
-    }
-    
-    if (!checkMnemonic(mnemonic))
-    {
-        throw std::runtime_error("Not a valid Gulden mnemonic");
-    }
-        
-    std::vector<unsigned char> entropy(16);
-    GetStrongRandBytes(&entropy[0], 16);
-    CHDSeed* newSeed = new CHDSeed(mnemonic, type);
-    if (!CWalletDB(strWalletFile).WriteHDSeed(*newSeed))
-    {
-        throw std::runtime_error("Writing seed failed");
-    }
-    if (IsCrypted())
-    {
-        if (!newSeed->Encrypt(activeAccount->vMasterKey))
-        {
-            throw std::runtime_error("Encrypting seed failed");
-        }
-    }
-    mapSeeds[newSeed->getUUID()] = newSeed;
-    
-    return newSeed;
-}
-
-
-CHDSeed* CWallet::getActiveSeed()
-{
-    return activeSeed;
-}
-
 CKeyPool::CKeyPool()
 {
     nTime = GetTime();
@@ -5190,7 +4523,6 @@ CKeyPool::CKeyPool(const CPubKey& vchPubKeyIn, const std::string& accountNameIn,
 , accountName( accountNameIn )
 , nChain ( nChainIn )
 {
-    
 }
 
 CWalletKey::CWalletKey(int64_t nExpires)

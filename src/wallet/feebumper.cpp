@@ -237,8 +237,6 @@ bool CFeeBumper::signTransaction(CWallet *pWallet)
 
 bool CFeeBumper::commit(CWallet *pWallet)
 {
-    //fixme: (GULDEN) (MERGE)
-    /*
     AssertLockHeld(pWallet->cs_wallet);
     if (!vErrors.empty() || currentResult != BumpFeeResult::OK) {
         return false;
@@ -252,7 +250,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
 
     CWalletTx wtxBumped(pWallet, MakeTransactionRef(std::move(mtx)));
     // commit/broadcast the tx
-    CReserveKey reservekey(pWallet);
+    CReserveKey reservekey(pWallet, pWallet->mapAccounts[oldWtx.strFromAccount], KEYCHAIN_CHANGE);
     wtxBumped.mapValue = oldWtx.mapValue;
     wtxBumped.mapValue["replaces_txid"] = oldWtx.GetHash().ToString();
     wtxBumped.vOrderForm = oldWtx.vOrderForm;
@@ -281,7 +279,6 @@ bool CFeeBumper::commit(CWallet *pWallet)
         // replaced does not succeed for some reason.
         vErrors.push_back("Error: Created new bumpfee transaction but could not mark the original transaction as replaced.");
     }
-    */
     return true;
 }
 

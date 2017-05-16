@@ -539,12 +539,6 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
         Checkpoints::hashPendingCheckpoint = hashCheckpoint;
         Checkpoints::checkpointMessagePending = *this;
         LogPrintf("ProcessSyncCheckpoint: pending for sync-checkpoint %s\n", hashCheckpoint.ToString().c_str());
-        //fixme: (GULDEN) (MERGE) - IDONTTHINKWENEEDTHIS - CAN WE REMOVE? DOUBLE CHECK
-        // Ask this guy to fill in what we're missing
-        /*if (pfrom)
-        {
-            PushMessage(pfrom, "getheaders", chainActive.GetLocator(chainActive.Tip()), uint256());
-        }*/
         return false;
     }
 

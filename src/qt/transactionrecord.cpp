@@ -73,7 +73,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     for (const CTxIn& txin : wtx.tx->vin)
                     {
                         //fixme: rather just have a CAccount::GetDebit function?
-                        isminetype txinMine = wallet->IsMine(*account, txin);
+                        isminetype txinMine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                         if (txinMine == ISMINE_SPENDABLE)
                         {
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
@@ -129,7 +129,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             isminetype fAllFromMe = ISMINE_SPENDABLE;
             BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin)
             {
-                isminetype mine = wallet->IsMine(*account, txin);
+                isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                 if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
                 if(fAllFromMe > mine) fAllFromMe = mine;
             }
@@ -255,7 +255,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 for (const CTxIn& txin : wtx.tx->vin)
                 {
                     //fixme: rather just have a CAccount::GetDebit function?
-                    isminetype mine = wallet->IsMine(*account, txin);
+                    isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                     if (mine == ISMINE_SPENDABLE)
                     {
                         nNetMixed -= wallet->GetDebit(txin, ISMINE_SPENDABLE);

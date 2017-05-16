@@ -24,8 +24,6 @@
 #include "wallet/crypter.h"
 #include "wallet/walletdb.h"
 #include "wallet/rpcwallet.h"
-#include "wallet/walletdberrors.h"
-#include "account.h"
 
 #include <algorithm>
 #include <atomic>
@@ -37,14 +35,13 @@
 #include <utility>
 #include <vector>
 
+//Gulden specific includes
+#include "wallet/walletdberrors.h"
+#include "wallet/Gulden/guldenwallet.h"
+#include "account.h"
 #include <boost/foreach.hpp>
 #include <boost/thread.hpp>
 extern CWallet* pwalletMain;
-
-void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
-
-//fixme: GULDEN Make configurable option
-extern bool fShowChildAccountsSeperately;
 
 /**
  * Settings
@@ -102,6 +99,9 @@ enum WalletFeature
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
 
     FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
+/* GULDEN - we don't use this.
+    FEATURE_HD_SPLIT = 139900, // Wallet with HD chain split (change outputs will use m/0'/1'/k)
+*/
     FEATURE_LATEST = FEATURE_COMPRPUBKEY // HD is optional, use FEATURE_COMPRPUBKEY as latest version
 };
 
@@ -112,8 +112,12 @@ class CKeyPool
 public:
     int64_t nTime;
     CPubKey vchPubKey;
+    /* GULDEN - we don't use this
+    bool fInternal; // for change outputs
+   */
     std::string accountName;
     int64_t nChain;//internal or external keypool (HD wallets)
+
 
     CKeyPool();
     CKeyPool(const CPubKey& vchPubKeyIn, const std::string& accountNameIn, int64_t nChainIn);
@@ -127,6 +131,23 @@ public:
             READWRITE(nVersion);
         READWRITE(nTime);
         READWRITE(vchPubKey);
+        #if 0
+        GULDEN - no fInternal
+        if (ser_action.ForRead()) {
+            try {
+                READWRITE(fInternal);
+            }
+            catch (std::ios_base::failure&) {
+                /* flag as external address if we can't read the internal boolean
+                   (this will be the case for any wallet before the HD chain split version) */
+                fInternal = false;
+            }
+        }
+        else {
+            READWRITE(fInternal);
+        }
+        #endif
+
         //Allow to fail for legacy accounts.
         try
         {
@@ -656,17 +677,11 @@ private:
     std::vector<char> _ssExtra;
 };
 
-
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
-
-/** 
- * A CWallet maintains a set of transactions and balances
- * and provides the ability to create new transactions.
- * it containes one or more accounts, which are responsible for creating/allocating/managing keys via their keystore interfaces.
- */
-class CWallet : public CValidationInterface
+/*
+All Gulden specific functionality goes in base class CGuldenWallet
+A little bit clumsy 
+*/
+class CWallet : public CGuldenWallet
 {
 private:
     static std::atomic<bool> fFlushScheduled;
@@ -710,10 +725,34 @@ private:
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected.
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
     void SyncTransaction(const CTransactionRef& tx, const CBlockIndex *pindex = NULL, int posInBlock = 0);
+    #if 0
+    //GULDEN - we don't use these as we have our own system.
+    /* the HD chain data model (external chain counters) */
+    CHDChain hdChain;
 
-    bool fFileBacked;
+    /* HD derive new child key (on internal or external chain) */
+    void DeriveNewChildKey(CKeyMetadata& metadata, CKey& secret, bool internal = false);
+    #endif
+
+    //bool fFileBacked;
 
     std::set<int64_t> setKeyPool;
+
+    //int64_t nTimeFirstKey;
+
+    /**
+     * Private version of AddWatchOnly method which does not accept a
+     * timestamp, and which will reset the wallet's nTimeFirstKey value to 1 if
+     * the watch key did not previously have a timestamp associated with it.
+     * Because this is an inherited virtual method, it is accessible despite
+     * being marked private, but it is marked private anyway to encourage use
+     * of the other AddWatchOnly which accepts a timestamp and sets
+     * nTimeFirstKey more intelligently for more efficient rescans.
+     */
+#if 0
+    bool AddWatchOnly(const CScript& dest) override;
+#endif
+
 public:
     /*
      * Main wallet lock.
@@ -722,9 +761,9 @@ public:
      *      fFileBacked (immutable after instantiation)
      *      strWalletFile (immutable after instantiation)
      */
-    mutable CCriticalSection cs_wallet;
+    //mutable CCriticalSection cs_wallet;//Moved to base
 
-    const std::string strWalletFile;
+    //const std::string strWalletFile;//Moved to base
 
     void LoadKeyPool(int nIndex, const CKeyPool &keypool)
     {
@@ -749,13 +788,17 @@ public:
         SetNull();
     }
 
-    CWallet(const std::string& strWalletFileIn) : strWalletFile(strWalletFileIn)
+    CWallet(const std::string& strWalletFileIn) : CGuldenWallet(strWalletFileIn)
     {
         SetNull();
         fFileBacked = true;
     }
 
-    virtual ~CWallet();
+    ~CWallet()
+    {
+        delete pwalletdbEncryption;
+        pwalletdbEncryption = NULL;
+    }
 
     void SetNull()
     {
@@ -778,187 +821,9 @@ public:
         activeAccount = NULL;
         activeSeed = NULL;
     }
-    
-    
-    // The 'shadow pool thread' sets delay lock true if it had a backlog of work it wants to do on the unlocked wallet
-    bool delayLock;
-    bool wantDelayLock;
-    mutable bool didDelayLock;
-    bool Lock() const
-    {
-        LOCK(cs_wallet);
-        if (delayLock || wantDelayLock)
-        {
-            didDelayLock = true;
-            return true;
-        }
-        
-        bool ret = true;
-        for (auto accountPair : mapAccounts)
-        {
-            if (!accountPair.second->Lock())
-                ret = false;
-        }
-        for (auto seedPair : mapSeeds)
-        {
-            if (!seedPair.second->Lock())
-                ret = false;
-        }
-        return ret;
-    }
-    
-    bool Unlock(const CKeyingMaterial& vMasterKeyIn) const
-    {
-        LOCK(cs_wallet);
-        bool ret = true;
-        for (auto accountPair : mapAccounts)
-        {
-            if (!accountPair.second->Unlock(vMasterKeyIn))
-                ret = false;
-        }
-        for (auto seedPair : mapSeeds)
-        {
-            if (!seedPair.second->Unlock(vMasterKeyIn))
-                ret = false;
-        }
-        return ret;
-    }
-    
-    bool IsCrypted() const
-    {
-        for (auto accountPair : mapAccounts)
-        {
-            if(accountPair.second->IsCrypted())
-                return true;
-        }
-        for (auto seedPair : mapSeeds)
-        {
-            if (seedPair.second->IsCrypted())
-                return true;
-        }
-        return false;
-    }
-    
-    
-    bool IsLocked() const
-    {
-        for (auto accountPair : mapAccounts)
-        {
-            if(accountPair.second->IsLocked())
-                return true;
-        }
-        for (auto seedPair : mapSeeds)
-        {
-            if (seedPair.second->IsLocked())
-                return true;
-        }
-        return false;
-    }
-        
-    bool GetKey(const CKeyID &address, CKey& keyOut) const
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->GetKey(address, keyOut))
-                return true;
-        }
-        return false;
-    }
-    
-    
-    bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut)
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->GetPubKey(address, vchPubKeyOut))
-                return true;
-        }
-        return false;
-    }
-    
-    
-    bool HaveWatchOnly(const CScript &dest) const
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->HaveWatchOnly(dest))
-                return true;
-        }
-        return false;
-    }
-    
-    bool HaveWatchOnly() const
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->HaveWatchOnly())
-                return true;
-        }
-        return false;
-    }
-    
-    bool HaveCScript(const CScriptID &hash)
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->HaveCScript(hash))
-                return true;
-        }
-        return false;
-    }
-    
-    bool GetCScript(const CScriptID &hash, CScript& redeemScriptOut)
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->GetCScript(hash, redeemScriptOut))
-                return true;
-        }
-        return false;
-    }
-    
-    
-    bool HaveKey(const CKeyID &address) const
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->HaveKey(address))
-            return true;
-        }
-        return false;
-    }
-    
-    bool HaveWatchOnly(const CScript &dest)
-    {
-        LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
-        {
-            if (accountPair.second->HaveWatchOnly(dest))
-            return true;
-        }
-        return false;
-    }
 
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;
-    
-    
-    std::map<std::string, CHDSeed*> mapSeeds;
-    std::map<std::string, CAccount*> mapAccounts;
-    std::map<std::string, std::string> mapAccountLabels;
-    
-    void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
-    void addAccount(CAccount* account, const std::string& newName);
-    void deleteAccount(CAccount* account);
-    
-    
 
     typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
     typedef std::multimap<int64_t, TxPair > TxItems;
@@ -973,8 +838,6 @@ public:
 */
 
     std::set<COutPoint> setLockedCoins;
-
-    int64_t nTimeFirstKey;
 
     const CWalletTx* GetWalletTx(const uint256& hash) const;
 
@@ -1014,29 +877,20 @@ public:
      * Generate a new key
      */
     CPubKey GenerateNewKey(CAccount& forAccount, int keyChain);
-    void DeriveNewChildKey(CKeyMetadata& metadata, CKey& secret);
     //! Adds a key to the store, and saves it to disk.
     bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, CAccount& forAccount, int keyChain);
-    //! for wallet upgrade
-    void ForceRewriteKeys(CAccount& forAccount);
-    bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain);
     //! Adds a key to the store, without saving it to disk (used by LoadWallet)
-    bool LoadKey(const CKey& key, const CPubKey &pubkey, const std::string& forAccount, int64_t nKeyChain)
-    {
-        LOCK(cs_wallet);
-        return mapAccounts[forAccount]->AddKeyPubKey(key, pubkey, nKeyChain);
-    }
-    bool LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
-    {
-        LOCK(cs_wallet);
-        return mapAccounts[forAccount]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);
-    }
+    bool LoadKey(const CKey& key, const CPubKey &pubkey, const std::string& forAccount, int64_t nKeyChain);
     //! Load metadata (used by LoadWallet)
     bool LoadKeyMetadata(const CPubKey &pubkey, const CKeyMetadata &metadata);
 
     bool LoadMinVersion(int nVersion) { AssertLockHeld(cs_wallet); nWalletVersion = nVersion; nWalletMaxVersion = std::max(nWalletMaxVersion, nVersion); return true; }
     void UpdateTimeFirstKey(int64_t nCreateTime);
 
+/*
+    //! Adds an encrypted key to the store, and saves it to disk.
+    bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret) override;
+*/
     //! Adds an encrypted key to the store, without saving it to disk (used by LoadWallet)
     bool LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, const std::string& forAccount, int64_t nKeyChain);
     bool AddCScript(const CScript& redeemScript);
@@ -1075,10 +929,6 @@ public:
     DBErrors ReorderTransactions();
     bool AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment = "");
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
-    
-    CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType);
-    CAccount* GenerateNewLegacyAccount(std::string strAccount);
-    CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
@@ -1139,10 +989,12 @@ public:
     static CAmount GetRequiredFee(unsigned int nTxBytes);
 
     bool NewKeyPool();
+    /*
+    size_t KeypoolCountExternalKeys();
+    */
     int TopUpKeyPool(unsigned int kpSize = 0, unsigned int maxNew = 0);
     void ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool, CAccount* forAccount, int64_t keyChain);
     void KeepKey(int64_t nIndex);
-    void MarkKeyUsed(CKeyID keyID, uint64_t usageTime);
     void ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain);
     bool GetKeyFromPool(CPubKey &key, CAccount* forAccount, int64_t keyChain);
     int64_t GetOldestKeyPoolTime();
@@ -1156,21 +1008,16 @@ public:
     std::set<CTxDestination> GetAccountAddresses(const std::string& strAccount) const;
 
     isminetype IsMine(const CTxIn& txin) const;
-    isminetype IsMine(const CKeyStore &keystore, const CTxIn& txin) const;
-    void RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time);
-    
     /**
      * Returns amount of debit if the input matches the
      * filter, otherwise returns 0
      */
     CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;
     isminetype IsMine(const CTxOut& txout) const;
-    void RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time);
     CAmount GetCredit(const CTxOut& txout, const isminefilter& filter) const;
     bool IsChange(const CTxOut& txout) const;
     CAmount GetChange(const CTxOut& txout) const;
     bool IsMine(const CTransaction& tx) const;
-    void RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time);
     /** should probably be renamed to IsRelevantToMe */
     bool IsFromMe(const CTransaction& tx) const;
     CAmount GetDebit(const CTransaction& tx, const isminefilter& filter) const;
@@ -1199,13 +1046,18 @@ public:
     }
 
     void GetScriptForMining(std::shared_ptr<CReserveScript> &script) override;
-/*GULDEN - we don't use these (accounts)
+    
     unsigned int GetKeyPoolSize()
     {
         AssertLockHeld(cs_wallet); // setKeyPool
-        return setKeyPool.size();
+        int nPoolSize=0;
+        for (auto accountPair : mapAccounts)
+        {
+            nPoolSize += accountPair.second->GetKeyPoolSize();
+        }
+        return nPoolSize;
     }
-
+/*GULDEN - we don't use this (accounts)
     bool SetDefaultKey(const CPubKey &vchPubKey);
 */
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
@@ -1250,21 +1102,7 @@ public:
 
     /** Watch-only address added */
     boost::signals2::signal<void (bool fHaveWatchOnly)> NotifyWatchonlyChanged;
-    
-    // Account changed (name change)
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountNameChanged;
-    
-    // New account added to the wallet
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountAdded;
-    
-    // Account marked as deleted.
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountDeleted;
-    
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyUpdateAccountList;
-    
-    // Currently active account changed
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyActiveAccountChanged;
-    
+
     /** Inquire whether this wallet broadcasts transactions. */
     bool GetBroadcastTransactions() const { return fBroadcastTransactions; }
     /** Set whether this wallet broadcasts transactions. */
@@ -1294,24 +1132,25 @@ public:
 
     bool BackupWallet(const std::string& strDest);
 
-    void setActiveAccount(CAccount* newActiveAccount);
-    CAccount* getActiveAccount();
-    void setActiveSeed(CHDSeed* newActiveSeed);
-    CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
-    void DeleteSeed(CHDSeed* deleteSeed, bool purge);
-    CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
-    CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
-    CHDSeed* getActiveSeed();
-    
-    //const CHDChain& GetHDChain() { return hdChain; }
+#if 0
+GULDEN UNUSED
+    /* Set the HD chain model (chain child index counters) */
+    bool SetHDChain(const CHDChain& chain, bool memonly);
+    const CHDChain& GetHDChain() const { return hdChain; }
 
     /* Returns true if HD is enabled */
-    /*bool IsHDEnabled() const;*/
+    bool IsHDEnabled() const;
 
     /* Generates a new HD master key (will not be activated) */
-    //CPubKey GenerateNewHDMasterKey();
-    CAccount* activeAccount;
-    CHDSeed* activeSeed;
+    CPubKey GenerateNewHDMasterKey();
+    
+    /* Set the current HD master key (will reset the chain child index counters)
+       If possibleOldChain is provided, the parameters from the old chain (version)
+       will be preserved. */
+    bool SetHDMasterKey(const CPubKey& key, CHDChain *possibleOldChain = nullptr);
+#endif
+
+    
         
     friend class CAccount;
 };

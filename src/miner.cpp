@@ -610,10 +610,6 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
             return error("GuldenMiner: generated block is stale");
     }
 
-    // Inform about the new block
-    //fixme: (GULDEN) (MERGE)
-    //GetMainSignals().BlockFound(pblock->GetHash());
-
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(pblock), true, NULL))
         return error("GuldenMiner: ProcessNewBlock, block not accepted");

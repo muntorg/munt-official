@@ -205,7 +205,6 @@ public:
        
     ADD_SERIALIZE_METHODS;
 
-    //fixme: (GULDEN) (MERGE) something went odd here.
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
@@ -306,6 +305,7 @@ protected:
     bool m_readOnly;
     
     CKeyingMaterial vMasterKey;//Memory only.
+    friend class CGuldenWallet;
     friend class CWallet;
 };
 

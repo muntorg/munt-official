@@ -235,7 +235,10 @@ public:
     /// Create splash screen
     void createSplashScreen(const NetworkStyle *networkStyle);
 
-    
+    /*GULDEN - move to public section
+    /// Request core initialization
+    void requestInitialize();
+    */
     /// Request core shutdown
     void requestShutdown();
 
@@ -275,7 +278,7 @@ private:
 
     void startThread();
     
-    // GULDEN - rescan code needs this to tell if we try shut down midway throguh a rescan.
+    // GULDEN - rescan code needs this to tell if we try shut down midway through a rescan.
     bool shutDownRequested;
 };
 
@@ -410,6 +413,7 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
     
     window->show();
 }
+
 /*GULDEN - we don't use this as we have no splash screen
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
@@ -582,16 +586,16 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(bitcoin_locale);
 
     //NB!!! This must be called -before- the application is created, otherwise it has -no- effect.
-    #if QT_VERSION > 0x050100
+#if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    #endif
-    #if QT_VERSION >= 0x050600
+#endif
+#if QT_VERSION >= 0x050600
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    #endif
-    #ifdef Q_OS_MAC
+#endif
+#ifdef Q_OS_MAC
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
-    #endif
+#endif
     
     BitcoinApplication app(argc, argv);
 #if QT_VERSION >= 0x050500

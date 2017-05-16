@@ -228,7 +228,7 @@ bool CHDSeed::Lock()
     purposeKeyPriv = CExtKey();
     cointypeKeyPriv = CExtKey();
     
-    //fixme: HIGH - also burnt he memory just to be sure?
+    //fixme: HIGH - also burn the memory just to be sure?
     vMasterKey.clear();
     
     return true;
@@ -542,7 +542,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, int keyChain)
     
     LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
     
-    if (!wallet.AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
+    if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
     return childKey.pubkey;
@@ -687,7 +687,7 @@ bool CAccount::IsCrypted() const
 
 bool CAccount::Lock()
 {
-    //fixme: HIGH - also burnt he memory just to be sure?
+    //fixme: HIGH - also burn the memory just to be sure?
     vMasterKey.clear();
     
     return externalKeyStore.Lock() && internalKeyStore.Lock();

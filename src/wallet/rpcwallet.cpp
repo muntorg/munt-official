@@ -3038,8 +3038,6 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
     return result;
 }
 
-//fixme: (GULDEN) (MERGE)
-/*
 UniValue bumpfee(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -3173,7 +3171,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
     result.push_back(errors);
 
     return result;
-}*/
+}
 
 extern UniValue abortrescan(const JSONRPCRequest& request); // in rpcdump.cpp
 extern UniValue dumpprivkey(const JSONRPCRequest& request); // in rpcdump.cpp

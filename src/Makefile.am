@@ -108,7 +108,8 @@ GDN_CONSENSUS_SRCS = \
 GDN_WALLET_SRCS = account.cpp \
    Gulden/mnemonic.cpp \
    Gulden/util.cpp \
-   Gulden/guldenapplication.cpp
+   Gulden/guldenapplication.cpp \
+   wallet/Gulden/guldenwallet.cpp
 
 # bitcoin core #
 BITCOIN_CORE_H = \
