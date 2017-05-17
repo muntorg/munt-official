@@ -40,6 +40,13 @@ class CWalletTx;
 class uint160;
 class uint256;
 
+enum WalletLoadState
+{
+    NEW_WALLET,
+    EXISTING_WALLET_OLDACCOUNTSYSTEM,
+    EXISTING_WALLET
+};
+
 /** Error statuses for the wallet database */
 //fixme: (GULDEN) check if this is still necesary or if we can fix this
 /* Gulden - we rather have these in dberrors.h due to a linking issue
@@ -100,6 +107,9 @@ public:
     int64_t nCreateTime; // 0 means unknown
     std::string hdKeypath; //optional HD/bip32 keypath
     std::string hdAccountUUID; //uuid of the account used to derive this key
+/* GULDEN - unused
+    CKeyID hdMasterKeyID; //id of the HD masterkey used to derive this key
+*/
 
     CKeyMetadata()
     {
@@ -122,7 +132,11 @@ public:
         {
             READWRITE(hdKeypath);
             READWRITE(hdAccountUUID);
+/* GULDEN - unused
+            READWRITE(hdMasterKeyID);
+*/
         }
+
     }
 
     void SetNull()
@@ -131,15 +145,12 @@ public:
         nCreateTime = 0;
         hdKeypath.clear();
         hdAccountUUID = "";
+/* GULDEN - unused
+        hdMasterKeyID.SetNull();
+*/
     }
 };
 
-enum WalletLoadState
-{
-    NEW_WALLET,
-    EXISTING_WALLET_OLDACCOUNTSYSTEM,
-    EXISTING_WALLET
-};
 
 /** Access to the wallet database */
 class CWalletDB : public CDB
@@ -158,12 +169,13 @@ public:
     bool WriteTx(const CWalletTx& wtx);
     bool EraseTx(uint256 hash);
 
-    bool EraseKey(const CPubKey& vchPubKey);
-    bool EraseEncryptedKey(const CPubKey& vchPubKey);
     bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
-    bool WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, const int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount);
     bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
+
+    bool EraseKey(const CPubKey& vchPubKey);
+    bool EraseEncryptedKey(const CPubKey& vchPubKey);
+    bool WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, const int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount);
 
     bool WriteCScript(const uint160& hash, const CScript& redeemScript);
 
@@ -189,11 +201,20 @@ public:
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
     bool WriteAccountingEntry_Backend(const CAccountingEntry& acentry);
+/*
+    bool ReadAccount(const std::string& strAccount, CAccount& account);
+    bool WriteAccount(const std::string& strAccount, const CAccount& account);
+*/
 
+    //! write the account and account label - account label stored seperately to allow for easy changing.
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
     bool EraseAccountLabel(const std::string& strUUID);
-
     bool WriteAccount(const std::string& strAccount, const CAccount* account);
+    //! write the seed (mnemonic / account index counter)
+    bool WriteHDSeed(const CHDSeed& seed);
+    bool DeleteHDSeed(const CHDSeed& seed);    
+    bool WritePrimarySeed(const CHDSeed& seed);
+    bool WritePrimaryAccount(const CAccount* account);
 
     /// Write destination data key,value tuple to database
     bool WriteDestData(const std::string &address, const std::string &key, const std::string &value);
@@ -224,13 +245,6 @@ public:
     /* GULDEN - We don't use HD chain.
     bool WriteHDChain(const CHDChain& chain);
     */
-    
-    //! write the seed (mnemonic / account index counter)
-    bool WriteHDSeed(const CHDSeed& seed);
-    bool DeleteHDSeed(const CHDSeed& seed);
-    
-    bool WritePrimarySeed(const CHDSeed& seed);
-    bool WritePrimaryAccount(const CAccount* account);
 
     static void IncrementUpdateCounter();
     static unsigned int GetUpdateCounter();

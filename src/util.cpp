@@ -266,6 +266,7 @@ const CLogCategoryDesc LogCategories[] =
     {BCLog::MEMPOOLREJ, "mempoolrej"},
     {BCLog::LIBEVENT, "libevent"},
     {BCLog::COINDB, "coindb"},
+    {BCLog::DELTA, "delta"},
     {BCLog::QT, "qt"},
     {BCLog::LEVELDB, "leveldb"},
     {BCLog::ALL, "1"},
