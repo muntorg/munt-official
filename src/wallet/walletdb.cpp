@@ -149,15 +149,19 @@ bool CWalletDB::WriteCScript(const uint160& hash, const CScript& redeemScript)
     return Write(std::make_pair(std::string("cscript"), hash), *(const CScriptBase*)(&redeemScript), false);
 }
 
-bool CWalletDB::WriteWatchOnly(const CScript &dest)
+bool CWalletDB::WriteWatchOnly(const CScript &dest, const CKeyMetadata& keyMeta)
 {
     nWalletDBUpdateCounter++;
+    if (!Write(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)), keyMeta))
+        return false;
     return Write(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)), '1');
 }
 
 bool CWalletDB::EraseWatchOnly(const CScript &dest)
 {
     nWalletDBUpdateCounter++;
+    if (!Erase(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest))))
+        return false;
     return Erase(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)));
 }
 
@@ -1198,12 +1202,13 @@ bool CWalletDB::EraseDestData(const std::string &address, const std::string &key
     return Erase(std::make_pair(std::string("destdata"), std::make_pair(address, key)));
 }
 
-
+/*
 bool CWalletDB::WriteHDChain(const CHDChain& chain)
 {
     nWalletDBUpdateCounter++;
     return Write(std::string("hdchain"), chain);
 }
+*/
 
 void CWalletDB::IncrementUpdateCounter()
 {

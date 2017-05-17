@@ -332,11 +332,10 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
 {
     AssertLockHeld(cs_wallet);
     
-    //fixme: (GULDEN) (FUT) (WATCHONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
-        //fixme: (GULDEN) (MERGE) - nCreateTime should go here as well?
+        //fixme: (GULDEN) (FUT) (WATCHONLY) - nCreateTime should go here as well?
         if (accountPair.second->AddWatchOnly(dest))
             ret = true;
     }
@@ -349,8 +348,7 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
      NotifyWatchonlyChanged(true);
      if (!fFileBacked)
          return true;
-    //fixme: (GULDEN) (MERGE)
-    return CWalletDB(strWalletFile).WriteWatchOnly(dest/*, meta*/);
+    return CWalletDB(strWalletFile).WriteWatchOnly(dest, meta);
 }
 
 bool CWallet::RemoveWatchOnly(const CScript &dest)
@@ -935,21 +933,20 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
 bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew)
 {
     assert(0);
-    
-    /*LOCK(cs_wallet);
-    
+    /* GULDEN - function unused.
     CWalletDB walletdb(strWalletFile);
 
-    CAccount* account = mapAccounts[strAccount];
+    CAccount account;
+    walletdb.ReadAccount(strAccount, account);
 
-    if (account && !bForceNew) {
-        if (!account->vchPubKey.IsValid())
+    if (!bForceNew) {
+        if (!account.vchPubKey.IsValid())
             bForceNew = true;
         else {
             // Check if the current key has been used
-            CScript scriptPubKey = GetScriptForDestination(account->vchPubKey.GetID());
+            CScript scriptPubKey = GetScriptForDestination(account.vchPubKey.GetID());
             for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin();
-                 it != mapWallet.end() && account->vchPubKey.IsValid();
+                 it != mapWallet.end() && account.vchPubKey.IsValid();
                  ++it)
                 BOOST_FOREACH(const CTxOut& txout, (*it).second.tx->vout)
                     if (txout.scriptPubKey == scriptPubKey) {
@@ -962,23 +959,16 @@ bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bFo
     //fixme: GULDEN - the below is completely broken - redo this if we ever actually need it.
     // Generate a new key
     if (bForceNew) {
-        if (!GetKeyFromPool(account->vchPubKey, account, KEYCHAIN_EXTERNAL))
+        if (!GetKeyFromPool(account.vchPubKey, false))
             return false;
 
-        account = activeSeed->GenerateAccount(Desktop, NULL);
-        if (!walletdb.WriteAccount(strAccount, account))
-        {
-            throw runtime_error("Writing seed failed");
-        }
-        //fixme: GULDEN - the below is completely broken - redo this if we ever actually need it.
-        //mapAccounts[strAccount] = account;
-
-        //SetAddressBook(account->vchPubKey.GetID(), strAccount, "receive");
+        SetAddressBook(account.vchPubKey.GetID(), strAccount, "receive");
+        walletdb.WriteAccount(strAccount, account);
     }
 
-    pubKey = account->vchPubKey;*/
-
-    return false;
+    pubKey = account.vchPubKey;
+    */
+    return true;
 }
 
 void CWallet::MarkDirty()
