@@ -655,22 +655,16 @@ void static BitcoinMiner(const CChainParams& chainparams)
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 
         while (true) {
-            //fixme: (GULDEN) (MERGE) (REGTEST)
-            /*if (chainparams.MiningRequiresPeers())
+            if (GetBoolArg("-regtest", false))
             {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {  
-                    bool fvNodesEmpty;
-                    {
-                        LOCK(cs_vNodes);
-                        fvNodesEmpty = vNodes.empty();
-                    }
-                    if (!fvNodesEmpty && !IsInitialBlockDownload())
+                    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0 && !IsInitialBlockDownload())
                         break;
                     MilliSleep(1000);
                 } while (true);
-            }*/
+            }
 
             //
             // Create new block
@@ -764,9 +758,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 // Check for stop or if block needs to be rebuilt
                 boost::this_thread::interruption_point();
                 // Regtest mode doesn't require peers
-                //fixme: (GULDEN) (MERGE) regtest
-                //if (vNodes.empty())
-                    //break;
+                
+                if (!GetBoolArg("-regtest", false) && g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
+                    break;
                 if (nNonce >= 0xffff0000)
                     break;
                 if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
