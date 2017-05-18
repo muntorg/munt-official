@@ -6,7 +6,7 @@ Gulden is a simple and very powerful payment system. Gulden uses blockchain tech
 ### Technical documentation
 
 * PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
-* Intro for PHP developers - https://www.paulwillen.nl/1102/get-started-with-php-developing-on-the-gulden-network/
+* Intro for PHP developers - https://www.paulwillen.nl/1102/get-started-with-php-developing-on-the-gulden-network
 
 ### Community
 
@@ -17,7 +17,10 @@ Connect with the community through one or more of the following:
 |Slack:|https://gulden.com/join|
 |Twitter:|http://twitter.com/gulden|
 |Facebook:|http://facebook.com/gulden|
+|Meetup:|https://www.meetup.com/gulden|
+|Reddit:|https://www.reddit.com/r/GuldenCommunity|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
+
 
 
 ### Building
