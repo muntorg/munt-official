@@ -52,14 +52,15 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scri
 class CGuldenWallet : public CValidationInterface
 {
 public:
-    CGuldenWallet(){};
-    CGuldenWallet(const std::string& strWalletFileIn) : strWalletFile(strWalletFileIn){};
+    CGuldenWallet() : dbw(new CWalletDBWrapper()){};
+    CGuldenWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in)){};
     virtual ~CGuldenWallet(){};
     
     //Members that are shared with CWallet.
     mutable CCriticalSection cs_wallet;
     int64_t nTimeFirstKey;
-    const std::string strWalletFile;
+    //const std::string strWalletFile;
+    std::unique_ptr<CWalletDBWrapper> dbw;
     bool fFileBacked;
     
     

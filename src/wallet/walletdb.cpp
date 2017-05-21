@@ -43,7 +43,7 @@ static std::atomic<unsigned int> nWalletDBUpdateCounter;
 bool CWalletDB::WriteName(const std::string& strAddress, const std::string& strName)
 {
     nWalletDBUpdateCounter++;
-    return Write(make_pair(std::string("name"), strAddress), strName);
+    return batch.Write(std::make_pair(std::string("name"), strAddress), strName);
 }
 
 bool CWalletDB::EraseName(const std::string& strAddress)
@@ -51,50 +51,50 @@ bool CWalletDB::EraseName(const std::string& strAddress)
     // This should only be used for sending addresses, never for receiving addresses,
     // receiving addresses must always have an address book entry if they're not change return.
     nWalletDBUpdateCounter++;
-    return Erase(make_pair(std::string("name"), strAddress));
+    return batch.Erase(std::make_pair(std::string("name"), strAddress));
 }
 
 bool CWalletDB::WritePurpose(const std::string& strAddress, const std::string& strPurpose)
 {
     nWalletDBUpdateCounter++;
-    return Write(make_pair(std::string("purpose"), strAddress), strPurpose);
+    return batch.Write(std::make_pair(std::string("purpose"), strAddress), strPurpose);
 }
 
 bool CWalletDB::ErasePurpose(const std::string& strPurpose)
 {
     nWalletDBUpdateCounter++;
-    return Erase(make_pair(std::string("purpose"), strPurpose));
+    return batch.Erase(std::make_pair(std::string("purpose"), strPurpose));
 }
 
 bool CWalletDB::WriteTx(const CWalletTx& wtx)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("tx"), wtx.GetHash()), wtx);
+    return batch.Write(std::make_pair(std::string("tx"), wtx.GetHash()), wtx);
 }
 
 bool CWalletDB::EraseTx(uint256 hash)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("tx"), hash));
+    return batch.Erase(std::make_pair(std::string("tx"), hash));
 }
 
 bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("key"), vchPubKey));
+    return batch.Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && batch.Erase(std::make_pair(std::string("key"), vchPubKey));
 }
 
 bool CWalletDB::EraseEncryptedKey(const CPubKey& vchPubKey)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && Erase(std::make_pair(std::string("ckey"), vchPubKey));
+    return batch.Erase(std::make_pair(std::string("keymeta"), vchPubKey)) && batch.Erase(std::make_pair(std::string("ckey"), vchPubKey));
 }
 
 bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata& keyMeta, const std::string forAccount, int64_t nKeyChain)
 {
     nWalletDBUpdateCounter++;
 
-    if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
+    if (!batch.Write(std::make_pair(std::string("keymeta"), vchPubKey),
                keyMeta, false))
         return false;
 
@@ -104,18 +104,17 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
     vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
 
-    return Write(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(vchPrivKey, Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
+    return batch.Write(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(vchPrivKey, Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
 }
 
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
 {
     nWalletDBUpdateCounter++;
 
-    if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
-               keyMeta, false))
+    if (!batch.Write(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta, false))
         return false;
 
-    return Write(std::make_pair(std::string("keyHD"), vchPubKey), std::make_tuple(HDKeyIndex, keyChain, forAccount) , false);
+    return batch.Write(std::make_pair(std::string("keyHD"), vchPubKey), std::make_tuple(HDKeyIndex, keyChain, forAccount) , false);
 }
 
 bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain)
@@ -123,16 +122,16 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsi
     const bool fEraseUnencryptedKey = true;
     nWalletDBUpdateCounter++;
 
-    if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
+    if (!batch.Write(std::make_pair(std::string("keymeta"), vchPubKey),
             keyMeta))
         return false;
 
-    if (!Write(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(vchCryptedSecret, forAccount, nKeyChain), false))
+    if (!batch.Write(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(vchCryptedSecret, forAccount, nKeyChain), false))
         return false;
     if (fEraseUnencryptedKey)
     {
-        Erase(std::make_pair(std::string("key"), vchPubKey));
-        Erase(std::make_pair(std::string("wkey"), vchPubKey));
+        batch.Erase(std::make_pair(std::string("key"), vchPubKey));
+        batch.Erase(std::make_pair(std::string("wkey"), vchPubKey));
     }
     return true;
 }
@@ -140,73 +139,72 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsi
 bool CWalletDB::WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("mkey"), nID), kMasterKey, true);
+    return batch.Write(std::make_pair(std::string("mkey"), nID), kMasterKey, true);
 }
 
 bool CWalletDB::WriteCScript(const uint160& hash, const CScript& redeemScript)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("cscript"), hash), *(const CScriptBase*)(&redeemScript), false);
+    return batch.Write(std::make_pair(std::string("cscript"), hash), *(const CScriptBase*)(&redeemScript), false);
 }
 
 bool CWalletDB::WriteWatchOnly(const CScript &dest, const CKeyMetadata& keyMeta)
 {
     nWalletDBUpdateCounter++;
-    if (!Write(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)), keyMeta))
+    if (!batch.Write(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)), keyMeta))
         return false;
-    return Write(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)), '1');
+    return batch.Write(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)), '1');
 }
 
 bool CWalletDB::EraseWatchOnly(const CScript &dest)
 {
     nWalletDBUpdateCounter++;
-    if (!Erase(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest))))
+    if (!batch.Erase(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest))))
         return false;
-    return Erase(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)));
+    return batch.Erase(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)));
 }
 
 bool CWalletDB::WriteBestBlock(const CBlockLocator& locator)
 {
     nWalletDBUpdateCounter++;
-    Write(std::string("bestblock"), CBlockLocator()); // Write empty block locator so versions that require a merkle branch automatically rescan
-    return Write(std::string("bestblock_nomerkle"), locator);
+    batch.Write(std::string("bestblock"), CBlockLocator()); // Write empty block locator so versions that require a merkle branch automatically rescan
+    return batch.Write(std::string("bestblock_nomerkle"), locator);
 }
 
 bool CWalletDB::ReadBestBlock(CBlockLocator& locator)
 {
-    if (Read(std::string("bestblock"), locator) && !locator.vHave.empty()) return true;
-    return Read(std::string("bestblock_nomerkle"), locator);
+    if (batch.Read(std::string("bestblock"), locator) && !locator.vHave.empty()) return true;
+    return batch.Read(std::string("bestblock_nomerkle"), locator);
 }
 
 bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::string("orderposnext"), nOrderPosNext);
+    return batch.Write(std::string("orderposnext"), nOrderPosNext);
 }
 /*GULDEN - no default key (accounts)
 bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::string("defaultkey"), vchPubKey);
+    return batch.Write(std::string("defaultkey"), vchPubKey);
 }
 */
 bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 {
-    return Read(std::make_pair(std::string("pool"), nPool), keypool);
+    return batch.Read(std::make_pair(std::string("pool"), nPool), keypool);
 }
 
 bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 {
     nWalletDBUpdateCounter++;
     staticPoolCache[keypool.vchPubKey.GetID()] = nPool;
-    
-    return Write(std::make_pair(std::string("pool"), nPool), keypool);
+    return batch.Write(std::make_pair(std::string("pool"), nPool), keypool);    
 }
 
 bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("pool"), nPool));
+    return batch.Erase(std::make_pair(std::string("pool"), nPool));
 }
 
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
@@ -221,30 +219,30 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
         iter.second->setKeyPoolInternal.erase(keyIndex);
     }
     //Remove from disk
-    return Erase(std::make_pair(std::string("pool"), staticPoolCache[id]));
+    return batch.Erase(std::make_pair(std::string("pool"), staticPoolCache[id]));
 }
 
 bool CWalletDB::HasPool(CWallet* pwallet, const CKeyID& id)
 {
     //Remove from disk
-    return Exists(std::make_pair(std::string("pool"), staticPoolCache[id]));
+    return batch.Exists(std::make_pair(std::string("pool"), staticPoolCache[id]));
 }
 
 bool CWalletDB::WriteMinVersion(int nVersion)
 {
-    return Write(std::string("minversion"), nVersion);
+    return batch.Write(std::string("minversion"), nVersion);
 }
 
 bool CWalletDB::WriteAccountLabel(const std::string& strUUID, const std::string& strLabel)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("acclabel"), strUUID), strLabel);
+    return batch.Write(std::make_pair(std::string("acclabel"), strUUID), strLabel);
 }
   
 bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("acclabel"), strUUID));
+    return batch.Erase(std::make_pair(std::string("acclabel"), strUUID));
 }
     
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
@@ -252,15 +250,15 @@ bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* acco
     nWalletDBUpdateCounter++;
     
     if (account->IsHD())
-      return Write(make_pair(std::string("acchd"), strAccount), *((CAccountHD*)account));
+      return batch.Write(make_pair(std::string("acchd"), strAccount), *((CAccountHD*)account));
     else
-      return Write(make_pair(std::string("accleg"), strAccount), *account);
+      return batch.Write(make_pair(std::string("accleg"), strAccount), *account);
 }
 
 
 bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry)
 {
-    return Write(std::make_pair(std::string("acentry"), std::make_pair(acentry.strAccount, nAccEntryNum)), acentry);
+    return batch.Write(std::make_pair(std::string("acentry"), std::make_pair(acentry.strAccount, nAccEntryNum)), acentry);
 }
 
 bool CWalletDB::WriteAccountingEntry_Backend(const CAccountingEntry& acentry)
@@ -284,7 +282,7 @@ void CWalletDB::ListAccountCreditDebit(const std::string& strAccount, std::list<
 {
     bool fAllAccounts = (strAccount == "*");
 
-    Dbc* pcursor = GetCursor();
+    Dbc* pcursor = batch.GetCursor();
     if (!pcursor)
         throw std::runtime_error(std::string(__func__) + ": cannot create DB cursor");
     bool setRange = true;
@@ -295,7 +293,7 @@ void CWalletDB::ListAccountCreditDebit(const std::string& strAccount, std::list<
         if (setRange)
             ssKey << std::make_pair(std::string("acentry"), std::make_pair((fAllAccounts ? std::string("") : strAccount), uint64_t(0)));
         CDataStream ssValue(SER_DISK, CLIENT_VERSION);
-        int ret = ReadAtCursor(pcursor, ssKey, ssValue, setRange);
+        int ret = batch.ReadAtCursor(pcursor, ssKey, ssValue, setRange);
         setRange = false;
         if (ret == DB_NOTFOUND)
             break;
@@ -754,7 +752,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     try {
         LOCK(pwallet->cs_wallet);
         int nMinVersion = 0;
-        if (Read((std::string)"minversion", nMinVersion))
+        if (batch.Read((std::string)"minversion", nMinVersion))
         {
             if (nMinVersion > CLIENT_VERSION)
                 return DB_TOO_NEW;
@@ -767,7 +765,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         // Accounts first
         {
             // Get cursor
-            Dbc* pcursor = GetCursor();
+            Dbc* pcursor = batch.GetCursor();
             if (!pcursor)
             {
                 LogPrintf("Error getting wallet database cursor\n");
@@ -778,7 +776,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 // Read next record
                 CDataStream ssKey(SER_DISK, CLIENT_VERSION);
                 CDataStream ssValue(SER_DISK, CLIENT_VERSION);
-                int ret = ReadAtCursor(pcursor, ssKey, ssValue);
+                int ret = batch.ReadAtCursor(pcursor, ssKey, ssValue);
                 if (ret == DB_NOTFOUND)
                     break;
                 else if (ret != 0)
@@ -856,7 +854,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 try
                 {
                     fs::path oldPath = bitdb.strPath;
-                    oldPath = oldPath / strFile;
+                    oldPath = oldPath / pwallet->dbw->GetName();
                     fs::path backupPath = oldPath;
                     backupPath.replace_extension(".old.preHD");
                     fs::copy_file(oldPath, backupPath);
@@ -878,7 +876,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         }
         
         // Get cursor
-        Dbc* pcursor = GetCursor();
+        Dbc* pcursor = batch.GetCursor();
         if (!pcursor)
         {
             LogPrintf("Error getting wallet database cursor\n");
@@ -890,7 +888,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             // Read next record
             CDataStream ssKey(SER_DISK, CLIENT_VERSION);
             CDataStream ssValue(SER_DISK, CLIENT_VERSION);
-            int ret = ReadAtCursor(pcursor, ssKey, ssValue);
+            int ret = batch.ReadAtCursor(pcursor, ssKey, ssValue);
             if (ret == DB_NOTFOUND)
                 break;
             else if (ret != 0)
@@ -1002,14 +1000,14 @@ DBErrors CWalletDB::FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CWal
 
     try {
         int nMinVersion = 0;
-        if (Read((std::string)"minversion", nMinVersion))
+        if (batch.Read((std::string)"minversion", nMinVersion))
         {
             if (nMinVersion > CLIENT_VERSION)
                 return DB_TOO_NEW;
         }
 
         // Get cursor
-        Dbc* pcursor = GetCursor();
+        Dbc* pcursor = batch.GetCursor();
         if (!pcursor)
         {
             LogPrintf("Error getting wallet database cursor\n");
@@ -1021,7 +1019,7 @@ DBErrors CWalletDB::FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CWal
             // Read next record
             CDataStream ssKey(SER_DISK, CLIENT_VERSION);
             CDataStream ssValue(SER_DISK, CLIENT_VERSION);
-            int ret = ReadAtCursor(pcursor, ssKey, ssValue);
+            int ret = batch.ReadAtCursor(pcursor, ssKey, ssValue);
             if (ret == DB_NOTFOUND)
                 break;
             else if (ret != 0)
@@ -1135,9 +1133,9 @@ void MaybeCompactWalletDB()
 
     if (nLastFlushed != CWalletDB::GetUpdateCounter() && GetTime() - nLastWalletUpdate >= 2)
     {
-        const std::string& strFile = pwalletMain->strWalletFile;
-        if (CDB::PeriodicFlush(strFile))
+        if (CDB::PeriodicFlush(pwalletMain->GetDBHandle())) {
             nLastFlushed = CWalletDB::GetUpdateCounter();
+        }
     }
     fOneThread = false;
 }
@@ -1193,20 +1191,20 @@ bool CWalletDB::VerifyDatabaseFile(const std::string& walletFile, const fs::path
 bool CWalletDB::WriteDestData(const std::string &address, const std::string &key, const std::string &value)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("destdata"), std::make_pair(address, key)), value);
+    return batch.Write(std::make_pair(std::string("destdata"), std::make_pair(address, key)), value);
 }
 
 bool CWalletDB::EraseDestData(const std::string &address, const std::string &key)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("destdata"), std::make_pair(address, key)));
+    return batch.Erase(std::make_pair(std::string("destdata"), std::make_pair(address, key)));
 }
 
 /*
 bool CWalletDB::WriteHDChain(const CHDChain& chain)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::string("hdchain"), chain);
+    return batch.Write(std::string("hdchain"), chain);
 }
 */
 
@@ -1220,27 +1218,52 @@ unsigned int CWalletDB::GetUpdateCounter()
     return nWalletDBUpdateCounter;
 }
 
+bool CWalletDB::TxnBegin()
+{
+    return batch.TxnBegin();
+}
+
+bool CWalletDB::TxnCommit()
+{
+    return batch.TxnCommit();
+}
+
+bool CWalletDB::TxnAbort()
+{
+    return batch.TxnAbort();
+}
+
+bool CWalletDB::ReadVersion(int& nVersion)
+{
+    return batch.ReadVersion(nVersion);
+}
+
+bool CWalletDB::WriteVersion(int nVersion)
+{
+    return batch.WriteVersion(nVersion);
+}
+
 bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
+    return batch.Write(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
 }
 
 bool CWalletDB::DeleteHDSeed(const CHDSeed& seed)
 {
     nWalletDBUpdateCounter++;
-    return Erase(std::make_pair(std::string("hdseed"), seed.getUUID()));
+    return batch.Erase(std::make_pair(std::string("hdseed"), seed.getUUID()));
 }
 
 bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::string("primaryseed"), seed.getUUID());
+    return batch.Write(std::string("primaryseed"), seed.getUUID());
 }
 
 bool CWalletDB::WritePrimaryAccount(const CAccount* account)
 {
     nWalletDBUpdateCounter++;
-    return Write(std::string("primaryaccount"), account->getUUID());
+    return batch.Write(std::string("primaryaccount"), account->getUUID());
 }
 

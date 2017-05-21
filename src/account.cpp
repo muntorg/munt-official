@@ -751,7 +751,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                 if (pwalletMain->pwalletdbEncryption)
                     pwalletMain->pwalletdbEncryption->EraseKey(pubKey);
                 else
-                    CWalletDB(pwalletMain->strWalletFile).EraseKey(pubKey);
+                    CWalletDB(*pwalletMain->dbw).EraseKey(pubKey);
                 
                 std::vector<unsigned char> secret;
                 if (!GetKey(keyID, secret))
@@ -769,7 +769,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                 }
                 else
                 {
-                    if (!CWalletDB(pwalletMain->strWalletFile).WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    if (!CWalletDB(*pwalletMain->dbw).WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
                     {
                         LogPrintf("CAccount::EncryptKeys(): Failed to write key");
                         return false;
@@ -873,7 +873,7 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
             if (pwalletMain->pwalletdbEncryption)
                 return pwalletMain->pwalletdbEncryption->WriteCryptedKey(vchPubKey, vchCryptedSecret, pwalletMain->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
             else
-                return CWalletDB(pwalletMain->strWalletFile).WriteCryptedKey(vchPubKey, vchCryptedSecret, pwalletMain->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
+                return CWalletDB(*pwalletMain->dbw).WriteCryptedKey(vchPubKey, vchCryptedSecret, pwalletMain->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
         }
     }
     else

@@ -412,7 +412,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     std::set<CKeyID> setAddress;
     fromAccount->GetKeys(setAddress);
     
-    CWalletDB walletdb(pwallet->strWalletFile);
+    CWalletDB walletdb(*pwallet->dbw);
     for (const auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
     {
         const auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal );
@@ -2316,7 +2316,7 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
 
     int64_t nSleepTime = request.params[1].get_int64();
     pwallet->nRelockTime = GetTime() + nSleepTime;
-    RPCRunLater(strprintf("lockwallet(%s)", pwallet->strWalletFile), boost::bind(LockWallet, pwallet), nSleepTime);
+    RPCRunLater(strprintf("lockwallet(%s)", pwallet->GetName()), boost::bind(LockWallet, pwallet), nSleepTime);
 
     return NullUniValue;
 }

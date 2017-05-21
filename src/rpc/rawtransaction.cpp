@@ -798,7 +798,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
 
 #ifdef ENABLE_WALLET
     //fixme: (GULDEN) (BIP44)
-    const CKeyStore& keystore = ((fGivenKeys || !pwallet->activeAccount) ? tempKeystore : pwallet->activeAccount);
+    const CKeyStore& keystore = ((fGivenKeys || !pwallet->activeAccount) ? tempKeystore : *pwallet->activeAccount);
 #else
     const CKeyStore& keystore = tempKeystore;
 #endif
