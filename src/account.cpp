@@ -531,7 +531,7 @@ bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int key
 }
 
 
-CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, int keyChain)
+CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
 {
     CExtPubKey childKey;
     do
@@ -542,6 +542,9 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, int keyChain)
     
     LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
     
+    metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
+    metadata.hdAccountUUID = getUUID();
+            
     if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
@@ -593,7 +596,7 @@ void CAccount::SetNull()
     vchPubKey = CPubKey();
 }
 
-CPubKey CAccount::GenerateNewKey(CWallet& wallet, int keyChain)
+CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
 {    
     CKey secret;
     secret.MakeNewKey(true);   

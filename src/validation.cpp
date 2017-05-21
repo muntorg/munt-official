@@ -1146,6 +1146,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 
 bool IsInitialBlockDownload()
 {
+    //AssertLockHeld(cs_main);
     const CChainParams& chainParams = Params();
 
     // Once this function has returned false, it must remain false.
@@ -1154,7 +1155,6 @@ bool IsInitialBlockDownload()
     if (latchToFalse.load(std::memory_order_relaxed))
         return false;
 
-    LOCK(cs_main);
     if (latchToFalse.load(std::memory_order_relaxed))
         return false;
     if (fImporting || fReindex)

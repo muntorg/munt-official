@@ -557,13 +557,6 @@ bool CWallet::Verify()
 
     uiInterface.InitMessage(_("Verifying wallet..."));
     std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
-
-    // Check file permissions.
-    {
-        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
-        if (!testPerms.is_open())
-            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
-    }
     
     std::string strError;
     if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError))
@@ -576,7 +569,7 @@ bool CWallet::Verify()
         if (!CWalletDB::Recover(walletFile, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter))
             return false;
     }
-
+    
     std::string strWarning;
     bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
     if (!strWarning.empty())
@@ -586,6 +579,16 @@ bool CWallet::Verify()
         InitError(strError);
         return false;
     }
+    
+    
+    //fixme: (GULDEN) (MERGE)
+    // Check file permissions.
+    /*{
+        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
+        if (!testPerms.is_open())
+            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+    }*/
+    
     return true;
 }
 
@@ -2833,11 +2836,13 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                                               std::numeric_limits<unsigned int>::max() - (rbf ? 2 : 1)));
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(txNew, setCoins)) {
-                    //fixme: (GULDEN) (MERGE)
-                    //if (!ProduceSignature(DummySignatureCreator(forAccount), scriptPubKey, sigdata))
-                    strFailReason = _("Signing transaction failed");
-                    return false;
+                if (!DummySignTx(forAccount, txNew, setCoins)) {
+                    SignatureData sigdata;
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CScript(), sigdata))
+                    {
+                        strFailReason = _("Signing transaction failed");
+                        return false;
+                    }
                 }
 
                 unsigned int nBytes = GetVirtualTransactionSize(txNew);

@@ -216,12 +216,9 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
         if (mi != mapWallet.end())
         {
-            //fixme: (GULDEN) (MERGE)
-            /*
             const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.vout.size())
-                return ::IsMine(keystore, prev.vout[txin.prevout.n]);
-            */
+            if (txin.prevout.n < prev.tx->vout.size())
+                return ::IsMine(keystore, prev.tx->vout[txin.prevout.n]);
         }
     }
     return ISMINE_NO;
@@ -813,9 +810,13 @@ CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
     // Create new metadata
     int64_t nCreationTime = GetTime();
     CKeyMetadata metadata(nCreationTime);
+
+    CPubKey pubkey = forAccount.GenerateNewKey(*this, metadata, keyChain);
     
-    //fixme: (GULDEN) (MERGE) (CHECKME)
-    return forAccount.GenerateNewKey(*this, keyChain);
+    mapKeyMetadata[pubkey.GetID()] = metadata;
+    UpdateTimeFirstKey(nCreationTime);
+    
+    return pubkey;
 }
 
 bool CWallet::LoadKey(const CKey& key, const CPubKey &pubkey, const std::string& forAccount, int64_t nKeyChain)

@@ -33,8 +33,14 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
         assert(mi != pWallet->mapWallet.end() && input.prevout.n < mi->second.tx->vout.size());
         vCoins.emplace_back(CInputCoin(&(mi->second), input.prevout.n));
     }
-    if (!pWallet->DummySignTx(txNew, vCoins)) {
-        // This should never happen, because IsAllFromMe(ISMINE_SPENDABLE)
+    bool success = false;
+    for (auto accountPair : pWallet->mapAccounts)
+    {
+        success = success || pWallet->DummySignTx(accountPair.second, txNew, vCoins);
+    }
+    if (!success)
+    {
+         // This should never happen, because IsAllFromMe(ISMINE_SPENDABLE)
         // implies that we can sign for every input.
         return -1;
     }

@@ -36,6 +36,7 @@ const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 class CAccountHD;
 class CWallet;
 class CWalletDB;
+class CKeyMetadata;
 
 enum AccountType
 {
@@ -199,7 +200,7 @@ public:
        
     //fixme: (GULDEN) (CLEANUP)
     virtual void GetKey(CExtKey& childKey, int nChain) {};
-    virtual CPubKey GenerateNewKey(CWallet& wallet, int keyChain);
+    virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
     virtual bool IsMobi() const {return m_SubType == Mobi;}
        
@@ -325,7 +326,7 @@ public:
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;
-    virtual CPubKey GenerateNewKey(CWallet& wallet, int keyChain) override;
+    virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain) override;
     virtual bool Lock() override;
     virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) override;
     virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn) override;

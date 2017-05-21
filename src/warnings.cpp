@@ -81,15 +81,16 @@ std::string GetWarnings(const std::string& strFor)
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
     }
     
-    if (!IsInitialBlockDownload())
+    
+    // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
+    if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
     {
-        // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
-        if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
+        if (!IsInitialBlockDownload())
         {
             strStatusBar = strGUI = strRPC = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
-            
         }
     }
+
 
     // Gulden: if detected invalid checkpoint enter safe mode
     if (Checkpoints::hashInvalidCheckpoint != uint256())

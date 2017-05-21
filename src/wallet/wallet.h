@@ -968,7 +968,7 @@ public:
     bool AddAccountingEntry(const CAccountingEntry&);
     bool AddAccountingEntry(const CAccountingEntry&, CWalletDB *pwalletdb);
     template <typename ContainerType>
-    bool DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const;
+    bool DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins) const;
 
     static CFeeRate minTxFee;
     static CFeeRate fallbackFee;
@@ -1053,6 +1053,7 @@ public:
         int nPoolSize=0;
         for (auto accountPair : mapAccounts)
         {
+            LOCK(accountPair.second->cs_keypool);
             nPoolSize += accountPair.second->GetKeyPoolSize();
         }
         return nPoolSize;
@@ -1224,7 +1225,7 @@ public:
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.
 template <typename ContainerType>
-bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const
+bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins) const
 {
     // Fill in dummy signatures for fee calculation.
     int nIn = 0;
@@ -1233,13 +1234,12 @@ bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins
         const CScript& scriptPubKey = coin.txout.scriptPubKey;
         SignatureData sigdata;
 
-	//gixme: (GULDEN) (MERGE)
-        /*if (!ProduceSignature(DummySignatureCreator(this), scriptPubKey, sigdata))
+        if (!ProduceSignature(DummySignatureCreator(forAccount), scriptPubKey, sigdata))
         {
             return false;
         } else {
             UpdateTransaction(txNew, nIn, sigdata);
-        }*/
+        }
 
         nIn++;
     }

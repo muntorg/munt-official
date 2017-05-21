@@ -1422,7 +1422,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }*/
 
-        //checkme: (GULDEN) (MERGE) right place for this?
         // Relay alerts
         {
             LOCK(cs_mapAlerts);

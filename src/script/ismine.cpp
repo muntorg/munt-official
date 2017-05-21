@@ -194,19 +194,19 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, SigVersion sigversion)
 {
     bool isInvalid = false;
-    return RemoveAddressFromKeypoolIfIsMine(keystore, scriptPubKey, isInvalid, sigversion);
+    return RemoveAddressFromKeypoolIfIsMine(keystore, scriptPubKey, time, isInvalid, sigversion);
 }
 
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, SigVersion sigversion)
 {
     bool isInvalid = false;
-    return RemoveAddressFromKeypoolIfIsMine(keystore, dest, isInvalid, sigversion);
+    return RemoveAddressFromKeypoolIfIsMine(keystore, dest, time, isInvalid, sigversion);
 }
 
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, bool& isInvalid, SigVersion sigversion)
 {
     CScript script = GetScriptForDestination(dest);
-    return RemoveAddressFromKeypoolIfIsMine(keystore, script, isInvalid, sigversion);
+    return RemoveAddressFromKeypoolIfIsMine(keystore, script, time, isInvalid, sigversion);
 }
 
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, bool& isInvalid, SigVersion sigversion)
