@@ -1,6 +1,7 @@
 x.x.x
 
 RPC - Add a type parameter to importseed RPC command.
+RPC - Fix error with 'signrawtransaction' RPC command, closes #38.
 
 1.6.4.1
 
