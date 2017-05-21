@@ -41,7 +41,7 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
 extern bool fShowChildAccountsSeperately;
 
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey);
+isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
 
 /** 

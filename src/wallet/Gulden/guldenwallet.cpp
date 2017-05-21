@@ -174,7 +174,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     return ret;
 }
 
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey)
+isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion)
 {
     LOCK(wallet.cs_wallet);
     
@@ -183,7 +183,7 @@ isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, scriptPubKey) : IsMine(accountItem.second->internalKeyStore, scriptPubKey) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, scriptPubKey, sigVersion) : IsMine(accountItem.second->internalKeyStore, scriptPubKey, sigVersion) );
             if (temp > ret)
                 ret = temp;
         }

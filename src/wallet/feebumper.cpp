@@ -238,7 +238,12 @@ CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConf
 
 bool CFeeBumper::signTransaction(CWallet *pWallet)
 {
-     return pWallet->SignTransaction(mtx);
+    for (auto accountPair : pWallet->mapAccounts)
+    {
+        if (pWallet->SignTransaction(accountPair.second, mtx));
+            return true;
+    }
+    return false;
 }
 
 bool CFeeBumper::commit(CWallet *pWallet)

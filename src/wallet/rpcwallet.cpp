@@ -1294,10 +1294,9 @@ public:
         if (pwallet) {
             CScript basescript = GetScriptForDestination(keyID);
             isminetype typ;
-            //fixme: (GULDEN) (MERGE)
-            /*typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
+            typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
-                return false;*/
+                return false;
             CScript witscript = GetScriptForWitness(basescript);
             pwallet->AddCScript(witscript);
             result = CScriptID(witscript);
@@ -1316,10 +1315,9 @@ public:
                 return true;
             }
             isminetype typ;
-            //fixme: (GULDEN) (MERGE)
-            /*typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
+            typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
-                return false;*/
+                return false;
             CScript witscript = GetScriptForWitness(subscript);
             pwallet->AddCScript(witscript);
             result = CScriptID(witscript);
