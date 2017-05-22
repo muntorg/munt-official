@@ -157,7 +157,7 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "shadowpoolmanager", &ThreadShadowPoolManager));
 }
 
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
+isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion sigVersion)
 {
     LOCK(wallet.cs_wallet);
     
@@ -166,7 +166,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest, sigVersion) : IsMine(accountItem.second->internalKeyStore, dest, sigVersion) );
             if (temp > ret)
                 ret = temp;
         }

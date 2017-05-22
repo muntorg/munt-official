@@ -40,8 +40,8 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
 //fixme: GULDEN Make configurable option
 extern bool fShowChildAccountsSeperately;
 
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion);
+isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion sigVersion=SIGVERSION_BASE);
+isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion=SIGVERSION_BASE);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
 
 /** 
