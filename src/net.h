@@ -707,15 +707,15 @@ private:
 public:
 
     NodeId GetId() const {
-      return id;
+        return id;
     }
 
     uint64_t GetLocalNonce() const {
-      return nLocalHostNonce;
+        return nLocalHostNonce;
     }
 
     int GetMyStartingHeight() const {
-      return nMyStartingHeight;
+        return nMyStartingHeight;
     }
 
     int GetRefCount()

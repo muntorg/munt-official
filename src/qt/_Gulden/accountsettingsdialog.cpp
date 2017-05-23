@@ -138,7 +138,8 @@ void AccountSettingsDialog::deleteAccount()
 {
     if (activeAccount)
     {
-        CAmount balance = pwalletMain->GetAccountBalance(activeAccount->getUUID(), 0, ISMINE_SPENDABLE, true );
+        std::string accountUUID = activeAccount->getUUID();
+        CAmount balance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");

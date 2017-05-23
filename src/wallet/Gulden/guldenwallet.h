@@ -42,7 +42,6 @@ extern bool fShowChildAccountsSeperately;
 
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion sigVersion=SIGVERSION_BASE);
 isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion=SIGVERSION_BASE);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet &wallet, const CScript& scriptPubKey, uint64_t time);
 
 /** 
  * A CGuldenWallet maintains a set of transactions and balances
@@ -61,7 +60,6 @@ public:
     int64_t nTimeFirstKey;
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;
-    bool fFileBacked;
     
     
     virtual bool Lock() const

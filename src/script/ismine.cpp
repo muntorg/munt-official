@@ -197,18 +197,6 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
     return RemoveAddressFromKeypoolIfIsMine(keystore, scriptPubKey, time, isInvalid, sigversion);
 }
 
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, SigVersion sigversion)
-{
-    bool isInvalid = false;
-    return RemoveAddressFromKeypoolIfIsMine(keystore, dest, time, isInvalid, sigversion);
-}
-
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, bool& isInvalid, SigVersion sigversion)
-{
-    CScript script = GetScriptForDestination(dest);
-    return RemoveAddressFromKeypoolIfIsMine(keystore, script, time, isInvalid, sigversion);
-}
-
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, bool& isInvalid, SigVersion sigversion)
 {
     std::vector<valtype> vSolutions;

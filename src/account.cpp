@@ -733,8 +733,6 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
     
     if (pwalletMain)
     {
-        if (!pwalletMain->fFileBacked)
-            return true;
         {
             std::set<CKeyID> setAddress;
             GetKeys(setAddress);
@@ -866,8 +864,6 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
     // If we don't have a wallet yet (busy during wallet upgrade) - then the below not being called is fine as the wallet does a 'force resave' of all keys at the end of the upgrade.
     if (pwalletMain)
     {
-        if (!pwalletMain->fFileBacked)
-            return true;
         {
             LOCK(pwalletMain->cs_wallet);
             if (pwalletMain->pwalletdbEncryption)

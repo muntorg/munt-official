@@ -49,8 +49,6 @@ isminetype IsMine(const CKeyStore& keystore, const CTxOut& txout);
 
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, bool& isInvalid, SigVersion = SIGVERSION_BASE);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, SigVersion = SIGVERSION_BASE);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, bool& isInvalid, SigVersion = SIGVERSION_BASE);
-isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxDestination& dest, uint64_t time, SigVersion = SIGVERSION_BASE);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txout, uint64_t time);
 
 #endif // BITCOIN_SCRIPT_ISMINE_H

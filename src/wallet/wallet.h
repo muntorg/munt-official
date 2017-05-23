@@ -348,26 +348,33 @@ public:
     int64_t nOrderPos; //!< position in ordered transaction list
 
     // memory only
-    mutable bool fDebitCached;
-    mutable bool fCreditCached;
-    mutable bool fImmatureCreditCached;
-    mutable bool fAvailableCreditCached;
-    //fixme: (GULDEN) (SBSU) - Caching would be faster but seems to become invalid if we do internal transfers between accounts.
-    //mutable std::map<const CAccount*, CAmount> availableCreditForAccountCached;
-    mutable bool fWatchDebitCached;
-    mutable bool fWatchCreditCached;
-    mutable bool fImmatureWatchCreditCached;
-    mutable bool fAvailableWatchCreditCached;
+    //mutable bool fDebitCached;
+    //mutable bool fCreditCached;
+    //mutable bool fImmatureCreditCached;
+    //mutable bool fAvailableCreditCached;
+    //mutable bool fWatchDebitCached;
+    //mutable bool fWatchCreditCached;
+    //mutable bool fImmatureWatchCreditCached;
+    //mutable bool fAvailableWatchCreditCached;
     mutable bool fChangeCached;
-    mutable CAmount nDebitCached;
-    mutable CAmount nCreditCached;
-    mutable CAmount nImmatureCreditCached;
-    mutable CAmount nAvailableCreditCached;
-    mutable CAmount nWatchDebitCached;
-    mutable CAmount nWatchCreditCached;
-    mutable CAmount nImmatureWatchCreditCached;
-    mutable CAmount nAvailableWatchCreditCached;
+    //mutable CAmount nDebitCached;
+    //mutable CAmount nCreditCached;
+    //mutable CAmount nImmatureCreditCached;
+    //mutable CAmount nAvailableCreditCached;
+    //mutable CAmount nWatchDebitCached;
+    //mutable CAmount nWatchCreditCached;
+    //mutable CAmount nImmatureWatchCreditCached;
+    //mutable CAmount nAvailableWatchCreditCached;
     mutable CAmount nChangeCached;
+    //fixme: (GULDEN) (SBSU) - Caching would be faster but seems to become invalid if we do internal transfers between accounts.
+    mutable std::map<const CAccount*, CAmount> debitCached;
+    mutable std::map<const CAccount*, CAmount> creditCached;
+    mutable std::map<const CAccount*, CAmount> immatureCreditCached;
+    mutable std::map<const CAccount*, CAmount> availableCreditCached;
+    mutable std::map<const CAccount*, CAmount> watchDebitCached;
+    mutable std::map<const CAccount*, CAmount> watchCreditCached;
+    mutable std::map<const CAccount*, CAmount> immatureWatchCreditCached;
+    mutable std::map<const CAccount*, CAmount> availableWatchCreditCached;
 
     CWalletTx()
     {
@@ -389,23 +396,31 @@ public:
         nTimeSmart = 0;
         fFromMe = false;
         strFromAccount.clear();
-        fDebitCached = false;
-        fCreditCached = false;
-        fImmatureCreditCached = false;
-        fAvailableCreditCached = false;
-        fWatchDebitCached = false;
-        fWatchCreditCached = false;
-        fImmatureWatchCreditCached = false;
-        fAvailableWatchCreditCached = false;
+        //fDebitCached = false;
+        //fCreditCached = false;
+        //fImmatureCreditCached = false;
+        //fAvailableCreditCached = false;
+        //fWatchDebitCached = false;
+        //fWatchCreditCached = false;
+        //fImmatureWatchCreditCached = false;
+        //fAvailableWatchCreditCached = false;
         fChangeCached = false;
-        nDebitCached = 0;
-        nCreditCached = 0;
-        nImmatureCreditCached = 0;
-        nAvailableCreditCached = 0;
-        nWatchDebitCached = 0;
-        nWatchCreditCached = 0;
-        nAvailableWatchCreditCached = 0;
-        nImmatureWatchCreditCached = 0;
+        //nDebitCached = 0;
+        //nCreditCached = 0;
+        //nImmatureCreditCached = 0;
+        //nAvailableCreditCached = 0;
+        //nWatchDebitCached = 0;
+        //nWatchCreditCached = 0;
+        //nAvailableWatchCreditCached = 0;
+        //nImmatureWatchCreditCached = 0;
+        debitCached.clear();
+        creditCached.clear();
+        immatureCreditCached.clear();
+        availableCreditCached.clear();
+        watchDebitCached.clear();
+        watchCreditCached.clear();
+        immatureWatchCreditCached.clear();
+        availableWatchCreditCached.clear();
         nChangeCached = 0;
         nOrderPos = -1;
     }
@@ -456,15 +471,23 @@ public:
     //! make sure balances are recalculated
     void MarkDirty()
     {
-        fCreditCached = false;
-        fAvailableCreditCached = false;
-        fImmatureCreditCached = false;
-        fWatchDebitCached = false;
-        fWatchCreditCached = false;
-        fAvailableWatchCreditCached = false;
-        fImmatureWatchCreditCached = false;
-        fDebitCached = false;
+        //fCreditCached = false;
+        //fAvailableCreditCached = false;
+        //fImmatureCreditCached = false;
+        //fWatchDebitCached = false;
+        //fWatchCreditCached = false;
+        //fAvailableWatchCreditCached = false;
+        //fImmatureWatchCreditCached = false;
+        //fDebitCached = false;
         fChangeCached = false;
+        debitCached.clear();
+        creditCached.clear();
+        immatureCreditCached.clear();
+        availableCreditCached.clear();
+        watchDebitCached.clear();
+        watchCreditCached.clear();
+        immatureWatchCreditCached.clear();
+        availableWatchCreditCached.clear();
     }
 
     void BindWallet(CWallet *pwalletIn)
@@ -474,19 +497,16 @@ public:
     }
 
     //! filter decides which addresses will count towards the debit
-    CAmount GetDebit(const isminefilter& filter) const;
-    CAmount GetCredit(const isminefilter& filter) const;
+    CAmount GetDebit(const isminefilter& filter, CAccount* forAccount=NULL) const;
+    CAmount GetCredit(const isminefilter& filter, CAccount* forAccount=NULL) const;
     CAmount GetImmatureCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetAvailableCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true) const;
-    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true) const;
+    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
+    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetChange() const;
 
     void GetAmounts(std::list<COutputEntry>& listReceived,
                     std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from=NULL) const;
-
-    void GetAccountAmounts(const std::string& strAccount, CAmount& nReceived,
-                           CAmount& nSent, CAmount& nFee, const isminefilter& filter) const;
 
     bool IsFromMe(const isminefilter& filter) const
     {
@@ -961,6 +981,7 @@ public:
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const;
 
     /**
      * Insert additional inputs into the transaction by
@@ -1017,27 +1038,25 @@ public:
     std::set< std::set<CTxDestination> > GetAddressGroupings();
     std::map<CTxDestination, CAmount> GetAddressBalances();
 
-    CAmount GetAccountBalance(const std::string& strAccount, int nMinDepth, const isminefilter& filter, bool includeChildren=false);
-    CAmount GetAccountBalance(CWalletDB& walletdb, const std::string& strAccount, int nMinDepth, const isminefilter& filter, bool includeChildren=false);
     std::set<CTxDestination> GetAccountAddresses(const std::string& strAccount) const;
 
     isminetype IsMine(const CTxIn& txin) const;
+    isminetype IsMine(const CTxOut& txout) const;
     /**
      * Returns amount of debit if the input matches the
      * filter, otherwise returns 0
      */
-    CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;
-    isminetype IsMine(const CTxOut& txout) const;
-    CAmount GetCredit(const CTxOut& txout, const isminefilter& filter) const;
+    CAmount GetDebit(const CTxIn& txin, const isminefilter& filter, CAccount* forAccount=NULL) const;
+    CAmount GetCredit(const CTxOut& txout, const isminefilter& filte, CAccount* forAccount=NULL) const;
     bool IsChange(const CTxOut& txout) const;
     CAmount GetChange(const CTxOut& txout) const;
     bool IsMine(const CTransaction& tx) const;
     /** should probably be renamed to IsRelevantToMe */
     bool IsFromMe(const CTransaction& tx) const;
-    CAmount GetDebit(const CTransaction& tx, const isminefilter& filter) const;
+    CAmount GetDebit(const CTransaction& tx, const isminefilter& filter, CAccount* forAccount=NULL) const;
     /** Returns whether all of the inputs match the filter */
     bool IsAllFromMe(const CTransaction& tx, const isminefilter& filter) const;
-    CAmount GetCredit(const CTransaction& tx, const isminefilter& filter) const;
+    CAmount GetCredit(const CTransaction& tx, const isminefilter& filter, CAccount* forAccount=NULL) const;
     CAmount GetChange(const CTransaction& tx) const;
     void SetBestChain(const CBlockLocator& loc);
 
@@ -1048,6 +1067,8 @@ public:
     bool SetAddressBook(const std::string& address, const std::string& strName, const std::string& purpose);
 
     bool DelAddressBook(const std::string& address);
+
+    const std::string& GetAccountName(const CScript& scriptPubKey) const;
 
     void Inventory(const uint256 &hash)
     {

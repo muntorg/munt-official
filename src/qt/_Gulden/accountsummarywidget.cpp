@@ -67,7 +67,8 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
     ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 35) );
     
     //fixme: GULDEN - Use AccountTableModel.
-    m_accountBalance = pwalletMain->GetAccountBalance(m_account->getUUID(), 0, ISMINE_SPENDABLE, true );
+    std::string accountUUID = m_account->getUUID();
+    m_accountBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
     
     updateExchangeRates();
 }
@@ -83,7 +84,8 @@ void AccountSummaryWidget::balanceChanged()
 {
     if (pwalletMain && m_account)
     {
-        m_accountBalance = pwalletMain->GetAccountBalance(m_account->getUUID(), 0, ISMINE_SPENDABLE, true );
+        std::string accountUUID = m_account->getUUID();
+        m_accountBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         updateExchangeRates();
     }
 }

@@ -725,10 +725,9 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         {
             if (!accountPair.second->Encrypt(_vMasterKey))
             {
-                if (fFileBacked) {
-                    pwalletdbEncryption->TxnAbort();
-                    delete pwalletdbEncryption;
-                }
+                pwalletdbEncryption->TxnAbort();
+                delete pwalletdbEncryption;
+
                 // We now probably have half of our keys encrypted in memory, and half not...
                 // die and let the user reload the unencrypted wallet.
                 assert(false);
@@ -1347,7 +1346,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
 
 // Note that this function doesn't distinguish between a 0-valued input,
 // and a not-"is mine" (according to the filter) input.
-CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
+CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccount* forAccount) const
 {
     {
         LOCK(cs_wallet);
@@ -1356,8 +1355,12 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
         {
             const CWalletTx& prev = (*mi).second;
             if (txin.prevout.n < prev.tx->vout.size())
-                if (IsMine(prev.tx->vout[txin.prevout.n]) & filter)
+            {
+                if ( (forAccount && (::IsMine(*forAccount, prev.tx->vout[txin.prevout.n]) & filter)) || (!forAccount && (IsMine(prev.tx->vout[txin.prevout.n]) & filter)) )
+                {
                     return prev.tx->vout[txin.prevout.n].nValue;
+                }
+            }
         }
     }
     return 0;
@@ -1368,11 +1371,11 @@ isminetype CWallet::IsMine(const CTxOut& txout) const
     return ::IsMine(*this, txout.scriptPubKey);
 }
 
-CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter) const
+CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, CAccount* forAccount) const
 {
     if (!MoneyRange(txout.nValue))
         throw std::runtime_error(std::string(__func__) + ": value out of range");
-    return ((IsMine(txout) & filter) ? txout.nValue : 0);
+    return ( ( (forAccount && ::IsMine(*forAccount, txout) & filter) || (!forAccount && IsMine(txout) & filter) ) ? txout.nValue : 0);
 }
 
 bool CWallet::IsChange(const CTxOut& txout) const
@@ -1417,12 +1420,12 @@ bool CWallet::IsFromMe(const CTransaction& tx) const
     return (GetDebit(tx, ISMINE_ALL) > 0);
 }
 
-CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) const
+CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter, CAccount* forAccount) const
 {
     CAmount nDebit = 0;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
     {
-        nDebit += GetDebit(txin, filter);
+        nDebit += GetDebit(txin, filter, forAccount);
         if (!MoneyRange(nDebit))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
@@ -1450,12 +1453,12 @@ bool CWallet::IsAllFromMe(const CTransaction& tx, const isminefilter& filter) co
     return true;
 }
 
-CAmount CWallet::GetCredit(const CTransaction& tx, const isminefilter& filter) const
+CAmount CWallet::GetCredit(const CTransaction& tx, const isminefilter& filter, CAccount* forAccount) const
 {
     CAmount nCredit = 0;
     BOOST_FOREACH(const CTxOut& txout, tx.vout)
     {
-        nCredit += GetCredit(txout, filter);
+        nCredit += GetCredit(txout, filter, forAccount);
         if (!MoneyRange(nCredit))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
@@ -1661,29 +1664,6 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
 
 }
 
-void CWalletTx::GetAccountAmounts(const std::string& strAccount, CAmount& nReceived,
-                                  CAmount& nSent, CAmount& nFee, const isminefilter& filter) const
-{
-    LOCK(pwalletMain->cs_wallet);
-    
-    nReceived = nSent = nFee = 0;
-
-    CAmount allFee;
-    std::list<COutputEntry> listReceived;
-    std::list<COutputEntry> listSent;
-    GetAmounts(listReceived, listSent, allFee, filter, pwalletMain->mapAccounts[strAccount]);
-
-    BOOST_FOREACH(const COutputEntry& s, listSent)
-        nSent += s.amount;
-    nFee = allFee;
-    {
-        LOCK(pwallet->cs_wallet);
-        BOOST_FOREACH(const COutputEntry& r, listReceived)
-        {
-            nReceived += r.amount;
-        }
-    }
-}
 
 /**
  * Scan the block chain (starting in pindexStart) for transactions
@@ -1824,7 +1804,7 @@ std::set<uint256> CWalletTx::GetConflicts() const
     return result;
 }
 
-CAmount CWalletTx::GetDebit(const isminefilter& filter) const
+CAmount CWalletTx::GetDebit(const isminefilter& filter, CAccount* forAccount) const
 {
     if (tx->vin.empty())
         return 0;
@@ -1832,30 +1812,28 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
     CAmount debit = 0;
     if(filter & ISMINE_SPENDABLE)
     {
-        if (fDebitCached)
-            debit += nDebitCached;
+        if (debitCached.find(forAccount) != debitCached.end())
+            debit += debitCached[forAccount];
         else
         {
-            nDebitCached = pwallet->GetDebit(*this, ISMINE_SPENDABLE);
-            fDebitCached = true;
-            debit += nDebitCached;
+            debitCached[forAccount] = pwallet->GetDebit(*this, ISMINE_SPENDABLE, forAccount);
+            debit += debitCached[forAccount];
         }
     }
     if(filter & ISMINE_WATCH_ONLY)
     {
-        if(fWatchDebitCached)
-            debit += nWatchDebitCached;
+        if (watchDebitCached.find(forAccount) != watchDebitCached.end())
+            debit += watchDebitCached[forAccount];
         else
         {
-            nWatchDebitCached = pwallet->GetDebit(*this, ISMINE_WATCH_ONLY);
-            fWatchDebitCached = true;
-            debit += nWatchDebitCached;
+            watchDebitCached[forAccount] = pwallet->GetDebit(*this, ISMINE_WATCH_ONLY, forAccount);
+            debit += watchDebitCached[forAccount];
         }
     }
     return debit;
 }
 
-CAmount CWalletTx::GetCredit(const isminefilter& filter) const
+CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount) const
 {
     // Must wait until coinbase is safely deep enough in the chain before valuing it
     if (IsCoinBase() && GetBlocksToMaturity() > 0)
@@ -1865,24 +1843,22 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
     if (filter & ISMINE_SPENDABLE)
     {
         // GetBalance can assume transactions in mapWallet won't change
-        if (fCreditCached)
-            credit += nCreditCached;
+        if (creditCached.find(forAccount) != creditCached.end())
+            credit += creditCached[forAccount];
         else
         {
-            nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
-            fCreditCached = true;
-            credit += nCreditCached;
+            creditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_SPENDABLE, forAccount);
+            credit += creditCached[forAccount];
         }
     }
     if (filter & ISMINE_WATCH_ONLY)
     {
-        if (fWatchCreditCached)
-            credit += nWatchCreditCached;
+        if (watchCreditCached.find(forAccount) != watchCreditCached.end())
+            credit += watchCreditCached[forAccount];
         else
         {
-            nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
-            fWatchCreditCached = true;
-            credit += nWatchCreditCached;
+            watchCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY, forAccount);
+            credit += watchCreditCached[forAccount];
         }
     }
     return credit;
@@ -1892,11 +1868,10 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount)
 {
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
     {
-        if (fUseCache && fImmatureCreditCached)
-            return nImmatureCreditCached;
-        nImmatureCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
-        fImmatureCreditCached = true;
-        return nImmatureCreditCached;
+        if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
+            return immatureCreditCached[forAccount];
+        immatureCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
+        return immatureCreditCached[forAccount];
     }
 
     return 0;
@@ -1911,11 +1886,8 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
     if (IsCoinBase() && GetBlocksToMaturity() > 0)
         return 0;
 
-    if (fUseCache && fAvailableCreditCached)
-        if (!forAccount)
-            return nAvailableCreditCached;
-    //if (fUseCache && availableCreditForAccountCached.find(forAccount) != availableCreditForAccountCached.end())
-        //return availableCreditForAccountCached[forAccount];
+    if (fUseCache && availableCreditCached.find(forAccount) != availableCreditCached.end())
+        return availableCreditCached[forAccount];
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
@@ -1933,33 +1905,25 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
         }
     }
 
-    if (forAccount)
-    {
-        //availableCreditForAccountCached[forAccount] = nCredit;
-    }
-    else
-    {
-        nAvailableCreditCached = nCredit;
-        fAvailableCreditCached = true;
-    }
+    availableCreditCached[forAccount] = nCredit;
+    
     return nCredit;
 }
 
-CAmount CWalletTx::GetImmatureWatchOnlyCredit(const bool& fUseCache) const
+CAmount CWalletTx::GetImmatureWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount) const
 {
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
     {
-        if (fUseCache && fImmatureWatchCreditCached)
-            return nImmatureWatchCreditCached;
-        nImmatureWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
-        fImmatureWatchCreditCached = true;
-        return nImmatureWatchCreditCached;
+        if (fUseCache && immatureWatchCreditCached.find(forAccount) != immatureWatchCreditCached.end())
+            return immatureWatchCreditCached[forAccount];
+        immatureWatchCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+        return immatureWatchCreditCached[forAccount];
     }
 
     return 0;
 }
 
-CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache) const
+CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount) const
 {
     if (pwallet == 0)
         return 0;
@@ -1968,8 +1932,8 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache) const
     if (IsCoinBase() && GetBlocksToMaturity() > 0)
         return 0;
 
-    if (fUseCache && fAvailableWatchCreditCached)
-        return nAvailableWatchCreditCached;
+    if (fUseCache && availableWatchCreditCached.find(forAccount) != availableWatchCreditCached.end())
+        return availableWatchCreditCached[forAccount];
 
     CAmount nCredit = 0;
     for (unsigned int i = 0; i < tx->vout.size(); i++)
@@ -1983,8 +1947,7 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache) const
         }
     }
 
-    nAvailableWatchCreditCached = nCredit;
-    fAvailableWatchCreditCached = true;
+    availableWatchCreditCached[forAccount] = nCredit;
     return nCredit;
 }
 
@@ -2201,6 +2164,41 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
         }
     }
     return nTotal;
+}
+
+// Calculate total balance in a different way from GetBalance. The biggest
+// difference is that GetBalance sums up all unspent TxOuts paying to the
+// wallet, while this sums up both spent and unspent TxOuts paying to the
+// wallet, and then subtracts the values of TxIns spending from the wallet. This
+// also has fewer restrictions on which unconfirmed transactions are considered
+// trusted.
+CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const
+{
+    LOCK2(cs_main, cs_wallet);
+    
+    CAccount* forAccount = NULL;
+    if (account && mapAccounts.find(*account) != mapAccounts.end())
+        forAccount = mapAccounts.find(*account)->second;
+
+    CAmount balance = 0;
+    
+
+    //checkme: (GULDEN) - Is fee handled right?
+    for (const auto& entry : mapWallet) {
+        const CWalletTx& wtx = entry.second;
+        const int depth = wtx.GetDepthInMainChain();
+        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity() > 0) {
+            continue;
+        }
+
+        if (depth >= minDepth)
+        {
+            balance += wtx.GetCredit(filter, forAccount);
+            balance -= wtx.GetDebit(filter, forAccount);
+        }
+    }
+
+    return balance;
 }
 
 void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput>& vCoins, bool fOnlySafe, const CCoinControl *coinControl, bool fIncludeZeroValue) const
@@ -3308,14 +3306,12 @@ void CWallet::ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain)
 {
     // Return to key pool - but only if it hasn't been used in the interim (If MarkKeyUsed has removed it from disk in the meantime then we don't return it)
     CKeyPool keypoolentry;
-    if (fFileBacked)
+
+    CWalletDB walletdb(*dbw);
+    if (!walletdb.ReadPool(nIndex, keypoolentry))
     {
-        CWalletDB walletdb(*dbw);
-        if (!walletdb.ReadPool(nIndex, keypoolentry))
-        {
-            LogPrintf("keypool return - aborted as key already used %d\n", nIndex);
-            return;
-        }
+        LogPrintf("keypool return - aborted as key already used %d\n", nIndex);
+        return;
     }
     
     {
@@ -3507,59 +3503,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
     return ret;
 }
 
-CAmount CWallet::GetAccountBalance(const std::string& strAccount, int nMinDepth, const isminefilter& filter, bool includeChildren)
-{
-    CWalletDB walletdb(*dbw);
-    return GetAccountBalance(walletdb, strAccount, nMinDepth, filter, includeChildren);
-}
 
-CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAccount, int nMinDepth, const isminefilter& filter, bool includeChildren)
-{
-    CAmount nBalance = 0;
-
-    {
-        //cs_main lock required for CheckFinalTx
-        LOCK2(cs_main, cs_wallet);
-    
-        // Tally wallet transactions
-        for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
-        {
-            const CWalletTx& wtx = (*it).second;
-            if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || wtx.GetDepthInMainChain() < 0)
-                continue;
-
-            //fixme: GULDEN (FUT) - fee already included here. (find better way to handle fee?)
-            CAmount nReceived, nSent, nFee;
-            wtx.GetAccountAmounts(strAccount, nReceived, nSent, nFee, filter);
-
-            if (wtx.GetDepthInMainChain() >= nMinDepth)
-            {
-                nBalance += nReceived;
-                nBalance -= nSent /*+ nFee*/;
-            }
-        }
-    }
-
-    // Tally internal accounting entries
-    //fixme: (GULDEN) Does this actually serve any purpose here?
-    nBalance += walletdb.GetAccountCreditDebit(strAccount);
-    
-    
-    //fixme: (GULDEN) (HIGH) - fee getting added twice?
-    if (includeChildren)
-    {
-        for (const auto& accountItem : mapAccounts)
-        {
-            const auto& childAccount = accountItem.second;
-            if (childAccount->getParentUUID() == strAccount)
-            {
-                nBalance += GetAccountBalance(walletdb, childAccount->getUUID(), nMinDepth, filter, includeChildren);
-            }
-        }
-    }
-
-    return nBalance;
-}
 
 std::set<CTxDestination> CWallet::GetAccountAddresses(const std::string& strAccount) const
 {
@@ -4012,7 +3956,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             
             // Generate a new primary seed and account (BIP44)
             walletInstance->activeSeed = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
-            if (!CWalletDB(*dbw).WriteHDSeed(*walletInstance->activeSeed))
+            if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
             {
                 throw std::runtime_error("Writing seed failed");
             }
@@ -4024,12 +3968,12 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             if (GuldenApplication::gApp->isRecovery)
             {
                 CHDSeed* seedBip32 = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
-                if (!CWalletDB(*dbw).WriteHDSeed(*seedBip32))
+                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32))
                 {
                     throw std::runtime_error("Writing bip32 seed failed");
                 }
                 CHDSeed* seedBip32Legacy = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
-                if (!CWalletDB(*dbw).WriteHDSeed(*seedBip32Legacy))
+                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32Legacy))
                 {
                     throw std::runtime_error("Writing bip32 legacy seed failed");
                 }
@@ -4051,7 +3995,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             
             // Write the seed last so that account index changes are reflected
             {
-                CWalletDB walletdb(*dbw);
+                CWalletDB walletdb(*walletInstance->dbw);
                 walletdb.WritePrimarySeed(*walletInstance->activeSeed);
                 walletdb.WritePrimaryAccount(walletInstance->activeAccount);
             }
@@ -4069,7 +4013,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             
             // Write the primary account into wallet file
             {
-                CWalletDB walletdb(*dbw);
+                CWalletDB walletdb(*walletInstance->dbw);
                 if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
                 {
                     throw std::runtime_error("Writing legacy account failed");
@@ -4085,7 +4029,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         walletInstance->SetBestChain(chainActive.GetLocator());
         
         //fixme: (GULDEN) (MERGE)
-        CWalletDB walletdb(*dbw);
+        CWalletDB walletdb(*walletInstance->dbw);
     }
     else if (loadState == EXISTING_WALLET_OLDACCOUNTSYSTEM)
     {
@@ -4125,7 +4069,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 
                     //Force old legacy account to resave
                     {
-                        CWalletDB walletdb(*dbw);
+                        CWalletDB walletdb(*walletInstance->dbw);
                         walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
                         if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
                         {
@@ -4143,7 +4087,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     std::vector<unsigned char> entropy(16);
                     GetStrongRandBytes(&entropy[0], 16);
                     walletInstance->activeSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), CHDSeed::CHDSeed::BIP44);
-                    if (!CWalletDB(*dbw).WriteHDSeed(*walletInstance->activeSeed))
+                    if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
                     {
                         throw std::runtime_error("Writing seed failed");
                     }
@@ -4156,12 +4100,12 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     }
                     walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
                     {
-                        CWalletDB walletdb(*dbw);
+                        CWalletDB walletdb(*walletInstance->dbw);
                         walletdb.WritePrimarySeed(*walletInstance->activeSeed);
                     }
                     walletInstance->activeAccount = walletInstance->GenerateNewAccount(_("My account"), AccountType::Normal, AccountSubType::Desktop);
                     {
-                        CWalletDB walletdb(*dbw);
+                        CWalletDB walletdb(*walletInstance->dbw);
                         walletdb.WritePrimaryAccount(walletInstance->activeAccount);
                     }
                 }
@@ -4187,7 +4131,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             
                 //Force old legacy account to resave
                 {
-                    CWalletDB walletdb(*dbw);
+                    CWalletDB walletdb(*walletInstance->dbw);
                     walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
                     if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
                     {

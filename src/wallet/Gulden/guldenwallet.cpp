@@ -227,12 +227,9 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
 {
     // Remove from key pool
-    if (fFileBacked)
-    {
-        CWalletDB walletdb(*dbw);
-        //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
-        walletdb.ErasePool(static_cast<CWallet*>(this), keyID);
-    }
+    CWalletDB walletdb(*dbw);
+    //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
+    walletdb.ErasePool(static_cast<CWallet*>(this), keyID);
     
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
@@ -243,15 +240,8 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
             {
                 if (usageTime > 0)
                 {
-                    if (fFileBacked)
-                    {
-                        CWalletDB walletdb(*dbw);
-                        accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
-                    }
-                    else
-                    {
-                        accountItem.second->possiblyUpdateEarliestTime(usageTime, NULL);
-                    }
+                    CWalletDB walletdb(*dbw);
+                    accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
                 }
                 
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
@@ -546,7 +536,7 @@ CHDSeed* CGuldenWallet::getActiveSeed()
 
 void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
 {
-    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), (CTxDestination)txout.scriptPubKey, time);
+    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout.scriptPubKey, time);
 }
 
 
@@ -686,10 +676,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
 }
 
 void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
-{
-    if (!fFileBacked)
-        return;
-        
+{        
     {
         LOCK(cs_wallet);
         
@@ -790,9 +777,6 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    //fixme: Account
-    if (!fFileBacked)
-        return true;
     return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], forAccount.getUUID());    
 }
 

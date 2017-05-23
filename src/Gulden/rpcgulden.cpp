@@ -243,7 +243,8 @@ UniValue deleteaccount(const JSONRPCRequest& request)
     
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
-        CAmount balance = pwallet->GetAccountBalance(account->getUUID(), 0, ISMINE_SPENDABLE, true );
+        std::string accountUUID = account->getUUID();
+        CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
             throw std::runtime_error("Account not empty, please first empty your account before trying to delete it.");
