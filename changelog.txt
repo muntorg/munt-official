@@ -3,6 +3,11 @@ x.x.x
 RPC - Add a type parameter to importseed RPC command.
 RPC - Fix error with 'signrawtransaction' RPC command, closes #38.
 
+1.6.4.2
+
+UI - Fix a crash on 32 bit windows installs when clicking to use buy page.
+UI - Fix a bug that caused "insufficient fund" message in incorrect cases when using a recovery phrase from an iOS device.
+
 1.6.4.1
 
 Minor bugfix release.
