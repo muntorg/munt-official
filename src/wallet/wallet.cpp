@@ -43,6 +43,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 #include <boost/uuid/nil_generator.hpp>
+#include <fstream>
 
 
 #include <Gulden/Common/scrypt.h>
@@ -2332,7 +2333,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime)
  */
 
 
-CAmount CWallet::GetBalance(const CAccount* forAccount) const
+CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -2344,7 +2345,21 @@ CAmount CWallet::GetBalance(const CAccount* forAccount) const
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (pcoin->IsTrusted())
+                {
                     nTotal += pcoin->GetAvailableCredit(true, forAccount);
+                }
+            }
+            
+        }
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nTotal += GetBalance(childAccount, false);
             }
         }
     }
@@ -2352,7 +2367,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount) const
     return nTotal;
 }
 
-CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount) const
+CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -2365,6 +2380,17 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount) const
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
                     nTotal += pcoin->GetAvailableCredit(true, forAccount);
+            }
+        }
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nTotal += GetUnconfirmedBalance(childAccount, false);
             }
         }
     }

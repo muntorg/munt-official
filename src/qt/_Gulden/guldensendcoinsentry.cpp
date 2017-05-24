@@ -367,7 +367,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             
     //fixme: GULDEN - give user a choice here.
     //fixme: Check if 'spend unconfirmed' is checked or not.
-    if (recipient.amount >= ( pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount()) ))
+    if (recipient.amount >= ( pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
     {
         if (showWarningDialogs)
         {
@@ -376,7 +376,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             d->exec();
         }
     
-        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount());
+        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true);
         recipient.fSubtractFeeFromAmount = true;
     }
     
