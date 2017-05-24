@@ -975,8 +975,8 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
-    CAmount GetBalance(const CAccount* forAccount = NULL) const;
-    CAmount GetUnconfirmedBalance(const CAccount* forAccount = NULL) const;
+    CAmount GetBalance(const CAccount* forAccount = NULL, bool includeChildren=false) const;
+    CAmount GetUnconfirmedBalance(const CAccount* forAccount = NULL, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = NULL) const;
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;

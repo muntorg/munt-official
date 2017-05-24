@@ -286,6 +286,16 @@ void ReceiveCoinsDialog::gotoReceievePage()
 
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
+    #ifdef WIN32
+    if(WIN32)
+    {
+        // Workaround for bug page crash on 32 bit windows builds
+        // https://github.com/Gulden/gulden-official/issues/41
+        QDesktopServices::openUrl(QUrl("https://gulden.com/purchase")); 
+        return;
+    }
+    #endif
+    
     #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
     ui->receiveCoinsStackedWidget->setCurrentIndex(1);
 
@@ -303,7 +313,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     
     
     QMovie *movie = new QMovie(":/Gulden/loading_animation");
-    if ( movie->isValid() )
+    if ( movie && movie->isValid() )
     {
         ui->loadingAnimationLabel->setVisible(true);
         buyView->setVisible(false);
@@ -315,7 +325,8 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     {
         ui->loadingAnimationLabel->setVisible(false);
         buyView->setVisible(true);
-        delete movie;
+        if (movie)
+            delete movie;
     }    
     
     buyView->load(QUrl("https://gulden.com/purchase"));
