@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 The Gulden developers
+// Copyright (c) 2015-2017 The Gulden developers
 // Authored by: Frank (dt_cdog@yahoo.com) and Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
