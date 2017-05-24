@@ -287,7 +287,7 @@ void ReceiveCoinsDialog::gotoReceievePage()
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
     #ifdef WIN32
-    if(WIN32)
+    if(_WIN32)
     {
         // Workaround for bug page crash on 32 bit windows builds
         // https://github.com/Gulden/gulden-official/issues/41
