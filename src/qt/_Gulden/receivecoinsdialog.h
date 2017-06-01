@@ -18,6 +18,12 @@
 #include <QVariant>
 #include <QSslError>
 
+//fixme: Future - mingw doesn't work with web engine view - for now we just use webkit everywhere but in future we should use web engine view
+//Leaving the code here as it's already done and maybe someone can use it.
+#ifndef WIN32
+#define HAVE_WEBENGINE_VIEW
+#endif
+
 class OptionsModel;
 class PlatformStyle;
 class WalletModel;
@@ -76,7 +82,9 @@ private Q_SLOTS:
   void loadBuyViewFinished(bool bOk);
   void generateRequest();
   void buyGulden();
+  #ifndef HAVE_WEBENGINE_VIEW
   void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
+  #endif
   
 };
 

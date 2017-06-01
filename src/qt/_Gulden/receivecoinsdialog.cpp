@@ -28,8 +28,6 @@
 
 #include "GuldenGUI.h"
 
-//fixme: Future - mingw doesn't work with web engine view - for now we just use webkit everywhere but in future we should use web engine view
-//Leaving the code here as it's already done and maybe someone can use it.
 #ifdef HAVE_WEBENGINE_VIEW
 #include <QWebEngineView>
 #elif defined(HAVE_WEBKIT)
@@ -287,7 +285,7 @@ void ReceiveCoinsDialog::gotoReceievePage()
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
     #ifdef WIN32
-    if(_WIN32)
+    if(_WIN32 && !GetBoolArg("-testbuypage32", false))
     {
         // Workaround for bug page crash on 32 bit windows builds
         // https://github.com/Gulden/gulden-official/issues/41
@@ -558,8 +556,10 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
     #endif
 }
 
+#ifndef HAVE_WEBENGINE_VIEW
 void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist)
 {
     qnr->ignoreSslErrors();
 }
+#endif
 
