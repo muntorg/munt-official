@@ -88,8 +88,8 @@ void WalletTests::walletTests()
     bitdb.MakeMock();
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
     CWallet wallet(std::move(dbw));
-    bool firstRun;
-    wallet.LoadWallet(firstRun);
+    WalletLoadState loadState;
+    wallet.LoadWallet(loadState);
     {
         LOCK(wallet.cs_wallet);
         //fixme: (GULDEN) (MERGE)

@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2017 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -20,6 +20,7 @@
 const std::string CBaseChainParams::MAIN = "main";
 const std::string CBaseChainParams::TESTNET = "test";
 const std::string CBaseChainParams::REGTEST = "regtest";
+const std::string CBaseChainParams::TESTNETACCEL = "testnetaccel";
 
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
@@ -29,6 +30,7 @@ void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
         strUsage += HelpMessageOpt("-regtest", "Enter regression test mode, which uses a special chain in which blocks can be solved instantly. "
                                    "This is intended for regression testing tools and app development.");
     }
+    strUsage += HelpMessageOpt("-testnetaccel", _("Use the accelerated test chain"));
 }
 
 /**
@@ -72,6 +74,20 @@ public:
 };
 static CBaseRegTestParams regTestParams;
 
+/**
+ * testnetaccel
+ */
+class CBaseTestNetAccelParams : public CBaseChainParams
+{
+public:
+    CBaseTestNetAccelParams()
+    {
+        nRPCPort = 9925;
+        strDataDir = "testnetaccel";
+    }
+};
+static CBaseTestNetAccelParams testNetAccelParams;
+
 static CBaseChainParams* pCurrentBaseParams = 0;
 
 const CBaseChainParams& BaseParams()
@@ -88,6 +104,8 @@ CBaseChainParams& BaseParams(const std::string& chain)
         return testNetParams;
     else if (chain == CBaseChainParams::REGTEST)
         return regTestParams;
+    else if (chain == CBaseChainParams::TESTNETACCEL)
+        return testNetAccelParams;
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }
@@ -101,6 +119,7 @@ std::string ChainNameFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
     bool fTestNet = GetBoolArg("-testnet", false);
+    bool fTestNetAccel = IsArgSet("-testnetaccel");
 
     if (fTestNet && fRegTest)
         throw std::runtime_error("Invalid combination of -regtest and -testnet.");
@@ -108,5 +127,18 @@ std::string ChainNameFromCommandLine()
         return CBaseChainParams::REGTEST;
     if (fTestNet)
         return CBaseChainParams::TESTNET;
+    if (fTestNetAccel)
+    {
+        int64_t accelTimestamp;
+        accelTimestamp = GetArg("-testnetaccel", 0);
+        if (accelTimestamp == 0)
+            throw std::runtime_error("Invalid seed timestamp for accelerated testnet.");
+        return CBaseChainParams::TESTNETACCEL;
+    }
     return CBaseChainParams::MAIN;
+}
+
+bool AreBaseParamsConfigured()
+{
+    return pCurrentBaseParams != NULL;
 }

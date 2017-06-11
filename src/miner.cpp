@@ -598,7 +598,7 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
     memcpy(phash1, &tmp.hash1, 64);
 }
 
-bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
+bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0]->vout[0].nValue));
@@ -611,7 +611,7 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
     }
 
     // Process this block the same as if we had received it from another node
-    if (!ProcessNewBlock(chainparams, std::shared_ptr<const CBlock>(pblock), true, NULL))
+    if (!ProcessNewBlock(chainparams, pblock, true, NULL))
         return error("GuldenMiner: ProcessNewBlock, block not accepted");
 
     return true;
@@ -629,6 +629,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
     LogPrintf("GuldenMiner started\n");
     RenameThread("gulden-miner");
 
+    bool testnetAccel = IsArgSet("-testnetaccel");
 
     unsigned int nExtraNonce = 0;
 
@@ -653,8 +654,10 @@ void static BitcoinMiner(const CChainParams& chainparams)
         // In the latter case, already the pointer is NULL.
         if (!coinbaseScript || coinbaseScript->reserveScript.empty())
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
-
-        while (true) {
+        
+        
+        while (true)
+        {
             if (GetBoolArg("-regtest", false))
             {
                 // Busy-wait for the network to come online so we don't waste time mining
@@ -672,7 +675,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
             CBlockIndex* pindexPrev = chainActive.Tip();
 
-            std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(chainparams).CreateNewBlock(coinbaseScript->reserveScript));
+            std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
             if (!pblocktemplate.get())
             {
                 LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
@@ -690,71 +693,78 @@ void static BitcoinMiner(const CChainParams& chainparams)
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             uint256 hash;
-            uint32_t nNonce = 0;
-            while (true) {
-                // Check if something found
-                arith_uint256 thash;
-                while (true)
+            uint32_t nNonce =0; 
+            
+            // Check if something found
+            arith_uint256 thash;
+            while (true)
+            {
+                if (GetTimeMillis() - nHPSTimerStart > 1000)
+                {
+                    TRY_LOCK(timerCS, lockhc);
+                    if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
+                    {
+                        int64_t nTemp = nHashCounter;
+                        nHashCounter = 0;
+                        dHashesPerSec =   1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+                        nHPSTimerStart = GetTimeMillis();
+                    }
+                    UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
+                    arith_uint256 compBits = pblock->nBits;
+                    if (GetNextWorkRequired(chainActive.Tip(), pblock, Params().GetConsensus()) != compBits)
+                    {
+                        break;
+                    }
+                }
+
+                if (testnetAccel)
+                {
+                    hash_city(BEGIN(pblock->nVersion), thash);
+                }
+                else
+                {
+                    char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+                    scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
+                }
+
+                if (thash <= hashTarget)
+                {
+                    // Found a solution
+                    LogPrintf("GuldenMiner:\n");
+                    LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
+                    std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+                    ProcessBlockFound(shared_pblock, chainparams);
+                    coinbaseScript->KeepScript();
+
+                    // In regression test mode, stop mining after a block is found.
+                    if (chainparams.MineBlocksOnDemand())
+                        throw boost::thread_interrupted();
+
+                    break;
+                }
+                pblock->nNonce += 1;
+                nHashCounter++;
+                while(nHashThrottle != -1 && nHashCounter >= nHashThrottle)
                 {
                     if (GetTimeMillis() - nHPSTimerStart > 1000)
                     {
-                        TRY_LOCK(timerCS, lockhc);
-                        if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
-                        {
-                            int64_t nTemp = nHashCounter;
-                            nHashCounter = 0;
-                            dHashesPerSec =   1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
-                            dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                            nHPSTimerStart = GetTimeMillis();
-                        }
-                        UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-                        arith_uint256 compBits = pblock->nBits;
-                        if (GetNextWorkRequired(chainActive.Tip(), pblock, Params().GetConsensus()) != compBits)
-                        {
-                            break;
-                        }
+                            TRY_LOCK(timerCS, lockhc);
+                            if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
+                            {
+                                    int64_t nTemp = nHashCounter;
+                                    nHashCounter = 0;
+                                    dHashesPerSec =  1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
+                                    dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+                                    nHPSTimerStart = GetTimeMillis();
+                            }
                     }
- 
-                    char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-                    scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
-
-                    if (thash <= hashTarget)
-                    {
-                        // Found a solution
-                        LogPrintf("GuldenMiner:\n");
-                        LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
-                        ProcessBlockFound(pblock, chainparams);
-                        coinbaseScript->KeepScript();
-
-                        // In regression test mode, stop mining after a block is found.
-                        if (chainparams.MineBlocksOnDemand())
-                            throw boost::thread_interrupted();
-
-                        break;
-                    }
-                    pblock->nNonce += 1;
-                    nHashCounter++;
-                    while(nHashThrottle != -1 && nHashCounter >= nHashThrottle)
-                    {
-                        if (GetTimeMillis() - nHPSTimerStart > 1000)
-                        {
-                                TRY_LOCK(timerCS, lockhc);
-                                if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
-                                {
-                                        int64_t nTemp = nHashCounter;
-                                        nHashCounter = 0;
-                                        dHashesPerSec =  1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
-                                        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                                        nHPSTimerStart = GetTimeMillis();
-                                }
-                        }
-                        MilliSleep(1);
-                    }
-
-                    if ((pblock->nNonce & 0xFF) == 0)
-                        break;
+                    MilliSleep(1);
                 }
 
+                if ((pblock->nNonce & 0xFF) == 0)
+                    break;
+                
                 // Check for stop or if block needs to be rebuilt
                 boost::this_thread::interruption_point();
                 // Regtest mode doesn't require peers
@@ -771,7 +781,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 // Update nTime every few seconds
                 if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
                     break; // Recreate the block if the clock has run backwards,
-                           // so that we can use the correct time.
+                        // so that we can use the correct time.
                 if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
                 {
                     // Changing pblock->nTime can change work required on testnet:

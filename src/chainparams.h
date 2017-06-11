@@ -76,6 +76,7 @@ public:
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
+    bool UseSyncCheckpoints() const { return fUseSyncCheckpoints; }
 protected:
     CChainParams() {}
 
@@ -93,6 +94,7 @@ protected:
     bool fDefaultConsistencyChecks;
     bool fRequireStandard;
     bool fMineBlocksOnDemand;
+    bool fUseSyncCheckpoints;
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
 };

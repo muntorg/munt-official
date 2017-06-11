@@ -1077,6 +1077,12 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
         return;
     }
     
+    //testnet-accel prevent spamming of mined messages
+    if (IsArgSet("-testnetaccel") && type == "Mined")
+    {
+        return;
+    }
+
     message(amountSent>amountReceived ? tr("Sent funds%1").arg(accountStr) : tr("Incoming funds%1").arg(accountStr),
              msg, CClientUIInterface::MSG_INFORMATION);
 }

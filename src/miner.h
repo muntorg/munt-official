@@ -34,7 +34,7 @@ extern double dHashesPerSec;
 extern int64_t nHPSTimerStart;
 extern int64_t nHashThrottle;
 
-bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey);
+bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams);
 /** Do mining precalculation */
 void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash1);
 

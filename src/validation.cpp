@@ -3914,13 +3914,16 @@ bool InitBlockIndex(const CChainParams& chainparams)
                 return error("LoadBlockIndex() : failed to init sync checkpoint");
             std::string strPubKey;
             std::string strPubKeyComp = GetBoolArg("-testnet", false) ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
-            if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
+            if (chainparams.UseSyncCheckpoints())
             {
-                // write checkpoint master key to db
-                if (!Checkpoints::WriteCheckpointPubKey(strPubKeyComp))
-                    return error("LoadBlockIndex() : failed to write new checkpoint master key to db");
-                if (!Checkpoints::ResetSyncCheckpoint(chainparams))
-                    return error("LoadBlockIndex() : failed to reset sync-checkpoint");
+                if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
+                {
+                    // write checkpoint master key to db
+                    if (!Checkpoints::WriteCheckpointPubKey(strPubKeyComp))
+                        return error("LoadBlockIndex() : failed to write new checkpoint master key to db");
+                    if (!Checkpoints::ResetSyncCheckpoint(chainparams))
+                        return error("LoadBlockIndex() : failed to reset sync-checkpoint");
+                }
             }
     LogPrintf("Wrote sync checkpoint...\n");
 
