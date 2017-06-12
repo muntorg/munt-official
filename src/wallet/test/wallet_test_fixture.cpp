@@ -8,15 +8,17 @@
 #include "wallet/db.h"
 #include "wallet/wallet.h"
 
+CWallet *pwalletMain;
+
 WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     TestingSetup(chainName)
 {
     bitdb.MakeMock();
 
-    bool fFirstRun;
+    WalletLoadState loadState;
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
     pwalletMain = new CWallet(std::move(dbw));
-    pwalletMain->LoadWallet(fFirstRun);
+    pwalletMain->LoadWallet(loadState);
     RegisterValidationInterface(pwalletMain);
 
     RegisterWalletRPCCommands(tableRPC);

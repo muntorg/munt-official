@@ -367,7 +367,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             
     //fixme: GULDEN - give user a choice here.
     //fixme: Check if 'spend unconfirmed' is checked or not.
-    if (recipient.amount >= ( pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
+    if (recipient.amount >= ( pactiveWallet->GetBalance(model->getActiveAccount(), true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
     {
         if (showWarningDialogs)
         {
@@ -376,7 +376,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             d->exec();
         }
     
-        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true);
+        recipient.amount = pactiveWallet->GetBalance(model->getActiveAccount(), true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
         recipient.fSubtractFeeFromAmount = true;
     }
     
@@ -417,10 +417,10 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     QModelIndex index = selection.at(0);
                     QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
                     
-                    LOCK(pwalletMain->cs_wallet);
+                    LOCK(pactiveWallet->cs_wallet);
                     
                     //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
-                    CReserveKey key(pwalletMain, pwalletMain->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
+                    CReserveKey key(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
                     CPubKey pubKey;
                     if (!key.GetReservedKey(pubKey))
                     {
@@ -432,7 +432,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     key.KeepKey();
                     CKeyID keyID = pubKey.GetID();
                     recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
-                    recipient.label = QString::fromStdString(pwalletMain->mapAccountLabels[sAccountUUID.toStdString()]);
+                    recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[sAccountUUID.toStdString()]);
                 }
             }
             break;

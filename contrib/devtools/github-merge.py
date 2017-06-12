@@ -15,7 +15,7 @@
 # In case of a clean merge that is accepted by the user, the local branch with
 # name $BRANCH is overwritten with the merged result, and optionally pushed.
 from __future__ import division,print_function,unicode_literals
-import os,sys
+import os
 from sys import stdin,stdout,stderr
 import argparse
 import hashlib
@@ -301,8 +301,7 @@ def main():
                     subprocess.check_call([GIT,'commit','-q','--gpg-sign','--amend','--no-edit'])
                     break
                 except subprocess.CalledProcessError as e:
-                    print("Error signing, exiting.",file=stderr)
-                    exit(1)
+                    print("Error while signing, asking again.",file=stderr)
             elif reply == 'x':
                 print("Not signing off on merge, exiting.",file=stderr)
                 exit(1)

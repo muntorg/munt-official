@@ -152,7 +152,7 @@ struct update_for_parent_inclusion
 };
 
 /** Run the miner threads */
-void GenerateBitcoins(bool fGenerate, int nThreads, const CChainParams& chainparams);
+void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams);
 
 /** Generate a new block, without valid proof-of-work */
 class BlockAssembler

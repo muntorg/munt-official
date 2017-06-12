@@ -22,7 +22,6 @@
 #include "util.h"
 
 #include <boost/signals2/signal.hpp>
-#include <boost/variant.hpp>
 
 //temp
 #include "base58.h"

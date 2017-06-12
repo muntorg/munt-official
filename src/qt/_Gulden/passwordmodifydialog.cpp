@@ -27,7 +27,7 @@ PasswordModifyDialog::PasswordModifyDialog(const PlatformStyle *_platformStyle, 
     connect(ui->lineEditNewPassword, SIGNAL(textEdited(QString)), this, SLOT(newPasswordChanged()));
     connect(ui->lineEditNewPasswordRepeat, SIGNAL(textEdited(QString)), this, SLOT(newPasswordRepeatChanged()));
     
-    if (pwalletMain->IsCrypted())
+    if (pactiveWallet->IsCrypted())
     {
         ui->lineEditOldPassword->setVisible(true);
     }
@@ -63,7 +63,7 @@ void PasswordModifyDialog::newPasswordRepeatChanged()
 
 void PasswordModifyDialog::setPassword()
 {
-    if (pwalletMain->IsCrypted())
+    if (pactiveWallet->IsCrypted())
     {
         if (ui->lineEditOldPassword->text().isEmpty())
         {
@@ -88,9 +88,9 @@ void PasswordModifyDialog::setPassword()
         return;
     }
     
-    if (pwalletMain->IsCrypted())
+    if (pactiveWallet->IsCrypted())
     {
-        if(!pwalletMain->ChangeWalletPassphrase(ui->lineEditOldPassword->text().toStdString().c_str(), ui->lineEditNewPassword->text().toStdString().c_str()))
+        if(!pactiveWallet->ChangeWalletPassphrase(ui->lineEditOldPassword->text().toStdString().c_str(), ui->lineEditNewPassword->text().toStdString().c_str()))
         {
             setValid(ui->lineEditOldPassword, false);
             return;
@@ -102,12 +102,12 @@ void PasswordModifyDialog::setPassword()
     }
     else
     {
-        if(!pwalletMain->EncryptWallet(ui->lineEditNewPassword->text().toStdString().c_str()))
+        if(!pactiveWallet->EncryptWallet(ui->lineEditNewPassword->text().toStdString().c_str()))
         {
             setValid(ui->lineEditNewPassword, false);
             return;
         }
-        pwalletMain->Lock();
+        pactiveWallet->Lock();
         burnLineEditMemory(ui->lineEditOldPassword);
         burnLineEditMemory(ui->lineEditNewPassword);
         burnLineEditMemory(ui->lineEditNewPasswordRepeat);

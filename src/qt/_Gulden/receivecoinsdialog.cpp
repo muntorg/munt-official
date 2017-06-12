@@ -362,7 +362,7 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
 void ReceiveCoinsDialog::generateRequest()
 {
     //fixme: (HD) kep gaps
-    CReserveKey reservekey(pwalletMain, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
+    CReserveKey reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
     {
@@ -448,7 +448,7 @@ void ReceiveCoinsDialog::generateRequest()
         }
     }
     
-    pwalletMain->SetAddressBook(CBitcoinAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "receive");
+    pactiveWallet->SetAddressBook(CBitcoinAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "receive");
 }
 
 
@@ -484,7 +484,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
             buyReceiveAddress = NULL;
         }
         
-        buyReceiveAddress = new CReserveKey(pwalletMain, currentAccount, KEYCHAIN_EXTERNAL);
+        buyReceiveAddress = new CReserveKey(pactiveWallet, currentAccount, KEYCHAIN_EXTERNAL);
         CPubKey pubKey;
         QString guldenAddress;
         

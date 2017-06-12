@@ -21,6 +21,7 @@
 #include "hash.h"
 #include "limitedmap.h"
 #include "netaddress.h"
+#include "policy/feerate.h"
 #include "protocol.h"
 #include "random.h"
 #include "streams.h"
@@ -150,6 +151,7 @@ public:
         unsigned int nReceiveFloodSize = 0;
         uint64_t nMaxOutboundTimeframe = 0;
         uint64_t nMaxOutboundLimit = 0;
+        std::vector<std::string> vSeedNodes;
     };
     CConnman(uint64_t seed0, uint64_t seed1);
     ~CConnman();
@@ -239,8 +241,6 @@ public:
     void GetBanned(banmap_t &banmap);
     void SetBanned(const banmap_t &banmap);
 
-    void AddOneShot(const std::string& strDest);
-
     bool AddNode(const std::string& node);
     bool RemoveAddedNode(const std::string& node);
     std::vector<AddedNodeInfo> GetAddedNodeInfo();
@@ -298,6 +298,7 @@ private:
     };
 
     void ThreadOpenAddedConnections();
+    void AddOneShot(const std::string& strDest);
     void ProcessOneShot();
     void ThreadOpenConnections();
     void ThreadMessageHandler();
@@ -510,8 +511,12 @@ public:
     double dPingTime;
     double dPingWait;
     double dMinPing;
+    // Our address, as reported by the peer
     std::string addrLocal;
+    // Address of this peer
     CAddress addr;
+    // Bind address of our side of the connection
+    CAddress addrBind;
 };
 
 
@@ -592,7 +597,10 @@ public:
     std::atomic<int64_t> nLastRecv;
     const int64_t nTimeConnected;
     std::atomic<int64_t> nTimeOffset;
+    // Address of this peer
     const CAddress addr;
+    // Bind address of our side of the connection
+    const CAddress addrBind;
     std::atomic<int> nVersion;
     // strSubVer is whatever byte array we read from the wire. However, this field is intended
     // to be printed out, displayed to humans in various forms and so on. So we sanitize it and
@@ -618,7 +626,6 @@ public:
     CCriticalSection cs_filter;
     CBloomFilter* pfilter;
     std::atomic<int> nRefCount;
-    const NodeId id;
 
     const uint64_t nKeyedNetGroup;
     std::atomic_bool fPauseRecv;
@@ -684,12 +691,13 @@ public:
     CAmount lastSentFeeFilter;
     int64_t nextSendTimeFeeFilter;
 
-    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const std::string &addrNameIn = "", bool fInboundIn = false);
+    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string &addrNameIn = "", bool fInboundIn = false);
     ~CNode();
 
 private:
     CNode(const CNode&);
     void operator=(const CNode&);
+    const NodeId id;
 
 
     const uint64_t nLocalHostNonce;
@@ -702,6 +710,7 @@ private:
     mutable CCriticalSection cs_addrName;
     std::string addrName;
 
+    // Our address, as reported by the peer
     CService addrLocal;
     mutable CCriticalSection cs_addrLocal;
 public:
@@ -718,7 +727,7 @@ public:
         return nMyStartingHeight;
     }
 
-    int GetRefCount()
+    int GetRefCount() const
     {
         assert(nRefCount >= 0);
         return nRefCount;
@@ -730,7 +739,7 @@ public:
     {
         nRecvVersion = nVersionIn;
     }
-    int GetRecvVersion()
+    int GetRecvVersion() const
     {
         return nRecvVersion;
     }

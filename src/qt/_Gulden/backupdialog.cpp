@@ -43,12 +43,12 @@ void BackupDialog::showBackupPhrase()
     ui->labelShowBackupPhrase->setVisible(false);
     ui->buttonShowBackupPhrase->setVisible(false);
     
-    LOCK(pwalletMain->cs_wallet);
+    LOCK(pactiveWallet->cs_wallet);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
         std::set<SecureString> allPhrases;
-        for (const auto& seedIter : pwalletMain->mapSeeds)
+        for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
             allPhrases.insert(seedIter.second->getMnemonic());
         }
@@ -75,7 +75,7 @@ void BackupDialog::showBackupPhrase()
     }
     
     bool haveNonHDAccounts = false;
-    for (const auto& accountIter : pwalletMain->mapAccounts)
+    for (const auto& accountIter : pactiveWallet->mapAccounts)
     {
         if (!accountIter.second->IsHD())
         {

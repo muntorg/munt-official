@@ -20,7 +20,6 @@
 
 #include <boost/foreach.hpp>
 #include <boost/thread.hpp>
-#include <boost/version.hpp>
 
 //
 // CDB
@@ -143,7 +142,7 @@ void CDBEnv::MakeMock()
     fMockDb = true;
 }
 
-CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, bool (*recoverFunc)(const std::string& strFile))
+CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, recoverFunc_type recoverFunc, std::string& out_backup_filename)
 {
     LOCK(cs_db);
     assert(mapFileUseCount.count(strFile) == 0);
@@ -156,21 +155,21 @@ CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, bool (*recoverFu
         return RECOVER_FAIL;
 
     // Try to recover:
-    bool fRecovered = (*recoverFunc)(strFile);
+    bool fRecovered = (*recoverFunc)(strFile, out_backup_filename);
     return (fRecovered ? RECOVER_OK : RECOVER_FAIL);
 }
 
-bool CDB::Recover(const std::string& filename, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue))
+bool CDB::Recover(const std::string& filename, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue), std::string& newFilename)
 {
     // Recovery procedure:
-    // move wallet file to wallet.timestamp.bak
+    // move wallet file to walletfilename.timestamp.bak
     // Call Salvage with fAggressive=true to
     // get as much data as possible.
     // Rewrite salvaged data to fresh wallet file
     // Set -rescan so any missing transactions will be
     // found.
     int64_t now = GetTime();
-    std::string newFilename = strprintf("wallet.%d.bak", now);
+    newFilename = strprintf("%s.%d.bak", filename, now);
 
     int result = bitdb.dbenv->dbrename(NULL, filename.c_str(), NULL,
                                        newFilename.c_str(), DB_AUTO_COMMIT);
@@ -211,7 +210,6 @@ bool CDB::Recover(const std::string& filename, void *callbackDataIn, bool (*reco
         {
             CDataStream ssKey(row.first, SER_DISK, CLIENT_VERSION);
             CDataStream ssValue(row.second, SER_DISK, CLIENT_VERSION);
-            std::string strType, strErr;
             if (!(*recoverKVcallback)(callbackDataIn, ssKey, ssValue))
                 continue;
         }
@@ -261,18 +259,19 @@ bool CDB::VerifyEnvironment(const std::string& walletFile, const fs::path& dataD
     return true;
 }
 
-bool CDB::VerifyDatabaseFile(const std::string& walletFile, const fs::path& dataDir, std::string& warningStr, std::string& errorStr, bool (*recoverFunc)(const std::string& strFile))
+bool CDB::VerifyDatabaseFile(const std::string& walletFile, const fs::path& dataDir, std::string& warningStr, std::string& errorStr, CDBEnv::recoverFunc_type recoverFunc)
 {
     if (fs::exists(dataDir / walletFile))
     {
-        CDBEnv::VerifyResult r = bitdb.Verify(walletFile, recoverFunc);
+        std::string backup_filename;
+        CDBEnv::VerifyResult r = bitdb.Verify(walletFile, recoverFunc, backup_filename);
         if (r == CDBEnv::RECOVER_OK)
         {
             warningStr = strprintf(_("Warning: Wallet file corrupt, data salvaged!"
                                      " Original %s saved as %s in %s; if"
                                      " your balance or transactions are incorrect you should"
                                      " restore from a backup."),
-                                   walletFile, "wallet.{timestamp}.bak", dataDir);
+                                   walletFile, backup_filename, dataDir);
         }
         if (r == CDBEnv::RECOVER_FAIL)
         {
@@ -361,7 +360,6 @@ void CDBEnv::CheckpointLSN(const std::string& strFile)
 
 CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb(NULL), activeTxn(NULL)
 {
-    int ret;
     fReadOnly = (!strchr(pszMode, '+') && !strchr(pszMode, 'w'));
     fFlushOnClose = fFlushOnCloseIn;
     env = dbw.env;
@@ -384,6 +382,7 @@ CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb
         ++env->mapFileUseCount[strFile];
         pdb = env->mapDb[strFile];
         if (pdb == NULL) {
+            int ret;
             pdb = new Db(env->dbenv, 0);
 
             bool fMockDb = env->IsMock();
@@ -432,6 +431,11 @@ void CDB::Flush()
         nMinutes = 1;
 
     env->dbenv->txn_checkpoint(nMinutes ? GetArg("-dblogsize", DEFAULT_WALLET_DBLOGSIZE) * 1024 : 0, nMinutes, 0);
+}
+
+void CWalletDBWrapper::IncrementUpdateCounter()
+{
+    ++nUpdateCounter;
 }
 
 void CDB::Close()

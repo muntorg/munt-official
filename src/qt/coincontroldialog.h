@@ -22,6 +22,8 @@ class WalletModel;
 class CCoinControl;
 class CTxMemPool;
 
+class CAccount;
+
 namespace Ui {
     class CoinControlDialog;
 }
@@ -71,7 +73,7 @@ private:
     const PlatformStyle *platformStyle;
 
     void sortView(int, Qt::SortOrder);
-    void updateView();
+    void updateView(CAccount* forAccount);
 
     enum
     {

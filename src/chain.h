@@ -313,10 +313,10 @@ public:
 
     //enum { nMedianTimeSpan=11 };
 
-    int64_t GetMedianTimePast(int _nHeight) const
+    int64_t GetMedianTimePast() const
     {
         int nMedianTimeSpan = 11;
-        if (_nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
+        if (nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
             nMedianTimeSpan = 3;
             
         int64_t pmedian[nMedianTimeSpan];

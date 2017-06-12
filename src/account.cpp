@@ -629,8 +629,8 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
     for(const CTxIn& txin : tx.vin)
     {
         isminetype ret = isminetype::ISMINE_NO;
-        std::map<uint256, CWalletTx>::const_iterator mi = pwalletMain->mapWallet.find(txin.prevout.hash);
-        if (mi != pwalletMain->mapWallet.end())
+        std::map<uint256, CWalletTx>::const_iterator mi = pactiveWallet->mapWallet.find(txin.prevout.hash);
+        if (mi != pactiveWallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
             if (txin.prevout.n < prev.tx->vout.size())
@@ -731,13 +731,13 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
     if (!internalKeyStore.EncryptKeys(vMasterKeyIn))
         return false;
     
-    if (pwalletMain)
+    if (pactiveWallet)
     {
         {
             std::set<CKeyID> setAddress;
             GetKeys(setAddress);
             
-            LOCK(pwalletMain->cs_wallet);                
+            LOCK(pactiveWallet->cs_wallet);                
             for (const auto& keyID : setAddress)
             {
                 CPubKey pubKey;
@@ -746,10 +746,10 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                     LogPrintf("CAccount::EncryptKeys(): Failed to get pubkey");
                     return false;
                 }
-                if (pwalletMain->pwalletdbEncryption)
-                    pwalletMain->pwalletdbEncryption->EraseKey(pubKey);
+                if (pactiveWallet->pwalletdbEncryption)
+                    pactiveWallet->pwalletdbEncryption->EraseKey(pubKey);
                 else
-                    CWalletDB(*pwalletMain->dbw).EraseKey(pubKey);
+                    CWalletDB(*pactiveWallet->dbw).EraseKey(pubKey);
                 
                 std::vector<unsigned char> secret;
                 if (!GetKey(keyID, secret))
@@ -757,9 +757,9 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                     LogPrintf("CAccount::EncryptKeys(): Failed to get crypted key");
                     return false;
                 }
-                if (pwalletMain->pwalletdbEncryption)
+                if (pactiveWallet->pwalletdbEncryption)
                 {
-                    if (!pwalletMain->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    if (!pactiveWallet->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
                     {
                         LogPrintf("CAccount::EncryptKeys(): Failed to write key");
                         return false;
@@ -767,7 +767,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                 }
                 else
                 {
-                    if (!CWalletDB(*pwalletMain->dbw).WriteCryptedKey(pubKey, secret, pwalletMain->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    if (!CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
                     {
                         LogPrintf("CAccount::EncryptKeys(): Failed to write key");
                         return false;
@@ -862,14 +862,14 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
     }
     
     // If we don't have a wallet yet (busy during wallet upgrade) - then the below not being called is fine as the wallet does a 'force resave' of all keys at the end of the upgrade.
-    if (pwalletMain)
+    if (pactiveWallet)
     {
         {
-            LOCK(pwalletMain->cs_wallet);
-            if (pwalletMain->pwalletdbEncryption)
-                return pwalletMain->pwalletdbEncryption->WriteCryptedKey(vchPubKey, vchCryptedSecret, pwalletMain->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
+            LOCK(pactiveWallet->cs_wallet);
+            if (pactiveWallet->pwalletdbEncryption)
+                return pactiveWallet->pwalletdbEncryption->WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
             else
-                return CWalletDB(*pwalletMain->dbw).WriteCryptedKey(vchPubKey, vchCryptedSecret, pwalletMain->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
+                return CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
         }
     }
     else

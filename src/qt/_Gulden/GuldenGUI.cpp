@@ -967,7 +967,7 @@ void GuldenGUI::refreshAccountControls()
     LogPrintf("GuldenGUI::refreshAccountControls\n");
 
     //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
-    if (pwalletMain->getActiveAccount()->IsReadOnly())
+    if (pactiveWallet->getActiveAccount()->IsReadOnly())
         m_pImpl->sendCoinsAction->setVisible( false );
         
     for ( const auto& controlPair : m_accountMap )
@@ -975,16 +975,16 @@ void GuldenGUI::refreshAccountControls()
         controlPair.first->deleteLater();
     }
     m_accountMap.clear();
-    if (pwalletMain)
+    if (pactiveWallet)
     {
         // Sort the accounts.
         std::map<QString, ClickableLabel*> sortedAccounts;
         ClickableLabel* makeActive = NULL;
         {
             //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
-            LOCK(pwalletMain->cs_wallet);
+            LOCK(pactiveWallet->cs_wallet);
             
-            for ( const auto& accountPair : pwalletMain->mapAccounts )
+            for ( const auto& accountPair : pactiveWallet->mapAccounts )
             {    
                 if (accountPair.second->m_Type == AccountType::Normal || (fShowChildAccountsSeperately && accountPair.second->m_Type == AccountType::ShadowChild) )
                 {
@@ -1063,12 +1063,12 @@ void GuldenGUI::setActiveAccountButton( ClickableLabel* activeButton )
 
 void GuldenGUI::updateAccount(CAccount* account)
 {
-    LOCK(pwalletMain->cs_wallet);
+    LOCK(pactiveWallet->cs_wallet);
             
     if (receiveAddress)
         delete receiveAddress;
     
-    receiveAddress = new CReserveKey(pwalletMain, account, KEYCHAIN_EXTERNAL);
+    receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
     if (receiveAddress->GetReservedKey(pubKey))
     {
@@ -1102,7 +1102,7 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
     
     //Update account name 'in place' in account list
     bool haveAccount=false;
-    if (pwalletMain)
+    if (pactiveWallet)
     {
         for ( const auto& accountPair : m_accountMap )
         {
@@ -1155,7 +1155,7 @@ void GuldenGUI::promptImportPrivKey()
     
     if (fGood)
     {
-        LOCK2(cs_main, pwalletMain->cs_wallet);
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
         
         CKey key = vchSecret.GetKey();
         if (!key.IsValid())
@@ -1169,24 +1169,24 @@ void GuldenGUI::promptImportPrivKey()
         CKeyID vchAddress = pubkey.GetID();
         
         //Don't import an address that is already in wallet.
-        if (pwalletMain->HaveKey(vchAddress))
+        if (pactiveWallet->HaveKey(vchAddress))
         {
             m_pImpl->message(tr("Error importing private key"), tr("Wallet already contains key."), CClientUIInterface::MSG_ERROR, NULL);
             return;
         }
         
-        CAccount* pAccount = pwalletMain->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
-        pwalletMain->MarkDirty();
-        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+        CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
+        pactiveWallet->MarkDirty();
+        pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
 
-        if (!pwalletMain->AddKeyPubKey(key, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
+        if (!pactiveWallet->AddKeyPubKey(key, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
         {
             m_pImpl->message(tr("Error importing private key"), tr("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR, NULL);
             return;
         }
 
         // Whenever a key is imported, we need to scan the whole chain - do so now
-        pwalletMain->nTimeFirstKey = 1;
+        pactiveWallet->nTimeFirstKey = 1;
         boost::thread t(rescanThread); // thread runs free
     }
 }
@@ -1194,7 +1194,7 @@ void GuldenGUI::promptImportPrivKey()
 void GuldenGUI::promptRescan()
 {
     // Whenever a key is imported, we need to scan the whole chain - do so now
-    pwalletMain->nTimeFirstKey = 1;
+    pactiveWallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
 }
 
@@ -1206,7 +1206,7 @@ void GuldenGUI::gotoWebsite()
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
     m_pImpl->receiveCoinsAction->setVisible( true );
-    if (pwalletMain->getActiveAccount()->IsReadOnly())
+    if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
         m_pImpl->sendCoinsAction->setVisible( false );
         if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
@@ -1338,7 +1338,7 @@ void GuldenGUI::acceptNewAccount()
 { 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
-        pwalletMain->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+        pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
         restoreCachedWidgetIfNeeded();
     }
     else

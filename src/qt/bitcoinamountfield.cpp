@@ -27,6 +27,7 @@
 #include "_Gulden/GuldenGUI.h"
 #include "_Gulden/clickablelabel.h"
 #include "_Gulden/nocksrequest.h"
+#include <assert.h>
 
 /** QSpinBox that uses fixed-point numbers internally and uses our own
  * formatting/parsing functions.

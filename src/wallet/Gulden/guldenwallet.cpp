@@ -22,15 +22,15 @@ void ThreadShadowPoolManager()
     {
         long milliSleep = 100;
         
-        if (pwalletMain)
+        if (pactiveWallet)
         {
-            LOCK(pwalletMain->cs_wallet);
+            LOCK(pactiveWallet->cs_wallet);
                       
             milliSleep = 500;
             // Top up 'shadow' pool
             int numNew = 0;
             bool dolock=true;
-            for (const auto& seedIter : pwalletMain->mapSeeds)
+            for (const auto& seedIter : pactiveWallet->mapSeeds)
             {
                 //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
                 if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
@@ -40,7 +40,7 @@ void ThreadShadowPoolManager()
                 {
                     int numShadow = 0;
                     {                    
-                        for (const auto& accountPair : pwalletMain->mapAccounts)
+                        for (const auto& accountPair : pactiveWallet->mapAccounts)
                         {
                             if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
                             {
@@ -57,10 +57,10 @@ void ThreadShadowPoolManager()
                     if (numShadow < GetArg("-accountpool", 10))
                     {
                         dolock=false;
-                        if (!pwalletMain->IsLocked())
+                        if (!pactiveWallet->IsLocked())
                         {
-                            pwalletMain->delayLock = true;
-                            CWalletDB db(*pwalletMain->dbw);
+                            pactiveWallet->delayLock = true;
+                            CWalletDB db(*pactiveWallet->dbw);
                             while (numShadow < GetArg("-accountpool", 10))
                             {
                                 ++numShadow;
@@ -76,7 +76,7 @@ void ThreadShadowPoolManager()
                                 newShadow->m_Type = AccountType::Shadow;
                                 
                                 // Write new account
-                                pwalletMain->addAccount(newShadow, "Shadow");
+                                pactiveWallet->addAccount(newShadow, "Shadow");
                                 
                                 if (numNew > 2)
                                 {
@@ -87,10 +87,10 @@ void ThreadShadowPoolManager()
                         }
                         else
                         {
-                            pwalletMain->wantDelayLock = true;
+                            pactiveWallet->wantDelayLock = true;
                             if (numShadow < 2)
                             {
-                                uiInterface.RequestUnlock(pwalletMain, _("Wallet unlock required for account creation"));
+                                uiInterface.RequestUnlock(pactiveWallet, _("Wallet unlock required for account creation"));
                             }
                         }
                     }
@@ -104,7 +104,7 @@ void ThreadShadowPoolManager()
                 int numToAllocatePerRound = 5;
                 if (targetPoolDepth > 40)
                     numToAllocatePerRound = 20;
-                int numAllocated = pwalletMain->TopUpKeyPool(depth, numToAllocatePerRound);
+                int numAllocated = pactiveWallet->TopUpKeyPool(depth, numToAllocatePerRound);
                 if (numAllocated >= 0)
                 {
                     if (depth <= targetPoolDepth)
@@ -137,12 +137,12 @@ void ThreadShadowPoolManager()
             }
             if (dolock)
             {
-                if(pwalletMain->didDelayLock)
+                if(pactiveWallet->didDelayLock)
                 {
-                    pwalletMain->delayLock = false;
-                    pwalletMain->wantDelayLock = false;
-                    pwalletMain->didDelayLock = false;
-                    pwalletMain->Lock();
+                    pactiveWallet->delayLock = false;
+                    pactiveWallet->wantDelayLock = false;
+                    pactiveWallet->didDelayLock = false;
+                    pactiveWallet->Lock();
                 }                
             }
         }
@@ -436,7 +436,7 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
     }
     
     //fixme: purge accounts completely if empty?
-    for (const auto& accountPair : pwalletMain->mapAccounts)
+    for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {

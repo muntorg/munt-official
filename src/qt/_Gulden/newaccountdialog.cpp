@@ -97,13 +97,13 @@ void NewAccountDialog::showSyncQr()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {    
-        newAccount = pwalletMain->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountType::Normal, AccountSubType::Mobi);
-        LOCK(pwalletMain->cs_wallet);
+        newAccount = pactiveWallet->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountType::Normal, AccountSubType::Mobi);
+        LOCK(pactiveWallet->cs_wallet);
         {
             int64_t currentTime = newAccount->getEarliestPossibleCreationTime();
         
             std::string payoutAddress;
-            CReserveKey reservekey(pwalletMain, newAccount, KEYCHAIN_CHANGE);
+            CReserveKey reservekey(pactiveWallet, newAccount, KEYCHAIN_CHANGE);
             CPubKey vchPubKey;
             if (!reservekey.GetReservedKey(vchPubKey))
                 return;

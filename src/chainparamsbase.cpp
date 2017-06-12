@@ -44,7 +44,6 @@ public:
         nRPCPort = 9232;
     }
 };
-static CBaseMainParams mainParams;
 
 /**
  * Testnet (v3)
@@ -58,7 +57,6 @@ public:
         strDataDir = "testnet";
     }
 };
-static CBaseTestNetParams testNetParams;
 
 /*
  * Regression test
@@ -72,7 +70,8 @@ public:
         strDataDir = "regtest";
     }
 };
-static CBaseRegTestParams regTestParams;
+
+static std::unique_ptr<CBaseChainParams> globalChainBaseParams;
 
 /**
  * testnetaccel
@@ -86,33 +85,30 @@ public:
         strDataDir = "testnetaccel";
     }
 };
-static CBaseTestNetAccelParams testNetAccelParams;
-
-static CBaseChainParams* pCurrentBaseParams = 0;
 
 const CBaseChainParams& BaseParams()
 {
-    assert(pCurrentBaseParams);
-    return *pCurrentBaseParams;
+    assert(globalChainBaseParams);
+    return *globalChainBaseParams;
 }
 
-CBaseChainParams& BaseParams(const std::string& chain)
+std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain)
 {
     if (chain == CBaseChainParams::MAIN)
-        return mainParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseMainParams());
     else if (chain == CBaseChainParams::TESTNET)
-        return testNetParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseTestNetParams());
     else if (chain == CBaseChainParams::REGTEST)
-        return regTestParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseRegTestParams());
     else if (chain == CBaseChainParams::TESTNETACCEL)
-        return testNetAccelParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseTestNetAccelParams());
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }
 
 void SelectBaseParams(const std::string& chain)
 {
-    pCurrentBaseParams = &BaseParams(chain);
+    globalChainBaseParams = CreateBaseChainParams(chain);
 }
 
 std::string ChainNameFromCommandLine()
@@ -136,9 +132,4 @@ std::string ChainNameFromCommandLine()
         return CBaseChainParams::TESTNETACCEL;
     }
     return CBaseChainParams::MAIN;
-}
-
-bool AreBaseParamsConfigured()
-{
-    return pCurrentBaseParams != NULL;
 }

@@ -77,7 +77,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
         }
         if (index.column() == 1)
         {
-            CAmount balance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+            CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
             return BitcoinUnits::format(BitcoinUnits::Unit::BTC, balance, false, BitcoinUnits::separatorAlways, 2);
         }
     }

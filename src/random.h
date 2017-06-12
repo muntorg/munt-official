@@ -24,6 +24,13 @@ int GetRandInt(int nMax);
 uint256 GetRandHash();
 
 /**
+ * Add a little bit of randomness to the output of GetStrongRangBytes.
+ * This sleeps for a millisecond, so should only be called when there is
+ * no other work to be done.
+ */
+void RandAddSeedSleep();
+
+/**
  * Function to gather random data from multiple sources, failing whenever any
  * of those source fail to provide a result.
  */
@@ -103,8 +110,14 @@ public:
         }
     }
 
+    /** Generate random bytes. */
+    std::vector<unsigned char> randbytes(size_t len);
+
     /** Generate a random 32-bit integer. */
     uint32_t rand32() { return randbits(32); }
+
+    /** generate a random uint256. */
+    uint256 rand256();
 
     /** Generate a random boolean. */
     bool randbool() { return randbits(1); }

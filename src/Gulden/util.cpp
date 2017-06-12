@@ -13,7 +13,7 @@ void rescanThread()
     if (alreadyInRescan)
         return;
     alreadyInRescan = true;
-    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    pactiveWallet->ScanForWalletTransactions(chainActive.Genesis(), true);
     alreadyInRescan = false;
 }
 

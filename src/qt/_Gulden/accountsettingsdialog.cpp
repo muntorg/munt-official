@@ -100,12 +100,12 @@ void AccountSettingsDialog::showSyncQr()
 {
     int64_t currentTime = activeAccount->getEarliestPossibleCreationTime();
     
-    LOCK(pwalletMain->cs_wallet);
+    LOCK(pactiveWallet->cs_wallet);
     std::string payoutAddress;
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        CReserveKey reservekey(pwalletMain, activeAccount, KEYCHAIN_CHANGE);
+        CReserveKey reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
         CPubKey vchPubKey;
         if (!reservekey.GetReservedKey(vchPubKey))
             return;
@@ -125,7 +125,7 @@ void AccountSettingsDialog::applyChanges()
         if (!ui->lineEditChangeAccountName->text().isEmpty())
         {
             //fixme: GULDEN - multiwallet.
-            pwalletMain->changeAccountName(activeAccount, ui->lineEditChangeAccountName->text().toStdString());
+            pactiveWallet->changeAccountName(activeAccount, ui->lineEditChangeAccountName->text().toStdString());
             ui->lineEditChangeAccountName->setText(QString(""));
         }
     }
@@ -139,7 +139,7 @@ void AccountSettingsDialog::deleteAccount()
     if (activeAccount)
     {
         std::string accountUUID = activeAccount->getUUID();
-        CAmount balance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");
@@ -153,7 +153,7 @@ void AccountSettingsDialog::deleteAccount()
             int result = d->exec();
             if(result == QDialog::Accepted)
             {
-                pwalletMain->deleteAccount(activeAccount);
+                pactiveWallet->deleteAccount(activeAccount);
             }
         }
     }
