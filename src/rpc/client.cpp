@@ -148,6 +148,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "dumpdiffarray", 0, "height" },
     { "dumpblockgaps", 0, "startheight" },
     { "dumpblockgaps", 1, "count" },
+    { "dumptransactionstats", 0, "startheight" },
+    { "dumptransactionstats", 1, "count" },
     { "sendtoaddressfromaccount", 2, "amount" },
     { "sendtoaddressfromaccount", 5, "subtractfeefromamount" },
 };

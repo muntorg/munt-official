@@ -170,6 +170,104 @@ UniValue dumpblockgaps(const JSONRPCRequest& request)
 }
 
 
+UniValue dumptransactionstats(const JSONRPCRequest& request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+    
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "dumptransactionstats startheight count\n"
+            "\nDump the transaction stats for the last n blocks.\n"
+            "\nArguments:\n"
+            "1. startheight     (numeric) Where to start dumping from, counting backwards from chaintip.\n"
+            "2. count           (numeric) The number of blocks to dump the block gaps of - going backwards from the startheight.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("dumpblockgaps 50", ""));
+
+    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VNUM));
+    
+    int nStart = request.params[0].get_int();
+    int nNumToOutput = request.params[1].get_int();
+
+    CBlockIndex* pBlock = chainActive.Tip();
+
+    UniValue jsonGaps(UniValue::VARR);
+    
+    while(pBlock && pBlock->pprev && --nStart>0)
+    {
+        pBlock = pBlock->pprev;
+    }
+     
+    int count = 0;
+    std::map<int64_t, int64_t> inputCount;
+    std::map<int64_t, int64_t> outputCount;
+    inputCount[1]=outputCount[1]=0;
+    inputCount[2]=outputCount[2]=0;
+    inputCount[3]=outputCount[3]=0;
+    inputCount[4]=outputCount[4]=0;
+    inputCount[5]=outputCount[5]=0;
+    inputCount[6]=outputCount[6]=0;
+    inputCount[7]=outputCount[7]=0;
+    
+    while(pBlock && pBlock->pprev && --nNumToOutput>0)
+    {
+        CBlock block;
+        if (ReadBlockFromDisk(block, pBlock, Params().GetConsensus()))
+        {
+            for (auto transaction : block.vtx)
+            {
+                ++count;
+                if (transaction->vin.size() >=7)
+                {
+                    ++inputCount[7];
+                }
+                else
+                {
+                    ++inputCount[transaction->vin.size()];
+                }
+                if (transaction->vout.size() >=7)
+                {
+                    ++outputCount[7];
+                }
+                else
+                {
+                    ++outputCount[transaction->vout.size()];
+                }
+            }
+        }
+        pBlock = pBlock->pprev;
+    }
+    
+    jsonGaps.push_back("count:");
+    jsonGaps.push_back(count);
+    jsonGaps.push_back("1:");
+    jsonGaps.push_back(inputCount[1]);
+    jsonGaps.push_back(outputCount[1]);
+    jsonGaps.push_back("2:");
+    jsonGaps.push_back(inputCount[2]);
+    jsonGaps.push_back(outputCount[2]);
+    jsonGaps.push_back("3:");
+    jsonGaps.push_back(inputCount[3]);
+    jsonGaps.push_back(outputCount[3]);
+    jsonGaps.push_back("4:");
+    jsonGaps.push_back(inputCount[4]);
+    jsonGaps.push_back(outputCount[4]);
+    jsonGaps.push_back("5:");
+    jsonGaps.push_back(inputCount[5]);
+    jsonGaps.push_back(outputCount[5]);
+    jsonGaps.push_back("6:");
+    jsonGaps.push_back(inputCount[6]);
+    jsonGaps.push_back(outputCount[6]);
+    jsonGaps.push_back("n:");
+    jsonGaps.push_back(inputCount[7]);
+    jsonGaps.push_back(outputCount[7]);
+    
+
+    return jsonGaps;
+}
+
 
 UniValue changeaccountname(const JSONRPCRequest& request)
 {
@@ -894,6 +992,7 @@ static const CRPCCommand commands[] =
     { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
 
     { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
+    { "developer",          "dumptransactionstats",   &dumptransactionstats,   true,    {"startheight", "count"} },
     { "developer",          "dumpdiffarray",          &dumpdiffarray,          true,    {"height"} },
     
     { "accounts",           "changeaccountname",      &changeaccountname,      true,    {"account", "name"} },
