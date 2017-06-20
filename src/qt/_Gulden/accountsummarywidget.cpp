@@ -84,8 +84,7 @@ void AccountSummaryWidget::balanceChanged()
 {
     if (pactiveWallet && m_account)
     {
-        std::string accountUUID = m_account->getUUID();
-        m_accountBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        m_accountBalance = pactiveWallet->GetBalance(m_account);
         updateExchangeRates();
     }
 }

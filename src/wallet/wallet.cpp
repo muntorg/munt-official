@@ -4324,8 +4324,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     RegisterValidationInterface(walletInstance);
 
-    //fixme: (GULDEN) (MERGE) check
-    CBlockIndex *pindexRescan = NULL;
+    CBlockIndex *pindexRescan = chainActive.Tip();
     if (GetBoolArg("-rescan", false) || GuldenApplication::gApp->isRecovery)
     {
         pindexRescan = chainActive.Genesis();
