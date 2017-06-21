@@ -1,6 +1,13 @@
 # Copyright (c) 2013-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+#
+# File contains modifications by: The Gulden developers
+# All modifications:
+# Copyright (c) 2016-2017 The Gulden developers
+# Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+# Distributed under the GULDEN software license, see the accompanying
+# file COPYING
 
 DIST_SUBDIRS = secp256k1 univalue
 
@@ -90,7 +97,8 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/auto_checkpoints.h \
   alert.h \
   Gulden/guldenapplication.h \
-  account.h
+  account.h \
+  primitives/Gulden/transaction.h
 
 GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
 
@@ -103,7 +111,8 @@ GDN_CONSENSUS_SRCS = \
   Gulden/Common/diff_delta.cpp \
   Gulden/Common/diff_old.cpp \
   Gulden/Common/diff_common.cpp \
-  Gulden/Common/hash/city.cpp
+  Gulden/Common/hash/city.cpp \
+  primitives/Gulden/transaction.cpp
 
 GDN_WALLET_SRCS = account.cpp \
    Gulden/mnemonic.cpp \
