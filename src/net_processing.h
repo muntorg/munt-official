@@ -88,4 +88,10 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 void SetAutoRequestBlocks(bool state);
 bool isAutoRequestingBlocks();
 
+/**
+ * Prioritize a block for downloading
+ * Blocks requested with priority will be downloaded and processed first
+ * Downloaded blocks will not trigger ActivateBestChain
+ */
+void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload);
 #endif // GULDEN_NET_PROCESSING_H
