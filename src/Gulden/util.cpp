@@ -560,7 +560,7 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
         pBlockPoW->hashMerkleRootPoW2Witness = uint256();
         pBlockPoW->witnessHeaderPoW2Sig.clear();
 
-        if (!ProcessNewBlock(Params(), pBlockPoW, true, nullptr))
+        if (!ProcessNewBlock(Params(), pBlockPoW, true, nullptr, false, true))
             return nullptr;
     }
     return mapBlockIndex[powHash];

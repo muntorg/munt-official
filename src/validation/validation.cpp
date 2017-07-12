@@ -2750,7 +2750,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     return true;
 }
 
-bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock, bool fAssumePOWGood)
+bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock, bool fAssumePOWGood, bool activateBestChain)
 {
     {
         CBlockIndex *pindex = NULL;
@@ -2774,7 +2774,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
     }
 
     CValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (!ActivateBestChain(state, chainparams, pblock))
+    if (activateBestChain && !ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed", __func__);
 
     if (!IsInitialBlockDownload())
