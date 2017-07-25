@@ -3,6 +3,11 @@
 ### About
 Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
 
+### Technical documentation
+
+* PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
+* Intro for PHP developers - https://www.paulwillen.nl/1102/get-started-with-php-developing-on-the-gulden-network
+
 ### Community
 
 Connect with the community through one or more of the following:
@@ -12,7 +17,10 @@ Connect with the community through one or more of the following:
 |Slack:|https://gulden.com/join|
 |Twitter:|http://twitter.com/gulden|
 |Facebook:|http://facebook.com/gulden|
+|Meetup:|https://www.meetup.com/gulden|
+|Reddit:|https://www.reddit.com/r/GuldenCommunity|
 |IRC:|https://webchat.freenode.net/?channels=Gulden|
+
 
 
 ### Building
@@ -106,17 +114,15 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057||
 
-|Infrastructure||
-|:-----------|:---------|
-|Official block explorer|blockchain.gulden.com|
-|Community block explorer|guldenchain.com|
-|Electrum server 1|electrum1.gulden.com:5038|
-|Electrum server 2|electrum2.gulden.com:5038|
-|DNS Seed 1|seed.gulden.com|
-|DNS Seed 2|amsterdam.gulden.com|
-|DNS Seed 3|seed.gulden.network|
-|DNS Seed 4|rotterdam.gulden.network|
-|DNS Seed 5|seed.gulden.blue|
-|Testnet DNS Seed 1|testseed.gulden.blue|
-|Testnet DNS Seed 2|testseed.gulden.network|
-|Testnet DNS Seed 3|testseed.coinpool.nl|
+|Infrastructure|Main network|Testnet|
+|:-----------|:---------|:---------|
+|Official block explorer|blockchain.gulden.com||
+|Community block explorer|guldenchain.com|testnet.guldenchain.com|
+|Electrum server 1|electrum1.gulden.com:5038||
+|Electrum server 2|electrum2.gulden.com:5038||
+|DNS Seed 1|seed.gulden.com|testseed.gulden.blue|
+|DNS Seed 2|amsterdam.gulden.com|testseed.coinpool.nl|
+|DNS Seed 3|seed.gulden.network|testseed.gulden.network|
+|DNS Seed 4|rotterdam.gulden.network||
+|DNS Seed 5|seed.gulden.blue||
+

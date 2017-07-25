@@ -310,14 +310,14 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->valueForCurrency();
 
-    if (recipient.amount >= (pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount()))) {
+    if (recipient.amount >= (pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true))) {
         if (showWarningDialogs) {
             QString message = tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
             QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), "", 400, 180);
             d->exec();
         }
 
-        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount()) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount());
+        recipient.amount = pwalletMain->GetBalance(model->getActiveAccount(), true) + pwalletMain->GetUnconfirmedBalance(model->getActiveAccount(), true);
         recipient.fSubtractFeeFromAmount = true;
     }
 
