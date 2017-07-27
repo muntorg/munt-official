@@ -2933,6 +2933,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
         bool fNewBlock = false;
         ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock, fAssumePOWGood, !result.fPriorityRequest);
+        if (result.fPriorityRequest) {
+            ProcessPriorityRequests(pblock);
+        }
         if (fNewBlock)
             pfrom->nLastBlockTime = GetTime();
     }
@@ -3922,6 +3925,46 @@ void SetAutoRequestBlocks(bool state) {
 
 bool isAutoRequestingBlocks() {
     return fAutoRequestBlocks;
+}
+
+void ProcessPriorityRequests(const std::shared_ptr<CBlock> blockRef) {
+    LOCK(cs_main);
+    if (blocksToDownloadFirst.empty()) {
+        return;
+    }
+    auto it = std::begin(blocksToDownloadFirst);
+    while (it != std::end(blocksToDownloadFirst)) {
+        std::shared_ptr<const CBlock> currentBlock;
+        const PriorityBlockRequest &r = *it;
+        // make sure we process blocks in order
+        if (!r.downloaded) {
+            break;
+        }
+        if (r.pindex && blockRef && blockRef->GetHashPoW2() == r.pindex->GetBlockHashPoW2()) {
+            // the passed in block, no need to load again from disk
+            currentBlock = blockRef;
+        }
+        else if (r.pindex->nStatus & BLOCK_HAVE_DATA) {
+            CBlock loadBlock;
+            if (!ReadBlockFromDisk(loadBlock, r.pindex, Params().GetConsensus())) {
+                throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
+            }
+            currentBlock = std::make_shared<const CBlock>(loadBlock);
+        }
+        else {
+            // stop in case we have no block data for this request
+            break;
+        }
+
+        // allow processing through signal
+        GetMainSignals().ProcessPriorityRequest(currentBlock, r.pindex);
+        LogPrint(BCLog::NET, "processed priority block request (%s) height=%d\n", r.pindex->GetBlockHashPoW2().ToString(), r.pindex->nHeight);
+
+        // remove processed block from queue
+        it = blocksToDownloadFirst.erase(std::remove_if(blocksToDownloadFirst.begin(), blocksToDownloadFirst.end(), [&r](const PriorityBlockRequest &rB) {
+                                        return rB.pindex == r.pindex;
+                                    }), blocksToDownloadFirst.end());
+    }
 }
 
 class CNetProcessingCleanup
