@@ -97,8 +97,7 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/auto_checkpoints.h \
   alert.h \
   Gulden/guldenapplication.h \
-  account.h \
-  primitives/Gulden/transaction.h
+  account.h
 
 GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
 
@@ -111,8 +110,7 @@ GDN_CONSENSUS_SRCS = \
   Gulden/Common/diff_delta.cpp \
   Gulden/Common/diff_old.cpp \
   Gulden/Common/diff_common.cpp \
-  Gulden/Common/hash/city.cpp \
-  primitives/Gulden/transaction.cpp
+  Gulden/Common/hash/city.cpp 
 
 GDN_WALLET_SRCS = account.cpp \
    Gulden/mnemonic.cpp \

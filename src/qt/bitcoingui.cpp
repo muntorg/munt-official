@@ -1077,8 +1077,8 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
         return;
     }
     
-    //testnet-accel prevent spamming of mined messages
-    if (IsArgSet("-testnetaccel") && type == "Mined")
+    //testnet prevent spamming of mined messages
+    if (IsArgSet("-testnet") && type == "Mined")
     {
         return;
     }

@@ -316,7 +316,7 @@ public:
     int64_t GetMedianTimePast() const
     {
         int nMedianTimeSpan = 11;
-        if (nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
+        if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
             
         int64_t pmedian[nMedianTimeSpan];

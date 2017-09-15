@@ -60,8 +60,10 @@ uint256 CBlock::GetPoWHash() const
     //if (!cachedPOWHash.IsNull())
         //return cachedPOWHash;
 
+      //CBSU - maybe use a static functor or something here instead of having the branch 
+    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     arith_uint256 thash;
-    if (IsArgSet("-testnetaccel"))
+    if (hashCity)
     {
         hash_city(BEGIN(nVersion), thash);
     }
@@ -70,7 +72,5 @@ uint256 CBlock::GetPoWHash() const
         char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
         scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
     }
-    //cachedPOWHash = ArithToUint256(thash);
-    //return cachedPOWHash;
     return ArithToUint256(thash);
 }
