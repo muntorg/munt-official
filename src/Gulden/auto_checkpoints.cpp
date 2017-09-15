@@ -507,7 +507,7 @@ std::string CSyncCheckpoint::strMasterPrivKey = "";
 // ppcoin: verify signature of sync-checkpoint message
 bool CSyncCheckpoint::CheckSignature()
 {
-    CPubKey key(ParseHex(GetBoolArg("-testnet", false) ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey));
+    CPubKey key(ParseHex(IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey));
     if (!key.IsValid())
     {
         return error("CSyncCheckpoint::CheckSignature() : SetPubKey failed");

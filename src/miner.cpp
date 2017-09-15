@@ -629,7 +629,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
     LogPrintf("GuldenMiner started\n");
     RenameThread("gulden-miner");
 
-    bool testnetAccel = IsArgSet("-testnetaccel");
+    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
 
     unsigned int nExtraNonce = 0;
 
@@ -718,7 +718,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     }
                 }
 
-                if (testnetAccel)
+                if (hashCity)
                 {
                     hash_city(BEGIN(pblock->nVersion), thash);
                 }
