@@ -115,10 +115,10 @@ public:
         READWRITE(encrypted);
         if(encrypted)
         {
-            READWRITE(encryptedMnemonic);
-            READWRITE(masterKeyPrivEncrypted);
-            READWRITE(purposeKeyPrivEncrypted);
-            READWRITE(cointypeKeyPrivEncrypted);
+            READWRITECOMPACTSIZEVECTOR(encryptedMnemonic);
+            READWRITECOMPACTSIZEVECTOR(masterKeyPrivEncrypted);
+            READWRITECOMPACTSIZEVECTOR(purposeKeyPrivEncrypted);
+            READWRITECOMPACTSIZEVECTOR(cointypeKeyPrivEncrypted);
         }
         else
         {
@@ -371,9 +371,9 @@ public:
 
         if ( IsCrypted() )
         {
-            READWRITE(accountKeyPrivEncrypted);
-            READWRITE(primaryChainKeyEncrypted);
-            READWRITE(changeChainKeyEncrypted);
+            READWRITECOMPACTSIZEVECTOR(accountKeyPrivEncrypted);
+            READWRITECOMPACTSIZEVECTOR(primaryChainKeyEncrypted);
+            READWRITECOMPACTSIZEVECTOR(changeChainKeyEncrypted);
         }
         else
         {

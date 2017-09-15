@@ -470,7 +470,10 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                 CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
                 oss << strRequestMutable;
                 oss >> fCheckMemPool;
-                oss >> vOutPoints;
+                //fixme: (GULDEN) (2.0) HIGH
+                /*
+                oss >> COMPACTSIZEVECTOR(vOutPoints);
+                */
             }
         } catch (const std::ios_base::failure& e) {
             // abort in case of unreadable binary data
@@ -530,7 +533,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
         // serialize data
         // use exact same output as mentioned in Bip64
         CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
-        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHash() << bitmap << outs;
+        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHash() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
         std::string ssGetUTXOResponseString = ssGetUTXOResponse.str();
 
         req->WriteHeader("Content-Type", "application/octet-stream");
@@ -540,7 +543,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
 
     case RF_HEX: {
         CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
-        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHash() << bitmap << outs;
+        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHash() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
         std::string strHex = HexStr(ssGetUTXOResponse.begin(), ssGetUTXOResponse.end()) + "\n";
 
         req->WriteHeader("Content-Type", "text/plain");

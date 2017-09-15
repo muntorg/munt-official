@@ -351,10 +351,10 @@ void TxConfirmStats::Write(CAutoFile& fileout) const
 {
     fileout << decay;
     fileout << scale;
-    fileout << avg;
-    fileout << txCtAvg;
-    fileout << confAvg;
-    fileout << failAvg;
+    fileout << COMPACTSIZEVECTOR(avg);
+    fileout << COMPACTSIZEVECTOR(txCtAvg);
+    fileout << COMPACTSIZEVECTOR(confAvg);
+    fileout << COMPACTSIZEVECTOR(failAvg);
 }
 
 void TxConfirmStats::Read(CAutoFile& filein, int nFileVersion, size_t numBuckets)
@@ -373,15 +373,15 @@ void TxConfirmStats::Read(CAutoFile& filein, int nFileVersion, size_t numBuckets
         filein >> scale;
     }
 
-    filein >> avg;
+    filein >> COMPACTSIZEVECTOR(avg);
     if (avg.size() != numBuckets) {
         throw std::runtime_error("Corrupt estimates file. Mismatch in feerate average bucket count");
     }
-    filein >> txCtAvg;
+    filein >> COMPACTSIZEVECTOR(txCtAvg);
     if (txCtAvg.size() != numBuckets) {
         throw std::runtime_error("Corrupt estimates file. Mismatch in tx count bucket count");
     }
-    filein >> confAvg;
+    filein >> COMPACTSIZEVECTOR(confAvg);
     maxPeriods = confAvg.size();
     maxConfirms = scale * maxPeriods;
 
@@ -395,7 +395,7 @@ void TxConfirmStats::Read(CAutoFile& filein, int nFileVersion, size_t numBuckets
     }
 
     if (nFileVersion >= 149900) {
-        filein >> failAvg;
+        filein >> COMPACTSIZEVECTOR(failAvg);
         if (maxPeriods != failAvg.size()) {
             throw std::runtime_error("Corrupt estimates file. Mismatch in confirms tracked for failures");
         }
@@ -838,7 +838,7 @@ bool CBlockPolicyEstimator::Write(CAutoFile& fileout) const
         else {
             fileout << historicalFirst << historicalBest;
         }
-        fileout << buckets;
+        fileout << COMPACTSIZEVECTOR(buckets);
         feeStats->Write(fileout);
         shortStats->Write(fileout);
         longStats->Write(fileout);
@@ -873,7 +873,7 @@ bool CBlockPolicyEstimator::Read(CAutoFile& filein)
                 throw std::runtime_error("Corrupt estimates file. Decay must be between 0 and 1 (non-inclusive)");
 
             std::vector<double> tempBuckets;
-            filein >> tempBuckets;
+            filein >> COMPACTSIZEVECTOR(tempBuckets);
             size_t tempNum = tempBuckets.size();
             if (tempNum <= 1 || tempNum > 1000)
                 throw std::runtime_error("Corrupt estimates file. Must have between 2 and 1000 feerate buckets");
@@ -896,7 +896,7 @@ bool CBlockPolicyEstimator::Read(CAutoFile& filein)
                 throw std::runtime_error("Corrupt estimates file. Historical block range for estimates is invalid");
             }
             std::vector<double> fileBuckets;
-            filein >> fileBuckets;
+            filein >> COMPACTSIZEVECTOR(fileBuckets);
             size_t numBuckets = fileBuckets.size();
             if (numBuckets <= 1 || numBuckets > 1000)
                 throw std::runtime_error("Corrupt estimates file. Must have between 2 and 1000 feerate buckets");

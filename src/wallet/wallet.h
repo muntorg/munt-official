@@ -264,7 +264,7 @@ public:
         std::vector<uint256> vMerkleBranch; // For compatibility with older versions.
         READWRITE(tx);
         READWRITE(hashBlock);
-        READWRITE(vMerkleBranch);
+        READWRITECOMPACTSIZEVECTOR(vMerkleBranch);
         READWRITE(nIndex);
     }
 
@@ -446,9 +446,9 @@ public:
 
         READWRITE(*(CMerkleTx*)this);
         std::vector<CMerkleTx> vUnused; //!< Used to be vtxPrev
-        READWRITE(vUnused);
+        READWRITECOMPACTSIZEVECTOR(vUnused);
         READWRITE(mapValue);
-        READWRITE(vOrderForm);
+        READWRITECOMPACTSIZEVECTOR(vOrderForm);
         READWRITE(fTimeReceivedIsTxTime);
         READWRITE(nTimeReceived);
         READWRITE(fFromMe);
@@ -609,7 +609,7 @@ public:
         int nVersion = s.GetVersion();
         if (!(s.GetType() & SER_GETHASH))
             READWRITE(nVersion);
-        READWRITE(vchPrivKey);
+        READWRITECOMPACTSIZEVECTOR(vchPrivKey);
         READWRITE(nTimeCreated);
         READWRITE(nTimeExpires);
         READWRITE(LIMITED_STRING(strComment, 65536));

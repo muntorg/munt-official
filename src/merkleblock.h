@@ -87,10 +87,10 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(nTransactions);
-        READWRITE(vHash);
+        READWRITECOMPACTSIZEVECTOR(vHash);
         std::vector<unsigned char> vBytes;
         if (ser_action.ForRead()) {
-            READWRITE(vBytes);
+            READWRITECOMPACTSIZEVECTOR(vBytes);
             CPartialMerkleTree &us = *(const_cast<CPartialMerkleTree*>(this));
             us.vBits.resize(vBytes.size() * 8);
             for (unsigned int p = 0; p < us.vBits.size(); p++)
@@ -100,7 +100,7 @@ public:
             vBytes.resize((vBits.size()+7)/8);
             for (unsigned int p = 0; p < vBits.size(); p++)
                 vBytes[p / 8] |= vBits[p] << (p % 8);
-            READWRITE(vBytes);
+            READWRITECOMPACTSIZEVECTOR(vBytes);
         }
     }
 

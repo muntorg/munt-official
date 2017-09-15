@@ -184,7 +184,7 @@ public:
             }
         }
 
-        READWRITE(prefilledtxn);
+        READWRITECOMPACTSIZEVECTOR(prefilledtxn);
 
         if (ser_action.ForRead())
             FillShortTxIDSelector();

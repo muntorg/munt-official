@@ -89,7 +89,7 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
     vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
 
-    return WriteIC(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(vchPrivKey, Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
+    return WriteIC(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
 }
 
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
@@ -108,7 +108,7 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsi
         return false;
     }
 
-    if (!WriteIC(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(vchCryptedSecret, forAccount, nKeyChain), false)) {
+    if (!WriteIC(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(COMPACTSIZEVECTOR(vchCryptedSecret), forAccount, nKeyChain), false)) {
         return false;
     }
     if (fEraseUnencryptedKey)
@@ -434,7 +434,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             if (strType == "key")
             {
                 wss.nKeys++;
-                ssValue >> pkey;
+                ssValue >> COMPACTSIZEVECTOR(pkey);
             } else {
                 CWalletKey wkey;
                 ssValue >> wkey;
@@ -524,7 +524,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
             std::vector<unsigned char> vchPrivKey;
-            ssValue >> vchPrivKey;
+            ssValue >> COMPACTSIZEVECTOR(vchPrivKey);
             wss.nCKeys++;
             try
             {

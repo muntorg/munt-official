@@ -118,7 +118,7 @@ CDBWrapper::CDBWrapper(const fs::path& path, size_t nCacheSize, bool fMemory, bo
     // The base-case obfuscation key, which is a noop.
     obfuscate_key = std::vector<unsigned char>(OBFUSCATE_KEY_NUM_BYTES, '\000');
 
-    bool key_exists = Read(OBFUSCATE_KEY_KEY, obfuscate_key);
+    bool key_exists = Read(OBFUSCATE_KEY_KEY, COMPACTSIZEVECTOR(obfuscate_key));
 
     if (!key_exists && obfuscate && IsEmpty()) {
         // Initialize non-degenerate obfuscation if it won't upset
@@ -126,7 +126,7 @@ CDBWrapper::CDBWrapper(const fs::path& path, size_t nCacheSize, bool fMemory, bo
         std::vector<unsigned char> new_key = CreateObfuscateKey();
 
         // Write `new_key` so we don't obfuscate the key with itself
-        Write(OBFUSCATE_KEY_KEY, new_key);
+        Write(OBFUSCATE_KEY_KEY, COMPACTSIZEVECTOR(new_key));
         obfuscate_key = new_key;
 
         LogPrintf("Wrote new obfuscate key for %s: %s\n", path.string(), HexStr(obfuscate_key));

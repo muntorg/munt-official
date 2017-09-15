@@ -95,8 +95,8 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(vchMsg);
-        READWRITE(vchSig);
+        READWRITECOMPACTSIZEVECTOR(vchMsg);
+        READWRITECOMPACTSIZEVECTOR(vchSig);
     }
 
     void SetNull();

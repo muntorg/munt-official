@@ -157,7 +157,9 @@ enum
 };
 
 #define READWRITE(obj)      (::SerReadWrite(s, (obj), ser_action))
-#define READWRITEMANY(...)      (::SerReadWriteMany(s, ser_action, __VA_ARGS__))
+#define READWRITEMANY(...)  (::SerReadWriteMany(s, ser_action, __VA_ARGS__))
+#define STRWRITE(obj)       (::SerWrite(s, (obj), ser_action))
+#define STRREAD(obj)        (::SerRead(s, (obj), ser_action))
 
 /** 
  * Implement three methods for serializable objects. These are actually wrappers over
@@ -498,15 +500,155 @@ template<typename Stream, unsigned int N, typename T, typename V> void Unseriali
 template<typename Stream, unsigned int N, typename T> inline void Unserialize(Stream& is, prevector<N, T>& v);
 
 /**
- * vector
- * vectors of unsigned char are a special case and are intended to be serialized as a single opaque blob.
+ * compactsizevectorwrapper
+ * same as normal vector but using compact size to represent the size when serializing
  */
-template<typename Stream, typename T, typename A> void Serialize_impl(Stream& os, const std::vector<T, A>& v, const unsigned char&);
-template<typename Stream, typename T, typename A, typename V> void Serialize_impl(Stream& os, const std::vector<T, A>& v, const V&);
-template<typename Stream, typename T, typename A> inline void Serialize(Stream& os, const std::vector<T, A>& v);
-template<typename Stream, typename T, typename A> void Unserialize_impl(Stream& is, std::vector<T, A>& v, const unsigned char&);
-template<typename Stream, typename T, typename A, typename V> void Unserialize_impl(Stream& is, std::vector<T, A>& v, const V&);
-template<typename Stream, typename T, typename A> inline void Unserialize(Stream& is, std::vector<T, A>& v);
+template<typename T, typename A> class compactsizevectorwrapper : public std::vector<T, A> {
+public:
+    using std::vector<T, A>::vector; // use the constructors from vector
+};
+template<typename Stream, typename T, typename A> void Serialize_impl(Stream& os, const compactsizevectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Serialize_impl(Stream& os, const compactsizevectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Serialize(Stream& os, const compactsizevectorwrapper<T, A>& v);
+template<typename Stream, typename T, typename A> void Unserialize_impl(Stream& is, compactsizevectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Unserialize_impl(Stream& is, compactsizevectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Unserialize(Stream& is, compactsizevectorwrapper<T, A>& v);
+
+template<typename T>  compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeCompactSizeVector(std::vector<std::vector<T>>& obj)
+{
+    return (compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T>  compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeCompactSizeVector(const std::vector<std::vector<T>>& obj)
+{
+    return (compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeCompactSizeVector(std::vector<std::vector<T, A>>& obj)
+{
+    return (compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeCompactSizeVector(const std::vector<std::vector<T, A>>& obj)
+{
+    return (compactsizevectorwrapper<compactsizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  compactsizevectorwrapper<T, A>& MakeCompactSizeVector(std::vector<T, A>& obj)
+{
+    return (compactsizevectorwrapper<T, A>&)obj;
+}
+template<typename T, typename A>  compactsizevectorwrapper<T, A>& MakeCompactSizeVector(const std::vector<T, A>& obj)
+{
+    return (compactsizevectorwrapper<T, A>&)obj;
+}
+template<typename T>  compactsizevectorwrapper<T, std::allocator<T>>& MakeCompactSizeVector(std::vector<T>& obj)
+{
+    return (compactsizevectorwrapper<T, std::allocator<T>>&)obj;
+}
+template<typename T>  const compactsizevectorwrapper<T, std::allocator<T>>& MakeCompactSizeVector(const std::vector<T>& obj)
+{
+    return (const compactsizevectorwrapper<T, std::allocator<T>>&)obj;
+}
+#define COMPACTSIZEVECTOR(obj) MakeCompactSizeVector(obj)
+#define READWRITECOMPACTSIZEVECTOR(obj) READWRITE(COMPACTSIZEVECTOR(obj))
+#define READWRITECOMPACTSIZE(obj) READWRITE(COMPACTSIZE(obj))
+
+/**
+ * varintvectorwrapper
+ * same as normal vector but using CVarInt to represent the size when serializing
+ */
+template<typename T, typename A> class varintvectorwrapper : public std::vector<T, A> {
+public:
+    using std::vector<T, A>::vector; // use the constructors from vector
+};
+template<typename Stream, typename T, typename A> void Serialize_impl(Stream& os, const varintvectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Serialize_impl(Stream& os, const varintvectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Serialize(Stream& os, const varintvectorwrapper<T, A>& v);
+template<typename Stream, typename T, typename A> void Unserialize_impl(Stream& is, varintvectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Unserialize_impl(Stream& is, varintvectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Unserialize(Stream& is, varintvectorwrapper<T, A>& v);
+
+template<typename T>  varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeVarIntVector(std::vector<std::vector<T>>& obj)
+{
+    return (varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T>  varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeVarIntVector(const std::vector<std::vector<T>>& obj)
+{
+    return (varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeVarIntVector(std::vector<std::vector<T, A>>& obj)
+{
+    return (varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeVarIntVector(const std::vector<std::vector<T, A>>& obj)
+{
+    return (varintvectorwrapper<varintvectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  varintvectorwrapper<T, A>& MakeVarIntVector(std::vector<T, A>& obj)
+{
+    return (varintvectorwrapper<T, A>&)obj;
+}
+template<typename T, typename A>  varintvectorwrapper<T, A>& MakeVarIntVector(const std::vector<T, A>& obj)
+{
+    return (varintvectorwrapper<T, A>&)obj;
+}
+template<typename T>  varintvectorwrapper<T, std::allocator<T>>& MakeVarIntVector(std::vector<T>& obj)
+{
+    return (varintvectorwrapper<T, std::allocator<T>>&)obj;
+}
+template<typename T>  const varintvectorwrapper<T, std::allocator<T>>& MakeVarIntVector(const std::vector<T>& obj)
+{
+    return (const varintvectorwrapper<T, std::allocator<T>>&)obj;
+}
+#define VARINTVECTOR(obj) MakeVarIntVector(obj)
+#define READWRITEVARINTVECTOR(obj) READWRITE(VARINTVECTOR(obj))
+
+/**
+ * nosizevectorwrapper
+ * same as normal vector but no size output when serializing, size must be obtained/set independently.
+ */
+template<typename T, typename A> class nosizevectorwrapper : public std::vector<T, A> {
+public:
+    using std::vector<T, A>::vector; // use the constructors from vector
+};
+template<typename Stream, typename T, typename A> void Serialize_impl(Stream& os, const nosizevectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Serialize_impl(Stream& os, const nosizevectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Serialize(Stream& os, const nosizevectorwrapper<T, A>& v);
+template<typename Stream, typename T, typename A> void Unserialize_impl(Stream& is, nosizevectorwrapper<T, A>& v, const unsigned char&);
+template<typename Stream, typename T, typename A, typename V> void Unserialize_impl(Stream& is, nosizevectorwrapper<T, A>& v, const V&);
+template<typename Stream, typename T, typename A> inline void Unserialize(Stream& is, nosizevectorwrapper<T, A>& v);
+
+template<typename T>  nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeNoSizeVector(std::vector<std::vector<T>>& obj)
+{
+    return (nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T>  nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeNoSizeVector(const std::vector<std::vector<T>>& obj)
+{
+    return (nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeNoSizeVector(std::vector<std::vector<T, A>>& obj)
+{
+    return (nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>& MakeNoSizeVector(const std::vector<std::vector<T, A>>& obj)
+{
+    return (nosizevectorwrapper<nosizevectorwrapper<T, std::allocator<T>>, std::allocator<std::vector<T>>>&)obj;
+}
+template<typename T, typename A>  nosizevectorwrapper<T, A>& MakeNoSizeVector(std::vector<T, A>& obj)
+{
+    return (nosizevectorwrapper<T, A>&)obj;
+}
+template<typename T, typename A>  nosizevectorwrapper<T, A>& MakeNoSizeVector(const std::vector<T, A>& obj)
+{
+    return (nosizevectorwrapper<T, A>&)obj;
+}
+template<typename T>  nosizevectorwrapper<T, std::allocator<T>>& MakeNoSizeVector(std::vector<T>& obj)
+{
+    return (nosizevectorwrapper<T, std::allocator<T>>&)obj;
+}
+template<typename T>  const nosizevectorwrapper<T, std::allocator<T>>& MakeNoSizeVector(const std::vector<T>& obj)
+{
+    return (const nosizevectorwrapper<T, std::allocator<T>>&)obj;
+}
+#define NOSIZEVECTOR(obj) MakeNoSizeVector(obj)
+#define READWRITENOSIZEVECTOR(obj) READWRITE(NOSIZEVECTOR(obj))
 
 /**
  * pair
@@ -689,7 +831,7 @@ inline void Unserialize(Stream& is, prevector<N, T>& v)
  * vector
  */
 template<typename Stream, typename T, typename A>
-void Serialize_impl(Stream& os, const std::vector<T, A>& v, const unsigned char&)
+void Serialize_impl(Stream& os, const compactsizevectorwrapper<T, A>& v, const unsigned char&)
 {
     WriteCompactSize(os, v.size());
     if (!v.empty())
@@ -697,22 +839,22 @@ void Serialize_impl(Stream& os, const std::vector<T, A>& v, const unsigned char&
 }
 
 template<typename Stream, typename T, typename A, typename V>
-void Serialize_impl(Stream& os, const std::vector<T, A>& v, const V&)
+void Serialize_impl(Stream& os, const compactsizevectorwrapper<T, A>& v, const V&)
 {
     WriteCompactSize(os, v.size());
-    for (typename std::vector<T, A>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
+    for (typename compactsizevectorwrapper<T, A>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream, typename T, typename A>
-inline void Serialize(Stream& os, const std::vector<T, A>& v)
+inline void Serialize(Stream& os, const compactsizevectorwrapper<T, A>& v)
 {
     Serialize_impl(os, v, T());
 }
 
 
 template<typename Stream, typename T, typename A>
-void Unserialize_impl(Stream& is, std::vector<T, A>& v, const unsigned char&)
+void Unserialize_impl(Stream& is, compactsizevectorwrapper<T, A>& v, const unsigned char&)
 {
     // Limit size per read so bogus size value won't cause out of memory
     v.clear();
@@ -728,7 +870,7 @@ void Unserialize_impl(Stream& is, std::vector<T, A>& v, const unsigned char&)
 }
 
 template<typename Stream, typename T, typename A, typename V>
-void Unserialize_impl(Stream& is, std::vector<T, A>& v, const V&)
+void Unserialize_impl(Stream& is, compactsizevectorwrapper<T, A>& v, const V&)
 {
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
@@ -746,11 +888,142 @@ void Unserialize_impl(Stream& is, std::vector<T, A>& v, const V&)
 }
 
 template<typename Stream, typename T, typename A>
-inline void Unserialize(Stream& is, std::vector<T, A>& v)
+inline void Unserialize(Stream& is, compactsizevectorwrapper<T, A>& v)
 {
     Unserialize_impl(is, v, T());
 }
 
+
+
+/**
+ * varintvectorwrapper
+ */
+template<typename Stream, typename T, typename A>
+void Serialize_impl(Stream& os, const varintvectorwrapper<T, A>& v, const unsigned char&)
+{
+    WriteVarInt(os, v.size());
+    if (!v.empty())
+        os.write((char*)&v[0], v.size() * sizeof(T));
+}
+
+template<typename Stream, typename T, typename A, typename V>
+void Serialize_impl(Stream& os, const varintvectorwrapper<T, A>& v, const V&)
+{
+    WriteVarInt(os, v.size());
+    for (typename varintvectorwrapper<T, A>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
+        ::Serialize(os, (*vi));
+}
+
+template<typename Stream, typename T, typename A>
+inline void Serialize(Stream& os, const varintvectorwrapper<T, A>& v)
+{
+    Serialize_impl(os, v, T());
+}
+
+
+template<typename Stream, typename T, typename A>
+void Unserialize_impl(Stream& is, varintvectorwrapper<T, A>& v, const unsigned char&)
+{
+    // Limit size per read so bogus size value won't cause out of memory
+    v.clear();
+    unsigned int nSize = ReadVarInt<Stream, unsigned int>(is);
+    unsigned int i = 0;
+    while (i < nSize)
+    {
+        unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(T)));
+        v.resize(i + blk);
+        is.read((char*)&v[i], blk * sizeof(T));
+        i += blk;
+    }
+}
+
+template<typename Stream, typename T, typename A, typename V>
+void Unserialize_impl(Stream& is, varintvectorwrapper<T, A>& v, const V&)
+{
+    v.clear();
+    unsigned int nSize = ReadVarInt<Stream, unsigned int>(is);
+    unsigned int i = 0;
+    unsigned int nMid = 0;
+    while (nMid < nSize)
+    {
+        nMid += 5000000 / sizeof(T);
+        if (nMid > nSize)
+            nMid = nSize;
+        v.resize(nMid);
+        for (; i < nMid; i++)
+            Unserialize(is, v[i]);
+    }
+}
+
+template<typename Stream, typename T, typename A>
+inline void Unserialize(Stream& is, varintvectorwrapper<T, A>& v)
+{
+    Unserialize_impl(is, v, T());
+}
+
+
+
+/**
+ * nosizevectorwrapper
+ */
+template<typename Stream, typename T, typename A>
+void Serialize_impl(Stream& os, const nosizevectorwrapper<T, A>& v, const unsigned char&)
+{
+    if (!v.empty())
+        os.write((char*)&v[0], v.size() * sizeof(T));
+}
+
+template<typename Stream, typename T, typename A, typename V>
+void Serialize_impl(Stream& os, const nosizevectorwrapper<T, A>& v, const V&)
+{
+    for (typename nosizevectorwrapper<T, A>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
+        ::Serialize(os, (*vi));
+}
+
+template<typename Stream, typename T, typename A>
+inline void Serialize(Stream& os, const nosizevectorwrapper<T, A>& v)
+{
+    Serialize_impl(os, v, T());
+}
+
+
+template<typename Stream, typename T, typename A>
+void Unserialize_impl(Stream& is, nosizevectorwrapper<T, A>& v, const unsigned char&)
+{
+    // Limit size per read so bogus size value won't cause out of memory
+    //v.clear();
+    unsigned int nSize = v.size();
+    unsigned int i = 0;
+    while (i < nSize)
+    {
+        unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(T)));
+        is.read((char*)&v[i], blk * sizeof(T));
+        i += blk;
+    }
+}
+
+template<typename Stream, typename T, typename A, typename V>
+void Unserialize_impl(Stream& is, nosizevectorwrapper<T, A>& v, const V&)
+{
+    //v.clear();
+    unsigned int nSize = v.size();
+    unsigned int i = 0;
+    unsigned int nMid = 0;
+    while (nMid < nSize)
+    {
+        nMid += 5000000 / sizeof(T);
+        if (nMid > nSize)
+            nMid = nSize;
+        for (; i < nMid; i++)
+            Unserialize(is, v[i]);
+    }
+}
+
+template<typename Stream, typename T, typename A>
+inline void Unserialize(Stream& is, nosizevectorwrapper<T, A>& v)
+{
+    Unserialize_impl(is, v, T());
+}
 
 
 /**
@@ -935,7 +1208,27 @@ inline void SerReadWrite(Stream& s, T& obj, CSerActionUnserialize ser_action)
     ::Unserialize(s, obj);
 }
 
+template<typename Stream, typename T>
+inline void SerWrite(Stream& s, const T& obj, CSerActionSerialize ser_action)
+{
+    ::Serialize(s, obj);
+}
 
+template<typename Stream, typename T>
+inline void SerWrite(Stream& s, const T& obj, CSerActionUnserialize ser_action)
+{
+}
+
+template<typename Stream, typename T>
+inline void SerRead(Stream& s, const T& obj, CSerActionSerialize ser_action)
+{
+}
+
+template<typename Stream, typename T>
+inline void SerRead(Stream& s, T& obj, CSerActionUnserialize ser_action)
+{
+    ::Unserialize(s, obj);
+}
 
 
 

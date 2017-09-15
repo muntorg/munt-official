@@ -111,7 +111,7 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(*(CBlockHeader*)this);
-        READWRITE(vtx);
+        READWRITECOMPACTSIZEVECTOR(vtx);
     }
 
     void SetNull()
@@ -160,7 +160,7 @@ struct CBlockLocator
         int nVersion = s.GetVersion();
         if (!(s.GetType() & SER_GETHASH))
             READWRITE(nVersion);
-        READWRITE(vHave);
+        READWRITECOMPACTSIZEVECTOR(vHave);
     }
 
     void SetNull()
