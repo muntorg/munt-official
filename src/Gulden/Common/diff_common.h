@@ -14,6 +14,7 @@
     #define BLOCK_TIME(block) block.getTimeSeconds()
     #define INDEX_TYPE StoredBlock
     #define INDEX_HEIGHT(block) block.getHeight()
+    //fixme: (GULDEN) (2.0)
     #define INDEX_TIME(block) block.getHeader().getTimeSeconds()
     #define INDEX_PREV(block) blockStore.get(block.getHeader().getPrevBlockHash())
     #define INDEX_TARGET(block) block.getHeader().getDifficultyTarget()
@@ -34,13 +35,14 @@
     #define BLOCK_TIME(block) (int64_t)block.timestamp
     #define INDEX_TYPE BRMerkleBlock*
     #define INDEX_HEIGHT(block) block.height
+    //fixme: (GULDEN) (2.0)
     #define INDEX_TIME(block) (int64_t)block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
     #ifdef GULDEN_TESTNET
-        #define DIFF_SWITCHOVER(TEST, MAIN) TEST
+        #define DIFF_SWITCHOVER(T, M) T
     #else
-        #define DIFF_SWITCHOVER(TEST, MAIN) MAIN
+        #define DIFF_SWITCHOVER(T, M) M
     #endif
     #define DIFF_ABS llabs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
@@ -62,7 +64,7 @@
     #define INDEX_TIME(block) block->GetBlockTime()
     #define INDEX_PREV(block) block->pprev
     #define INDEX_TARGET(block) block->nBits
-    #define DIFF_SWITCHOVER(TEST, MAIN) (GetBoolArg("-testnet", false) ? TEST :  MAIN)
+    #define DIFF_SWITCHOVER(TEST, MAIN) (IsArgSet("-testnet") ? TEST :  MAIN)
     #define DIFF_ABS std::abs
     #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
     #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
