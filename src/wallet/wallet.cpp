@@ -1131,8 +1131,9 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.prevout);
                 while (range.first != range.second) {
                     if (range.first->second != tx.GetHash()) {
-                        LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHash().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
-                        MarkConflicted(pIndex->GetBlockHash(), range.first->second);
+                        LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
+                        //fixme: (2.0) (POW2) (check that PoW and PoW2 block don't conflict here?)
+                        MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
                 }
@@ -4178,7 +4179,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
         
         pactiveWallet = walletInstance;
-        walletInstance->SetBestChain(chainActive.GetLocator());
+        walletInstance->SetBestChain(chainActive.GetLocatorPoW2());
         
         //fixme: (GULDEN) (MERGE)
         CWalletDB walletdb(*walletInstance->dbw);
@@ -4358,7 +4359,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         nStart = GetTimeMillis();
         walletInstance->ScanForWalletTransactions(pindexRescan, true);
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
-        walletInstance->SetBestChain(chainActive.GetLocator());
+        walletInstance->SetBestChain(chainActive.GetLocatorPoW2());
         walletInstance->dbw->IncrementUpdateCounter();
 
         // Restore wallet transaction metadata after -zapwallettxes=1
@@ -4559,7 +4560,7 @@ CWalletKey::CWalletKey(int64_t nExpires)
 void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)
 {
     // Update the tx's hashBlock
-    hashBlock = pindex->GetBlockHash();
+    hashBlock = pindex->GetBlockHashPoW2();
 
     // set the position of the transaction in the block
     nIndex = posInBlock;

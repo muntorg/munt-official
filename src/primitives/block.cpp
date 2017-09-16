@@ -17,23 +17,34 @@
 #include "utilstrencodings.h"
 #include "crypto/common.h"
 
-uint256 CBlockHeader::GetHash() const
+uint256 CBlockHeader::GetHashLegacy() const
 {
     //if (!cachedHash.IsNull())
         //return cachedHash;
     
     //cachedHash = SerializeHash(*this);
     //return cachedHash;
-    return SerializeHash(*this);
+    return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+}
+
+uint256 CBlockHeader::GetHashPoW2(bool force) const
+{   
+    if (force)
+        assert(nVersionPoW2Witness != 0 || nTimePoW2Witness != 0);
+    
+    if (nVersionPoW2Witness == 0 || nTimePoW2Witness == 0)
+        return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        
+    return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG);
 }
 
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, input=%s, PoW=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
-        HexStr(BEGIN(nVersion),BEGIN(nVersion)+80,false).c_str(),
+    s << strprintf("CBlock(hashlegacy=%s, hashpow2=%s, powhash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+        GetHashLegacy().ToString(),
+        GetHashPoW2().ToString(),
         GetPoWHash().ToString().c_str(),
-        GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashMerkleRoot.ToString(),
@@ -52,7 +63,11 @@ int64_t GetBlockWeight(const CBlock& block)
     // using only serialization with and without witness data. As witness_size
     // is equal to total_size - stripped_size, this formula is identical to:
     // weight = (stripped_size * 3) + total_size.
+    /*
     return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR - 1) + ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
+    */
+    //Gulden: block weight = block size - no complicated segwit weighting shenanigans necessary.
+    return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
 }
 
 uint256 CBlock::GetPoWHash() const

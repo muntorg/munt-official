@@ -308,7 +308,7 @@ public:
         block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
         block.nVersion       = nVersion;
         if (pprev)
-            block.hashPrevBlock = pprev->GetBlockHash();
+            block.hashPrevBlock = pprev->GetBlockHashPoW2();
         block.hashMerkleRoot = hashMerkleRoot;
         block.nTime          = nTime;
         block.nBits          = nBits;
@@ -316,7 +316,17 @@ public:
         return block;
     }
 
-    uint256 GetBlockHash() const
+    //Gulden - phashBlock contains 'legacy' hash for PoW blocks and PoW2 hash for witness blocks.
+    //fixme: (GULDEN) (2.1) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
+    uint256 GetBlockHashLegacy() const
+    {
+        if (nVersionPoW2Witness == 0)
+            return *phashBlock;
+        else
+            return GetBlockHeader().GetHashLegacy();
+    }
+    
+    uint256 GetBlockHashPoW2() const
     {
         return *phashBlock;
     }
@@ -356,7 +366,7 @@ public:
         return strprintf("CBlockIndex(pprev=%p, nHeight=%d, merkle=%s, hashBlock=%s)",
             pprev, nHeight,
             hashMerkleRoot.ToString(),
-            GetBlockHash().ToString());
+            GetBlockHashPoW2().ToString());
     }
 
     //! Check whether this block index entry is valid up to the passed validity level.
@@ -405,7 +415,7 @@ public:
     }
 
     explicit CDiskBlockIndex(const CBlockIndex* pindex) : CBlockIndex(*pindex) {
-        hashPrev = (pprev ? pprev->GetBlockHash() : uint256());
+        hashPrev = (pprev ? pprev->GetBlockHashPoW2() : uint256());
     }
 
     ADD_SERIALIZE_METHODS;
@@ -435,7 +445,7 @@ public:
         READWRITE(nNonce);
     }
 
-    uint256 GetBlockHash() const
+    uint256 GetBlockHashLegacy() const
     {
         CBlockHeader block;
         block.nVersionPoW2Witness = nVersionPoW2Witness;
@@ -448,7 +458,23 @@ public:
         block.nTime           = nTime;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
-        return block.GetHash();
+        return block.GetHashLegacy();
+    }
+    
+    uint256 GetBlockHashPoW2(bool force=false) const
+    {
+        CBlockHeader block;
+        block.nVersionPoW2Witness = nVersionPoW2Witness;
+        block.nTimePoW2Witness = nTimePoW2Witness;
+        block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
+        block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
+        block.nVersion        = nVersion;
+        block.hashPrevBlock   = hashPrev;
+        block.hashMerkleRoot  = hashMerkleRoot;
+        block.nTime           = nTime;
+        block.nBits           = nBits;
+        block.nNonce          = nNonce;
+        return block.GetHashPoW2(force);
     }
 
 
@@ -456,8 +482,9 @@ public:
     {
         std::string str = "CDiskBlockIndex(";
         str += CBlockIndex::ToString();
-        str += strprintf("\n                hashBlock=%s, hashPrev=%s)",
-            GetBlockHash().ToString(),
+        str += strprintf("\n                hashBlockPoW=%s, hashBlockPoW2=%s, hashPrev=%s)",
+            GetBlockHashLegacy().ToString(),
+            GetBlockHashPoW2().ToString(),
             hashPrev.ToString());
         return str;
     }
@@ -514,7 +541,8 @@ public:
     void SetTip(CBlockIndex *pindex);
 
     /** Return a CBlockLocator that refers to a block in this chain (by default the tip). */
-    CBlockLocator GetLocator(const CBlockIndex *pindex = NULL) const;
+    CBlockLocator GetLocatorLegacy(const CBlockIndex *pindex = NULL) const;
+    CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const;
 
     /** Find the last common block between this chain and a block index entry. */
     const CBlockIndex *FindFork(const CBlockIndex *pindex) const;

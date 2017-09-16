@@ -131,7 +131,7 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
             LOCK(cs_main);
             IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
         }
-        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus())) {
+        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, Params().GetConsensus())) {
             ++pblock->nNonce;
             --nMaxTries;
         }
@@ -145,7 +145,7 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
         if (!ProcessNewBlock(Params(), shared_pblock, true, NULL))
             throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
         ++nHeight;
-        blockHashes.push_back(pblock->GetHash().GetHex());
+        blockHashes.push_back(pblock->GetHashLegacy().GetHex());
 
         //mark script as important because it was used at least for one coinbase output if the script came from the wallet
         if (keepScript)
@@ -534,7 +534,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             if (!DecodeHexBlk(block, dataval.get_str()))
                 throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
 
-            uint256 hash = block.GetHash();
+            uint256 hash = block.GetHashPoW2();
             BlockMap::iterator mi = mapBlockIndex.find(hash);
             if (mi != mapBlockIndex.end()) {
                 CBlockIndex *pindex = mi->second;
@@ -547,7 +547,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 
             CBlockIndex* const pindexPrev = chainActive.Tip();
             // TestBlockValidity only supports blocks built on the current Tip
-            if (block.hashPrevBlock != pindexPrev->GetBlockHash())
+            //fixme: (2.0) (PHASE3) (POW2)
+            if (block.hashPrevBlock != pindexPrev->GetBlockHashLegacy())
                 return "inconclusive-not-best-prevblk";
             CValidationState state;
             TestBlockValidity(state, Params(), block, pindexPrev, false, true);
@@ -604,7 +605,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         else
         {
             // NOTE: Spec does not specify behaviour for non-string longpollid, but this makes testing easier
-            hashWatchedChain = chainActive.Tip()->GetBlockHash();
+            hashWatchedChain = chainActive.Tip()->GetBlockHashPoW2();
             nTransactionsUpdatedLastLP = nTransactionsUpdatedLast;
         }
         UpdateTime(&blockUpdatedLastLP, Params().GetConsensus(), chainActive.Tip());
@@ -618,7 +619,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             checktxtime = boost::get_system_time() + boost::posix_time::minutes(1);
 
             boost::unique_lock<boost::mutex> lock(csBestBlock);
-            while (chainActive.Tip()->GetBlockHash() == hashWatchedChain && IsRPCRunning())
+            while (chainActive.Tip()->GetBlockHashPoW2() == hashWatchedChain && IsRPCRunning())
             {
                 if (!cvBlockChange.timed_wait(lock, checktxtime))
                 {
@@ -808,7 +809,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("transactions", transactions));
     result.push_back(Pair("coinbaseaux", aux));
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0]->vout[0].nValue));
-    result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
+    result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHashPoW2().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePast()+1, GetTime())));
     //fixme: (GULDEN) (MED) - Implement 'maxtime' here?
@@ -848,7 +849,7 @@ public:
 
 protected:
     void BlockChecked(const CBlock& block, const CValidationState& stateIn) override {
-        if (block.GetHash() != hash)
+        if (block.GetHashPoW2() != hash)
             return;
         found = true;
         state = stateIn;
@@ -887,7 +888,7 @@ UniValue submitblock(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block does not start with a coinbase");
     }
 
-    uint256 hash = block.GetHash();
+    uint256 hash = block.GetHashPoW2();
     bool fBlockPresent = false;
     {
         LOCK(cs_main);
@@ -913,7 +914,7 @@ UniValue submitblock(const JSONRPCRequest& request)
         }
     }
 
-    submitblock_StateCatcher sc(block.GetHash());
+    submitblock_StateCatcher sc(block.GetHashPoW2());
     RegisterValidationInterface(&sc);
     bool fAccepted = ProcessNewBlock(Params(), blockptr, true, NULL);
     UnregisterValidationInterface(&sc);

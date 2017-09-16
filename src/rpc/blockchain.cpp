@@ -85,7 +85,7 @@ double GetDifficulty(const CBlockIndex* blockindex)
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
 {
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hash", blockindex->GetBlockHash().GetHex()));
+    result.push_back(Pair("hash", blockindex->GetBlockHashPoW2().GetHex()));
     int confirmations = -1;
     // Only report confirmations if the block is on the main chain
     if (chainActive.Contains(blockindex))
@@ -103,17 +103,17 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
 
     if (blockindex->pprev)
-        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
+        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHashPoW2().GetHex()));
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
-        result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+        result.push_back(Pair("nextblockhash", pnext->GetBlockHashPoW2().GetHex()));
     return result;
 }
 
 UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails)
 {
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hash", blockindex->GetBlockHash().GetHex()));
+    result.push_back(Pair("hash", blockindex->GetBlockHashPoW2().GetHex()));
     int confirmations = -1;
     // Only report confirmations if the block is on the main chain
     if (chainActive.Contains(blockindex))
@@ -147,10 +147,10 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
 
     if (blockindex->pprev)
-        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
+        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHashPoW2().GetHex()));
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
-        result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+        result.push_back(Pair("nextblockhash", pnext->GetBlockHashPoW2().GetHex()));
     return result;
 }
 
@@ -185,14 +185,14 @@ UniValue getbestblockhash(const JSONRPCRequest& request)
         );
 
     LOCK(cs_main);
-    return chainActive.Tip()->GetBlockHash().GetHex();
+    return chainActive.Tip()->GetBlockHashPoW2().GetHex();
 }
 
 void RPCNotifyBlockChange(bool ibd, const CBlockIndex * pindex)
 {
     if(pindex) {
         std::lock_guard<std::mutex> lock(cs_blockchange);
-        latestblock.hash = pindex->GetBlockHash();
+        latestblock.hash = pindex->GetBlockHashPoW2();
         latestblock.height = pindex->nHeight;
     }
     cond_blockchange.notify_all();
@@ -630,7 +630,7 @@ UniValue getblockhash(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
 
     CBlockIndex* pblockindex = chainActive[nHeight];
-    return pblockindex->GetBlockHash().GetHex();
+    return pblockindex->GetBlockHashPoW2().GetHex();
 }
 
 UniValue getblockheader(const JSONRPCRequest& request)
@@ -1009,7 +1009,7 @@ UniValue gettxout(const JSONRPCRequest& request)
 
     BlockMap::iterator it = mapBlockIndex.find(pcoinsTip->GetBestBlock());
     CBlockIndex *pindex = it->second;
-    ret.push_back(Pair("bestblock", pindex->GetBlockHash().GetHex()));
+    ret.push_back(Pair("bestblock", pindex->GetBlockHashPoW2().GetHex()));
     if (coin.nHeight == MEMPOOL_HEIGHT) {
         ret.push_back(Pair("confirmations", 0));
     } else {
@@ -1178,7 +1178,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("chain",                 Params().NetworkIDString()));
     obj.push_back(Pair("blocks",                (int)chainActive.Height()));
     obj.push_back(Pair("headers",               pindexBestHeader ? pindexBestHeader->nHeight : -1));
-    obj.push_back(Pair("bestblockhash",         chainActive.Tip()->GetBlockHash().GetHex()));
+    obj.push_back(Pair("bestblockhash",         chainActive.Tip()->GetBlockHashPoW2().GetHex()));
     obj.push_back(Pair("difficulty",            (double)GetDifficulty()));
     obj.push_back(Pair("mediantime",            (int64_t)chainActive.Tip()->GetMedianTimePast()));
     obj.push_back(Pair("verificationprogress",  GuessVerificationProgress(Params().TxData(), chainActive.Tip())));

@@ -21,6 +21,10 @@
 #include "util.h"
 #include <Gulden/Common/hash/hash.h>
 
+#define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS     0x20000000
+#define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG 0x40000000
+
+
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
  * requirements.  When they solve the proof-of-work, they broadcast the block
@@ -56,12 +60,34 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
+        //fixme: (GULDEN) (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
+        if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
+        {
+            READWRITE(nVersionPoW2Witness);
+            READWRITE(nTimePoW2Witness);
+            READWRITE(hashMerkleRootPoW2Witness);
+        }
+        
         READWRITE(this->nVersion);
         READWRITE(hashPrevBlock);
         READWRITE(hashMerkleRoot);
         READWRITE(nTime);
         READWRITE(nBits);
-        READWRITE(nNonce);
+        READWRITE(nNonce);   
+        
+        //fixme: (GULDEN) (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
+        if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
+        {        
+            if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG))
+            {
+                if (nVersionPoW2Witness != 0)
+                {
+                    if (ser_action.ForRead())
+                        witnessHeaderPoW2Sig.resize(65);
+                    READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
+                }
+            }
+        }
     }
 
     void SetNull()
@@ -90,7 +116,9 @@ public:
     //re-enable once carefully looking into the below assertion.
     //GuldenD: main.cpp:2341: bool ConnectBlock(const CBlock&, CValidationState&, CBlockIndex*, CCoinsViewCache&, const CChainParams&, bool): Assertion `hashPrevBlock == view.GetBestBlock()' failed.
     //mutable uint256 cachedHash;
-    uint256 GetHash() const;
+    uint256 GetHashLegacy() const;
+    
+    uint256 GetHashPoW2(bool force=false) const;
 
     int64_t GetBlockTime() const
     {

@@ -90,7 +90,7 @@ namespace Checkpoints
                 if (!(pindex = pindex->pprev))
                     return error("ValidateSyncCheckpoint: pprev1 null - block index structure failure");
             }
-            if (pindex->GetBlockHash() != hashCheckpoint)
+            if (pindex->GetBlockHashLegacy() != hashCheckpoint)
             {
                 hashInvalidCheckpoint = hashCheckpoint;
                 return error("ValidateSyncCheckpoint: new sync-checkpoint %s is conflicting with current sync-checkpoint %s", hashCheckpoint.ToString().c_str(), hashSyncCheckpoint.ToString().c_str());
@@ -109,7 +109,7 @@ namespace Checkpoints
                 return error("ValidateSyncCheckpoint: pprev2 null - block index structure failure");
             }
         }
-        if (pindex->GetBlockHash() != hashSyncCheckpoint)
+        if (pindex->GetBlockHashLegacy() != hashSyncCheckpoint)
         {
             hashInvalidCheckpoint = hashCheckpoint;
             return error("ValidateSyncCheckpoint: new sync-checkpoint %s is not a descendant of current sync-checkpoint %s", hashCheckpoint.ToString().c_str(), hashSyncCheckpoint.ToString().c_str());
@@ -300,7 +300,7 @@ namespace Checkpoints
                         return error("CheckSync: pprev null - block index structure failure");
                     }
                 }
-                if (pindex->nHeight < pindexSync->nHeight || pindex->GetBlockHash() != hashSyncCheckpoint)
+                if (pindex->nHeight < pindexSync->nHeight || pindex->GetBlockHashLegacy() != hashSyncCheckpoint)
                 {
                     return false; // only descendant of sync-checkpoint can pass check
                 }
@@ -355,7 +355,7 @@ namespace Checkpoints
     {
         LOCK(cs_hashSyncCheckpoint);
 
-        const uint256& hash = GetLastCheckpoint(chainparams.Checkpoints())->GetBlockHash();
+        const uint256& hash = GetLastCheckpoint(chainparams.Checkpoints())->GetBlockHashLegacy();
         if (mapBlockIndex.count(hash) && !chainActive.Contains(mapBlockIndex[hash]))
         {
             // checkpoint block accepted but not yet in main chain
@@ -402,7 +402,7 @@ namespace Checkpoints
         CBlockIndex *pindex = chainActive.Tip();
         if (pindex->nHeight < AUTO_CHECKPOINT_DEPTH+1)
         {
-            return pindex->GetBlockHash();
+            return pindex->GetBlockHashLegacy();
         }
 
         // Search backwards AUTO_CHECKPOINT_DEPTH blocks
@@ -411,7 +411,7 @@ namespace Checkpoints
             pindex = pindex->pprev;
         }
 
-        return pindex->GetBlockHash();
+        return pindex->GetBlockHashLegacy();
     }
 
     // Set the private key with which to broadcast checkpoints [Checkpoint server only]

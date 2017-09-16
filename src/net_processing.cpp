@@ -546,7 +546,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
             if (pindex->nStatus & BLOCK_HAVE_DATA || chainActive.Contains(pindex)) {
                 if (pindex->nChainTx)
                     state->pindexLastCommonBlock = pindex;
-            } else if (mapBlocksInFlight.count(pindex->GetBlockHash()) == 0) {
+            } else if (mapBlocksInFlight.count(pindex->GetBlockHashPoW2()) == 0) {
                 // The block is not already downloaded, and not yet in flight.
                 if (pindex->nHeight > nWindowEnd) {
                     // We reached the end of the window.
@@ -562,7 +562,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 }
             } else if (waitingfor == -1) {
                 // This is the first already-in-flight block.
-                waitingfor = mapBlocksInFlight[pindex->GetBlockHash()].first;
+                waitingfor = mapBlocksInFlight[pindex->GetBlockHashPoW2()].first;
             }
         }
     }
@@ -789,9 +789,15 @@ void PeerLogicValidation::BlockConnected(const std::shared_ptr<const CBlock>& pb
 
 // All of the following cache a recent block, and are protected by cs_most_recent_block
 static CCriticalSection cs_most_recent_block;
-static std::shared_ptr<const CBlock> most_recent_block;
-static std::shared_ptr<const CBlockHeaderAndShortTxIDs> most_recent_compact_block;
-static uint256 most_recent_block_hash;
+
+static std::shared_ptr<const CBlock> most_recent_block_pow;
+static std::shared_ptr<const CBlockHeaderAndShortTxIDs> most_recent_compact_block_pow;
+static uint256 most_recent_block_hash_pow;
+
+static std::shared_ptr<const CBlock> most_recent_block_pow2;
+static std::shared_ptr<const CBlockHeaderAndShortTxIDs> most_recent_compact_block_pow2;
+static uint256 most_recent_block_hash_pow2;
+
 static bool fWitnessesPresentInMostRecentCompactBlock;
 
 void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock) {
@@ -806,15 +812,35 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
     nHighestFastAnnounce = pindex->nHeight;
 
     bool fWitnessEnabled = IsWitnessEnabled(pindex->pprev, Params().GetConsensus());
-    uint256 hashBlock(pblock->GetHash());
-
+    
+    uint256 hashBlock;
+    
+    if (pblock->nVersionPoW2Witness > 0)
     {
-        LOCK(cs_most_recent_block);
-        most_recent_block_hash = hashBlock;
-        most_recent_block = pblock;
-        most_recent_compact_block = pcmpctblock;
-        fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
+        hashBlock = pblock->GetHashLegacy();
+        
+        {
+            LOCK(cs_most_recent_block);
+            most_recent_block_hash_pow = hashBlock;
+            most_recent_block_pow = pblock;
+            most_recent_compact_block_pow = pcmpctblock;
+            fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
+        }
     }
+    else
+    {
+        hashBlock = pblock->GetHashPoW2();
+        
+        {
+            LOCK(cs_most_recent_block);
+            most_recent_block_hash_pow2 = hashBlock;
+            most_recent_block_pow2 = pblock;
+            most_recent_compact_block_pow2 = pcmpctblock;
+            fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
+        }
+    }
+
+    
 
     connman->ForEachNode([this, &pcmpctblock, pindex, &msgMaker, fWitnessEnabled, &hashBlock](CNode* pnode) {
         // TODO: Avoid the repeated-serialization here
@@ -844,7 +870,7 @@ void PeerLogicValidation::UpdatedBlockTip(const CBlockIndex *pindexNew, const CB
         std::vector<uint256> vHashes;
         const CBlockIndex *pindexToAnnounce = pindexNew;
         while (pindexToAnnounce != pindexFork) {
-            vHashes.push_back(pindexToAnnounce->GetBlockHash());
+            vHashes.push_back(pindexToAnnounce->GetBlockHashPoW2());
             pindexToAnnounce = pindexToAnnounce->pprev;
             if (vHashes.size() == MAX_BLOCKS_TO_ANNOUNCE) {
                 // Limit announcements in case of a huge reorganization.
@@ -869,7 +895,8 @@ void PeerLogicValidation::UpdatedBlockTip(const CBlockIndex *pindexNew, const CB
 void PeerLogicValidation::BlockChecked(const CBlock& block, const CValidationState& state) {
     LOCK(cs_main);
 
-    const uint256 hash(block.GetHash());
+    const uint256 hash = block.GetHashPoW2();
+            
     std::map<uint256, std::pair<NodeId, bool>>::iterator it = mapBlockSource.find(hash);
 
     int nDoS = 0;
@@ -913,13 +940,13 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
     case MSG_WITNESS_TX:
         {
             assert(recentRejects);
-            if (chainActive.Tip()->GetBlockHash() != hashRecentRejectsChainTip)
+            if (chainActive.Tip()->GetBlockHashPoW2() != hashRecentRejectsChainTip)
             {
                 // If the chain tip has changed previously rejected transactions
                 // might be now valid, e.g. due to a nLockTime'd tx becoming valid,
                 // or a double-spend. Reset the rejects filter and give those
                 // txs a second chance.
-                hashRecentRejectsChainTip = chainActive.Tip()->GetBlockHash();
+                hashRecentRejectsChainTip = chainActive.Tip()->GetBlockHashPoW2();
                 recentRejects->reset();
             }
 
@@ -1010,8 +1037,18 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                 bool fWitnessesPresentInARecentCompactBlock;
                 {
                     LOCK(cs_most_recent_block);
-                    a_recent_block = most_recent_block;
-                    a_recent_compact_block = most_recent_compact_block;
+                    
+                    //For PoW2 peers we use the most recent block pow or pow2 - otherwise we only ever return pow blocks for old peers.
+                    if (pfrom->IsPoW2Capable() && most_recent_block_pow2->GetHashLegacy() == most_recent_block_pow->GetHashLegacy())
+                    {
+                        a_recent_block = most_recent_block_pow2;
+                        a_recent_compact_block = most_recent_compact_block_pow2;
+                    }
+                    else
+                    {
+                        a_recent_block = most_recent_block_pow;
+                        a_recent_compact_block = most_recent_compact_block_pow;
+                    }
                     fWitnessesPresentInARecentCompactBlock = fWitnessesPresentInMostRecentCompactBlock;
                 }
                 if (mi != mapBlockIndex.end())
@@ -1057,14 +1094,29 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                 if (send && (mi->second->nStatus & BLOCK_HAVE_DATA))
                 {
                     std::shared_ptr<const CBlock> pblock;
-                    if (a_recent_block && a_recent_block->GetHash() == (*mi).second->GetBlockHash()) {
-                        pblock = a_recent_block;
-                    } else {
-                        // Send block from disk
-                        std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
-                        if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
-                            assert(!"cannot load block from disk");
-                        pblock = pblockRead;
+                    if (pfrom->IsPoW2Capable())
+                    {
+                        if (a_recent_block && a_recent_block->GetHashPoW2() == (*mi).second->GetBlockHashPoW2()) {
+                            pblock = a_recent_block;
+                        } else {
+                            // Send block from disk
+                            std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
+                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
+                                assert(!"cannot load block from disk");
+                            pblock = pblockRead;
+                        }
+                    }
+                    else
+                    {
+                        if (a_recent_block && a_recent_block->GetHashLegacy() == (*mi).second->GetBlockHashLegacy()) {
+                            pblock = a_recent_block;
+                        } else {
+                            // Send block from disk
+                            std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
+                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
+                                assert(!"cannot load block from disk");
+                            pblock = pblockRead;
+                        }
                     }
                     if (inv.type == MSG_BLOCK)
                         connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_WITNESS, NetMsgType::BLOCK, *pblock));
@@ -1105,11 +1157,23 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         bool fPeerWantsWitness = State(pfrom->GetId())->fWantsCmpctWitness;
                         int nSendFlags = fPeerWantsWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
                         if (CanDirectFetch(consensusParams) && mi->second->nHeight >= chainActive.Height() - MAX_CMPCTBLOCK_DEPTH) {
-                            if ((fPeerWantsWitness || !fWitnessesPresentInARecentCompactBlock) && a_recent_compact_block && a_recent_compact_block->header.GetHash() == mi->second->GetBlockHash()) {
-                                connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
-                            } else {
-                                CBlockHeaderAndShortTxIDs cmpctblock(*pblock, fPeerWantsWitness);
-                                connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                            if (pfrom->IsPoW2Capable())
+                            {
+                                if ((fPeerWantsWitness || !fWitnessesPresentInARecentCompactBlock) && a_recent_compact_block && a_recent_compact_block->header.GetHashPoW2() == mi->second->GetBlockHashPoW2()) {
+                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
+                                } else {
+                                    CBlockHeaderAndShortTxIDs cmpctblock(*pblock, fPeerWantsWitness);
+                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                                }
+                            }
+                            else
+                            {
+                                if ((fPeerWantsWitness || !fWitnessesPresentInARecentCompactBlock) && a_recent_compact_block && a_recent_compact_block->header.GetHashLegacy() == mi->second->GetBlockHashLegacy()) {
+                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
+                                } else {
+                                    CBlockHeaderAndShortTxIDs cmpctblock(*pblock, fPeerWantsWitness);
+                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                                }
                             }
                         } else {
                             connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCK, *pblock));
@@ -1123,7 +1187,14 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         // and we want it right after the last block so they don't
                         // wait for other stuff first.
                         std::vector<CInv> vInv;
-                        vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHash()));
+                        if (pfrom->IsPoW2Capable())
+                        {
+                            vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHashPoW2()));
+                        }
+                        else
+                        {
+                            vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHashLegacy()));
+                        }
                         connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
                         pfrom->hashContinue.SetNull();
                     }
@@ -1654,7 +1725,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     // fell back to inv we probably have a reorg which we should get the headers for first,
                     // we now only provide a getheaders response here. When we receive the headers, we will
                     // then ask for the blocks we need.
-                    connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), inv.hash));
+                    connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexBestHeader), inv.hash));
                     LogPrint(BCLog::NET, "getheaders (%d) %s to peer=%d\n", pindexBestHeader->nHeight, inv.hash.ToString(), pfrom->GetId());
                 }
             }
@@ -1713,7 +1784,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             std::shared_ptr<const CBlock> a_recent_block;
             {
                 LOCK(cs_most_recent_block);
-                a_recent_block = most_recent_block;
+                if (pfrom->IsPoW2Capable())
+                {
+                    a_recent_block = most_recent_block_pow2;
+                }
+                else
+                {
+                    a_recent_block = most_recent_block_pow;
+                }
             }
             CValidationState dummy;
             ActivateBestChain(dummy, Params(), a_recent_block);
@@ -1731,9 +1809,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         LogPrint(BCLog::NET, "getblocks %d to %s limit %d from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop.IsNull() ? "end" : hashStop.ToString(), nLimit, pfrom->GetId());
         for (; pindex; pindex = chainActive.Next(pindex))
         {
-            if (pindex->GetBlockHash() == hashStop)
+            if (pindex->GetBlockHashPoW2() == hashStop || pindex->GetBlockHashLegacy() == hashStop)
             {
-                LogPrint(BCLog::NET, "  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
+                LogPrint(BCLog::NET, "  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
                 break;
             }
             // If pruning, don't inv blocks unless we have on disk and are likely to still have
@@ -1741,16 +1819,30 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             const int nPrunedBlocksLikelyToHave = MIN_BLOCKS_TO_KEEP - 3600 / chainparams.GetConsensus().nPowTargetSpacing;
             if (fPruneMode && (!(pindex->nStatus & BLOCK_HAVE_DATA) || pindex->nHeight <= chainActive.Tip()->nHeight - nPrunedBlocksLikelyToHave))
             {
-                LogPrint(BCLog::NET, " getblocks stopping, pruned or too old block at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
+                LogPrint(BCLog::NET, " getblocks stopping, pruned or too old block at %d %s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
                 break;
             }
-            pfrom->PushInventory(CInv(MSG_BLOCK, pindex->GetBlockHash()));
+            if (pfrom->IsPoW2Capable())
+            {
+                pfrom->PushInventory(CInv(MSG_BLOCK, pindex->GetBlockHashPoW2()));
+            }
+            else
+            {
+                pfrom->PushInventory(CInv(MSG_BLOCK, pindex->GetBlockHashLegacy()));
+            }
             if (--nLimit <= 0)
             {
                 // When this block is requested, we'll send an inv that'll
                 // trigger the peer to getblocks the next batch of inventory.
-                LogPrint(BCLog::NET, "  getblocks stopping at limit %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
-                pfrom->hashContinue = pindex->GetBlockHash();
+                LogPrint(BCLog::NET, "  getblocks stopping at limit %d %s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
+                if (pfrom->IsPoW2Capable())
+                {
+                    pfrom->hashContinue = pindex->GetBlockHashPoW2();
+                }
+                else
+                {
+                    pfrom->hashContinue = pindex->GetBlockHashLegacy();
+                }
                 break;
             }
         }
@@ -1765,8 +1857,16 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         std::shared_ptr<const CBlock> recent_block;
         {
             LOCK(cs_most_recent_block);
-            if (most_recent_block_hash == req.blockhash)
-                recent_block = most_recent_block;
+            if (pfrom->IsPoW2Capable())
+            {
+                if (most_recent_block_hash_pow2 == req.blockhash)
+                recent_block = most_recent_block_pow2;
+            }
+            else
+            {
+                if (most_recent_block_hash_pow == req.blockhash)
+                    recent_block = most_recent_block_pow;
+            }
             // Unlock cs_most_recent_block to avoid cs_main lock inversion
         }
         if (recent_block) {
@@ -1844,8 +1944,16 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         for (; pindex; pindex = chainActive.Next(pindex))
         {
             vHeaders.push_back(pindex->GetBlockHeader());
-            if (--nLimit <= 0 || pindex->GetBlockHash() == hashStop)
-                break;
+            if (pfrom->IsPoW2Capable())
+            {
+                if (--nLimit <= 0 || pindex->GetBlockHashLegacy() == hashStop)
+                    break;
+            }
+            else
+            {
+                if (--nLimit <= 0 || pindex->GetBlockHashPoW2() == hashStop)
+                    break;
+            }
         }
         // pindex can be NULL either if we sent chainActive.Tip() OR
         // if our peer has chainActive.Tip() (and thus we are sending an empty
@@ -2061,7 +2169,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (mapBlockIndex.find(cmpctblock.header.hashPrevBlock) == mapBlockIndex.end()) {
             // Doesn't connect (or is genesis), instead of DoSing in AcceptBlockHeader, request deeper headers
             if (!IsInitialBlockDownload())
-                connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256()));
+                connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexBestHeader), uint256()));
             return true;
         }
         }
@@ -2101,9 +2209,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         LOCK(cs_main);
         // If AcceptBlockHeader returned true, it set pindex
         assert(pindex);
-        UpdateBlockAvailability(pfrom->GetId(), pindex->GetBlockHash());
+        UpdateBlockAvailability(pfrom->GetId(), pindex->GetBlockHashPoW2());
 
-        std::map<uint256, std::pair<NodeId, std::list<QueuedBlock>::iterator> >::iterator blockInFlightIt = mapBlocksInFlight.find(pindex->GetBlockHash());
+        std::map<uint256, std::pair<NodeId, std::list<QueuedBlock>::iterator> >::iterator blockInFlightIt = mapBlocksInFlight.find(pindex->GetBlockHashPoW2());
         bool fAlreadyInFlight = blockInFlightIt != mapBlocksInFlight.end();
 
         if (pindex->nStatus & BLOCK_HAVE_DATA) // Nothing to do here
@@ -2115,7 +2223,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 // We requested this block for some reason, but our mempool will probably be useless
                 // so we just grab the block via normal getdata
                 std::vector<CInv> vInv(1);
-                vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHash());
+                vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHashPoW2());
                 connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETDATA, COMPACTSIZEVECTOR(vInv)));
             }
             return true;
@@ -2139,7 +2247,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if ((!fAlreadyInFlight && nodestate->nBlocksInFlight < MAX_BLOCKS_IN_TRANSIT_PER_PEER) ||
                  (fAlreadyInFlight && blockInFlightIt->second.first == pfrom->GetId())) {
                 std::list<QueuedBlock>::iterator* queuedBlockIt = NULL;
-                if (!MarkBlockAsInFlight(pfrom->GetId(), pindex->GetBlockHash(), pindex, &queuedBlockIt)) {
+                if (!MarkBlockAsInFlight(pfrom->GetId(), pindex->GetBlockHashPoW2(), pindex, &queuedBlockIt)) {
                     if (!(*queuedBlockIt)->partialBlock)
                         (*queuedBlockIt)->partialBlock.reset(new PartiallyDownloadedBlock(&mempool));
                     else {
@@ -2152,14 +2260,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 PartiallyDownloadedBlock& partialBlock = *(*queuedBlockIt)->partialBlock;
                 ReadStatus status = partialBlock.InitData(cmpctblock, vExtraTxnForCompact);
                 if (status == READ_STATUS_INVALID) {
-                    MarkBlockAsReceived(pindex->GetBlockHash()); // Reset in-flight state in case of whitelist
+                    MarkBlockAsReceived(pindex->GetBlockHashPoW2()); // Reset in-flight state in case of whitelist
                     Misbehaving(pfrom->GetId(), 100);
                     LogPrintf("Peer %d sent us invalid compact block\n", pfrom->GetId());
                     return true;
                 } else if (status == READ_STATUS_FAILED) {
                     // Duplicate txindexes, the block is now in-flight, so just request it
                     std::vector<CInv> vInv(1);
-                    vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHash());
+                    vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHashPoW2());
                     connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETDATA, COMPACTSIZEVECTOR(vInv)));
                     return true;
                 }
@@ -2172,11 +2280,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 if (req.indexes.empty()) {
                     // Dirty hack to jump to BLOCKTXN code (TODO: move message handling into their own functions)
                     BlockTransactions txn;
-                    txn.blockhash = cmpctblock.header.GetHash();
+                    txn.blockhash = cmpctblock.header.GetHashPoW2();
                     blockTxnMsg << txn;
                     fProcessBLOCKTXN = true;
                 } else {
-                    req.blockhash = pindex->GetBlockHash();
+                    req.blockhash = pindex->GetBlockHashPoW2();
                     connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETBLOCKTXN, req));
                 }
             } else {
@@ -2202,7 +2310,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 // We requested this block, but its far into the future, so our
                 // mempool will probably be useless - request the block normally
                 std::vector<CInv> vInv(1);
-                vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHash());
+                vInv[0] = CInv(MSG_BLOCK | GetFetchFlags(pfrom), cmpctblock.header.GetHashPoW2());
                 connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETDATA, COMPACTSIZEVECTOR(vInv)));
                 return true;
             } else {
@@ -2227,7 +2335,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // block that is in flight from some other peer.
             {
                 LOCK(cs_main);
-                mapBlockSource.emplace(pblock->GetHash(), std::make_pair(pfrom->GetId(), false));
+                mapBlockSource.emplace(pblock->GetHashPoW2(), std::make_pair(pfrom->GetId(), false));
             }
             bool fNewBlock = false;
             ProcessNewBlock(chainparams, pblock, true, &fNewBlock);
@@ -2240,7 +2348,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 // process from some other peer.  We do this after calling
                 // ProcessNewBlock so that a malleated cmpctblock announcement
                 // can't be used to interfere with block relay.
-                MarkBlockAsReceived(pblock->GetHash());
+                MarkBlockAsReceived(pblock->GetHashPoW2());
             }
         }
 
@@ -2351,16 +2459,16 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         //   nUnconnectingHeaders gets reset back to 0.
         if (mapBlockIndex.find(headers[0].hashPrevBlock) == mapBlockIndex.end() && nCount < MAX_BLOCKS_TO_ANNOUNCE) {
             nodestate->nUnconnectingHeaders++;
-            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256()));
+            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexBestHeader), uint256()));
             LogPrint(BCLog::NET, "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
-                    headers[0].GetHash().ToString(),
+                    headers[0].GetHashPoW2().ToString(),
                     headers[0].hashPrevBlock.ToString(),
                     pindexBestHeader->nHeight,
                     pfrom->GetId(), nodestate->nUnconnectingHeaders);
             // Set hashLastUnknownBlock for this peer, so that if we
             // eventually get the headers - even from a different peer -
             // we can use this peer to download.
-            UpdateBlockAvailability(pfrom->GetId(), headers.back().GetHash());
+            UpdateBlockAvailability(pfrom->GetId(), headers.back().GetHashPoW2());
 
             if (nodestate->nUnconnectingHeaders % MAX_UNCONNECTING_HEADERS == 0) {
                 Misbehaving(pfrom->GetId(), 20);
@@ -2374,7 +2482,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 Misbehaving(pfrom->GetId(), 20);
                 return error("non-continuous headers sequence");
             }
-            hashLastBlock = header.GetHash();
+            hashLastBlock = header.GetHashPoW2();
         }
         }
 
@@ -2399,14 +2507,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         nodestate->nUnconnectingHeaders = 0;
 
         assert(pindexLast);
-        UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHash());
+        UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHashPoW2());
 
         if (nCount == MAX_HEADERS_RESULTS) {
             // Headers message had its maximum size; the peer may have more headers.
             // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
             // from there instead.
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
-            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexLast), uint256()));
+            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexLast), uint256()));
         }
 
         bool fCanDirectFetch = CanDirectFetch(chainparams.GetConsensus());
@@ -2418,7 +2526,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // Calculate all the blocks we'd need to switch to pindexLast, up to a limit.
             while (pindexWalk && !chainActive.Contains(pindexWalk) && vToFetch.size() <= MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
                 if (!(pindexWalk->nStatus & BLOCK_HAVE_DATA) &&
-                        !mapBlocksInFlight.count(pindexWalk->GetBlockHash()) &&
+                        !mapBlocksInFlight.count(pindexWalk->GetBlockHashPoW2()) &&
                         (!IsWitnessEnabled(pindexWalk->pprev, chainparams.GetConsensus()) || State(pfrom->GetId())->fHaveWitness)) {
                     // We don't have this block, and it's not yet in flight.
                     vToFetch.push_back(pindexWalk);
@@ -2431,7 +2539,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // direct fetch and rely on parallel download instead.
             if (!chainActive.Contains(pindexWalk)) {
                 LogPrint(BCLog::NET, "Large reorg, won't direct fetch to %s (%d)\n",
-                        pindexLast->GetBlockHash().ToString(),
+                        pindexLast->GetBlockHashPoW2().ToString(),
                         pindexLast->nHeight);
             } else {
                 std::vector<CInv> vGetData;
@@ -2442,14 +2550,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                         break;
                     }
                     uint32_t nFetchFlags = GetFetchFlags(pfrom);
-                    vGetData.push_back(CInv(MSG_BLOCK | nFetchFlags, pindex->GetBlockHash()));
-                    MarkBlockAsInFlight(pfrom->GetId(), pindex->GetBlockHash(), pindex);
+                    vGetData.push_back(CInv(MSG_BLOCK | nFetchFlags, pindex->GetBlockHashPoW2()));
+                    MarkBlockAsInFlight(pfrom->GetId(), pindex->GetBlockHashPoW2(), pindex);
                     LogPrint(BCLog::NET, "Requesting block %s from  peer=%d\n",
-                            pindex->GetBlockHash().ToString(), pfrom->GetId());
+                            pindex->GetBlockHashPoW2().ToString(), pfrom->GetId());
                 }
                 if (vGetData.size() > 1) {
                     LogPrint(BCLog::NET, "Downloading blocks toward %s (%d) via headers direct fetch\n",
-                            pindexLast->GetBlockHash().ToString(), pindexLast->nHeight);
+                            pindexLast->GetBlockHashPoW2().ToString(), pindexLast->nHeight);
                 }
                 if (vGetData.size() > 0) {
                     if (nodestate->fSupportsDesiredCmpctVersion && vGetData.size() == 1 && mapBlocksInFlight.size() == 1 && pindexLast->pprev->IsValid(BLOCK_VALID_CHAIN)) {
@@ -2468,14 +2576,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
         vRecv >> *pblock;
 
-        LogPrint(BCLog::NET, "received block %s peer=%d\n", pblock->GetHash().ToString(), pfrom->GetId());
+        LogPrint(BCLog::NET, "received block %s peer=%d\n", pblock->GetHashPoW2().ToString(), pfrom->GetId());
 
         // Process all blocks from whitelisted peers, even if not requested,
         // unless we're still syncing with the network.
         // Such an unrequested block may still be processed, subject to the
         // conditions in AcceptBlock().
         bool forceProcessing = pfrom->fWhitelisted && !IsInitialBlockDownload();
-        const uint256 hash(pblock->GetHash());
+        const uint256 hash(pblock->GetHashPoW2());
         {
             LOCK(cs_main);
             // Also always process if we requested the block explicitly, as we may
@@ -2976,7 +3084,14 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 if (pindexStart->pprev)
                     pindexStart = pindexStart->pprev;
                 LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
-                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexStart), uint256()));
+                if (pto->IsPoW2Capable())
+                {
+                    connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexStart), uint256()));
+                }
+                else
+                {
+                    connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorLegacy(pindexStart), uint256()));
+                }
             }
         }
 
@@ -3060,18 +3175,27 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     // We only send up to 1 block as header-and-ids, as otherwise
                     // probably means we're doing an initial-ish-sync or they're slow
                     LogPrint(BCLog::NET, "%s sending header-and-ids %s to peer=%d\n", __func__,
-                            vHeaders.front().GetHash().ToString(), pto->GetId());
+                            vHeaders.front().GetHashPoW2().ToString(), pto->GetId());
 
                     int nSendFlags = state.fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
 
                     bool fGotBlockFromCache = false;
                     {
                         LOCK(cs_most_recent_block);
-                        if (most_recent_block_hash == pBestIndex->GetBlockHash()) {
+                        if (most_recent_block_hash_pow == pBestIndex->GetBlockHashLegacy()) {
                             if (state.fWantsCmpctWitness || !fWitnessesPresentInMostRecentCompactBlock)
-                                connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *most_recent_compact_block));
+                                connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *most_recent_compact_block_pow));
                             else {
-                                CBlockHeaderAndShortTxIDs cmpctblock(*most_recent_block, state.fWantsCmpctWitness);
+                                CBlockHeaderAndShortTxIDs cmpctblock(*most_recent_block_pow, state.fWantsCmpctWitness);
+                                connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                            }
+                            fGotBlockFromCache = true;
+                        }
+                        else if (most_recent_block_hash_pow2 == pBestIndex->GetBlockHashPoW2()) {
+                            if (state.fWantsCmpctWitness || !fWitnessesPresentInMostRecentCompactBlock)
+                                connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *most_recent_compact_block_pow2));
+                            else {
+                                CBlockHeaderAndShortTxIDs cmpctblock(*most_recent_block_pow2, state.fWantsCmpctWitness);
                                 connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
                             }
                             fGotBlockFromCache = true;
@@ -3089,11 +3213,11 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     if (vHeaders.size() > 1) {
                         LogPrint(BCLog::NET, "%s: %u headers, range (%s, %s), to peer=%d\n", __func__,
                                 vHeaders.size(),
-                                vHeaders.front().GetHash().ToString(),
-                                vHeaders.back().GetHash().ToString(), pto->GetId());
+                                vHeaders.front().GetHashLegacy().ToString(),
+                                vHeaders.back().GetHashLegacy().ToString(), pto->GetId());
                     } else {
                         LogPrint(BCLog::NET, "%s: sending header %s to peer=%d\n", __func__,
-                                vHeaders.front().GetHash().ToString(), pto->GetId());
+                                vHeaders.front().GetHashLegacy().ToString(), pto->GetId());
                     }
                     connman.PushMessage(pto, msgMaker.Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
                     state.pindexBestHeaderSent = pBestIndex;
@@ -3115,7 +3239,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     // Just log for now.
                     if (chainActive[pindex->nHeight] != pindex) {
                         LogPrint(BCLog::NET, "Announcing block %s not on main chain (tip=%s)\n",
-                            hashToAnnounce.ToString(), chainActive.Tip()->GetBlockHash().ToString());
+                            hashToAnnounce.ToString(), chainActive.Tip()->GetBlockHashPoW2().ToString());
                     }
 
                     // If the peer's chain has this block, don't inv it back.
@@ -3331,9 +3455,9 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             FindNextBlocksToDownload(pto->GetId(), MAX_BLOCKS_IN_TRANSIT_PER_PEER - state.nBlocksInFlight, vToDownload, staller, consensusParams);
             BOOST_FOREACH(const CBlockIndex *pindex, vToDownload) {
                 uint32_t nFetchFlags = GetFetchFlags(pto);
-                vGetData.push_back(CInv(MSG_BLOCK | nFetchFlags, pindex->GetBlockHash()));
-                MarkBlockAsInFlight(pto->GetId(), pindex->GetBlockHash(), pindex);
-                LogPrint(BCLog::NET, "Requesting block %s (%d) peer=%d\n", pindex->GetBlockHash().ToString(),
+                vGetData.push_back(CInv(MSG_BLOCK | nFetchFlags, pindex->GetBlockHashPoW2()));
+                MarkBlockAsInFlight(pto->GetId(), pindex->GetBlockHashPoW2(), pindex);
+                LogPrint(BCLog::NET, "Requesting block %s (%d) peer=%d\n", pindex->GetBlockHashPoW2().ToString(),
                     pindex->nHeight, pto->GetId());
             }
             if (state.nBlocksInFlight == 0 && staller != -1) {

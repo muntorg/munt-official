@@ -2016,7 +2016,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     }
 
     CBlockIndex *pblockLast = chainActive[chainActive.Height() + 1 - target_confirms];
-    uint256 lastblock = pblockLast ? pblockLast->GetBlockHash() : uint256();
+    uint256 lastblock = pblockLast ? pblockLast->GetBlockHashPoW2() : uint256();
 
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("transactions", transactions));

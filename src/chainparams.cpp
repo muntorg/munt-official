@@ -145,7 +145,7 @@ public:
         nPruneAfterHeight = 100000;
 
         genesis = CreateGenesisBlock(1009843200, 2200095, 0x1e0ffff0, 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetHashLegacy();
         assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
@@ -294,7 +294,7 @@ public:
             if(genesis.nNonce == 0)
                 genesis.nTime++;
         }
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetHashLegacy();
         printf("genesis nonce: %d\n",genesis.nNonce);
         printf("genesis time: %d\n",genesis.nTime);
         printf("genesis bits: %d\n",genesis.nBits);        
@@ -320,7 +320,7 @@ public:
 
         checkpointData = (CCheckpointData){
             {
-                { 0, genesis.GetHash() }
+                { 0, genesis.GetHashPoW2() }
             }
         };
 
@@ -398,7 +398,7 @@ public:
         //assert(consensus.hashGenesisBlock == uint256S("0x6dbdcc5f450c07c61b51b492021dee6b4bd246c8dd578fd73e8f6c28cfe0393b"));
 
         genesis = CreateGenesisBlock(1296688602, 2, 0x1e0, 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis.GetHashLegacy();
         //assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.

@@ -286,7 +286,7 @@ UniValue verifytxoutproof(const JSONRPCRequest& request)
 
     LOCK(cs_main);
 
-    if (!mapBlockIndex.count(merkleBlock.header.GetHash()) || !chainActive.Contains(mapBlockIndex[merkleBlock.header.GetHash()]))
+    if (!mapBlockIndex.count(merkleBlock.header.GetHashPoW2()) || !chainActive.Contains(mapBlockIndex[merkleBlock.header.GetHashPoW2()]))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found in chain");
 
     BOOST_FOREACH(const uint256& hash, vMatch)

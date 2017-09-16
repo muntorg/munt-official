@@ -211,7 +211,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     LogPrintf("CreateNewBlock(): total size: %u block weight: %u txs: %u fees: %ld sigops %d\n", nSerializeSize, GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
 
     // Fill in header
-    pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
+    pblock->hashPrevBlock  = pindexPrev->GetBlockHashPoW2();
     UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
     pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
     pblock->nNonce         = 0;
@@ -606,7 +606,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     // Found a solution
     {
         LOCK(cs_main);
-        if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
+        if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHashPoW2())
             return error("GuldenMiner: generated block is stale");
     }
 

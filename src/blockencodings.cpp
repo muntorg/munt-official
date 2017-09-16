@@ -164,7 +164,7 @@ ReadStatus PartiallyDownloadedBlock::InitData(const CBlockHeaderAndShortTxIDs& c
             break;
     }
 
-    LogPrint(BCLog::CMPCTBLOCK, "Initialized PartiallyDownloadedBlock for block %s using a cmpctblock of size %lu\n", cmpctblock.header.GetHash().ToString(), GetSerializeSize(cmpctblock, SER_NETWORK, PROTOCOL_VERSION));
+    LogPrint(BCLog::CMPCTBLOCK, "Initialized PartiallyDownloadedBlock for block %s %s using a cmpctblock of size %lu\n", cmpctblock.header.GetHashLegacy().ToString(), cmpctblock.header.GetHashPoW2().ToString(), GetSerializeSize(cmpctblock, SER_NETWORK, PROTOCOL_VERSION));
 
     return READ_STATUS_OK;
 }
@@ -177,7 +177,11 @@ bool PartiallyDownloadedBlock::IsTxAvailable(size_t index) const {
 
 ReadStatus PartiallyDownloadedBlock::FillBlock(CBlock& block, const std::vector<CTransactionRef>& vtx_missing) {
     assert(!header.IsNull());
-    uint256 hash = header.GetHash();
+    uint256 hash;
+    if (header.nVersionPoW2Witness == 0)
+        hash = header.GetHashLegacy();
+    else
+        hash = header.GetHashPoW2();
     block = header;
     block.vtx.resize(txn_available.size());
 
