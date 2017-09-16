@@ -31,7 +31,15 @@
 class CBlockHeader
 {
 public:
-    // header
+    // PoW2 Witness header
+    int32_t nVersionPoW2Witness;
+    uint32_t nTimePoW2Witness;
+    uint256 hashMerkleRootPoW2Witness;
+    //fixme: (GULDEN) (2.0) (POW2) - Fixed size 65 bit.
+    std::vector<unsigned char> witnessHeaderPoW2Sig;
+    
+    
+    // PoW header
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
@@ -64,6 +72,11 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        
+        nVersionPoW2Witness = 0;
+        nTimePoW2Witness = 0;
+        hashMerkleRootPoW2Witness.SetNull();
+        witnessHeaderPoW2Sig.clear();
     }
 
     bool IsNull() const
@@ -135,6 +148,10 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+        block.nVersionPoW2Witness = nVersionPoW2Witness;
+        block.nTimePoW2Witness = nTimePoW2Witness;
+        block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
+        block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
         return block;
     }
 

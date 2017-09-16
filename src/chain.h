@@ -213,6 +213,13 @@ public:
     //! Verification status of this block. See enum BlockStatus
     unsigned int nStatus;
 
+    //! PoW2 witness block header
+    int32_t nVersionPoW2Witness;
+    uint32_t nTimePoW2Witness;
+    uint256 hashMerkleRootPoW2Witness;
+    std::vector<unsigned char> witnessHeaderPoW2Sig; // 65 bytes
+    
+    
     //! block header
     int nVersion;
     uint256 hashMerkleRoot;
@@ -242,6 +249,11 @@ public:
         nSequenceId = 0;
         nTimeMax = 0;
 
+        nVersionPoW2Witness = 0;
+        nTimePoW2Witness = 0;
+        hashMerkleRootPoW2Witness = uint256();
+        witnessHeaderPoW2Sig.clear();
+    
         nVersion       = 0;
         hashMerkleRoot = uint256();
         nTime          = 0;
@@ -258,6 +270,10 @@ public:
     {
         SetNull();
 
+        nVersionPoW2Witness = block.nVersionPoW2Witness;
+        nTimePoW2Witness = block.nTimePoW2Witness;
+        hashMerkleRootPoW2Witness = block.hashMerkleRootPoW2Witness;
+        witnessHeaderPoW2Sig = block.witnessHeaderPoW2Sig;
         nVersion       = block.nVersion;
         hashMerkleRoot = block.hashMerkleRoot;
         nTime          = block.nTime;
@@ -286,6 +302,10 @@ public:
     CBlockHeader GetBlockHeader() const
     {
         CBlockHeader block;
+        block.nVersionPoW2Witness = nVersionPoW2Witness;
+        block.nTimePoW2Witness = nTimePoW2Witness;
+        block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
+        block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
         block.nVersion       = nVersion;
         if (pprev)
             block.hashPrevBlock = pprev->GetBlockHash();
@@ -418,6 +438,10 @@ public:
     uint256 GetBlockHash() const
     {
         CBlockHeader block;
+        block.nVersionPoW2Witness = nVersionPoW2Witness;
+        block.nTimePoW2Witness = nTimePoW2Witness;
+        block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
+        block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
         block.nVersion        = nVersion;
         block.hashPrevBlock   = hashPrev;
         block.hashMerkleRoot  = hashMerkleRoot;
