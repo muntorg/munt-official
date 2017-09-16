@@ -8,6 +8,8 @@
 #include "chain.h"
 #include <map>
 
+#include "chainparams.h"
+
 /** What block version to use for new blocks (pre versionbits) */
 static const int32_t VERSIONBITS_LAST_OLD_BLOCK_VERSION = 4;
 /** What bits to set in version for versionbits blocks */
@@ -67,7 +69,28 @@ public:
 
 struct VersionBitsCache
 {
-    ThresholdConditionCache caches[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
+    // A little bit of 'nasty' trickery to make this a drop in replacement for the single cache bitcoin code.
+    VersionBitsCache() : caches(*this) {};
+    VersionBitsCache& caches;
+    ThresholdConditionCache& operator [](int idx)
+    {
+        //fixme: (GULDEN) (params should be passed in)
+        switch (Params().GetConsensus().vDeployments[idx].type)
+        {
+            case Consensus::DEPLOYMENT_POW:
+                return cachespow[idx];
+            case Consensus::DEPLOYMENT_WITNESS:
+                return cacheswitness[idx];
+            case Consensus::DEPLOYMENT_BOTH:
+                return cachescombined[idx];
+            default:
+                assert(0);
+        }
+    }
+    
+    ThresholdConditionCache cachespow[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
+    ThresholdConditionCache cacheswitness[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
+    ThresholdConditionCache cachescombined[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
 
     void Clear();
 };

@@ -12,6 +12,10 @@
 #include "versionbits.h"
 #include "consensus/params.h"
 
+//Gulden
+#include "Gulden/util.h"
+#include "validation.h"
+
 const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_BITS_DEPLOYMENTS] = {
     {
         /*.name =*/ "testdummy",
@@ -181,14 +185,51 @@ private:
     const Consensus::DeploymentPos id;
 
 protected:
-    int64_t BeginTime(const Consensus::Params& params) const { return params.vDeployments[id].nStartTime; }
+    int64_t BeginTime(const Consensus::Params& params) const
+    {
+        //fixme: (GULDEN) (POW2) (2.1) We can remove this for 2.1
+/*        if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
+        {
+            return GetPoW2Phase3ActivationTime();
+        }*/
+
+        return params.vDeployments[id].nStartTime;
+    }
     int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }
     int Period(const Consensus::Params& params) const { return params.nMinerConfirmationWindow; }
     int Threshold(const Consensus::Params& params) const { return params.nRuleChangeActivationThreshold; }
 
     bool Condition(const CBlockIndex* pindex, const Consensus::Params& params) const
     {
-        return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0);
+        switch (params.vDeployments[id].type)
+        {
+            case Consensus::DEPLOYMENT_POW:
+                return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0);
+            case Consensus::DEPLOYMENT_WITNESS:
+            {
+                //fixme: (GULDEN) (2.1) - This can be removed for 2.1
+                int nVersionPoW2Witness = pindex->nVersionPoW2Witness;
+                if (nVersionPoW2Witness == 0)
+                {
+                    CBlock temp;
+                    assert(ReadBlockFromDisk(temp, pindex, params));
+
+                    //fixme: (GULDEN) (2.0) - Consider using a cache here to speed things up?
+                    int nWitnessCoinbaseIndex = 0;//GetPoW2WitnessCoinbaseIndex(temp);
+                    if (nWitnessCoinbaseIndex != -1)
+                    {
+                        std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.begin() + 6, temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.end());
+                        CDataStream serialisedWitnessHeaderInfoStream(serialisedWitnessHeaderInfo, SER_NETWORK, INIT_PROTO_VERSION);
+                        ::Unserialize(serialisedWitnessHeaderInfoStream, nVersionPoW2Witness);
+                    }
+                }
+
+                return (((nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (nVersionPoW2Witness & Mask(params)) != 0);
+            }
+            case Consensus::DEPLOYMENT_BOTH:
+                return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0) && (((pindex->nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersionPoW2Witness & Mask(params)) != 0);
+        }
+        return false;
     }
 
 public:
@@ -221,6 +262,8 @@ uint32_t VersionBitsMask(const Consensus::Params& params, Consensus::DeploymentP
 void VersionBitsCache::Clear()
 {
     for (unsigned int d = 0; d < Consensus::MAX_VERSION_BITS_DEPLOYMENTS; d++) {
-        caches[d].clear();
+        cachespow[d].clear();
+        cacheswitness[d].clear();
+        cachescombined[d].clear();
     }
 }
