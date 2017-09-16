@@ -13,4 +13,15 @@ void rescanThread();
 std::string StringFromSeedType(CHDSeed* seed);
 CHDSeed::SeedType SeedTypeFromString(std::string type);
 
+class CBlockIndex;
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+
+void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight);
+
 #endif
