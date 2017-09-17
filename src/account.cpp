@@ -129,11 +129,16 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
     switch (type)
     {
         case Desktop:
-            assert(m_nAccountIndex <= 99999);
+            assert(m_nAccountIndex < 100000);
             account = GenerateAccount( m_nAccountIndex++ );
             break;
         case Mobi:
+            assert(m_nAccountIndexMobi < 200000);
             account = GenerateAccount( m_nAccountIndexMobi++ );
+            break;
+        case PoW2Witness:
+            assert(m_nAccountIndex < 300000);
+            account = GenerateAccount( m_nAccountIndexWitness++ );
             break;
         default:
             assert(0);

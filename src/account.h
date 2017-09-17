@@ -40,16 +40,17 @@ class CKeyMetadata;
 
 enum AccountType
 {
-        Normal = 0,        // Standard account (or HD account)
-        Shadow = 1,        // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
-        ShadowChild = 2,   // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
-        Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
+    Normal = 0,        // Standard account (or HD account)
+    Shadow = 1,        // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
+    ShadowChild = 2,   // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
+    Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
     
 enum AccountSubType
 {
-        Desktop = 0,       // Standard desktop account.
-        Mobi = 1           // Mobile phone.
+    Desktop = 0,       // Standard desktop account.
+    Mobi = 1,          // Mobile phone. (Android, iOS)
+    PoW2Witness = 2    // PoW2 witness account.
 };
 
 const int HDDesktopStartIndex = 0;
@@ -61,11 +62,11 @@ class CHDSeed
 public:
     enum SeedType
     {
-            BIP44 = 0, // New Gulden standard based on BIP44 for /all/ Gulden wallets (desktop/iOS/android)
-            BIP32 = 1, // Old Gulden android/iOS wallets
-            BIP32Legacy = 2, // Very old 'guldencoin' wallets
-            BIP44External = 3, //External BIP44 wallets like 'coinomi' (uses a different hash that Gulden BIP44)
-            BIP44NoHardening = 4 // Same as BIP44 however with no hardening on accounts (Users have to be more careful with key security but allows for synced read only wallets... whereas with normal BIP44 only accounts are possible)
+        BIP44 = 0, // New Gulden standard based on BIP44 for /all/ Gulden wallets (desktop/iOS/android)
+        BIP32 = 1, // Old Gulden android/iOS wallets
+        BIP32Legacy = 2, // Very old 'guldencoin' wallets
+        BIP44External = 3, //External BIP44 wallets like 'coinomi' (uses a different hash that Gulden BIP44)
+        BIP44NoHardening = 4 // Same as BIP44 however with no hardening on accounts (Users have to be more careful with key security but allows for synced read only wallets... whereas with normal BIP44 only accounts are possible)
     };
 
     CHDSeed();
@@ -86,8 +87,11 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
-        int nVersion;
+        int nVersion = 2;
         READWRITE(nVersion);
+        if (nVersion > 1000000)
+            nVersion = 1;
+        
         if (ser_action.ForRead())
         {
             int type;
@@ -107,6 +111,11 @@ public:
         
         READWRITE(m_nAccountIndex);
         READWRITE(m_nAccountIndexMobi);
+        m_nAccountIndexWitness = 200000;
+        if (nVersion >= 2)
+        {
+            READWRITE(m_nAccountIndexWitness);
+        }
         
         READWRITE(masterKeyPub);
         READWRITE(purposeKeyPub);
@@ -149,19 +158,21 @@ public:
     virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn);
     virtual bool IsReadOnly() { return m_readOnly; };
     
-    //What type of seed this is (BIP32 or BIP44)
+    // What type of seed this is (BIP32 or BIP44)
     SeedType m_type;
     
 protected:
     CAccountHD* GenerateAccount(int nAccountIndex);
     
-    //Unique seed identifier
+    // Unique seed identifier
     boost::uuids::uuid m_UUID;    
 
-    //Index of next account to generate (normal accounts)
+    // Index of next account to generate (normal accounts)
     int m_nAccountIndex;
-    //Index of next account to generate (mobile accounts)
+    // Index of next account to generate (mobile accounts)
     int m_nAccountIndexMobi;
+    // Index of next account to generate (witness accounts)
+    int m_nAccountIndexWitness;
 
     //Always available
     CExtPubKey masterKeyPub;  //hd master key (m)      - BIP32 and BIP44
@@ -169,7 +180,7 @@ protected:
     CExtPubKey cointypeKeyPub;//key at m/44'/87'       - BIP44 only
     
     bool encrypted;
-    //These members are only valid when the account is unlocked/unencrypted.
+    // These members are only valid when the account is unlocked/unencrypted.
     SecureString unencryptedMnemonic;
     CExtKey masterKeyPriv;  //hd master key (m)      - BIP32 and BIP44
     CExtKey purposeKeyPriv; //key at m/44'           - BIP44 only
@@ -178,7 +189,7 @@ protected:
     
     bool m_readOnly;
     
-    //Contains the encrypted versions of the above - only valid when the account is an encrypted one.
+    // Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> encryptedMnemonic;
     std::vector<unsigned char> masterKeyPrivEncrypted;
     std::vector<unsigned char> purposeKeyPrivEncrypted;
@@ -203,6 +214,7 @@ public:
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
     virtual bool IsMobi() const {return m_SubType == Mobi;}
+    virtual bool IsPoW2Witness() const {return m_SubType == PoW2Witness;}
        
     ADD_SERIALIZE_METHODS;
 
@@ -347,8 +359,12 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
-        int nVersion;
+        int nVersion = 2;
         READWRITE(nVersion);
+        if (nVersion > 1000000)
+            nVersion = 1;
+
+        
         if (ser_action.ForRead())
         {
             std::string sUUID;
