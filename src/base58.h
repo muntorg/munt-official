@@ -110,6 +110,7 @@ public:
  */
 class CBitcoinAddress : public CBase58Data {
 public:
+    bool Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID);
     bool Set(const CKeyID &id);
     bool Set(const CScriptID &id);
     bool Set(const CTxDestination &dest);

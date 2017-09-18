@@ -8,6 +8,7 @@
 
 #include "script/interpreter.h"
 #include "uint256.h"
+#include "pubkey.h"
 
 #include <boost/variant.hpp>
 
@@ -53,12 +54,41 @@ enum txnouttype
     TX_NULL_DATA,
     TX_WITNESS_V0_SCRIPTHASH,
     TX_WITNESS_V0_KEYHASH,
+    TX_PUBKEYHASH_POW2WITNESS,
 };
 
 class CNoDestination {
 public:
     friend bool operator==(const CNoDestination &a, const CNoDestination &b) { return true; }
     friend bool operator<(const CNoDestination &a, const CNoDestination &b) { return true; }
+};
+
+class CPoW2WitnessDestination{
+public:
+    //fixme: (GULDEN) (PoW2) (2.0) - should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
+    //Double check this.
+    CPoW2WitnessDestination(const CKeyID& spendingKeyIn, const CKeyID& witnessKeyIn) : spendingKey(spendingKeyIn), witnessKey(witnessKeyIn) {}
+    
+    CKeyID spendingKey;
+    CKeyID witnessKey;
+    uint64_t lockFromBlock;
+    uint64_t lockUntilBlock;
+    uint64_t failCount;
+    
+    //fixme: (GULDEN) (2.0) - Should these comparators consider the lock block or not?
+    friend bool operator==(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey == b.spendingKey && a.witnessKey == b.witnessKey; }
+    friend bool operator<(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey < b.spendingKey || (a.spendingKey == b.spendingKey && a.witnessKey < b.witnessKey); }
+    
+    ADD_SERIALIZE_METHODS
+    
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(spendingKey);
+        READWRITE(witnessKey);
+        READWRITE(lockFromBlock);
+        READWRITE(lockUntilBlock);
+        READWRITE(failCount);
+    }
 };
 
 /** 
@@ -68,7 +98,7 @@ public:
  *  * CScriptID: TX_SCRIPTHASH destination
  *  A CTxDestination is the internal data type encoded in a CBitcoinAddress
  */
-typedef boost::variant<CNoDestination, CKeyID, CScriptID> CTxDestination;
+typedef boost::variant<CNoDestination, CKeyID, CScriptID, CPoW2WitnessDestination> CTxDestination;
 
 const char* GetTxnOutputType(txnouttype t);
 

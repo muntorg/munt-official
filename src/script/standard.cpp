@@ -31,6 +31,7 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_NULL_DATA: return "nulldata";
     case TX_WITNESS_V0_KEYHASH: return "witness_v0_keyhash";
     case TX_WITNESS_V0_SCRIPTHASH: return "witness_v0_scripthash";
+    case TX_PUBKEYHASH_POW2WITNESS: return "pow2_witness";
     }
     return NULL;
 }
@@ -63,6 +64,19 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
         typeRet = TX_SCRIPTHASH;
         std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
         vSolutionsRet.push_back(hashBytes);
+        return true;
+    }
+    
+    //fixme: (GULDEN) (2.1) We can remove this logic after 2.1 release.
+    // Shortcut for PoW2 witness, which is more constrained than other types: 
+    //OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+    if (scriptPubKey.IsPoW2Witness())
+    {
+        typeRet = TX_PUBKEYHASH_POW2WITNESS;
+        std::vector<unsigned char> hashSpendingBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
+        vSolutionsRet.push_back(hashSpendingBytes);
+        std::vector<unsigned char> hashWitnessBytes(scriptPubKey.begin()+22, scriptPubKey.begin()+42);
+        vSolutionsRet.push_back(hashWitnessBytes);
         return true;
     }
 
@@ -198,6 +212,11 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
         addressRet = CKeyID(uint160(vSolutions[0]));
         return true;
     }
+    else if (whichType == TX_PUBKEYHASH_POW2WITNESS)
+    {
+        addressRet = CPoW2WitnessDestination(CKeyID(uint160(vSolutions[0])), CKeyID(uint160(vSolutions[1])));
+        return true;
+    }
     else if (whichType == TX_SCRIPTHASH)
     {
         addressRet = CScriptID(uint160(vSolutions[0]));
@@ -270,6 +289,18 @@ public:
     bool operator()(const CScriptID &scriptID) const {
         script->clear();
         *script << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+        return true;
+    }
+    
+    //OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+    bool operator()(const CPoW2WitnessDestination& destinationPoW2Witness) const {
+        script->clear();
+        *script << OP_0;
+        script->insert(script->end(), (unsigned char)64);
+        script->insert(script->end(), destinationPoW2Witness.spendingKey.begin(), destinationPoW2Witness.spendingKey.end());
+        script->insert(script->end(), destinationPoW2Witness.witnessKey.begin(), destinationPoW2Witness.witnessKey.end());
+        *script << CScriptUInt64(destinationPoW2Witness.lockFromBlock) << CScriptUInt64(destinationPoW2Witness.lockUntilBlock) << CScriptUInt64(destinationPoW2Witness.failCount);
+        
         return true;
     }
 };

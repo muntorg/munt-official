@@ -1260,6 +1260,9 @@ public:
 
     bool operator()(const CNoDestination &dest) const { return false; }
 
+    //fixme: (GULDEN) (PoW2) (2.0) - Is this needed
+    bool operator()(const CPoW2WitnessDestination &dest) const { return false; }
+    
     bool operator()(const CKeyID &keyID) {
         CPubKey pubkey;
         if (pwallet) {

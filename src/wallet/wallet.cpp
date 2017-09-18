@@ -3796,6 +3796,13 @@ public:
         if (keystore.GetCScript(scriptId, script))
             Process(script);
     }
+    
+    void operator()(const CPoW2WitnessDestination &dest) {
+        if (keystore.HaveKey(dest.witnessKey))
+            vKeys.push_back(dest.witnessKey);
+        if (keystore.HaveKey(dest.spendingKey))
+            vKeys.push_back(dest.spendingKey);
+    }
 
     void operator()(const CNoDestination &none) {}
 };

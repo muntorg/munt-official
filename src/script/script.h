@@ -201,6 +201,40 @@ public:
     explicit scriptnum_error(const std::string& str) : std::runtime_error(str) {}
 };
 
+//fixme: (GULDEN) (2.1) We can remove this class
+class CScriptUInt64
+{
+    public:
+        CScriptUInt64(uint64_t nNumber_)
+        {
+            nNumber = nNumber_;
+            
+            vchNumber.resize(8);
+            for (auto iter = vchNumber.begin(); iter != vchNumber.end(); ++iter)
+            {
+                *iter = (nNumber_ & 0xff);
+                nNumber_ >>= 8;
+            }
+        }
+        CScriptUInt64(std::vector<unsigned char> vchNumber_)
+        {
+            assert(vchNumber_.size() == 8);
+            nNumber = 0;
+            
+            auto iter = vchNumber_.begin();
+            nNumber |= *iter;
+            ++iter;
+            for (; iter != vchNumber_.end(); ++iter)
+            {
+                nNumber <<= 8;
+                nNumber |= *iter;
+            }
+        }
+
+        std::vector<unsigned char> vchNumber;
+        uint64_t nNumber;
+};
+
 class CScriptNum
 {
 /**
@@ -476,6 +510,12 @@ public:
         assert(!"Warning: Pushing a CScript onto a CScript with << is probably not intended, use + to concatenate!");
         return *this;
     }
+    
+    CScript& operator<<(const CScriptUInt64& b)
+    {
+        *this << b.vchNumber;
+        return *this;
+    }
 
 
     bool GetOp(iterator& pc, opcodetype& opcodeRet, std::vector<unsigned char>& vchRet)
@@ -628,6 +668,8 @@ public:
     bool IsPayToScriptHash() const;
     bool IsPayToWitnessScriptHash() const;
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
+    
+    bool IsPoW2Witness() const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */
     bool IsPushOnly(const_iterator pc) const;

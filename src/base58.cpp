@@ -230,9 +230,21 @@ public:
     bool operator()(const CKeyID& id) const { return addr->Set(id); }
     bool operator()(const CScriptID& id) const { return addr->Set(id); }
     bool operator()(const CNoDestination& no) const { return false; }
+    bool operator()(const CPoW2WitnessDestination& dest) const { return addr->Set(dest.spendingKey, dest.witnessKey); }
 };
 
 } // anon namespace
+
+bool CBitcoinAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID)
+{
+    std::vector<unsigned char> vchVersionIn;
+    vchVersionIn.reserve(40);
+    vchVersionIn.insert(vchVersionIn.end(), spendingKeyID.begin(), spendingKeyID.end());
+    vchVersionIn.insert(vchVersionIn.end(), witnessKeyID.begin(), witnessKeyID.end());
+    
+    SetData(Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS), &vchVersionIn, 40);
+    return true;
+}
 
 bool CBitcoinAddress::Set(const CKeyID& id)
 {
@@ -258,6 +270,9 @@ bool CBitcoinAddress::IsValid() const
 
 bool CBitcoinAddress::IsValid(const CChainParams& params) const
 {
+    if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
+        return true;
+    
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = vchVersion == params.Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
                          vchVersion == params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);

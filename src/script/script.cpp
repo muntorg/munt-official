@@ -234,6 +234,20 @@ bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program
     return false;
 }
 
+
+//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+bool CScript::IsPoW2Witness() const
+{
+    if (this->size() != 66)
+        return false;
+    
+    if ((*this)[0] != OP_0 || (*this)[1] != 64)
+        return false;
+    
+    //fixme: (GULDEN) (2.0) (POW2) Just consume the entire script to be sure?
+    return true;
+}
+
 bool CScript::IsPushOnly(const_iterator pc) const
 {
     while (pc < end())
