@@ -1481,6 +1481,32 @@ void ThreadScriptCheck() {
 // Protected by cs_main
 VersionBitsCache versionbitscache;
 
+
+bool HaveRequiredPeerUpgradePercent(int nRequiredProtoVersion, unsigned int nRequiredPercent)
+{
+    std::vector<CNodeStats> vstats;
+    g_connman->GetNodeStats(vstats);
+
+    // Insufficient peers to determine.
+    if (vstats.size() < 3)
+    {
+        if (IsArgSet("-testnet"))
+            return true;
+        
+        return false;
+    }
+
+    int nUpgradeCount = 0;
+    for (const CNodeStats& stats : vstats)
+    {
+        if (stats.nVersion >= nRequiredProtoVersion)
+        {
+            ++nUpgradeCount;
+        }
+    }
+    return (100 * nUpgradeCount) / vstats.size() > nRequiredPercent;
+}
+
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)
 {
     LOCK(cs_main);
@@ -1489,7 +1515,11 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
     for (int i = 0; i < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; i++) {
         ThresholdState state = VersionBitsState(pindexPrev, params, (Consensus::DeploymentPos)i, versionbitscache);
         if (state == THRESHOLD_LOCKED_IN || state == THRESHOLD_STARTED) {
-            nVersion |= VersionBitsMask(params, (Consensus::DeploymentPos)i);
+            //fixme: (GULDEN) (POW2) Make same change in RPC mining code.
+            if (params.vDeployments[i].protoVersion == 0 || HaveRequiredPeerUpgradePercent(params.vDeployments[i].protoVersion, params.vDeployments[i].requiredProtoUpgradePercent))
+            {
+                nVersion |= VersionBitsMask(params, (Consensus::DeploymentPos)i);
+            }
         }
     }
 

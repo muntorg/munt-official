@@ -123,6 +123,22 @@ bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chain
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase3Active(pindexPrev, chainparams.GetConsensus()); }
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase4Active(pindexPrev, chainparams.GetConsensus()); }
 
+//fixme: (GULDEN) (POW2) (2.0) (HIGH) Cache the activation block hash value across runs.
+int64_t GetPoW2Phase3ActivationTime()
+{
+    if (IsPow2Phase3Active(chainActive.Tip(), Params()))
+    {
+        CBlockIndex* pIndex = chainActive.Tip();
+        while (pIndex->pprev && IsPow2Phase3Active(pIndex->pprev, Params()))
+        {
+            pIndex = pIndex->pprev;
+        }
+        
+        return pIndex->nTime;
+    }
+    return std::numeric_limits<int64_t>::max();
+}
+
 void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight)
 {
     //implement

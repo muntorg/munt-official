@@ -22,6 +22,7 @@ bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chain
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
 
+int64_t GetPoW2Phase3ActivationTime();
 void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight);
 
 #endif

@@ -188,11 +188,11 @@ protected:
     int64_t BeginTime(const Consensus::Params& params) const
     {
         //fixme: (GULDEN) (POW2) (2.1) We can remove this for 2.1
-/*        if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
+        if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
             return GetPoW2Phase3ActivationTime();
-        }*/
-
+        }
+        
         return params.vDeployments[id].nStartTime;
     }
     int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }
@@ -207,15 +207,15 @@ protected:
                 return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0);
             case Consensus::DEPLOYMENT_WITNESS:
             {
-                //fixme: (GULDEN) (2.1) - This can be removed for 2.1
+                //fixme: (GULDEN) (2.1) This can be removed/simplified for 2.1
                 int nVersionPoW2Witness = pindex->nVersionPoW2Witness;
                 if (nVersionPoW2Witness == 0)
                 {
                     CBlock temp;
                     assert(ReadBlockFromDisk(temp, pindex, params));
-
+                        
                     //fixme: (GULDEN) (2.0) - Consider using a cache here to speed things up?
-                    int nWitnessCoinbaseIndex = 0;//GetPoW2WitnessCoinbaseIndex(temp);
+                    int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);
                     if (nWitnessCoinbaseIndex != -1)
                     {
                         std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.begin() + 6, temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.end());
@@ -223,7 +223,7 @@ protected:
                         ::Unserialize(serialisedWitnessHeaderInfoStream, nVersionPoW2Witness);
                     }
                 }
-
+                
                 return (((nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (nVersionPoW2Witness & Mask(params)) != 0);
             }
             case Consensus::DEPLOYMENT_BOTH:
