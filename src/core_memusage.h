@@ -26,6 +26,16 @@ static inline size_t RecursiveDynamicUsage(const CTxIn& in) {
 }
 
 static inline size_t RecursiveDynamicUsage(const CTxOut& out) {
+    switch(out.GetType())
+    {
+        case CTxOutType::PoW2WitnessOutput:
+            return sizeof(CTxOutPoW2Witness);
+        case CTxOutType::StandardKeyHashOutput:
+            return sizeof(CTxOutStandardKeyHash);
+        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+            break;
+    };
+    
     return RecursiveDynamicUsage(out.scriptPubKey);
 }
 

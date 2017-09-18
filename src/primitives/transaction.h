@@ -11,6 +11,9 @@
 #include "serialize.h"
 #include "uint256.h"
 
+//Gulden
+#include "pubkey.h"
+
 static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
@@ -126,12 +129,90 @@ public:
     std::string ToString() const;
 };
 
+enum CTxOutType : uint8_t
+{
+    //General purpose output types start from 0 counting upward
+    ScriptLegacyOutput = 0,
+    ScriptOutput = 1,
+    
+    //Specific/fixed purpose output types start from max counting backwards
+    PoW2WitnessOutput = 31,
+    StandardKeyHashOutput = 30
+};
+
+
+class CTxOutPoW2Witness
+{
+public:
+    CKeyID spendingKeyID;
+    CKeyID witnessKeyID;
+    uint64_t lockFromBlock;
+    uint64_t lockUntilBlock;
+    uint64_t failCount;
+    
+    void clear()
+    {
+        spendingKeyID.SetNull();
+        witnessKeyID.SetNull();
+        lockFromBlock = 0;
+        lockUntilBlock = 0;
+        failCount = 0;
+    }
+    
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        READWRITE(spendingKeyID);
+        READWRITE(witnessKeyID);
+        READWRITE(lockFromBlock);
+        READWRITE(lockUntilBlock);
+        READWRITE(failCount);
+    }
+};
+
+class CTxOutStandardKeyHash
+{
+public:
+    CKeyID keyID;
+    
+    void clear()
+    {
+        keyID.SetNull();
+    }
+    
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        READWRITE(keyID);
+    }
+};
+
 /** An output of a transaction.  It contains the public key that the next input
  * must be able to sign with to claim it.
  */
 class CTxOut
 {
 public:
+    //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    CTxOutType GetType() const
+    {
+        //implement
+        return ScriptLegacyOutput;
+    }
+    std::string GetTypeAsString() const
+    {
+        //implement
+        return "";
+    }
+    void SetType(CTxOutType nType_)
+    {
+        //implement
+    }
+    
     CAmount nValue;
     CScript scriptPubKey;
 
