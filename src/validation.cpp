@@ -1520,6 +1520,24 @@ public:
     }
 };
 
+//fixme: (GULDEN) (2.1) Can remove this.
+int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
+{
+    int commitpos = -1;
+    if (!block.vtx.empty()) {
+        for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
+            if (block.vtx[0]->vout[o].GetType() <= CTxOutType::ScriptOutput)
+            {
+                if (block.vtx[0]->vout[o].scriptPubKey.size() == 143 && block.vtx[0]->vout[o].scriptPubKey[0] == OP_RETURN && block.vtx[0]->vout[o].scriptPubKey[1] == 0x50 && block.vtx[0]->vout[o].scriptPubKey[2] == 0x6f && block.vtx[0]->vout[o].scriptPubKey[3] == 0x57 && block.vtx[0]->vout[o].scriptPubKey[4] == 0xc2 && block.vtx[0]->vout[o].scriptPubKey[5] == 0xb2) {
+                    commitpos = o;
+                }
+            }
+        }
+    }
+    return commitpos;
+}
+
+
 // Protected by cs_main
 static ThresholdConditionCache warningcache[VERSIONBITS_NUM_BITS];
 
