@@ -155,6 +155,7 @@ uint256 ComputeMerkleRootFromBranch(const uint256& leaf, const std::vector<uint2
     return hash;
 }
 
+#if 0 
 uint256 BlockMerkleRoot(const CBlock& block, bool* mutated)
 {
     std::vector<uint256> leaves;
@@ -162,6 +163,15 @@ uint256 BlockMerkleRoot(const CBlock& block, bool* mutated)
     for (size_t s = 0; s < block.vtx.size(); s++) {
         leaves[s] = block.vtx[s]->GetHash();
     }
+    return ComputeMerkleRoot(leaves, mutated);
+}
+#endif
+
+uint256 BlockMerkleRoot(const std::vector<CTransactionRef>::const_iterator txStartIter, const std::vector<CTransactionRef>::const_iterator txEndIter, bool* mutated)
+{
+    std::vector<uint256> leaves;
+    leaves.reserve(std::distance(txStartIter, txEndIter));
+    std::transform(txStartIter, txEndIter, std::back_inserter(leaves), [](const CTransactionRef& ref) { return ref->GetHash(); });
     return ComputeMerkleRoot(leaves, mutated);
 }
 
