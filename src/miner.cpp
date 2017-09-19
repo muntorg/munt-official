@@ -65,7 +65,7 @@ uint64_t nLastBlockWeight = 0;
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     int64_t nOldTime = pblock->nTime;
-    int64_t nNewTime = std::max(pindexPrev->GetMedianTimePast()+1, GetAdjustedTime());
+    int64_t nNewTime = std::max(pindexPrev->GetMedianTimePastWitness()+1, GetAdjustedTime());
 
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
@@ -170,7 +170,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
         pblock->nVersion = GetArg("-blockversion", pblock->nVersion);
 
     pblock->nTime = GetAdjustedTime();
-    const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
+    const int64_t nMedianTimePast = pindexPrev->GetMedianTimePastWitness();
 
     nLockTimeCutoff = (STANDARD_LOCKTIME_VERIFY_FLAGS & LOCKTIME_MEDIAN_TIME_PAST)
                        ? nMedianTimePast

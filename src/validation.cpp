@@ -2904,14 +2904,14 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
     // Check timestamp against prev
-    if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())
+    if (block.GetBlockTime() <= pindexPrev->GetMedianTimePastWitness())
         return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
 
     // Check timestamp
     if (pindexPrev->nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500) )
     {
-    if (block.GetBlockTime() > nAdjustedTime + MAX_FUTURE_BLOCK_TIME)
-        return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
+        if (block.GetBlockTime() > nAdjustedTime + MAX_FUTURE_BLOCK_TIME)
+            return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
     else
     {

@@ -20,7 +20,7 @@
 #include "uint256.h"
 
 #include <vector>
-
+#include <valarray>
 /**
  * Maximum amount of time that a block timestamp is allowed to exceed the
  * current network-adjusted time before the block will be accepted.
@@ -348,14 +348,69 @@ public:
         int nMedianTimeSpan = 11;
         if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
+        
+        //fixme: (GULDEN) (2.0) - Check this works right.
+        if (this->nTimePoW2Witness != 0)
+        {
+            nMedianTimeSpan *= 2;
+            int nMid = nMedianTimeSpan/2;
             
-        int64_t pmedian[nMedianTimeSpan];
+            std::valarray<int64_t> pmedian(nMedianTimeSpan);
+            int64_t* pbegin = &pmedian[nMedianTimeSpan];
+            int64_t* pend = &pmedian[nMedianTimeSpan];
+
+            const CBlockIndex* pindex = this;
+            for (int i = 0; i < nMedianTimeSpan/2 && pindex; i++, pindex = pindex->pprev)
+            {
+                *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->nTimePoW2Witness : pindex->GetBlockTime();
+                *(--pbegin) = pindex->GetBlockTime();
+            }
+
+            std::sort(pbegin, pend);
+            return ( pbegin[nMid-1] + pbegin[nMid] ) / 2;
+        }
+        else
+        {   
+            std::valarray<int64_t> pmedian(nMedianTimeSpan);
+            int64_t* pbegin = &pmedian[nMedianTimeSpan];
+            int64_t* pend = &pmedian[nMedianTimeSpan];
+
+            const CBlockIndex* pindex = this;
+            for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
+                *(--pbegin) = pindex->GetBlockTime();
+
+            std::sort(pbegin, pend);
+            return pbegin[(pend - pbegin)/2];
+        }
+    }
+    
+    int64_t GetMedianTimePastPoW() const
+    {
+        int nMedianTimeSpan = 3;
+            
+        std::valarray<int64_t> pmedian(nMedianTimeSpan);
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
         int64_t* pend = &pmedian[nMedianTimeSpan];
 
         const CBlockIndex* pindex = this;
         for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
             *(--pbegin) = pindex->GetBlockTime();
+
+        std::sort(pbegin, pend);
+        return pbegin[(pend - pbegin)/2];
+    }
+    
+    int64_t GetMedianTimePastWitness() const
+    {
+        int nMedianTimeSpan = 3;
+            
+        std::valarray<int64_t> pmedian(nMedianTimeSpan);
+        int64_t* pbegin = &pmedian[nMedianTimeSpan];
+        int64_t* pend = &pmedian[nMedianTimeSpan];
+
+        const CBlockIndex* pindex = this;
+        for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
+            *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->nTimePoW2Witness : pindex->GetBlockTime();
 
         std::sort(pbegin, pend);
         return pbegin[(pend - pbegin)/2];

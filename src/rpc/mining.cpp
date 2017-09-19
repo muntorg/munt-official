@@ -811,7 +811,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0]->vout[0].nValue));
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHashPoW2().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
-    result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePast()+1, GetTime())));
+    result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePastWitness()+1, GetTime())));
     //fixme: (GULDEN) (MED) - Implement 'maxtime' here?
     result.push_back(Pair("mutable", aMutable));
     result.push_back(Pair("noncerange", "00000000ffffffff"));
