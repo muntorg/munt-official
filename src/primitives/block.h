@@ -165,7 +165,7 @@ public:
     }
 
     //mutable uint256 cachedPOWHash;
-    uint256 GetPoWHash() const;
+    uint256&& GetPoWHash() const;
 
     CBlockHeader GetBlockHeader() const
     {

@@ -38,6 +38,31 @@ uint256 CBlockHeader::GetHashPoW2(bool force) const
     return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG);
 }
 
+uint256&& CBlock::GetPoWHash() const
+{
+    //if (!cachedPOWHash.IsNull())
+        //return cachedPOWHash;
+
+    uint256 hashRet;
+    
+    //CBSU - maybe use a static functor or something here instead of having the branch 
+    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
+    if (hashCity)
+    {
+        arith_uint256 thash;
+        hash_city(BEGIN(nVersion), thash);
+        hashRet = std::move(ArithToUint256(thash));
+    }
+    else
+    {
+        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(hashRet), scratchpad);
+    }
+    //cachedPOWHash = ArithToUint256(thash);
+    //return cachedPOWHash;
+    return std::move(hashRet);
+}
+
 std::string CBlock::ToString() const
 {
     std::stringstream s;
@@ -68,24 +93,4 @@ int64_t GetBlockWeight(const CBlock& block)
     */
     //Gulden: block weight = block size - no complicated segwit weighting shenanigans necessary.
     return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
-}
-
-uint256 CBlock::GetPoWHash() const
-{
-    //if (!cachedPOWHash.IsNull())
-        //return cachedPOWHash;
-
-      //CBSU - maybe use a static functor or something here instead of having the branch 
-    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
-    arith_uint256 thash;
-    if (hashCity)
-    {
-        hash_city(BEGIN(nVersion), thash);
-    }
-    else
-    {
-        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
-    }
-    return ArithToUint256(thash);
 }
