@@ -175,6 +175,8 @@ public:
 static CCoinsViewErrorCatcher *pcoinscatcher = NULL;
 static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
 
+static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
+
 void Interrupt(boost::thread_group& threadGroup)
 {
     InterruptHTTPServer();
@@ -249,6 +251,12 @@ void Shutdown()
         pcoinsdbview = NULL;
         delete pblocktree;
         pblocktree = NULL;
+        
+        //Already flushed to disk by FlushStateToDisk.
+        ppow2witTip = nullptr;
+        delete ppow2witcatcher;
+        ppow2witcatcher = NULL;
+        delete ppow2witdbview;
     }
 #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {
@@ -1496,6 +1504,17 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 pcoinsdbview = new CCoinsViewDB(nCoinDBCache, false, fReindex || fReindexChainState);
                 pcoinscatcher = new CCoinsViewErrorCatcher(pcoinsdbview);
                 pcoinsTip = new CCoinsViewCache(pcoinscatcher);
+                
+                delete ppow2witdbview;
+                delete ppow2witcatcher;
+                ppow2witTip = nullptr;
+                
+                ppow2witdbview = new CWitViewDB(nCoinDBCache, false, fReindex || fReindexChainState);
+                ppow2witcatcher = new CCoinsViewErrorCatcher(ppow2witdbview);
+                ppow2witTip = std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(ppow2witcatcher));
+                
+                pcoinsTip->SetSiblingView(ppow2witTip);
+                
 
                 if (fReindex) {
                     pblocktree->WriteReindexing(true);

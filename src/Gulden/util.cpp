@@ -7,6 +7,12 @@
 #include "wallet/wallet.h"
 #include "validation.h"
 
+#include "txdb.h"
+#include "coins.h"
+
+#include "primitives/transaction.h"
+
+
 static bool alreadyInRescan = false;
 void rescanThread()
 {
@@ -119,9 +125,114 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& para
     return phase4ActivationCache[pIndex->GetBlockHashLegacy()];
 }
 
+
+// Phase 5 becomes active after all 'backwards compatible' witness addresses have been flushed from the system.
+// At this point 'backwards compatible' witness addresses in the chain are treated simply as anyone can spend transactions (as they have all been spent this is fine) and old witness data is discarded.
+bool IsPow2Phase5Active(const CBlockIndex* pIndex, const Consensus::Params& params)
+{
+    if (!pIndex)
+        return false;
+    
+    if (!IsPow2Phase4Active(pIndex, params))
+        return false;
+    
+    std::map<COutPoint, Coin> allWitnessCoins;
+    CCoinsViewCursor* cursor = ppow2witdbview->Cursor();
+    while (cursor && cursor->Valid())
+    {
+        COutPoint outPoint;
+        if (!cursor->GetKey(outPoint))
+            throw std::runtime_error("Error fetching record from witness cache.");
+            
+        Coin outCoin;
+        if (!cursor->GetValue(outCoin))
+            throw std::runtime_error("Error fetching record from witness cache.");
+        
+        allWitnessCoins.emplace(std::make_pair(outPoint, outCoin));
+        
+        cursor->Next();
+    }
+    for (auto iter : ppow2witTip->GetCachedCoins())
+    {
+        allWitnessCoins[iter.first] = iter.second.coin;
+    }
+    
+    // If any PoW2WitnessOutput remain then we aren't active yet.
+    for (auto iter : allWitnessCoins)
+    {
+        if (iter.second.out.GetType() != CTxOutType::PoW2WitnessOutput)
+            return false;
+    }
+    
+    return true;
+}
+
+
+bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const Consensus::Params& params)
+{
+    if (!pIndex)
+        return false;
+    
+    return IsPow2Phase3Active(pIndex, params) || IsPow2Phase4Active(pIndex, params) || IsPow2Phase5Active(pIndex, params);
+}
+
+int GetPoW2Phase(const CBlockIndex* pIndex, const Consensus::Params& params)
+{
+    if (IsPow2Phase5Active(pIndex, params))
+    {
+        return 5;
+    }
+    if (IsPow2Phase4Active(pIndex, params))
+    {
+        return 4;
+    }
+    if (IsPow2Phase3Active(pIndex, params))
+    {
+        return 3;
+    }
+    if (IsPow2Phase2Active(pIndex, params))
+    {
+        return 2;
+    }
+    return 1;
+}
+
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase2Active(pindexPrev, chainparams.GetConsensus()); }
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase3Active(pindexPrev, chainparams.GetConsensus()); }
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase4Active(pindexPrev, chainparams.GetConsensus()); }
+bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase5Active(pindexPrev, chainparams.GetConsensus()); }
+bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2WitnessingActive(pindexPrev, chainparams.GetConsensus()); }
+
+
+int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
+{
+    // We rebase the entire formula to to match internal monetary format (8 zeros), so that we can work with fixed point precision.
+    // We rebase to 10 at the end for the final weight.
+    arith_uint256 base = arith_uint256(COIN);
+    #define BASE(x) (arith_uint256(x)*base)
+    arith_uint256 nWeight = (arith_uint256(nAmount) * ( BASE(1) + ((BASE(nLockLengthInBlocks))/(365*576)) ) * 2) - BASE(BASE(10000));
+    #undef BASE
+    nWeight /= base;
+    nWeight /= base;
+    return nWeight.GetLow64();
+}
+
+
+int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber)
+{
+    //fixme: (GULDEN) (2.0) - Check for off by 1 error (lockUntil - lockFrom)
+    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.scriptPubKey.IsPoW2Witness()) )
+    {
+        CTxOutPoW2Witness witnessDetails;
+        out.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
+        return witnessDetails.lockUntilBlock - ( witnessDetails.lockFromBlock == 0 ? txBlockNumber : witnessDetails.lockFromBlock);
+    }
+    else if (out.GetType() == CTxOutType::PoW2WitnessOutput)
+    {
+        //implement
+    }
+    return 0;
+}
 
 //fixme: (GULDEN) (POW2) (2.0) (HIGH) Cache the activation block hash value across runs.
 int64_t GetPoW2Phase3ActivationTime()
@@ -140,6 +251,49 @@ int64_t GetPoW2Phase3ActivationTime()
 }
 
 void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight)
+{        
+    std::map<COutPoint, Coin> allWitnessCoins;
+    CCoinsViewCursor* cursor = ppow2witdbview->Cursor();
+    while (cursor && cursor->Valid())
+    {
+        COutPoint outPoint;
+        if (!cursor->GetKey(outPoint))
+            throw std::runtime_error("Error fetching record from witness cache.");
+            
+        Coin outCoin;
+        if (!cursor->GetValue(outCoin))
+            throw std::runtime_error("Error fetching record from witness cache.");
+        
+        allWitnessCoins.emplace(std::make_pair(outPoint, outCoin));
+        
+        cursor->Next();
+    }
+    for (auto iter : ppow2witTip->GetCachedCoins())
+    {
+        allWitnessCoins[iter.first] = iter.second.coin;
+    }
+    
+    nNumWitnessAddresses = 0;
+    nTotalWeight = 0;
+    
+    for (auto iter : allWitnessCoins)
+    {        
+        if (pIndex == nullptr || iter.second.nHeight < pIndex->nHeight)
+        {
+            CTxOut output = iter.second.out;
+
+            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight));
+            ++nNumWitnessAddresses;
+        }
+    }
+}
+
+
+
+CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
 {
-    //implement
+    uint256 powHash = pIndex->GetBlockHashLegacy();
+    if (!mapBlockIndex.count(powHash))
+        return NULL;
+    return mapBlockIndex[powHash];
 }

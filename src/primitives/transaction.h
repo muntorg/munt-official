@@ -212,9 +212,19 @@ public:
     {
         //implement
     }
-    
+
     CAmount nValue;
     CScript scriptPubKey;
+
+    bool IsUnspendable() const
+    {
+        if (GetType() <= CTxOutType::ScriptOutput)
+            return scriptPubKey.IsUnspendable();
+
+        //fixme: (GULDEN) (2.0) - Can our 'standard' outputs still be unspendable?
+        return false;
+    }
+
 
     CTxOut()
     {

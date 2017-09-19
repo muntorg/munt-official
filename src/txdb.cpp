@@ -56,7 +56,11 @@ struct CoinEntry {
 
 }
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CWitViewDB::CWitViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : CCoinsViewDB(nCacheSize, fMemory, fWipe, "witstate")
+{
+}
+
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe, std::string name) : db(GetDataDir() / name, nCacheSize, fMemory, fWipe, true)
 {
 }
 

@@ -203,6 +203,7 @@ protected:
     mutable size_t cachedCoinsUsage;
 
 public:
+    CCoinsViewCache(CCoinsViewCache *baseIn);
     CCoinsViewCache(CCoinsView *baseIn);
 
     // Standard CCoinsView methods
@@ -215,6 +216,8 @@ public:
         throw std::logic_error("CCoinsViewCache cursor iteration not supported.");
     }
 
+    CCoinsMap& GetCachedCoins() { return cacheCoins; };
+    
     /**
      * Check if we have the given utxo already loaded in this cache.
      * The semantics are the same as HaveCoin(), but no calls to
@@ -273,6 +276,10 @@ public:
 
     //! Check whether all prevouts of the transaction are present in the UTXO set represented by this view
     bool HaveInputs(const CTransaction& tx) const;
+    
+    // Side view
+    void SetSiblingView(std::shared_ptr<CCoinsViewCache> pChainedWitView_) { pChainedWitView = pChainedWitView_; };
+    std::shared_ptr<CCoinsViewCache> pChainedWitView;
 
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint) const;

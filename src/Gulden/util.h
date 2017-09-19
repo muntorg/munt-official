@@ -17,12 +17,29 @@ class CBlockIndex;
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+
+bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+int GetPoW2Phase();
 
 int64_t GetPoW2Phase3ActivationTime();
+
+int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
+int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber);
 void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight);
+CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
+
+inline bool IsPow2WitnessOutput(const CTxOut& out)
+{
+    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
+        return true;
+    return false;
+}
 
 #endif

@@ -10,6 +10,9 @@
 
 #include <assert.h>
 
+// Gulden specific includes
+#include "Gulden/util.h"
+
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin) const { return false; }
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
@@ -28,7 +31,8 @@ size_t CCoinsViewBacked::EstimateSize() const { return base->EstimateSize(); }
 
 SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max())), k1(GetRand(std::numeric_limits<uint64_t>::max())) {}
 
-CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0) {}
+CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(nullptr) {}
+CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr) {}
 
 size_t CCoinsViewCache::DynamicMemoryUsage() const {
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
@@ -62,7 +66,18 @@ bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin) const {
 
 void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possible_overwrite) {
     assert(!coin.IsSpent());
-    if (coin.out.scriptPubKey.IsUnspendable()) return;
+    if (coin.out.IsUnspendable()) return;
+    
+    CTxOut out = coin.out;
+    
+    if (pChainedWitView)
+    {
+        if ( IsPow2WitnessOutput(coin.out) )
+        {
+            pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase), possible_overwrite);
+        }
+    }
+    
     CCoinsMap::iterator it;
     bool inserted;
     std::tie(it, inserted) = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
@@ -104,6 +119,9 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout) {
         it->second.flags |= CCoinsCacheEntry::DIRTY;
         it->second.coin.Clear();
     }
+    
+    if (pChainedWitView)
+        pChainedWitView->SpendCoin(outpoint, NULL);
 }
 
 static const Coin coinEmpty;
@@ -194,6 +212,9 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
 }
 
 bool CCoinsViewCache::Flush() {
+    if (pChainedWitView)
+        pChainedWitView->Flush();
+    
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
     cachedCoinsUsage = 0;
@@ -202,6 +223,9 @@ bool CCoinsViewCache::Flush() {
 
 void CCoinsViewCache::Uncache(const COutPoint& hash)
 {
+    if (pChainedWitView)
+        pChainedWitView->Uncache(hash);
+    
     CCoinsMap::iterator it = cacheCoins.find(hash);
     if (it != cacheCoins.end() && it->second.flags == 0) {
         cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();

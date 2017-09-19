@@ -37,6 +37,8 @@
 
 #include <atomic>
 
+#include "uint256.h"
+
 class CBlockIndex;
 class CBlockTreeDB;
 class CBloomFilter;
@@ -53,6 +55,8 @@ struct ChainTxData;
 
 struct PrecomputedTransactionData;
 struct LockPoints;
+
+class CWitViewDB;
 
 /** Default for accepting alerts from the P2P network. */
 static const bool DEFAULT_ALERTS = true;
@@ -467,6 +471,12 @@ extern CCoinsViewCache *pcoinsTip;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern CBlockTreeDB *pblocktree;
+
+
+/** Global variable that points to the witness coins database */
+extern CWitViewDB *ppow2witdbview;
+extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
+
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().

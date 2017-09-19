@@ -18,6 +18,7 @@
 class CBlockIndex;
 class CCoinsViewDBCursor;
 class uint256;
+class CWitViewDB;
 
 //! Compensate for extra memory peak (x1.5-x1.9) at flush time.
 static constexpr int DB_PEAK_USAGE_FACTOR = 2;
@@ -69,7 +70,7 @@ class CCoinsViewDB : public CCoinsView
 protected:
     CDBWrapper db;
 public:
-    CCoinsViewDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);
+    CCoinsViewDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false, std::string name="chainstate");
 
     bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
@@ -80,6 +81,13 @@ public:
     //! Attempt to update from an older database format. Returns whether an error occurred.
     bool Upgrade();
     size_t EstimateSize() const override;
+};
+
+/** CWitViewDB backed by the witness database (witstate/) */
+class CWitViewDB : public CCoinsViewDB
+{
+public:
+    CWitViewDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */

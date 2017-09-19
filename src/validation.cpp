@@ -196,6 +196,9 @@ CCoinsViewDB *pcoinsdbview = NULL;
 CCoinsViewCache *pcoinsTip = NULL;
 CBlockTreeDB *pblocktree = NULL;
 
+CWitViewDB *ppow2witdbview = NULL;
+std::shared_ptr<CCoinsViewCache> ppow2witTip = NULL;
+
 enum FlushStateMode {
     FLUSH_STATE_NONE,
     FLUSH_STATE_IF_NEEDED,
