@@ -8,6 +8,9 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 
+//Gulden
+#include <primitives/transaction.h>
+
 const char* GetOpName(opcodetype opcode)
 {
     switch (opcode)
@@ -247,6 +250,63 @@ bool CScript::IsPoW2Witness() const
     //fixme: (GULDEN) (2.0) (POW2) Just consume the entire script to be sure?
     return true;
 }
+
+//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+std::vector<unsigned char> CScript::GetPow2WitnessHash() const
+{
+    assert(IsPoW2Witness());
+    
+    std::vector<unsigned char> hashWitnessBytes(this->begin()+22, this->begin()+42);
+    return hashWitnessBytes;
+}
+
+
+//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+//fixme: (Gulden) (2.0) Better error handling.
+void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
+{
+    if (this->size() != 66)
+        assert(0);
+        
+    CScript::const_iterator it = begin();
+    
+    opcodetype opcode;
+    std::vector<unsigned char> item;
+    if (!GetOp(it, opcode, item) || opcode != OP_0)
+        assert(0);
+
+    if (!GetOp(it, opcode, item) || opcode != (unsigned char)64)
+        assert(0);
+    
+    auto start = it;
+    std::advance(it, 20);
+    std::vector<unsigned char> vchSpendingKey( start, it );
+    witness.spendingKeyID = CKeyID(uint160(vchSpendingKey));
+    
+    start = it;
+    std::advance(it, 20);
+    std::vector<unsigned char> vchWitnessKey( start, it );
+    witness.witnessKeyID = CKeyID(uint160(vchWitnessKey));
+    
+    start = it;
+    std::advance(it, 8);
+    std::vector<unsigned char> vchLockFromBlock( start, it );
+    witness.lockFromBlock = CScriptUInt64( vchLockFromBlock ).nNumber;
+    
+    start = it;
+    std::advance(it, 8);
+    std::vector<unsigned char> vchLockUntilBlock( start, it );
+    witness.lockUntilBlock = CScriptUInt64( vchLockUntilBlock ).nNumber;
+    
+    start = it;
+    std::advance(it, 8);
+    std::vector<unsigned char> vchFailCount( start, it );
+    witness.failCount = CScriptUInt64( vchFailCount ).nNumber;
+    
+    if (it != end())
+        assert(0);
+}
+
 
 bool CScript::IsPushOnly(const_iterator pc) const
 {

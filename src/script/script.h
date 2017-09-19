@@ -18,6 +18,9 @@
 #include <string>
 #include <vector>
 
+//Gulden
+class CTxOutPoW2Witness;
+
 // Maximum number of bytes pushable to the stack
 static const unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
 
@@ -670,6 +673,8 @@ public:
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
     
     bool IsPoW2Witness() const;
+    std::vector<unsigned char> GetPow2WitnessHash() const;
+    void ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */
     bool IsPushOnly(const_iterator pc) const;
