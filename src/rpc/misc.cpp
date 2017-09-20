@@ -117,7 +117,6 @@ UniValue getinfo(const JSONRPCRequest& request)
             LOCK(pwallet->activeAccount->cs_keypool);
             obj.push_back(Pair("keypoolsize",   (int)pwallet->activeAccount->GetKeyPoolSize()));
         }
-        obj.push_back(Pair("keypoolsize",   (int)pwallet->activeAccount->GetKeyPoolSize()));
     }
     if (pwallet && pwallet->IsCrypted()) {
         obj.push_back(Pair("unlocked_until", pwallet->nRelockTime));

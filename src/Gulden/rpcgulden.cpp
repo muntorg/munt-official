@@ -24,6 +24,9 @@
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/max.hpp>
 
+#include "txdb.h"
+#include "coins.h"
+
 
 #ifdef ENABLE_WALLET
 
@@ -63,6 +66,39 @@ UniValue sethashlimit(const JSONRPCRequest& request)
 
     return nHashThrottle;
 }
+
+UniValue getwitnessinfo(const JSONRPCRequest& request)
+{
+    if (request.fHelp)
+        throw std::runtime_error(
+            "getwitnessinfo\n"
+            "\nReturns statistics on witness info for the current chain tip, including overall network weight and number of witnesses.\n");
+        
+    int64_t nNumWitnessAddresses = 0;
+    int64_t nTotalWeight = 0;
+    
+    GetPow2NetworkWeight(chainActive.Tip(), nNumWitnessAddresses, nTotalWeight);
+    
+    std::string sPoW2Phase = "Phase 1";
+    if (IsPow2Phase5Active(chainActive.Tip(), Params()))
+        sPoW2Phase = "Phase 5";
+    else if (IsPow2Phase4Active(chainActive.Tip(), Params()))
+        sPoW2Phase = "Phase 4";
+    else if (IsPow2Phase3Active(chainActive.Tip(), Params()))
+        sPoW2Phase = "Phase 3";
+    else if (IsPow2Phase2Active(chainActive.Tip(), Params()))
+        sPoW2Phase = "Phase 2";    
+    
+    UniValue witnessStats(UniValue::VARR);
+    UniValue rec(UniValue::VOBJ);
+    rec.push_back(Pair("number_of_witnesses", nNumWitnessAddresses));
+    rec.push_back(Pair("total_witness_weight", nTotalWeight));
+    rec.push_back(Pair("pow2_phase", sPoW2Phase));
+    witnessStats.push_back(rec);
+    
+    return witnessStats;
+}
+
 
 UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
@@ -990,6 +1026,8 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "mining",             "gethashps",              &gethashps,              true,    {} },
     { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
+    
+    { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {""} },
 
     { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
     { "developer",          "dumptransactionstats",   &dumptransactionstats,   true,    {"startheight", "count"} },
