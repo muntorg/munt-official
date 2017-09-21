@@ -221,15 +221,15 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber)
 {
     //fixme: (GULDEN) (2.0) - Check for off by 1 error (lockUntil - lockFrom)
-    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.scriptPubKey.IsPoW2Witness()) )
+    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;
-        out.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
+        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
         return witnessDetails.lockUntilBlock - ( witnessDetails.lockFromBlock == 0 ? txBlockNumber : witnessDetails.lockFromBlock);
     }
     else if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //implement
+        return out.output.witnessDetails.lockUntilBlock - ( out.output.witnessDetails.lockFromBlock == 0 ? txBlockNumber : out.output.witnessDetails.lockFromBlock);
     }
     return 0;
 }

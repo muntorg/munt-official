@@ -771,7 +771,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             continue;
 
         BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
-            if (txout.scriptPubKey == scriptPubKey)
+            if (txout.output.scriptPubKey == scriptPubKey)
                 if (wtx.GetDepthInMainChain() >= nMinDepth)
                     nAmount += txout.nValue;
     }
@@ -1250,6 +1250,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     return "";
 }
 
+#if 0
 class Witnessifier : public boost::static_visitor<bool>
 {
 public:
@@ -1348,6 +1349,7 @@ UniValue addwitnessaddress(const JSONRPCRequest& request)
 
     return CBitcoinAddress(w.result).ToString();
 }
+#endif
 
 struct tallyitem
 {
@@ -1395,7 +1397,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
         BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
         {
             CTxDestination address;
-            if (!ExtractDestination(txout.scriptPubKey, address))
+            if (!ExtractDestination(txout, address))
                 continue;
 
             isminefilter mine = IsMine(*pwallet, address);
@@ -2856,37 +2858,40 @@ UniValue listunspent(const JSONRPCRequest& request)
         pwallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
         BOOST_FOREACH(const COutput& out, vecOutputs) {
             CTxDestination address;
-            const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
-            bool fValidAddress = ExtractDestination(scriptPubKey, address);
+            if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptOutput)
+            {
+                const CScript& scriptPubKey = out.tx->tx->vout[out.i].output.scriptPubKey;
+                bool fValidAddress = ExtractDestination(scriptPubKey, address);
 
-            if (setAddress.size() && (!fValidAddress || !setAddress.count(address)))
-                continue;
+                if (setAddress.size() && (!fValidAddress || !setAddress.count(address)))
+                    continue;
 
-            UniValue entry(UniValue::VOBJ);
-            entry.push_back(Pair("txid", out.tx->GetHash().GetHex()));
-            entry.push_back(Pair("vout", out.i));
+                UniValue entry(UniValue::VOBJ);
+                entry.push_back(Pair("txid", out.tx->GetHash().GetHex()));
+                entry.push_back(Pair("vout", out.i));
 
-            if (fValidAddress) {
-                entry.push_back(Pair("address", CBitcoinAddress(address).ToString()));
+                if (fValidAddress) {
+                    entry.push_back(Pair("address", CBitcoinAddress(address).ToString()));
 
-                entry.push_back(Pair("account", account->getUUID()));
-                entry.push_back(Pair("accountlabel", account->getLabel()));
+                    entry.push_back(Pair("account", account->getUUID()));
+                    entry.push_back(Pair("accountlabel", account->getLabel()));
+                }
+
+                if (scriptPubKey.IsPayToScriptHash()) {
+                    const CScriptID& hash = boost::get<CScriptID>(address);
+                    CScript redeemScript;
+                    if (pwallet->GetCScript(hash, redeemScript))
+                        entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
+                }
+
+                entry.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
+                entry.push_back(Pair("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue)));
+                entry.push_back(Pair("confirmations", out.nDepth));
+                entry.push_back(Pair("spendable", out.fSpendable));
+                entry.push_back(Pair("solvable", out.fSolvable));
+                entry.push_back(Pair("safe", out.fSafe));
+                results.push_back(entry);
             }
-
-            if (scriptPubKey.IsPayToScriptHash()) {
-                const CScriptID& hash = boost::get<CScriptID>(address);
-                CScript redeemScript;
-                if (pwallet->GetCScript(hash, redeemScript))
-                    entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
-            }
-
-            entry.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
-            entry.push_back(Pair("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue)));
-            entry.push_back(Pair("confirmations", out.nDepth));
-            entry.push_back(Pair("spendable", out.fSpendable));
-            entry.push_back(Pair("solvable", out.fSolvable));
-            entry.push_back(Pair("safe", out.fSafe));
-            results.push_back(entry);
         }
     }
 
@@ -3217,7 +3222,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "abandontransaction",       &abandontransaction,       false,  {"txid"} },
     { "wallet",             "abortrescan",              &abortrescan,              false,  {} },
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       true,   {"nrequired","keys","account"} },
-    { "wallet",             "addwitnessaddress",        &addwitnessaddress,        true,   {"address"} },
+    //{ "wallet",             "addwitnessaddress",        &addwitnessaddress,        true,   {"address"} },
     { "wallet",             "backupwallet",             &backupwallet,             true,   {"destination"} },
     //{ "wallet",             "bumpfee",                  &bumpfee,                  true,   {"txid", "options"} },
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },

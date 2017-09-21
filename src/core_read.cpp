@@ -102,7 +102,7 @@ bool CheckTxScriptsSanity(const CMutableTransaction& tx)
     for (unsigned int i = 0; i < tx.vout.size(); i++) {
         if (tx.vout[i].GetType()  <= CTxOutType::ScriptOutput)
         {
-            if (!tx.vout[i].scriptPubKey.HasValidOps() || tx.vout[i].scriptPubKey.size() > MAX_SCRIPT_SIZE) {
+            if (!tx.vout[i].output.scriptPubKey.HasValidOps() || tx.vout[i].output.scriptPubKey.size() > MAX_SCRIPT_SIZE) {
                 return false;
             }
         }

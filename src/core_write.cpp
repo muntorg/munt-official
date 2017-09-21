@@ -189,10 +189,14 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         out.pushKV("value", outValue);
         out.pushKV("n", (int64_t)i);
 
-        UniValue o(UniValue::VOBJ);
-        ScriptPubKeyToUniv(txout.scriptPubKey, o, true);
-        out.pushKV("scriptPubKey", o);
-        vout.push_back(out);
+        //fixme: (GULDEN) (2.0) HIGH
+        if (txout.GetType() <= CTxOutType::ScriptOutput)
+        {
+            UniValue o(UniValue::VOBJ);
+            ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
+            out.pushKV("scriptPubKey", o);
+            vout.push_back(out);
+        }
     }
     entry.pushKV("vout", vout);
 

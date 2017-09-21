@@ -190,7 +190,7 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                 {
                     // Offline transaction
                     CTxDestination address;
-                    if (ExtractDestination(txout.scriptPubKey, address))
+                    if (ExtractDestination(txout, address))
                     {
                         strHTML += "<b>" + tr("To") + ":</b> ";
                         if (wallet->mapAddressBook.count(CBitcoinAddress(address).ToString()) && !wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name.empty())
@@ -313,7 +313,7 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                     strHTML += "<li>";
                     const CTxOut &vout = prev.out;
                     CTxDestination address;
-                    if (ExtractDestination(vout.scriptPubKey, address))
+                    if (ExtractDestination(vout, address))
                     {
                         if (wallet->mapAddressBook.count(CBitcoinAddress(address).ToString()) && !wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name.empty())
                             strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CBitcoinAddress(address).ToString()].name) + " ";

@@ -40,8 +40,8 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
 //fixme: GULDEN Make configurable option
 extern bool fShowChildAccountsSeperately;
 
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion sigVersion=SIGVERSION_BASE);
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion=SIGVERSION_BASE);
+isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
+isminetype IsMine(const CWallet &wallet, const CTxOut& out);
 
 /** 
  * A CGuldenWallet maintains a set of transactions and balances

@@ -191,6 +191,22 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
     return false;
 }
 
+bool ExtractDestination(const CTxOut& out, CTxDestination& addressRet)
+{
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
+    {
+        addressRet = CPoW2WitnessDestination(out.output.witnessDetails.spendingKeyID, out.output.witnessDetails.witnessKeyID);
+        return true;
+    }
+    else if (out.GetType() == CTxOutType::StandardKeyHashOutput)
+    {
+        addressRet = out.output.standardKeyHash.keyID;
+        return true;
+    }
+    
+    return ExtractDestination(out.output.scriptPubKey, addressRet);
+}
+    
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
 {
     std::vector<valtype> vSolutions;
@@ -226,8 +242,28 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
     return false;
 }
 
-bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet)
+bool ExtractDestinations(const CTxOut& out, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet)
 {
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
+    {
+        nRequiredRet = 1;
+        typeRet = TX_PUBKEYHASH_POW2WITNESS;
+        addressRet.push_back(CPoW2WitnessDestination(out.output.witnessDetails.spendingKeyID, out.output.witnessDetails.witnessKeyID));
+        return true;
+    }
+    else if (out.GetType() == CTxOutType::StandardKeyHashOutput)
+    {
+        nRequiredRet = 1;
+        typeRet = TX_PUBKEYHASH;
+        addressRet.push_back(out.output.standardKeyHash.keyID);
+        return true;
+    }
+    
+    return ExtractDestinations(out.output.scriptPubKey, typeRet, addressRet, nRequiredRet);
+}
+
+bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet)
+{   
     addressRet.clear();
     typeRet = TX_NONSTANDARD;
     std::vector<valtype> vSolutions;

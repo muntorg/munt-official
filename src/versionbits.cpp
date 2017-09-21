@@ -218,7 +218,7 @@ protected:
                     int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);
                     if (nWitnessCoinbaseIndex != -1)
                     {
-                        std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.begin() + 6, temp.vtx[0]->vout[nWitnessCoinbaseIndex].scriptPubKey.end());
+                        std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(temp.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.begin() + 6, temp.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.end());
                         CDataStream serialisedWitnessHeaderInfoStream(serialisedWitnessHeaderInfo, SER_NETWORK, INIT_PROTO_VERSION);
                         ::Unserialize(serialisedWitnessHeaderInfoStream, nVersionPoW2Witness);
                     }

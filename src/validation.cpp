@@ -1235,7 +1235,7 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                 // a sanity check that our caching is not introducing consensus
                 // failures through additional data in, eg, the coins being
                 // spent being checked as a part of CScriptCheck.
-                const CScript& scriptPubKey = coin.out.scriptPubKey;
+                const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 const CAmount amount = coin.out.nValue;
 
                 // Verify signature
@@ -1416,7 +1416,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
         // Check that all outputs are available and match the outputs in the block itself
         // exactly.
         for (size_t o = 0; o < tx.vout.size(); o++) {
-            if (!tx.vout[o].scriptPubKey.IsUnspendable()) {
+            if (!tx.vout[o].IsUnspendable()) {
                 COutPoint out(hash, o);
                 Coin coin;
                 view.SpendCoin(out, &coin);
@@ -1561,7 +1561,7 @@ int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
         for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
             if (block.vtx[0]->vout[o].GetType() <= CTxOutType::ScriptOutput)
             {
-                if (block.vtx[0]->vout[o].scriptPubKey.size() == 143 && block.vtx[0]->vout[o].scriptPubKey[0] == OP_RETURN && block.vtx[0]->vout[o].scriptPubKey[1] == 0x50 && block.vtx[0]->vout[o].scriptPubKey[2] == 0x6f && block.vtx[0]->vout[o].scriptPubKey[3] == 0x57 && block.vtx[0]->vout[o].scriptPubKey[4] == 0xc2 && block.vtx[0]->vout[o].scriptPubKey[5] == 0xb2) {
+                if (block.vtx[0]->vout[o].output.scriptPubKey.size() == 143 && block.vtx[0]->vout[o].output.scriptPubKey[0] == OP_RETURN && block.vtx[0]->vout[o].output.scriptPubKey[1] == 0x50 && block.vtx[0]->vout[o].output.scriptPubKey[2] == 0x6f && block.vtx[0]->vout[o].output.scriptPubKey[3] == 0x57 && block.vtx[0]->vout[o].output.scriptPubKey[4] == 0xc2 && block.vtx[0]->vout[o].output.scriptPubKey[5] == 0xb2) {
                     commitpos = o;
                 }
             }
@@ -2841,7 +2841,7 @@ bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& pa
 
 // Compute at which vout of the block's coinbase transaction the witness
 // commitment occurs, or -1 if not found.
-static int GetWitnessCommitmentIndex(const CBlock& block)
+/*static int GetWitnessCommitmentIndex(const CBlock& block)
 {
     int commitpos = -1;
     if (!block.vtx.empty()) {
@@ -2893,7 +2893,9 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
     }
     UpdateUncommittedBlockStructures(block, pindexPrev, consensusParams);
     return commitment;
-}
+}*/
+
+
 
 /** Context-dependent validity checks.
  *  By "context", we mean only the previous block headers, but not the UTXO
@@ -2975,7 +2977,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
     //   multiple, the last one is used.
     bool fHaveWitness = false;
-    if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
+    /*if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
         int commitpos = GetWitnessCommitmentIndex(block);
         if (commitpos != -1) {
             bool malleated = false;
@@ -2992,7 +2994,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
             }
             fHaveWitness = true;
         }
-    }
+    }*/
 
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
     if (!fHaveWitness) {

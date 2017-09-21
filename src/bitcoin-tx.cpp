@@ -599,14 +599,14 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
 
             {
                 const Coin& coin = view.AccessCoin(out);
-                if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
+                if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
-                    err = err + ScriptToAsmStr(coin.out.scriptPubKey) + "\nvs:\n"+
+                    err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n"+
                         ScriptToAsmStr(scriptPubKey);
                     throw std::runtime_error(err);
                 }
                 Coin newcoin;
-                newcoin.out.scriptPubKey = scriptPubKey;
+                newcoin.out.output.scriptPubKey = scriptPubKey;
                 newcoin.out.nValue = 0;
                 if (prevOut.exists("amount")) {
                     newcoin.out.nValue = AmountFromValue(prevOut["amount"]);
@@ -639,7 +639,7 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             fComplete = false;
             continue;
         }
-        const CScript& prevPubKey = coin.out.scriptPubKey;
+        const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
         SignatureData sigdata;

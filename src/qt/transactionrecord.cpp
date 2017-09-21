@@ -84,7 +84,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (parent != NULL)
                         {
                             CTxDestination senderAddress;
-                            if (ExtractDestination(parent->tx->vout[txin.prevout.n].scriptPubKey, senderAddress))
+                            if (ExtractDestination(parent->tx->vout[txin.prevout.n], senderAddress))
                             {
                                 if (!addressIn.empty())
                                     addressIn += ", ";
@@ -97,7 +97,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         sub.address = addressIn;
                     }
                     sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
-                    if (ExtractDestination(txout.scriptPubKey, address) && IsMine(*account, address))
+                    if (ExtractDestination(txout, address) && IsMine(*account, address))
                     {
                         // Received by Bitcoin Address
                         sub.type = TransactionRecord::RecvWithAddress;
@@ -214,7 +214,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
 
                     CTxDestination address;
-                    if (ExtractDestination(txout.scriptPubKey, address))
+                    if (ExtractDestination(txout, address))
                     {
                         // Sent to Bitcoin Address
                         sub.type = TransactionRecord::SendToAddress;

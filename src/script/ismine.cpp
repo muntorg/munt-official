@@ -159,19 +159,56 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
             return ISMINE_SPENDABLE;
         break;
     }
+    case TX_PUBKEYHASH_POW2WITNESS:
+        CKeyID spendingKeyID = CKeyID(uint160(vSolutions[0]));
+        CKeyID witnessKeyID = CKeyID(uint160(vSolutions[1]));
+        if (sigversion != SIGVERSION_BASE) {
+            CPubKey pubkey;
+            if (keystore.GetPubKey(spendingKeyID, pubkey) && !pubkey.IsCompressed()) {
+                isInvalid = true;
+                return ISMINE_NO;
+            }
+        }
+        if (keystore.HaveKey(spendingKeyID))
+            return ISMINE_SPENDABLE;
+        //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+        if (keystore.HaveKey(witnessKeyID))
+            return ISMINE_SPENDABLE;
+        break;
     }
 
-    if (keystore.HaveWatchOnly(scriptPubKey)) {
+    //fixme: (GULDEN) (2.0)
+    /*if (keystore.HaveWatchOnly(scriptPubKey)) {
         // TODO: This could be optimized some by doing some work after the above solver
         SignatureData sigs;
         return ProduceSignature(DummySignatureCreator(&keystore), scriptPubKey, sigs) ? ISMINE_WATCH_SOLVABLE : ISMINE_WATCH_UNSOLVABLE;
-    }
+    }*/
     return ISMINE_NO;
 }
 
 isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
 {
-    return IsMine(keystore, txout.scriptPubKey);
+    switch (txout.GetType())
+    {
+        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+            return IsMine(keystore, txout.output.scriptPubKey);
+        case CTxOutType::PoW2WitnessOutput:
+        {
+            if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
+                return ISMINE_SPENDABLE;
+            //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+            if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
+                return ISMINE_SPENDABLE;
+            break;
+        }
+        case CTxOutType::StandardKeyHashOutput:
+        {
+            if (keystore.HaveKey(txout.output.standardKeyHash.keyID))
+                return ISMINE_SPENDABLE;
+            break;
+        }
+    }
+    return ISMINE_NO;
 }
 
 
@@ -307,6 +344,28 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
         }
         break;
     }
+    case TX_PUBKEYHASH_POW2WITNESS:
+        CKeyID spendingKeyID = CKeyID(uint160(vSolutions[0]));
+        CKeyID witnessKeyID = CKeyID(uint160(vSolutions[1]));
+        if (sigversion != SIGVERSION_BASE) {
+            CPubKey pubkey;
+            if (keystore.GetPubKey(spendingKeyID, pubkey) && !pubkey.IsCompressed()) {
+                isInvalid = true;
+                return ISMINE_NO;
+            }
+        }
+        
+        if (keystore.HaveKey(spendingKeyID))
+            keystore.MarkKeyUsed(spendingKeyID, time);
+        if (keystore.HaveKey(witnessKeyID))
+            keystore.MarkKeyUsed(witnessKeyID, time);
+        
+        if (keystore.HaveKey(spendingKeyID))
+            return ISMINE_SPENDABLE;
+        //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+        if (keystore.HaveKey(witnessKeyID))
+            return ISMINE_SPENDABLE;
+        break;
     }
 
     /*

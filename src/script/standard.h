@@ -103,6 +103,8 @@ typedef boost::variant<CNoDestination, CKeyID, CScriptID, CPoW2WitnessDestinatio
 const char* GetTxnOutputType(txnouttype t);
 
 bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::vector<unsigned char> >& vSolutionsRet);
+bool ExtractDestination(const CTxOut& out, CTxDestination& addressRet);
+bool ExtractDestinations(const CTxOut& out, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet);
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet);
 bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet);
 

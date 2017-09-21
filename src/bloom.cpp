@@ -151,12 +151,12 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
         // If this matches, also add the specific output that was matched.
         // This means clients don't have to update the filter themselves when a new relevant tx 
         // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
-        CScript::const_iterator pc = txout.scriptPubKey.begin();
+        CScript::const_iterator pc = txout.output.scriptPubKey.begin();
         std::vector<unsigned char> data;
-        while (pc < txout.scriptPubKey.end())
+        while (pc < txout.output.scriptPubKey.end())
         {
             opcodetype opcode;
-            if (!txout.scriptPubKey.GetOp(pc, opcode, data))
+            if (!txout.output.scriptPubKey.GetOp(pc, opcode, data))
                 break;
             if (data.size() != 0 && contains(data))
             {
@@ -167,7 +167,7 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
                 {
                     txnouttype type;
                     std::vector<std::vector<unsigned char> > vSolutions;
-                    if (Solver(txout.scriptPubKey, type, vSolutions) &&
+                    if (Solver(txout.output.scriptPubKey, type, vSolutions) &&
                             (type == TX_PUBKEY || type == TX_MULTISIG))
                         insert(COutPoint(hash, i));
                 }

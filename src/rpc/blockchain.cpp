@@ -805,12 +805,12 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     stats.nTransactions++;
     for (const auto output : outputs) {
         ss << VARINT(output.first + 1);
-        ss << *(const CScriptBase*)(&output.second.out.scriptPubKey);
+        ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
         ss << VARINT(output.second.out.nValue);
         stats.nTransactionOutputs++;
         stats.nTotalAmount += output.second.out.nValue;
         stats.nBogoSize += 32 /* txid */ + 4 /* vout index */ + 4 /* height + coinbase */ + 8 /* amount */ +
-                           2 /* scriptPubKey len */ + output.second.out.scriptPubKey.size() /* scriptPubKey */;
+                           2 /* scriptPubKey len */ + output.second.out.output.scriptPubKey.size() /* scriptPubKey */;
     }
     ss << VARINT(0);
 }
@@ -1016,9 +1016,12 @@ UniValue gettxout(const JSONRPCRequest& request)
         ret.push_back(Pair("confirmations", (int64_t)(pindex->nHeight - coin.nHeight + 1)));
     }
     ret.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
-    UniValue o(UniValue::VOBJ);
-    ScriptPubKeyToUniv(coin.out.scriptPubKey, o, true);
-    ret.push_back(Pair("scriptPubKey", o));
+    if (coin.out.GetType() <= CTxOutType::ScriptOutput)
+    {
+        UniValue o(UniValue::VOBJ);
+        ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
+        ret.push_back(Pair("scriptPubKey", o));
+    }
     ret.push_back(Pair("coinbase", (bool)coin.fCoinBase));
 
     return ret;

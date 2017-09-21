@@ -157,7 +157,7 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "shadowpoolmanager", &ThreadShadowPoolManager));
 }
 
-isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion sigVersion)
+isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
 {
     LOCK(wallet.cs_wallet);
     
@@ -166,7 +166,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion 
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest, sigVersion) : IsMine(accountItem.second->internalKeyStore, dest, sigVersion) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
             if (temp > ret)
                 ret = temp;
         }
@@ -174,7 +174,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest, SigVersion 
     return ret;
 }
 
-isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion sigVersion)
+isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
     
@@ -183,7 +183,7 @@ isminetype IsMine(const CWallet &wallet, const CScript& scriptPubKey, SigVersion
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, scriptPubKey, sigVersion) : IsMine(accountItem.second->internalKeyStore, scriptPubKey, sigVersion) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, out) : IsMine(accountItem.second->internalKeyStore, out) );
             if (temp > ret)
                 ret = temp;
         }
@@ -198,7 +198,7 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(forAccount->externalKeyStore, txout.scriptPubKey) : IsMine(forAccount->internalKeyStore, txout.scriptPubKey) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(forAccount->externalKeyStore, txout) : IsMine(forAccount->internalKeyStore, txout) );
             if (temp > ret)
                 ret = temp;
         }
@@ -536,7 +536,7 @@ CHDSeed* CGuldenWallet::getActiveSeed()
 
 void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
 {
-    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout.scriptPubKey, time);
+    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout.output.scriptPubKey, time);
 }
 
 

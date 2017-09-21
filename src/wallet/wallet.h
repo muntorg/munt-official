@@ -1281,7 +1281,7 @@ bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, cons
     int nIn = 0;
     for (const auto& coin : coins)
     {
-        const CScript& scriptPubKey = coin.txout.scriptPubKey;
+        const CScript& scriptPubKey = coin.txout.output.scriptPubKey;
         SignatureData sigdata;
 
         if (!ProduceSignature(DummySignatureCreator(forAccount), scriptPubKey, sigdata))

@@ -906,6 +906,8 @@ UniValue submitblock(const JSONRPCRequest& request)
         }
     }
 
+    #if 0
+    //Gulden - we don't have witness commitment so nothing to do here
     {
         LOCK(cs_main);
         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
@@ -913,6 +915,7 @@ UniValue submitblock(const JSONRPCRequest& request)
             UpdateUncommittedBlockStructures(block, mi->second, Params().GetConsensus());
         }
     }
+    #endif
 
     submitblock_StateCatcher sc(block.GetHashPoW2());
     RegisterValidationInterface(&sc);

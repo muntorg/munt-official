@@ -716,7 +716,8 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            {
+            //fixme: (GULDEN) (2.0) implement
+            /*{
                 const Coin& coin = view.AccessCoin(out);
                 if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
@@ -732,7 +733,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
                 }
                 newcoin.nHeight = 1;
                 view.AddCoin(out, std::move(newcoin), true);
-            }
+            }*/
 
             // if redeemScript given and not using the local wallet (private keys
             // given), add redeemScript to the tempKeystore so it can be signed:
@@ -794,7 +795,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             TxInErrorToJSON(txin, vErrors, "Input not found or already spent");
             continue;
         }
-        const CScript& prevPubKey = coin.out.scriptPubKey;
+        const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
         SignatureData sigdata;

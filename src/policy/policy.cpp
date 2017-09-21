@@ -138,9 +138,12 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     unsigned int nDataOut = 0;
     txnouttype whichType;
     BOOST_FOREACH(const CTxOut& txout, tx.vout) {
-        if (!::IsStandard(txout.scriptPubKey, whichType, witnessEnabled)) {
-            reason = "scriptpubkey";
-            return false;
+        if (txout.GetType() <= CTxOutType::ScriptOutput)
+        {
+            if (!::IsStandard(txout.output.scriptPubKey, whichType, witnessEnabled)) {
+                reason = "scriptpubkey";
+                return false;
+            }
         }
 
         if (whichType == TX_NULL_DATA)
@@ -175,21 +178,24 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         std::vector<std::vector<unsigned char> > vSolutions;
         txnouttype whichType;
         // get the scriptPubKey corresponding to this input:
-        const CScript& prevScript = prev.scriptPubKey;
-        if (!Solver(prevScript, whichType, vSolutions))
-            return false;
-
-        if (whichType == TX_SCRIPTHASH)
+        if (prev.GetType() <= CTxOutType::ScriptOutput)
         {
-            std::vector<std::vector<unsigned char> > stack;
-            // convert the scriptSig into a stack, so we can inspect the redeemScript
-            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+            const CScript& prevScript = prev.output.scriptPubKey;
+            if (!Solver(prevScript, whichType, vSolutions))
                 return false;
-            if (stack.empty())
-                return false;
-            CScript subscript(stack.back().begin(), stack.back().end());
-            if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
-                return false;
+
+            if (whichType == TX_SCRIPTHASH)
+            {
+                std::vector<std::vector<unsigned char> > stack;
+                // convert the scriptSig into a stack, so we can inspect the redeemScript
+                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+                    return false;
+                if (stack.empty())
+                    return false;
+                CScript subscript(stack.back().begin(), stack.back().end());
+                if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
+                    return false;
+                }
             }
         }
     }
@@ -212,39 +218,44 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         const CTxOut &prev = mapInputs.AccessCoin(tx.vin[i].prevout).out;
 
         // get the scriptPubKey corresponding to this input:
-        CScript prevScript = prev.scriptPubKey;
+        if (prev.GetType() <= CTxOutType::ScriptOutput)
+        {
+            CScript prevScript = prev.output.scriptPubKey;
 
-        if (prevScript.IsPayToScriptHash()) {
-            std::vector <std::vector<unsigned char> > stack;
-            // If the scriptPubKey is P2SH, we try to extract the redeemScript casually by converting the scriptSig
-            // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
-            // If the check fails at this stage, we know that this txid must be a bad one.
-            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
-                return false;
-            if (stack.empty())
-                return false;
-            prevScript = CScript(stack.back().begin(), stack.back().end());
-        }
-
-        int witnessversion = 0;
-        std::vector<unsigned char> witnessprogram;
-
-        // Non-witness program must not be associated with any witness
-        if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
-            return false;
-
-        // Check P2WSH standard limits
-        if (witnessversion == 0 && witnessprogram.size() == 32) {
-            if (tx.vin[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)
-                return false;
-            size_t sizeWitnessStack = tx.vin[i].scriptWitness.stack.size() - 1;
-            if (sizeWitnessStack > MAX_STANDARD_P2WSH_STACK_ITEMS)
-                return false;
-            for (unsigned int j = 0; j < sizeWitnessStack; j++) {
-                if (tx.vin[i].scriptWitness.stack[j].size() > MAX_STANDARD_P2WSH_STACK_ITEM_SIZE)
+            if (prevScript.IsPayToScriptHash()) {
+                std::vector <std::vector<unsigned char> > stack;
+                // If the scriptPubKey is P2SH, we try to extract the redeemScript casually by converting the scriptSig
+                // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
+                // If the check fails at this stage, we know that this txid must be a bad one.
+                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
                     return false;
+                if (stack.empty())
+                    return false;
+                prevScript = CScript(stack.back().begin(), stack.back().end());
+            }
+
+            int witnessversion = 0;
+            std::vector<unsigned char> witnessprogram;
+
+            // Non-witness program must not be associated with any witness
+            if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
+                return false;
+            
+            // Check P2WSH standard limits
+            if (witnessversion == 0 && witnessprogram.size() == 32) {
+                if (tx.vin[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)
+                    return false;
+                size_t sizeWitnessStack = tx.vin[i].scriptWitness.stack.size() - 1;
+                if (sizeWitnessStack > MAX_STANDARD_P2WSH_STACK_ITEMS)
+                    return false;
+                for (unsigned int j = 0; j < sizeWitnessStack; j++) {
+                    if (tx.vin[i].scriptWitness.stack[j].size() > MAX_STANDARD_P2WSH_STACK_ITEM_SIZE)
+                        return false;
+                }
             }
         }
+
+        
     }
     return true;
 }

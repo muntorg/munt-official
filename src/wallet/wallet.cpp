@@ -1383,9 +1383,10 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
     return 0;
 }
 
+
 isminetype CWallet::IsMine(const CTxOut& txout) const
 {
-    return ::IsMine(*this, txout.scriptPubKey);
+    return ::IsMine(*this, txout);
 }
 
 CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, CAccount* forAccount) const
@@ -1404,10 +1405,10 @@ bool CWallet::IsChange(const CTxOut& txout) const
     // a better way of identifying which outputs are 'the send' and which are
     // 'the change' will need to be implemented (maybe extend CWalletTx to remember
     // which output, if any, was change).
-    if (::IsMine(*this, txout.scriptPubKey))
+    if (::IsMine(*this, txout))
     {
         CTxDestination address;
-        if (!ExtractDestination(txout.scriptPubKey, address))
+        if (!ExtractDestination(txout, address))
             return true;
 
         LOCK(cs_wallet);
@@ -1636,7 +1637,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
                 if ((fIsMine & filter))
                 {                    
                     CTxDestination address;
-                    if (!ExtractDestination(prevOut.scriptPubKey, address) && !prevOut.scriptPubKey.IsUnspendable())
+                    if (!ExtractDestination(prevOut, address) && !prevOut.IsUnspendable())
                     {
                         LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
                                 this->GetHash().ToString());
@@ -1663,7 +1664,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
 
         // Get the destination address
         CTxDestination address;
-        if (!ExtractDestination(txout.scriptPubKey, address) && !txout.scriptPubKey.IsUnspendable())
+        if (!ExtractDestination(txout, address) && !txout.IsUnspendable())
         {
             LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
                      this->GetHash().ToString());
@@ -1906,7 +1907,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
         if (!pwallet->IsSpent(hashTx, i))
         {
             const CTxOut &txout = tx->vout[i];
-            if (!forAccount || IsMine(*forAccount, txout.scriptPubKey))
+            if (!forAccount || IsMine(*forAccount, txout))
             {
                 nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                 if (!MoneyRange(nCredit))
@@ -2387,7 +2388,7 @@ std::map<CTxDestination, std::vector<COutput>> CWallet::ListCoins(CAccount* forA
     for (auto& coin : availableCoins) {
         CTxDestination address;
         if (coin.fSpendable &&
-            ExtractDestination(FindNonChangeParentOutput(*coin.tx->tx, coin.i).scriptPubKey, address)) {
+            ExtractDestination(FindNonChangeParentOutput(*coin.tx->tx, coin.i), address)) {
             result[address].emplace_back(std::move(coin));
         }
     }
@@ -2401,7 +2402,7 @@ std::map<CTxDestination, std::vector<COutput>> CWallet::ListCoins(CAccount* forA
             if (depth >= 0 && output.n < it->second.tx->vout.size() &&
                 IsMine(it->second.tx->vout[output.n]) == ISMINE_SPENDABLE) {
                 CTxDestination address;
-                if (ExtractDestination(FindNonChangeParentOutput(*it->second.tx, output.n).scriptPubKey, address)) {
+                if (ExtractDestination(FindNonChangeParentOutput(*it->second.tx, output.n), address)) {
                     result[address].emplace_back(
                         &it->second, output.n, depth, true /* spendable */, true /* solvable */, false /* safe */);
                 }
@@ -2662,10 +2663,10 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx)
         if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
             return false;
         }
-        const CScript& scriptPubKey = mi->second.tx->vout[input.prevout.n].scriptPubKey;
+        //const CScript& scriptPubKey = mi->second.tx->vout[input.prevout.n].scriptPubKey;
         const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
         SignatureData sigdata;
-        if (!ProduceSignature(TransactionSignatureCreator(fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), scriptPubKey, sigdata)) {
+        if (!ProduceSignature(TransactionSignatureCreator(fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n].output.scriptPubKey, sigdata)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -2682,8 +2683,9 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     for (size_t idx = 0; idx < tx.vout.size(); idx++)
     {
         const CTxOut& txOut = tx.vout[idx];
-        CRecipient recipient = {txOut.scriptPubKey, txOut.nValue, setSubtractFeeFromOutputs.count(idx) == 1};
-        vecSend.push_back(recipient);
+        //fixme: (GULDEN) (2.0)
+        //CRecipient recipient = {txOut.scriptPubKey, txOut.nValue, setSubtractFeeFromOutputs.count(idx) == 1};
+        //vecSend.push_back(recipient);
     }
 
     coinControl.fAllowOtherInputs = true;
@@ -2779,13 +2781,14 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
+    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (GULDEN) (FUT) (only set this for high fee [per byte] transactions?)
     txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
     // e.g. high-latency mix networks and some CoinJoin implementations, have
     // better privacy.
-    if (GetRandInt(10) == 0)
+    if (GetRandInt(100) == 0)
         txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
 
     assert(txNew.nLockTime <= (unsigned int)chainActive.Height());
@@ -2960,7 +2963,8 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins)) {
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(forAccount), CScript(), sigdata))
+                    //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut().output.scriptPubKey, sigdata))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -3038,10 +3042,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             int nIn = 0;
             for (const auto& coin : setCoins)
             {
-                const CScript& scriptPubKey = coin.txout.scriptPubKey;
+                //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL), scriptPubKey, sigdata))
+                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout.output.scriptPubKey, sigdata))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
@@ -3534,7 +3538,7 @@ std::map<CTxDestination, CAmount> CWallet::GetAddressBalances()
                 CTxDestination addr;
                 if (!IsMine(pcoin->tx->vout[i]))
                     continue;
-                if(!ExtractDestination(pcoin->tx->vout[i].scriptPubKey, addr))
+                if(!ExtractDestination(pcoin->tx->vout[i], addr))
                     continue;
 
                 CAmount n = IsSpent(walletEntry.first, i) ? 0 : pcoin->tx->vout[i].nValue;
@@ -3568,7 +3572,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
                 CTxDestination address;
                 if(!IsMine(txin)) /* If this input isn't mine, ignore it */
                     continue;
-                if(!ExtractDestination(mapWallet[txin.prevout.hash].tx->vout[txin.prevout.n].scriptPubKey, address))
+                if(!ExtractDestination(mapWallet[txin.prevout.hash].tx->vout[txin.prevout.n], address))
                     continue;
                 grouping.insert(address);
                 any_mine = true;
@@ -3581,7 +3585,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
                    if (IsChange(txout))
                    {
                        CTxDestination txoutAddr;
-                       if(!ExtractDestination(txout.scriptPubKey, txoutAddr))
+                       if(!ExtractDestination(txout, txoutAddr))
                            continue;
                        grouping.insert(txoutAddr);
                    }
@@ -3598,7 +3602,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
             if (IsMine(txout))
             {
                 CTxDestination address;
-                if(!ExtractDestination(txout.scriptPubKey, address))
+                if(!ExtractDestination(txout, address))
                     continue;
                 grouping.insert(address);
                 groupings.insert(grouping);
@@ -3776,11 +3780,11 @@ private:
 public:
     CAffectedKeysVisitor(const CKeyStore &keystoreIn, std::vector<CKeyID> &vKeysIn) : keystore(keystoreIn), vKeys(vKeysIn) {}
 
-    void Process(const CScript &script) {
+    void Process(const CTxOut &out) {
         txnouttype type;
         std::vector<CTxDestination> vDest;
         int nRequired;
-        if (ExtractDestinations(script, type, vDest, nRequired)) {
+        if (ExtractDestinations(out, type, vDest, nRequired)) {
             BOOST_FOREACH(const CTxDestination &dest, vDest)
                 boost::apply_visitor(*this, dest);
         }
@@ -3792,9 +3796,12 @@ public:
     }
 
     void operator()(const CScriptID &scriptId) {
+        //fixme: (GULDEN) (2.0)
+        /*
         CScript script;
         if (keystore.GetCScript(scriptId, script))
             Process(script);
+        */
     }
     
     void operator()(const CPoW2WitnessDestination &dest) {
@@ -3849,7 +3856,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
             BOOST_FOREACH(const CTxOut &txout, wtx.tx->vout) {
                 // iterate over all their outputs
                 //fixme: (GULDEN) (FUT) (1.6.1)
-                CAffectedKeysVisitor(activeAccount->externalKeyStore, vAffected).Process(txout.scriptPubKey);
+                CAffectedKeysVisitor(activeAccount->externalKeyStore, vAffected).Process(txout);
                 BOOST_FOREACH(const CKeyID &keyid, vAffected) {
                     // ... and all their affected keys
                     std::map<CKeyID, CBlockIndex*>::iterator rit = mapKeyFirstBlock.find(keyid);

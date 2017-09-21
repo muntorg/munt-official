@@ -624,7 +624,7 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
         isminetype ret = isminetype::ISMINE_NO;
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(externalKeyStore, txout.scriptPubKey) : IsMine(internalKeyStore, txout.scriptPubKey) );
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(externalKeyStore, txout) : IsMine(internalKeyStore, txout) );
             if (temp > ret)
                 ret = temp;
         }
@@ -644,7 +644,7 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
                 {
                     for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
                     {
-                        isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(externalKeyStore, txout.scriptPubKey) : IsMine(internalKeyStore, txout.scriptPubKey) );
+                        isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(externalKeyStore, txout) : IsMine(internalKeyStore, txout) );
                         if (temp > ret)
                             ret = temp;
                     }

@@ -37,7 +37,7 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {
-    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
+    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
         return true;
     return false;
 }

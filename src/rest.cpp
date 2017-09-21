@@ -566,11 +566,15 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
             utxo.push_back(Pair("height", (int32_t)coin.nHeight));
             utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
 
-            // include the script in a json output
-            UniValue o(UniValue::VOBJ);
-            ScriptPubKeyToUniv(coin.out.scriptPubKey, o, true);
-            utxo.push_back(Pair("scriptPubKey", o));
-            utxos.push_back(utxo);
+            //fixme: (GULDEN) (2.0) - Implement something here for other output types.
+            if (coin.out.GetType() <= CTxOutType::ScriptOutput)
+            {
+                // include the script in a json output
+                UniValue o(UniValue::VOBJ);
+                ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
+                utxo.push_back(Pair("scriptPubKey", o));
+                utxos.push_back(utxo);
+            }
         }
         objGetUTXOResponse.push_back(Pair("utxos", utxos));
 
