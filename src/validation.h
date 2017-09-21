@@ -480,6 +480,15 @@ extern CBlockTreeDB *pblocktree;
 extern CWitViewDB *ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
 
+// Returns all competing orphans at same height and same parent as current tip.
+// NB! It is important that we consider height and not chain weight here.
+// If there is a stalled chain due to absentee signer(s) delta may drop the difficulty so competing PoW blocks will have a lower chain weight, but we still want to sign them to get the chain moving again.
+std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uint256& prevhash);
+// Retrieve the witness for a PoW block (phase 3 only)
+CBlockIndex* GetWitnessOrphanForBlock(const int64_t nHeight, const uint256& prevHash, const uint256& powHash);
+
+CTxOut GetWitness(CBlockIndex* pPreviousIndex, const CBlock& block, const CChainParams& chainParams);
+int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().
