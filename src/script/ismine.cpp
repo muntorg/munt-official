@@ -211,6 +211,40 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
     return ISMINE_NO;
 }
 
+isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txout, uint64_t time)
+{
+    switch (txout.GetType())
+    {
+        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+            return RemoveAddressFromKeypoolIfIsMine(keystore, txout.output.scriptPubKey, time);
+        case CTxOutType::PoW2WitnessOutput:
+        {
+            if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
+            {
+                keystore.MarkKeyUsed(txout.output.witnessDetails.spendingKeyID, time);
+                return ISMINE_SPENDABLE;
+            }
+            //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+            if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
+            {
+                keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
+                return ISMINE_SPENDABLE;
+            }
+            break;
+        }
+        case CTxOutType::StandardKeyHashOutput:
+        {
+            if (keystore.HaveKey(txout.output.standardKeyHash.keyID))
+            {
+                keystore.MarkKeyUsed(txout.output.standardKeyHash.keyID, time);
+                return ISMINE_SPENDABLE;
+            }
+            break;
+        }
+    }
+    return ISMINE_NO;
+}
+
 
 
 

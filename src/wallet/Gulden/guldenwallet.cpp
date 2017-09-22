@@ -536,7 +536,7 @@ CHDSeed* CGuldenWallet::getActiveSeed()
 
 void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
 {
-    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout.output.scriptPubKey, time);
+    ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout, time);
 }
 
 
