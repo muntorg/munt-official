@@ -600,6 +600,9 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             "       \"ALL|ANYONECANPAY\"\n"
             "       \"NONE|ANYONECANPAY\"\n"
             "       \"SINGLE|ANYONECANPAY\"\n"
+            "5. \"signtype\"     (string, optional, default=Spend) The type of signing operation to do (Spend or Witness) - only significant for witness addess transactions.\n"
+            "       \"Spend\"\n"
+            "       \"Witness\"\n"
 
             "\nResult:\n"
             "{\n"
@@ -778,6 +781,18 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         else
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid sighash param");
     }
+    
+    SignType signType = Spend;
+
+    if (request.params.size() > 4 && !request.params[4].isNull()) {
+        std::string strHashType = request.params[3].get_str();
+        if (strHashType == "Witness" || strHashType == "witness" || strHashType == "WITNESS")
+            signType = Witness;
+        else if (strHashType == "Spend" || strHashType == "spend" || strHashType == "SPEND")
+            signType = Spend;
+        else
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Unknown sign type");
+    }
 
     bool fHashSingle = ((nHashType & ~SIGHASH_ANYONECANPAY) == SIGHASH_SINGLE);
 
@@ -801,7 +816,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), prevPubKey, sigdata);
+            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType);
 
         // ... and merge in other signatures:
         BOOST_FOREACH(const CMutableTransaction& txv, txVariants) {

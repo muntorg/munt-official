@@ -36,7 +36,7 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
     bool success = false;
     for (auto accountPair : pWallet->mapAccounts)
     {
-        success = success || pWallet->DummySignTx(accountPair.second, txNew, vCoins);
+        success = success || pWallet->DummySignTx(accountPair.second, txNew, vCoins, Spend);
     }
     if (!success)
     {
@@ -239,7 +239,7 @@ bool CFeeBumper::signTransaction(CWallet *pWallet)
 {
     for (auto accountPair : pWallet->mapAccounts)
     {
-        if (pWallet->SignTransaction(accountPair.second, mtx));
+        if (pWallet->SignTransaction(accountPair.second, mtx, Spend))
             return true;
     }
     return false;

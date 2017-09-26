@@ -645,7 +645,7 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), prevPubKey, sigdata);
+            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend);//fixme: (GULDEN) (2.0) - We must somehow detect if this is a spend or a witness here.
 
         // ... and merge in other signatures:
         BOOST_FOREACH(const CTransaction& txv, txVariants)

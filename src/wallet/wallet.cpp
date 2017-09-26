@@ -2651,7 +2651,7 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
     return res;
 }
 
-bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx)
+bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
 {
     AssertLockHeld(cs_wallet); // mapWallet
 
@@ -2663,10 +2663,9 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx)
         if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
             return false;
         }
-        //const CScript& scriptPubKey = mi->second.tx->vout[input.prevout.n].scriptPubKey;
         const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
         SignatureData sigdata;
-        if (!ProduceSignature(TransactionSignatureCreator(fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n].output.scriptPubKey, sigdata)) {
+        if (!ProduceSignature(TransactionSignatureCreator(fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -2961,10 +2960,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                                               nSequence));
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(forAccount, txNew, setCoins)) {
+                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
                     //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
-                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut().output.scriptPubKey, sigdata))
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -3045,7 +3044,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout.output.scriptPubKey, sigdata))
+                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;

@@ -1004,7 +1004,7 @@ public:
      * calling CreateTransaction();
      */
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, bool keepReserveKey = true);
-    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx);
+    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
 
     /**
      * Create a new transaction paying the recipients with a set of coins
@@ -1019,7 +1019,7 @@ public:
     bool AddAccountingEntry(const CAccountingEntry&);
     bool AddAccountingEntry(const CAccountingEntry&, CWalletDB *pwalletdb);
     template <typename ContainerType>
-    bool DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins) const;
+    bool DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const;
 
     static CFeeRate minTxFee;
     static CFeeRate fallbackFee;
@@ -1275,16 +1275,15 @@ public:
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.
 template <typename ContainerType>
-bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins) const
+bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const
 {
     // Fill in dummy signatures for fee calculation.
     int nIn = 0;
     for (const auto& coin : coins)
     {
-        const CScript& scriptPubKey = coin.txout.output.scriptPubKey;
         SignatureData sigdata;
 
-        if (!ProduceSignature(DummySignatureCreator(forAccount), scriptPubKey, sigdata))
+        if (!ProduceSignature(DummySignatureCreator(forAccount), coin.txout, sigdata, type))
         {
             return false;
         } else {

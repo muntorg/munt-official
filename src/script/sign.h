@@ -67,12 +67,18 @@ struct SignatureData {
     explicit SignatureData(const CScript& script) : scriptSig(script) {}
 };
 
+enum SignType
+{
+    Spend,
+    Witness
+};
+
 /** Produce a script signature using a generic signature creator. */
-bool ProduceSignature(const BaseSignatureCreator& creator, const CScript& scriptPubKey, SignatureData& sigdata);
+bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type);
 
 /** Produce a script signature for a transaction. */
-bool SignSignature(const CKeyStore &keystore, const CScript& fromPubKey, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType);
-bool SignSignature(const CKeyStore& keystore, const CTransaction& txFrom, CMutableTransaction& txTo, unsigned int nIn, int nHashType);
+bool SignSignature(const CKeyStore& keystore, const CTxOut& fromOutput, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType, SignType type);
+bool SignSignature(const CKeyStore& keystore, const CTransaction& txFrom, CMutableTransaction& txTo, unsigned int nIn, int nHashType, SignType type);
 
 /** Combine two script signatures using a generic signature checker, intelligently, possibly with OP_0 placeholders. */
 SignatureData CombineSignatures(const CScript& scriptPubKey, const BaseSignatureChecker& checker, const SignatureData& scriptSig1, const SignatureData& scriptSig2);
