@@ -335,6 +335,11 @@ public:
     {
         return (int64_t)nTime;
     }
+    
+    int64_t GetBlockTimePoW2Witness() const
+    {
+        return nTimePoW2Witness == 0 ? (int64_t)nTime : (int64_t)nTimePoW2Witness;
+    }
 
     int64_t GetBlockTimeMax() const
     {
