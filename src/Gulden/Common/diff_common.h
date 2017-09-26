@@ -61,7 +61,7 @@
     #define BLOCK_TIME(block) block->nTime
     #define INDEX_TYPE CBlockIndex*
     #define INDEX_HEIGHT(block) block->nHeight
-    #define INDEX_TIME(block) block->GetBlockTime()
+    #define INDEX_TIME(block) block->GetBlockTimePoW2Witness()
     #define INDEX_PREV(block) block->pprev
     #define INDEX_TARGET(block) block->nBits
     #define DIFF_SWITCHOVER(TEST, MAIN) (IsArgSet("-testnet") ? TEST :  MAIN)
