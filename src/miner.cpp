@@ -70,9 +70,8 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
 
-    // Updating time can change work required on testnet:
-    if (consensusParams.fPowAllowMinDifficultyBlocks)
-        pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
+    // Updating time can change work required (Delta)
+    pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
 
     return nNewTime - nOldTime;
 }
@@ -201,7 +200,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout.resize(1);
     //fixme: (GULDEN) (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
-    //coinbaseTx.vout[0].nValue = nFees + nSubsidy;
+    coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
     std::string coinbaseSignature = GetArg("-coinbasesignature", "");
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
@@ -501,13 +500,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
         hashPrevBlock = pblock->hashPrevBlock;
     }
     ++nExtraNonce;
-    unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
-    CMutableTransaction txCoinbase(*pblock->vtx[0]);
-    std::string coinbaseSignature = GetArg("-coinbasesignature", "");
-    txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce) << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end())) + COINBASE_FLAGS;
-    assert(txCoinbase.vin[0].scriptSig.size() <= 100);
-
-    pblock->vtx[0] = MakeTransactionRef(std::move(txCoinbase));
     pblock->hashMerkleRoot = BlockMerkleRoot(pblock->vtx.begin(), pblock->vtx.end());
 }
 
@@ -631,9 +623,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
     RenameThread("gulden-miner");
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
+    static bool regTest = GetBoolArg("-regtest", false);
 
     unsigned int nExtraNonce = 0;
-
     std::shared_ptr<CReserveScript> coinbaseScript;
     GetMainSignals().ScriptForMining(coinbaseScript);
 
@@ -659,15 +651,15 @@ void static BitcoinMiner(const CChainParams& chainparams)
         
         while (true)
         {
-            if (GetBoolArg("-regtest", false))
+            if (!regTest && !hashCity)
             {
-                // Busy-wait for the network to come online so we don't waste time mining
-                // on an obsolete chain. In regtest mode we expect to fly solo.
-                do {  
+                // Busy-wait for the network to come online so we don't waste time mining on an obsolete chain. In regtest mode we expect to fly solo.
+                while (true)
+                {  
                     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0 && !IsInitialBlockDownload())
                         break;
                     MilliSleep(1000);
-                } while (true);
+                }
             }
 
             //
@@ -685,19 +677,17 @@ void static BitcoinMiner(const CChainParams& chainparams)
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running GuldenMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
-                ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            //LogPrintf("Running GuldenMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
             // Search
             //
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
-            uint256 hash;
             uint32_t nNonce =0; 
             
             // Check if something found
-            arith_uint256 thash;
+            arith_uint256 hashMined;
             while (true)
             {
                 if (GetTimeMillis() - nHPSTimerStart > 1000)
@@ -719,21 +709,13 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     }
                 }
 
-                if (hashCity)
-                {
-                    hash_city(BEGIN(pblock->nVersion), thash);
-                }
-                else
-                {
-                    char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-                    scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
-                }
+                hashMined = UintToArith256(pblock->GetPoWHash());
 
-                if (thash <= hashTarget)
+                if (hashMined <= hashTarget)
                 {
                     // Found a solution
                     LogPrintf("GuldenMiner:\n");
-                    LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", thash.GetHex(), hashTarget.GetHex());
+                    LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
                     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
                     ProcessBlockFound(shared_pblock, chainparams);
                     coinbaseScript->KeepScript();
@@ -745,7 +727,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     break;
                 }
                 pblock->nNonce += 1;
-                nHashCounter++;
+                ++nHashCounter;
                 while(nHashThrottle != -1 && nHashCounter >= nHashThrottle)
                 {
                     if (GetTimeMillis() - nHPSTimerStart > 1000)
@@ -770,8 +752,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 boost::this_thread::interruption_point();
                 // Regtest mode doesn't require peers
                 
-                if (!GetBoolArg("-regtest", false) && g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
-                    break;
                 if (nNonce >= 0xffff0000)
                     break;
                 if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
@@ -780,14 +760,13 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     break;
 
                 // Update nTime every few seconds
-                if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
-                    break; // Recreate the block if the clock has run backwards,
-                        // so that we can use the correct time.
-                if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
+                //if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
+                    //break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
+                /*if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
                 {
                     // Changing pblock->nTime can change work required on testnet:
                     hashTarget.SetCompact(pblock->nBits);
-                }
+                }*/
             }
         }
     }
