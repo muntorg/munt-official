@@ -1301,6 +1301,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 #endif
     
     StartShadowPoolManagerThread(threadGroup);
+    StartPoW2WitnessThread(threadGroup);
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections
     // until the very end ("start node") as the UTXO/block state
