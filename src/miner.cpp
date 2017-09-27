@@ -43,9 +43,15 @@
 
 #include <Gulden/Common/diff.h>
 #include <Gulden/Common/hash/hash.h>
+#include <Gulden/util.h>
 #include <openssl/sha.h>
 
 #include <boost/thread.hpp>
+
+#include "txdb.h"
+
+//Gulden includes
+#include "streams.h"
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -141,8 +147,64 @@ void BlockAssembler::resetBlock()
     nFees = 0;
 }
 
+
+void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams)
+{
+    std::vector<unsigned char> commitment;
+    int commitpos = GetPoW2WitnessCoinbaseIndex(block);
+    
+    CBlockIndex* pPoW2Index = GetWitnessOrphanForBlock(pindexPrev->nHeight, pindexPrev->pprev->GetBlockHashLegacy(), pindexPrev->GetBlockHashLegacy());
+    std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
+    if (!ReadBlockFromDisk(*pWitnessBlock, pPoW2Index, consensusParams))
+        assert(0);
+    assert(pPoW2Index);
+    
+    if (commitpos == -1)
+    {    
+        std::vector<unsigned char> serialisedWitnessHeaderInfo;
+        {
+            CVectorWriter serialisedWitnessHeaderInfoStream(SER_NETWORK, INIT_PROTO_VERSION, serialisedWitnessHeaderInfo, 0);
+            ::Serialize(serialisedWitnessHeaderInfoStream, pPoW2Index->nVersionPoW2Witness); //4 bytes
+            ::Serialize(serialisedWitnessHeaderInfoStream, pPoW2Index->nTimePoW2Witness); //4 bytes
+            ::Serialize(serialisedWitnessHeaderInfoStream, pPoW2Index->hashMerkleRootPoW2Witness); // 32 bytes
+            ::Serialize(serialisedWitnessHeaderInfoStream, NOSIZEVECTOR(pPoW2Index->witnessHeaderPoW2Sig)); //65 bytes
+            ::Serialize(serialisedWitnessHeaderInfoStream, pindexPrev->GetBlockHashLegacy()); //32 bytes
+        }
+        
+        assert(serialisedWitnessHeaderInfo.size() == 137);
+        
+        CTxOut out;
+        
+        if (IsPow2Phase4Active(pindexPrev, consensusParams))
+        {
+            out.SetType(CTxOutType::ScriptOutput);
+        }
+        
+        out.nValue = 0;
+        out.output.scriptPubKey.resize(143); // 1 + 5 + 137
+        out.output.scriptPubKey[0] = OP_RETURN;
+        //testme: (HIGH) (PoW2) (2.0) - is an OP_PUSH required here?
+        // 0x506f57c2b2 = PoW²
+        out.output.scriptPubKey[1] = 0x50;
+        out.output.scriptPubKey[2] = 0x6f;
+        out.output.scriptPubKey[3] = 0x57;
+        out.output.scriptPubKey[4] = 0xc2;
+        out.output.scriptPubKey[5] = 0xb2;
+        std::copy(serialisedWitnessHeaderInfo.begin(), serialisedWitnessHeaderInfo.end(), out.output.scriptPubKey.begin()+6);
+        
+        // Serialised PoW2 witness header (witness portion only)
+        // Followed by a single transction (20 NLG witness reward)
+        CMutableTransaction tx(*block.vtx[0]);
+        tx.vout.push_back(out);
+        tx.vout.push_back(pWitnessBlock->vtx[1]->vout[0]);
+        block.vtx[0] = MakeTransactionRef(std::move(tx));
+    }
+}
+
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx)
 {
+    fMineWitnessTx = true;
+    
     int64_t nTimeStart = GetTimeMicros();
 
     resetBlock();
@@ -162,7 +224,17 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     CBlockIndex* pindexPrev = chainActive.Tip();
     nHeight = pindexPrev->nHeight + 1;
 
-    pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus());
+    //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
+    //fixme: (GULDEN) (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
+    Consensus::Params consensusParams = chainparams.GetConsensus();
+    CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
+    if (IsPow2WitnessingActive(pindexPrev, consensusParams))
+        nSubsidy -= GetBlockSubsidyWitness(nHeight, consensusParams);
+    
+    // PoW mining on top of a PoS block during phase 3 indicates an error of some kind.
+    assert(pindexPrev->nVersionPoW2Witness == 0 || !IsPow2Phase3Active(pindexPrev, consensusParams));
+
+    pblock->nVersion = ComputeBlockVersion(pindexPrev, consensusParams);
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
     if (chainparams.MineBlocksOnDemand())
@@ -181,7 +253,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // -promiscuousmempoolflags is used.
     // TODO: replace this with a call to main to assess validity of a mempool
     // transaction (which in most cases can be a no-op).
-    fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus()) && fMineWitnessTx;
+    //fIncludeWitness = IsWitnessEnabled(pindexPrev, consensusParams) && fMineWitnessTx;
 
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
@@ -200,20 +272,40 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout.resize(1);
     //fixme: (GULDEN) (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
-    coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+    coinbaseTx.vout[0].nValue = nFees + nSubsidy;
     std::string coinbaseSignature = GetArg("-coinbasesignature", "");
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     //pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
+    
+    // From second phase 3 block onward until (and including first phase 4 block) embed the PoW2 witness.
+    if (IsPow2Phase3Active(pindexPrev->pprev, consensusParams))
+    {
+        InsertPoW2WitnessIntoCoinbase(*pblock, pindexPrev, consensusParams);
+    }
 
-    uint64_t nSerializeSize = GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION);
-    LogPrintf("CreateNewBlock(): total size: %u block weight: %u txs: %u fees: %ld sigops %d\n", nSerializeSize, GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
-
+    // Until phase 4 activates we don't point to the hash of the previous PoW2 block but rather the hash of the previous PoW block (as we need to communicate with legacy clients that don't know about PoW blocks)
+    // For phase 3 we embed the hash of the contents of the PoW2 block in a special coinbase transaction.
     // Fill in header
-    pblock->hashPrevBlock  = pindexPrev->GetBlockHashPoW2();
-    UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-    pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+    if (IsPow2Phase4Active(pindexPrev, chainparams) || IsPow2Phase5Active(pindexPrev, chainparams))
+    {
+        pblock->hashPrevBlock  = pindexPrev->GetBlockHashPoW2();
+    }
+    else
+    {
+        pblock->hashPrevBlock  = pindexPrev->GetBlockHashLegacy();
+    }
+
+    
+    //uint64_t nSerializeSize = GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION);
+    //LogPrintf("CreateNewBlock(): total size: %u block weight: %u txs: %u fees: %ld sigops %d\n", nSerializeSize, GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
+    
+    
+    //fixme: (GULDEN) (2.0) (POW2) (HIGH) - Other mining logic, coinbase etc. logic here.
+    
+    UpdateTime(pblock, consensusParams, pindexPrev);
+    pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
     pblock->nNonce         = 0;
     pblocktemplate->vTxSigOpsCost[0] = WITNESS_SCALE_FACTOR * GetLegacySigOpCount(*pblock->vtx[0]);
 
@@ -371,6 +463,8 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
     // Start by adding all descendants of previously added txs to mapModifiedTx
     // and modifying them for their already included ancestors
     UpdatePackagesForAdded(inBlock, mapModifiedTx);
+    
+    //fixme: (GULDEN) (2.0) (POW2) - We need to avoid adding any transactions from possible 'tip candidates' here (only for witness blocks) - figure out best way to do that.
 
     CTxMemPool::indexed_transaction_set::index<ancestor_score>::type::iterator mi = mempool.mapTx.get<ancestor_score>().begin();
     CTxMemPool::txiter iter;
@@ -596,12 +690,20 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0]->vout[0].nValue));
 
+    CBlockIndex* pIndexPrev = chainActive.Tip();
+    
     // Found a solution
+    if (IsPow2Phase4Active(pIndexPrev, chainparams) || IsPow2Phase5Active(pIndexPrev, chainparams))
     {
-        LOCK(cs_main);
-        if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHashPoW2())
-            return error("GuldenMiner: generated block is stale");
+        if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
+            return error("GuldenWitness: generated block is stale");
     }
+    else
+    {   
+        if (pblock->hashPrevBlock != pIndexPrev->GetBlockHashLegacy())
+            return error("GuldenWitness: generated block is stale");
+    }
+    
 
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(chainparams, pblock, true, NULL))
@@ -616,6 +718,8 @@ int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
 int64_t nHashThrottle=-1;
 static CCriticalSection timerCS;
+static CCriticalSection processBlockCS;
+
 
 void static BitcoinMiner(const CChainParams& chainparams)
 {
@@ -667,12 +771,46 @@ void static BitcoinMiner(const CChainParams& chainparams)
             //
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
             CBlockIndex* pindexPrev = chainActive.Tip();
-
-            std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
-            if (!pblocktemplate.get())
+            
+            if ( !pindexPrev )
+                continue;
+            
+            //fixme: (GULDEN) (POW2) (2.0) - Implement this also for RPC mining.
+            // If PoW2 witnessing is active.
+            // Phase 3 - Tip must always be PoS with witness so we can always keep mining on tip.
+            // Phase 4 - Tip must always be PoW2 with witness so we can always keep mining on tip. 
+            if ( IsPow2Phase3Active(pindexPrev, Params().GetConsensus()) )
             {
-                LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
-                return;
+                assert(pindexPrev->nVersionPoW2Witness == 0);
+                if ( IsPow2Phase3Active(pindexPrev->pprev, Params().GetConsensus()) )
+                {
+                    if (!GetWitnessOrphanForBlock(pindexPrev->nHeight, pindexPrev->pprev->GetBlockHashLegacy(), pindexPrev->GetBlockHashLegacy()))
+                    {
+                        MilliSleep(500);
+                        continue;
+                    }
+                }
+            }
+            else if ( IsPow2WitnessingActive(pindexPrev, Params().GetConsensus()) )
+            {
+                assert(pindexPrev->nVersionPoW2Witness != 0);
+            }
+
+            
+            std::unique_ptr<CBlockTemplate> pblocktemplate;
+            {
+                TRY_LOCK(processBlockCS, lockProcessBlock);
+                if(!lockProcessBlock)
+                {
+                    continue;
+                }
+
+                pblocktemplate =  BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript);
+                if (!pblocktemplate.get())
+                {
+                    LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                    return;
+                }
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
@@ -692,6 +830,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
             {
                 if (GetTimeMillis() - nHPSTimerStart > 1000)
                 {
+                    // Check for stop or if block needs to be rebuilt
+                    boost::this_thread::interruption_point();
+                    
                     TRY_LOCK(timerCS, lockhc);
                     if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
                     {
@@ -701,7 +842,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
                         dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
                         nHPSTimerStart = GetTimeMillis();
                     }
-                    UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
+                    // Update nTime every few seconds
+                    if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
+                        break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
                     arith_uint256 compBits = pblock->nBits;
                     if (GetNextWorkRequired(chainActive.Tip(), pblock, Params().GetConsensus()) != compBits)
                     {
@@ -713,56 +856,38 @@ void static BitcoinMiner(const CChainParams& chainparams)
 
                 if (hashMined <= hashTarget)
                 {
-                    // Found a solution
-                    LogPrintf("GuldenMiner:\n");
-                    LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
-                    std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
-                    ProcessBlockFound(shared_pblock, chainparams);
-                    coinbaseScript->KeepScript();
+                    TRY_LOCK(processBlockCS, lockProcessBlock);
+                    if(!lockProcessBlock)
+                        break;
 
-                    // In regression test mode, stop mining after a block is found.
-                    if (chainparams.MineBlocksOnDemand())
-                        throw boost::thread_interrupted();
+                    {
+                        // Found a solution
+                        LogPrintf("GuldenMiner: proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
+                        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+                        ProcessBlockFound(shared_pblock, chainparams);
+                        coinbaseScript->KeepScript();
 
-                    break;
+                        // In regression test mode, stop mining after a block is found.
+                        if (chainparams.MineBlocksOnDemand())
+                            throw boost::thread_interrupted();
+
+                        break;
+                    }
                 }
                 pblock->nNonce += 1;
                 ++nHashCounter;
-                while(nHashThrottle != -1 && nHashCounter >= nHashThrottle)
-                {
-                    if (GetTimeMillis() - nHPSTimerStart > 1000)
-                    {
-                            TRY_LOCK(timerCS, lockhc);
-                            if (lockhc && GetTimeMillis() - nHPSTimerStart > 1000)
-                            {
-                                    int64_t nTemp = nHashCounter;
-                                    nHashCounter = 0;
-                                    dHashesPerSec =  1000 * (nTemp / (GetTimeMillis() - nHPSTimerStart));
-                                    dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                                    nHPSTimerStart = GetTimeMillis();
-                            }
-                    }
-                    MilliSleep(1);
-                }
 
                 if ((pblock->nNonce & 0xFF) == 0)
                     break;
-                
-                // Check for stop or if block needs to be rebuilt
-                boost::this_thread::interruption_point();
-                // Regtest mode doesn't require peers
-                
                 if (nNonce >= 0xffff0000)
                     break;
                 if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
                     break;
                 if (pindexPrev != chainActive.Tip())
                     break;
-
-                // Update nTime every few seconds
-                //if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
+                /*if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
                     //break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
-                /*if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
+                if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
                 {
                     // Changing pblock->nTime can change work required on testnet:
                     hashTarget.SetCompact(pblock->nBits);
@@ -802,4 +927,253 @@ void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
         minerThreads->create_thread(boost::bind(&BitcoinMiner, boost::cref(chainparams)));
+}
+
+
+bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
+{    
+    assert(pBlock->nVersionPoW2Witness != 0);
+    
+    CKeyID witnessKeyID;
+    
+    
+    if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
+    {    
+        witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
+    }
+    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) )
+    {
+        std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
+        witnessKeyID = CKeyID(uint160(hashWitnessBytes));
+    }
+    else
+    {
+        assert(0);
+    }
+        
+    CKey key;    
+    if (!pactiveWallet->GetKey(witnessKeyID, key))
+        assert(0);
+
+    // Do not allow uncompressed keys.
+    if (!key.IsCompressed())
+        assert(0);
+
+    //fixme: (GULDEN) (PoW2) (2.0) - Anything else to serialise here? Add the block height maybe? probably overkill.
+    uint256 hash = pBlock->GetHashPoW2();
+    if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
+        return false;
+    
+    //fixme: NEXTNEXTNEXT temporary test - delme once verified to work
+    if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
+        assert(0);
+    
+    return true;
+}
+
+
+struct CBlockIndexCacheComparator
+{
+    bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+        if (pa->nHeight > pb->nHeight) return false;
+        if (pa->nHeight < pb->nHeight) return true;
+        
+        if (pa < pb) return false;
+        if (pa > pb) return true;
+
+        return false;
+    }
+};
+
+//fixme: (GULDEN) (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
+//fixme: (GULDEN) (2.0) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
+std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
+
+void static GuldenWitness()
+{
+    LogPrintf("GuldenWitness started\n");
+    RenameThread("gulden-witness");
+
+    CChainParams chainparams = Params();
+    try
+    {       
+        while (true)
+        {
+            /*if (GetBoolArg("-regtest", false))
+            {
+                // Busy-wait for the network to come online so we don't waste time mining
+                // on an obsolete chain. In regtest mode we expect to fly solo.
+                do {  
+                    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0 && !IsInitialBlockDownload())
+                        break;
+                    MilliSleep(5000);
+                } while (true);
+            }*/
+            
+            
+            CBlockIndex* pindexTip = chainActive.Tip();
+            Consensus::Params pParams = chainparams.GetConsensus();
+            
+            //We can only start witnessing from phase 3 onward.
+            if ( !pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip, pParams)  )
+            {
+                MilliSleep(5000);
+                continue;
+            }
+
+            //fixme: (GULDEN) (PoW2) (HIGH) Shorter sleep here?
+            //Or ideally instead of just sleeping/busy pollig rather wait on a signal that gets triggered only when new blocks come in??
+            //MilliSleep(500);
+            
+            // Check for stop or if block needs to be rebuilt
+            boost::this_thread::interruption_point();
+            
+            int nWitnessHeight = pindexTip->nHeight + 1;
+            
+            // If we already have a witnessed block at the tip don't bother looking at any orphans, just patiently wait for next unsigned tip.
+            if (pindexTip->nVersionPoW2Witness != 0)
+                continue;
+
+            // Use a cache to prevent trying the same blocks over and over.
+            std::vector<CBlockIndex*> candidateOrphans;
+            for (const auto candidateIter : GetTopLevelPoWOrphans(nWitnessHeight, *(pindexTip->phashBlock)))
+            {
+                if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
+                {
+                    cacheAlreadySeenWitnessCandidates.insert(candidateIter);
+                    candidateOrphans.push_back(candidateIter);
+                }
+            }
+            if (cacheAlreadySeenWitnessCandidates.size() > 50)
+            {
+                auto eraseEnd = cacheAlreadySeenWitnessCandidates.begin();
+                std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 50);
+                cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
+            }
+            
+            if (candidateOrphans.size() > 0)
+            {
+                LOCK(processBlockCS);
+                
+                if (chainActive.Tip() != pindexTip)
+                {
+                    continue;
+                }
+                    
+                    
+                // Look for all potential signable blocks at same height as the index tip - don't limit ourselves to just the tip
+                // This is important because otherwise the chain can stall if there is an absent signer for the current tip.
+                for (const auto candidateIter : candidateOrphans)
+                {                    
+                    //Create new block
+                    std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
+                    if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, pParams))
+                    {
+                        CTxOut selectedWitnessOutput = GetWitness(pindexTip, *pWitnessBlock, chainparams);
+                        
+                        CAmount witnessSubsidy = GetBlockSubsidyWitness(nWitnessHeight, pParams);
+                        
+                        //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
+                        if (pactiveWallet->IsMine(selectedWitnessOutput) == ISMINE_SPENDABLE)
+                        {                                       
+                            /** First we add the new witness coinbase to the block, this acts as a seperator between transactions from the initial mined block and the witness block **/
+                            /** We add a placeholder for now as we don't know the fees we will generate **/
+                            pWitnessBlock->vtx.emplace_back();
+                            int nWitnessCoinbaseIndex = pWitnessBlock->vtx.size()-1;
+                            
+                            std::shared_ptr<CReserveScript> coinbaseScript;
+                            //fixme: (HIGH) - change this script (should rather output to new witness address)
+                            GetMainSignals().ScriptForMining(coinbaseScript);
+                            
+                            /** Now add any additional transactions if there is space left **/
+                            if (IsPow2Phase4Active(pindexTip, pParams) || IsPow2Phase5Active(pindexTip, pParams))
+                            {
+                                // Piggy back off existing block assembler code to grab the transactions we want to include.
+                                // Setup maximum size for assembler so that size of existing (PoW) block transactions are subtracted from overall maximum.
+                                BlockAssembler::Options assemblerOptions;
+                                assemblerOptions.nBlockMaxWeight = GetBlockWeight(*pWitnessBlock);
+                                assemblerOptions.nBlockMaxSize = assemblerOptions.nBlockMaxWeight;
+                                
+                                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(coinbaseScript->reserveScript));
+                                if (!pblocktemplate.get())
+                                {
+                                    LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                                    continue;
+                                }
+                                
+                                //fixme: (GULDEN) (CBSU)? pre-allocate for vtx.size().
+                                for (size_t i=1; i < pblocktemplate->block.vtx.size(); ++i)
+                                {
+                                    //fixme: (GULDEN) (CBSU)? emplace_back?
+                                    pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
+                                }
+                                
+                                //testme: (GULDEN) (2.0) (HIGH) test this is right.
+                                witnessSubsidy += (-pblocktemplate->vTxFees[0]);
+                            }
+                            
+                            /** Populate witness coinbase placeholder with real information now that we have it **/
+                            //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
+                            CMutableTransaction coinbaseTx;
+                            coinbaseTx.vin.resize(1);
+                            coinbaseTx.vin[0].prevout.SetNull();
+                            coinbaseTx.vin[0].nSequence = 0;
+                            coinbaseTx.vout.resize(1);
+                            coinbaseTx.vout[0].output.scriptPubKey = coinbaseScript->reserveScript;
+                            coinbaseTx.vout[0].nValue = witnessSubsidy;
+                            
+                            // Phase 3 - we restrict the coinbase signature to only the block height.
+                            // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
+                            if (IsPow2Phase3Active(pindexTip, pParams))
+                            {
+                                coinbaseTx.vin[0].scriptSig = CScript() << nWitnessHeight;
+                            }
+                            else
+                            {
+                                std::string coinbaseSignature = GetArg("-coinbasesignature", "");
+                                coinbaseTx.vin[0].scriptSig = CScript() << nWitnessHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+                            }
+                            pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
+                            
+                            /** Set witness specific block header information **/
+                            //testme: (GULDEN) (POW2) (2.0)
+                            // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
+                            pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(pindexTip, pParams);
+                            
+                            /** Second witness timestamp gets added to the block as an additional time source to the miner timestamp. **/
+                            /** Witness timestamp must exceed median of previous mined timestamps. **/
+                            pWitnessBlock->nTimePoW2Witness = std::max(candidateIter->GetMedianTimePastPoW()+1, GetAdjustedTime());
+                            
+                            /** Set witness merkle hash **/
+                            pWitnessBlock->hashMerkleRootPoW2Witness = BlockMerkleRoot(pWitnessBlock->vtx.begin()+nWitnessCoinbaseIndex, pWitnessBlock->vtx.end());
+                            
+                            /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
+                            if (SignBlockAsWitness(pWitnessBlock, selectedWitnessOutput))
+                            {
+                                LogPrintf("GuldenMiner: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
+                                ProcessBlockFound(pWitnessBlock, chainparams);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    catch (const boost::thread_interrupted&)
+    {
+        LogPrintf("GuldenWitness terminated\n");
+        throw;
+    }
+    catch (const std::runtime_error &e)
+    {
+        LogPrintf("GuldenWitness runtime error: %s\n", e.what());
+        return;
+    }
+}
+
+
+void StartPoW2WitnessThread(boost::thread_group& threadGroup)
+{
+    threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "pow2_witness", &GuldenWitness));
 }
