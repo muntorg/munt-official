@@ -25,6 +25,12 @@ namespace Ui {
     class NewAccountDialog;
 }
 
+enum NewAccountType
+{
+    Transactional,
+    FixedDeposit
+};
+
 class NewAccountDialog : public QFrame
 {
     Q_OBJECT
@@ -34,6 +40,7 @@ public:
     ~NewAccountDialog();
 
     QString getAccountName();
+    NewAccountType getAccountType();
 Q_SIGNALS:
       void cancel();
       void accountAdded();
@@ -52,6 +59,7 @@ private:
 private Q_SLOTS:
       void connectToMobile();
       void cancelMobile();
+      void accountTypeChanged(int index);
       void valueChanged();
       void addAccount();
       void showSyncQr();

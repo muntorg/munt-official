@@ -78,6 +78,7 @@ private:
     const PlatformStyle *platformStyle;
     
     friend class GuldenGUI;
+    friend class BitcoinGUI;
 
 public Q_SLOTS:
     /** Switch to overview (home) page */

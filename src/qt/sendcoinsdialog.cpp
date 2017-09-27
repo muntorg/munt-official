@@ -599,7 +599,7 @@ GuldenSendCoinsEntry *SendCoinsDialog::addEntry()
     entry->setModel(model);
     ui->entries->addWidget(entry);
     connect(entry, SIGNAL(removeEntry(GuldenSendCoinsEntry*)), this, SLOT(removeEntry(GuldenSendCoinsEntry*)));
-    connect(entry, SIGNAL(payAmountChanged()), this, SLOT(coinControlUpdateLabels()));
+    connect(entry, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
     connect(entry, SIGNAL(subtractFeeFromAmountChanged()), this, SLOT(coinControlUpdateLabels()));
     
     connect(entry, SIGNAL(sendTabChanged()), this, SLOT(updateActionButtons()));
@@ -1081,6 +1081,18 @@ void SendCoinsDialog::coinControlUpdateLabels()
         ui->labelCoinControlAutomaticallySelected->show();
         ui->widgetCoinControl->hide();
         ui->labelCoinControlInsuffFunds->hide();
+    }
+}
+
+void SendCoinsDialog::update()
+{
+    for(int i = 0; i < ui->entries->count(); ++i)
+    {
+        GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        if(entry)
+        {
+            entry->update();
+        }
     }
 }
 

@@ -50,6 +50,7 @@
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
 #include <Gulden/util.h>
+#include "sendcoinsdialog.h"
 #include "wallet/wallet.h"
 #include "walletframe.h"
 #include "walletview.h"
@@ -950,6 +951,10 @@ QString getAccountLabel(CAccount* account)
     {
         accountName.append(QString::fromUtf8(" \uf10b"));
     }
+    else if ( account->IsPoW2Witness() )
+    {
+        accountName.append(QString::fromUtf8(" \uf19c"));
+    }
     else if ( !account->IsHD() )
     {
         accountName.append(QString::fromUtf8(" \uf187"));
@@ -969,6 +974,9 @@ void GuldenGUI::refreshAccountControls()
     //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
         m_pImpl->sendCoinsAction->setVisible( false );
+
+    if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
+        m_pImpl->receiveCoinsAction->setVisible( false );
         
     for ( const auto& controlPair : m_accountMap )
     {
@@ -1206,6 +1214,10 @@ void GuldenGUI::gotoWebsite()
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
     m_pImpl->receiveCoinsAction->setVisible( true );
+    m_pImpl->sendCoinsAction->setVisible( true );
+    
+    m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->update();
+    
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
         m_pImpl->sendCoinsAction->setVisible( false );
@@ -1214,9 +1226,13 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
             m_pImpl->gotoReceiveCoinsPage();
         }
     }
-    else
+    else if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
-        m_pImpl->sendCoinsAction->setVisible( true );
+        m_pImpl->receiveCoinsAction->setVisible( false );
+        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage )
+        {
+            m_pImpl->gotoSendCoinsPage();
+        }
     }
     m_pImpl->historyAction->setVisible( true );
     passwordAction->setVisible( false );
@@ -1338,7 +1354,14 @@ void GuldenGUI::acceptNewAccount()
 { 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
-        pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+        if (dialogNewAccount->getAccountType() == NewAccountType::FixedDeposit)
+        {
+            pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::PoW2Witness);
+        }
+        else
+        {
+            pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+        }
         restoreCachedWidgetIfNeeded();
     }
     else

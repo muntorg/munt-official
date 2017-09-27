@@ -54,6 +54,8 @@ public:
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
     void updateActionButtonsForEntry(GuldenSendCoinsEntry* entry);
+    
+    void update();
 
 public Q_SLOTS:
     void clear();

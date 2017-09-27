@@ -45,6 +45,9 @@
 #include <boost/foreach.hpp>
 #include "askpassphrasedialog.h"
 
+#include "Gulden/util.h"
+#include "validation.h"
+
 WalletModel::WalletModel(const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent) :
     QObject(parent), wallet(_wallet), optionsModel(_optionsModel), addressTableModel(0), accountTableModel(0),
     transactionTableModel(0),
@@ -271,12 +274,28 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 return InvalidAmount;
             }
             setAddress.insert(rcp.address);
-            ++nAddresses;
-
-            CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
-            CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
-            vecSend.push_back(recipient);
-
+                ++nAddresses;
+            if(rcp.destinationPoW2Witness.lockUntilBlock != 0)
+            {
+                assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
+                
+                if (IsPow2Phase2Active(chainActive.Tip(), Params()) || IsPow2Phase3Active(chainActive.Tip(), Params()))
+                {                
+                    CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
+                    CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
+                    vecSend.push_back(recipient);
+                }
+                else
+                {
+                    assert(0);
+                }
+            }
+            else
+            {
+                CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+                CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
+                vecSend.push_back(recipient);
+            }
             total += rcp.amount;
         }
     }
@@ -287,7 +306,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
 
     CAmount nBalance = getBalance(forAccount, coinControl);
 
-    if(total > nBalance)
+    if (total > nBalance)
     {
         return AmountExceedsBalance;
     }

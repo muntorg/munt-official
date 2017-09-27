@@ -259,8 +259,8 @@ public:
         
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 1498867200; // July 1st 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1504051200; // August 30th 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = seedTimestamp; 
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = seedTimestamp + (30 * 24 * 60 * 60); //1 month.
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
         
         // Deployment of PoW2 - phase 4

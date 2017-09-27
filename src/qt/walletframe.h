@@ -104,6 +104,7 @@ public Q_SLOTS:
     void outOfSyncWarningClicked();
     
     friend class GuldenGUI;
+    friend class BitcoinGUI;
 };
 
 #endif // BITCOIN_QT_WALLETFRAME_H

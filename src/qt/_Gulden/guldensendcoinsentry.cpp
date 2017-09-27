@@ -21,7 +21,10 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+
 #include "GuldenGUI.h"
+#include "validation.h"//chainActive
+#include "Gulden/util.h"
 
 GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *parent) :
     QFrame(parent),
@@ -34,6 +37,8 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     QList<QTabBar *> tabBar = this->ui->sendCoinsRecipientBook->findChildren<QTabBar *>();
     tabBar.at(0)->setCursor(Qt::PointingHandCursor);	
 
+    update();
+    
     ui->addressBookTabTable->horizontalHeader()->setStretchLastSection(true);
     ui->addressBookTabTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->addressBookTabTable->horizontalHeader()->hide();
@@ -43,10 +48,21 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     ui->myAccountsTabTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->myAccountsTabTable->horizontalHeader()->hide();
 
+    ui->sendCoinsRecipientStack->setContentsMargins(0, 0, 0, 0);
+    ui->sendCoinsRecipientPage->setContentsMargins(0, 0, 0, 0);
+    ui->sendCoinsWitnessPage->setContentsMargins(0, 0, 0, 0);
+    
+    ui->sendCoinsRecipientBook->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel1->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel2->setContentsMargins(0, 0, 0, 0);
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
+    
+    ui->pow2LockFundsSlider->setMinimum(30);
+    ui->pow2LockFundsSlider->setMaximum(365*3);
+    ui->pow2LockFundsSlider->setValue(30);
+    ui->pow2LockFundsSlider->setCursor(Qt::PointingHandCursor);
+    
 
     connect(ui->searchBox1, SIGNAL(textEdited(QString)), this, SLOT(searchChangedAddressBook(QString)));
     connect(ui->searchBox2, SIGNAL(textEdited(QString)), this, SLOT(searchChangedMyAccounts(QString)));
@@ -54,6 +70,11 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SIGNAL(sendTabChanged()));
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     connect(ui->receivingAddress, SIGNAL(textEdited(QString)), this, SLOT(addressChanged()));
+    
+    connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(witnessSliderValueChanged(int)));
+    
+    connect(ui->payAmount, SIGNAL(valueChanged()), this, SLOT(payAmountChanged()));
+    connect(ui->payAmount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
@@ -62,6 +83,20 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
 GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
 {
     delete ui;
+}
+
+bool GuldenSendCoinsEntry::isPoW2WitnessCreation()
+{
+    return ui->sendCoinsRecipientStack->currentIndex() == 1;
+}
+
+void GuldenSendCoinsEntry::update()
+{
+    if (isPoW2WitnessCreation())
+    {
+        ui->sendCoinsRecipientStack->setCurrentIndex(0);
+        ui->myAccountsTabTable->clearSelection();
+    }
 }
 
 void GuldenSendCoinsEntry::on_pasteButton_clicked()
@@ -156,7 +191,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
         connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged()));
         
         connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged())); 
-        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(myAccountsSelectionChanged())); 
+        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged())); 
     }
 
     clear();
@@ -216,6 +251,22 @@ void GuldenSendCoinsEntry::addressBookSelectionChanged()
 
 void GuldenSendCoinsEntry::myAccountsSelectionChanged()
 {
+    QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
+    if (selection.count() > 0)
+    {
+        QModelIndex index = selection.at(0);
+        QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
+        
+        LOCK(pactiveWallet->cs_wallet);
+
+        CAccount* pAccount = pactiveWallet->mapAccounts[sAccountUUID.toStdString()];
+        if ( pAccount->IsPoW2Witness() )
+        {
+            ui->sendCoinsRecipientStack->setCurrentIndex(1);
+            witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
+        }
+    }
+                    
     tabChanged();
 }
 
@@ -363,7 +414,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->valueForCurrency();
     
-    
+    recipient.destinationPoW2Witness.lockFromBlock = 0;
+    recipient.destinationPoW2Witness.lockUntilBlock = 0;
+    if (isPoW2WitnessCreation())
+    {
+        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + ui->pow2LockFundsSlider->value();
+    }
             
     //fixme: GULDEN - give user a choice here.
     //fixme: Check if 'spend unconfirmed' is checked or not.
@@ -419,19 +475,59 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     
                     LOCK(pactiveWallet->cs_wallet);
                     
-                    //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
-                    CReserveKey key(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
-                    CPubKey pubKey;
-                    if (!key.GetReservedKey(pubKey))
+                    if (isPoW2WitnessCreation())
                     {
-                        //fixme: (GULDEN) Better error handling
-                        recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-                        recipient.address = QString("error");
-                        return recipient;
+                        {
+                            //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+                            //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
+                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_CHANGE);
+                            CPubKey pubWitnessKey;
+                            if (!keyWitness.GetReservedKey(pubWitnessKey))
+                            {
+                                //fixme: (GULDEN) Better error handling
+                                recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                                recipient.address = QString("error");
+                                return recipient;
+                            }
+                            keyWitness.KeepKey();
+                            recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+                        }
+                        {
+                            //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+                            //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
+                            CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
+                            CPubKey pubSpendingKey;
+                            if (!keySpending.GetReservedKey(pubSpendingKey))
+                            {
+                                //fixme: (GULDEN) Better error handling
+                                recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                                recipient.address = QString("error");
+                                return recipient;
+                            }
+                            keySpending.KeepKey();
+                            recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
+                        }
+                        
+                        recipient.destinationPoW2Witness.failCount = 0;
+                        recipient.address = QString::fromStdString(CBitcoinAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
+                        
                     }
-                    key.KeepKey();
-                    CKeyID keyID = pubKey.GetID();
-                    recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+                    else
+                    {
+                        //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
+                        CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
+                        CPubKey pubSpendingKey;
+                        if (!keySpending.GetReservedKey(pubSpendingKey))
+                        {
+                            //fixme: (GULDEN) Better error handling
+                            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                            recipient.address = QString("error");
+                            return recipient;
+                        }
+                        keySpending.KeepKey();
+                        CKeyID keyID = pubSpendingKey.GetID();
+                        recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+                    }
                     recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[sAccountUUID.toStdString()]);
                 }
             }
@@ -675,6 +771,79 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 }
 
 
+void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
+{
+    //fixme: (GULDEN) (2.0) (POW2) (CLEANUP)
+    CAmount nAmount = ui->payAmount->valueForCurrency();
+    ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
+    
+    if (nAmount < CAmount(500000000000))
+    {
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of 5000 is required."));
+        return;
+    }
+    
+    //fixme: (GULDEN) (2.0) (HIGH) - warn if weight exceeds 1%.
+    int nDays = newValue;
+    float fMonths = newValue/30.0;
+    float fYears = newValue/365.0;
+    int nEarnings = 0;
+    
+    
+    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);    
+    
+    int64_t nNetworkWeight = 239990000;
+    
+    
+    if (nOurWeight < 10000)
+    {
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.").arg(nOurWeight));
+        return;
+    }
+    
+    double fWeightPercent = nOurWeight/(double)nNetworkWeight;
+    if (fWeightPercent > 0.01)
+    {
+        ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
+        fWeightPercent = 0.01;
+    }
+    
+    double fBlocksPerDay = 576 * fWeightPercent;
+    if (fBlocksPerDay > 5.76)
+        fBlocksPerDay = 5.76;
+    
+    nEarnings = fBlocksPerDay * nDays * 25;
+    
+    float fPercent = (fBlocksPerDay * 30 * 25)/((nAmount/100000000))*100;
+
+    
+    QString sSecondTimeUnit = "";
+    if (fYears > 1)
+    {
+        sSecondTimeUnit = tr("1 year");
+        if (fYears > 1.0)
+            sSecondTimeUnit = tr("%1 years").arg(QString::number(fYears, 'f', 2).replace(".00",""));
+    }
+    else
+    {
+        sSecondTimeUnit = tr("1 month");
+        if (fMonths > 1.0)
+            sSecondTimeUnit = tr("%1 months").arg(QString::number(fMonths, 'f', 2).replace(".00",""));
+    }
+    
+    ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\n\nWitness weight: %5")
+    .arg(nDays)
+    .arg(sSecondTimeUnit)
+    .arg(nEarnings)
+    .arg(QString::number(fPercent, 'f', 2).replace(".00",""))
+    .arg(nOurWeight)
+    );
+}
+
+void GuldenSendCoinsEntry::payAmountChanged()
+{
+    witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
+}
 
 bool GuldenSendCoinsEntry::updateLabel(const QString &address)
 {

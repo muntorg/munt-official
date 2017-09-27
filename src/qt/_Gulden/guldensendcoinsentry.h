@@ -36,6 +36,8 @@ public:
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();
+    
+    void update();
 
     void setValue(const SendCoinsRecipient &value);
     void setAddress(const QString &address);
@@ -63,9 +65,9 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void removeEntry(GuldenSendCoinsEntry *entry);
-    void payAmountChanged();
     void subtractFeeFromAmountChanged();
     void sendTabChanged();
+    void valueChanged();
 
 private Q_SLOTS:
     void deleteClicked();
@@ -75,8 +77,11 @@ private Q_SLOTS:
     void updateDisplayUnit();
     void searchChangedAddressBook(const QString& searchString);
     void searchChangedMyAccounts(const QString& searchString);
+    void witnessSliderValueChanged(int newValue);
+    void payAmountChanged();
 
 private:
+    bool isPoW2WitnessCreation();
     SendCoinsRecipient recipient;
     Ui::GuldenSendCoinsEntry *ui;
     WalletModel *model;

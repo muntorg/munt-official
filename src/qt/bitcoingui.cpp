@@ -71,6 +71,9 @@
 
 #include <QFontDatabase>
 
+#include "walletview.h"
+#include "sendcoinsdialog.h"
+
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
 #include <QUrl>
@@ -741,18 +744,21 @@ void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
+    if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
 }
 
 void BitcoinGUI::gotoReceiveCoinsPage()
 {
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
+    if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
 }
 
 void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
+    if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
 }
 
 void BitcoinGUI::gotoSignMessageTab(QString addr)

@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QTextDocument>
+#include <QStringListModel>
 
 #ifdef USE_QRCODE
 #include <qrencode.h>
@@ -56,6 +57,12 @@ NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget 
     setValid(ui->newAccountName, true);
     ui->cancelButton2->setVisible(false);
     
+    QStringListModel* accountTypeModel = new QStringListModel();
+    QStringList accountTypeList;
+    accountTypeList << tr("Transactional account") << tr("Fixed deposit savings account");
+    accountTypeModel->setStringList(accountTypeList);
+    ui->newAccountType->setModel(accountTypeModel);
+    
     // Set default keyboard focus
     ui->newAccountName->setFocus();
     
@@ -65,6 +72,7 @@ NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget 
     connect(ui->cancelButton, SIGNAL(clicked()), this, SIGNAL(cancel()));
     connect(ui->cancelButton2, SIGNAL(clicked()), this, SLOT(cancelMobile()));
     connect(ui->syncWithMobileButton, SIGNAL(clicked()), this, SLOT(connectToMobile()));
+    connect(ui->newAccountType, SIGNAL(currentIndexChanged(int)), this, SLOT(accountTypeChanged(int)));
     connect(ui->newAccountName, SIGNAL(textEdited(QString)), this, SLOT(valueChanged()));
 }
 
@@ -140,8 +148,32 @@ void NewAccountDialog::valueChanged()
     setValid(ui->newAccountName, true);
 }
 
+void NewAccountDialog::accountTypeChanged(int index)
+{
+    if (index > 0)
+    {
+        ui->syncWithMobileButton->setVisible(false);
+    }
+    else
+    {
+        ui->syncWithMobileButton->setVisible(true);
+    }
+}
+
 
 QString NewAccountDialog::getAccountName()
 {
     return ui->newAccountName->text();
+}
+
+NewAccountType NewAccountDialog::getAccountType()
+{
+    if (ui->newAccountType->currentIndex() == 0)
+    {
+        return NewAccountType::Transactional;
+    }
+    else
+    {
+        return NewAccountType::FixedDeposit;
+    }
 }
