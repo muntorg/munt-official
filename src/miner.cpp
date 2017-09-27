@@ -700,9 +700,9 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     }
     else
     {   
-        if (pblock->hashPrevBlock != pIndexPrev->GetBlockHashLegacy())
+        if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
             return error("GuldenWitness: generated block is stale");
-    }
+    }    
     
 
     // Process this block the same as if we had received it from another node
