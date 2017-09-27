@@ -36,7 +36,7 @@ void ThreadShadowPoolManager()
                 if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
                     continue;
                 
-                for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi })
+                for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi, AccountSubType::PoW2Witness })
                 {
                     int numShadow = 0;
                     {                    
