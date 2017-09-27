@@ -433,6 +433,10 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
         if (sigs1.script.empty() || sigs1.script[0].empty())
             return sigs2;
         return sigs1;
+    case TX_PUBKEYHASH_POW2WITNESS:
+        //fixme: (GULDEN) (POW2) (2.0) NEXTNEXT
+        //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
+        return sigs1;
     case TX_WITNESS_V0_KEYHASH:
         // Signatures are bigger than placeholders or empty scripts:
         if (sigs1.witness.empty() || sigs1.witness[0].empty())
