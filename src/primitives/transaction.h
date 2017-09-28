@@ -17,9 +17,6 @@
 #include "utilstrencodings.h"
 #include <new> // Required for placement 'new'.
 
-//Gulden
-#include "pubkey.h"
-
 static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
@@ -336,6 +333,16 @@ public:
     {
         nType = copyFrom.nType;
         nValue = copyFrom.nValue;
+        switch(CTxOutType(nType))
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+                output.scriptPubKey = copyFrom.output.scriptPubKey; break;
+            case CTxOutType::PoW2WitnessOutput:
+                output.witnessDetails = copyFrom.output.witnessDetails; break;
+            case CTxOutType::StandardKeyHashOutput:
+                output.standardKeyHash = copyFrom.output.standardKeyHash; break;
+        }
         return *this;
     }
     
@@ -343,6 +350,16 @@ public:
     {
         nType = copyFrom.nType;
         nValue = copyFrom.nValue;
+        switch(CTxOutType(nType))
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+                output.scriptPubKey = copyFrom.output.scriptPubKey; break;
+            case CTxOutType::PoW2WitnessOutput:
+                output.witnessDetails = copyFrom.output.witnessDetails; break;
+            case CTxOutType::StandardKeyHashOutput:
+                output.standardKeyHash = copyFrom.output.standardKeyHash; break;
+        }
     }
 
     CTxOut()
