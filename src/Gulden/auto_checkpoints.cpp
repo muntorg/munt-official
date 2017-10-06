@@ -482,6 +482,9 @@ namespace Checkpoints
     // Is the sync-checkpoint too old?
     bool IsSyncCheckpointTooOld(unsigned int nSeconds)
     {
+        if (GetBoolArg("-testnet", false))
+            return false;
+
         LOCK(cs_hashSyncCheckpoint);
         if (hashSyncCheckpoint==uint256())
         {
@@ -499,8 +502,9 @@ namespace Checkpoints
 }
 
 //Gulden checkpoint key public signature
-const std::string CSyncCheckpoint::strMasterPubKey		= "043872e04721dc342fee16ca8f76e0d0bee23170e000523241f83e5190dece6e259a465e8efd4194c0b8f208967c59089fc2d85fcb9847764568833021197344b0";
+const std::string CSyncCheckpoint::strMasterPubKey		= "04ff1007ffe5cffe8889b1842c7bd2d82894f9a5a946fbec95f5f748a190fcb724c29ab304b026ba2040fca893c617ca09f7b67f53be0f18146ee93638ab39c0dc";
 const std::string CSyncCheckpoint::strMasterPubKeyTestnet  	= "042785eba41f699847a7afa0fd3d70485065b5d04d726925e5a7827ca11b5a0479ea8f90dc74e10500adff05ca695f1590bb6bd17ad3cccea80441d4c2e9a4e5e5";
+const std::string CSyncCheckpoint::strMasterPubKeyOld             = "043872e04721dc342fee16ca8f76e0d0bee23170e000523241f83e5190dece6e259a465e8efd4194c0b8f208967c59089fc2d85fcb9847764568833021197344b0";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
@@ -514,7 +518,12 @@ bool CSyncCheckpoint::CheckSignature()
     }
     if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
     {
-        return error("CSyncCheckpoint::CheckSignature() : verify signature failed");
+        CPubKey keyOld(ParseHex(strMasterPubKeyOld));
+        if (!keyOld.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
+        {
+            return error("CSyncCheckpoint::CheckSignature() : verify signature failed");
+        }
+        return false;
     }
 
     // Now unserialize the data
