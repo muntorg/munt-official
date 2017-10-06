@@ -1104,6 +1104,7 @@ bool AppInitParameterInteraction()
     //Gulden - generate private/public key pair for alert or checkpoint system
     if (IsArgSet("-genkeypair"))
     {
+        ECC_Start();
         CKey key;
         key.MakeNewKey(false);
 
@@ -1112,6 +1113,7 @@ bool AppInitParameterInteraction()
 	CPubKey vchPubKey = key.GetPubKey();
 	vchPubKey.Decompress();
         printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
+        exit(EXIT_SUCCESS);
     }
 
 
