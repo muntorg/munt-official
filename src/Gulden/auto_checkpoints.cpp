@@ -482,7 +482,7 @@ namespace Checkpoints
     // Is the sync-checkpoint too old?
     bool IsSyncCheckpointTooOld(unsigned int nSeconds)
     {
-        if (GetBoolArg("-testnet", false))
+        if (IsArgSet("-testnet"))
             return false;
 
         LOCK(cs_hashSyncCheckpoint);
