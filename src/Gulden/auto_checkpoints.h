@@ -91,7 +91,7 @@ public:
 	bool IsNull() const;
 	uint256 GetHash() const;
 	bool RelayTo(CNode* pnode) const;
-	bool CheckSignature();
+	bool CheckSignature(CNode* pfrom);
 	bool ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& chainparams);
 };
 #endif

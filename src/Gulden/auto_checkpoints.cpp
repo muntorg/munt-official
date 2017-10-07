@@ -509,7 +509,7 @@ const std::string CSyncCheckpoint::strMasterPubKeyOld             = "043872e0472
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
 // ppcoin: verify signature of sync-checkpoint message
-bool CSyncCheckpoint::CheckSignature()
+bool CSyncCheckpoint::CheckSignature(CNode* pfrom)
 {
     CPubKey key(ParseHex(IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey));
     if (!key.IsValid())
@@ -521,6 +521,7 @@ bool CSyncCheckpoint::CheckSignature()
         CPubKey keyOld(ParseHex(strMasterPubKeyOld));
         if (!keyOld.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
         {
+            Misbehaving(pfrom->GetId(), 10);
             return error("CSyncCheckpoint::CheckSignature() : verify signature failed");
         }
         return false;
@@ -535,7 +536,7 @@ bool CSyncCheckpoint::CheckSignature()
 // ppcoin: process synchronized checkpoint
 bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& chainparams)
 {
-    if (!CheckSignature())
+    if (!CheckSignature(pfrom))
     {
         return false;
     }
