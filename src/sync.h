@@ -170,6 +170,21 @@ typedef CMutexLock<CCriticalSection> CCriticalBlock;
 #define LOCK2(cs1, cs2) CCriticalBlock criticalblock1(cs1, #cs1, __FILE__, __LINE__), criticalblock2(cs2, #cs2, __FILE__, __LINE__)
 #define TRY_LOCK(cs, name) CCriticalBlock name(cs, #cs, __FILE__, __LINE__, true)
 
+#define DS_LOCK2(cs1, cs2)                                                                                         \
+    std::shared_ptr<CCriticalBlock> criticalblock1 = nullptr;                                                      \
+    std::shared_ptr<CCriticalBlock> criticalblock2 = nullptr;                                                      \
+    while (true) {                                                                                                 \
+        criticalblock1 = std::shared_ptr<CCriticalBlock>(new CCriticalBlock(cs1, #cs1, __FILE__, __LINE__, true)); \
+        criticalblock2 = std::shared_ptr<CCriticalBlock>(new CCriticalBlock(cs2, #cs2, __FILE__, __LINE__, true)); \
+        if (!(*criticalblock1) || !(*criticalblock2)) {                                                            \
+            criticalblock1 = nullptr;                                                                              \
+            criticalblock2 = nullptr;                                                                              \
+            MilliSleep(50);                                                                                        \
+            continue;                                                                                              \
+        };                                                                                                         \
+        break;                                                                                                     \
+    }
+
 #define ENTER_CRITICAL_SECTION(cs)                            \
     {                                                         \
         EnterCritical(#cs, __FILE__, __LINE__, (void*)(&cs)); \

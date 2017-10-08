@@ -600,7 +600,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 
             QString strArgs = "-min";
 
-            strArgs += QString::fromStdString(strprintf(" -testnet=%d -regtest=%d", GetBoolArg("-testnet", false), GetBoolArg("-regtest", false)));
+            strArgs += QString::fromStdString(strprintf(" -testnet=%d -regtest=%d", IsArgSet("-testnet"), GetBoolArg("-regtest", false)));
 
 #ifdef UNICODE
             boost::scoped_array<TCHAR> args(new TCHAR[strArgs.length() + 1]);
@@ -703,7 +703,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             optionFile << "Name=Gulden\n";
         else
             optionFile << strprintf("Name=Gulden (%s)\n", chain);
-        optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", GetBoolArg("-testnet", false), GetBoolArg("-regtest", false));
+        optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", IsArgSet("-testnet"), GetBoolArg("-regtest", false));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
         optionFile << "MimeType=x-scheme-handler/guldencoin:\n";

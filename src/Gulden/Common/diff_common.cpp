@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 The Gulden developers
+// Copyright (c) 2015-2017 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -22,9 +22,9 @@ import org.bitcoinj.store.BlockStoreException;
 public
 class CommonDiff extends DeltaDiff {
 public
-    static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 250000);
+    static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
 public
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 437600);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
 public
     static
 #endif
@@ -37,8 +37,8 @@ public
                             )
     {
 #ifndef __JAVA__
-        static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(350000, 250000);
-        static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(200, 437600);
+        static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
+        static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
 #endif
 
         if (INDEX_HEIGHT(indexLast) + 1 >= nOldDiffSwitchoverBlock) {

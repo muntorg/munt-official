@@ -45,17 +45,19 @@ std::string CBlock::ToString() const
 
 uint256 CBlock::GetPoWHash() const
 {
+    uint256 hashRet;
 
-    arith_uint256 thash;
-
-    if (GetBoolArg("-testnetaccel", false)) {
+    static bool hashCity = IsArgSet("-testnet") ? (GetArg("-testnet", "")[0] == 'C' ? true : false) : false;
+    if (hashCity) {
+        arith_uint256 thash;
         hash_city(BEGIN(nVersion), thash);
+        hashRet = ArithToUint256(thash);
     } else {
         char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(thash), scratchpad);
+        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(hashRet), scratchpad);
     }
 
-    return ArithToUint256(thash);
+    return hashRet;
 }
 
 int64_t GetBlockWeight(const CBlock& block)

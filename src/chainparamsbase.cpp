@@ -24,7 +24,7 @@ const std::string CBaseChainParams::REGTEST = "regtest";
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
     strUsage += HelpMessageGroup(_("Chain selection options:"));
-    strUsage += HelpMessageOpt("-testnet", _("Use the test chain"));
+    strUsage += HelpMessageOpt("-testnet", _("Use or create a test blockchain. Specify the chain using the format <hashtype><genesistimestamp>:<blockintervaltarget> e.g. S1505211751:20 (Scrypt with 20 second block target) or C1505211751:10 (City hash with 10 second block target). For 'official' testnet chain specifiers visit https://github.com/bitcoin/gulden-official where the latest chains will always be listed."));
     if (debugHelp) {
         strUsage += HelpMessageOpt("-regtest", "Enter regression test mode, which uses a special chain in which blocks can be solved instantly. "
                                                "This is intended for regression testing tools and app development.");
@@ -41,7 +41,6 @@ public:
         nRPCPort = 9232;
     }
 };
-static CBaseMainParams mainParams;
 
 /**
  * Testnet (v3)
@@ -51,10 +50,11 @@ public:
     CBaseTestNetParams()
     {
         nRPCPort = 9924;
-        strDataDir = "testnet";
+        std::string testnetArgs = GetArg("-testnet", "");
+        std::replace(testnetArgs.begin(), testnetArgs.end(), ':', '_');
+        strDataDir = (boost::filesystem::path("testnet") / testnetArgs).string();
     }
 };
-static CBaseTestNetParams testNetParams;
 
 /*
  * Regression test
@@ -67,48 +67,57 @@ public:
         strDataDir = "regtest";
     }
 };
-static CBaseRegTestParams regTestParams;
 
-static CBaseChainParams* pCurrentBaseParams = 0;
+static std::unique_ptr<CBaseChainParams> globalChainBaseParams;
 
 const CBaseChainParams& BaseParams()
 {
-    assert(pCurrentBaseParams);
-    return *pCurrentBaseParams;
+    assert(globalChainBaseParams);
+    return *globalChainBaseParams;
 }
 
-CBaseChainParams& BaseParams(const std::string& chain)
+std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain)
 {
     if (chain == CBaseChainParams::MAIN)
-        return mainParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseMainParams());
     else if (chain == CBaseChainParams::TESTNET)
-        return testNetParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseTestNetParams());
     else if (chain == CBaseChainParams::REGTEST)
-        return regTestParams;
+        return std::unique_ptr<CBaseChainParams>(new CBaseRegTestParams());
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }
 
 void SelectBaseParams(const std::string& chain)
 {
-    pCurrentBaseParams = &BaseParams(chain);
+    globalChainBaseParams = CreateBaseChainParams(chain);
+}
+
+const CBaseChainParams& BaseParams(const std::string& chain)
+{
+    SelectBaseParams(chain);
+    return BaseParams();
 }
 
 std::string ChainNameFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
-    bool fTestNet = GetBoolArg("-testnet", false);
+    bool fTestNet = IsArgSet("-testnet");
 
     if (fTestNet && fRegTest)
         throw std::runtime_error("Invalid combination of -regtest and -testnet.");
     if (fRegTest)
         return CBaseChainParams::REGTEST;
-    if (fTestNet)
+    if (fTestNet) {
+        std::string sTestnetParams = GetArg("-testnet", "");
+        if (sTestnetParams.empty())
+            throw std::runtime_error("Invalid seed timestamp for testnet.");
         return CBaseChainParams::TESTNET;
+    }
     return CBaseChainParams::MAIN;
 }
 
 bool AreBaseParamsConfigured()
 {
-    return pCurrentBaseParams != NULL;
+    return globalChainBaseParams != NULL;
 }

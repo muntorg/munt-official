@@ -3129,9 +3129,9 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast(pindexPrev->nHeight))
         return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
 
-    if (pindexPrev->nHeight > (GetBoolArg("-testnet", false) ? 446500 : 437500)) {
+    if (pindexPrev->nHeight > (IsArgSet("-testnet") ? 446500 : 437500)) {
         if (block.GetBlockTime() > nAdjustedTime + 60)
-            return state.Invalid(false, REJECT_INVALID, "time-too-new", strprintf("block timestamp too far in the future block:%u adjusted:%u system:%u offset:%u", block.GetBlockTime(), nAdjustedTime, GetTime(), GetTimeOffset()));
+            return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     } else {
         if (block.GetBlockTime() > nAdjustedTime + 15 * 60)
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
@@ -3317,7 +3317,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
 
 static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned nRequired, const Consensus::Params& consensusParams)
 {
-    if (pstart->nHeight < (GetBoolArg("-testnet", false) ? 446500 : 434500))
+    if (!IsArgSet("-testnet") && pstart->nHeight < 434500)
         return false;
 
     unsigned int nFound = 0;
@@ -3904,7 +3904,7 @@ bool InitBlockIndex(const CChainParams& chainparams)
             if (!Checkpoints::WriteSyncCheckpoint(Params().GenesisBlock().GetHash()))
                 return error("LoadBlockIndex() : failed to init sync checkpoint");
             std::string strPubKey;
-            std::string strPubKeyComp = GetBoolArg("-testnet", false) ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
+            std::string strPubKeyComp = IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
             if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp) {
 
                 if (!Checkpoints::WriteCheckpointPubKey(strPubKeyComp))

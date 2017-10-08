@@ -2015,7 +2015,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) co
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
 
@@ -2042,7 +2042,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeC
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
 
@@ -2067,7 +2067,7 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
             if (!forAccount || ::IsMine(forAccount, *pcoin)) {
@@ -2082,7 +2082,7 @@ CAmount CWallet::GetWatchOnlyBalance() const
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
             if (pcoin->IsTrusted())
@@ -2097,7 +2097,7 @@ CAmount CWallet::GetUnconfirmedWatchOnlyBalance() const
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
             if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
@@ -2111,7 +2111,7 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
 {
     CAmount nTotal = 0;
     {
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
             nTotal += pcoin->GetImmatureWatchOnlyCredit();
@@ -2681,12 +2681,12 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
     return nFeeNeeded;
 }
 
-DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
+DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
 {
+    nExtraLoadState = NEW_WALLET;
     if (!fFileBacked)
         return DB_LOAD_OK;
-    fFirstRunRet = false;
-    DBErrors nLoadWalletRet = CWalletDB(strWalletFile, "cr+").LoadWallet(this, fFirstRunRet);
+    DBErrors nLoadWalletRet = CWalletDB(strWalletFile, "cr+").LoadWallet(this, nExtraLoadState);
     if (nLoadWalletRet == DB_NEED_REWRITE) {
         if (CDB::Rewrite(strWalletFile, "\x04pool")) {
             LOCK(cs_wallet);
@@ -3141,7 +3141,7 @@ CAmount CWallet::GetAccountBalance(CWalletDB& walletdb, const std::string& strAc
 
     {
 
-        LOCK2(cs_main, cs_wallet);
+        DS_LOCK2(cs_main, cs_wallet);
 
         for (map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx& wtx = (*it).second;
@@ -3565,9 +3565,9 @@ bool CWallet::InitLoadWallet()
     uiInterface.InitMessage(_("Loading wallet..."));
 
     int64_t nStart = GetTimeMillis();
-    bool fFirstRun = true;
+    WalletLoadState loadState = NEW_WALLET;
     CWallet* walletInstance = new CWallet(walletFile);
-    DBErrors nLoadWalletRet = walletInstance->LoadWallet(fFirstRun);
+    DBErrors nLoadWalletRet = walletInstance->LoadWallet(loadState);
     if (nLoadWalletRet != DB_LOAD_OK) {
         if (nLoadWalletRet == DB_CORRUPT)
             return InitError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
@@ -3584,7 +3584,7 @@ bool CWallet::InitLoadWallet()
             return InitError(strprintf(_("Error loading %s"), walletFile));
     }
 
-    if (GetBoolArg("-upgradewallet", fFirstRun)) {
+    if (GetBoolArg("-upgradewallet", loadState == NEW_WALLET)) {
         int nMaxVersion = GetArg("-upgradewallet", 0);
         if (nMaxVersion == 0) // the -upgradewallet without argument case
         {
@@ -3599,13 +3599,20 @@ bool CWallet::InitLoadWallet()
         walletInstance->SetMaxVersion(nMaxVersion);
     }
 
-    if (fFirstRun) {
+    if (loadState == NEW_WALLET) {
 
         if (GetBoolArg("-usehd", DEFAULT_USE_HD_WALLET)) {
             if (fNoUI) {
                 std::vector<unsigned char> entropy(16);
                 GetStrongRandBytes(&entropy[0], 16);
                 GuldenApplication::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size() * 8));
+            }
+
+            if (GuldenApplication::gApp->getRecoveryPhrase().size() == 0) {
+
+                if (!walletInstance->mapAccounts.empty())
+                    walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+                throw std::runtime_error("Invalid seed mnemonic");
             }
 
             walletInstance->activeSeed = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
@@ -3652,6 +3659,14 @@ bool CWallet::InitLoadWallet()
             walletInstance->activeAccount->m_Type = AccountType::Normal;
             walletInstance->activeAccount->m_SubType = AccountSubType::Desktop;
 
+            {
+                CWalletDB walletdb(walletFile);
+                if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount)) {
+                    throw std::runtime_error("Writing legacy account failed");
+                }
+                walletdb.WritePrimaryAccount(walletInstance->activeAccount);
+            }
+
             walletInstance->TopUpKeyPool(2);
         }
 
@@ -3659,7 +3674,7 @@ bool CWallet::InitLoadWallet()
         walletInstance->SetBestChain(chainActive.GetLocator());
 
         CWalletDB walletdb(walletFile);
-    } else {
+    } else if (loadState == EXISTING_WALLET_OLDACCOUNTSYSTEM) {
 
         if (fNoUI) {
             if (!walletInstance->activeAccount->IsHD() && !walletInstance->activeSeed) {
@@ -3752,6 +3767,16 @@ bool CWallet::InitLoadWallet()
                 }
             }
         }
+    } else if (loadState == EXISTING_WALLET) {
+
+        if (!walletInstance->activeAccount) {
+            if (!walletInstance->mapAccounts.empty())
+                walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+            else
+                throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
+        }
+    } else {
+        throw std::runtime_error("Unknown wallet load state.");
     }
 
     if (GuldenApplication::gApp->isRecovery) {
