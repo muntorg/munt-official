@@ -66,9 +66,6 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
 
-    if (consensusParams.fPowAllowMinDifficultyBlocks)
-        pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
-
     return nNewTime - nOldTime;
 }
 
@@ -152,7 +149,6 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     nLastBlockTx = nBlockTx;
     nLastBlockSize = nBlockSize;
     nLastBlockWeight = nBlockWeight;
-    LogPrintf("CreateNewBlock(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOpsCost);
 
     CMutableTransaction coinbaseTx;
     coinbaseTx.vin.resize(1);
@@ -626,6 +622,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
     LogPrintf("GuldenMiner started\n");
     RenameThread("gulden-miner");
 
+    static bool hashCity = IsArgSet("-testnet") ? (GetArg("-testnet", "")[0] == 'C' ? true : false) : false;
+    static bool regTest = GetBoolArg("-regtest", false);
+
     unsigned int nExtraNonce = 0;
 
     boost::shared_ptr<CReserveScript> coinbaseScript;
@@ -646,7 +645,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 
         while (true) {
-            if (chainparams.MiningRequiresPeers()) {
+            if (!regTest && !hashCity) {
 
                 do {
                     bool fvNodesEmpty;
@@ -670,9 +669,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
             }
             CBlock* pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
-
-            LogPrintf("Running GuldenMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
-                      ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
@@ -698,8 +694,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                         }
                     }
 
-                    char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-                    scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
+                    thash = UintToArith256(pblock->GetPoWHash());
 
                     if (thash <= hashTarget) {
 
@@ -746,11 +741,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
 
                 if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
                     break; // Recreate the block if the clock has run backwards,
-
-                if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks) {
-
-                    hashTarget.SetCompact(pblock->nBits);
-                }
             }
         }
     }

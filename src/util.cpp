@@ -389,6 +389,13 @@ void ParseParameters(int argc, const char* const argv[])
     }
 }
 
+bool IsArgSet(const std::string& strArg)
+{
+    if (mapArgs.count(strArg))
+        return true;
+    return false;
+}
+
 std::string GetArg(const std::string& strArg, const std::string& strDefault)
 {
     if (mapArgs.count(strArg))

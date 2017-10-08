@@ -41,7 +41,7 @@ void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp = true);
  */
 const CBaseChainParams& BaseParams();
 
-CBaseChainParams& BaseParams(const std::string& chain);
+const CBaseChainParams& BaseParams(const std::string& chain);
 
 /** Sets the params returned by Params() to those for the given network. */
 void SelectBaseParams(const std::string& chain);

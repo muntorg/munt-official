@@ -691,7 +691,7 @@ static bool IsKeyType(string strType)
     return (strType == "key" || strType == "wkey" || strType == "mkey" || strType == "ckey");
 }
 
-DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
+DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadState)
 {
     CWalletScanState wss;
     bool fNoncriticalErrors = false;
@@ -709,6 +709,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
         }
 
         bool isPreHDWallet = false;
+        bool haveAnyAccounts = false;
 
         {
 
@@ -732,6 +733,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 std::string sKey;
                 ssKey >> sKey;
                 if (sKey == "accleg" || sKey == "acchd") {
+                    haveAnyAccounts = true;
                     CDataStream ssKey2(SER_DISK, CLIENT_VERSION);
                     std::string accountUUID;
                     ssKey >> accountUUID;
@@ -762,9 +764,9 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
             pcursor->close();
         }
 
-        firstRunRet = true;
+        nExtraLoadState = NEW_WALLET;
         if (!primaryAccountString.empty()) {
-            firstRunRet = false;
+            nExtraLoadState = EXISTING_WALLET;
             if (pwallet->mapAccounts.count(primaryAccountString) == 0) {
                 LogPrintf("Error - missing primary account for UUID [%s]\n", primaryAccountString);
                 fNoncriticalErrors = true;
@@ -772,7 +774,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
             }
         } else if (isPreHDWallet) {
-            firstRunRet = false;
+            nExtraLoadState = EXISTING_WALLET_OLDACCOUNTSYSTEM;
 
             if (pwallet->activeAccount == NULL && pwallet->activeSeed == NULL) {
                 try {
@@ -790,6 +792,8 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, bool& firstRunRet)
                 pwallet->mapAccounts[pwallet->activeAccount->getUUID()] = pwallet->activeAccount;
                 pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] = "Legacy";
             }
+        } else if (haveAnyAccounts) {
+            nExtraLoadState = EXISTING_WALLET;
         }
 
         Dbc* pcursor = GetCursor();

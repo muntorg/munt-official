@@ -1,3 +1,20 @@
+1.6.4.3
+
+Maintenance release in preparation for 2.0 release. 
+CORE - Backport new testnet from 2.0 branch, this is required in order to beta test 2.0 upgrades correctly. 
+CORE - Introduce some corrections/changes to all mutex related code in an attempt to fix some occasional RPC freezes that are intermittently occurring. 
+CORE - Pre-emptively patch/fix against a potential but unlikely DDoS attack that could be used to try temporarily make specific nodes inaccessible. 
+CORE - Fix a minor issue with encrypted non-HD wallets where it was necessary to input the password on every GuldenD restart. 
+MISC - Update all nocks calls to use the new nocks.com API. 
+MISC - Clean up some unnecessary logging to keep log files small. 
+MISC - Periodic update of checkpoints and other hardcoded wallet information. 
+CMDFLAG - Fix issue with genkeypair command. 
+
+1.6.4.2
+
+Minor bugfix release.
+RPC - Fix some balance calculation issues.
+
 1.6.4.1
 
 Minor bugfix release.

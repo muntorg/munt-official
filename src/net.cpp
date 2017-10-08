@@ -45,6 +45,7 @@
 #include <boost/thread.hpp>
 
 #include <math.h>
+#include "main.h"
 
 #define DUMP_ADDRESSES_INTERVAL 900
 
@@ -1645,9 +1646,8 @@ void ThreadMessageHandler()
             boost::this_thread::interruption_point();
 
             {
-                TRY_LOCK(pnode->cs_vSend, lockSend);
-                if (lockSend)
-                    GetNodeSignals().SendMessages(pnode);
+                DS_LOCK2(cs_main, pnode->cs_vSend);
+                GetNodeSignals().SendMessages(pnode);
             }
             boost::this_thread::interruption_point();
         }

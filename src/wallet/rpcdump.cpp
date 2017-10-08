@@ -110,7 +110,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
             + HelpExampleCli("importprivkey", "\"mykey\" \"testing\" false") + "\nAs a JSON-RPC call\n"
             + HelpExampleRpc("importprivkey", "\"mykey\", \"testing\", false"));
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     EnsureWalletIsUnlocked();
 
@@ -240,7 +240,7 @@ UniValue importaddress(const UniValue& params, bool fHelp)
     if (params.size() > 3)
         fP2SH = params[3].get_bool();
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     CBitcoinAddress address(params[0].get_str());
     if (address.IsValid()) {
@@ -308,7 +308,7 @@ UniValue importprunedfunds(const UniValue& params, bool fHelp)
     wtx.nIndex = txnIndex;
     wtx.hashBlock = merkleBlock.header.GetHash();
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     if (pwalletMain->IsMine(tx)) {
         CWalletDB walletdb(pwalletMain->strWalletFile, "r+", false);
@@ -334,7 +334,7 @@ UniValue removeprunedfunds(const UniValue& params, bool fHelp)
             + HelpExampleCli("removeprunedfunds", "\"a8d0c0184dde994a09ec054286f1ce581bebf46446a512166eae7628734ea0a5\"") + "\nAs a JSON-RPC call\n"
             + HelpExampleRpc("removprunedfunds", "\"a8d0c0184dde994a09ec054286f1ce581bebf46446a512166eae7628734ea0a5\""));
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     uint256 hash;
     hash.SetHex(params[0].get_str());
@@ -395,7 +395,7 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
     if (!pubKey.IsFullyValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Pubkey is not a valid public key");
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     ImportAddress(CBitcoinAddress(pubKey.GetID()), strLabel);
     ImportScript(GetScriptForRawPubKey(pubKey), strLabel, false);
@@ -434,7 +434,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
     if (forAccount->IsHD())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot import a privkey into an HD account.");
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     EnsureWalletIsUnlocked();
 
@@ -540,7 +540,7 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
             + HelpExampleCli("importprivkey", "\"mykey\"")
             + HelpExampleRpc("dumpprivkey", "\"myaddress\""));
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     EnsureWalletIsUnlocked();
 
@@ -586,7 +586,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
             + HelpExampleCli("dumpwallet", "\"test\"")
             + HelpExampleRpc("dumpwallet", "\"test\""));
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    DS_LOCK2(cs_main, pwalletMain->cs_wallet);
 
     EnsureWalletIsUnlocked();
 
