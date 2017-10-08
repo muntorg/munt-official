@@ -263,7 +263,7 @@ void ReceiveCoinsDialog::gotoReceievePage()
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
 #ifdef WIN32
-    if (WIN32) {
+    if (_WIN32 && !GetBoolArg("-testbuypage32", false)) {
 
         QDesktopServices::openUrl(QUrl("https://gulden.com/purchase"));
         return;
@@ -489,7 +489,9 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
 #endif
 }
 
+#ifndef HAVE_WEBENGINE_VIEW
 void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError>& errlist)
 {
     qnr->ignoreSslErrors();
 }
+#endif

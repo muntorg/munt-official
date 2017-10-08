@@ -709,7 +709,7 @@ void InitLogging()
     fLogIPs = GetBoolArg("-logips", DEFAULT_LOGIPS);
 
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("Bitcoin version %s\n", FormatFullVersion());
+    LogPrintf("Gulden version %s\n", FormatFullVersion());
 }
 
 /** Initialize bitcoin.
@@ -881,6 +881,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         return false;
 
     if (mapArgs.count("-genkeypair")) {
+        ECC_Start();
         CKey key;
         key.MakeNewKey(false);
 
@@ -889,6 +890,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         CPubKey vchPubKey = key.GetPubKey();
         vchPubKey.Decompress();
         printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
+        exit(EXIT_SUCCESS);
     }
 
 #endif // ENABLE_WALLET

@@ -23,6 +23,7 @@
 #include "wallet/crypter.h"
 #include "wallet/rpcwallet.h"
 #include "wallet/walletdberrors.h"
+#include "wallet/walletdb.h"
 #include "account.h"
 
 #include <algorithm>
@@ -1023,7 +1024,7 @@ public:
     CAmount GetChange(const CTransaction& tx) const;
     void SetBestChain(const CBlockLocator& loc);
 
-    DBErrors LoadWallet(bool& fFirstRunRet);
+    DBErrors LoadWallet(WalletLoadState& nExtraLoadState);
     DBErrors ZapWalletTx(std::vector<CWalletTx>& vWtx);
     DBErrors ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
 

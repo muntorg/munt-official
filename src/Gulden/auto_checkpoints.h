@@ -69,6 +69,7 @@ class CSyncCheckpoint : public CUnsignedSyncCheckpoint {
 public:
     static const std::string strMasterPubKey;
     static const std::string strMasterPubKeyTestnet;
+    static const std::string strMasterPubKeyOld;
     static std::string strMasterPrivKey;
 
     std::vector<unsigned char> vchMsg;
@@ -86,7 +87,7 @@ public:
     bool IsNull() const;
     uint256 GetHash() const;
     bool RelayTo(CNode* pnode) const;
-    bool CheckSignature();
+    bool CheckSignature(CNode* pfrom);
     bool ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& chainparams);
 };
 #endif

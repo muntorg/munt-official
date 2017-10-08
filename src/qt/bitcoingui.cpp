@@ -966,6 +966,10 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
         return;
     }
 
+    if (IsArgSet("-testnet") && type == "Mined") {
+        return;
+    }
+
     message(amountSent > amountReceived ? tr("Sent funds%1").arg(accountStr) : tr("Incoming funds%1").arg(accountStr),
             msg, CClientUIInterface::MSG_INFORMATION);
 }

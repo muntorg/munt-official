@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 The Gulden developers
+// Copyright (c) 2015-2017 The Gulden developers
 // Authored by: Frank (dt_cdog@yahoo.com) and Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -50,6 +50,7 @@ public
 
         static int64_t nPrevHeight = 0;
         static int64_t nPrevDifficulty = 0;
+        static bool debugLogging = false;
 
         std::string sLogInfo;
 #endif
@@ -137,7 +138,7 @@ public
                 pindexFirst = INDEX_PREV(pindexFirst);
             }
 
-            if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nMiddleFrame) {
+            if (INDEX_HEIGHT(pindexLast) - (int)nFirstDeltaBlock <= (int)nMiddleFrame) {
                 nMiddleWeight = nMiddleTimespan = 0;
             } else {
                 pindexFirst = pindexLast;
@@ -152,7 +153,7 @@ public
                 }
             }
 
-            if (INDEX_HEIGHT(pindexLast) - nFirstDeltaBlock <= nLongFrame) {
+            if ((int)INDEX_HEIGHT(pindexLast) - (int)nFirstDeltaBlock <= (int)nLongFrame) {
                 nLongWeight = nLongTimespan = 0;
             } else {
                 pindexFirst = pindexLast;
@@ -165,7 +166,7 @@ public
             if ((nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 40 / PERCENT_FACTOR)) {
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                     sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
 #endif
 #endif
@@ -210,7 +211,7 @@ public
                     bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                    if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                    if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                         sLogInfo += strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
 #endif
 #endif
@@ -218,7 +219,7 @@ public
                     SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                    if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                    if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                         sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
 #endif
 #endif
@@ -235,7 +236,7 @@ public
 
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty))
+                if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty))
                     sLogInfo += strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
 #endif
 #endif
@@ -247,7 +248,7 @@ public
 
 #ifndef BUILD_IOS
 #ifndef __JAVA__
-            if (fDebug) {
+            if (debugLogging) {
                 if (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty) {
                     static CCriticalSection logCS;
                     LOCK(logCS);
