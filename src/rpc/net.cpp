@@ -44,7 +44,7 @@ UniValue getconnectioncount(const UniValue& params, bool fHelp)
             + HelpExampleCli("getconnectioncount", "")
             + HelpExampleRpc("getconnectioncount", ""));
 
-    LOCK2(cs_main, cs_vNodes);
+    DS_LOCK2(cs_main, cs_vNodes);
 
     return (int)vNodes.size();
 }
@@ -61,7 +61,7 @@ UniValue ping(const UniValue& params, bool fHelp)
             + HelpExampleCli("ping", "")
             + HelpExampleRpc("ping", ""));
 
-    LOCK2(cs_main, cs_vNodes);
+    DS_LOCK2(cs_main, cs_vNodes);
 
     BOOST_FOREACH (CNode* pNode, vNodes) {
         pNode->fPingQueued = true;

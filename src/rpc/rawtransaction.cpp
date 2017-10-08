@@ -629,7 +629,7 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
             + HelpExampleRpc("signrawtransaction", "\"myhex\""));
 
 #ifdef ENABLE_WALLET
-    LOCK2(cs_main, pwalletMain ? &pwalletMain->cs_wallet : NULL);
+    DS_LOCK2(cs_main, pwalletMain ? &pwalletMain->cs_wallet : NULL);
 #else
     LOCK(cs_main);
 #endif

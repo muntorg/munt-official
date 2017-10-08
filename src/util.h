@@ -149,6 +149,8 @@ inline bool IsSwitchChar(char c)
 #endif
 }
 
+bool IsArgSet(const std::string& strArg);
+
 /**
  * Return string argument or default value
  *
