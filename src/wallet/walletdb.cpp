@@ -797,11 +797,11 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             }
             pcursor->close();
         }
-                
-        
+
+
         nExtraLoadState = NEW_WALLET;
         if (!primaryAccountString.empty())
-        {   
+        {
             nExtraLoadState = EXISTING_WALLET;
             if (pwallet->mapAccounts.count(primaryAccountString) == 0)
             {
@@ -813,10 +813,10 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
             }
         }
-        else if (isPreHDWallet)
+        else if (isPreHDWallet && !haveAnyAccounts)
         {
             nExtraLoadState = EXISTING_WALLET_OLDACCOUNTSYSTEM;
-            
+
             //Upgrade old legacy wallet - set active account - all the old keys will just land up in this.
             if (pwallet->activeAccount == NULL && pwallet->activeSeed == NULL)
             {
@@ -832,7 +832,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 {
                     //We don't care enough about this to worry - if it fails we just carry on.
                 }
-                
+
                 pwallet->activeAccount = new CAccount();
                 pwallet->activeAccount->setLabel("Legacy", NULL);
                 pwallet->mapAccounts[pwallet->activeAccount->getUUID()] = pwallet->activeAccount;
@@ -843,7 +843,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         {
             nExtraLoadState = EXISTING_WALLET;
         }
-        
+
         // Get cursor
         Dbc* pcursor = batch.GetCursor();
         if (!pcursor)
