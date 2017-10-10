@@ -773,7 +773,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             } else {
                 pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
             }
-        } else if (isPreHDWallet) {
+        } else if (isPreHDWallet && !haveAnyAccounts) {
             nExtraLoadState = EXISTING_WALLET_OLDACCOUNTSYSTEM;
 
             if (pwallet->activeAccount == NULL && pwallet->activeSeed == NULL) {
