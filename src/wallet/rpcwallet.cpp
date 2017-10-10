@@ -36,6 +36,8 @@
 #include <Gulden/auto_checkpoints.h>
 #include <Gulden/translate.h>
 
+#include <thread>
+
 using namespace std;
 
 int64_t nWalletUnlockTime;
@@ -1966,9 +1968,14 @@ UniValue keypoolrefill(const UniValue& params, bool fHelp)
 
 static void LockWallet(CWallet* pWallet)
 {
-    LOCK(cs_nWalletUnlockTime);
-    nWalletUnlockTime = 0;
-    pWallet->Lock();
+
+    std::thread(
+        [=] {
+            DS_LOCK2(cs_main, pWallet->cs_wallet);
+            LOCK(cs_nWalletUnlockTime);
+            nWalletUnlockTime = 0;
+            pWallet->Lock();
+        }).detach();
 }
 
 UniValue walletpassphrase(const UniValue& params, bool fHelp)
