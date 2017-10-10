@@ -1,3 +1,8 @@
+1.6.4.4
+
+RPC - Fix an issue with the 'unlock' callback of 'walletpassphrase' whereby it could temporarily freeze the main RPC thread. In most cases this would result in slow RPC but in extreme cases it could be so slow that the slowness would then cascade into other parts of the program (e.g. peers timing out) presenting as a frozen RPC that no longer 
+responds.
+
 1.6.4.3
 
 Maintenance release in preparation for 2.0 release. 
