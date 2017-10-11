@@ -238,7 +238,7 @@ bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program
 }
 
 
-//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
 bool CScript::IsPoW2Witness() const
 {
     if (this->size() != 66)
@@ -251,7 +251,7 @@ bool CScript::IsPoW2Witness() const
     return true;
 }
 
-//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
 std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 {
     assert(IsPoW2Witness());
@@ -261,7 +261,7 @@ std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 }
 
 
-//OP_0 64 [hash 20 byte] [hash 20 byte] [uint64_t 8 byte] [uint64_t 8 byte] [uint64_t 8 byte]
+//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
 //fixme: (Gulden) (2.0) Better error handling.
 void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
@@ -278,33 +278,20 @@ void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
     if (!GetOp(it, opcode, item) || opcode != (unsigned char)64)
         assert(0);
     
-    auto start = it;
-    std::advance(it, 20);
-    std::vector<unsigned char> vchSpendingKey( start, it );
+    std::vector<unsigned char> vchSpendingKey( begin()+2, begin()+22 );
     witness.spendingKeyID = CKeyID(uint160(vchSpendingKey));
     
-    start = it;
-    std::advance(it, 20);
-    std::vector<unsigned char> vchWitnessKey( start, it );
+    std::vector<unsigned char> vchWitnessKey( begin()+22, begin()+42 );
     witness.witnessKeyID = CKeyID(uint160(vchWitnessKey));
     
-    start = it;
-    std::advance(it, 8);
-    std::vector<unsigned char> vchLockFromBlock( start, it );
+    std::vector<unsigned char> vchLockFromBlock( begin()+42, begin()+50 );
     witness.lockFromBlock = CScriptUInt64( vchLockFromBlock ).nNumber;
     
-    start = it;
-    std::advance(it, 8);
-    std::vector<unsigned char> vchLockUntilBlock( start, it );
+    std::vector<unsigned char> vchLockUntilBlock( begin()+50, begin()+58 );
     witness.lockUntilBlock = CScriptUInt64( vchLockUntilBlock ).nNumber;
     
-    start = it;
-    std::advance(it, 8);
-    std::vector<unsigned char> vchFailCount( start, it );
+    std::vector<unsigned char> vchFailCount( begin()+58, begin()+66 );
     witness.failCount = CScriptUInt64( vchFailCount ).nNumber;
-    
-    if (it != end())
-        assert(0);
 }
 
 

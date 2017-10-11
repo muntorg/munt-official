@@ -67,7 +67,8 @@ class CPoW2WitnessDestination{
 public:
     //fixme: (GULDEN) (PoW2) (2.0) - should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
     //Double check this.
-    CPoW2WitnessDestination(const CKeyID& spendingKeyIn, const CKeyID& witnessKeyIn) : spendingKey(spendingKeyIn), witnessKey(witnessKeyIn) {}
+    CPoW2WitnessDestination(const CKeyID& spendingKeyIn, const CKeyID& witnessKeyIn) : spendingKey(spendingKeyIn), witnessKey(witnessKeyIn), lockFromBlock(0), lockUntilBlock(0), failCount(0) {}
+    CPoW2WitnessDestination() : spendingKey(CKeyID()), witnessKey(CKeyID()), lockFromBlock(0), lockUntilBlock(0), failCount(0) {}
     
     CKeyID spendingKey;
     CKeyID witnessKey;

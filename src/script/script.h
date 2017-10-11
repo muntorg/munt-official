@@ -516,7 +516,7 @@ public:
     
     CScript& operator<<(const CScriptUInt64& b)
     {
-        *this << b.vchNumber;
+        insert(end(), b.vchNumber.begin(), b.vchNumber.end());
         return *this;
     }
 
