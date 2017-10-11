@@ -45,7 +45,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
     if (requestType == RequestType::Quotation)
     {
         httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\"}").arg(from, to, amount);
-        netRequest.setUrl( QString::fromStdString( "https://nocks.co/api/price" ) );
+        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/price" ) );
     }
     else
     {
@@ -81,7 +81,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
         QString forexAmount = BitcoinUnits::format(BitcoinUnits::BTC, recipient->amount, false, BitcoinUnits::separatorNever);
     
         httpPostParamaters = QString("{\"pair\": \"NLG_%1\", \"amount\": \"%2\", \"withdrawal\": \"%3\"%4}").arg(forexCurrencyType, forexAmount, recipient->address, httpExtraParams);
-        netRequest.setUrl( QString::fromStdString( "https://nocks.co/api/transaction" ) );
+        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/transaction" ) );
     }
     
     netRequest.setRawHeader( "User-Agent", "Gulden-qt" );

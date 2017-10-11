@@ -104,7 +104,7 @@ std::string NocksSettings::getMaximumForCurrencyAsString(std::string symbol)
 void NocksSettings::pollSettings()
 {
     QNetworkRequest netRequest;
-    netRequest.setUrl( QString::fromStdString( "https://nocks.co/api/settings" ) );
+    netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/settings" ) );
     netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
     netRequest.setRawHeader( "Accept", "application/json" );
 
