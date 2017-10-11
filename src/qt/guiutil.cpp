@@ -568,10 +568,10 @@ boost::filesystem::path static StartupShortcutPath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Bitcoin.lnk";
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "Gulden.lnk";
     if (chain == CBaseChainParams::TESTNET) // Remove this special case when CBaseChainParams::TESTNET = "testnet4"
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Bitcoin (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("Bitcoin (%s).lnk", chain);
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "Gulden (testnet).lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("Gulden (%s).lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -600,7 +600,12 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 
             QString strArgs = "-min";
 
-            strArgs += QString::fromStdString(strprintf(" -testnet=%d -regtest=%d", IsArgSet("-testnet"), GetBoolArg("-regtest", false)));
+            if (IsArgSet("-testnet")) {
+                strArgs += QString::fromStdString(strprintf(" -testnet=%s", GetArg("-testnet", "")));
+            }
+            if (IsArgSet("-regtest")) {
+                strArgs += QString::fromStdString(strprintf(" -regtest=%s", GetBoolArg("-regtest", false)));
+            }
 
 #ifdef UNICODE
             boost::scoped_array<TCHAR> args(new TCHAR[strArgs.length() + 1]);
@@ -660,7 +665,7 @@ boost::filesystem::path static GetAutostartFilePath()
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
         return GetAutostartDir() / "Gulden.desktop";
-    return GetAutostartDir() / strprintf("bitcoin-%s.lnk", chain);
+    return GetAutostartDir() / strprintf("gulden-%s.lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -703,7 +708,12 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             optionFile << "Name=Gulden\n";
         else
             optionFile << strprintf("Name=Gulden (%s)\n", chain);
-        optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", IsArgSet("-testnet"), GetBoolArg("-regtest", false));
+        optionFile << "Exec=" << pszExePath << "-min";
+        if (IsArgSet("-testnet")) {
+            optionFile << strprintf("-testnet=%s\n", GetArg("-testnet", ""));
+        } else if (IsArgSet("-regtest")) {
+            optionFile << strprintf("-regtest=%d\n", GetBoolArg("-regtest", false));
+        }
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
         optionFile << "MimeType=x-scheme-handler/guldencoin:\n";
