@@ -731,7 +731,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript);
+    GetMainSignals().ScriptForMining(coinbaseScript, NULL);
 
      // Meter hashes/sec
     if (nHPSTimerStart == 0)
@@ -1075,7 +1075,8 @@ void static GuldenWitness()
                         
                         //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(selectedWitnessOutput) == ISMINE_SPENDABLE)
-                        {                                       
+                        {
+                            CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(selectedWitnessOutput);
                             /** First we add the new witness coinbase to the block, this acts as a seperator between transactions from the initial mined block and the witness block **/
                             /** We add a placeholder for now as we don't know the fees we will generate **/
                             pWitnessBlock->vtx.emplace_back();
@@ -1083,7 +1084,7 @@ void static GuldenWitness()
                             
                             std::shared_ptr<CReserveScript> coinbaseScript;
                             //fixme: (HIGH) - change this script (should rather output to new witness address)
-                            GetMainSignals().ScriptForMining(coinbaseScript);
+                            GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
                             
                             /** Now add any additional transactions if there is space left **/
                             if (IsPow2Phase4Active(pindexTip, pParams) || IsPow2Phase5Active(pindexTip, pParams))

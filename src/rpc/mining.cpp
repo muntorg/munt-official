@@ -228,7 +228,7 @@ UniValue generate(const JSONRPCRequest& request)
     }
 
     std::shared_ptr<CReserveScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript);
+    GetMainSignals().ScriptForMining(coinbaseScript, NULL);
 
     // If the keypool is exhausted, no script is returned at all.  Catch this.
     if (!coinbaseScript)

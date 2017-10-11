@@ -1081,6 +1081,8 @@ public:
 
     const std::string& GetAccountName(const CScript& scriptPubKey) const;
 
+    CAccount* FindAccountForTransaction(const CTxOut& out);
+
     void Inventory(const uint256 &hash)
     {
         {
@@ -1091,7 +1093,7 @@ public:
         }
     }
 
-    void GetScriptForMining(std::shared_ptr<CReserveScript> &script) override;
+    void GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount) override;
     
     unsigned int GetKeyPoolSize()
     {

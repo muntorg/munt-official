@@ -20,6 +20,7 @@ class CReserveScript;
 class CValidationInterface;
 class CValidationState;
 class uint256;
+class CAccount;
 
 // These functions dispatch to one or all registered wallets
 
@@ -40,7 +41,7 @@ protected:
     virtual void Inventory(const uint256 &hash) {}
     virtual void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) {}
     virtual void BlockChecked(const CBlock&, const CValidationState&) {}
-    virtual void GetScriptForMining(std::shared_ptr<CReserveScript>&) {};
+    virtual void GetScriptForMining(std::shared_ptr<CReserveScript>&, CAccount* forAccount) {};
     virtual void NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& block) {};
     friend void ::RegisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
@@ -73,7 +74,7 @@ struct CMainSignals {
      */
     boost::signals2::signal<void (const CBlock&, const CValidationState&)> BlockChecked;
     /** Notifies listeners that a key for mining is required (coinbase) */
-    boost::signals2::signal<void (std::shared_ptr<CReserveScript>&)> ScriptForMining;
+    boost::signals2::signal<void (std::shared_ptr<CReserveScript>&, CAccount* forAccount)> ScriptForMining;
     /**
      * Notifies listeners that a block which builds directly on our current tip
      * has been received and connected to the headers tree, though not validated yet */

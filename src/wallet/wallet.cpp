@@ -47,6 +47,7 @@
 #include "init.h"
 #include <Gulden/guldenapplication.h>
 #include <Gulden/mnemonic.h>
+#include <script/ismine.h>
 
 std::vector<CWalletRef> vpwallets;
 CWalletRef pactiveWallet = NULL;
@@ -2674,6 +2675,19 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     return true;
 }
 
+CAccount* CWallet::FindAccountForTransaction(const CTxOut& out)
+{
+    for (const auto& accountItem : mapAccounts)
+    {
+        CAccount* childAccount = accountItem.second;
+        if (::IsMine(*childAccount, out) == ISMINE_SPENDABLE)
+        {
+            return childAccount;
+        }
+    }
+    return NULL;
+}
+
 bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl coinControl, bool keepReserveKey)
 {
     std::vector<CRecipient> vecSend;
@@ -3721,10 +3735,18 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
     }
 }
 
-void CWallet::GetScriptForMining(std::shared_ptr<CReserveScript> &script)
+void CWallet::GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount)
 {
-    //fixme: GULDEN (FUT) - Allow mining account to be seperately selected?
-    std::shared_ptr<CReserveKey> rKey = std::make_shared<CReserveKey>(this, activeAccount, KEYCHAIN_EXTERNAL);
+    //fixme: (GULDEN) (FUT) - Allow defaultmining account to be seperately selected?
+    std::shared_ptr<CReserveKey> rKey;
+    if (forAccount)
+    {
+        rKey = std::make_shared<CReserveKey>(this, forAccount, KEYCHAIN_EXTERNAL);
+    }
+    else
+    {
+        rKey = std::make_shared<CReserveKey>(this, activeAccount, KEYCHAIN_EXTERNAL);
+    }
     CPubKey pubkey;
     if (!rKey->GetReservedKey(pubkey))
         return;
