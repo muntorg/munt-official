@@ -170,7 +170,7 @@ UniValue getnewaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getnewaddress", "")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Parse the account first so we don't generate a key if there's an error
     CAccount* account;
@@ -225,7 +225,7 @@ UniValue getaccountaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getaccountaddress", "\"myaccount\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Parse the account first so we don't generate a key if there's an error
     std::string strAccount = AccountFromValue(request.params[0]);
@@ -256,7 +256,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getrawchangeaddress", "")
        );
         
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
     CAccount* fromAccount;
     if (request.params.size() > 0)
         fromAccount = AccountFromValue(pwallet, request.params[0], true);
@@ -304,7 +304,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("setaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"tabby\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CBitcoinAddress address(request.params[0].get_str());
     if (!address.IsValid())
@@ -355,7 +355,7 @@ UniValue getaccount(const JSONRPCRequest& request)
             + HelpExampleRpc("getaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CBitcoinAddress address(request.params[0].get_str());
     if (!address.IsValid())
@@ -404,7 +404,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
             + HelpExampleRpc("getaddressesbyaccount", "\"tabby\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
 
@@ -509,7 +509,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("sendtoaddress", "\"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CBitcoinAddress address(request.params[0].get_str());
     if (!address.IsValid())
@@ -543,7 +543,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
 
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    DS_LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
     #else
     LOCK(cs_main);
     #endif
@@ -635,7 +635,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             + HelpExampleRpc("listaddressgroupings", "")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     UniValue jsonGroupings(UniValue::VARR);
     std::map<CTxDestination, CAmount> balances = pwallet->GetAddressBalances();
@@ -689,7 +689,7 @@ UniValue signmessage(const JSONRPCRequest& request)
             + HelpExampleRpc("signmessage", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"my message\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -747,7 +747,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getreceivedbyaddress", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", 6")
        );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Bitcoin address
     CBitcoinAddress address = CBitcoinAddress(request.params[0].get_str());
@@ -807,7 +807,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getreceivedbyaccount", "\"tabby\", 6")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Minimum confirmations
     int nMinDepth = 1;
@@ -878,13 +878,15 @@ UniValue getbalance(const JSONRPCRequest& request)
             + HelpExampleRpc("getbalance", "\"*\", 6")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.params.size() == 0)
         return ValueFromAmount(pwallet->GetBalance());
     
+    /*
     const std::string& account_param = request.params[0].get_str();
     const std::string* account = account_param != "*" ? &account_param : nullptr;
+    */
 
     int nMinDepth = 1;
     if (request.params.size() > 1)
@@ -912,7 +914,7 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
                 "getunconfirmedbalance\n"
                 "Returns the server's total unconfirmed balance\n");
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     return ValueFromAmount(pwallet->GetUnconfirmedBalance());
 }
@@ -946,7 +948,7 @@ UniValue movecmd(const JSONRPCRequest& request)
             + HelpExampleRpc("move", "\"timotei\", \"akiko\", 0.01, 6, \"happy birthday!\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CAccount* toAccount = AccountFromValue(pwallet, request.params[1], true);
@@ -1039,7 +1041,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
             + HelpExampleRpc("sendfrom", "\"tabby\", \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.01, 6, \"donation\", \"seans outpost\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CBitcoinAddress address(request.params[1].get_str());
@@ -1116,7 +1118,7 @@ UniValue sendmany(const JSONRPCRequest& request)
             + HelpExampleRpc("sendmany", "\"\", \"{\\\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\\\":0.01,\\\"G353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz\\\":0.02}\", 6, \"testing\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (pwallet->GetBroadcastTransactions() && !g_connman) {
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
@@ -1234,7 +1236,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
-    /*LOCK2(cs_main, pwallet->cs_wallet);
+    /*DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount;
     if (request.params.size() > 2)
@@ -1540,7 +1542,7 @@ UniValue listreceivedbyaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("listreceivedbyaddress", "6, true, true")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     return ListReceived(pwallet, request.params, false);
 }
@@ -1579,7 +1581,7 @@ UniValue listreceivedbyaccount(const JSONRPCRequest& request)
             + HelpExampleRpc("listreceivedbyaccount", "6, true, true")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     return ListReceived(pwallet, request.params, true);
 }
@@ -1601,7 +1603,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
     bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
     //fixme: Get checkpoints working for testnet.
-    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !GetBoolArg("-testnet", false) ))
+    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !IsArgSet("-testnet") ))
         return;
     
     std::vector<CAccount*> doForAccounts;
@@ -1778,7 +1780,7 @@ UniValue listtransactions(const JSONRPCRequest& request)
             + HelpExampleRpc("listtransactions", "\"*\", 20, 100")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount = "*";
     if (request.params.size() > 0)
@@ -1871,7 +1873,7 @@ UniValue listtransactions(const JSONRPCRequest& request)
             + HelpExampleRpc("listaccounts", "6")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     int nMinDepth = 1;
     if (request.params.size() > 0)
@@ -1971,7 +1973,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             + HelpExampleRpc("listsinceblock", "\"000000000000000bacf66f7497b7dc45ef753ee9a7d38571037cdb1a57f663ad\", 6")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     const CBlockIndex *pindex = NULL;
     int target_confirms = 1;
@@ -2082,7 +2084,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
             + HelpExampleRpc("gettransaction", "\"G075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     uint256 hash;
     hash.SetHex(request.params[0].get_str());
@@ -2142,7 +2144,7 @@ UniValue abandontransaction(const JSONRPCRequest& request)
             + HelpExampleRpc("abandontransaction", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     uint256 hash;
     hash.SetHex(request.params[0].get_str());
@@ -2176,7 +2178,7 @@ UniValue backupwallet(const JSONRPCRequest& request)
             + HelpExampleRpc("backupwallet", "\"backup.dat\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strDest = request.params[0].get_str();
     if (!pwallet->BackupWallet(strDest)) {
@@ -2206,7 +2208,7 @@ UniValue keypoolrefill(const JSONRPCRequest& request)
             + HelpExampleRpc("keypoolrefill", "")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // 0 is interpreted by TopUpKeyPool() as the default keypool size given by -keypool
     unsigned int kpSize = 0;
@@ -2232,9 +2234,17 @@ UniValue keypoolrefill(const JSONRPCRequest& request)
 
 static void LockWallet(CWallet* pWallet)
 {
-    LOCK(pWallet->cs_wallet);
-    pWallet->nRelockTime = 0;
-    pWallet->Lock();
+    //NB!! It is highly important that this runs in a thread
+    //RPCRunLater calls this in the -main- http thread which blocks all RPC and can cause to RPC freezing for long periods of ti me in certain instances.
+    //fixme (FUTURE) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
+    std::thread(
+        [=] 
+        {
+            DS_LOCK2(cs_main, pWallet->cs_wallet);
+            pWallet->nRelockTime = 0;
+            pWallet->Lock();
+        }
+    ).detach();
 }
 
 UniValue walletpassphrase(const JSONRPCRequest& request)
@@ -2265,7 +2275,7 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
         );
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.fHelp)
         return true;
@@ -2321,7 +2331,7 @@ UniValue walletpassphrasechange(const JSONRPCRequest& request)
         );
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.fHelp)
         return true;
@@ -2377,7 +2387,7 @@ UniValue walletlock(const JSONRPCRequest& request)
         );
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.fHelp)
         return true;
@@ -2424,7 +2434,7 @@ UniValue encryptwallet(const JSONRPCRequest& request)
         );
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.fHelp)
         return true;
@@ -2498,7 +2508,7 @@ UniValue lockunspent(const JSONRPCRequest& request)
             + HelpExampleRpc("lockunspent", "false, \"[{\\\"txid\\\":\\\"a08e6907dbbd3d809776dbfc5d82e371b764ed838b5655e72f463568df1aadf0\\\",\\\"vout\\\":1}]\"")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     if (request.params.size() == 1)
         RPCTypeCheck(request.params, {UniValue::VBOOL});
@@ -2578,7 +2588,7 @@ UniValue listlockunspent(const JSONRPCRequest& request)
             + HelpExampleRpc("listlockunspent", "")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::vector<COutPoint> vOutpts;
     pwallet->ListLockedCoins(vOutpts);
@@ -2616,7 +2626,7 @@ UniValue settxfee(const JSONRPCRequest& request)
             + HelpExampleRpc("settxfee", "0.00001")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Amount
     CAmount nAmount = AmountFromValue(request.params[0]);
@@ -2654,7 +2664,7 @@ UniValue getwalletinfo(const JSONRPCRequest& request)
             + HelpExampleRpc("getwalletinfo", "")
         );
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     UniValue obj(UniValue::VOBJ);
 
@@ -2703,7 +2713,7 @@ UniValue resendwallettransactions(const JSONRPCRequest& request)
     if (!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::vector<uint256> txids = pwallet->ResendWalletTransactionsBefore(GetTime(), g_connman.get());
     UniValue result(UniValue::VARR);
@@ -2829,7 +2839,7 @@ UniValue listunspent(const JSONRPCRequest& request)
     UniValue results(UniValue::VARR);
     //std::vector<COutput> vecOutputs;
     assert(pwallet != NULL);
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
     //fixme: (FUT) (1.6.1) - Take an account as an optional paramater for this call
     std::string strAccount = "*";
     std::vector<CAccount*> doForAccounts;
@@ -3157,7 +3167,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
         }
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
     EnsureWalletIsUnlocked(pwallet);
 
     CFeeBumper feeBump(pwallet, hash, newConfirmTarget, ignoreGlobalPayTxFee, totalFee, replaceable);
