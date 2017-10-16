@@ -1,3 +1,11 @@
+1.6.4.6
+
+RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
+
+1.6.4.5
+
+UI - Fix "run on boot" links that were broken by testnet changes and other minor "run on boot" corrections.
+
 1.6.4.1
 
 Minor bugfix release.
