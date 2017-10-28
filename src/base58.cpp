@@ -237,12 +237,12 @@ public:
 
 bool CBitcoinAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID)
 {
-    std::vector<unsigned char> vchVersionIn;
-    vchVersionIn.reserve(40);
-    vchVersionIn.insert(vchVersionIn.end(), spendingKeyID.begin(), spendingKeyID.end());
-    vchVersionIn.insert(vchVersionIn.end(), witnessKeyID.begin(), witnessKeyID.end());
+    std::vector<unsigned char> vchData;
+    vchData.reserve(40);
+    vchData.insert(vchData.end(), spendingKeyID.begin(), spendingKeyID.end());
+    vchData.insert(vchData.end(), witnessKeyID.begin(), witnessKeyID.end());
     
-    SetData(Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS), &vchVersionIn, 40);
+    SetData(Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS), &vchData[0], 40);
     return true;
 }
 
