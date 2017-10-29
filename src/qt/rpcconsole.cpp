@@ -169,7 +169,7 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
     std::vector<std::pair<size_t, size_t>> filter_ranges;
 
     auto add_to_current_stack = [&](const std::string& strArg) {
-        if (stack.back().empty() && (!nDepthInsideSensitive) && historyFilter.contains(QString::fromStdString(strArg), Qt::CaseInsensitive)) {
+        if (!stack.empty() && stack.back().empty() && (!nDepthInsideSensitive) && historyFilter.contains(QString::fromStdString(strArg), Qt::CaseInsensitive)) {
             nDepthInsideSensitive = 1;
             filter_begin_pos = chpos;
         }
