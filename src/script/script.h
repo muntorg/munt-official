@@ -224,13 +224,9 @@ class CScriptUInt64
             assert(vchNumber_.size() == 8);
             nNumber = 0;
             
-            auto iter = vchNumber_.begin();
-            nNumber |= *iter;
-            ++iter;
-            for (; iter != vchNumber_.end(); ++iter)
+            for (unsigned int idx = 0; idx < vchNumber_.size(); ++idx)
             {
-                nNumber <<= 8;
-                nNumber |= *iter;
+                nNumber |= ((uint64_t)(vchNumber_[idx]) << 8*idx);
             }
         }
 
