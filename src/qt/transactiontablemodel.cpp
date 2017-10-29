@@ -399,7 +399,9 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
     case TransactionRecord::InternalTransfer:
         return tr("Internal transfer");
     case TransactionRecord::Generated:
-        return tr("Mined");
+        return tr("Mining reward");
+    case TransactionRecord::GeneratedWitness:
+        return tr("Witness reward");
     default:
         return QString();
     }
@@ -410,6 +412,8 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx
     switch(wtx->type)
     {
     case TransactionRecord::Generated:
+        return QIcon(":/icons/tx_mined");
+    case TransactionRecord::GeneratedWitness:
         return QIcon(":/icons/tx_mined");
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
@@ -473,7 +477,9 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     case TransactionRecord::RecvWithAddress:
         return tr("Payment from: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::Generated:
-        return tr("Mined") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
+        return tr("Mining reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
+    case TransactionRecord::GeneratedWitness:
+        return tr("Witness reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
     case TransactionRecord::SendToAddress:
         return tr("Paid to: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
@@ -495,6 +501,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
+    case TransactionRecord::GeneratedWitness:
         {
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         if(label.isEmpty())

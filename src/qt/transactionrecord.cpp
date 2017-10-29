@@ -47,8 +47,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
     LOCK(wallet->cs_wallet);
-    
-    if (nNet > 0 || wtx.IsCoinBase())
+    if (nNet > 0 || (wtx.IsCoinBase() && !wtx.IsPoW2WitnessCoinBase()))
     {
         //
         // Credit
@@ -58,7 +57,6 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             CAccount* account = accountPair.second;
             for(const CTxOut& txout: wtx.tx->vout)
             {
-                
                 isminetype mine = IsMine(*account, txout);
                 if(mine)
                 {
@@ -79,8 +77,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
                             //fixme: Add a 'payment to self' sub here as well.
                         }
-                        
-                        const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.hash);   
+
+                        const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.hash);
                         if (parent != NULL)
                         {
                             CTxDestination senderAddress;
@@ -109,10 +107,21 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         sub.type = TransactionRecord::RecvFromOther;
                         //sub.address = mapValue["from"];
                     }
-                    if (wtx.IsCoinBase())
+                    if (wtx.IsPoW2WitnessCoinBase())
+                    {
+                        sub.type = TransactionRecord::GeneratedWitness;
+                    }
+                    else if (wtx.IsCoinBase())
                     {
                         // Generated
-                        sub.type = TransactionRecord::Generated;
+                        if (sub.credit == 20 * COIN && sub.debit == 0)
+                        {
+                            sub.type = TransactionRecord::GeneratedWitness;
+                        }
+                        else
+                        {
+                            sub.type = TransactionRecord::Generated;
+                        }
                     }
 
                     parts.append(sub);
@@ -152,6 +161,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
                 TransactionRecord sub(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, "",
                                 -(nDebit - nChange), nCredit - nChange));
+                
+                if (wtx.IsPoW2WitnessCoinBase() && sub.credit == 0 && sub.debit == 0)
+                    continue;
 
                 sub.actionAccountUUID = sub.receiveAccountUUID = sub.fromAccountUUID = account->getUUID();
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
@@ -281,6 +293,15 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
                     }
                     
+                    if (wtx.IsPoW2WitnessCoinBase())
+                    {
+                        sub.type = TransactionRecord::GeneratedWitness;
+                    }
+                    else if (wtx.IsCoinBase())
+                    {
+                        sub.type = TransactionRecord::Generated;
+                    }
+
                     parts.append(sub);
                     parts.last().involvesWatchAddress = involvesWatchAddress;
                 }
@@ -378,7 +399,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         }
     }
     // For generated transactions, determine maturity
-    else if(type == TransactionRecord::Generated)
+    else if(type == TransactionRecord::Generated || type == TransactionRecord::GeneratedWitness)
     {
         if (wtx.GetBlocksToMaturity() > 0)
         {

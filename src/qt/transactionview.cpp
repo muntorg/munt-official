@@ -97,7 +97,8 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
                                   TransactionFilterProxy::TYPE(TransactionRecord::SendToOther));
     typeWidget->addItem(tr("Internal transfer"), TransactionFilterProxy::TYPE(TransactionRecord::InternalTransfer));
     //typeWidget->addItem(tr("Internal account movement"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf));
-    typeWidget->addItem(tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
+    typeWidget->addItem(tr("Mining reward"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
+    typeWidget->addItem(tr("Witness reward"), TransactionFilterProxy::TYPE(TransactionRecord::GeneratedWitness));
     typeWidget->addItem(tr("Other"), TransactionFilterProxy::TYPE(TransactionRecord::Other));
 
     hlayout->addWidget(typeWidget);

@@ -82,6 +82,7 @@ public:
     {
         Other,
         Generated,
+        GeneratedWitness,
         SendToAddress,
         SendToOther,
         RecvWithAddress,
