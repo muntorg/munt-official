@@ -252,11 +252,12 @@ void Shutdown()
         delete pblocktree;
         pblocktree = NULL;
         
-        //Already flushed to disk by FlushStateToDisk.
+        //Already flushed to disk by FlushStateToDisk, and already deleted by shared_ptr in pcoinsTip.
         ppow2witTip = nullptr;
         delete ppow2witcatcher;
         ppow2witcatcher = NULL;
-        delete ppow2witdbview;
+        //delete ppow2witdbview;
+        ppow2witdbview = NULL;
     }
 #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {
@@ -538,6 +539,12 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcserialversion", strprintf(_("Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)"), DEFAULT_RPC_SERIALIZE_VERSION));
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(_("Set the number of threads to service RPC calls (default: %d)"), DEFAULT_HTTP_THREADS));
     strUsage += HelpMessageOpt("-rpconlylistsecuredtransactions=<bool>", strprintf(_("When enabled RPC listtransactions command only returns transactions that have been secured by a checkpoint and therefore are safe from double spend (default: %u)"), true));
+    
+    strUsage += HelpMessageGroup(_("Gulden developer options:"));
+    strUsage += HelpMessageOpt("-genkeypair", _("Generate a random public/private keypair for use with alert system and other similar functionality."));
+    strUsage += HelpMessageOpt("-setwindowtitle", _("Change the window title name, useful for distinguishing multiple program instances during testing."));
+    strUsage += HelpMessageOpt("-coinbasesignature", _("Insert value into coinbase of generated (mined or witnessed) blocks, useful during testing."));
+    strUsage += HelpMessageOpt("-accountpool", _("Use to increase the default account pool look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)"));
     
     if (showDebug) {
         strUsage += HelpMessageOpt("-rpcworkqueue=<n>", strprintf("Set the depth of the work queue to service RPC calls (default: %d)", DEFAULT_HTTP_WORKQUEUE));
@@ -1110,8 +1117,8 @@ bool AppInitParameterInteraction()
 
         CPrivKey vchPrivKey = key.GetPrivKey();
         printf("PrivateKey %s\n", HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str());
-	CPubKey vchPubKey = key.GetPubKey();
-	vchPubKey.Decompress();
+        CPubKey vchPubKey = key.GetPubKey();
+        vchPubKey.Decompress();
         printf("PublicKey %s\n", HexStr(vchPubKey.begin(), vchPubKey.end()).c_str());
         exit(EXIT_SUCCESS);
     }

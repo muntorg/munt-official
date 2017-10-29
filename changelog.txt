@@ -1,3 +1,6 @@
+2.0.0
+CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assist with testing so that multiple program instances can be easily distinguished.
+
 1.6.4.6
 
 RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
