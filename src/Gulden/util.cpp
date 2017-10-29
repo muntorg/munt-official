@@ -59,11 +59,15 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
     return CHDSeed::CHDSeed::BIP44;
 }
 
+CCriticalSection pow2phase;
+
 // Phase 2 becomes active after 75% of miners signal upgrade.
 // After activation creation of 'backwards compatible' PoW2 addresses becomes possible.
 std::map<uint256, bool> phase2ActivationCache;
 bool IsPow2Phase2Active(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK(pow2phase);
+
     if (!pIndex)
         return false;
 
@@ -83,6 +87,8 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const Consensus::Params& para
 std::map<uint256, bool> phase3ActivationCache;
 bool IsPow2Phase3Active(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK2(cs_main, pow2phase);
+
     if (!pIndex)
         return false;
 
@@ -95,7 +101,8 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex, const Consensus::Params& para
     GetPow2NetworkWeight(pIndex, nNumWitnessAddresses, nTotalWeight);
 
     const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
-    if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > 20000000)
+    const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
+    if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > nTotalWeightRequired)
     {
         phase3ActivationCache[pIndex->GetBlockHashLegacy()] = true;
         return true;
@@ -114,6 +121,8 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex, const Consensus::Params& para
 std::map<uint256, bool> phase4ActivationCache;
 bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK2(cs_main, pow2phase);
+
     if (!pIndex)
         return false;
 
@@ -130,6 +139,8 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& para
 // At this point 'backwards compatible' witness addresses in the chain are treated simply as anyone can spend transactions (as they have all been spent this is fine) and old witness data is discarded.
 bool IsPow2Phase5Active(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK2(cs_main, pow2phase);
+
     if (!pIndex)
         return false;
     
@@ -170,6 +181,8 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const Consensus::Params& para
 
 bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK2(cs_main, pow2phase);
+
     if (!pIndex)
         return false;
     
@@ -178,6 +191,8 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const Consensus::Params& 
 
 int GetPoW2Phase(const CBlockIndex* pIndex, const Consensus::Params& params)
 {
+    LOCK2(cs_main, pow2phase);
+
     if (IsPow2Phase5Active(pIndex, params))
     {
         return 5;
@@ -204,14 +219,18 @@ bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chain
 bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2WitnessingActive(pindexPrev, chainparams.GetConsensus()); }
 
 
+//NB! nAmount is already in internal monetary format (8 zeros) form when entering this function - i.e. the nAmount for 22 NLG is '2200000000' and not '22'
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 {
     // We rebase the entire formula to to match internal monetary format (8 zeros), so that we can work with fixed point precision.
     // We rebase to 10 at the end for the final weight.
     arith_uint256 base = arith_uint256(COIN);
     #define BASE(x) (arith_uint256(x)*base)
-    arith_uint256 nWeight = (arith_uint256(nAmount) * ( BASE(1) + ((BASE(nLockLengthInBlocks))/(365*576)) ) * 2) - BASE(BASE(10000));
+    arith_uint256 Quantity = arith_uint256(nAmount);
+    arith_uint256 BlocksPerYear = arith_uint256(365 * 576);
+    arith_uint256 nWeight = ((BASE(Quantity)) + ((Quantity*Quantity) / arith_uint256(100000))) * (BASE(1) + (BASE(nLockLengthInBlocks) / BlocksPerYear));
     #undef BASE
+    nWeight /= base;
     nWeight /= base;
     nWeight /= base;
     return nWeight.GetLow64();
@@ -251,7 +270,9 @@ int64_t GetPoW2Phase3ActivationTime()
 }
 
 void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight)
-{        
+{
+    LOCK(cs_main);
+    
     std::map<COutPoint, Coin> allWitnessCoins;
     CCoinsViewCursor* cursor = ppow2witdbview->Cursor();
     while (cursor && cursor->Valid())
@@ -278,7 +299,7 @@ void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddress
     
     for (auto iter : allWitnessCoins)
     {        
-        if (pIndex == nullptr || iter.second.nHeight < pIndex->nHeight)
+        if (pIndex == nullptr || iter.second.nHeight <= pIndex->nHeight)
         {
             CTxOut output = iter.second.out;
 

@@ -26,7 +26,7 @@ bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chain
 bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
 
 bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
-int GetPoW2Phase();
+int GetPoW2Phase(const CBlockIndex* pIndex, const Consensus::Params& params);
 
 int64_t GetPoW2Phase3ActivationTime();
 
@@ -40,6 +40,24 @@ inline bool IsPow2WitnessOutput(const CTxOut& out)
     if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
         return true;
     return false;
+}
+
+inline CTxOutPoW2Witness GetPow2WitnessOutput(const CTxOut& out)
+{
+    CTxOutPoW2Witness witnessInput;
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
+    {
+        witnessInput = out.output.witnessDetails;
+    }
+    else if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (GULDEN) (2.1) we can remove this
+    {
+        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessInput);
+    }
+    else
+    {
+        assert(0);
+    }
+    return witnessInput;
 }
 
 #endif
