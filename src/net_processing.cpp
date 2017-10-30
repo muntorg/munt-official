@@ -1014,6 +1014,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
     std::deque<CInv>::iterator it = pfrom->vRecvGetData.begin();
     std::vector<CInv> vNotFound;
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
+    const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
     LOCK(cs_main);
 
     while (it != pfrom->vRecvGetData.end()) {
@@ -1039,7 +1040,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                     LOCK(cs_most_recent_block);
                     
                     //For PoW2 peers we use the most recent block pow or pow2 - otherwise we only ever return pow blocks for old peers.
-                    if (pfrom->IsPoW2Capable() && most_recent_block_pow2->GetHashLegacy() == most_recent_block_pow->GetHashLegacy())
+                    if (pfrom->IsPoW2Capable() && most_recent_block_pow2 && most_recent_block_pow && most_recent_block_pow2->GetHashLegacy() == most_recent_block_pow->GetHashLegacy())
                     {
                         a_recent_block = most_recent_block_pow2;
                         a_recent_compact_block = most_recent_compact_block_pow2;
@@ -1119,9 +1120,9 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         }
                     }
                     if (inv.type == MSG_BLOCK)
-                        connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_WITNESS, NetMsgType::BLOCK, *pblock));
+                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_WITNESS, NetMsgType::BLOCK, *pblock));
                     else if (inv.type == MSG_WITNESS_BLOCK)
-                        connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::BLOCK, *pblock));
+                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::BLOCK, *pblock));
                     else if (inv.type == MSG_FILTERED_BLOCK)
                     {
                         bool sendMerkleBlock = false;
@@ -1176,7 +1177,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                                 }
                             }
                         } else {
-                            connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCK, *pblock));
+                            connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(nSendFlags, NetMsgType::BLOCK, *pblock));
                         }
                     }
 
@@ -1565,6 +1566,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     // At this point, the outgoing message serialization version can't change.
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
+    const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
     if (strCommand == NetMsgType::VERACK)
     {
@@ -1686,6 +1688,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::INV)
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         std::vector<CInv> vInv;
         vRecv >> COMPACTSIZEVECTOR(vInv);
         if (vInv.size() > MAX_INV_SZ)
@@ -1747,6 +1754,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::GETDATA)
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         std::vector<CInv> vInv;
         vRecv >> COMPACTSIZEVECTOR(vInv);
         if (vInv.size() > MAX_INV_SZ)
@@ -1769,6 +1781,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::GETBLOCKS)
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         CBlockLocator locator;
         uint256 hashStop;
         vRecv >> locator >> hashStop;
@@ -1909,6 +1926,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::GETHEADERS)
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         CBlockLocator locator;
         uint256 hashStop;
         vRecv >> locator >> hashStop;
@@ -1968,7 +1990,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // will re-announce the new block via headers (or compact blocks again)
         // in the SendMessages logic.
         nodestate->pindexBestHeaderSent = pindex ? pindex : chainActive.Tip();
-        connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
+        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
     }
 
 
@@ -2424,6 +2446,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::HEADERS && !fImporting && !fReindex) // Ignore headers received while importing
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         std::vector<CBlockHeader> headers;
 
         // Bypass the normal CBlock deserialization, as we don't want to risk deserializing 2000 full blocks.
@@ -2573,6 +2600,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::BLOCK && !fImporting && !fReindex) // Ignore blocks received while importing
     {
+        if (!pfrom->IsPoW2Capable())
+        {
+            vRecv.SetVersion(vRecv.GetVersion() | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        }
+
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
         vRecv >> *pblock;
 
@@ -2989,6 +3021,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
         // If we get here, the outgoing message serialization version is set and can't change.
         const CNetMsgMaker msgMaker(pto->GetSendVersion());
+        const CNetMsgMaker msgMakerHeadersCompat(pto->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
         //
         // Message: ping
@@ -3219,7 +3252,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                         LogPrint(BCLog::NET, "%s: sending header %s to peer=%d\n", __func__,
                                 vHeaders.front().GetHashLegacy().ToString(), pto->GetId());
                     }
-                    connman.PushMessage(pto, msgMaker.Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
+                    connman.PushMessage(pto, (pto->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
                     state.pindexBestHeaderSent = pBestIndex;
                 } else
                     fRevertToInv = true;

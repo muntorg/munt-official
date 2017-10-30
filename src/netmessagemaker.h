@@ -12,14 +12,14 @@
 class CNetMsgMaker
 {
 public:
-    CNetMsgMaker(int nVersionIn) : nVersion(nVersionIn){}
+    CNetMsgMaker(int nVersionIn, int nExtraFlagsIn = 0) : nVersion(nVersionIn), nExtraFlags(nExtraFlagsIn){}
 
     template <typename... Args>
     CSerializedNetMsg Make(int nFlags, std::string sCommand, Args&&... args) const
     {
         CSerializedNetMsg msg;
         msg.command = std::move(sCommand);
-        CVectorWriter{ SER_NETWORK, nFlags | nVersion, msg.data, 0, std::forward<Args>(args)... };
+        CVectorWriter{ SER_NETWORK, nFlags | nVersion | nExtraFlags, msg.data, 0, std::forward<Args>(args)... };
         return msg;
     }
 
@@ -31,6 +31,7 @@ public:
 
 private:
     const int nVersion;
+    const int nExtraFlags;
 };
 
 #endif // BITCOIN_NETMESSAGEMAKER_H
