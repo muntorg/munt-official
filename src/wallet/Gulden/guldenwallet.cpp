@@ -213,12 +213,11 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
-        if (mi != mapWallet.end())
+        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.hash);
+        if (prev)
         {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
-                return ::IsMine(keystore, prev.tx->vout[txin.prevout.n]);
+            if (txin.prevout.n < prev->tx->vout.size())
+                return ::IsMine(keystore, prev->tx->vout[txin.prevout.n]);
         }
     }
     return ISMINE_NO;

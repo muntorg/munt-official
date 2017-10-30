@@ -634,13 +634,12 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
     for(const CTxIn& txin : tx.vin)
     {
         isminetype ret = isminetype::ISMINE_NO;
-        std::map<uint256, CWalletTx>::const_iterator mi = pactiveWallet->mapWallet.find(txin.prevout.hash);
-        if (mi != pactiveWallet->mapWallet.end())
+        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.hash);
+        if (prev)
         {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
+            if (txin.prevout.n < prev->tx->vout.size())
             {
-                for(const CTxOut& txout : prev.tx->vout)
+                for(const CTxOut& txout : prev->tx->vout)
                 {
                     for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
                     {
