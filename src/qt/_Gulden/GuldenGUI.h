@@ -171,6 +171,9 @@ private:
     
     CReserveKey* receiveAddress;
     
+    GuldenProxyStyle* guldenStyle;
+    GuldenEventFilter* guldenEventFilter;
+    
     //Cache the balances so that we can easily re-use them when the currency ticker changes.
     CAmount balanceCached;
     CAmount unconfirmedBalanceCached;

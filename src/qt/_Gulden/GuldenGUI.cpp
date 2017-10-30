@@ -205,6 +205,7 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , watchUnconfBalanceCached( 0 )
 , watchImmatureBalanceCached( 0 )
 , guldenStyle (NULL)
+, guldenEventFilter (NULL)
 {
     ticker = new CurrencyTicker( this );
     nocksSettings = new NocksSettings( this );
@@ -235,7 +236,11 @@ void GuldenGUI::NotifyRequestUnlock(void* wallet, QString reason)
 
 GuldenGUI::~GuldenGUI()
 {
-
+    if (guldenEventFilter)
+    {
+        m_pImpl->removeEventFilter(guldenEventFilter);
+        delete guldenEventFilter;
+    }
 }
 
 void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
@@ -667,8 +672,14 @@ void GuldenGUI::doApplyStyleSheet()
     //Use the same style on all platforms to simplify skinning
     guldenStyle = new GuldenProxyStyle();
     QApplication::setStyle( guldenStyle );
-    
-    //m_pImpl->installEventFilter(new GuldenEventFilter(m_pImpl->style(), m_pImpl, guldenStyle));
+
+    if (guldenEventFilter)
+    {
+        m_pImpl->removeEventFilter(guldenEventFilter);
+        delete guldenEventFilter;
+    }
+    guldenEventFilter = new GuldenEventFilter(m_pImpl->style(), m_pImpl, guldenStyle);
+    m_pImpl->installEventFilter(guldenEventFilter);
 
     //Replace variables in the 'template' with actual values
     QString style( styleFile.readAll() );
