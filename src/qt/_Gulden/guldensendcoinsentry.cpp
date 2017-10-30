@@ -480,7 +480,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         {
                             //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
                             //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
-                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_CHANGE);
+                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_WITNESS);
                             CPubKey pubWitnessKey;
                             if (!keyWitness.GetReservedKey(pubWitnessKey))
                             {
@@ -495,7 +495,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         {
                             //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
                             //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
-                            CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
+                            CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_SPENDING);
                             CPubKey pubSpendingKey;
                             if (!keySpending.GetReservedKey(pubSpendingKey))
                             {

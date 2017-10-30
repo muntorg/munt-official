@@ -204,6 +204,7 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , watchOnlyBalanceCached( 0 )
 , watchUnconfBalanceCached( 0 )
 , watchImmatureBalanceCached( 0 )
+, guldenStyle (NULL)
 {
     ticker = new CurrencyTicker( this );
     nocksSettings = new NocksSettings( this );
@@ -664,10 +665,10 @@ void GuldenGUI::doApplyStyleSheet()
     styleFile.open( QFile::ReadOnly );
 
     //Use the same style on all platforms to simplify skinning
-    GuldenProxyStyle* guldenStyle = new GuldenProxyStyle();
+    guldenStyle = new GuldenProxyStyle();
     QApplication::setStyle( guldenStyle );
     
-    m_pImpl->installEventFilter(new GuldenEventFilter(m_pImpl->style(), m_pImpl, guldenStyle));
+    //m_pImpl->installEventFilter(new GuldenEventFilter(m_pImpl->style(), m_pImpl, guldenStyle));
 
     //Replace variables in the 'template' with actual values
     QString style( styleFile.readAll() );
