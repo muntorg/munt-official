@@ -23,9 +23,15 @@
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/max.hpp>
+#include <boost/algorithm/string/predicate.hpp> // for starts_with() and ends_with()
 
 #include "txdb.h"
 #include "coins.h"
+
+#include <Gulden/util.h>
+
+#include <consensus/validation.h>
+#include "net.h"
 
 
 #ifdef ENABLE_WALLET
@@ -390,6 +396,33 @@ UniValue deleteaccount(const JSONRPCRequest& request)
 }
 
 
+UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType)
+{
+    CAccount* account = NULL;
+    
+    if (accountType == "HD")
+    {
+        account = pwallet->GenerateNewAccount(accountName, AccountType::Normal, AccountSubType::Desktop);
+    }
+    else if (accountType == "Mobile")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::Mobi);
+    }
+    else if (accountType == "Witness")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::PoW2Witness);
+    }
+    else if (accountType == "Legacy")
+    {
+        EnsureWalletIsUnlocked(pwallet);
+        account = pwallet->GenerateNewLegacyAccount(accountName.c_str());
+    }
+    
+    if (!account)
+        throw std::runtime_error("Unable to create account.");
+    
+    return account->getUUID();
+}
 
 UniValue createaccount(const JSONRPCRequest& request)
 {
@@ -405,11 +438,11 @@ UniValue createaccount(const JSONRPCRequest& request)
     
     if (request.fHelp || request.params.size() == 0 || request.params.size() > 2)
         throw std::runtime_error(
-            "createaccount \"name\"\n"
+            "createaccount \"name\" \"type\"\n"
             "Create an account, for HD accounts the currently active seed will be used to create the account.\n"
             "\nArguments:\n"
             "1. \"name\"       (string) Specify the label for the account.\n"
-            "2. \"type\"       (string, optional) Type of account to create (HD; Mobile; Legacy)\n"
+            "2. \"type\"       (string, optional) Type of account to create (HD; Mobile; Legacy; Witness)\n"
             "\nExamples:\n"
             + HelpExampleCli("createaccount", "")
             + HelpExampleRpc("createaccount", ""));
@@ -424,26 +457,180 @@ UniValue createaccount(const JSONRPCRequest& request)
     if (request.params.size() > 1)
     {
         accountType = request.params[1].get_str();
-        if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy")
+        if (accountType != "HD" && accountType != "Mobile" && accountType != "Legacy" && accountType != "Witness")
             throw std::runtime_error("Invalid account type");    
     }
-                       
-    CAccount* account = NULL;
-    
-    if (accountType == "HD")
-        account = pwallet->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Desktop);
-    else if (accountType == "Mobile")
-        account = pwallet->GenerateNewAccount(request.params[0].get_str(), AccountType::Normal, AccountSubType::Mobi);
-    else if (accountType == "Legacy")
+
+    return createaccounthelper(pwallet, request.params[0].get_str(), accountType);
+}
+
+
+UniValue createwitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "createwitnessaccount \"name\"\n"
+            "Create an account, the currently active seed will be used to create the account.\n"
+            "\nArguments:\n"
+            "1. \"name\"       (string) Specify the label for the account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("createwitnessaccount", "")
+            + HelpExampleRpc("createwitnessaccount", ""));   
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    if (GetPoW2Phase(chainActive.Tip(), Params().GetConsensus()) < 2)
+        throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
+
+    return createaccounthelper(pwallet, request.params[0].get_str(), "Witness");
+}
+
+
+UniValue fundwitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 4)
+        throw std::runtime_error(
+            "fundwitnessaccount \"fundingaccount\" \"witnessaccount\" \"amount\" \"time\" \n"
+            "Lock \"amount\" NLG in witness account \"witnessaccount\" for time period \"time\"\n"
+            "\"fundingaccount\" is the account from which the locked funds will be claimed.\n"
+            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "\nArguments:\n"
+            "1. \"fundingaccount\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "2. \"witnessaccount\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\" or \"d\" to work in years months weeks or days instead.\n"
+            "\nResult:\n"
+            "\"txid\"               (string) The transaction id.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
+            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (GetPoW2Phase(chainActive.Tip(), Params().GetConsensus()) < 2)
+        throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], true);
+    if (!witnessAccount)
+        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
+    if (!witnessAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
+
+    // arg3 - amount
+    CAmount nAmount =  AmountFromValue(request.params[2]);
+    if (nAmount < 5000*COIN)
+        throw JSONRPCError(RPC_TYPE_ERROR, "Witness amount must be 5000 or larger");
+
+    // arg4 - lock period.
+    // Calculate lock period based on suffix (if one is present) otherwise leave as is.
+    int nLockPeriodInBlocks = 0;
+    int nMultiplier = 1;
+    std::string sLockPeriodInBlocks = request.params[3].getValStr();
+    if (boost::algorithm::ends_with(sLockPeriodInBlocks, "y"))
     {
-        EnsureWalletIsUnlocked(pwallet);
-        account = pwallet->GenerateNewLegacyAccount(request.params[0].get_str());
+        nMultiplier = 365 * 576;
+        sLockPeriodInBlocks.pop_back();
     }
-    
-    if (!account)
-        throw std::runtime_error("Unable to create account.");
-    
-    return account->getUUID();
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "m"))
+    {
+        nMultiplier = 30 * 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "w"))
+    {
+        nMultiplier = 7 * 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "d"))
+    {
+        nMultiplier = 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
+    nLockPeriodInBlocks *=  nMultiplier;
+
+
+
+    // Finally attempt to create and send the witness transaction.
+    CPoW2WitnessDestination destinationPoW2Witness;
+    destinationPoW2Witness.lockFromBlock = 0;
+    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
+    destinationPoW2Witness.failCount = 0;
+    {
+        //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
+        CReserveKey keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+        CPubKey pubWitnessKey;
+        if (!keyWitness.GetReservedKey(pubWitnessKey))
+            throw("Error allocating witness key for witness account.");
+
+        keyWitness.KeepKey();
+        destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+    }
+    {
+        //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
+        CReserveKey keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
+        CPubKey pubSpendingKey;
+        if (!keySpending.GetReservedKey(pubSpendingKey))
+            throw("Error allocating spending key for witness account.");
+
+        keySpending.KeepKey();
+        destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
+    }
+    CScript scriptWitness = GetScriptForDestination(destinationPoW2Witness);
+
+    CAmount nFeeRequired;
+    std::string strError;
+    std::vector<CRecipient> vecSend;
+    int nChangePosRet = -1;
+    CRecipient recipient = {scriptWitness, nAmount, false};
+    vecSend.push_back(recipient);
+
+    CWalletTx wtx;
+    CReserveKey reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(wtx, reservekey, g_connman.get(), state))
+    {
+        strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    return wtx.GetHash().GetHex();
 }
 
 
@@ -496,7 +683,7 @@ UniValue getreadonlyaccount(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getreadonlyaccount \"account\" \n"
             "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
-            "1. \"account\"        (, required) The unique UUID or label for the account or \"\" for the active account.\n"
+            "1. \"account\"        (required) The unique UUID or label for the account or \"\" for the active account.\n"
             "\nResult:\n"
             "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
             "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
@@ -1028,6 +1215,8 @@ static const CRPCCommand commands[] =
     { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
     
     { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {""} },
+    { "witness",           "createwitnessaccount",   &createwitnessaccount,   true,    {"name"} },
+    { "witness",           "fundwitnessaccount",   &fundwitnessaccount,   true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
 
     { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
     { "developer",          "dumptransactionstats",   &dumptransactionstats,   true,    {"startheight", "count"} },
