@@ -36,6 +36,7 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
 : QFrame( parent )
 , ui( new Ui::WelcomeDialog )
 , platformStyle( _platformStyle )
+, loadingAnimation( NULL )
 {
     ui->setupUi(this);
     
@@ -60,12 +61,12 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
         assert(0);
     }
     
-    QMovie *movie = new QMovie(":/Gulden/loading_animation");
-    if ( movie->isValid() )
+    loadingAnimation = new QMovie(":/Gulden/loading_animation");
+    if ( loadingAnimation->isValid() )
     {
-        movie->setScaledSize(QSize(30, 30));
-        ui->labelWelcomeScreenAnimation->setMovie(movie);
-        movie->start();
+        loadingAnimation->setScaledSize(QSize(30, 30));
+        ui->labelWelcomeScreenAnimation->setMovie(loadingAnimation);
+        loadingAnimation->start();
     }
     
     setAttribute(Qt::WA_DeleteOnClose);
@@ -198,4 +199,5 @@ void WelcomeDialog::processRecoveryPhrase()
 WelcomeDialog::~WelcomeDialog()
 {
     delete ui;
+    delete loadingAnimation;
 }

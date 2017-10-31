@@ -256,7 +256,7 @@ void Shutdown()
         ppow2witTip = nullptr;
         delete ppow2witcatcher;
         ppow2witcatcher = NULL;
-        //delete ppow2witdbview;
+        delete ppow2witdbview;
         ppow2witdbview = NULL;
     }
 #ifdef ENABLE_WALLET

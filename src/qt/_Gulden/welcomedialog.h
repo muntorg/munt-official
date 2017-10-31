@@ -19,6 +19,7 @@
 class OptionsModel;
 class PlatformStyle;
 class WalletModel;
+class QMovie;
 
 namespace Ui {
     class WelcomeDialog;
@@ -49,6 +50,7 @@ protected:
 private:
     Ui::WelcomeDialog *ui;
     const PlatformStyle *platformStyle;
+    QMovie* loadingAnimation;
 
 private Q_SLOTS:
       

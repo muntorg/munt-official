@@ -835,6 +835,14 @@ public:
     {
         delete pwalletdbEncryption;
         pwalletdbEncryption = NULL;
+        for (auto accountPair : mapAccounts)
+        {
+            delete accountPair.second;
+        }
+        for (auto mapPair : mapSeeds)
+        {
+            delete mapPair.second;
+        }
     }
 
     void SetNull()

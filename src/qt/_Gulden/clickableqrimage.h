@@ -22,6 +22,7 @@ class ClickableQRImage : public QLabel
 
 public:
     explicit ClickableQRImage(QWidget *parent = 0);
+    virtual ~ClickableQRImage();
     QImage exportImage();
     
     void setCode(const QString& qrString);

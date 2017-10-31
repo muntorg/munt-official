@@ -33,6 +33,12 @@ ClickableQRImage::ClickableQRImage(QWidget *parent):
     setWordWrap(true);
 }
 
+ClickableQRImage::~ClickableQRImage()
+{
+    delete contextMenu;
+    contextMenu = NULL;
+}
+
 QImage ClickableQRImage::exportImage()
 {
     if(!pixmap())

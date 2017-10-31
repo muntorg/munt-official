@@ -275,6 +275,8 @@ void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddress
     
     std::map<COutPoint, Coin> allWitnessCoins;
     CCoinsViewCursor* cursor = ppow2witdbview->Cursor();
+    if (!cursor)
+        throw std::runtime_error("Error fetching record from witness cache.");
     while (cursor && cursor->Valid())
     {
         COutPoint outPoint;
@@ -289,6 +291,7 @@ void GetPow2NetworkWeight(const CBlockIndex* pIndex, int64_t& nNumWitnessAddress
         
         cursor->Next();
     }
+    delete cursor;
     for (auto iter : ppow2witTip->GetCachedCoins())
     {
         allWitnessCoins[iter.first] = iter.second.coin;
