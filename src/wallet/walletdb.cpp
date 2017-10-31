@@ -175,7 +175,6 @@ bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 
 bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 {
-    return WriteIC(std::make_pair(std::string("pool"), nPool), keypool);
     staticPoolCache[keypool.vchPubKey.GetID()] = nPool;
     return WriteIC(std::make_pair(std::string("pool"), nPool), keypool);
 }
