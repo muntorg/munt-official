@@ -122,6 +122,8 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 {
     LogPrintf("AccountTableModel::activeAccountChanged\n");
     
+    LOCK(m_wallet->cs_wallet);
+    
     activeAccount = account;
     //fixme: Technically we can emit for just the two rows here.
     beginResetModel();
