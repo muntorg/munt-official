@@ -106,14 +106,14 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
     }
 }
 
-void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout) {
+void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh) {
     CCoinsMap::iterator it = FetchCoin(outpoint);
     if (it == cacheCoins.end()) return;
     cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
     if (moveout) {
         *moveout = std::move(it->second.coin);
     }
-    if (it->second.flags & CCoinsCacheEntry::FRESH) {
+    if (!nodeletefresh && it->second.flags & CCoinsCacheEntry::FRESH) {
         cacheCoins.erase(it);
     } else {
         it->second.flags |= CCoinsCacheEntry::DIRTY;
@@ -121,7 +121,11 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout) {
     }
     
     if (pChainedWitView)
-        pChainedWitView->SpendCoin(outpoint, NULL);
+    {
+        // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
+        // For chained view we force everything to 'dirty' because we need to know about fresh coins that have been removed and can't just erase them.
+        pChainedWitView->SpendCoin(outpoint, NULL, false);
+    }
 }
 
 static const Coin coinEmpty;

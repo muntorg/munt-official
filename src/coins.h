@@ -243,7 +243,7 @@ public:
      * If no unspent output exists for the passed outpoint, this call
      * has no effect.
      */
-    void SpendCoin(const COutPoint &outpoint, Coin* moveto = nullptr);
+    void SpendCoin(const COutPoint &outpoint, Coin* moveto = nullptr, bool nodeletefresh = false);
 
     /**
      * Push the modifications applied to this cache to its base.
