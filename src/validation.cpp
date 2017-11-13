@@ -2939,8 +2939,6 @@ std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainPar
         indexDummy.pprev = pPreviousIndexChain;
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
         //fixme: (GULDEN) (PoW2) Error handling
-        //checke: (GULDEN) (PoW2) (2.0) (HIGH) - Make sure this doesn't actually set the tip of the real chain.
-        viewNew.SetBestBlock(pcoinsTip->GetBestBlock());
         //fixme: Better error handling than assert is probably a good idea here.
         if (!ConnectBlock(*newBlock, state, &indexDummy, viewNew, chainParams, true, false))
             assert(0);
