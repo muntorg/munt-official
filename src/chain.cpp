@@ -87,6 +87,35 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
     return pindex;
 }
 
+//fixme: (GULDEN) (FUT) Ideally this should use move semantics, but for some reason doing so results in segfault. Look into this closer.
+CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut)
+{
+    CChain clone;
+    clone.vChain.reserve(vChain.size());
+    
+    CBlockIndex* pprev = nullptr;
+    for (const auto index : vChain)
+    {
+        clone.vChain.emplace_back(new CBlockIndex(*index));
+        if (pprev)
+            clone.vChain.back()->pprev = pprev;
+        pprev = clone.vChain.back();
+        if (index == retainIndexIn)
+            retainIndexOut = pprev;
+    }
+    
+    return clone;
+}
+
+void CChain::FreeMemory()
+{
+    for (auto index : vChain)
+    {
+        delete index;
+    }
+    vChain.clear();
+}
+
 CBlockIndex* CChain::FindEarliestAtLeast(int64_t nTime) const
 {
     std::vector<CBlockIndex*>::const_iterator lower = std::lower_bound(vChain.begin(), vChain.end(), nTime,

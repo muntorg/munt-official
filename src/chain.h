@@ -503,6 +503,24 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+
+        //fixme: NEXT NEXT NEXT - does this screw up index reading?
+        try
+        {
+            READWRITE(nVersionPoW2Witness);
+            if (nVersionPoW2Witness != 0)
+            {
+                READWRITE(nTimePoW2Witness);
+                READWRITE(hashMerkleRootPoW2Witness);
+                if (ser_action.ForRead())
+                    witnessHeaderPoW2Sig.resize(65);
+                READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
+            }
+        }
+        catch (...)
+        {
+            
+        }
     }
 
     uint256 GetBlockHashLegacy() const
@@ -609,6 +627,10 @@ public:
 
     /** Find the earliest block with timestamp equal or greater than the given. */
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
+    
+    // Create a duplicate (deep copy) of this chain, update retainIndex to the pointer of the equivalent block in the new chain.
+    CChain Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
+    void FreeMemory();
 };
 
 #endif // BITCOIN_CHAIN_H
