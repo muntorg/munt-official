@@ -78,6 +78,14 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
 
+    //fixme: (GULDEN) (2.1) We can remove these for 2.1
+    void SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint);
+    uint256 GetPhase3ActivationHash();
+    void SetPhase4ActivationHash(const uint256 &hashPhase4ActivationPoint);
+    uint256 GetPhase4ActivationHash();
+    void SetPhase5ActivationHash(const uint256 &hashPhase5ActivationPoint);
+    uint256 GetPhase5ActivationHash();
+
     //! Attempt to update from an older database format. Returns whether an error occurred.
     bool Upgrade();
     size_t EstimateSize() const override;

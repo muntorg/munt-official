@@ -32,6 +32,10 @@ static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
+static const char DB_POW2_PHASE3 = '3';
+static const char DB_POW2_PHASE4 = '4';
+static const char DB_POW2_PHASE5 = '5';
+
 namespace {
 
 struct CoinEntry {
@@ -70,6 +74,45 @@ bool CCoinsViewDB::GetCoin(const COutPoint &outpoint, Coin &coin) const {
 
 bool CCoinsViewDB::HaveCoin(const COutPoint &outpoint) const {
     return db.Exists(CoinEntry(&outpoint));
+}
+
+void CCoinsViewDB::SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint)
+{
+    db.Write(DB_POW2_PHASE3, hashPhase3ActivationPoint);
+}
+
+uint256 CCoinsViewDB::GetPhase3ActivationHash()
+{
+    uint256 hashPhase3ActivationPoint;
+    if (!db.Read(DB_POW2_PHASE3, hashPhase3ActivationPoint))
+        return uint256();
+    return hashPhase3ActivationPoint;
+}
+
+void CCoinsViewDB::SetPhase4ActivationHash(const uint256 &hashPhase4ActivationPoint)
+{
+    db.Write(DB_POW2_PHASE4, hashPhase4ActivationPoint);
+}
+
+uint256 CCoinsViewDB::GetPhase4ActivationHash()
+{
+    uint256 hashPhase4ActivationPoint;
+    if (!db.Read(DB_POW2_PHASE4, hashPhase4ActivationPoint))
+        return uint256();
+    return hashPhase4ActivationPoint;
+}
+
+void CCoinsViewDB::SetPhase5ActivationHash(const uint256 &hashPhase5ActivationPoint)
+{
+    db.Write(DB_POW2_PHASE5, hashPhase5ActivationPoint);
+}
+
+uint256 CCoinsViewDB::GetPhase5ActivationHash()
+{
+    uint256 hashPhase5ActivationPoint;
+    if (!db.Read(DB_POW2_PHASE4, hashPhase5ActivationPoint))
+        return uint256();
+    return hashPhase5ActivationPoint;
 }
 
 uint256 CCoinsViewDB::GetBestBlock() const {
@@ -248,6 +291,11 @@ bool CBlockTreeDB::LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
+                
+                pindexNew->nVersionPoW2Witness = diskindex.nVersionPoW2Witness;
+                pindexNew->nTimePoW2Witness = diskindex.nTimePoW2Witness;
+                pindexNew->hashMerkleRootPoW2Witness = diskindex.hashMerkleRootPoW2Witness;
+                pindexNew->witnessHeaderPoW2Sig = diskindex.witnessHeaderPoW2Sig;
 
                 /** Scrypt is used for block proof-of-work, but for purposes of performance the index internally uses sha256.
                 *  This check was considered unneccessary given the other safeguards like the genesis and checkpoints. */
