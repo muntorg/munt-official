@@ -152,7 +152,9 @@ public:
     uint64_t lockFromBlock;
     uint64_t lockUntilBlock;
     uint64_t failCount;
-    
+
+    CTxOutPoW2Witness() {clear();}
+
     void clear()
     {
         spendingKeyID.SetNull();
@@ -160,6 +162,15 @@ public:
         lockFromBlock = 0;
         lockUntilBlock = 0;
         failCount = 0;
+    }
+    
+    bool operator==(const CTxOutPoW2Witness& compare) const
+    {
+        return spendingKeyID == compare.spendingKeyID &&
+               witnessKeyID == compare.witnessKeyID &&
+               lockFromBlock == compare.lockFromBlock &&
+               lockUntilBlock == compare.lockUntilBlock &&
+               failCount == compare.failCount;
     }
     
     ADD_SERIALIZE_METHODS;
@@ -185,6 +196,11 @@ public:
         keyID.SetNull();
     }
     
+    bool operator==(const CTxOutStandardKeyHash& compare) const
+    {
+        return keyID == compare.keyID;
+    }
+    
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -199,17 +215,15 @@ public:
  */
 class CTxOut
 {
-private:
-CTxOutType nType;
 public:
     //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxOutType GetType() const
     {
-        return (CTxOutType)nType;
+        return (CTxOutType)output.nType;
     }
     std::string GetTypeAsString() const
     {
-        switch(CTxOutType(nType))
+        switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
             case CTxOutType::ScriptOutput:
@@ -223,48 +237,23 @@ public:
     }
     void SetType(CTxOutType nType_)
     {
-        switch(nType)
-        {
-            case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
-            {
-                output.scriptPubKey.clear();
-                output.scriptPubKey.~CScript(); break;
-            }
-            case CTxOutType::PoW2WitnessOutput:
-            {
-                output.witnessDetails.clear();
-                output.witnessDetails.~CTxOutPoW2Witness(); break;
-            }
-            case CTxOutType::StandardKeyHashOutput:
-            {
-                output.standardKeyHash.clear();
-                output.standardKeyHash.~CTxOutStandardKeyHash(); break;
-            }
-        }
-        
-        nType = nType_;
-        
-        switch(nType_)
-        {
-            case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
-                new(&output.scriptPubKey) CScript(); break;
-            case CTxOutType::PoW2WitnessOutput:
-                new(&output.witnessDetails) CTxOutPoW2Witness(); break;
-            case CTxOutType::StandardKeyHashOutput:
-                new(&output.standardKeyHash) CTxOutStandardKeyHash(); break;
-        }
+        DeleteOutput(output.nType);
+        AllocOutput(nType_);
+        output.nType = nType_;
     }
 
     CAmount nValue;
-    
+
     //Size of CTxOut in memory is very important - so we use a union here to try minimise the space taken.
-    union output
+    struct output
     {
-        CScript scriptPubKey;
-        CTxOutPoW2Witness witnessDetails;
-        CTxOutStandardKeyHash standardKeyHash;
+        int64_t nType;
+        union
+        {
+            CScript scriptPubKey;
+            CTxOutPoW2Witness witnessDetails;
+            CTxOutStandardKeyHash standardKeyHash;
+        };
         output()
         {
             new(&scriptPubKey) CScript();
@@ -300,20 +289,59 @@ public:
         
         bool operator==(const output& compare) const
         {
-            return false;
-            //fixme: NEXT
-            /*switch(CTxOutType(nType))
+            if (nType != compare.nType)
+                return false;
+
+            switch(CTxOutType(nType))
             {
                 case CTxOutType::ScriptLegacyOutput:
                 case CTxOutType::ScriptOutput:
                     return scriptPubKey == compare.scriptPubKey;
                 case CTxOutType::PoW2WitnessOutput:
-                    return scriptPubKey == compare.scriptPubKey;
+                    return witnessDetails == compare.witnessDetails;
                 case CTxOutType::StandardKeyHashOutput:
-                    return scriptPubKey == compare.scriptPubKey;
-            }*/
+                    return standardKeyHash == compare.standardKeyHash;
+            }
+            return false;
         }
     } output;
+    
+    void DeleteOutput(int64_t nDeleteType)
+    {
+        switch(nDeleteType)
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+            {
+                output.scriptPubKey.clear();
+                output.scriptPubKey.~CScript(); break;
+            }
+            case CTxOutType::PoW2WitnessOutput:
+            {
+                output.witnessDetails.clear();
+                output.witnessDetails.~CTxOutPoW2Witness(); break;
+            }
+            case CTxOutType::StandardKeyHashOutput:
+            {
+                output.standardKeyHash.clear();
+                output.standardKeyHash.~CTxOutStandardKeyHash(); break;
+            }
+        }
+    }
+    
+    void AllocOutput(int64_t nAllocType)
+    {
+        switch(nAllocType)
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+                new(&output.scriptPubKey) CScript(); break;
+            case CTxOutType::PoW2WitnessOutput:
+                new(&output.witnessDetails) CTxOutPoW2Witness(); break;
+            case CTxOutType::StandardKeyHashOutput:
+                new(&output.standardKeyHash) CTxOutStandardKeyHash(); break;
+        }
+    }
     
     bool IsUnspendable() const
     {
@@ -324,16 +352,17 @@ public:
         return false;
     }
     
-    ~CTxOut()
+    virtual ~CTxOut()
     {
         //fixme: (GULDEN) (2.0) (IMPLEMENT)
+        DeleteOutput(output.nType);
     }
     
     CTxOut operator=(const CTxOut& copyFrom)
     {
-        nType = copyFrom.nType;
+        SetType(CTxOutType(copyFrom.output.nType));
         nValue = copyFrom.nValue;
-        switch(CTxOutType(nType))
+        switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
             case CTxOutType::ScriptOutput:
@@ -348,9 +377,41 @@ public:
     
     CTxOut(const CTxOut& copyFrom)
     {
-        nType = copyFrom.nType;
+        SetType(CTxOutType(copyFrom.output.nType));
         nValue = copyFrom.nValue;
-        switch(CTxOutType(nType))
+        switch(CTxOutType(output.nType))
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+                output.scriptPubKey = copyFrom.output.scriptPubKey; break;
+            case CTxOutType::PoW2WitnessOutput:
+                output.witnessDetails = copyFrom.output.witnessDetails; break;
+            case CTxOutType::StandardKeyHashOutput:
+                output.standardKeyHash = copyFrom.output.standardKeyHash; break;
+        }
+    }
+
+    CTxOut(CTxOut&& copyFrom)
+    {
+        SetType(CTxOutType(copyFrom.output.nType));
+        nValue = copyFrom.nValue;
+        switch(CTxOutType(output.nType))
+        {
+            case CTxOutType::ScriptLegacyOutput:
+            case CTxOutType::ScriptOutput:
+                output.scriptPubKey = copyFrom.output.scriptPubKey; break;
+            case CTxOutType::PoW2WitnessOutput:
+                output.witnessDetails = copyFrom.output.witnessDetails; break;
+            case CTxOutType::StandardKeyHashOutput:
+                output.standardKeyHash = copyFrom.output.standardKeyHash; break;
+        }
+    }
+    
+    CTxOut& operator=(CTxOut&& copyFrom)
+    {
+        SetType(CTxOutType(copyFrom.output.nType));
+        nValue = copyFrom.nValue;
+        switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
             case CTxOutType::ScriptOutput:
@@ -373,16 +434,17 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        //TODO: Implement serialisation of type.
+        //fixme: (GULDEN) (2.0) (HIGH) backwards compat.
+        READWRITE(VARINT(output.nType));
         READWRITE(nValue);
-        READWRITE(*(CScriptBase*)(&output.scriptPubKey));
+        output.SerializeOp(s, ser_action, GetType());
     }
 
     void SetNull()
     {
         SetType(ScriptLegacyOutput);
         nValue = -1;
-        switch(nType)
+        switch(output.nType)
         {
             case CTxOutType::ScriptLegacyOutput:
             case CTxOutType::ScriptOutput:
@@ -402,7 +464,7 @@ public:
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
         return (a.nValue       == b.nValue &&
-                a.output.scriptPubKey == b.output.scriptPubKey);
+                a.output == b.output);
     }
 
     friend bool operator!=(const CTxOut& a, const CTxOut& b)
@@ -571,7 +633,13 @@ public:
 
     bool IsCoinBase() const
     {
-        return (vin.size() == 1 && vin[0].prevout.IsNull());
+        return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
+    }
+
+    //fixme: (GULDEN) (2.0) - check second vin is a witness transaction.
+    bool IsPoW2WitnessCoinBase() const
+    {
+        return (vin.size() == 2 && vin[0].prevout.IsNull());
     }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
