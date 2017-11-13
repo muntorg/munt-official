@@ -13,7 +13,10 @@
 #include "chain.h"
 #include "coins.h"
 #include "utilmoneystr.h"
- 
+
+//Gulden dependencies
+#include "Gulden/util.h"
+
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
     if (tx.nLockTime == 0)
@@ -158,12 +161,11 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
             case CTxOutType::PoW2WitnessOutput: nSigOps += 1; break;
         }
-        
     }
     return nSigOps;
 }
 
-bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs)
+bool CheckTransaction(const CTransaction& tx, CValidationState &state, int checkHeight, bool fCheckDuplicateInputs)
 {
     // Basic checks that don't depend on any context
     if (tx.vin.empty())
@@ -207,6 +209,60 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         for (const auto& txin : tx.vin)
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+    }
+
+    /*Witness transactions inputs/outputs fall into several different categories.
+    * 1) Creation of a new witnessing account: This is the only case in which lockfrom can and must be 0.
+    * Output only.
+    *
+    * 2) Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to 
+    * Can only appear as a "witnesscoinbase" transaction.
+    * Input/Output.
+    * Signed by witness key.
+    *
+    * 3) Spending, only amount should change, entire amount should be consumed.
+    * Input only
+    * Signed by spending key.
+    *
+    * 4) Renewal, only failcount should change, must increase by 1.
+    * Input/Output.
+    * Signed by witness key.
+    *
+    * 5) Increase amount and/or lock period to increase, reset lockfrom to 0. Lock period and/or amount must exceed or equal old period/amount.
+    * Input/Output.
+    * Signed by spending key.
+    *
+    * 6) Split, everything must stay the same, but input may be split into two identical outputs.
+    * Input/Output.
+    * Signed by witness key.
+    *
+    * 7) Merge, two identical (other than amount and failcount) inputs can be combined into one output. Everything should stay the same except amount and failcount which must match the combination of the two inputs in both cases.
+    * Input/Output.
+    * Signed by witness key.
+    *
+    * 8) Update, identical input/output but witness key changes.
+    * Input/Output.
+    * Signed by spending key.*/
+
+    for (const CTxOut& txout : tx.vout)
+    {
+        if (IsPow2WitnessOutput(txout))
+        {
+            if ( txout.nValue < (5000 * COIN) )
+                return state.DoS(10, false, REJECT_INVALID, "PoW2 witness output smaller than 5000 NLG not allowed.");
+
+            CTxOutPoW2Witness witnessInput = GetPow2WitnessOutput(txout);
+            if (witnessInput.lockFromBlock == 0)
+            {
+                if (witnessInput.lockUntilBlock - checkHeight < (576 * 30))
+                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
+            }
+            else
+            {
+                if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock < (576 * 30))
+                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
+            }
+        }
     }
 
     return true;

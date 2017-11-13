@@ -83,7 +83,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     int64_t nNumWitnessAddresses = 0;
     int64_t nTotalWeight = 0;
     
-    GetPow2NetworkWeight(chainActive.Tip(), nNumWitnessAddresses, nTotalWeight);
+    GetPow2NetworkWeight(chainActive.Tip(), Params(), nNumWitnessAddresses, nTotalWeight);
     
     std::string sPoW2Phase = "Phase 1";
     if (IsPow2Phase5Active(chainActive.Tip(), Params()))
@@ -490,7 +490,7 @@ UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    if (GetPoW2Phase(chainActive.Tip(), Params().GetConsensus()) < 2)
+    if (GetPoW2Phase(chainActive.Tip(), Params()) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness");
@@ -529,7 +529,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (GetPoW2Phase(chainActive.Tip(), Params().GetConsensus()) < 2)
+    if (GetPoW2Phase(chainActive.Tip(), Params()) < 2)
         throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
 
     // arg1 - 'from' account.

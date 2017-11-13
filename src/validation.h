@@ -476,7 +476,7 @@ extern CCoinsViewCache *pcoinsTip;
 extern CBlockTreeDB *pblocktree;
 
 
-/** Global variable that points to the witness coins database */
+/** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB *ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
 
@@ -487,8 +487,11 @@ std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uin
 // Retrieve the witness for a PoW block (phase 3 only)
 CBlockIndex* GetWitnessOrphanForBlock(const int64_t nHeight, const uint256& prevHash, const uint256& powHash);
 
-CTxOut GetWitness(CBlockIndex* pPreviousIndex, const CBlock& block, const CChainParams& chainParams);
+bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView);
+void GetWitness(CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight);
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
+
+std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, CBlock* newBlock=NULL);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().
