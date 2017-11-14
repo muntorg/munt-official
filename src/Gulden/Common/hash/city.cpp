@@ -27,7 +27,6 @@
 // possible hash functions, by using SIMD instructions, or by
 // compromising on hash quality.
 
-#include "cityconfig.h"
 #include "city.h"
 
 #include <algorithm>
@@ -73,6 +72,10 @@ static uint32 UNALIGNED_LOAD32(const char *p) {
 
 #include <compat/byteswap.h>
 
+#endif
+
+#ifndef HAVE_DLFCN_H
+#include "cityconfig.h"
 #endif
 
 #ifdef WORDS_BIGENDIAN
