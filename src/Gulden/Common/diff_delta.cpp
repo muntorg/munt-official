@@ -47,7 +47,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
     static int64_t nPrevHeight     = 0;
     static int64_t nPrevDifficulty = 0;
-    static bool debugLogging = LogAcceptCategory(BCLog::DELTA);
+    static bool debugLogging = false;
 
     std::string sLogInfo;
     #endif
