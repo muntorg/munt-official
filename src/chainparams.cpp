@@ -109,14 +109,14 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
-        
+
         //fixme: (GULDEN) (POW2) (2.0) (HIGH) Enable this when ready for final launch.
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 999999999999ULL; // July 1st 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1504051200; // August 30th 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
-        
+
         // Deployment of PoW2 - phase 4
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit = 26;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nStartTime = 999999999999ULL; // July 1st 2017
@@ -202,7 +202,7 @@ public:
                 { 505000, uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb")}
             }
         };
-            
+
         chainTxData = ChainTxData{
             1491810603, // * UNIX timestamp of last checkpoint block
             1208446,    // * total number of transactions between genesis and last checkpoint
@@ -226,13 +226,13 @@ public:
         consensus.BIP66Height = 330776; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
         consensus.powLimit =  uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        
+
         std::string sTestnetParams = GetArg("-testnet", "");
         if (!sTestnetParams.empty())
         {
             assert(sTestnetParams.find(":")!=std::string::npos);
             assert(sTestnetParams[0] == 'S' || sTestnetParams[0] == 'C');
-            
+
             int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
             int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
 
@@ -241,7 +241,7 @@ public:
             consensus.fPowNoRetargeting = false;
             consensus.nRuleChangeActivationThreshold = 15; // 75% for testchains
             consensus.nMinerConfirmationWindow = 20; // nPowTargetTimespan / nPowTargetSpacing
-            
+
             consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 0;
             consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
             consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
@@ -258,13 +258,13 @@ public:
             consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
             consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
             consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
-            
+
             // Deployment of PoW2 - phase 2
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = seedTimestamp; 
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = seedTimestamp + (30 * 24 * 60 * 60); //1 month.
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
-            
+
             // Deployment of PoW2 - phase 4
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit = 26;
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nStartTime = 999999999999ULL; // July 1st 2017
@@ -289,22 +289,22 @@ public:
                     genesis.nTime++;
             }
             consensus.hashGenesisBlock = genesis.GetHashLegacy();
-            printf("genesis nonce: %d\n",genesis.nNonce);
-            printf("genesis time: %d\n",genesis.nTime);
-            printf("genesis bits: %d\n",genesis.nBits);        
-            printf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
-            
+            LogPrintf("genesis nonce: %d\n",genesis.nNonce);
+            LogPrintf("genesis time: %d\n",genesis.nTime);
+            LogPrintf("genesis bits: %d\n",genesis.nBits);        
+            LogPrintf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
+
             pchMessageStart[0] = targetInterval;
             pchMessageStart[3] = sTestnetParams[0];
             pchMessageStart[1] = seedTimestamp >> 8;
             pchMessageStart[2] = seedTimestamp >> 16;
+
+            LogPrintf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
         }
-        
+
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
         nDefaultPort = 9923;
         nPruneAfterHeight = 1000;
-
-        
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -363,24 +363,24 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].type = Consensus::DEPLOYMENT_POW;
-        
-        
+
+
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
-        
+
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
-        
+
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 999999999999ULL; // July 1st 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1504051200; // August 30th 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
-        
+
         // Deployment of PoW2 - phase 4
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit = 26;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nStartTime = 999999999999ULL; // July 1st 2017
@@ -388,7 +388,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].type =Consensus::DEPLOYMENT_WITNESS;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].protoVersion = 70015;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 95; 
-        
+
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
