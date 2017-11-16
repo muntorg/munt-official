@@ -770,10 +770,12 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
         if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
             continue;
 
+         //fixme: (GULDEN) (2.0)
+        /*
         BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
             if (txout.output.scriptPubKey == scriptPubKey)
                 if (wtx.GetDepthInMainChain() >= nMinDepth)
-                    nAmount += txout.nValue;
+                    nAmount += txout.nValue;*/
     }
 
     return  ValueFromAmount(nAmount);
@@ -1271,7 +1273,8 @@ public:
         if (pwallet) {
             CScript basescript = GetScriptForDestination(keyID);
             isminetype typ;
-            typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
+            //fixme: (GULDEN) (2.0) (HIGH)
+            //typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
                 return false;
             CScript witscript = GetScriptForWitness(basescript);
@@ -1292,7 +1295,8 @@ public:
                 return true;
             }
             isminetype typ;
-            typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
+            //fixme: (GULDEN) (2.0) (HIGH)
+            //typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
                 return false;
             CScript witscript = GetScriptForWitness(subscript);

@@ -3592,7 +3592,10 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
 bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params)
 {
     LOCK(cs_main);
-    return (VersionBitsState(pindexPrev, params, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE);
+    //fixme: (GULDEN) (2.0)
+    //return (VersionBitsState(pindexPrev, params, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE);
+    //fixme: (GULDEN) (2.0) - segsig
+    return false;
 }
 
 // Compute at which vout of the block's coinbase transaction the witness
@@ -3680,6 +3683,8 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
 
+    //fixme: (GULDEN) (2.0) (HIGH) (SEGSIG) Enforce segsig upgrade rules here..
+
     // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
     // check for version 2, 3 and 4 upgrades
     /* GULDEN - These aren't valid for Gulden
@@ -3766,6 +3771,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     }
     
 
+    //fixme: (HIGH) (GULDEN) (2.0) (SEGSIG)
     // Validation for witness commitments.
     // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the
     //   coinbase (where 0x0000....0000 is used instead).

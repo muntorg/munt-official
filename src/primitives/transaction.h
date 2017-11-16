@@ -16,31 +16,113 @@
 #include "streams.h"
 #include "utilstrencodings.h"
 #include <new> // Required for placement 'new'.
+#include <bitset>
+
 
 static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
 
+struct CBlockPosition
+{
+    uint64_t blockNumber; // Position of block on blockchain that contains our transaction.
+    uint64_t transactionIndex; // Position of transaction within the block.
+    CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
+};
+
+
+// Represented in class as 5 bits - so maximum of 32 values
+enum CTxInType : uint8_t
+{
+    //fixme: (GULDEN) (2.0) What types do we even need here?
+};
+
+// Only 3 bits available for TxInFlags (used as bit flags so only 3 values)
+enum CTxInFlags : uint8_t
+{
+    IndexBasedOutpoint,  // Outpoint is an index instead of a hash
+    HasSequenceNumber,
+    CTxInFutureFlag2
+};
+
+#define UINT31_MAX 2147483647
+
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
 {
 public:
-    uint256 hash;
-    uint32_t n;
+    // fixme: (GULDEN) (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
+    // Outpoint either uses hash or 'block position' never both.
+    union
+    {
+        uint256 hash;
+        CBlockPosition prevBlock;
+    };
+    uint32_t isHash: 1; // Set to 0 when using prevBlock, 1 when using hash.
+    uint32_t n : 31;
 
-    COutPoint(): n((uint32_t) -1) { }
-    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), n(nIn) { }
+    COutPoint(): hash(uint256()), isHash(1), n(UINT31_MAX) { }
+    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), isHash(1), n(nIn) { }
+    COutPoint(const uint64_t blockNumber, const uint64_t transactionIndex, uint32_t nIn): prevBlock(blockNumber, transactionIndex), isHash(0), n(nIn) { }
 
-    ADD_SERIALIZE_METHODS;
+    template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
+    {
+        const CSerActionUnserialize ser_action;
 
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(hash);
-        READWRITE(n);
+        if (nTransactionVersion < 3)
+        {
+            isHash = 1;
+            STRREAD(hash);
+            uint32_t n_;
+            STRREAD(n_);
+            n = n_;
+        }
+        else
+        {
+            std::bitset<3> flags(nFlags);
+            if (!flags[IndexBasedOutpoint])
+            {
+                isHash = 1;
+                STRREAD(hash);
+            }
+            else
+            {
+                isHash = 0;
+                STRREAD(VARINT(prevBlock.blockNumber));
+                STRREAD(VARINT(prevBlock.transactionIndex));
+            }
+            STRREAD(VARINT(n));
+        }
     }
 
-    void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
-    bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
+    template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion) const
+    {
+        const CSerActionSerialize ser_action;
+
+        if (nTransactionVersion < 3)
+        {
+            STRWRITE(hash);
+            uint32_t nTemp = (n == UINT31_MAX ? std::numeric_limits<uint32_t>::max() : (uint32_t)n);
+            STRWRITE(nTemp);
+        }
+        else
+        {
+            std::bitset<3> flags(nFlags);
+            if (!flags[IndexBasedOutpoint])
+            {
+                STRWRITE(hash);
+            }
+            else
+            {
+                STRWRITE(VARINT(prevBlock.blockNumber));
+                STRWRITE(VARINT(prevBlock.transactionIndex));
+            }
+            STRWRITE(VARINT(n));
+        }
+    }
+
+    void SetNull() { hash.SetNull(); n = UINT31_MAX; }
+    bool IsNull() const { return (hash.IsNull() && n == UINT31_MAX); }
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
@@ -68,6 +150,21 @@ public:
 class CTxIn
 {
 public:
+    // First 5 bits are type, last 3 bits are flags.
+    uint8_t nTypeAndFlags;
+    //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    CTxInType GetType() const
+    {
+        return (CTxInType) ( (nTypeAndFlags & 0b11111000) >> 3 );
+    }
+    CTxInFlags GetFlags() const
+    {
+        return (CTxInFlags) ( nTypeAndFlags & 0b00000111 );
+    }
+    bool FlagIsSet(CTxInFlags flag) const
+    {
+        return (GetFlags() & flag) != 0;
+    }
     COutPoint prevout;
     CScript scriptSig;
     uint32_t nSequence;
@@ -108,13 +205,52 @@ public:
     explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
     CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
 
-    ADD_SERIALIZE_METHODS;
+        template <typename Stream> inline void ReadFromStream(Stream& s, int nTransactionVersion)
+    {
+        const CSerActionUnserialize ser_action;
 
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(prevout);
-        READWRITE(*(CScriptBase*)(&scriptSig));
-        READWRITE(nSequence);
+        //2.0 onwards we have versioning for CTxIn
+        if (nTransactionVersion >= 3)
+        {
+            uint8_t nTypeAndFlags_;
+            STRREAD(nTypeAndFlags_);
+
+            prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
+            //scriptSig is no longer used - everything goes in scriptWitness.
+            if (FlagIsSet(HasSequenceNumber))
+            {
+                s >> VARINT(nSequence);
+            }
+        }
+        else
+        {
+            prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
+            STRREAD(*(CScriptBase*)(&scriptSig));
+            STRREAD(nSequence);
+        }
+    }
+    template <typename Stream> inline void WriteToStream(Stream& s, int nTransactionVersion) const
+    {
+        const CSerActionSerialize ser_action;
+
+        if (nTransactionVersion >= 3)
+        {
+            uint8_t nTypeAndFlags_;
+            STRWRITE(nTypeAndFlags_);
+
+            prevout.WriteToStream(s, GetType(), GetFlags(), nTransactionVersion);
+
+            if (FlagIsSet(HasSequenceNumber))
+            {
+                s << VARINT(nSequence);
+            }
+        }
+        else
+        {
+            prevout.WriteToStream(s, GetType(), GetFlags(), nTransactionVersion);
+            STRWRITE(*(CScriptBase*)(&scriptSig));
+            STRWRITE(nSequence);
+        }
     }
 
     friend bool operator==(const CTxIn& a, const CTxIn& b)
@@ -137,7 +273,7 @@ enum CTxOutType : uint8_t
     //General purpose output types start from 0 counting upward
     ScriptLegacyOutput = 0,
     ScriptOutput = 1,
-    
+
     //Specific/fixed purpose output types start from max counting backwards
     PoW2WitnessOutput = 31,
     StandardKeyHashOutput = 30
@@ -163,7 +299,7 @@ public:
         lockUntilBlock = 0;
         failCount = 0;
     }
-    
+
     bool operator==(const CTxOutPoW2Witness& compare) const
     {
         return spendingKeyID == compare.spendingKeyID &&
@@ -172,7 +308,7 @@ public:
                lockUntilBlock == compare.lockUntilBlock &&
                failCount == compare.failCount;
     }
-    
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -190,17 +326,17 @@ class CTxOutStandardKeyHash
 {
 public:
     CKeyID keyID;
-    
+
     void clear()
     {
         keyID.SetNull();
     }
-    
+
     bool operator==(const CTxOutStandardKeyHash& compare) const
     {
         return keyID == compare.keyID;
     }
-    
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -247,7 +383,8 @@ public:
     //Size of CTxOut in memory is very important - so we use a union here to try minimise the space taken.
     struct output
     {
-        int64_t nType;
+        uint8_t nType: 5;
+        uint8_t nValueBase: 3;
         union
         {
             CScript scriptPubKey;
@@ -276,7 +413,7 @@ public:
                     READWRITE(standardKeyHash); break;
             }
         }
-        
+
         std::string GetHex(CTxOutType nType) const
         {
             std::vector<unsigned char> serData;
@@ -286,7 +423,7 @@ public:
             }
             return HexStr(serData);
         }
-        
+
         bool operator==(const output& compare) const
         {
             if (nType != compare.nType)
@@ -305,7 +442,7 @@ public:
             return false;
         }
     } output;
-    
+
     void DeleteOutput(int64_t nDeleteType)
     {
         switch(nDeleteType)
@@ -328,7 +465,7 @@ public:
             }
         }
     }
-    
+
     void AllocOutput(int64_t nAllocType)
     {
         switch(nAllocType)
@@ -342,25 +479,26 @@ public:
                 new(&output.standardKeyHash) CTxOutStandardKeyHash(); break;
         }
     }
-    
+
     bool IsUnspendable() const
     {
         if (GetType() <= CTxOutType::ScriptOutput)
             return output.scriptPubKey.IsUnspendable();
-        
+
         //fixme: (GULDEN) (2.0) - Can our 'standard' outputs still be unspendable?
         return false;
     }
-    
+
     virtual ~CTxOut()
     {
         //fixme: (GULDEN) (2.0) (IMPLEMENT)
         DeleteOutput(output.nType);
     }
-    
+
     CTxOut operator=(const CTxOut& copyFrom)
     {
         SetType(CTxOutType(copyFrom.output.nType));
+        output.nValueBase = copyFrom.output.nValueBase;
         nValue = copyFrom.nValue;
         switch(CTxOutType(output.nType))
         {
@@ -374,11 +512,12 @@ public:
         }
         return *this;
     }
-    
+
     CTxOut(const CTxOut& copyFrom)
     {
         SetType(CTxOutType(copyFrom.output.nType));
         nValue = copyFrom.nValue;
+        output.nValueBase = copyFrom.output.nValueBase;
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
@@ -395,6 +534,7 @@ public:
     {
         SetType(CTxOutType(copyFrom.output.nType));
         nValue = copyFrom.nValue;
+        output.nValueBase = copyFrom.output.nValueBase;
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
@@ -406,11 +546,12 @@ public:
                 output.standardKeyHash = copyFrom.output.standardKeyHash; break;
         }
     }
-    
+
     CTxOut& operator=(CTxOut&& copyFrom)
     {
         SetType(CTxOutType(copyFrom.output.nType));
         nValue = copyFrom.nValue;
+        output.nValueBase = copyFrom.output.nValueBase;
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
@@ -434,15 +575,79 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        //fixme: (GULDEN) (2.0) (HIGH) backwards compat.
-        READWRITE(VARINT(output.nType));
-        READWRITE(nValue);
+        if (ser_action.ForRead())
+        {
+            uint8_t read8;
+            READWRITE(read8);
+
+            output.nValueBase = (read8 & 0b00000111);
+            SetType(CTxOutType((read8 & 0b11111000) >> 5));
+
+            if (GetType() == CTxOutType::ScriptLegacyOutput) // Old transaction format.
+            {
+                // nValue is 64 bit including the byte we have already read (so pull a further  bits from the stream).
+                nValue = 0;
+                nValue |= read8; READWRITE(read8); nValue = (nValue << 8) | read8;    // 16
+                uint16_t read16; READWRITE(read16); nValue = (nValue << 16) | read16; // 32
+                uint32_t read32; READWRITE(read32); nValue = (nValue << 32) | read32; // 64
+            }
+            else // New transaction format.
+            {
+                READWRITE(VARINT(nValue)); // Compacted value is stored as a varint.
+                switch(output.nValueBase) // Which further needs to be multiplied by base to get the full int64 value.
+                {
+                    case 0: break;                   // 8 decimal precision  (0.00000008, 87654321.12345678 etc.)
+                    case 1: nValue *= 100;           // 6 decimal precision  (0.00000600, 87654321.12345600 etc.)
+                    case 2: nValue *= 10000;         // 4 decimal precision  (0.00040000, 87654321.12340000 etc.)
+                    case 3: nValue *= 1000000;       // 2 decimal precision  (0.02000000, 87654321.12000000 etc.)
+                    case 4: nValue *= 10000000;      // 1 decimal precision  (0.10000000, 87654321.10000000 etc.)
+                    case 5: nValue *= 100000000;     // 1 significant digit precision (1.00000000, 87654321.00000000 etc.)
+                    case 6: nValue *= 10000000000;   // 3 significant digit precision (200.00000000, 876543200.00000000 etc.)
+                    case 7: nValue *= 1000000000000; // 5 significant digit precision (40000.00000000, 876540000.00000000 etc.)
+                };
+            }
+        }
+        else
+        {
+            if (GetType() == CTxOutType::ScriptLegacyOutput)
+            {
+                // Old transaction format.
+                READWRITE(nValue);
+            }
+            else
+            {
+                CAmount nValueWrite = nValue;
+
+                // If we don't already have a 'base' set calculate the best one and adjust nValue to the new base
+                if (output.nValueBase == 0)
+                {
+                    //fixme: (Gulden) - Is there some 'trick' to calculate this faster without so much branching?
+                    if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; nValueWrite /= 1000000000000; } // 4 significant digit precision
+                    else if (nValue % 10000000000 == 0) { output.nValueBase = 6; nValueWrite /= 10000000000; }   // 2 significant digit precision
+                    else if (nValue % 100000000 == 0)   { output.nValueBase = 5; nValueWrite /= 100000000; }     // 1 significant digit precision
+                    else if (nValue % 10000000 == 0)    { output.nValueBase = 4; nValueWrite /= 10000000; }      // 1 decimal precision
+                    else if (nValue % 1000000 == 0)     { output.nValueBase = 3; nValueWrite /= 1000000; }       // 2 decimal precision
+                    else if (nValue % 10000 == 0)       { output.nValueBase = 2; nValueWrite /= 10000; }         // 4 decimal precision
+                    else if (nValue % 100 == 0)         { output.nValueBase = 1; nValueWrite /= 100;  }          // 6 decimal precision
+                    // 8 decimal precision.
+                }
+
+                //checkme: NEXT
+                uint8_t write8 = 0;
+                write8 = output.nType;
+                write8 <<= 5;
+                write8 |= output.nValueBase;
+                READWRITE(write8);
+                READWRITE(VARINT(nValueWrite));
+            }
+        }
         output.SerializeOp(s, ser_action, GetType());
     }
 
     void SetNull()
     {
         SetType(ScriptLegacyOutput);
+        output.nValueBase = 0;
         nValue = -1;
         switch(output.nType)
         {
@@ -477,6 +682,8 @@ public:
 
 struct CMutableTransaction;
 
+#define UnserializeTransaction UnserializeTransactionOld
+#define SerializeTransaction SerializeTransactionOld
 /**
  * Basic transaction serialization format:
  * - int32_t nVersion
@@ -498,17 +705,29 @@ template<typename Stream, typename TxType>
 inline void UnserializeTransaction(TxType& tx, Stream& s) {
     const bool fAllowWitness = !(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS);
 
-    s >> tx.nVersion;
+    //s >> tx.nVersion;
     unsigned char flags = 0;
     tx.vin.clear();
     tx.vout.clear();
     /* Try to read the vin. In case the dummy is there, this will be read as an empty vector. */
-    s >> COMPACTSIZEVECTOR(tx.vin);
+    uint64_t nSize;
+    s >> COMPACTSIZE(nSize);
+    tx.vin.resize(nSize);
+    for (auto& in : tx.vin)
+    {
+        in.ReadFromStream(s, tx.nVersion);
+    }
     if (tx.vin.size() == 0 && fAllowWitness) {
         /* We read a dummy or an empty vin. */
         s >> flags;
         if (flags != 0) {
-            s >> COMPACTSIZEVECTOR(tx.vin);
+            uint64_t nSize;
+            s >> COMPACTSIZE(nSize);
+            tx.vin.resize(nSize);
+            for (auto& in : tx.vin)
+            {
+                in.ReadFromStream(s, tx.nVersion);
+            }
             s >> COMPACTSIZEVECTOR(tx.vout);
         }
     } else {
@@ -545,10 +764,15 @@ inline void SerializeTransaction(const TxType& tx, Stream& s) {
     if (flags) {
         /* Use extended format in case witnesses are to be serialized. */
         std::vector<CTxIn> vinDummy;
-        s << COMPACTSIZEVECTOR(vinDummy);
+        s << COMPACTSIZE(vinDummy.size());
+        //vinDummy[0].WriteToStream(s, tx.nVersion);
         s << flags;
     }
-    s << COMPACTSIZEVECTOR(tx.vin);
+    s << COMPACTSIZE(tx.vin.size());
+    for (const auto& in : tx.vin)
+    {
+        in.WriteToStream(s, tx.nVersion);
+    }
     s << COMPACTSIZEVECTOR(tx.vout);
     if (flags & 1) {
         for (size_t i = 0; i < tx.vin.size(); i++) {
@@ -557,7 +781,190 @@ inline void SerializeTransaction(const TxType& tx, Stream& s) {
     }
     s << tx.nLockTime;
 }
+#undef UnserializeTransaction
+#undef SerializeTransaction
 
+//New transaction format:
+//Version number: CVarInt [1 byte] (but forward compat for larger sizes)
+//Flags: bitset [1 byte] (7 bytes used, 8th byte signals ExtraFlags)  {Current flags are for 1/2/3 input transactions, 1/2/3 output transactions and locktime}
+//ExtraFlags: bitset [1 byte] (but never currently present, only there for forwards compat)
+//Input count: CVarInt [0-9 byte] (only present in the event that input count flags are all unset)
+//Vector of inputs
+//Output count: CVarInt [0-9 byte] (only present in the event that output count flags are all unset)
+//Vector of outputs
+//Vector of witnesses (no size)
+//Lock time: CVarInt [0-9 byte] (only present if locktime flag is set)
+
+//>90% of transactions involve either 1/2/3 inputs or 1/2/3 outputs.
+enum TransactionFlags : uint8_t
+{
+    HasOneInput,
+    HasTwoInputs,
+    HasThreeInputs,
+    HasOneOutput,
+    HasTwoOutputs,
+    HasThreeOutputs,
+    HasLockTime,
+    HasExtraFlags
+};
+
+template<typename Stream, typename TxType> inline void SerializeTransaction(const TxType& tx, Stream& s) {
+    if (tx.nVersion < 3)
+        return SerializeTransactionOld(tx, s);
+
+    // Setup flags
+    switch(tx.vin.size())
+    {
+        case 1:
+            tx.flags.set(HasOneInput, true).set(HasTwoInputs, false).set(HasThreeInputs, false); break;
+        case 2:
+            tx.flags.set(HasOneInput, false).set(HasTwoInputs, true).set(HasThreeInputs, false); break;
+        case 3:
+            tx.flags.set(HasOneInput, false).set(HasTwoInputs, false).set(HasThreeInputs, true); break;
+        default:
+            tx.flags.set(HasOneInput, false).set(HasTwoInputs, false).set(HasThreeInputs, false);
+    }
+    switch(tx.vout.size())
+    {
+        case 1:
+            tx.flags.set(HasOneOutput, true).set(HasTwoOutputs, false).set(HasThreeOutputs, false); break;
+        case 2:
+            tx.flags.set(HasOneOutput, false).set(HasTwoOutputs, true).set(HasThreeOutputs, false); break;
+        case 3:
+            tx.flags.set(HasOneOutput, false).set(HasTwoOutputs, false).set(HasThreeOutputs, true); break;
+        default:
+            tx.flags.set(HasOneOutput, false).set(HasTwoOutputs, false).set(HasThreeOutputs, false);
+    }
+    tx.flags.set(HasLockTime, false);
+    if (tx.nLockTime > 0)
+    {
+        tx.flags.set(HasLockTime, true);
+    }
+
+    //Serialization begins.
+    //Version
+    s << VARINT(tx.nVersion);
+
+    //Flags + (opt) ExtraFlags
+    s << static_cast<uint8_t>(tx.flags.to_ulong());
+    if(tx.flags[HasExtraFlags])
+        s << static_cast<uint8_t>(tx.extraFlags.to_ulong());
+
+    //(opt) Input count + Inputs
+    if ( !(tx.flags[HasOneInput] || tx.flags[HasTwoInputs] || tx.flags[HasThreeInputs]) )
+        s << VARINT(tx.vin.size());
+    for (const auto& in : tx.vin)
+    {
+        in.WriteToStream(s, tx.nVersion);
+    }
+
+    //(opt) Output count + Outputs
+    if (tx.flags[HasOneOutput] || tx.flags[HasTwoOutputs] || tx.flags[HasThreeOutputs])
+        s << NOSIZEVECTOR(tx.vout);
+    else
+        s << VARINTVECTOR(tx.vout);
+
+    //Witness data
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+        for (size_t i = 0; i < tx.vin.size(); i++)
+        {
+            s << VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+        }
+    }
+
+    // (opt) lock time
+    if (tx.flags[HasLockTime])
+    {
+        s << VARINT(tx.nLockTime);
+    }
+}
+
+
+template<typename Stream, typename TxType>
+inline void UnserializeTransaction(TxType& tx, Stream& s) {
+    //Version
+    //fixme: (GULDEN) (2.0) (ENSURE NO REAL TXES EVER HAVE TRANSACTION VERSION 0)
+    tx.nVersion = ReadVarInt<Stream, int32_t>(s);
+    if (tx.nVersion < 3)
+    {
+        unsigned char v2, v3, v4;
+        s >> v2; s >> v3; s >> v4;
+        assert(v2 == 0); assert(v3 == 0); assert(v4 == 0);
+        UnserializeTransactionOld(tx, s);
+        return;
+    }
+
+    //Flags + (opt) ExtraFlags
+    tx.flags.reset();
+    tx.extraFlags.reset();
+    unsigned char cFlags, cExtraFlags;
+    s >> cFlags;
+    tx.flags = std::bitset<8>(cFlags);
+    if (tx.flags[HasExtraFlags])
+    {
+        s >> cExtraFlags;
+        tx.extraFlags = std::bitset<8>(cExtraFlags);
+    }
+
+    //(opt) Input count + Inputs
+    tx.vin.clear();
+    if (tx.flags[HasOneInput])
+    {
+        tx.vin.resize(1);
+    }
+    else if (tx.flags[HasTwoInputs])
+    {
+        tx.vin.resize(2);
+    }
+    else if (tx.flags[HasThreeInputs])
+    {
+        tx.vin.resize(3);
+    }
+    else
+    {
+        int nSize;
+        s >> VARINT(nSize);
+        tx.vin.resize(nSize);
+    }
+    for (auto & txIn : tx.vin)
+    {
+        txIn.ReadFromStream(s, tx.nVersion);
+    }
+
+    //(opt) Output count + Outputs
+    tx.vout.clear();
+    if (tx.flags[HasOneOutput])
+    {
+        tx.vout.resize(1);
+        s >> NOSIZEVECTOR(tx.vout);
+    }
+    else if (tx.flags[HasTwoOutputs])
+    {
+        tx.vout.resize(2);
+        s >> NOSIZEVECTOR(tx.vout);
+    }
+    else if (tx.flags[HasThreeOutputs])
+    {
+        tx.vout.resize(3);
+        s >> NOSIZEVECTOR(tx.vout);
+    }
+    else
+    {
+        s >> VARINTVECTOR(tx.vout);
+    }
+
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+        for (size_t i = 0; i < tx.vin.size(); i++) {
+            s >> VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+        }
+    }
+
+    // (opt) lock time
+    if (tx.flags[HasLockTime])
+    {
+        tx.nLockTime = ReadVarInt<Stream, uint32_t>(s);
+    }
+}
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
@@ -572,7 +979,7 @@ public:
     // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
     // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
     // MAX_STANDARD_VERSION will be equal.
-    static const int32_t MAX_STANDARD_VERSION=2;
+    static const int32_t MAX_STANDARD_VERSION=3;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -583,6 +990,8 @@ public:
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
     const uint32_t nLockTime;
+    mutable std::bitset<8> flags;
+    mutable std::bitset<8> extraFlags;//Currently unused but present for forwards compat.
 
 private:
     /** Memory only. */
@@ -672,6 +1081,8 @@ struct CMutableTransaction
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
+    mutable std::bitset<8> flags;
+    mutable std::bitset<8> extraFlags;//Currently unused but present for forwards compat.
 
     CMutableTransaction();
     CMutableTransaction(const CTransaction& tx);

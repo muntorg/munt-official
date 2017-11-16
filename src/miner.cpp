@@ -315,6 +315,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     std::string coinbaseSignature = GetArg("-coinbasesignature", "");
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
+    //fixme: (GULDEN) (2.0) (SEGSIG)
     //pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
     

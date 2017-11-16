@@ -154,6 +154,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
 
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
+        //checkme: (GULDEN) (2.0) - Is this right?
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
@@ -201,8 +202,17 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, int check
 
     if (tx.IsCoinBase())
     {
-        if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
-            return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
+        if (tx.nVersion < 3)
+        {
+            if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
+        }
+        else
+        {
+            if (tx.vin[0].scriptSig.size() != 0)
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
+            //fixme: (GULDEN) (HIGH) implement - check the scriptWitness here?
+        }
     }
     else
     {

@@ -563,10 +563,10 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
 
     request.getMerchant(certStore.get(), recipient.authenticatedMerchant);
 
-    QList<std::pair<CScript, CAmount> > sendingTos = request.getPayTo();
+    QList<std::pair<CTxOut, CAmount> > sendingTos = request.getPayTo();
     QStringList addresses;
 
-    Q_FOREACH(const PAIRTYPE(CScript, CAmount)& sendingTo, sendingTos) {
+    Q_FOREACH(const PAIRTYPE(CTxOut, CAmount)& sendingTo, sendingTos) {
         // Extract and check destination addresses
         CTxDestination dest;
         if (ExtractDestination(sendingTo.first, dest)) {
@@ -592,8 +592,8 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
         }
 
         // Extract and check amounts
-        CTxOut txOut(sendingTo.second, sendingTo.first);
-        if (IsDust(txOut, ::dustRelayFee)) {
+        //CTxOut txOut(sendingTo.second, sendingTo.first);
+        if (IsDust(sendingTo.first, ::dustRelayFee)) {
             Q_EMIT message(tr("Payment request error"), tr("Requested payment amount of %1 is too small (considered dust).")
                 .arg(BitcoinUnits::formatWithUnit(optionsModel->getDisplayUnit(), sendingTo.second)),
                 CClientUIInterface::MSG_ERROR);

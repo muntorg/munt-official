@@ -72,7 +72,11 @@ void CBloomFilter::insert(const std::vector<unsigned char>& vKey)
 void CBloomFilter::insert(const COutPoint& outpoint)
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    stream << outpoint;
+    //fixme: (GULDEN) (2.0) HIGH
+    //fixme: (GULDEN) (2.0) SEGSIG
+    /*
+    outpoint.StrWrite(stream, CSerActionSerialize() );
+    */
     std::vector<unsigned char> data(stream.begin(), stream.end());
     insert(data);
 }
@@ -102,7 +106,10 @@ bool CBloomFilter::contains(const std::vector<unsigned char>& vKey) const
 bool CBloomFilter::contains(const COutPoint& outpoint) const
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
+    //fixme: (2.0) (HIGH)
+    /*
     stream << outpoint;
+    */
     std::vector<unsigned char> data(stream.begin(), stream.end());
     return contains(data);
 }
@@ -152,6 +159,7 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
         // This means clients don't have to update the filter themselves when a new relevant tx 
         // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
         CScript::const_iterator pc = txout.output.scriptPubKey.begin();
+        //fixme: (GULDEN) (SEGSIG) (2.0) (HIGH) - Handle new output types here.
         std::vector<unsigned char> data;
         while (pc < txout.output.scriptPubKey.end())
         {

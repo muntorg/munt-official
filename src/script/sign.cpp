@@ -180,7 +180,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     {
         case Spend:
         {
-            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_WITNESS_V0))
+            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             else
             {
@@ -188,7 +188,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
                 creator.KeyStore().GetPubKey(pow2Witness.spendingKeyID, vch);
                 ret.push_back(ToByteVector(vch));
             }
-            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_WITNESS_V0))
+            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             else
             {
@@ -200,7 +200,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
         }
         case Witness:
         {
-            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_WITNESS_V0))
+            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             else
             {

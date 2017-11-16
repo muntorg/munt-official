@@ -593,12 +593,14 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             if (nOut < 0)
                 throw std::runtime_error("vout must be positive");
 
+            //fixme: (GULDEN) (2.0) (SEGSIG)
             COutPoint out(txid, nOut);
             std::vector<unsigned char> pkData(ParseHexUV(prevOut["scriptPubKey"], "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
             {
                 const Coin& coin = view.AccessCoin(out);
+                //fixme: (GULDEN) (HIGH) (2.0) NEXT
                 if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
                     err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n"+
