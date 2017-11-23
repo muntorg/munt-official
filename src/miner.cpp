@@ -174,7 +174,7 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         assert(serialisedWitnessHeaderInfo.size() == 137);
         
         CTxOut out;
-        out.SetType(CTxOutType::ScriptOutput);
+        out.SetType(CTxOutType::ScriptLegacyOutput);
         
         out.nValue = 0;
         out.output.scriptPubKey.resize(143); // 1 + 5 + 137
@@ -209,18 +209,12 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
 
         // Straight after coinbase we must contain the witness transaction, which contains a single input and two outputs, the single witness output and a 'fake' output containing nothing but OP_RETURN and the blockheight.
         // The second fake output is required to ensure that the witness transaction has a different hash for every block.
-        CMutableTransaction witnessTx;
+        CMutableTransaction witnessTx(1);
         witnessTx.vin.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vin[1]); // old selectedWitnessOutPoint
         witnessTx.vout.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[0]); // new selectedWitnessOutPoint
         CTxOut fakeOut; fakeOut.output.scriptPubKey = CScript() << OP_RETURN << pindexPrev->nHeight + 1; fakeOut.nValue = 0;
         witnessTx.vout.push_back(fakeOut);
         block.vtx.insert(block.vtx.begin()+1, MakeTransactionRef(std::move(witnessTx)));
-        
-        // NEXTNEXTNEXT NEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXTNEXT
-        // The current issue - It looks like the witness transaction for some reason does not get properly removed from the view.
-        //LogPrintf("pow2coinbase-transaction <<<%s>>>\n", pWitnessBlock->vtx[nWitnessCoinbasePos]->vin[1].prevout.hash.ToString());
-        //LogPrintf("pow2coinbase-witness-transaction-prevout <<<%s>>>\n", witnessTx.GetHash().ToString());
-        //LogPrintf("pow2coinbase-witness-transaction <<<%s>>>\n", witnessTx.GetHash().ToString());
     }
 }
 
@@ -255,7 +249,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
     if (IsPow2WitnessingActive(pindexPrev, chainparams))
         nSubsidy -= GetBlockSubsidyWitness(nHeight, consensusParams);
-    
+
     int nPow2Phase = GetPoW2Phase(pindexPrev, chainparams);
     int nPrevPow2Phase = GetPoW2Phase(pindexPrev->pprev, chainparams);
 
@@ -305,7 +299,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     nLastBlockWeight = nBlockWeight;
 
     // Create coinbase transaction.
-    CMutableTransaction coinbaseTx;
+    CMutableTransaction coinbaseTx(CURRENT_TX_VERSION_POW2);
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
@@ -313,7 +307,21 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
     std::string coinbaseSignature = GetArg("-coinbasesignature", "");
-    coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+
+    // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
+    // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)
+    if (nPrevPow2Phase < 4)
+    {
+        coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+    }
+    else
+    {
+        coinbaseTx.vin[0].scriptWitness.stack.clear();
+        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>());
+        CVectorWriter(0, 0, coinbaseTx.vin[0].scriptWitness.stack[0], 0) << VARINT(nHeight);
+        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
+    }
+
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     //fixme: (GULDEN) (2.0) (SEGSIG)
     //pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
@@ -1082,7 +1090,7 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     }
     else
     {
-        coinbaseTx.vout[0].SetType(CTxOutType::ScriptOutput);
+        coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[0].output.scriptPubKey = GetScriptForDestination(witnessDestination);
     }
     coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue;
@@ -1094,15 +1102,22 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     else
     {
         //fixme: (GULDEN) (2.0) (SEGSIG)
-        coinbaseTx.vout[1].SetType(CTxOutType::ScriptOutput);
+        if (nPoW2Phase >= 4)
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptOutput);
+        }
+        else
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+        }
         coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
         coinbaseTx.vout[1].nValue = witnessSubsidy;
     }
 }
 
-CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2Phase, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPrevPoW2Phase, int nPoW2Phase, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
 {
-    CMutableTransaction coinbaseTx;
+    CMutableTransaction coinbaseTx(CURRENT_TX_VERSION_POW2);
     coinbaseTx.vin.resize(2);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vin[0].nSequence = 0;
@@ -1111,14 +1126,17 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2Phase, st
 
     // Phase 3 - we restrict the coinbase signature to only the block height.
     // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
-    if (nPoW2Phase == 3)
+    if (nPrevPoW2Phase < 4)
     {
         coinbaseTx.vin[0].scriptSig = CScript() << nWitnessHeight;
     }
     else
     {
         std::string coinbaseSignature = GetArg("-coinbasesignature", "");
-        coinbaseTx.vin[0].scriptSig = CScript() << nWitnessHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+        coinbaseTx.vin[0].scriptWitness.stack.clear();
+        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>());
+        CVectorWriter(0, 0, coinbaseTx.vin[0].scriptWitness.stack[0], 0) << VARINT(nWitnessHeight);
+        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
     }
 
     // Sign witness coinbase.
@@ -1284,7 +1302,7 @@ void static GuldenWitness()
                                 
                                 //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(nWitnessHeight, GetPoW2Phase(pindexTip, chainparams), coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, selectedWitnessAccount);
+                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(nWitnessHeight, GetPoW2Phase(pindexTip->pprev, chainparams), GetPoW2Phase(pindexTip, chainparams), coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
                                 

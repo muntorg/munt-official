@@ -3042,7 +3042,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
     }
 
     // parse hex string from parameter
-    CMutableTransaction tx;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     if (!DecodeHexTx(tx, request.params[0].get_str(), true))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
 

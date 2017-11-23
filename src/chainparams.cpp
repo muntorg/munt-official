@@ -24,7 +24,7 @@
 
 static CBlock CreateGenesisBlock(const std::vector<unsigned char>& timestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    CMutableTransaction txNew;
+    CMutableTransaction txNew(1);
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);

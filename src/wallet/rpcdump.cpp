@@ -306,6 +306,10 @@ UniValue importaddress(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 UniValue importprunedfunds(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -322,7 +326,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
             "2. \"txoutproof\"     (string, required) The hex output from gettxoutproof that contains the transaction\n"
         );
 
-    CMutableTransaction tx;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     if (!DecodeHexTx(tx, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     uint256 hashTx = tx.GetHash();

@@ -50,7 +50,8 @@ CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
     SetNull();
 
     nValue = nValueIn;
-    SetType(CTxOutType::ScriptOutput);
+    //fixme: (GULDEN) (HIGH) - This should change to ScriptOutput (for phase 4) but should remain as is for phases before that, have to figure out the best way to switch over...
+    SetType(CTxOutType::ScriptLegacyOutput);
     output.scriptPubKey = scriptPubKeyIn;
 }
 
@@ -59,7 +60,9 @@ std::string CTxOut::ToString() const
     return strprintf("CTxOut(nValue=%d.%08d, type=%s, data=%s)", nValue / COIN, nValue % COIN, GetTypeAsString(), output.GetHex(GetType()).substr(0, 30));
 }
 
-CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0), flags(0), extraFlags(0) {}
+//fixme: (GULDEN) (2.1) restore CURRENT_VERSION behaviour here.
+//CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0), flags(0), extraFlags(0) {}
+CMutableTransaction::CMutableTransaction(int32_t nVersion_) : nVersion(nVersion_), nLockTime(0), flags(0), extraFlags(0) {}
 CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), flags(tx.flags), extraFlags(tx.extraFlags) {}
 
 uint256 CMutableTransaction::GetHash() const
@@ -90,7 +93,9 @@ uint256 CTransaction::GetWitnessHash() const
 }
 
 /* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
-CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), vin(), vout(), nLockTime(0), flags(0), extraFlags(0), hash() {}
+//fixme: (GULDEN) (2.1) restore CURRENT_VERSION behaviour here.
+//CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), vin(), vout(), nLockTime(0), flags(0), extraFlags(0), hash() {}
+CTransaction::CTransaction(int32_t nVersion_) : nVersion(nVersion_), vin(), vout(), nLockTime(0), flags(0), extraFlags(0), hash() {}
 CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), flags(tx.flags), extraFlags(tx.extraFlags), hash(ComputeHash()) {}
 CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nLockTime(tx.nLockTime), flags(tx.flags), extraFlags(tx.extraFlags), hash(ComputeHash()) {}
 

@@ -419,6 +419,10 @@ void CoinControlDialog::updateLabelLocked()
     else ui->labelLocked->setVisible(false);
 }
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 {
     if (!model)
@@ -427,7 +431,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
     // nPayAmount
     CAmount nPayAmount = 0;
     bool fDust = false;
-    CMutableTransaction txDummy;
+    CMutableTransaction txDummy(CURRENT_TX_VERSION_POW2);
     Q_FOREACH(const CAmount &amount, CoinControlDialog::payAmounts)
     {
         nPayAmount += amount;

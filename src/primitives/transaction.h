@@ -1027,6 +1027,10 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     }
 }
 
+
+//fixme: (GULDEN) (2.1) Remove
+#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params()) >= 4 ? 3 : 2)
+
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
  */
@@ -1062,7 +1066,7 @@ private:
 
 public:
     /** Construct a CTransaction that qualifies as IsNull() */
-    CTransaction();
+    CTransaction(int32_t nVersion_);
 
     /** Convert a CMutableTransaction into a CTransaction. */
     CTransaction(const CMutableTransaction &tx);
@@ -1145,7 +1149,7 @@ struct CMutableTransaction
     mutable std::bitset<8> flags;
     mutable std::bitset<8> extraFlags;//Currently unused but present for forwards compat.
 
-    CMutableTransaction();
+    CMutableTransaction(int32_t nVersion_);
     CMutableTransaction(const CTransaction& tx);
 
     template <typename Stream>
@@ -1186,7 +1190,7 @@ struct CMutableTransaction
 };
 
 typedef std::shared_ptr<const CTransaction> CTransactionRef;
-static inline CTransactionRef MakeTransactionRef() { return std::make_shared<const CTransaction>(); }
+static inline CTransactionRef MakeTransactionRef(int32_t nVersion_) { return std::make_shared<const CTransaction>(nVersion_); }
 template <typename Tx> static inline CTransactionRef MakeTransactionRef(Tx&& txIn) { return std::make_shared<const CTransaction>(std::forward<Tx>(txIn)); }
 
 /** Compute the weight of a transaction, as defined by BIP 141 */

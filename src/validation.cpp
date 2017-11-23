@@ -1185,10 +1185,14 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
 {
     // mark inputs spent
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase()) {
-        txundo.vprevout.reserve(tx.vin.size());
+        //fixme: (GULDEN) (2.1) See if we can bring back the reserve efficiency here.
+        //txundo.vprevout.reserve(tx.vin.size());
         BOOST_FOREACH(const CTxIn &txin, tx.vin) {
-            txundo.vprevout.emplace_back();
-            inputs.SpendCoin(txin.prevout, &txundo.vprevout.back());
+            if (!txin.prevout.IsNull())
+            {
+                txundo.vprevout.emplace_back();
+                inputs.SpendCoin(txin.prevout, &txundo.vprevout.back());
+            }
         }
     }
     // add outputs
@@ -1450,13 +1454,32 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
         // restore inputs
         if (i > 0) { // not coinbases
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
-            if (txundo.vprevout.size() != tx.vin.size()) {
-                error("DisconnectBlock(): transaction and undo data inconsistent");
-                return DISCONNECT_FAILED;
-            }
-            for (unsigned int j = tx.vin.size(); j-- > 0;) {
-                if (!tx.IsPoW2WitnessCoinBase() || txundo.vprevout[j].out.nValue > 0)
+            //fixme: (GULDEN) (HIGH) (NEXT) (force only 1 valid input in checkblock as well.)
+            if (tx.IsPoW2WitnessCoinBase())
+            {
+                if (txundo.vprevout.size() != 1 || tx.vin.size() < 2)
                 {
+                    error("DisconnectBlock(): transaction and undo data inconsistent");
+                    return DISCONNECT_FAILED;
+                }
+                for (unsigned int j = tx.vin.size(); j-- > 0;) {
+                    if (!tx.vin[j].prevout.IsNull())
+                    {
+                        const COutPoint &out = tx.vin[j].prevout;
+                        int res = ApplyTxInUndo(std::move(txundo.vprevout[0]), view, out);
+                        if (res == DISCONNECT_FAILED)
+                            return DISCONNECT_FAILED;
+                        fClean = fClean && res != DISCONNECT_UNCLEAN;
+                    }
+                }
+            }
+            else
+            {
+                if (txundo.vprevout.size() != tx.vin.size()) {
+                    error("DisconnectBlock(): transaction and undo data inconsistent");
+                    return DISCONNECT_FAILED;
+                }
+                for (unsigned int j = tx.vin.size(); j-- > 0;) {
                     const COutPoint &out = tx.vin[j].prevout;
                     int res = ApplyTxInUndo(std::move(txundo.vprevout[j]), view, out);
                     if (res == DISCONNECT_FAILED)
@@ -1637,7 +1660,7 @@ bool WitnessCoinbaseInfoIsValid(int nWitnessCoinbaseIndex, const CBlockIndex* pi
         return false;
     
     // Reconstruct transaction information of previous witness block from the coinbase of this PoW block.
-    CMutableTransaction coinbaseTx;
+    CMutableTransaction coinbaseTx(1);
     coinbaseTx.vin.resize(2);
     coinbaseTx.vout.resize(2);
     coinbaseTx.vout[0] = block.vtx[1]->vout[0];
@@ -1931,7 +1954,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     
     //testme: (2.0) (POW2) (HIGH) Ensure this works as intended.
     // Second block of phase 3 up to and including first block of phase 4 (coinbase of previous witness block embedded in coinbase of current PoW block)
-    if (GetPoW2Phase(pindex->pprev->pprev, chainparams) == 3)
+    int pow2phaseprevprev = GetPoW2Phase(pindex->pprev->pprev, chainparams);
+    if (pow2phaseprevprev == 3)
     {
         int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
         if (nWitnessCoinbaseIndex == -1)
@@ -2955,20 +2979,23 @@ std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainPar
     **/
     {
         CCoinsViewCursor* cursor = ppow2witdbview->Cursor();
-        while (cursor && cursor->Valid())
+        if (cursor)
         {
-            COutPoint outPoint;
-            if (!cursor->GetKey(outPoint))
-                throw std::runtime_error("Error fetching record from witness cache.");
+            while (cursor->Valid())
+            {
+                COutPoint outPoint;
+                if (!cursor->GetKey(outPoint))
+                    throw std::runtime_error("Error fetching record from witness cache.");
 
-            Coin outCoin;
-            if (!cursor->GetValue(outCoin))
-                throw std::runtime_error("Error fetching record from witness cache.");
+                Coin outCoin;
+                if (!cursor->GetValue(outCoin))
+                    throw std::runtime_error("Error fetching record from witness cache.");
 
-            allWitnessCoins.emplace(std::make_pair(outPoint, outCoin));
-            //LogPrintf(">>>potwitdb %s %d\n",outPoint.hash.ToString(), outCoin.nHeight);
+                allWitnessCoins.emplace(std::make_pair(outPoint, outCoin));
 
-            cursor->Next();
+                cursor->Next();
+            }
+            delete cursor;
         }
         for (auto iter : ppow2witTip->GetCachedCoins())
         {
@@ -3014,7 +3041,7 @@ const int nMinimumParticipationAge = 100;
 const int nMaximumParticipationAge = 10000;
 void GetWitness(CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight)
 {
-    LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
     // Fetch all unspent witness outputs for the chain in which -block- is the tip of the chain.
     std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainParams, pPreviousIndexChain, &block);
@@ -3719,16 +3746,46 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
         }
     }
 
+    int nPoW2PhasePrev = pindexPrev ? GetPoW2Phase(pindexPrev, chainParams) : 1;
+    int nPoW2PhasePrevPrev = pindexPrev ? GetPoW2Phase(pindexPrev->pprev, chainParams) : 1;
+
+    // Check that no transactions (from phase4 onward) contain a scriptSig - scriptSig is completely deprecated.
+    if (nPoW2PhasePrevPrev >= 4)
+    {
+        for (const auto& tx : block.vtx)
+        {
+            for (const auto& txIn : tx->vin)
+            {
+                if (txIn.scriptSig.size() > 0)
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "bad-segsig-txin", false, "segsig blocks may not contain scriptSig which has been deprecated");
+                }
+            }
+        }
+    }
+
     // Enforce rule that the coinbase starts with serialized block height
     if (nHeight >= chainParams.GetConsensus().BIP34Height)
     {
-        CScript expect = CScript() << nHeight;
-        if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
-            !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
+        if (nPoW2PhasePrevPrev < 4)
+        {
+            CScript expect = CScript() << nHeight;
+            if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
+                !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
+            }
+        }
+        else
+        {
+            std::vector<unsigned char> expect;
+            CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
+            if (block.vtx[0]->vin[0].scriptWitness.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptWitness.stack[0].begin()))
+            {
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase2");
+            }
         }
     }
-    
+
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
     unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness != 0)
@@ -3747,31 +3804,35 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
             return state.DoS(100, error("ContextualCheckBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
         }
     }
-    
-    
+
     if (block.nVersionPoW2Witness != 0)
     {
         // Phase 3 - we restrict the coinbase signature to only the block height.
         // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
-        if (GetPoW2Phase(pindexPrev, chainParams) == 3)
+        if (nPoW2PhasePrevPrev < 4)
         {
             CScript expect = CScript() << nHeight;
             if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.size() != expect.size())
                 return state.DoS(100, error("ContextualCheckBlock(): PoW2 phase 3 witness coinbase has incorrect size for scriptSig)"), REJECT_INVALID, "bad-phase3-witness-cb-scriptsig");
-        }
-        
-        // Enforce rule that the coinbase starts with serialized block height
-        {
-            CScript expect = CScript() << nHeight;
+
+            // Enforce rule that the coinbase starts with serialized block height
             if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.size() < expect.size() ||
-                !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.begin())) {
+                !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.begin()))
+            {
                 return state.DoS(100, false, REJECT_INVALID, "bad-witness-cb-height", false, "block height mismatch in witness coinbase");
             }
         }
+        else
+        {
+            std::vector<unsigned char> expect;
+            CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
+            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptWitness.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptWitness.stack[0].begin()))
+            {
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase3");
+            }
+        }
     }
-    
 
-    //fixme: (HIGH) (GULDEN) (2.0) (SEGSIG)
     // Validation for witness commitments.
     // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the
     //   coinbase (where 0x0000....0000 is used instead).
@@ -3780,7 +3841,9 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     // * There must be at least one output whose scriptPubKey is a single 36-byte push, the first 4 bytes of which are
     //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
     //   multiple, the last one is used.
-    bool fHaveWitness = false;
+    bool fHaveWitness = (nPoW2PhasePrev >= 4);
+    //fixme: (HIGH) (GULDEN) (2.0) (SEGSIG) NEXTNEXTNEXT
+    //Make sure we include the witness data in the blockhash...
     /*if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
         int commitpos = GetWitnessCommitmentIndex(block);
         if (commitpos != -1) {
@@ -3805,6 +3868,17 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
       for (const auto& tx : block.vtx) {
             if (tx->HasWitness()) {
                 return state.DoS(100, false, REJECT_INVALID, "unexpected-witness", true, strprintf("%s : unexpected witness data found", __func__));
+            }
+        }
+    }
+    else
+    {
+        if (GetPoW2Phase(pindexPrev->pprev, chainParams) >=4)
+        {
+            for (const auto& tx : block.vtx) {
+                if (!tx->HasWitness()) {
+                    return state.DoS(100, false, REJECT_INVALID, "missing-witness", true, strprintf("%s : missing witness data found", __func__));
+                }
             }
         }
     }

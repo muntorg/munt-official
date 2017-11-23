@@ -49,6 +49,10 @@
 #include <Gulden/mnemonic.h>
 #include <script/ismine.h>
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 std::vector<CWalletRef> vpwallets;
 CWalletRef pactiveWallet = NULL;
 
@@ -2772,7 +2776,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 
     wtxNew.fTimeReceivedIsTxTime = true;
     wtxNew.BindWallet(this);
-    CMutableTransaction txNew;
+    CMutableTransaction txNew(CURRENT_TX_VERSION_POW2);
 
     // Discourage fee sniping.
     //

@@ -13,6 +13,10 @@
 #include "config/bitcoin-config.h"
 #endif
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 #include "base58.h"
 #include "clientversion.h"
 #include "coins.h"
@@ -792,7 +796,8 @@ static int CommandLineRawTx(int argc, char* argv[])
             argv++;
         }
 
-        CMutableTransaction tx;
+        //fixme: (GULDEN) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for bitcoin-tx
+        CMutableTransaction tx(1);
         int startArg;
 
         if (!fCreateBlank) {

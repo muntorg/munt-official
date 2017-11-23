@@ -15,6 +15,10 @@
 
 #include <boost/foreach.hpp>
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {
     /*
@@ -102,6 +106,14 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
 bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled)
 {
     if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
+        reason = "version";
+        return false;
+    }
+
+    // Refuse to relay old style transactions once phase 4 is active.
+    // fixme: (GULDEN) (2.1) we can combine this with the rule above once we are locked into phase 5.
+    if (GetPoW2Phase(chainActive.Tip(), Params()) >= 4 && tx.nVersion < 1)
+    {
         reason = "version";
         return false;
     }
@@ -254,8 +266,6 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
                 }
             }
         }
-
-        
     }
     return true;
 }

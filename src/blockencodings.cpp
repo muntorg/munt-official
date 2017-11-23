@@ -15,7 +15,8 @@
 
 #include <unordered_map>
 
-#define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS))
+//fixme: (GULDEN) (2.0) (SEGSIG)
+#define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(1), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS))
 
 CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block, bool fUseWTXID) :
         nonce(GetRand(std::numeric_limits<uint64_t>::max())),

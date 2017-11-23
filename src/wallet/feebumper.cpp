@@ -72,11 +72,16 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
     return true;
 }
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConfirmTarget, bool ignoreGlobalPayTxFee, CAmount totalFee, bool newTxReplaceable)
     :
     txid(std::move(txidIn)),
     nOldFee(0),
-    nNewFee(0)
+    nNewFee(0),
+    mtx(CURRENT_TX_VERSION_POW2)
 {
     vErrors.clear();
     bumpedTxid.SetNull();

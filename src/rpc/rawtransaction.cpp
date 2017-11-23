@@ -41,6 +41,10 @@
 #include <Gulden/translate.h>
 #include <univalue.h>
 
+//fixme: (GULDEN) (2.1)
+#include "Gulden/util.h"
+#include "validation.h"
+
 
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 {
@@ -340,7 +344,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
     UniValue inputs = request.params[0].get_array();
     UniValue sendTo = request.params[1].get_obj();
 
-    CMutableTransaction rawTx;
+    CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
 
     if (request.params.size() > 2 && !request.params[2].isNull()) {
         int64_t nLockTime = request.params[2].get_int64();
@@ -480,7 +484,7 @@ UniValue decoderawtransaction(const JSONRPCRequest& request)
     LOCK(cs_main);
     RPCTypeCheck(request.params, {UniValue::VSTR});
 
-    CMutableTransaction mtx;
+    CMutableTransaction mtx(CURRENT_TX_VERSION_POW2);
 
     if (!DecodeHexTx(mtx, request.params[0].get_str(), true))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
@@ -637,7 +641,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     std::vector<CMutableTransaction> txVariants;
     while (!ssData.empty()) {
         try {
-            CMutableTransaction tx;
+            CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
             ssData >> tx;
             txVariants.push_back(tx);
         }
@@ -872,7 +876,7 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
     RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VBOOL});
 
     // parse hex string from parameter
-    CMutableTransaction mtx;
+    CMutableTransaction mtx(CURRENT_TX_VERSION_POW2);
     if (!DecodeHexTx(mtx, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     CTransactionRef tx(MakeTransactionRef(std::move(mtx)));
