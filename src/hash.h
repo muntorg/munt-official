@@ -176,6 +176,11 @@ public:
         this->write(pch, nSize);
     }
 
+    void peek(char* pch, size_t nSize)
+    {
+        source->peek(pch, nSize);
+    }
+
     void ignore(size_t nSize)
     {
         char data[1024];

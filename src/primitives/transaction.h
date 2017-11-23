@@ -28,6 +28,21 @@ struct CBlockPosition
     uint64_t blockNumber; // Position of block on blockchain that contains our transaction.
     uint64_t transactionIndex; // Position of transaction within the block.
     CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
+
+    friend bool operator<(const CBlockPosition& a, const CBlockPosition& b)
+    {
+        if (a.blockNumber < b.blockNumber)
+            return true;
+        if (a.blockNumber == b.blockNumber && a.transactionIndex < b.transactionIndex)
+            return true;
+
+        return false;
+    }
+
+    friend bool operator==(const CBlockPosition& a, const CBlockPosition& b)
+    {
+        return (a.blockNumber == b.blockNumber && a.transactionIndex == b.transactionIndex);
+    }
 };
 
 
@@ -91,7 +106,9 @@ public:
                 STRREAD(VARINT(prevBlock.blockNumber));
                 STRREAD(VARINT(prevBlock.transactionIndex));
             }
-            STRREAD(VARINT(n));
+            uint32_t n_;
+            STRREAD(VARINT(n_));
+            n = n_;
         }
     }
 
@@ -117,7 +134,8 @@ public:
                 STRWRITE(VARINT(prevBlock.blockNumber));
                 STRWRITE(VARINT(prevBlock.transactionIndex));
             }
-            STRWRITE(VARINT(n));
+            uint32_t n_ = n;
+            STRWRITE(VARINT(n_));
         }
     }
 
@@ -126,13 +144,22 @@ public:
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
-        int cmp = a.hash.Compare(b.hash);
-        return cmp < 0 || (cmp == 0 && a.n < b.n);
+        if (a.isHash < b.isHash)
+            return true;
+        if (a.isHash)
+        {
+            int cmp = a.hash.Compare(b.hash);
+            return cmp < 0 || (cmp == 0 && a.n < b.n);
+        }
+        else
+        {
+            return a.prevBlock < b.prevBlock;
+        }
     }
 
     friend bool operator==(const COutPoint& a, const COutPoint& b)
     {
-        return (a.hash == b.hash && a.n == b.n);
+        return (a.isHash == b.isHash && ((a.isHash && a.hash == b.hash) || (!a.isHash && a.prevBlock == b.prevBlock)) && a.n == b.n);
     }
 
     friend bool operator!=(const COutPoint& a, const COutPoint& b)
@@ -205,7 +232,7 @@ public:
     explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
     CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
 
-        template <typename Stream> inline void ReadFromStream(Stream& s, int nTransactionVersion)
+    template <typename Stream> inline void ReadFromStream(Stream& s, int nTransactionVersion)
     {
         const CSerActionUnserialize ser_action;
 
@@ -373,9 +400,9 @@ public:
     }
     void SetType(CTxOutType nType_)
     {
-        DeleteOutput(output.nType);
-        AllocOutput(nType_);
+        output.DeleteOutput();
         output.nType = nType_;
+        output.AllocOutput();
     }
 
     CAmount nValue;
@@ -399,8 +426,45 @@ public:
         {
         }
 
+        void DeleteOutput()
+        {
+            switch(nType)
+            {
+                case CTxOutType::ScriptLegacyOutput:
+                case CTxOutType::ScriptOutput:
+                {
+                    scriptPubKey.clear();
+                    scriptPubKey.~CScript(); break;
+                }
+                case CTxOutType::PoW2WitnessOutput:
+                {
+                    witnessDetails.clear();
+                    witnessDetails.~CTxOutPoW2Witness(); break;
+                }
+                case CTxOutType::StandardKeyHashOutput:
+                {
+                    standardKeyHash.clear();
+                    standardKeyHash.~CTxOutStandardKeyHash(); break;
+                }
+            }
+        }
+
+        void AllocOutput()
+        {
+            switch(nType)
+            {
+                case CTxOutType::ScriptLegacyOutput:
+                case CTxOutType::ScriptOutput:
+                    new(&scriptPubKey) CScript(); break;
+                case CTxOutType::PoW2WitnessOutput:
+                    new(&witnessDetails) CTxOutPoW2Witness(); break;
+                case CTxOutType::StandardKeyHashOutput:
+                    new(&standardKeyHash) CTxOutStandardKeyHash(); break;
+            }
+        }
+
         template <typename Stream, typename Operation>
-        inline void SerializeOp(Stream& s, Operation ser_action, CTxOutType nType)
+        inline void SerializeOp(Stream& s, Operation ser_action)
         {
             switch(nType)
             {
@@ -419,7 +483,7 @@ public:
             std::vector<unsigned char> serData;
             {
                 CVectorWriter serialisedWitnessHeaderInfoStream(SER_NETWORK, INIT_PROTO_VERSION, serData, 0);
-                const_cast<output*>(this)->SerializeOp(serialisedWitnessHeaderInfoStream, CSerActionSerialize(), nType);
+                const_cast<output*>(this)->SerializeOp(serialisedWitnessHeaderInfoStream, CSerActionSerialize());
             }
             return HexStr(serData);
         }
@@ -443,42 +507,7 @@ public:
         }
     } output;
 
-    void DeleteOutput(int64_t nDeleteType)
-    {
-        switch(nDeleteType)
-        {
-            case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
-            {
-                output.scriptPubKey.clear();
-                output.scriptPubKey.~CScript(); break;
-            }
-            case CTxOutType::PoW2WitnessOutput:
-            {
-                output.witnessDetails.clear();
-                output.witnessDetails.~CTxOutPoW2Witness(); break;
-            }
-            case CTxOutType::StandardKeyHashOutput:
-            {
-                output.standardKeyHash.clear();
-                output.standardKeyHash.~CTxOutStandardKeyHash(); break;
-            }
-        }
-    }
-
-    void AllocOutput(int64_t nAllocType)
-    {
-        switch(nAllocType)
-        {
-            case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
-                new(&output.scriptPubKey) CScript(); break;
-            case CTxOutType::PoW2WitnessOutput:
-                new(&output.witnessDetails) CTxOutPoW2Witness(); break;
-            case CTxOutType::StandardKeyHashOutput:
-                new(&output.standardKeyHash) CTxOutStandardKeyHash(); break;
-        }
-    }
+    
 
     bool IsUnspendable() const
     {
@@ -492,7 +521,7 @@ public:
     virtual ~CTxOut()
     {
         //fixme: (GULDEN) (2.0) (IMPLEMENT)
-        DeleteOutput(output.nType);
+        output.DeleteOutput();
     }
 
     CTxOut operator=(const CTxOut& copyFrom)
@@ -577,33 +606,51 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action) {
         if (ser_action.ForRead())
         {
-            uint8_t read8;
-            READWRITE(read8);
-
-            output.nValueBase = (read8 & 0b00000111);
-            SetType(CTxOutType((read8 & 0b11111000) >> 5));
-
-            if (GetType() == CTxOutType::ScriptLegacyOutput) // Old transaction format.
+            // Test whether we are dealing with the new or old transaction format by reading in 64 bits and testing them.
+            // If the 10 leading bits are zero or the stream does not contain 64 bits
+            // a) Old transaction format should always have 10 most significant bits as zero when reading the initial 64 bit value that it starts with.
+            // Largest output is 170'000'000'00000000 to have existed as this number greatly exceeds total supply at the point in time when old transactions existed. This number only occupies 5 bytes of a 64 bit integer....
+            // b) Old transaction format must always have >8 bytes as it starts with 64 bit amount.
+            try
             {
-                // nValue is 64 bit including the byte we have already read (so pull a further  bits from the stream).
-                nValue = 0;
-                nValue |= read8; READWRITE(read8); nValue = (nValue << 8) | read8;    // 16
-                uint16_t read16; READWRITE(read16); nValue = (nValue << 16) | read16; // 32
-                uint32_t read32; READWRITE(read32); nValue = (nValue << 32) | read32; // 64
+                STRPEEK(nValue);
+                if (nValue & 0b1111111111000000000000000000000000000000000000000000000000000000)
+                {
+                    nValue = -1;
+                }
+                else
+                {
+                    //fixme: SBSU - Ideally we should simply 'skip' here instead of incurring read overhead, unfortunately the behaviour of CHashVerifier makes this complicated
+                    //STRSKIP(nValue);
+                    STRREAD(nValue);
+                }
             }
-            else // New transaction format.
+            catch (std::ios_base::failure& e)
             {
-                READWRITE(VARINT(nValue)); // Compacted value is stored as a varint.
+                nValue = -1;
+            }
+
+            // Read in the new transaction format value, which is specified in a format that is much more compact in most circumstances.
+            if (nValue == -1)
+            {
+                uint8_t nTypeAndValueBase;
+                STRREAD(nTypeAndValueBase);
+                output.nValueBase = (nTypeAndValueBase & 0b00000111);
+                SetType(CTxOutType((nTypeAndValueBase & 0b11111000) >> 3));
+
+                assert(output.nType != CTxOutType::ScriptLegacyOutput);
+
+                STRREAD(VARINT(nValue)); // Compacted value is stored as a varint.
                 switch(output.nValueBase) // Which further needs to be multiplied by base to get the full int64 value.
                 {
-                    case 0: break;                   // 8 decimal precision  (0.00000008, 87654321.12345678 etc.)
-                    case 1: nValue *= 100;           // 6 decimal precision  (0.00000600, 87654321.12345600 etc.)
-                    case 2: nValue *= 10000;         // 4 decimal precision  (0.00040000, 87654321.12340000 etc.)
-                    case 3: nValue *= 1000000;       // 2 decimal precision  (0.02000000, 87654321.12000000 etc.)
-                    case 4: nValue *= 10000000;      // 1 decimal precision  (0.10000000, 87654321.10000000 etc.)
-                    case 5: nValue *= 100000000;     // 1 significant digit precision (1.00000000, 87654321.00000000 etc.)
-                    case 6: nValue *= 10000000000;   // 3 significant digit precision (200.00000000, 876543200.00000000 etc.)
-                    case 7: nValue *= 1000000000000; // 5 significant digit precision (40000.00000000, 876540000.00000000 etc.)
+                    case 0: break;                          // 8 decimal precision  (0.00000008, 87654321.12345678 etc.)
+                    case 1: nValue *= 100; break;           // 6 decimal precision  (0.00000600, 87654321.12345600 etc.)
+                    case 2: nValue *= 10000; break;         // 4 decimal precision  (0.00040000, 87654321.12340000 etc.)
+                    case 3: nValue *= 1000000; break;       // 2 decimal precision  (0.02000000, 87654321.12000000 etc.)
+                    case 4: nValue *= 10000000; break;      // 1 decimal precision  (0.10000000, 87654321.10000000 etc.)
+                    case 5: nValue *= 100000000; break;     // 1 significant digit precision (1.00000000, 87654321.00000000 etc.)
+                    case 6: nValue *= 10000000000; break;   // 3 significant digit precision (200.00000000, 876543200.00000000 etc.)
+                    case 7: nValue *= 1000000000000; break; // 5 significant digit precision (40000.00000000, 876540000.00000000 etc.)
                 };
             }
         }
@@ -612,36 +659,46 @@ public:
             if (GetType() == CTxOutType::ScriptLegacyOutput)
             {
                 // Old transaction format.
-                READWRITE(nValue);
+                STRWRITE(nValue);
             }
             else
             {
                 CAmount nValueWrite = nValue;
 
-                // If we don't already have a 'base' set calculate the best one and adjust nValue to the new base
+                // If we don't already have a 'base' set calculate the best one.
                 if (output.nValueBase == 0)
                 {
                     //fixme: (Gulden) - Is there some 'trick' to calculate this faster without so much branching?
-                    if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; nValueWrite /= 1000000000000; } // 4 significant digit precision
-                    else if (nValue % 10000000000 == 0) { output.nValueBase = 6; nValueWrite /= 10000000000; }   // 2 significant digit precision
-                    else if (nValue % 100000000 == 0)   { output.nValueBase = 5; nValueWrite /= 100000000; }     // 1 significant digit precision
-                    else if (nValue % 10000000 == 0)    { output.nValueBase = 4; nValueWrite /= 10000000; }      // 1 decimal precision
-                    else if (nValue % 1000000 == 0)     { output.nValueBase = 3; nValueWrite /= 1000000; }       // 2 decimal precision
-                    else if (nValue % 10000 == 0)       { output.nValueBase = 2; nValueWrite /= 10000; }         // 4 decimal precision
-                    else if (nValue % 100 == 0)         { output.nValueBase = 1; nValueWrite /= 100;  }          // 6 decimal precision
+                    if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; } // 4 significant digit precision
+                    else if (nValue % 10000000000 == 0) { output.nValueBase = 6; } // 2 significant digit precision
+                    else if (nValue % 100000000 == 0)   { output.nValueBase = 5; } // 1 significant digit precision
+                    else if (nValue % 10000000 == 0)    { output.nValueBase = 4; } // 1 decimal precision
+                    else if (nValue % 1000000 == 0)     { output.nValueBase = 3; } // 2 decimal precision
+                    else if (nValue % 10000 == 0)       { output.nValueBase = 2; } // 4 decimal precision
+                    else if (nValue % 100 == 0)         { output.nValueBase = 1; } // 6 decimal precision
                     // 8 decimal precision.
                 }
+                // Adjust nValueWrite to the new base.
+                switch (output.nValueBase)
+                {
+                    case 7: nValueWrite /= 1000000000000; break;
+                    case 6: nValueWrite /= 10000000000; break;
+                    case 5: nValueWrite /= 100000000; break;
+                    case 4: nValueWrite /= 10000000; break;
+                    case 3: nValueWrite /= 1000000; break;
+                    case 2: nValueWrite /= 10000; break;
+                    case 1: nValueWrite /= 100; break;
+                }
 
-                //checkme: NEXT
-                uint8_t write8 = 0;
-                write8 = output.nType;
-                write8 <<= 5;
-                write8 |= output.nValueBase;
-                READWRITE(write8);
-                READWRITE(VARINT(nValueWrite));
+                uint8_t nTypeAndValueBase = 0;
+                nTypeAndValueBase = output.nType;
+                nTypeAndValueBase <<= 3;
+                nTypeAndValueBase |= output.nValueBase;
+                STRWRITE(nTypeAndValueBase);
+                STRWRITE(VARINT(nValueWrite));
             }
         }
-        output.SerializeOp(s, ser_action, GetType());
+        output.SerializeOp(s, ser_action);
     }
 
     void SetNull()
@@ -668,7 +725,7 @@ public:
 
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
-        return (a.nValue       == b.nValue &&
+        return (a.nValue == b.nValue &&
                 a.output == b.output);
     }
 
@@ -963,6 +1020,10 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     if (tx.flags[HasLockTime])
     {
         tx.nLockTime = ReadVarInt<Stream, uint32_t>(s);
+    }
+    else
+    {
+        tx.nLockTime = 0;
     }
 }
 

@@ -45,6 +45,10 @@ std::string CTxIn::ToString() const
 
 CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
 {
+    //NB! Important otherwise we fail to initialise some member variables.
+    //CBSU - possibly initialise only those variables instead of double assigning nValue and nType
+    SetNull();
+
     nValue = nValueIn;
     SetType(CTxOutType::ScriptOutput);
     output.scriptPubKey = scriptPubKeyIn;

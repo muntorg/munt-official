@@ -39,6 +39,26 @@ public:
         m_data += nSize;
     }
 
+    void peek(char* pch, size_t nSize)
+    {
+        if (nSize > m_remaining)
+            throw std::ios_base::failure(std::string(__func__) + ": end of data");
+
+        if (pch == NULL)
+            throw std::ios_base::failure(std::string(__func__) + ": bad destination buffer");
+
+        if (m_data == NULL)
+            throw std::ios_base::failure(std::string(__func__) + ": bad source buffer");
+
+        memcpy(pch, m_data, nSize);
+    }
+
+    void ignore(size_t nSize)
+    {
+        m_remaining -= nSize;
+        m_data += nSize;
+    }
+
     template<typename T>
     TxInputStream& operator>>(T& obj)
     {

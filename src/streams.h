@@ -360,6 +360,19 @@ public:
         nReadPos = nReadPosNext;
     }
 
+    void peek(char* pch, size_t nSize)
+    {
+        if (nSize == 0) return;
+
+        // Read from the beginning of the buffer
+        unsigned int nReadPosNext = nReadPos + nSize;
+        if (nReadPosNext > vch.size())
+        {
+            throw std::ios_base::failure("CDataStream::read(): end of data");
+        }
+        memcpy(pch, &vch[nReadPos], nSize);
+    }
+
     void ignore(int nSize)
     {
         // Ignore from the beginning of the buffer
@@ -513,6 +526,15 @@ public:
             throw std::ios_base::failure(feof(file) ? "CAutoFile::read: end of file" : "CAutoFile::read: fread failed");
     }
 
+    void peek(char* pch, size_t nSize)
+    {
+        if (!file)
+            throw std::ios_base::failure("CAutoFile::read: file handle is NULL");
+        if (fread(pch, 1, nSize, file) != nSize)
+            throw std::ios_base::failure(feof(file) ? "CAutoFile::read: end of file" : "CAutoFile::read: fread failed");
+        fseek(file, -nSize, SEEK_CUR);
+    }
+
     void ignore(size_t nSize)
     {
         if (!file)
@@ -645,6 +667,38 @@ public:
             pch += nNow;
             nSize -= nNow;
         }
+    }
+
+    void peek(char *pch, size_t nSize) {
+        if (nSize > nRewind)
+            nRewind = nSize;
+        if (nSize + nReadPos > nReadLimit)
+            throw std::ios_base::failure("Read attempted past buffer limit");
+        if (nSize + nRewind > vchBuf.size())
+            throw std::ios_base::failure("Read larger than buffer size");
+        int nRewindPos = nReadPos;
+        while (nSize > 0) {
+            if (nReadPos == nSrcPos)
+                Fill();
+            unsigned int pos = nReadPos % vchBuf.size();
+            size_t nNow = nSize;
+            if (nNow + pos > vchBuf.size())
+                nNow = vchBuf.size() - pos;
+            if (nNow + nReadPos > nSrcPos)
+                nNow = nSrcPos - nReadPos;
+            memcpy(pch, &vchBuf[pos], nNow);
+            nReadPos += nNow;
+            pch += nNow;
+            nSize -= nNow;
+        }
+        SetPos(nRewindPos);
+    }
+
+    void ignore(int nSize)
+    {
+        if (nSize + nReadPos > nReadLimit)
+            throw std::ios_base::failure("Read attempted past buffer limit");
+        SetPos(GetPos()+nSize);
     }
 
     // return the current reading position

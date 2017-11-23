@@ -161,6 +161,10 @@ enum
 #define STRWRITE(obj)       (::SerWrite(s, (obj), ser_action))
 #define STRREAD(obj)        (::SerRead(s, (obj), ser_action))
 
+#define STRPEEK(obj)       (::SerPeek(s, (obj), ser_action))
+#define STRSKIP(obj)       (::SerSkip(s, (obj), ser_action))
+
+
 /** 
  * Implement three methods for serializable objects. These are actually wrappers over
  * "SerializationOp" template, which implements the body of each class' serialization
@@ -1230,7 +1234,27 @@ inline void SerRead(Stream& s, T& obj, CSerActionUnserialize ser_action)
     ::Unserialize(s, obj);
 }
 
+template<typename Stream, typename T>
+inline void SerPeek(Stream& s, T& obj, CSerActionSerialize ser_action)
+{
+}
 
+template<typename Stream, typename T>
+inline void SerPeek(Stream& s, T& obj, CSerActionUnserialize ser_action)
+{
+    s.peek((char*)&obj, sizeof(obj));
+}
+
+template<typename Stream, typename T>
+inline void SerSkip(Stream& s, const T& obj, CSerActionSerialize ser_action)
+{
+}
+
+template<typename Stream, typename T>
+inline void SerSkip(Stream& s, T& obj, CSerActionUnserialize ser_action)
+{
+    s.ignore(sizeof(obj));
+}
 
 
 
