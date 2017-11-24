@@ -80,8 +80,8 @@ std::string GetWarnings(const std::string& strFor)
         strStatusBar = strRPC = "Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.";
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
     }
-    
-    
+
+
     // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
     if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
     {

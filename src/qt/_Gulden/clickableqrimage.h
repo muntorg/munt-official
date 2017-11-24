@@ -24,12 +24,12 @@ public:
     explicit ClickableQRImage(QWidget *parent = 0);
     virtual ~ClickableQRImage();
     QImage exportImage();
-    
+
     void setCode(const QString& qrString);
 
 Q_SIGNALS:
     void clicked();
-    
+
 public Q_SLOTS:
     void saveImage();
     void copyImage();

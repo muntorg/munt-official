@@ -48,13 +48,13 @@ CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 {
     unencryptedMnemonic = "";
     masterKeyPub = pubkey;
-    
+
     //Random key - not actually used, but written to disk to avoid unnecessary complexity in serialisation code
     masterKeyPriv.GetMutableKey().MakeNewKey(true);
     assert(masterKeyPriv.key.IsValid());
     cointypeKeyPriv.GetMutableKey().MakeNewKey(true);
     purposeKeyPriv.GetMutableKey().MakeNewKey(true);
-    
+
     InitReadOnly();
 }
 
@@ -63,7 +63,7 @@ void CHDSeed::Init()
     unsigned char* seed = seedFromMnemonic(unencryptedMnemonic);
     static const std::vector<unsigned char> hashkey = {'G','u','l','d','e','n',' ','b','i','p','3','2'};
     static const std::vector<unsigned char> hashkeylegacy = {'B','i','t','c','o','i','n',' ','s','e','e','d'};
-    
+
     // Legacy support for old iOS and android 'Guldencoin' wallets.
     if (m_type == BIP32Legacy || m_type == BIP44External)
     {
@@ -73,8 +73,8 @@ void CHDSeed::Init()
     {
         masterKeyPriv.SetMaster(hashkey, seed, 64);
     }
-    
-    
+
+
     switch (m_type)
     {
         case BIP32:
@@ -100,7 +100,7 @@ void CHDSeed::Init()
     masterKeyPub = masterKeyPriv.Neuter();
     purposeKeyPub = purposeKeyPriv.Neuter();
     cointypeKeyPub = cointypeKeyPriv.Neuter();
-    
+
     if(m_UUID.is_nil())
     {
         m_UUID = boost::uuids::random_generator()();
@@ -108,11 +108,11 @@ void CHDSeed::Init()
 }
 
 void CHDSeed::InitReadOnly()
-{   
+{
     assert(m_type == BIP44NoHardening);
     masterKeyPub.Derive(purposeKeyPub, 44);  //m/44
     purposeKeyPub.Derive(cointypeKeyPub, 87);  //m/44/87
-    
+
     if(m_UUID.is_nil())
     {
         m_UUID = boost::uuids::random_generator()();
@@ -124,7 +124,7 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
 {
     if (IsLocked())
         return NULL;
-    
+
     CAccountHD* account = NULL;
     switch (type)
     {
@@ -144,13 +144,13 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
             assert(0);
             return NULL;
     }
-    
+
     if (Db)
     {
         //fixme: Can we just set dirty or something and then it gets saved later?
         Db->WriteHDSeed(*this);
     }
-    
+
     account->m_SubType = type;
     if (IsCrypted())
     {
@@ -163,7 +163,7 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
 {
     if (IsLocked())
         return NULL;
-        
+
     CExtKey accountKey;
     if ( IsReadOnly() )
     {
@@ -188,7 +188,7 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
                 break;
             default:
                 assert(0);
-        }      
+        }
         return new CAccountHD(accountKey, m_UUID);
     }
 }
@@ -232,10 +232,10 @@ bool CHDSeed::Lock()
     masterKeyPriv = CExtKey();
     purposeKeyPriv = CExtKey();
     cointypeKeyPriv = CExtKey();
-    
+
     //fixme: HIGH - also burn the memory just to be sure?
     vMasterKey.clear();
-    
+
     return true;
 }
 
@@ -247,59 +247,59 @@ bool CHDSeed::Unlock(const CKeyingMaterial& vMasterKeyIn)
     if (!DecryptSecret(vMasterKeyIn, encryptedMnemonic, std::vector<unsigned char>(m_UUID.begin(), m_UUID.end()), vchMnemonic))
         return false;
     unencryptedMnemonic = SecureString(vchMnemonic.begin(), vchMnemonic.end());
-    
+
     // Decrypt master key
     CKeyingMaterial vchMasterKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, masterKeyPrivEncrypted, masterKeyPub.pubkey.GetHash(), vchMasterKeyPrivEncoded))
         return false;
     masterKeyPriv.Decode(vchMasterKeyPrivEncoded.data());
-    
+
     // Decrypt purpose key
     CKeyingMaterial vchPurposeKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, purposeKeyPrivEncrypted, purposeKeyPub.pubkey.GetHash(), vchPurposeKeyPrivEncoded))
         return false;
     purposeKeyPriv.Decode(vchPurposeKeyPrivEncoded.data());
-    
+
     // Decrypt coin type key
     CKeyingMaterial vchCoinTypeKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, cointypeKeyPrivEncrypted, cointypeKeyPub.pubkey.GetHash(), vchCoinTypeKeyPrivEncoded))
         return false;
     cointypeKeyPriv.Decode(vchCoinTypeKeyPrivEncoded.data());
-    
+
     vMasterKey = vMasterKeyIn;
-    
+
     return true;
 }
 
 bool CHDSeed::Encrypt(CKeyingMaterial& vMasterKeyIn)
-{  
+{
     // Encrypt mnemonic
     assert(sizeof(m_UUID) == WALLET_CRYPTO_IV_SIZE);
     encryptedMnemonic.clear();
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(unencryptedMnemonic.begin(), unencryptedMnemonic.end()), std::vector<unsigned char>(m_UUID.begin(), m_UUID.end()), encryptedMnemonic))
         return false;
-    
+
     // Encrypt master key
     SecureUnsignedCharVector masterKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     masterKeyPriv.Encode(masterKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(masterKeyPrivEncoded.begin(), masterKeyPrivEncoded.end()), masterKeyPub.pubkey.GetHash(), masterKeyPrivEncrypted))
         return false;
-    
+
     // Encrypt purpose key
     SecureUnsignedCharVector purposeKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     purposeKeyPriv.Encode(purposeKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(purposeKeyPrivEncoded.begin(), purposeKeyPrivEncoded.end()), purposeKeyPub.pubkey.GetHash(), purposeKeyPrivEncrypted))
         return false;
-    
+
     // Encrypt coin type key
     SecureUnsignedCharVector cointypeKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     cointypeKeyPriv.Encode(cointypeKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(cointypeKeyPrivEncoded.begin(), cointypeKeyPrivEncoded.end()), cointypeKeyPub.pubkey.GetHash(), cointypeKeyPrivEncrypted))
         return false;
-    
+
     encrypted = true;
     vMasterKey = vMasterKeyIn;
-    
+
     return true;
 }
 
@@ -332,7 +332,7 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
     accountKeyPriv.GetMutableKey().MakeNewKey(true);
     primaryChainKeyPriv.GetMutableKey().MakeNewKey(true);
     changeChainKeyPriv.GetMutableKey().MakeNewKey(true);
-    
+
     accountKey_.Derive(primaryChainKeyPub, 0);  //a/0
     accountKey_.Derive(changeChainKeyPub, 1);  //a/1
     m_readOnly = true;
@@ -355,9 +355,9 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
     if(IsLocked())
         return false;
-    
+
     assert(!m_readOnly);
-    
+
     int64_t nKeyIndex = -1;
     CExtKey privKey;
     if(externalKeyStore.GetKey(keyID, nKeyIndex))
@@ -422,90 +422,90 @@ bool CAccountHD::Lock()
     {
         return true;
     }
-    
+
     // We can't lock if we are not encrypted, nothing to do.
     if (!encrypted)
         return false;
-        
+
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Lock())
         //return false;
-    
+
     //fixme: GULDEN (FUT) (1.6.1) - burn?
     accountKeyPriv = CExtKey();
     primaryChainKeyPriv = CExtKey();
     changeChainKeyPriv = CExtKey();
-    
+
     return true;
 }
 
 bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
-    
+
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Unlock(vMasterKeyIn))
     //    return false;
-    
+
     if (IsReadOnly())
     {
         return true;
     }
-    
+
     // Decrypt account key
     CKeyingMaterial vchAccountKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, accountKeyPrivEncrypted, std::vector<unsigned char>(accountUUID.begin(), accountUUID.end()), vchAccountKeyPrivEncoded))
         return false;
     accountKeyPriv.Decode(vchAccountKeyPrivEncoded.data());
-    
+
     // Decrypt primary chain key
     CKeyingMaterial vchPrimaryChainKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, primaryChainKeyEncrypted, primaryChainKeyPub.pubkey.GetHash(), vchPrimaryChainKeyPrivEncoded))
         return false;
     primaryChainKeyPriv.Decode(vchPrimaryChainKeyPrivEncoded.data());
-    
+
     // Decrypt change chain key
     CKeyingMaterial vchChangeChainKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, changeChainKeyEncrypted, changeChainKeyPub.pubkey.GetHash(), vchChangeChainKeyPrivEncoded))
         return false;
     changeChainKeyPriv.Decode(vchChangeChainKeyPrivEncoded.data());
-    
+
     return true;
 }
 
 bool CAccountHD::Encrypt(CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
-    
+
     if (IsReadOnly())
     {
         return true;
     }
-    
+
     //We don't encrypt the keystores for HD accounts - as they only contain public keys.
     //if (!CAccount::Encrypt(vMasterKeyIn))
-        //return false;    
-    
+        //return false;
+
     // Encrypt account key
     SecureUnsignedCharVector accountKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     accountKeyPriv.Encode(accountKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(accountKeyPrivEncoded.begin(), accountKeyPrivEncoded.end()), std::vector<unsigned char>(accountUUID.begin(), accountUUID.end()), accountKeyPrivEncrypted))
         return false;
-    
+
     // Encrypt primary chain key
     SecureUnsignedCharVector primaryChainKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     primaryChainKeyPriv.Encode(primaryChainKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(primaryChainKeyPrivEncoded.begin(), primaryChainKeyPrivEncoded.end()), primaryChainKeyPub.pubkey.GetHash(), primaryChainKeyEncrypted))
         return false;
-    
+
     // Encrypt change chain key
     SecureUnsignedCharVector changeChainKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     changeChainKeyPriv.Encode(changeChainKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(changeChainKeyPrivEncoded.begin(), changeChainKeyPrivEncoded.end()), changeChainKeyPub.pubkey.GetHash(), changeChainKeyEncrypted))
         return false;
-        
+
     encrypted = true;
-    
+
     return true;
 }
 
@@ -526,7 +526,7 @@ bool CAccountHD::AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyCha
     assert(0);
     return true;
 }
-    
+
 bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain)
 {
     if(keyChain == KEYCHAIN_EXTERNAL)
@@ -544,12 +544,12 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
         GetPubKey(childKey, keyChain);
     }
     while( wallet.HaveKey(childKey.pubkey.GetID()) );//fixme: (GULDEN) (BIP44) No longer need wallet here.
-    
+
     LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
-    
+
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUID();
-            
+
     if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
@@ -561,7 +561,7 @@ CExtKey* CAccountHD::GetAccountMasterPrivKey()
 {
     if (IsLocked())
         return NULL;
-    
+
     return &accountKeyPriv;
 }
 
@@ -569,7 +569,7 @@ SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
 {
     if (IsLocked())
         return NULL;
-    
+
     return CBitcoinSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
 }
 
@@ -602,13 +602,13 @@ void CAccount::SetNull()
 }
 
 CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
-{    
+{
     CKey secret;
-    secret.MakeNewKey(true);   
+    secret.MakeNewKey(true);
 
     CPubKey pubkey = secret.GetPubKey();
     assert(secret.VerifyPubKey(pubkey));
-    
+
     if (!wallet.AddKeyPubKey(secret, pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
@@ -696,17 +696,17 @@ bool CAccount::Lock()
 {
     //fixme: HIGH - also burn the memory just to be sure?
     vMasterKey.clear();
-    
+
     return externalKeyStore.Lock() && internalKeyStore.Lock();
 }
 
 bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn)
 {
     vMasterKey = vMasterKeyIn;
-    
+
     return externalKeyStore.Unlock(vMasterKeyIn) && internalKeyStore.Unlock(vMasterKeyIn);
 }
-    
+
 bool CAccount::GetKey(const CKeyID& keyID, CKey& key) const
 {
     return externalKeyStore.GetKey(keyID, key) || internalKeyStore.GetKey(keyID, key);
@@ -734,14 +734,14 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
         return false;
     if (!internalKeyStore.EncryptKeys(vMasterKeyIn))
         return false;
-    
+
     if (pactiveWallet)
     {
         {
             std::set<CKeyID> setAddress;
             GetKeys(setAddress);
-            
-            LOCK(pactiveWallet->cs_wallet);                
+
+            LOCK(pactiveWallet->cs_wallet);
             for (const auto& keyID : setAddress)
             {
                 CPubKey pubKey;
@@ -754,7 +754,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                     pactiveWallet->pwalletdbEncryption->EraseKey(pubKey);
                 else
                     CWalletDB(*pactiveWallet->dbw).EraseKey(pubKey);
-                
+
                 std::vector<unsigned char> secret;
                 if (!GetKey(keyID, secret))
                 { 
@@ -777,7 +777,6 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                         return false;
                     }
                 }
-                
             }
         }
     }
@@ -815,7 +814,7 @@ bool CAccount::AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain
     else
     {
         return internalKeyStore.AddKeyPubKey(key, pubkey);
-    }    
+    }
 }
 
 bool CAccount::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain)
@@ -850,10 +849,10 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
 {
     //fixme: GULDEN This is essentially dead code now - it has been replaced at the bottom of CWallet::AddKeyPubKey
     //For technical reasons (wallet upgrade)
-    
+
     //This should never be called on a non-HD wallet
     assert(!IsHD());
-    
+
     if (nKeyChain == KEYCHAIN_EXTERNAL)
     {
         if (!externalKeyStore.AddCryptedKey(vchPubKey, vchCryptedSecret))
@@ -864,7 +863,7 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
         if (!internalKeyStore.AddCryptedKey(vchPubKey, vchCryptedSecret))
             return false;
     }
-    
+
     // If we don't have a wallet yet (busy during wallet upgrade) - then the below not being called is fine as the wallet does a 'force resave' of all keys at the end of the upgrade.
     if (pactiveWallet)
     {
@@ -892,7 +891,7 @@ void CAccount::possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db)
 {
     if (creationTime < earliestPossibleCreationTime)
         earliestPossibleCreationTime = creationTime;
-    
+
     //fixme: GULDEN Can we just set dirty or something and then it gets saved later?
     if (Db)
     {
@@ -936,7 +935,7 @@ void CAccount::setUUID(const std::string& stringUUID)
 {
     accountUUID = boost::lexical_cast<boost::uuids::uuid>(stringUUID);
 }
-        
+
 std::string CAccount::getParentUUID() const
 {
     if (parentUUID == boost::uuids::nil_generator()())

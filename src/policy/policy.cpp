@@ -252,7 +252,7 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             // Non-witness program must not be associated with any witness
             if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
                 return false;
-            
+
             // Check P2WSH standard limits
             if (witnessversion == 0 && witnessprogram.size() == 32) {
                 if (tx.vin[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)

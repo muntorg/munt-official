@@ -50,16 +50,16 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->databaseCache->setMaximum(nMaxDbCache);
     ui->threadsScriptVerif->setMinimum(-GetNumCores());
     ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
-    
+
     QFrame* horizontalLine = new QFrame(this);
     horizontalLine->setFrameStyle(QFrame::HLine);
     horizontalLine->setFixedHeight(1);
     horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
     ui->verticalLayout->insertWidget(2, horizontalLine);
-    
+
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
-    
+
     ui->okButton->setCursor(Qt::PointingHandCursor);
     ui->cancelButton->setCursor(Qt::PointingHandCursor);
     ui->resetButton->setCursor(Qt::PointingHandCursor);
@@ -210,7 +210,7 @@ void OptionsDialog::setMapper()
 
     /* Wallet */
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
-    mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);  
+    mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
 
     /* Network */
     mapper->addMapping(ui->mapPortUpnp, OptionsModel::MapPortUPnP);
@@ -235,7 +235,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
-    
+
     //fixme: GULDEN - look at adding these back
     ui->coinControlFeatures->setVisible(false);
     ui->unit->setVisible(false);

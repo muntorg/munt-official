@@ -91,7 +91,7 @@ public:
             LOCK(cs_KeyStore);
             result = (mapHDKeys.count(address) > 0);
         }
-            
+
         return result;
     }
     void GetKeys(std::set<CKeyID> &setAddress) const

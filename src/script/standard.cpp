@@ -66,7 +66,7 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
         vSolutionsRet.push_back(hashBytes);
         return true;
     }
-    
+
     //fixme: (GULDEN) (2.1) We can remove this logic after 2.1 release.
     // Shortcut for PoW2 witness, which is more constrained than other types: 
     //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
@@ -203,10 +203,10 @@ bool ExtractDestination(const CTxOut& out, CTxDestination& addressRet)
         addressRet = out.output.standardKeyHash.keyID;
         return true;
     }
-    
+
     return ExtractDestination(out.output.scriptPubKey, addressRet);
 }
-    
+
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
 {
     std::vector<valtype> vSolutions;
@@ -258,12 +258,11 @@ bool ExtractDestinations(const CTxOut& out, txnouttype& typeRet, std::vector<CTx
         addressRet.push_back(out.output.standardKeyHash.keyID);
         return true;
     }
-    
     return ExtractDestinations(out.output.scriptPubKey, typeRet, addressRet, nRequiredRet);
 }
 
 bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet)
-{   
+{
     addressRet.clear();
     typeRet = TX_NONSTANDARD;
     std::vector<valtype> vSolutions;
@@ -327,7 +326,7 @@ public:
         *script << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
         return true;
     }
-    
+
     //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
     bool operator()(const CPoW2WitnessDestination& destinationPoW2Witness) const {
         script->clear();
@@ -336,7 +335,7 @@ public:
         script->insert(script->end(), destinationPoW2Witness.spendingKey.begin(), destinationPoW2Witness.spendingKey.end());
         script->insert(script->end(), destinationPoW2Witness.witnessKey.begin(), destinationPoW2Witness.witnessKey.end());
         *script << CScriptUInt64(destinationPoW2Witness.lockFromBlock) << CScriptUInt64(destinationPoW2Witness.lockUntilBlock) << CScriptUInt64(destinationPoW2Witness.failCount);
-        
+
         return true;
     }
 };

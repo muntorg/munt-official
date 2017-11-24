@@ -67,9 +67,9 @@ bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin) const {
 void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possible_overwrite) {
     assert(!coin.IsSpent());
     if (coin.out.IsUnspendable()) return;
-    
+
     CTxOut out = coin.out;
-    
+
     if (pChainedWitView)
     {
         if ( IsPow2WitnessOutput(coin.out) )
@@ -77,7 +77,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
             pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase), possible_overwrite);
         }
     }
-    
+
     CCoinsMap::iterator it;
     bool inserted;
     std::tie(it, inserted) = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
@@ -119,7 +119,7 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool n
         it->second.flags |= CCoinsCacheEntry::DIRTY;
         it->second.coin.Clear();
     }
-    
+
     if (pChainedWitView)
     {
         // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
@@ -218,7 +218,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
 bool CCoinsViewCache::Flush() {
     if (pChainedWitView)
         pChainedWitView->Flush();
-    
+
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
     cachedCoinsUsage = 0;
@@ -229,7 +229,7 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
 {
     if (pChainedWitView)
         pChainedWitView->Uncache(hash);
-    
+
     CCoinsMap::iterator it = cacheCoins.find(hash);
     if (it != cacheCoins.end() && it->second.flags == 0) {
         cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();

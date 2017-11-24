@@ -37,7 +37,7 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
     tab(_tab)
 {
     ui->setupUi(this);
-    
+
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 
     if (!platformStyle->getImagesOnButtons()) {
@@ -51,14 +51,14 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
         ui->deleteAddress->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
         ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
-    
+
     QFrame* horizontalLine = new QFrame(this);
     horizontalLine->setFrameStyle(QFrame::HLine);
     horizontalLine->setFixedHeight(1);
     horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
     ui->verticalLayout->insertWidget(2, horizontalLine);
-    
+
     ui->newAddress->setCursor(Qt::PointingHandCursor);
     ui->copyAddress->setCursor(Qt::PointingHandCursor);
     ui->deleteAddress->setCursor(Qt::PointingHandCursor);

@@ -25,7 +25,7 @@ AccountTableModel::AccountTableModel(CWallet *wallet, WalletModel *parent)
 int AccountTableModel::rowCount(const QModelIndex& parent) const
 {
     LOCK(m_wallet->cs_wallet);
-    
+
     if (!parent.isValid())
     {
         if (m_wallet)
@@ -40,20 +40,19 @@ int AccountTableModel::columnCount(const QModelIndex & parent) const
 }
 
 QVariant AccountTableModel::data(const QModelIndex& index, int role) const
-{    
+{
     if (!m_wallet)
         return QVariant();
-    
-    
+
     {
         LOCK(m_wallet->cs_wallet);
-    
+
         if (index.row() < 0 || (unsigned int)index.row() >= m_wallet->mapAccountLabels.size())
         {
             return QVariant();
         }
     }
-    
+
     CAccount* account = NULL;
     std::string accountLabel;
     std::string accountUUID;
@@ -63,12 +62,12 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
         std::advance(iter, index.row());
         if (m_wallet->mapAccounts.count(iter->first) == 0)
             return QVariant();
-        
+
         account = m_wallet->mapAccounts[iter->first];
         accountLabel = iter->second;
         accountUUID = iter->first;
     }
-    
+
     if  (role == Qt::DisplayRole)
     {
         if (index.column() == 0)
@@ -82,7 +81,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
         }
     }
     else if (role == TypeRole)
-    {   
+    {
         if (account->m_Type == AccountType::Normal)
         {
             return Normal;
@@ -121,9 +120,9 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
 void AccountTableModel::activeAccountChanged(CAccount* account)
 {
     LogPrintf("AccountTableModel::activeAccountChanged\n");
-    
+
     LOCK(m_wallet->cs_wallet);
-    
+
     activeAccount = account;
     //fixme: Technically we can emit for just the two rows here.
     beginResetModel();

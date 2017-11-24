@@ -137,7 +137,7 @@ namespace Checkpoints
 
         return true;
     }
-    
+
     bool WriteCheckpointPubKey(std::string& strPubKey)
     {
         try
@@ -164,7 +164,7 @@ namespace Checkpoints
 
         return true;
     }
-    
+
     // Read the current auto sync checkpoint from disk
     bool ReadSyncCheckpoint(uint256& hashCheckpoint)
     {
@@ -220,7 +220,7 @@ namespace Checkpoints
     bool AcceptPendingSyncCheckpoint(const CChainParams& chainparams)
     {
         LOCK2(cs_main, cs_hashSyncCheckpoint);
-        
+
         if (hashPendingCheckpoint != uint256() && mapBlockIndex.count(hashPendingCheckpoint))
         {
             if (!ValidateSyncCheckpoint(hashPendingCheckpoint))
@@ -283,14 +283,14 @@ namespace Checkpoints
             hashSyncCheckpoint = uint256();
             return false;
         }
-        
+
         const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
 
         if (nHeight > pindexSync->nHeight)
         {
             // trace back to same height as sync-checkpoint
             const CBlockIndex* pindex = pindexPrev;
-            
+
             //Causes performance issues during the initial download
             if (!IsInitialBlockDownload())
             {
@@ -397,7 +397,7 @@ namespace Checkpoints
     uint256 AutoSelectSyncCheckpoint()
     {
         // Proof-of-work blocks are immediately checkpointed
-        // to defend against 51% attack which rejects other miners block 
+        // to defend against 51% attack which rejects other miners block
 
         // Select the last proof-of-work block
         CBlockIndex *pindex = chainActive.Tip();

@@ -19,18 +19,18 @@ BackupDialog::BackupDialog(const PlatformStyle* _platformStyle, QWidget* parent,
 , walletModel(model)
 {
     ui->setupUi(this);
-    
-    
+
+
     ui->labelBackupPhrase->setVisible(false);
     ui->labelShowBackupPhrase->setVisible(true);
-    
+
     ui->labelShowBackupPhrase->setCursor(Qt::PointingHandCursor);
     ui->buttonShowBackupPhrase->setCursor(Qt::PointingHandCursor);
     ui->buttonSaveToFile->setCursor(Qt::PointingHandCursor);
     ui->buttonDone->setCursor(Qt::PointingHandCursor);
-    
+
     ui->frameBackupDialogsButtons->setVisible(true);
-        
+
     connect(ui->labelShowBackupPhrase, SIGNAL(clicked()), this, SLOT(showBackupPhrase()));
     connect(ui->buttonShowBackupPhrase, SIGNAL(clicked()), this, SLOT(showBackupPhrase()));
     connect(ui->buttonSaveToFile, SIGNAL(clicked()), this, SIGNAL(saveBackupFile()));
@@ -42,7 +42,7 @@ void BackupDialog::showBackupPhrase()
     ui->labelBackupPhrase->setVisible(true);
     ui->labelShowBackupPhrase->setVisible(false);
     ui->buttonShowBackupPhrase->setVisible(false);
-    
+
     LOCK(pactiveWallet->cs_wallet);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
@@ -52,7 +52,7 @@ void BackupDialog::showBackupPhrase()
         {
             allPhrases.insert(seedIter.second->getMnemonic());
         }
-        
+
         if (allPhrases.size() == 1)
         {
             ui->labelBackupPhraseHeading->setText(tr("Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens."));
@@ -73,7 +73,7 @@ void BackupDialog::showBackupPhrase()
             ui->labelBackupPhraseHeading->setText(tr("No recovery phrases present for this wallet."));
         }
     }
-    
+
     bool haveNonHDAccounts = false;
     for (const auto& accountIter : pactiveWallet->mapAccounts)
     {
@@ -82,7 +82,7 @@ void BackupDialog::showBackupPhrase()
             haveNonHDAccounts = true;
         }
     }
-    
+
     if (haveNonHDAccounts)
     {
         ui->labelSaveToDiskDescription->setText(tr("Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured."));

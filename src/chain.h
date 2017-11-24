@@ -218,8 +218,8 @@ public:
     uint32_t nTimePoW2Witness;
     uint256 hashMerkleRootPoW2Witness;
     std::vector<unsigned char> witnessHeaderPoW2Sig; // 65 bytes
-    
-    
+
+
     //! block header
     int nVersion;
     uint256 hashMerkleRoot;
@@ -253,7 +253,7 @@ public:
         nTimePoW2Witness = 0;
         hashMerkleRootPoW2Witness = uint256();
         witnessHeaderPoW2Sig.clear();
-    
+
         nVersion       = 0;
         hashMerkleRoot = uint256();
         nTime          = 0;
@@ -325,7 +325,7 @@ public:
         else
             return GetBlockHeader().GetHashLegacy();
     }
-    
+
     uint256 GetBlockHashPoW2() const
     {
         return *phashBlock;
@@ -335,7 +335,7 @@ public:
     {
         return (int64_t)nTime;
     }
-    
+
     int64_t GetBlockTimePoW2Witness() const
     {
         return nTimePoW2Witness == 0 ? (int64_t)nTime : (int64_t)nTimePoW2Witness;
@@ -353,13 +353,13 @@ public:
         int nMedianTimeSpan = 11;
         if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
-        
+
         //fixme: (GULDEN) (2.0) - Check this works right.
         if (this->nTimePoW2Witness != 0)
         {
             nMedianTimeSpan *= 2;
             int nMid = nMedianTimeSpan/2;
-            
+
             std::valarray<int64_t> pmedian(nMedianTimeSpan);
             int64_t* pbegin = &pmedian[nMedianTimeSpan];
             int64_t* pend = &pmedian[nMedianTimeSpan];
@@ -375,7 +375,7 @@ public:
             return ( pbegin[nMid-1] + pbegin[nMid] ) / 2;
         }
         else
-        {   
+        {
             std::valarray<int64_t> pmedian(nMedianTimeSpan);
             int64_t* pbegin = &pmedian[nMedianTimeSpan];
             int64_t* pend = &pmedian[nMedianTimeSpan];
@@ -388,11 +388,11 @@ public:
             return pbegin[(pend - pbegin)/2];
         }
     }
-    
+
     int64_t GetMedianTimePastPoW() const
     {
         int nMedianTimeSpan = 3;
-            
+
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
         int64_t* pend = &pmedian[nMedianTimeSpan];
@@ -404,11 +404,11 @@ public:
         std::sort(pbegin, pend);
         return pbegin[(pend - pbegin)/2];
     }
-    
+
     int64_t GetMedianTimePastWitness() const
     {
         int nMedianTimeSpan = 3;
-            
+
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
         int64_t* pend = &pmedian[nMedianTimeSpan];
@@ -519,7 +519,7 @@ public:
         }
         catch (...)
         {
-            
+
         }
     }
 
@@ -538,7 +538,7 @@ public:
         block.nNonce          = nNonce;
         return block.GetHashLegacy();
     }
-    
+
     uint256 GetBlockHashPoW2(bool force=false) const
     {
         CBlockHeader block;
@@ -627,7 +627,7 @@ public:
 
     /** Find the earliest block with timestamp equal or greater than the given. */
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
-    
+
     // Create a duplicate (deep copy) of this chain, update retainIndex to the pointer of the equivalent block in the new chain.
     CChain Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
     void FreeMemory();

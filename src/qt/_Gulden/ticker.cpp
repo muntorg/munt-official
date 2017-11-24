@@ -37,7 +37,7 @@ int CurrencyTableModel::rowCount(const QModelIndex& parent) const
 {
     if (m_currenciesMap)
         return m_currenciesMap->size();
-    
+
     return 0;
 }
 
@@ -50,15 +50,15 @@ QVariant CurrencyTableModel::data(const QModelIndex& index, int role) const
 {
     if (!m_currenciesMap)
         return QVariant();
-    
+
     if (index.row() < 0 || index.row() >= (int)m_currenciesMap->size() || role != Qt::DisplayRole)
     {
         return QVariant();
     }
-    
+
     auto iter = m_currenciesMap->begin();
     std::advance(iter, index.row());
-    
+
     if (index.column() == 0)
     {
         return QString::fromStdString(iter->first);
@@ -76,11 +76,11 @@ QVariant CurrencyTableModel::data(const QModelIndex& index, int role) const
         QString balance = BitcoinUnits::format(BitcoinUnits::Unit::BTC, m_ticker->convertGuldenToForex(m_balanceNLG, iter->first), false, BitcoinUnits::separatorAlways, 2);
         return rate + QString("<br/>") + balance;
     }
-    
+
     return QVariant();
 }
 
-    
+
 void CurrencyTableModel::setBalance(CAmount balanceNLG)
 {
     if (balanceNLG != m_balanceNLG)

@@ -17,12 +17,12 @@ public:
     ~ClickableLabel(){}
     void setChecked(bool checked);
     bool isChecked();
-    
+
 Q_SIGNALS:
     void clicked();
-    
+
 public Q_SLOTS:
-    
+
 protected:
     void mousePressEvent ( QMouseEvent * event );
     void mouseReleaseEvent ( QMouseEvent * event );

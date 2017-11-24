@@ -213,14 +213,14 @@ bool CWalletDB::WriteAccountLabel(const std::string& strUUID, const std::string&
 {
     return WriteIC(std::make_pair(std::string("acclabel"), strUUID), strLabel);
 }
-  
+
 bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
 {
     return EraseIC(std::make_pair(std::string("acclabel"), strUUID));
 }
-    
+
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
-{    
+{
     if (account->IsHD())
       return WriteIC(make_pair(std::string("acchd"), strAccount), *((CAccountHD*)account));
     else
@@ -404,7 +404,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 strErr = "Error reading wallet database: CPubKey corrupt";
                 return false;
             }
-            
+
             int64_t HDKeyIndex;
             int64_t keyChain;
             ssValue >> HDKeyIndex;
@@ -459,9 +459,9 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 forAccount = pwallet->activeAccount->getUUID();
                 nKeyChain = KEYCHAIN_EXTERNAL;
             }
-            
+
             if (strType == "key" && GetBoolArg("-skipplainkeys", false))
-            {   
+            {
                 LogPrintf("Skipping unencrypted key [skipplainkeys] [%s]\n", CBitcoinAddress(vchPubKey.GetID()).ToString());
             }
             else
@@ -539,10 +539,10 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
 
             if (GetBoolArg("-skipplainkeys", false))
-            {   
+            {
                 LogPrintf("Load crypted key [skipplainkeys] [%s]\n", CBitcoinAddress(vchPubKey.GetID()).ToString());
             }
-            
+
             if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey, forAccount, nKeyChain))
             {
                 strErr = "Error reading wallet database: LoadCryptedKey failed";
@@ -571,7 +571,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> nIndex;
             CKeyPool keypool;
             ssValue >> keypool;
-            
+
             CAccount* forAccount = NULL;
             std::string accountUUID = keypool.accountName;
             // If we are importing an old legacy (pre HD) wallet - then this keypool becomes the keypool of our 'legacy' account
@@ -589,7 +589,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 }
                 forAccount = pwallet->mapAccounts[accountUUID];
             }
-            
+
             if (keypool.nChain == KEYCHAIN_EXTERNAL)
             {
                 forAccount->setKeyPoolExternal.insert(nIndex);
@@ -600,7 +600,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
 
             pwallet->LoadKeyPool(nIndex, keypool);
-            
+
             staticPoolCache[keypool.vchPubKey.GetID()] = nIndex;
         }
         else if (strType == "version")
@@ -694,7 +694,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             std::string strAccountLabel;
             ssKey >> strAccountUUID;
             ssValue >> strAccountLabel;
-            
+
             pwallet->mapAccountLabels[strAccountUUID] = strAccountLabel;
         }
     } catch (...)
@@ -728,7 +728,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             pwallet->LoadMinVersion(nMinVersion);
         }
 
-        
+
         bool isPreHDWallet=false;
         bool haveAnyAccounts=false;
         // Accounts first
@@ -894,7 +894,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     catch (...) {
         result = DB_CORRUPT;
     }
-    
+
     for (const auto& labelPair : pwallet->mapAccountLabels)
         {
             if (pwallet->mapAccounts.count(labelPair.first) == 0)
@@ -921,7 +921,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             pwallet->activeSeed = pwallet->mapSeeds[primarySeedString];
         }
     }
-    
+
 
     if (fNoncriticalErrors && result == DB_LOAD_OK)
         result = DB_NONCRITICAL_ERROR;

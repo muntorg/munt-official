@@ -39,20 +39,19 @@ AccountSummaryWidget::AccountSummaryWidget( CurrencyTicker* ticker, QWidget* par
     ui->accountName->setContentsMargins( 0, 0, 0, 0 );
     ui->accountSettings->setContentsMargins( 0, 0, 0, 0 );
 
-       
+
     //Hand cursor for clickable elements.
     ui->accountSettings->setCursor( Qt::PointingHandCursor );
     ui->accountBalanceForex->setCursor( Qt::PointingHandCursor );
-    
+
     //We hide the forex value until we get a response from ticker
     ui->accountBalanceForex->setVisible( false );
-    
+
 
     //Signals.
     connect( m_ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
     connect( ui->accountSettings, SIGNAL( clicked() ), this, SIGNAL( requestAccountSettings() ) );
     connect( ui->accountBalanceForex, SIGNAL( clicked() ), this, SIGNAL( requestExchangeRateDialog() ) );
-    
 }
 
 AccountSummaryWidget::~AccountSummaryWidget()
@@ -65,11 +64,11 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
     m_account = account;
 
     ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 35) );
-    
+
     //fixme: GULDEN - Use AccountTableModel.
     std::string accountUUID = m_account->getUUID();
     m_accountBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
-    
+
     updateExchangeRates();
 }
 

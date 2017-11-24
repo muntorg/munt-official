@@ -117,12 +117,12 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
             return true;
         }
         return false;
-        
+
     case TX_PUBKEYHASH_POW2WITNESS:
     {
         CKeyID spendingKeyID = CKeyID(uint160(vSolutions[0]));
         CKeyID witnessKeyID = CKeyID(uint160(vSolutions[1]));
-        
+
         switch(type)
         {
             case Spend:
@@ -172,10 +172,10 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     CScript scriptRet;
     uint160 h160;
     ret.clear();
-        
+
     std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
     CScript scriptWitnessPlaceholder(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
-    
+
     switch(type)
     {
         case Spend:

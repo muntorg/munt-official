@@ -507,7 +507,6 @@ public:
         }
     } output;
 
-    
 
     bool IsUnspendable() const
     {

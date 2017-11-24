@@ -56,7 +56,7 @@ public:
         /* Make sure we return Intermediate so that fixup() is called on defocus */
         return valid ? QValidator::Intermediate : QValidator::Invalid;
     }
-    
+
     //fixme: GULDEN - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     int getCurrentDecimalPlaces(const QString& val) const
     {
@@ -68,13 +68,13 @@ public:
             if (currentDecimalPlaces == 0)
                 currentDecimalPlaces = 1;
         }
-        else   
+        else
         {
             currentDecimalPlaces = 0;
         }
         return currentDecimalPlaces;
     }
-    
+
     //fixme: GULDEN - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     void trimTailingZerosToCurrentDecimalPlace(QString& val, int currentDecimalPlaces) const
     {
@@ -102,8 +102,8 @@ public:
             }
         }
     }
-    
-    
+
+
 
     void fixup(QString &input) const
     {
@@ -122,7 +122,7 @@ public:
     {
         return parse(text(), valid_out);
     }
-    
+
     CAmount value(int& currentDecimalPlaces, bool *valid_out=0) const
     {
         QString val(text());
@@ -275,14 +275,14 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     nocksRequestEURtoNLG = NULL;
     nocksRequestNLGtoBTC = NULL;
     nocksRequestNLGtoEUR = NULL;
-    
+
     secondaryAmount = CAmount(0);
     tertiaryAmount = CAmount(0);
     quadAmount = CAmount(0);
-    
+
     primaryCurrency = AmountFieldCurrency::CurrencyGulden;
     displayCurrency = AmountFieldCurrency::CurrencyGulden;
-    
+
     amount = new AmountSpinBox(this);
     amount->setLocale(QLocale::c());
     amount->installEventFilter(this);
@@ -296,37 +296,37 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     unit = new QLabel(this);
     unit->setText(tr("Gulden"));
     layout->addWidget(unit);
-    
+
     amountSeperator = new ClickableLabel(this);
     amountSeperator->setText(QString("\uf0EC"));
     layout->addWidget(amountSeperator);
     amountSeperator->setObjectName("amountSeperator");
     amountSeperator->setCursor(Qt::PointingHandCursor);
-    
+
     secondaryAmountDisplay = new ClickableLabel(this);
     secondaryAmountDisplay->setText(QString("(€\u20090.00)"));
     layout->addWidget(secondaryAmountDisplay);
     secondaryAmountDisplay->setObjectName("secondaryAmountDisplay");
     secondaryAmountDisplay->setCursor(Qt::PointingHandCursor);
-    
+
     tertiaryAmountDisplay = new ClickableLabel(this);
     tertiaryAmountDisplay->setText(QString("(\uF15A\u20090.00)"));
     layout->addWidget(tertiaryAmountDisplay);
     tertiaryAmountDisplay->setObjectName("tertiaryAmountDisplay");
     tertiaryAmountDisplay->setCursor(Qt::PointingHandCursor);
-    
+
     quadAmountDisplay = new ClickableLabel(this);
     quadAmountDisplay->setText(QString(""));
     layout->addWidget(quadAmountDisplay);
     quadAmountDisplay->setObjectName("quadAmountDisplay");
     quadAmountDisplay->setCursor(Qt::PointingHandCursor);
     quadAmountDisplay->setVisible(false);
-       
+
     forexError = new QLabel(this);
     forexError->setObjectName("forexError");
     forexError->setText("");
     layout->addWidget(forexError);
-    
+
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
 
@@ -514,7 +514,7 @@ void BitcoinAmountField::unitChanged(int idx)
 }
 
 void BitcoinAmountField::changeToSecondaryCurrency()
-{   
+{
     // [...] Gulden <> E... (B...) (R...)
     // [...] Bitcoin <> G... (E...) (R...)
     // [...] Euro <> G... (B...) (R...)
@@ -670,7 +670,7 @@ void BitcoinAmountField::update()
         return;
     if (!ticker)
         return;
-    
+
     if (nocksRequestBTCtoNLG)
     {
         nocksRequestBTCtoNLG->deleteLater();
@@ -691,7 +691,7 @@ void BitcoinAmountField::update()
         nocksRequestNLGtoEUR->deleteLater();
         nocksRequestNLGtoEUR = NULL;
     }
-    
+
     if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" ) 
     {
         quadAmountDisplay->setVisible(false);
@@ -704,15 +704,15 @@ void BitcoinAmountField::update()
     {
         quadAmountDisplay->setVisible(true);
     }
-    
-    
+
+
     if (displayCurrency == AmountFieldCurrency::CurrencyGulden)
     {
         // [...] Gulden <> E... (B...) (R...)
         unit->setText("Gulden");
         forexError->setText("");
-        
-        
+
+
         if (amount > 0)
         {
             if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
@@ -727,7 +727,7 @@ void BitcoinAmountField::update()
                 if (!validateBTCLimits(BTCAmount))
                     return;
             }
-            
+
             secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
             nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", BitcoinUnits::format(BitcoinUnits::Unit::BTC, amount, false, BitcoinUnits::separatorNever, 2));
             connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
@@ -752,7 +752,7 @@ void BitcoinAmountField::update()
     else if(displayCurrency == AmountFieldCurrency::CurrencyBCOIN)
     {
         // [...] Bitcoin <> G... (E...) (R...)
-        
+
         unit->setText("Bitcoin");
         forexError->setText("");
 
@@ -770,7 +770,7 @@ void BitcoinAmountField::update()
                 if (!validateBTCLimits(amount))
                     return;
             }
-            
+
             secondaryAmount = guldenAmount;
             nocksRequestBTCtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "BTC", BitcoinUnits::format(BitcoinUnits::Unit::BTC, amount, false, BitcoinUnits::separatorNever, 2));
             connect(nocksRequestBTCtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestBTCtoNLG, 2); });
@@ -795,23 +795,23 @@ void BitcoinAmountField::update()
         // [...] Euro <> G... (B...) (R...)
         unit->setText("Euro");
         forexError->setText("");
-        
+
         if (amount > 0)
         {
             CAmount guldenAmount = ticker->convertForexToGulden(amount, "EUR");
             if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
-            {            
+            {
                 if (!validateEurLimits(amount))
                     return;
             }
             else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
             {
                 CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-                
+
                 if (!validateBTCLimits(BTCAmount))
                     return;
             }
-            
+
             secondaryAmount = guldenAmount;
             nocksRequestEURtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR", BitcoinUnits::format(BitcoinUnits::Unit::BTC, amount, false, BitcoinUnits::separatorNever, 2));
             connect(nocksRequestEURtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestEURtoNLG, 2); });
@@ -836,25 +836,25 @@ void BitcoinAmountField::update()
         // [...] ZAR <> G... (E...) (B...)
         unit->setText(optionsModel->guldenSettings->getLocalCurrency());
         forexError->setText("");
-        
+
         if (amount > 0)
         {
             CAmount guldenAmount = ticker->convertForexToGulden(amount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
             if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
             {
                 CAmount EURAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-            
+
                 if (!validateEurLimits(EURAmount))
                     return;
             }
             else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
             {
                 CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-                
+
                 if (!validateBTCLimits(BTCAmount))
                     return;
             }
-            
+
             secondaryAmount = guldenAmount;
             secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + BitcoinUnits::format(BitcoinUnits::Unit::BTC, secondaryAmount, false, BitcoinUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
@@ -871,7 +871,7 @@ void BitcoinAmountField::update()
             tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + QString("0.00)"));
             quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + QString("0.00)"));
         }
-    }    
+    }
 }
 
 void BitcoinAmountField::nocksRequestProcessed(NocksRequest*& request, int position)
@@ -913,10 +913,10 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
     {
         optionsModel = optionsModel_;
         ticker = ticker_;
-        
+
         connect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
     }
-    
+
     if (displayCurrency != currency_)
     {
         // [...] Gulden <> E... (B...) (R...)
@@ -1036,5 +1036,5 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
     {
         primaryCurrency = currency_;
         update();
-    }    
+    }
 }

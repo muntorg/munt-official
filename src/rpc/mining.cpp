@@ -611,7 +611,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         UpdateTime(&blockUpdatedLastLP, Params().GetConsensus(), chainActive.Tip());
         blockUpdatedLastLP.nBits = GetNextWorkRequired(chainActive.Tip(), &blockUpdatedLastLP, Params().GetConsensus());
 
-        
+
         forceBlockUpdate = false;
         // Release the wallet and main lock while waiting
         LEAVE_CRITICAL_SECTION(cs_main);

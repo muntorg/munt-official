@@ -85,14 +85,12 @@ class CondVar {
   void SignalAll();
  private:
   Mutex* mu_;
-  
+
   Mutex wait_mtx_;
   long waiting_;
-  
+
   void * sem1_;
   void * sem2_;
-  
-  
 };
 
 class OnceType {

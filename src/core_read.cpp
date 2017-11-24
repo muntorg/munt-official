@@ -107,7 +107,7 @@ bool CheckTxScriptsSanity(const CMutableTransaction& tx)
             }
         }
     }
-    
+
     return true;
 }
 

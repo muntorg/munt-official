@@ -81,7 +81,7 @@ void noui_connect()
     uiInterface.ThreadSafeMessageBox.connect(noui_ThreadSafeMessageBox);
     uiInterface.ThreadSafeQuestion.connect(noui_ThreadSafeQuestion);
     uiInterface.InitMessage.connect(noui_InitMessage);
-    
+
     #ifdef ENABLE_WALLET
     uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, _1, _2));
     #endif

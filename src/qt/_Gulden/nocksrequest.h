@@ -26,20 +26,20 @@ class NocksRequest : public QObject
     Q_OBJECT
 
 public:
-    
+
     enum RequestType
     {
         Quotation,
         Order
     };
-    
+
     // parent should be QApplication object
     NocksRequest(QObject* parent, SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="");
     ~NocksRequest();
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
-    
+
     QString nativeAmount;
 
 Q_SIGNALS:

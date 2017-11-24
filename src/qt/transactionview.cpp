@@ -107,7 +107,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     searchLabel->setObjectName("searchLabel1");
     searchLabel->setContentsMargins(0, 0, 0, 0);
     hlayout->addWidget(searchLabel);
-    
+
     addressWidget = new QLineEdit(this);
     addressWidget->setObjectName("searchBox1");
 #if QT_VERSION >= 0x040700
@@ -122,7 +122,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     amountWidget->setPlaceholderText(tr("Min amount"));
 #endif
     amountWidget->setFixedWidth(120);
-    
+
     amountWidget->setValidator(new QDoubleValidator(0, 1e20, 8, this));
     hlayout->addWidget(amountWidget);
 
@@ -134,9 +134,9 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     topMargin->setObjectName("topMargin");
     topMargin->setContentsMargins(0,0,0,0);
     vlayout->addWidget(topMargin);
-    
+
     vlayout->addWidget(createDateRangeWidget());
-    
+
     QTableView *view = new QTableView(this);
     vlayout->addLayout(hlayout);
     vlayout->addWidget(createDateRangeWidget());
@@ -218,7 +218,7 @@ void TransactionView::setModel(WalletModel *_model)
     if(_model)
     {
         connect(model, SIGNAL(activeAccountChanged(CAccount*)), this, SLOT(activeAccountChanged(CAccount*)));
-        
+
         transactionProxyModel = new TransactionFilterProxy(this);
         transactionProxyModel->setSourceModel(_model->getTransactionTableModel());
         transactionProxyModel->setDynamicSortFilter(true);
@@ -245,7 +245,7 @@ void TransactionView::setModel(WalletModel *_model)
         transactionView->setColumnHidden(TransactionTableModel::Type, true);
         transactionView->setColumnWidth(TransactionTableModel::AmountSent, AMOUNT_MINIMUM_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::AmountReceived, AMOUNT_MINIMUM_COLUMN_WIDTH);
-        
+
         // Description column streches, all other columns fixed but user resizable.
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Status, QHeaderView::Interactive);
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::Watchonly, QHeaderView::Interactive);
@@ -254,8 +254,6 @@ void TransactionView::setModel(WalletModel *_model)
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::ToAddress, QHeaderView::Stretch);
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::AmountReceived, QHeaderView::Interactive);
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::AmountSent, QHeaderView::Interactive);
-        
-        
 
         /*columnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(transactionView, AMOUNT_MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH, this);*/
 
@@ -283,7 +281,7 @@ void TransactionView::setModel(WalletModel *_model)
 
         // Watch-only signal
         connect(_model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyColumn(bool)));
-        
+
         activeAccountChanged(model->getActiveAccount());
     }
 }
@@ -411,7 +409,7 @@ void TransactionView::exportClicked()
 void TransactionView::activeAccountChanged(CAccount* account)
 {
     LogPrintf("TransactionView::activeAccountChanged\n");
-    
+
     if(!transactionProxyModel)
         return;
     transactionProxyModel->setAccountFilter(account);

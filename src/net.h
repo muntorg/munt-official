@@ -819,7 +819,7 @@ public:
     {
         return nLocalServices;
     }
-    
+
     bool IsPoW2Capable();
 
     std::string GetAddrName() const;

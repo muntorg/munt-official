@@ -69,19 +69,19 @@ public:
     //Double check this.
     CPoW2WitnessDestination(const CKeyID& spendingKeyIn, const CKeyID& witnessKeyIn) : spendingKey(spendingKeyIn), witnessKey(witnessKeyIn), lockFromBlock(0), lockUntilBlock(0), failCount(0) {}
     CPoW2WitnessDestination() : spendingKey(CKeyID()), witnessKey(CKeyID()), lockFromBlock(0), lockUntilBlock(0), failCount(0) {}
-    
+
     CKeyID spendingKey;
     CKeyID witnessKey;
     uint64_t lockFromBlock;
     uint64_t lockUntilBlock;
     uint64_t failCount;
-    
+
     //fixme: (GULDEN) (2.0) - Should these comparators consider the lock block or not?
     friend bool operator==(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey == b.spendingKey && a.witnessKey == b.witnessKey; }
     friend bool operator<(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey < b.spendingKey || (a.spendingKey == b.spendingKey && a.witnessKey < b.witnessKey); }
-    
+
     ADD_SERIALIZE_METHODS
-    
+
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(spendingKey);

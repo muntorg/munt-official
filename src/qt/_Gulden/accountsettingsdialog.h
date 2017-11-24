@@ -36,7 +36,7 @@ public:
 Q_SIGNALS:
       void cancel();
       void dismissAccountSettings();
-    
+
 public Q_SLOTS:
     void activeAccountChanged(CAccount* account);
     void applyChanges();
@@ -52,8 +52,6 @@ private:
     CAccount* activeAccount;
 
 private Q_SLOTS:
-    
-      
 };
 
 #endif // GULDEN_QT_GULDENNEWACCOUNTDIALOG_H

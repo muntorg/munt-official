@@ -36,7 +36,7 @@ Q_SIGNALS:
       void cancel();
       void saveBackupFile();
       void dismiss();
-    
+
 public Q_SLOTS:
 
 protected:
@@ -48,7 +48,6 @@ private:
 
 private Q_SLOTS:
     void showBackupPhrase();
-      
 };
 
 #endif // GULDEN_QT_BACKUPDIALOG_H

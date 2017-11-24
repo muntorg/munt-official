@@ -76,7 +76,7 @@ private:
 
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
-    
+
     friend class GuldenGUI;
     friend class BitcoinGUI;
 

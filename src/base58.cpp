@@ -241,7 +241,7 @@ bool CBitcoinAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyI
     vchData.reserve(40);
     vchData.insert(vchData.end(), spendingKeyID.begin(), spendingKeyID.end());
     vchData.insert(vchData.end(), witnessKeyID.begin(), witnessKeyID.end());
-    
+
     SetData(Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS), &vchData[0], 40);
     return true;
 }
@@ -272,7 +272,7 @@ bool CBitcoinAddress::IsValid(const CChainParams& params) const
 {
     if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
         return true;
-    
+
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = vchVersion == params.Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
                          vchVersion == params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);

@@ -29,7 +29,7 @@ ClickableQRImage::ClickableQRImage(QWidget *parent):
     QAction *copyImageAction = new QAction(tr("&Copy Image"), this);
     connect(copyImageAction, SIGNAL(triggered()), this, SLOT(copyImage()));
     contextMenu->addAction(copyImageAction);
-    
+
     setWordWrap(true);
 }
 
@@ -49,7 +49,7 @@ QImage ClickableQRImage::exportImage()
 void ClickableQRImage::setCode(const QString& qrString)
 {
     m_qrString = qrString;
-    
+
     QRcode *code = QRcode_encodeString(m_qrString.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
     if (!code)
     {

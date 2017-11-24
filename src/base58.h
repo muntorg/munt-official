@@ -154,22 +154,22 @@ public:
     KeyType GetKey()
     {
         //fixme: Strip creationTime and payAccount
-        KeyType retExt;        
-        
+        KeyType retExt;
+
         SecureString secretKey = SecureString(secret.begin(), secret.begin() + secret.find('-'));
         SecureString secretCode = SecureString(secret.begin() + secret.find('-') + 1, secret.end());
-        
+
         std::vector<unsigned char> vchSecretKey;
         std::vector<unsigned char> vchSecretCode;
         DecodeBase58(secretKey.c_str(), vchSecretKey);
         DecodeBase58(secretCode.c_str(), vchSecretCode);
-        
+
         if (vchSecretCode.size() == 32)
         {
-            retExt.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end());                
+            retExt.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end());
             retExt.chaincode = uint256(vchSecretCode);
         }
-        
+
         return retExt;
     }
 
@@ -189,27 +189,27 @@ public:
     std::string ToString(std::string creationtime, std::string payAccount) const
     {
         std::string ret = ToString();
-        
+
         const unsigned char* creationTimeRaw = (const unsigned char*)creationtime.c_str();
         ret = ret + ":" + EncodeBase58( creationTimeRaw, creationTimeRaw + creationtime.length() );
-        
+
         ret = ret + ";" + payAccount;
-        
+
         return ret;
     }
-    
+
     std::string ToString() const
     {
         std::string ret =  EncodeBase58( (const unsigned char*)key.GetKey().begin(), (const unsigned char*)key.GetKey().end() );
         ret = ret + "-" + EncodeBase58( key.chaincode.begin(), key.chaincode.end() );
-        
+
         return ret;
     }
 
     CBitcoinSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
     CBitcoinSecretExt(const std::string& strSecret) { SetString(strSecret); }
     CBitcoinSecretExt() {}
-    
+
 private:
     KeyType key;
     std::string secret;

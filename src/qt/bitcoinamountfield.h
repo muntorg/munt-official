@@ -69,7 +69,7 @@ public:
         in these cases we have to set it up manually.
     */
     QWidget *setupTabChain(QWidget *prev);
-    
+
     enum AmountFieldCurrency
     {
         CurrencyGulden,
@@ -78,9 +78,9 @@ public:
         CurrencyLocal
     };
     void setCurrency(OptionsModel* optionsModel_, CurrencyTicker* ticker, AmountFieldCurrency currency_);
-    
+
     void nocksRequestProcessed(NocksRequest*& request, int position);
-    
+
 Q_SIGNALS:
     void valueChanged();
 
@@ -98,14 +98,14 @@ private:
     AmountFieldCurrency primaryCurrency;
     AmountFieldCurrency displayCurrency;
     QLabel* forexError;
-    
+
     OptionsModel* optionsModel;
     CurrencyTicker* ticker;
-    
+
     CAmount secondaryAmount;
     CAmount tertiaryAmount;
     CAmount quadAmount;
-    
+
     NocksRequest* nocksRequestBTCtoNLG;
     NocksRequest* nocksRequestEURtoNLG;
     NocksRequest* nocksRequestNLGtoBTC;

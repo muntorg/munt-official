@@ -91,7 +91,6 @@ public:
     WalletFrame *walletFrame;
 private:
     ClientModel *clientModel;
-    
 
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelWalletEncryptionIcon;
@@ -157,7 +156,7 @@ private:
     void subscribeToCoreSignals();
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
-    
+
     QFrame *frameBlocks;
     GuldenGUI* m_pGuldenImpl;
     friend class GuldenGUI;
@@ -254,7 +253,7 @@ private Q_SLOTS:
 
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString &title, int nProgress);
-    
+
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);
 

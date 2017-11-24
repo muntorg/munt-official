@@ -291,7 +291,7 @@ public:
             consensus.hashGenesisBlock = genesis.GetHashLegacy();
             LogPrintf("genesis nonce: %d\n",genesis.nNonce);
             LogPrintf("genesis time: %d\n",genesis.nTime);
-            LogPrintf("genesis bits: %d\n",genesis.nBits);        
+            LogPrintf("genesis bits: %d\n",genesis.nBits);
             LogPrintf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
 
             pchMessageStart[0] = targetInterval;

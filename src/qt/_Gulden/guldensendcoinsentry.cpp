@@ -38,7 +38,7 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     tabBar.at(0)->setCursor(Qt::PointingHandCursor);	
 
     update();
-    
+
     ui->addressBookTabTable->horizontalHeader()->setStretchLastSection(true);
     ui->addressBookTabTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->addressBookTabTable->horizontalHeader()->hide();
@@ -51,28 +51,28 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     ui->sendCoinsRecipientStack->setContentsMargins(0, 0, 0, 0);
     ui->sendCoinsRecipientPage->setContentsMargins(0, 0, 0, 0);
     ui->sendCoinsWitnessPage->setContentsMargins(0, 0, 0, 0);
-    
+
     ui->sendCoinsRecipientBook->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel1->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel2->setContentsMargins(0, 0, 0, 0);
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
-    
+
     ui->pow2LockFundsSlider->setMinimum(30);
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
     ui->pow2LockFundsSlider->setCursor(Qt::PointingHandCursor);
-    
+
 
     connect(ui->searchBox1, SIGNAL(textEdited(QString)), this, SLOT(searchChangedAddressBook(QString)));
     connect(ui->searchBox2, SIGNAL(textEdited(QString)), this, SLOT(searchChangedMyAccounts(QString)));
-    
+
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SIGNAL(sendTabChanged()));
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     connect(ui->receivingAddress, SIGNAL(textEdited(QString)), this, SLOT(addressChanged()));
-    
+
     connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(witnessSliderValueChanged(int)));
-    
+
     connect(ui->payAmount, SIGNAL(valueChanged()), this, SLOT(payAmountChanged()));
     connect(ui->payAmount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
 
@@ -132,7 +132,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         ui->payAmount->setCurrency(model->getOptionsModel(), model->getOptionsModel()->getTicker(), BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
     }
-    
+
     if (model)
     {
         {
@@ -142,7 +142,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModel->setFilterRole(AddressTableModel::TypeRole);
             proxyModel->setFilterFixedString(AddressTableModel::Send);
-            
+
             proxyModelRecipients = new QSortFilterProxyModel(this);
             proxyModelRecipients->setSourceModel(proxyModel);
             proxyModelRecipients->setDynamicSortFilter(true);
@@ -150,7 +150,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModelRecipients->setFilterFixedString("");
             proxyModelRecipients->setFilterCaseSensitivity(Qt::CaseInsensitive);
             proxyModelRecipients->setFilterKeyColumn(AddressTableModel::ColumnIndex::Label);
-            
+
             ui->addressBookTabTable->setModel(proxyModelRecipients);
         }
         {
@@ -160,13 +160,13 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModel->setFilterRole(AccountTableModel::TypeRole);
             proxyModel->setFilterFixedString(AccountTableModel::Normal);
-            
+
             QSortFilterProxyModel *proxyInactive = new QSortFilterProxyModel(this);
             proxyInactive->setSourceModel(proxyModel);
             proxyInactive->setDynamicSortFilter(true);
             proxyInactive->setFilterRole(AccountTableModel::ActiveAccountRole);
             proxyInactive->setFilterFixedString(AccountTableModel::Inactive);
-            
+
             proxyModelAddresses = new QSortFilterProxyModel(this);
             proxyModelAddresses->setSourceModel(proxyInactive);
             proxyModelAddresses->setDynamicSortFilter(true);
@@ -176,7 +176,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModelAddresses->setFilterKeyColumn(AddressTableModel::ColumnIndex::Label);
             proxyModelAddresses->setSortRole(Qt::DisplayRole);
             proxyModelAddresses->sort(0);
-            
+
             connect(proxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
             connect(proxyModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
             connect(proxyModel, SIGNAL(columnsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
@@ -184,12 +184,12 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             connect(proxyModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()));
             connect(proxyModel, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()));
             connect(proxyModel, SIGNAL(modelReset()), proxyModelAddresses, SLOT(invalidate()));
-            
+
             ui->myAccountsTabTable->setModel(proxyModelAddresses);
         }
         connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged())); 
         connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged()));
-        
+
         connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged())); 
         connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged())); 
     }
@@ -206,7 +206,7 @@ void GuldenSendCoinsEntry::addressChanged()
     else
     {
         ui->receivingAddress->setProperty("valid", true);
-        
+
         if (val.paymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
         {
             ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBCOIN);
@@ -256,7 +256,7 @@ void GuldenSendCoinsEntry::myAccountsSelectionChanged()
     {
         QModelIndex index = selection.at(0);
         QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
-        
+
         LOCK(pactiveWallet->cs_wallet);
 
         CAccount* pAccount = pactiveWallet->mapAccounts[sAccountUUID.toStdString()];
@@ -266,7 +266,7 @@ void GuldenSendCoinsEntry::myAccountsSelectionChanged()
             witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
         }
     }
-                    
+
     tabChanged();
 }
 
@@ -276,7 +276,7 @@ void GuldenSendCoinsEntry::clear()
     ui->receivingAddress->setProperty("valid", true);
     ui->receivingAddress->setText("");
     ui->payAmount->clear();
-    
+
     //fixme: Gulden - implement the rest of this.
     // clear UI elements for normal payment
     /*ui->payTo->clear();
@@ -324,11 +324,11 @@ bool GuldenSendCoinsEntry::validate()
     else
     {
         ui->receivingAddress->setProperty("valid", true);
-        
+
         if (val.paymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
         {
             //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBCOIN);
-            
+
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
             if ( ui->payAmount->valueForCurrency(0) > currencyMax || ui->payAmount->valueForCurrency(0) < currencyMin )
@@ -340,7 +340,7 @@ bool GuldenSendCoinsEntry::validate()
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
             //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyEuro);
-            
+
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
             if ( ui->payAmount->valueForCurrency(0) > currencyMax || ui->payAmount->valueForCurrency(0) < currencyMin )
@@ -359,7 +359,7 @@ bool GuldenSendCoinsEntry::validate()
     {
         retval = false;
     }
-    
+
     // Sending a zero amount is invalid
     if (ui->payAmount->valueForCurrency(0) <= 0)
     {
@@ -386,7 +386,7 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
     }
     else
     {
-        QString compareModified = recipient.address;        
+        QString compareModified = recipient.address;
         if (model->validateAddressBCOIN(compareModified))
         {
             ret = SendCoinsRecipient::PaymentType::BCOINPayment;
@@ -408,19 +408,19 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     // Payment request
     if (recipient.paymentRequest.IsInitialized())
         return recipient;
-    
-    
+
+
     recipient.addToAddressBook = false;
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->valueForCurrency();
-    
+
     recipient.destinationPoW2Witness.lockFromBlock = 0;
     recipient.destinationPoW2Witness.lockUntilBlock = 0;
     if (isPoW2WitnessCreation())
     {
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + ui->pow2LockFundsSlider->value();
     }
-            
+
     //fixme: GULDEN - give user a choice here.
     //fixme: Check if 'spend unconfirmed' is checked or not.
     if (recipient.amount >= ( pactiveWallet->GetBalance(model->getActiveAccount(), true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
@@ -431,15 +431,15 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), "", 400, 180);
             d->exec();
         }
-    
+
         recipient.amount = pactiveWallet->GetBalance(model->getActiveAccount(), true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
         recipient.fSubtractFeeFromAmount = true;
     }
-    
-    
+
+
     //fixme: GULDEN - Handle 'messages'
-    //recipient.message = ui->messageTextLabel->text();        
-    
+    //recipient.message = ui->messageTextLabel->text();
+
     switch(ui->sendCoinsRecipientBook->currentIndex())
     {
         case 0:
@@ -472,9 +472,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                 {
                     QModelIndex index = selection.at(0);
                     QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
-                    
+
                     LOCK(pactiveWallet->cs_wallet);
-                    
+
                     if (isPoW2WitnessCreation())
                     {
                         {
@@ -507,10 +507,10 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                             keySpending.KeepKey();
                             recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
                         }
-                        
+
                         recipient.destinationPoW2Witness.failCount = 0;
                         recipient.address = QString::fromStdString(CBitcoinAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
-                        
+
                     }
                     else
                     {
@@ -534,14 +534,14 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             break;
         }
     }
-    
+
     // Strip all whitespace
     recipient.address.replace(QRegularExpression("\\s"), "");
     // Strip all punctuation
     recipient.address.replace(QRegularExpression("\\p{P}"), "");
-    
+
     // Select payment type
-    recipient.paymentType = getPaymentType(recipient.address);   
+    recipient.paymentType = getPaymentType(recipient.address);
 
     return recipient;
 }
@@ -549,7 +549,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 QWidget *GuldenSendCoinsEntry::setupTabChain(QWidget *prev)
 {
     //fixme: Implement.
-    
+
     return ui->payAmount;
 }
 
@@ -668,7 +668,6 @@ void GuldenSendCoinsEntry::deleteAddressBookEntry()
             }
         }
     }
-    
 }
 
 void GuldenSendCoinsEntry::editAddressBookEntry()
@@ -689,39 +688,39 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
             QVBoxLayout* vbox = new QVBoxLayout();
             vbox->setSpacing(0);
             vbox->setContentsMargins( 0, 0, 0, 0 );
-            
-            
+
+
             QLineEdit* lineEditAddress = new QLineEdit(d);
             vbox->addWidget(lineEditAddress);
             lineEditAddress->setText(indexes.at(0).sibling(indexes.at(0).row(), 0).data(Qt::DisplayRole).toString());
             lineEditAddress->setObjectName("receivingAddress_dialog");
             lineEditAddress->setContentsMargins( 0, 0, 0, 0 );
-            
-            
+
+
             QLineEdit* lineEditLabel = new QLineEdit(d);
             vbox->addWidget(lineEditLabel);
             lineEditLabel->setText(indexes.at(0).sibling(indexes.at(0).row(), 1).data(Qt::DisplayRole).toString());
             lineEditLabel->setObjectName("receivingAddressLabel_dialog");
             lineEditLabel->setContentsMargins( 0, 0, 0, 0 );
-            
+
             QWidget* spacer = new QWidget(d);
             spacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
             vbox->addWidget(spacer);
-            
+
             QFrame* horizontalLine = new QFrame(d);
             horizontalLine->setFrameStyle(QFrame::HLine);
             horizontalLine->setFixedHeight(1);
             horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
             horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE);
             vbox->addWidget(horizontalLine);
-    
+
             //We use reset button because it shows on the left where we want it.
             QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Reset, d);
             QObject::connect(buttonBox, SIGNAL(accepted()), d, SLOT(accept()));
             QObject::connect(buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), d, SLOT(reject()));
             vbox->addWidget(buttonBox);
             buttonBox->setContentsMargins( 0, 0, 0, 0 );
-            
+
             buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Save"));
             buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
             buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE);
@@ -729,7 +728,7 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
             buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Cancel"));
             buttonBox->button(QDialogButtonBox::Reset)->setCursor(Qt::PointingHandCursor);
             buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE);
-            
+
             d->setLayout(vbox);
 
             int result = d->exec();
@@ -738,9 +737,8 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
                 ui->addressBookTabTable->model()->setData(indexes.at(0).sibling(indexes.at(0).row(), 0), lineEditAddress->text(), Qt::EditRole);
                 ui->addressBookTabTable->model()->setData(indexes.at(0).sibling(indexes.at(0).row(), 1), lineEditLabel->text(), Qt::EditRole);
             }
-        }        
+        }
     }
-    
 }
 
 void GuldenSendCoinsEntry::updateDisplayUnit()
@@ -776,47 +774,47 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     //fixme: (GULDEN) (2.0) (POW2) (CLEANUP)
     CAmount nAmount = ui->payAmount->valueForCurrency();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
-    
+
     if (nAmount < CAmount(500000000000))
     {
         ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of 5000 is required."));
         return;
     }
-    
+
     //fixme: (GULDEN) (2.0) (HIGH) - warn if weight exceeds 1%.
     int nDays = newValue;
     float fMonths = newValue/30.0;
     float fYears = newValue/365.0;
     int nEarnings = 0;
-    
-    
-    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);    
-    
+
+
+    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
+
     int64_t nNetworkWeight = 239990000;
-    
-    
+
+
     if (nOurWeight < 10000)
     {
         ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.").arg(nOurWeight));
         return;
     }
-    
+
     double fWeightPercent = nOurWeight/(double)nNetworkWeight;
     if (fWeightPercent > 0.01)
     {
         ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
         fWeightPercent = 0.01;
     }
-    
+
     double fBlocksPerDay = 576 * fWeightPercent;
     if (fBlocksPerDay > 5.76)
         fBlocksPerDay = 5.76;
-    
+
     nEarnings = fBlocksPerDay * nDays * 25;
-    
+
     float fPercent = (fBlocksPerDay * 30 * 25)/((nAmount/100000000))*100;
 
-    
+
     QString sSecondTimeUnit = "";
     if (fYears > 1)
     {
@@ -830,7 +828,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
         if (fMonths > 1.0)
             sSecondTimeUnit = tr("%1 months").arg(QString::number(fMonths, 'f', 2).replace(".00",""));
     }
-    
+
     ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\n\nWitness weight: %5")
     .arg(nDays)
     .arg(sSecondTimeUnit)

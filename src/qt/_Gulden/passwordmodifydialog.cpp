@@ -17,16 +17,16 @@ PasswordModifyDialog::PasswordModifyDialog(const PlatformStyle *_platformStyle, 
 , platformStyle( _platformStyle )
 {
     ui->setupUi(this);
-    
+
     ui->buttonCancel->setCursor(Qt::PointingHandCursor);
     ui->buttonSave->setCursor(Qt::PointingHandCursor);
-    
+
     connect(ui->buttonCancel, SIGNAL(clicked()), this, SIGNAL(dismiss()));
     connect(ui->buttonSave, SIGNAL(clicked()), this, SLOT(setPassword()));
     connect(ui->lineEditOldPassword, SIGNAL(textEdited(QString)), this, SLOT(oldPasswordChanged()));
     connect(ui->lineEditNewPassword, SIGNAL(textEdited(QString)), this, SLOT(newPasswordChanged()));
     connect(ui->lineEditNewPasswordRepeat, SIGNAL(textEdited(QString)), this, SLOT(newPasswordRepeatChanged()));
-    
+
     if (pactiveWallet->IsCrypted())
     {
         ui->lineEditOldPassword->setVisible(true);
@@ -87,7 +87,7 @@ void PasswordModifyDialog::setPassword()
         setValid(ui->lineEditNewPasswordRepeat, false);
         return;
     }
-    
+
     if (pactiveWallet->IsCrypted())
     {
         if(!pactiveWallet->ChangeWalletPassphrase(ui->lineEditOldPassword->text().toStdString().c_str(), ui->lineEditNewPassword->text().toStdString().c_str()))

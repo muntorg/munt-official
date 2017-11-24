@@ -39,33 +39,33 @@ NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget 
 , walletModel( model )
 {
     ui->setupUi(this);
-    
+
     // Set object names for styling
     setObjectName("newAccountDialog");
     ui->scanToConnectPage->setObjectName("scanToConnectPage");
     ui->newAccountPage->setObjectName("newAccountPage");
-    
+
     // Setup cursors for all clickable elements
     ui->doneButton->setCursor(Qt::PointingHandCursor);
     ui->cancelButton->setCursor(Qt::PointingHandCursor);
     ui->doneButton2->setCursor(Qt::PointingHandCursor);
     ui->cancelButton2->setCursor(Qt::PointingHandCursor);
     ui->syncWithMobileButton->setCursor(Qt::PointingHandCursor);
-    
+
     // Set default display state
-    ui->stackedWidget->setCurrentIndex(0);    
+    ui->stackedWidget->setCurrentIndex(0);
     setValid(ui->newAccountName, true);
     ui->cancelButton2->setVisible(false);
-    
+
     QStringListModel* accountTypeModel = new QStringListModel();
     QStringList accountTypeList;
     accountTypeList << tr("Transactional account") << tr("Fixed deposit savings account");
     accountTypeModel->setStringList(accountTypeList);
     ui->newAccountType->setModel(accountTypeModel);
-    
+
     // Set default keyboard focus
     ui->newAccountName->setFocus();
-    
+
     // Connect signals.
     connect(ui->doneButton, SIGNAL(clicked()), this, SLOT(addAccount()));
     connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
@@ -88,7 +88,7 @@ void NewAccountDialog::connectToMobile()
     if (!ui->newAccountName->text().simplified().isEmpty())
     {
         ui->stackedWidget->setCurrentIndex(1);
-        
+
         ui->scanQRCode->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds."));
         connect(ui->scanQRCode, SIGNAL( clicked() ), this, SLOT( showSyncQr() ));
         ui->scanQRSyncHeader->setVisible(true);
@@ -101,25 +101,25 @@ void NewAccountDialog::connectToMobile()
 }
 
 void NewAccountDialog::showSyncQr()
-{        
+{
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
-    {    
+    {
         newAccount = pactiveWallet->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountType::Normal, AccountSubType::Mobi);
         LOCK(pactiveWallet->cs_wallet);
         {
             int64_t currentTime = newAccount->getEarliestPossibleCreationTime();
-        
+
             std::string payoutAddress;
             CReserveKey reservekey(pactiveWallet, newAccount, KEYCHAIN_CHANGE);
             CPubKey vchPubKey;
             if (!reservekey.GetReservedKey(vchPubKey))
                 return;
             payoutAddress = CBitcoinAddress(vchPubKey.GetID()).ToString();
-                
+
             QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt<CExtKey>(*newAccount->GetAccountMasterPrivKey()).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
             ui->scanQRCode->setCode(qrString);
-            
+
             disconnect(this, SLOT( showSyncQr() ));
         }
     }

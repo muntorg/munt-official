@@ -54,7 +54,7 @@ public:
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
     void updateActionButtonsForEntry(GuldenSendCoinsEntry* entry);
-    
+
     void update();
 
 public Q_SLOTS:
@@ -76,9 +76,9 @@ private:
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
     const PlatformStyle *platformStyle;
-    
+
     NocksRequest* nocksRequest;
-    
+
     QList<SendCoinsRecipient> pendingRecipients;
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting

@@ -83,11 +83,11 @@ public:
     CAmount forexAmount; //memory only
     std::string forexFailCode; //memory only
     int64_t expiry; //memory only
-    
+
 
     static const int CURRENT_VERSION = 1;
     int nVersion;
-    
+
     CPoW2WitnessDestination destinationPoW2Witness;
 
     ADD_SERIALIZE_METHODS;
@@ -110,7 +110,7 @@ public:
         READWRITE(sMessage);
         READWRITE(sPaymentRequest);
         READWRITE(sAuthenticatedMerchant);
-        
+
         try
         {
             READWRITE(destinationPoW2Witness);
@@ -256,14 +256,14 @@ public:
     bool hdEnabled() const;
 
     int getDefaultConfirmTarget() const;
-    
+
     bool getDefaultWalletRbf() const;
 
     //fixme: GULDEN (FUT) - Move this into a gulden specific subclass to keep diffs to a minimum
     void setActiveAccount( CAccount* account );
     CAccount* getActiveAccount();
     QString getAccountLabel(std::string uuid);
-    
+
 private:
     CWallet *wallet;
     bool fHaveWatchOnly;
@@ -293,9 +293,9 @@ private:
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
     void checkBalanceChanged();
-    
+
     QRegularExpression patternMatcherIBAN;
-    
+
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
@@ -321,7 +321,7 @@ Q_SIGNALS:
 
     // Watch-only address added
     void notifyWatchonlyChanged(bool fHaveWatchonly);
-    
+
     void activeAccountChanged(CAccount* account);
     void accountListChanged();
     void accountAdded(CAccount* account);

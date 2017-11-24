@@ -21,11 +21,11 @@ void ThreadShadowPoolManager()
     while (true)
     {
         long milliSleep = 100;
-        
+
         if (pactiveWallet)
         {
             LOCK(pactiveWallet->cs_wallet);
-                      
+
             milliSleep = 500;
             // Top up 'shadow' pool
             int numNew = 0;
@@ -35,11 +35,11 @@ void ThreadShadowPoolManager()
                 //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
                 if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
                     continue;
-                
+
                 for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi, AccountSubType::PoW2Witness })
                 {
                     int numShadow = 0;
-                    {                    
+                    {
                         for (const auto& accountPair : pactiveWallet->mapAccounts)
                         {
                             if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
@@ -66,18 +66,18 @@ void ThreadShadowPoolManager()
                                 ++numShadow;
                                 ++numNew;
                                 depth=1;
-                                
+
                                 // New shadow account
                                 CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
-                                
+
                                 if (newShadow == NULL)
                                     break;
-                                
+
                                 newShadow->m_Type = AccountType::Shadow;
-                                
+
                                 // Write new account
                                 pactiveWallet->addAccount(newShadow, "Shadow");
-                                
+
                                 if (numNew > 2)
                                 {
                                     milliSleep = 100;
@@ -97,7 +97,7 @@ void ThreadShadowPoolManager()
                 }
             }
 
-            
+
             if (numNew == 0)
             {
                 int targetPoolDepth = GetArg("-keypool", 40);
@@ -143,10 +143,10 @@ void ThreadShadowPoolManager()
                     pactiveWallet->wantDelayLock = false;
                     pactiveWallet->didDelayLock = false;
                     pactiveWallet->Lock();
-                }                
+                }
             }
         }
-            
+
         boost::this_thread::interruption_point();
         MilliSleep(milliSleep);
     }
@@ -160,7 +160,7 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
 {
     LOCK(wallet.cs_wallet);
-    
+
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
@@ -177,7 +177,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
 isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
-    
+
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
@@ -229,7 +229,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     CWalletDB walletdb(*dbw);
     //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
     walletdb.ErasePool(static_cast<CWallet*>(this), keyID);
-    
+
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
         LOCK(cs_wallet);
@@ -242,16 +242,16 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                     CWalletDB walletdb(*dbw);
                     accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
                 }
-                
+
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
                 // 1) User empties account. 2) User deletes account 3) At a later point MarkKeyUsed is called subsequent times (new blocks) 4) The account user just deleted is now recovered.
-                
+
                 //fixme: (GULDEN) (FUT) (1.6.1) This is still not 100% right, if the user does the following there can still be issues:
                 //1) Send funds from account
                 //2) Immediately close wallet
                 //3) Reopen wallet, as the new blocks are processed this code will be called and the just deleted account will be restored.
                 //We will need a better way to detect this...
-                
+
                 //fixme: (GULDEN) (FUT) (1.6.1) 
                 //Another edge bug here
                 //1) User sends/receives from address
@@ -275,14 +275,14 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                             name = _("Restored");
                         }
                         addAccount(accountItem.second, name);
-                        
+
                         //fixme: Shadow accounts during rescan...
                     }
                 }
             }
         }
     }
-    
+
     //Only assign the bare minimum keys - let the background thread do the rest.
     static_cast<CWallet*>(this)->TopUpKeyPool(10);
 }
@@ -294,9 +294,9 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
     std::string oldName = account->getLabel();
     {
         LOCK(cs_wallet);
-        
+
         CWalletDB db(*dbw);
-           
+
         int nPrefix = 1;
         bool possibleDuplicate = true;
         while(possibleDuplicate)
@@ -312,17 +312,17 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
                 }
             }
         }
-        
+
         account->setLabel(finalNewName, &db);
         mapAccountLabels[account->getUUID()] = finalNewName;
     }
-    
+
     if (notify && oldName != finalNewName)
         NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
 }
 
 void CGuldenWallet::deleteAccount(CAccount* account)
-{    
+{
     std::string newLabel = account->getLabel();
     if (newLabel.find(_("[Restored]")) != std::string::npos)
     {
@@ -332,10 +332,10 @@ void CGuldenWallet::deleteAccount(CAccount* account)
     {
         newLabel = newLabel + " " + _("[Deleted]");
     }
-    
+
     {
         LOCK(cs_wallet);
-        
+
         CWalletDB db(*dbw);
         account->setLabel(newLabel, &db);
         account->m_Type = AccountType::Deleted;
@@ -352,7 +352,7 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName)
 {
     {
         LOCK(cs_wallet);
-        
+
         CWalletDB walletdb(*dbw);
         if (!walletdb.WriteAccount(account->getUUID(), account))
         {
@@ -361,7 +361,7 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName)
         mapAccounts[account->getUUID()] = account;
         changeAccountName(account, newName, false);
     }
-    
+
     if (account->m_Type == AccountType::Normal)
     {
         NotifyAccountAdded(static_cast<CWallet*>(this), account);
@@ -377,7 +377,7 @@ void CGuldenWallet::setActiveAccount(CAccount* newActiveAccount)
         activeAccount = newActiveAccount;
         CWalletDB walletdb(*dbw);
         walletdb.WritePrimaryAccount(activeAccount);
-        
+
         NotifyActiveAccountChanged(static_cast<CWallet*>(this), newActiveAccount);
     }
 }
@@ -394,7 +394,7 @@ void CGuldenWallet::setActiveSeed(CHDSeed* newActiveSeed)
         activeSeed = newActiveSeed;
         CWalletDB walletdb(*dbw);
         walletdb.WritePrimarySeed(*activeSeed);
-        
+
         //fixme: (FUT) (1.6.1)
         //NotifyActiveSeedChanged(this, newActiveAccount);
     }
@@ -406,7 +406,7 @@ CHDSeed* CGuldenWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     {
         throw std::runtime_error("Generating seed requires unlocked wallet");
     }
-    
+
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
     CHDSeed* newSeed = new CHDSeed(mnemonicFromEntropy(entropy, entropy.size()*8).c_str(), seedType);
@@ -422,7 +422,7 @@ CHDSeed* CGuldenWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
-    
+
     return newSeed;
 }
 
@@ -433,7 +433,7 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
     {
         throw std::runtime_error("Deleting seed failed");
     }
-    
+
     //fixme: purge accounts completely if empty?
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
@@ -443,7 +443,7 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
             deleteAccount(accountPair.second);
         }
     }
-    
+
     if (activeSeed == deleteSeed)
     {
         if (mapSeeds.empty())
@@ -451,7 +451,7 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
         else
             setActiveSeed(mapSeeds.begin()->second);
     }
-    
+
     delete deleteSeed;
 }
 
@@ -461,7 +461,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     {
         throw std::runtime_error("Generating seed requires unlocked wallet");
     }
-    
+
     CExtPubKey pubkey;
     try
     {
@@ -473,7 +473,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     {
         throw std::runtime_error("Not a valid Gulden extended public key");
     }
-    
+
     if (!pubkey.pubkey.IsValid())
     {
         throw std::runtime_error("Not a valid Gulden extended public key");
@@ -492,7 +492,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
-    
+
     return newSeed;
 }
 
@@ -502,12 +502,12 @@ CHDSeed* CGuldenWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType ty
     {
         throw std::runtime_error("Generating seed requires unlocked wallet");
     }
-    
+
     if (!checkMnemonic(mnemonic))
     {
         throw std::runtime_error("Not a valid Gulden mnemonic");
     }
-        
+
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
     CHDSeed* newSeed = new CHDSeed(mnemonic, type);
@@ -523,7 +523,7 @@ CHDSeed* CGuldenWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType ty
         }
     }
     mapSeeds[newSeed->getUUID()] = newSeed;
-    
+
     return newSeed;
 }
 
@@ -570,12 +570,12 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
     assert(type != AccountType::ShadowChild);
     assert(type != AccountType::Deleted);
     CAccountHD* newAccount = NULL;
-    
+
     // Grab account with lowest index from existing pool of shadow accounts and convert it into a new account.
     if (type == AccountType::Normal || type == AccountType::Shadow)
     {
         LOCK(cs_wallet);
-        
+
         for (const auto& accountPair : mapAccounts)
         {
             if (accountPair.second->m_SubType == subType)
@@ -598,7 +598,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
             }
         }
     }
-    
+
     // Create a new account in the (unlikely) event there was no shadow type
     if (!newAccount)
     {
@@ -625,17 +625,17 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
         }
     }
     newAccount->m_Type = type;
-        
+
     // We don't top up the shadow pool here - we have a thread for that.
-    
+
     // Write new account
     //NB! We have to do this -after- we create the new shadow account, otherwise the shadow account ends up being the active account.
     addAccount(newAccount, strAccount);
-    
+
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
         static_cast<CWallet*>(this)->TopUpKeyPool(2);//We only assign the bare minimum addresses here - and let the background thread do the rest
-    
+
     return newAccount;
 }
 
@@ -643,7 +643,7 @@ CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
     addAccount(newAccount, strAccount);
-    
+
     return newAccount;
 }
 
@@ -662,26 +662,26 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     {
         throw std::runtime_error("Not a valid Gulden extended public key");
     }
-    
+
     newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
-        
+
     // Write new account
     addAccount(newAccount, strAccount);
-    
+
     //We only assign the bare minimum addresses here - and let the background thread do the rest
     static_cast<CWallet*>(this)->TopUpKeyPool(2);
-    
+
     return newAccount;
 }
 
 void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
-{        
+{
     {
         LOCK(cs_wallet);
-        
+
         std::set<CKeyID> setAddress;
         forAccount.GetKeys(setAddress);
-        
+
         CWalletDB walletDB(*dbw);
         for (const auto& keyID : setAddress)
         {
@@ -718,8 +718,8 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
             }
         }
     }
-    
-    
+
+
     CWalletDB walletDB(*dbw);
     BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolInternal)
     {
@@ -757,7 +757,6 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
             throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
     }
-        
 }
 
 
@@ -776,10 +775,10 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], forAccount.getUUID());    
+    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], forAccount.getUUID());
 }
 
-   
+
 bool CGuldenWallet::LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
 {
     LOCK(cs_wallet);
@@ -789,16 +788,16 @@ bool CGuldenWallet::LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey 
 CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
-    
+
     // Create new metadata
     int64_t nCreationTime = GetTime();
     CKeyMetadata metadata(nCreationTime);
 
     CPubKey pubkey = forAccount.GenerateNewKey(*this, metadata, keyChain);
-    
+
     mapKeyMetadata[pubkey.GetID()] = metadata;
     UpdateTimeFirstKey(nCreationTime);
-    
+
     return pubkey;
 }
 

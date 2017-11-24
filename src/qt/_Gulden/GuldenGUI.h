@@ -84,7 +84,7 @@ public:
 protected:
     bool eventFilter(QObject *obj, QEvent *evt);
 
-private:    
+private:
     QStyle* parentStyle;
     QWidget* parentObject;
     GuldenProxyStyle* guldenProxyStyle;
@@ -97,31 +97,31 @@ class GuldenGUI: public QObject
 public:
     explicit GuldenGUI(BitcoinGUI* pImpl);
     virtual ~GuldenGUI();
-    
-    
+
+
     void doPostInit();
     void doApplyStyleSheet();
     void resizeToolBarsGulden();
     void refreshAccountControls();
     bool setCurrentWallet(const QString& name);
-    
+
     void setOptionsModel(OptionsModel* optionsModel);
-    
+
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
-    
+
     void createMenusGulden();
-    
+
     void createToolBarsGulden();
     void hideToolBars();
     void showToolBars();
-    
+
     void hideProgressBarLabel();
     void showProgressBarLabel();
-    
+
     bool welcomeScreenIsVisible();
-    
+
     static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight);
-    
+
 protected:
 
 private:
@@ -136,13 +136,13 @@ private:
     QFrame* menuBarSpaceFiller;
     QFrame* balanceContainer;
     WelcomeDialog* welcomeScreen;
-    
+
     QFrame* accountScrollArea;
-    
+
     QMenu* toolsMenu;
     QAction* importPrivateKeyAction;
     QAction* rescanAction;
-    
+
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
     AccountSettingsDialog* dialogAccountSettings;
@@ -150,30 +150,30 @@ private:
     PasswordModifyDialog* dialogPasswordModify;
     ExchangeRateDialog* dialogExchangeRate;
     QWidget* cacheCurrentWidget;
-    
+
     std::map<ClickableLabel*, CAccount*> m_accountMap;
     CurrencyTicker* ticker;
     NocksSettings* nocksSettings;
-    
+
     QLabel* labelBalance;
     QLabel* labelBalanceForex;
-    
+
     QAction* accountSpacerAction;
     QAction* passwordAction;
     QAction* backupAction;
-    
+
     OptionsModel* optionsModel;
-    
+
     ClickableLabel* createAccountButton(const QString& accountName);
     void setActiveAccountButton(ClickableLabel* button);
     void restoreCachedWidgetIfNeeded();
     void updateAccount(CAccount* account);
-    
+
     CReserveKey* receiveAddress;
-    
+
     GuldenProxyStyle* guldenStyle;
     GuldenEventFilter* guldenEventFilter;
-    
+
     //Cache the balances so that we can easily re-use them when the currency ticker changes.
     CAmount balanceCached;
     CAmount unconfirmedBalanceCached;
@@ -186,7 +186,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void NotifyRequestUnlock(void* wallet, QString reason);
-    
+
 private Q_SLOTS:
     void activeAccountChanged(CAccount* account);
     void accountListChanged();

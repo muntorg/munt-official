@@ -32,7 +32,7 @@ class ExchangeRateDialog : public QDialog
 public:
     explicit ExchangeRateDialog(const PlatformStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel);
     ~ExchangeRateDialog();
-    
+
     void setOptionsModel(OptionsModel* model);
 
 protected:

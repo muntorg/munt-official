@@ -32,7 +32,7 @@ public:
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
-    
+
     CAmount getMinimumForCurrency(std::string symbol);
     CAmount getMaximumForCurrency(std::string symbol);
     std::string getMinimumForCurrencyAsString(std::string symbol);

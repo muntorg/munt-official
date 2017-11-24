@@ -41,8 +41,8 @@ public:
     uint256 hashMerkleRootPoW2Witness;
     //fixme: (GULDEN) (2.0) (POW2) - Fixed size 65 bit.
     std::vector<unsigned char> witnessHeaderPoW2Sig;
-    
-    
+
+
     // PoW header
     int32_t nVersion;
     uint256 hashPrevBlock;
@@ -67,17 +67,17 @@ public:
             READWRITE(nTimePoW2Witness);
             READWRITE(hashMerkleRootPoW2Witness);
         }
-        
+
         READWRITE(this->nVersion);
         READWRITE(hashPrevBlock);
         READWRITE(hashMerkleRoot);
         READWRITE(nTime);
         READWRITE(nBits);
-        READWRITE(nNonce);   
-        
+        READWRITE(nNonce);
+
         //fixme: (GULDEN) (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
         if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
-        {        
+        {
             if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG))
             {
                 if (nVersionPoW2Witness != 0)
@@ -98,7 +98,7 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
-        
+
         nVersionPoW2Witness = 0;
         nTimePoW2Witness = 0;
         hashMerkleRootPoW2Witness.SetNull();
@@ -117,7 +117,7 @@ public:
     //GuldenD: main.cpp:2341: bool ConnectBlock(const CBlock&, CValidationState&, CBlockIndex*, CCoinsViewCache&, const CChainParams&, bool): Assertion `hashPrevBlock == view.GetBestBlock()' failed.
     //mutable uint256 cachedHash;
     uint256 GetHashLegacy() const;
-    
+
     uint256 GetHashPoW2(bool force=false) const;
 
     int64_t GetBlockTime() const

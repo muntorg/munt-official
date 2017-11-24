@@ -391,12 +391,12 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     {
         // Generate a new address to associate with given label
         CPubKey newKey;
-        
+
         LOCK(wallet->cs_wallet);
-        
+
         if(wallet->mapAccounts.count(strAccount) == 0)
             return QString();
-        
+
         if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[strAccount], KEYCHAIN_EXTERNAL))
         {
             WalletModel::UnlockContext ctx(walletModel->requestUnlock());

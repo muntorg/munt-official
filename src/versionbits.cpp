@@ -192,7 +192,7 @@ protected:
         {
             return GetPoW2Phase3ActivationTime();
         }
-        
+
         return params.vDeployments[id].nStartTime;
     }
     int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }
@@ -213,7 +213,7 @@ protected:
                 {
                     CBlock temp;
                     assert(ReadBlockFromDisk(temp, pindex, params));
-                        
+
                     //fixme: (GULDEN) (2.0) - Consider using a cache here to speed things up?
                     int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);
                     if (nWitnessCoinbaseIndex != -1)
@@ -223,7 +223,7 @@ protected:
                         ::Unserialize(serialisedWitnessHeaderInfoStream, nVersionPoW2Witness);
                     }
                 }
-                
+
                 return (((nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (nVersionPoW2Witness & Mask(params)) != 0);
             }
             case Consensus::DEPLOYMENT_BOTH:

@@ -33,7 +33,7 @@ NocksSettings::NocksSettings( QObject* parent )
 
     connect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
     connect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
-    
+
     // Some defaults - just in case server is temporarily unavailable.
     exchangeLimits["BTC-NLG"] = std::make_pair("250.00000", "50000.00000");
     exchangeLimits["NLG-BTC"] = std::make_pair("0.00060", "1.00000");
@@ -69,7 +69,7 @@ CAmount NocksSettings::getMinimumForCurrency(std::string symbol)
 {
     if (exchangeLimits.count(symbol) == 0)
         return 0;
-    
+
     CAmount amountMinimum;
     BitcoinUnits::parse(BitcoinUnits::BTC, QString::fromStdString(exchangeLimits[symbol].first), &amountMinimum);
     return amountMinimum;
@@ -79,7 +79,7 @@ CAmount NocksSettings::getMaximumForCurrency(std::string symbol)
 {
     if (exchangeLimits.count(symbol) == 0)
         return 0;
-    
+
     CAmount amountMaximum;
     BitcoinUnits::parse(BitcoinUnits::BTC, QString::fromStdString(exchangeLimits[symbol].second), &amountMaximum);
     return amountMaximum;
@@ -89,7 +89,7 @@ std::string NocksSettings::getMinimumForCurrencyAsString(std::string symbol)
 {
     if (exchangeLimits.count(symbol) == 0)
         return "";
-    
+
     return exchangeLimits[symbol].first;
 }
 
@@ -97,7 +97,7 @@ std::string NocksSettings::getMaximumForCurrencyAsString(std::string symbol)
 {
     if (exchangeLimits.count(symbol) == 0)
         return "";
-    
+
     return exchangeLimits[symbol].second;
 }
 
@@ -124,7 +124,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
         //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
         //We update every ~10s but if we miss a few updates it has no ill-effects
         //So if we do anything here, it should only be after multiple failiures...
-        
+
         // Call again every 30 seconds
         QTimer::singleShot( 30000, this, SLOT(pollSettings()) );
     }
@@ -138,7 +138,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
             //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
             //We update every ~10s but if we miss a few updates it has no ill-effects
             //So if we do anything here, it should only be after multiple failiures...
-            
+
             // Call again every 30 seconds
             QTimer::singleShot( 30000, this, SLOT(pollSettings()) );
         }
@@ -155,12 +155,12 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
                 std::string currencyPair = jsonObject.value( "pair" ).toString().toStdString();
                 std::string amountMinimum = jsonObject.value( "amountMinimum" ).toString().toStdString();
                 std::string amountMaximum = jsonObject.value( "amountMaximum" ).toString().toStdString();
-                
+
                 exchangeLimits[currencyPair] = std::make_pair(amountMinimum, amountMaximum);
 
-                signalUpdates = true;                
+                signalUpdates = true;
             }
-            
+
             // Call again every ~24 hours
             QTimer::singleShot( 86400000, this, SLOT(pollSettings()) );
         }

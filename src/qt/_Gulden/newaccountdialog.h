@@ -45,7 +45,7 @@ Q_SIGNALS:
       void cancel();
       void accountAdded();
       void addAccountMobile();
-    
+
 public Q_SLOTS:
 
 protected:

@@ -194,7 +194,7 @@ class CCoinsViewCache : public CCoinsViewBacked
 protected:
     /**
      * Make mutable so that we can "fill the cache" even from Get-methods
-     * declared as "const".  
+     * declared as "const".
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
@@ -217,7 +217,7 @@ public:
     }
 
     CCoinsMap& GetCachedCoins() { return cacheCoins; };
-    
+
     /**
      * Check if we have the given utxo already loaded in this cache.
      * The semantics are the same as HaveCoin(), but no calls to
@@ -276,7 +276,7 @@ public:
 
     //! Check whether all prevouts of the transaction are present in the UTXO set represented by this view
     bool HaveInputs(const CTransaction& tx) const;
-    
+
     // Side view
     void SetSiblingView(std::shared_ptr<CCoinsViewCache> pChainedWitView_) { pChainedWitView = pChainedWitView_; };
     std::shared_ptr<CCoinsViewCache> pChainedWitView;

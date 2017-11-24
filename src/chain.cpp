@@ -92,7 +92,7 @@ CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndex
 {
     CChain clone;
     clone.vChain.reserve(vChain.size());
-    
+
     CBlockIndex* pprev = nullptr;
     for (const auto index : vChain)
     {
@@ -103,7 +103,7 @@ CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndex
         if (index == retainIndexIn)
             retainIndexOut = pprev;
     }
-    
+
     return clone;
 }
 

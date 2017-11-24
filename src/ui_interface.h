@@ -102,7 +102,7 @@ public:
 
     /** A wallet has been loaded. */
     boost::signals2::signal<void (CWallet* wallet)> LoadWallet;
-    
+
     /** The core requires a wallet unlock. */
     boost::signals2::signal<void (CWallet* wallet, std::string reason)> RequestUnlock;
 

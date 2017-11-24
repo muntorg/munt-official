@@ -243,10 +243,10 @@ bool CScript::IsPoW2Witness() const
 {
     if (this->size() != 66)
         return false;
-    
+
     if ((*this)[0] != OP_0 || (*this)[1] != 64)
         return false;
-    
+
     //fixme: (GULDEN) (2.0) (POW2) Just consume the entire script to be sure?
     return true;
 }
@@ -255,7 +255,7 @@ bool CScript::IsPoW2Witness() const
 std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 {
     assert(IsPoW2Witness());
-    
+
     std::vector<unsigned char> hashWitnessBytes(this->begin()+22, this->begin()+42);
     return hashWitnessBytes;
 }
@@ -267,9 +267,9 @@ void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
     if (this->size() != 66)
         assert(0);
-        
+
     CScript::const_iterator it = begin();
-    
+
     opcodetype opcode;
     std::vector<unsigned char> item;
     if (!GetOp(it, opcode, item) || opcode != OP_0)
@@ -277,19 +277,19 @@ void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 
     if (!GetOp(it, opcode, item) || opcode != (unsigned char)64)
         assert(0);
-    
+
     std::vector<unsigned char> vchSpendingKey( begin()+2, begin()+22 );
     witness.spendingKeyID = CKeyID(uint160(vchSpendingKey));
-    
+
     std::vector<unsigned char> vchWitnessKey( begin()+22, begin()+42 );
     witness.witnessKeyID = CKeyID(uint160(vchWitnessKey));
-    
+
     std::vector<unsigned char> vchLockFromBlock( begin()+42, begin()+50 );
     witness.lockFromBlock = CScriptUInt64( vchLockFromBlock ).nNumber;
-    
+
     std::vector<unsigned char> vchLockUntilBlock( begin()+50, begin()+58 );
     witness.lockUntilBlock = CScriptUInt64( vchLockUntilBlock ).nNumber;
-    
+
     std::vector<unsigned char> vchFailCount( begin()+58, begin()+66 );
     witness.failCount = CScriptUInt64( vchFailCount ).nNumber;
 }

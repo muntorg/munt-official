@@ -39,7 +39,7 @@ Q_SIGNALS:
 
     void requestExchangeRateDialog();
     void requestAccountSettings();
-    
+
 private Q_SLOTS:
 
     void balanceChanged();

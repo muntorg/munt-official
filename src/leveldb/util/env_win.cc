@@ -684,19 +684,19 @@ Status Win32Env::RenameFile( const std::string& src, const std::string& target )
     Status sRet;
     std::string src_path = src;
     std::wstring wsrc_path;
-	ToWidePath(ModifyPath(src_path), wsrc_path);
-	std::string target_path = target;
+    ToWidePath(ModifyPath(src_path), wsrc_path);
+    std::string target_path = target;
     std::wstring wtarget_path;
-	ToWidePath(ModifyPath(target_path), wtarget_path);
+    ToWidePath(ModifyPath(target_path), wtarget_path);
 
     if(!MoveFileW(wsrc_path.c_str(), wtarget_path.c_str() ) ){
         DWORD err = GetLastError();
         if(err == 0x000000b7){
             if(!::DeleteFileW(wtarget_path.c_str() ) )
                 sRet = Status::IOError(src, "Could not rename file.");
-			else if(!::MoveFileW(wsrc_path.c_str(),
+            else if(!::MoveFileW(wsrc_path.c_str(),
                                  wtarget_path.c_str() ) )
-                sRet = Status::IOError(src, "Could not rename file.");    
+                sRet = Status::IOError(src, "Could not rename file.");
         }
     }
     return sRet;

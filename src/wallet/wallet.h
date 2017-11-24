@@ -1104,7 +1104,7 @@ public:
     }
 
     void GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount) override;
-    
+
     unsigned int GetKeyPoolSize()
     {
         AssertLockHeld(cs_wallet); // setKeyPool
@@ -1139,7 +1139,7 @@ public:
 
     //! Verify the wallet database and perform salvage if required
     static bool Verify();
-    
+
     /** 
      * Address book entry changed.
      * @note called with lock cs_wallet held.
@@ -1205,7 +1205,7 @@ GULDEN UNUSED
 
     /* Generates a new HD master key (will not be activated) */
     CPubKey GenerateNewHDMasterKey();
-    
+
     /* Set the current HD master key (will reset the chain child index counters)
        Sets the master key's version based on the current wallet version (so the
        caller must ensure the current wallet version is correct before calling
@@ -1213,8 +1213,6 @@ GULDEN UNUSED
     bool SetHDMasterKey(const CPubKey& key);
 #endif
 
-    
-        
     friend class CAccount;
 };
 

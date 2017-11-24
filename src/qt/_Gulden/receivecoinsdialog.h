@@ -60,7 +60,7 @@ public Q_SLOTS:
     void cancelRequestPayment();
     void gotoReceievePage();
     void activeAccountChanged();
-  
+
 protected:
 
 private:
@@ -85,7 +85,6 @@ private Q_SLOTS:
   #ifndef HAVE_WEBENGINE_VIEW
   void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
   #endif
-  
 };
 
 #endif // BITCOIN_QT_GULDENRECEIVECOINSDIALOG_H

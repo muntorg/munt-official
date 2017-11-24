@@ -482,7 +482,7 @@ void BitcoinGUI::createMenuBar()
     settingsMenu->addAction(optionsAction);
 
     m_pGuldenImpl->createMenusGulden();
-    
+
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
     if(walletFrame)
     {
@@ -517,7 +517,7 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
     if(_clientModel)
     {
         optionsAction->setEnabled(true);
-        
+
         // Create system tray menu (or setup the dock menu) that late to prevent users from calling actions,
         // while the client has not yet fully loaded
         createTrayIconMenu();
@@ -545,16 +545,16 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
         }
 #endif // ENABLE_WALLET
         unitDisplayControl->setOptionsModel(_clientModel->getOptionsModel());
-        
+
         OptionsModel* optionsModel = _clientModel->getOptionsModel();
         if(optionsModel)
         {
             // be aware of the tray icon disable state change reported by the OptionsModel object.
             connect(optionsModel,SIGNAL(hideTrayIconChanged(bool)),this,SLOT(setTrayIconVisible(bool)));
-        
+
             // initialize the disable state of the tray icon with the current value in the model.
             setTrayIconVisible(optionsModel->getHideTrayIcon());
-            
+
             m_pGuldenImpl->setOptionsModel(optionsModel);
         }
     } else {
@@ -899,7 +899,7 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
         float nSyncProgress = (float)count / (Checkpoints::GetLastCheckpoint(Params().Checkpoints()) ? Checkpoints::GetLastCheckpoint(Params().Checkpoints())->nHeight : 600000);
-        
+
         m_pGuldenImpl->showProgressBarLabel();
         progressBarLabel->setVisible(true);
         progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
@@ -927,7 +927,6 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 
         tooltip += QString("<br>");
         if (count>1)
-            
         {
             //tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
             tooltip += QString("<br>");
@@ -1072,17 +1071,17 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
         msg += tr("Label: %1\n").arg(label);
     else if (account.isEmpty() && !address.isEmpty())
         msg += tr("Address: %1\n").arg(address);
-    
+
     QString accountStr = "";
     if (!account.isEmpty())
         accountStr = " [" + account + "]";
-    
+
     //fixme: (GULDEN) - prevent spurious blank messages from showing - track down why these happen though.
     if (amountSent == CAmount(0) && amountReceived == CAmount(0) && type.isEmpty())
     {
         return;
     }
-    
+
     //testnet prevent spamming of mined messages
     if (IsArgSet("-testnet") && type == "Mined")
     {
@@ -1243,7 +1242,7 @@ void BitcoinGUI::showProgress(const QString &title, int nProgress)
             progressBarLabel->setVisible(true);
             progressBar->setVisible(true);
             m_pGuldenImpl->showProgressBarLabel();
-            
+
             QString tooltip = title + "<br>" + QString("%1% complete.").arg(nProgress);
             progressBarLabel->setToolTip(tooltip);
             progressBar->setToolTip(tooltip);

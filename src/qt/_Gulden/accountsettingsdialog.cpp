@@ -23,35 +23,35 @@ AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *_platformStyle
 , activeAccount( NULL )
 {
     ui->setupUi(this);
-    
+
     // Setup object names for styling
     ui->buttonDone->setObjectName("doneButton");
     ui->buttonDeleteAccount->setObjectName("deleteButton");
     ui->frameAccountSettings->setObjectName("frameAccountSettings");
     setObjectName("dialogAccountSettings");
-    
+
     // Zero out all margins so that we can handle whitespace in stylesheet instead.
     ui->labelChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
     ui->lineEditChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
     ui->labelChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
     ui->addressQRImage->setContentsMargins( 0, 0, 0, 0 );
 
-       
+
     // Hand cursor for clickable elements.
     ui->buttonDeleteAccount->setCursor( Qt::PointingHandCursor );
     ui->buttonDone->setCursor( Qt::PointingHandCursor );
-    
+
     // Hide sync-with-mobile, we only show it for mobile accounts.
     ui->frameSyncWithMobile->setVisible(false);
-    
-    
+
+
     // Connect signals
     connect(ui->buttonDeleteAccount, SIGNAL( clicked() ), this, SLOT( deleteAccount() ));
     connect(ui->buttonDone, SIGNAL( clicked() ), this, SLOT( applyChanges() ));
-    
+
     // Set initial state.
     activeAccountChanged(_activeAccount);
-    
+
     LogPrintf("AccountSettingsDialog::AccountSettingsDialog\n");
 }
 
@@ -59,9 +59,9 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
 {
     LogPrintf("AccountSettingsDialog::activeAccountChanged\n");
     disconnect(this, SLOT( showSyncQr() ));
-    
+
     activeAccount = account;
-    
+
     //Should never happen - but just in case
     if (!account)
     {
@@ -73,11 +73,11 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
     {
         ui->lineEditChangeAccountName->setVisible(true);
     }
-    
+
     if (account->m_SubType == AccountSubType::Mobi)
     {
         ui->frameSyncWithMobile->setVisible(true);
-        
+
         ui->addressQRImage->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds."));
         connect(ui->addressQRImage, SIGNAL( clicked() ), this, SLOT( showSyncQr() ));
     }
@@ -85,12 +85,12 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
     {
         ui->frameSyncWithMobile->setVisible(false);
     }
-    
+
     if (!ui->lineEditChangeAccountName->text().isEmpty())
     {
         //fixme: GULDEN - prompt user to save changes?
     }
-    
+
     ui->lineEditChangeAccountName->setText("");
     ui->lineEditChangeAccountName->setPlaceholderText( QString::fromStdString(account->getLabel()) );
 }
@@ -99,7 +99,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
 void AccountSettingsDialog::showSyncQr()
 {
     int64_t currentTime = activeAccount->getEarliestPossibleCreationTime();
-    
+
     LOCK(pactiveWallet->cs_wallet);
     std::string payoutAddress;
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
@@ -110,10 +110,10 @@ void AccountSettingsDialog::showSyncQr()
         if (!reservekey.GetReservedKey(vchPubKey))
             return;
         payoutAddress = CBitcoinAddress(vchPubKey.GetID()).ToString();
-    
+
         QString qrString = QString::fromStdString("guldensync:" + CBitcoinSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
         ui->addressQRImage->setCode(qrString);
-    
+
         disconnect(this, SLOT( showSyncQr() ));
     }
 }

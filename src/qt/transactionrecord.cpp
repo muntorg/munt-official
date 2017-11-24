@@ -161,13 +161,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
                 TransactionRecord sub(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, "",
                                 -(nDebit - nChange), nCredit - nChange));
-                
+
                 if (wtx.IsPoW2WitnessCoinBase() && sub.credit == 0 && sub.debit == 0)
                     continue;
 
                 sub.actionAccountUUID = sub.receiveAccountUUID = sub.fromAccountUUID = account->getUUID();
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
-                
+
                 parts.append(sub);
                 parts.last().involvesWatchAddress = involvesWatchAddress;   // maybe pass to TransactionRecord as constructor argument
             }
@@ -175,10 +175,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 //Handle the 'receieve' part of an internal send between two accounts
                 TransactionRecord sub(hash, nTime);
-                
+
                 //We don't bother filling in the sender details here for now
                 //The sender will get it's own transaction record and then we try 'automatically' match the two up and 'swap details' in a loop at the bottom of this function.
-                
+
                 //Fill in all the details for the receive part of the transaction.
                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
@@ -292,7 +292,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         sub.actionAccountUUID = sub.fromAccountUUID = account->getUUID();
                         sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
                     }
-                    
+
                     if (wtx.IsPoW2WitnessCoinBase())
                     {
                         sub.type = TransactionRecord::GeneratedWitness;
@@ -308,7 +308,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
         }
     }
-    
+
     // A bit hairy/gross, but try to tie up sender/receiver for internal transfer between accounts.
     //fixme: Can this try harder?
     for (TransactionRecord& record : parts)

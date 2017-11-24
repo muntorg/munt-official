@@ -39,7 +39,7 @@ void HtmlDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     QAbstractTextDocumentLayout::PaintContext ctx;
 
     ctx.palette.setColor(QPalette::Text, optionV4.palette.color(QPalette::Normal, QPalette::Text));
-    
+
     // Highlighting text if item is selected
     if (optionV4.state & QStyle::State_Selected)
         ctx.palette.setColor(QPalette::Text, optionV4.palette.color(QPalette::Active, QPalette::HighlightedText));
@@ -71,7 +71,7 @@ ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidg
 {
     ui->setupUi(this);
     ui->ExchangeRateTable->setModel(tableModel);
-    
+
     ui->ExchangeRateTable->horizontalHeader()->hide();
     ui->ExchangeRateTable->verticalHeader()->hide();
     ui->ExchangeRateTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -79,10 +79,10 @@ ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidg
     ui->ExchangeRateTable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->ExchangeRateTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->ExchangeRateTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    
+
     HtmlDelegate* delegate = new HtmlDelegate();
     ui->ExchangeRateTable->setItemDelegate(delegate);
-    
+
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 }
 
@@ -94,7 +94,7 @@ ExchangeRateDialog::~ExchangeRateDialog()
 void ExchangeRateDialog::setOptionsModel(OptionsModel* model)
 {
     optionsModel = model;
-    
+
     const QString& localCurrency = optionsModel->guldenSettings->getLocalCurrency();
     int size = ui->ExchangeRateTable->model()->rowCount();
     for (int i = 0; i < size; i++)
@@ -107,8 +107,8 @@ void ExchangeRateDialog::setOptionsModel(OptionsModel* model)
             break;
         }
     }
-        
-    
+
+
     connect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),  SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)));
 }
 

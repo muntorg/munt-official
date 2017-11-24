@@ -47,7 +47,7 @@ enum AccountType
     ShadowChild = 2,   // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
     Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
-    
+
 enum AccountSubType
 {
     Desktop = 0,       // Standard desktop account.
@@ -57,7 +57,7 @@ enum AccountSubType
 
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex = 100000;
-    
+
 
 class CHDSeed
 {
@@ -78,12 +78,12 @@ public:
     {
         //fixme: Check if any cleanup needed here?
     }
-    
+
     void Init();
     void InitReadOnly();
     CAccountHD* GenerateAccount(AccountSubType type, CWalletDB* Db);
 
-    
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -93,7 +93,7 @@ public:
         READWRITE(nVersion);
         if (nVersion > 1000000)
             nVersion = 1;
-        
+
         if (ser_action.ForRead())
         {
             int type;
@@ -110,7 +110,7 @@ public:
             std::string sUUID = boost::uuids::to_string(m_UUID);
             READWRITE(sUUID);
         }
-        
+
         READWRITE(m_nAccountIndex);
         READWRITE(m_nAccountIndexMobi);
         m_nAccountIndexWitness = 200000;
@@ -118,11 +118,11 @@ public:
         {
             READWRITE(m_nAccountIndexWitness);
         }
-        
+
         READWRITE(masterKeyPub);
         READWRITE(purposeKeyPub);
         READWRITE(cointypeKeyPub);
-        
+
         READWRITE(encrypted);
         if(encrypted)
         {
@@ -148,8 +148,8 @@ public:
         {
         }
     }
-     
-    std::string getUUID() const;    
+
+    std::string getUUID() const;
     SecureString getMnemonic();
     SecureString getPubkey();
 
@@ -159,15 +159,15 @@ public:
     virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn);
     virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn);
     virtual bool IsReadOnly() { return m_readOnly; };
-    
+
     // What type of seed this is (BIP32 or BIP44)
     SeedType m_type;
-    
+
 protected:
     CAccountHD* GenerateAccount(int nAccountIndex);
-    
+
     // Unique seed identifier
-    boost::uuids::uuid m_UUID;    
+    boost::uuids::uuid m_UUID;
 
     // Index of next account to generate (normal accounts)
     int m_nAccountIndex;
@@ -180,7 +180,7 @@ protected:
     CExtPubKey masterKeyPub;  //hd master key (m)      - BIP32 and BIP44
     CExtPubKey purposeKeyPub; //key at m/44'           - BIP44 only
     CExtPubKey cointypeKeyPub;//key at m/44'/87'       - BIP44 only
-    
+
     bool encrypted;
     // These members are only valid when the account is unlocked/unencrypted.
     SecureString unencryptedMnemonic;
@@ -188,9 +188,9 @@ protected:
     CExtKey purposeKeyPriv; //key at m/44'           - BIP44 only
     CExtKey cointypeKeyPriv;//key at m/44'/87'       - BIP44 only
     CKeyingMaterial vMasterKey;//Memory only.
-    
+
     bool m_readOnly;
-    
+
     // Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> encryptedMnemonic;
     std::vector<unsigned char> masterKeyPrivEncrypted;
@@ -209,15 +209,15 @@ public:
     CPubKey vchPubKey;
 
     CAccount();
-    void SetNull();    
-       
+    void SetNull();
+
     //fixme: (GULDEN) (CLEANUP)
     virtual void GetKey(CExtKey& childKey, int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
     virtual bool IsMobi() const {return m_SubType == Mobi;}
     virtual bool IsPoW2Witness() const {return m_SubType == PoW2Witness;}
-       
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -251,7 +251,7 @@ public:
             }
         }
         READWRITE(earliestPossibleCreationTime);
-        
+
         // Read will fail on older wallets
         try
         {
@@ -261,8 +261,8 @@ public:
         {
         }
     }
-        
-    
+
+
     virtual bool HaveKey(const CKeyID &address) const override;
     virtual bool HaveWatchOnly(const CScript &dest) const override;
     virtual bool HaveWatchOnly() const override;
@@ -285,21 +285,21 @@ public:
 
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey) override {assert(0);};//Must never be called directly
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey) override {assert(0);};//Must never be called directly
-    
+
     virtual bool HaveWalletTx(const CTransaction& tx);
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain);
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain);
     void AddChild(CAccount* childAccount);
-    
+
     unsigned int GetKeyPoolSize();
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
     std::string getUUID() const;
     void setUUID(const std::string& stringUUID);
     std::string getParentUUID() const;
-    
+
     bool IsReadOnly() { return m_readOnly; };
-    
+
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
     mutable CCriticalSection cs_keypool;
@@ -307,7 +307,7 @@ public:
     std::set<int64_t> setKeyPoolExternal;
     AccountType m_Type;
     AccountSubType m_SubType;
-    
+
     void possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db);
     uint64_t getEarliestPossibleCreationTime();
 protected:
@@ -316,9 +316,9 @@ protected:
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
     uint64_t earliestPossibleCreationTime;
-    
+
     bool m_readOnly;
-    
+
     CKeyingMaterial vMasterKey;//Memory only.
     friend class CGuldenWallet;
     friend class CWallet;
@@ -335,7 +335,7 @@ public:
     CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID);
     //For serialization only.
     CAccountHD(){};
-    
+
     virtual void GetKey(CExtKey& childKey, int nChain) override;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
@@ -355,8 +355,8 @@ public:
     std::string getSeedUUID() const;
     CExtKey* GetAccountMasterPrivKey();
     SecureString GetAccountMasterPubKeyEncoded();
-    
-    
+
+
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
@@ -366,7 +366,7 @@ public:
         if (nVersion > 1000000)
             nVersion = 1;
 
-        
+
         if (ser_action.ForRead())
         {
             std::string sUUID;
@@ -407,17 +407,17 @@ private:
     uint32_t m_nIndex;
     mutable uint32_t m_nNextChildIndex;
     mutable uint32_t m_nNextChangeIndex;
-    
+
     //These members are always valid.
     CExtPubKey primaryChainKeyPub;
     CExtPubKey changeChainKeyPub;
     bool encrypted;
-    
+
     //These members are only valid when the account is unlocked/unencrypted.
     CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/0' (bip44)
     CExtKey primaryChainKeyPriv;    //key at m/0'/0 (bip32) or m/44'/87'/0'/0 (bip44)
     CExtKey changeChainKeyPriv;     //key at m/0'/1 (bip32) or m/44'/87'/0'/1 (bip44)
-    
+
     //Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> accountKeyPrivEncrypted;
     std::vector<unsigned char> primaryChainKeyEncrypted;

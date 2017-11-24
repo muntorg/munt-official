@@ -278,9 +278,9 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             if(rcp.destinationPoW2Witness.lockUntilBlock != 0)
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
-                
+
                 if (IsPow2Phase2Active(chainActive.Tip(), Params()) || IsPow2Phase3Active(chainActive.Tip(), Params()))
-                {                
+                {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
                     CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
                     vecSend.push_back(recipient);
@@ -570,7 +570,7 @@ static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAcc
 {
     LogPrintf("NotifyAccountDeleted\n");
     if (wallet)
-    {   
+    {
         QMetaObject::invokeMethod(walletmodel, "accountDeleted", Q_ARG(CAccount*, account));
         if (account == walletmodel->getActiveAccount())
         {
@@ -583,7 +583,7 @@ static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAcc
             {
                 if (iter.second->m_Type == AccountType::Normal)
                 {
-                    walletmodel->setActiveAccount(iter.second);   
+                    walletmodel->setActiveAccount(iter.second);
                     return;
                 }
             }

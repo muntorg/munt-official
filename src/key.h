@@ -150,7 +150,7 @@ struct CExtKey {
     unsigned int nChild;
     ChainCode chaincode;
     CKey key;
-    
+
     const CKey& GetKey() const { return key; };
     CKey& GetMutableKey() { return key; };
 

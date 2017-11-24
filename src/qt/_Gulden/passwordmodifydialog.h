@@ -34,7 +34,7 @@ public:
 
 Q_SIGNALS:
     void dismiss();
-    
+
 public Q_SLOTS:
 
 protected:

@@ -38,9 +38,9 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     inline void setMap(std::map<std::string, std::string>* currenciesMap) { m_currenciesMap = currenciesMap; }
-    
+
     void setBalance(CAmount balanceNLG);
-    
+
 public Q_SLOTS:
     void balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
@@ -65,7 +65,7 @@ public:
 
     CAmount convertGuldenToForex(CAmount guldenAmount, std::string forexCurrencyCode);
     CAmount convertForexToGulden(CAmount forexAmount, std::string forexCurrencyCode);
-    
+
     CurrencyTableModel* GetCurrencyTableModel();
 
 Q_SIGNALS:

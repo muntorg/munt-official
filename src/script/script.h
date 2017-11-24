@@ -211,7 +211,7 @@ class CScriptUInt64
         CScriptUInt64(uint64_t nNumber_)
         {
             nNumber = nNumber_;
-            
+
             vchNumber.resize(8);
             for (auto iter = vchNumber.begin(); iter != vchNumber.end(); ++iter)
             {
@@ -223,7 +223,7 @@ class CScriptUInt64
         {
             assert(vchNumber_.size() == 8);
             nNumber = 0;
-            
+
             for (unsigned int idx = 0; idx < vchNumber_.size(); ++idx)
             {
                 nNumber |= ((uint64_t)(vchNumber_[idx]) << 8*idx);
@@ -509,7 +509,7 @@ public:
         assert(!"Warning: Pushing a CScript onto a CScript with << is probably not intended, use + to concatenate!");
         return *this;
     }
-    
+
     CScript& operator<<(const CScriptUInt64& b)
     {
         insert(end(), b.vchNumber.begin(), b.vchNumber.end());
@@ -667,7 +667,7 @@ public:
     bool IsPayToScriptHash() const;
     bool IsPayToWitnessScriptHash() const;
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
-    
+
     bool IsPoW2Witness() const;
     std::vector<unsigned char> GetPow2WitnessHash() const;
     void ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const;

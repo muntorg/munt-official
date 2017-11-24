@@ -29,7 +29,7 @@ class QSettings;
 class GuldenOptionsModel : public QObject
 {
     Q_OBJECT
-    
+
 public:
     GuldenOptionsModel( OptionsModel* parent );
     ~GuldenOptionsModel();
@@ -39,7 +39,7 @@ public:
 private:
     OptionsModel* m_pImpl;
     QString localCurrency;
-    
+
 Q_SIGNALS:
     void localCurrencyChanged(QString currency);
 };
@@ -102,10 +102,10 @@ public:
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);
     bool isRestartRequired();
-    
+
     GuldenOptionsModel* guldenSettings;
     friend class GuldenOptionsModel;
-    
+
     void setTicker(CurrencyTicker* ticker)
     {
         currencyTicker = ticker;
@@ -114,7 +114,7 @@ public:
     {
         return currencyTicker;
     }
-    
+
     void setNocksSettings(NocksSettings* settings)
     {
         nocksSettings = settings;
@@ -135,7 +135,7 @@ private:
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */
     QString strOverriddenByCommandLine;
-    
+
     CurrencyTicker* currencyTicker;
     NocksSettings* nocksSettings;
 

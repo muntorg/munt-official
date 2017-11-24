@@ -785,7 +785,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         else
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid sighash param");
     }
-    
+
     SignType signType = Spend;
 
     if (request.params.size() > 4 && !request.params[4].isNull()) {

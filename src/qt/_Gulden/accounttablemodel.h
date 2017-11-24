@@ -23,7 +23,7 @@ public:
         ActiveAccountRole,
         SelectedAccountRole
     };
-    
+
     static const QString Normal;
     static const QString Active;
     static const QString Inactive;
@@ -36,7 +36,7 @@ public:
 private:
     CWallet* m_wallet;
     CAccount* activeAccount;
-    
+
 public Q_SLOTS:
     void activeAccountChanged(CAccount*);
     void accountAdded(CAccount*);

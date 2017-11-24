@@ -217,7 +217,7 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chain
 
     if (!pIndex)
         return false;
-    
+
     return IsPow2Phase3Active(pIndex, chainparams) || IsPow2Phase4Active(pIndex, chainparams) || IsPow2Phase5Active(pIndex, chainparams);
 }
 

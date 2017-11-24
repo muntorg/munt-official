@@ -87,7 +87,7 @@ struct VersionBitsCache
                 assert(0);
         }
     }
-    
+
     ThresholdConditionCache cachespow[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
     ThresholdConditionCache cacheswitness[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
     ThresholdConditionCache cachescombined[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];

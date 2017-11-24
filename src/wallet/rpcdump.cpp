@@ -121,9 +121,9 @@ UniValue importprivkey(const JSONRPCRequest& request)
     std::string strLabel = "";
     if (request.params.size() > 2)
         strLabel = request.params[2].get_str();
-    
+
     CAccount* forAccount = AccountFromValue(pwallet, request.params[1], true);
-    
+
     if (forAccount->IsHD())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot import a privkey into an HD account.");
 
@@ -266,7 +266,7 @@ UniValue importaddress(const JSONRPCRequest& request)
     std::string strLabel = "";
     //fixme: (FUT) (1.6.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
-    
+
     if (request.params.size() > 1)
         strLabel = request.params[1].get_str();
 
@@ -360,7 +360,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
 
     wtx.nIndex = txnIndex;
     wtx.hashBlock = merkleBlock.header.GetHashPoW2();
-    
+
     LOCK2(cs_main, pwallet->cs_wallet);
 
     if (pwallet->IsMine(wtx)) {
@@ -415,7 +415,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
         return NullUniValue;
     }
-    
+
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
         throw std::runtime_error(
             "importpubkey \"pubkey\" ( \"label\" rescan )\n"
@@ -436,7 +436,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
 
     //fixme: (FUT) (1.6.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
-    
+
     std::string strLabel = "";
     if (request.params.size() > 1)
         strLabel = request.params[1].get_str();
@@ -496,10 +496,10 @@ UniValue importwallet(const JSONRPCRequest& request)
 
     if (fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Importing wallets is disabled in pruned mode");
-    
+
     CAccount* forAccount = AccountFromValue(pwallet, request.params[1], true);
     LOCK2(cs_main, pwallet->cs_wallet);
-    
+
     if (forAccount->IsHD())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot import a privkey into an HD account.");
 
@@ -557,7 +557,7 @@ UniValue importwallet(const JSONRPCRequest& request)
             }
         }
         LogPrintf("Importing %s...\n", CBitcoinAddress(keyid).ToString());
-        
+
         if (!pwallet->AddKeyPubKey(key, pubkey, *forAccount, KEYCHAIN_EXTERNAL)) {
             fGood = false;
             continue;
@@ -619,7 +619,7 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
     CKey vchSecret;
-    
+
     for(const auto& accountIter : pwallet->mapAccounts)
     {
         if (accountIter.second->HaveKey(keyID))
@@ -672,7 +672,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     file.open(filepath.string().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
-    
+
     for(const auto& accountIter : pwallet->mapAccounts)
     {
         if (accountIter.second->IsHD())
@@ -894,7 +894,7 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                     //fixme: (GULDEN) (MERGE)
                     /*
                     if (!pwallet->AddKeyPubKey(key, pubkey, *forAccount, KEYCHAIN_EXTERNAL)) {
-                            throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");                    
+                            throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
                     }*/
                     pwallet->UpdateTimeFirstKey(timestamp);
                 }

@@ -54,14 +54,14 @@ public:
     CGuldenWallet() : dbw(new CWalletDBWrapper()){};
     CGuldenWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in)){};
     virtual ~CGuldenWallet(){};
-    
+
     //Members that are shared with CWallet.
     mutable CCriticalSection cs_wallet;
     int64_t nTimeFirstKey;
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;
-    
-    
+
+
     virtual bool Lock() const
     {
         LOCK(cs_wallet);
@@ -70,7 +70,7 @@ public:
             didDelayLock = true;
             return true;
         }
-        
+
         bool ret = true;
         for (auto accountPair : mapAccounts)
         {
@@ -84,7 +84,7 @@ public:
         }
         return ret;
     }
-    
+
     virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) const
     {
         LOCK(cs_wallet);
@@ -101,8 +101,8 @@ public:
         }
         return ret;
     }
-    
-    
+
+
     virtual bool IsCrypted() const
     {
         for (auto accountPair : mapAccounts)
@@ -117,8 +117,8 @@ public:
         }
         return false;
     }
-    
-    
+
+
     virtual bool IsLocked() const
     {
         for (auto accountPair : mapAccounts)
@@ -133,7 +133,7 @@ public:
         }
         return false;
     }
-        
+
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const
     {
         LOCK(cs_wallet);
@@ -144,8 +144,8 @@ public:
         }
         return false;
     }
-    
-    
+
+
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut)
     {
         LOCK(cs_wallet);
@@ -156,8 +156,8 @@ public:
         }
         return false;
     }
-    
-    
+
+
     virtual bool HaveWatchOnly(const CScript &dest) const
     {
         LOCK(cs_wallet);
@@ -168,7 +168,7 @@ public:
         }
         return false;
     }
-    
+
     virtual bool HaveWatchOnly() const
     {
         LOCK(cs_wallet);
@@ -179,7 +179,7 @@ public:
         }
         return false;
     }
-    
+
     virtual bool HaveCScript(const CScriptID &hash)
     {
         LOCK(cs_wallet);
@@ -190,7 +190,7 @@ public:
         }
         return false;
     }
-    
+
     virtual bool GetCScript(const CScriptID &hash, CScript& redeemScriptOut)
     {
         LOCK(cs_wallet);
@@ -201,8 +201,8 @@ public:
         }
         return false;
     }
-    
-    
+
+
     virtual bool HaveKey(const CKeyID &address) const
     {
         LOCK(cs_wallet);
@@ -213,7 +213,7 @@ public:
         }
         return false;
     }
-    
+
     virtual bool HaveWatchOnly(const CScript &dest)
     {
         LOCK(cs_wallet);
@@ -226,22 +226,22 @@ public:
     }
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain);
     virtual bool LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount);
-    
+
     virtual void MarkKeyUsed(CKeyID keyID, uint64_t usageTime);
-    
+
     isminetype IsMine(const CKeyStore &keystore, const CTxIn& txin) const;
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time);
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time);
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time);
-    
+
     virtual void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
     virtual void addAccount(CAccount* account, const std::string& newName);
     virtual void deleteAccount(CAccount* account);
-    
+
     virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType);
     virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
     virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
-    
+
     virtual void setActiveAccount(CAccount* newActiveAccount);
     virtual CAccount* getActiveAccount();
     virtual void setActiveSeed(CHDSeed* newActiveSeed);
@@ -250,35 +250,35 @@ public:
     virtual CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
     virtual CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
     virtual CHDSeed* getActiveSeed();
-    
+
     //! for wallet upgrade
     virtual void ForceRewriteKeys(CAccount& forAccount);
-    
+
     // The 'shadow pool thread' sets delay lock true if it had a backlog of work it wants to do on the unlocked wallet
     bool delayLock;
     bool wantDelayLock;
     mutable bool didDelayLock;
-    
-    
+
+
     std::map<std::string, CHDSeed*> mapSeeds;
     std::map<std::string, CAccount*> mapAccounts;
     std::map<std::string, std::string> mapAccountLabels;
     std::map<uint256, CWalletTx> mapWallet;
-    
+
     CAccount* activeAccount;
     CHDSeed* activeSeed;
-    
+
     // Account changed (name change)
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountNameChanged;
-    
+
     // New account added to the wallet
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountAdded;
-    
+
     // Account marked as deleted.
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountDeleted;
-    
+
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyUpdateAccountList;
-    
+
     // Currently active account changed
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyActiveAccountChanged;
 };

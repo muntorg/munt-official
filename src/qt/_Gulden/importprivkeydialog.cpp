@@ -26,7 +26,7 @@ ImportPrivKeyDialog::ImportPrivKeyDialog(QWidget *parent) :
     ui->setupUi(this);
 
     GUIUtil::setupPrivKeyWidget(ui->privKeyEdit, this);
-    
+
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN);
@@ -34,14 +34,14 @@ ImportPrivKeyDialog::ImportPrivKeyDialog(QWidget *parent) :
     ui->buttonBox->button(QDialogButtonBox::Reset)->setCursor(Qt::PointingHandCursor);
     ui->buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE_NOMARGIN);
     QObject::connect(ui->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), this, SLOT(reject()));
-    
+
     QFrame* horizontalLine = new QFrame(this);
     horizontalLine->setFrameStyle(QFrame::HLine);
     horizontalLine->setFixedHeight(1);
     horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
     ui->verticalLayout->insertWidget(1, horizontalLine);
-    
+
     //Need a minimum height otherwise our horizontal line gets hidden.
     setMinimumSize(300,200);
 }
@@ -57,10 +57,10 @@ void ImportPrivKeyDialog::accept()
 {
     CBitcoinSecret vchSecret;
     bool fGood = vchSecret.SetString(getPrivKey().c_str());
-    
+
     if (!fGood)
         return;
-    
+
     QDialog::accept();
 }
 

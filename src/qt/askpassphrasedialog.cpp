@@ -34,16 +34,16 @@ AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent) :
     fCapsLock(false)
 {
     ui->setupUi(this);
-    
+
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
-    
+
     QFrame* horizontalLine = new QFrame(this);
     horizontalLine->setFrameStyle(QFrame::HLine);
     horizontalLine->setFixedHeight(1);
     horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
     ui->verticalLayout->insertWidget(2, horizontalLine);
-    
+
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN);

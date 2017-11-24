@@ -36,7 +36,7 @@ public:
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();
-    
+
     void update();
 
     void setValue(const SendCoinsRecipient &value);
@@ -48,11 +48,11 @@ public:
     QWidget *setupTabChain(QWidget *prev);
 
     void setFocus();
-    
+
     bool ShouldShowEditButton() const;
     bool ShouldShowClearButton() const;
     bool ShouldShowDeleteButton() const;;
-    
+
     void deleteAddressBookEntry();
     void editAddressBookEntry();
 
@@ -86,7 +86,7 @@ private:
     Ui::GuldenSendCoinsEntry *ui;
     WalletModel *model;
     const PlatformStyle *platformStyle;
-    
+
     QSortFilterProxyModel* proxyModelRecipients;
     QSortFilterProxyModel* proxyModelAddresses;
 

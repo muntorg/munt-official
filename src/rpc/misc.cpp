@@ -151,7 +151,7 @@ public:
         }
         return obj;
     }
-    
+
     UniValue operator()(const CKeyID &keyID) const {
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
@@ -356,7 +356,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
         ;
         throw std::runtime_error(msg);
     }
-    
+
     //fixme: (FUT) (1.6.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 

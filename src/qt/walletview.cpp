@@ -49,9 +49,9 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     overviewPage = new OverviewPage(platformStyle);
 
     setContentsMargins( 0, 0, 0, 0);
-    
+
     transactionsPage = new QWidget(this);
-    
+
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(platformStyle, this);
@@ -68,13 +68,12 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
     vbox->addStretch(1);
-    
+
     transactionsPage->setLayout(vbox);
     transactionsPage->setContentsMargins( 0, 0, 0, 0);
     vbox->setContentsMargins( 0, 0, 0, 0);
     vbox->setSpacing(0);
-   
-    
+
 
     receiveCoinsPage = new ReceiveCoinsDialog(platformStyle);
     sendCoinsPage = new SendCoinsDialog(platformStyle);
@@ -191,8 +190,8 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
         QModelIndex index = ttm->index(idx, 0, parent);
         QString address = ttm->data(index, TransactionTableModel::AddressRole).toString();
         QString label = ttm->data(index, TransactionTableModel::LabelRole).toString();
-        
-        
+
+
         QString accountUUID = ttm->data(index, TransactionTableModel::AccountRole).toString();
         if (fShowChildAccountsSeperately)
         {
@@ -200,13 +199,12 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
             if (!accountParentUUID.isEmpty())
                 accountUUID = accountParentUUID;
         }
-        
+
         QString account;
         if(!accountUUID.isEmpty())
         {
             account = walletModel->getAccountLabel(accountUUID.toStdString());
         }
-        
 
         Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, account, label);
     }
@@ -355,7 +353,7 @@ void WalletView::showProgress(const QString &title, int nProgress)
         progressDialog->setCancelButton(0);
         progressDialog->setAutoClose(false);
         progressDialog->setValue(0);
-        
+
         //fixme: Minimum size
         progressDialog->setMinimumSize(300,100);
     }

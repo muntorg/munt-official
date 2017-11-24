@@ -251,7 +251,7 @@ void Shutdown()
         pcoinsdbview = NULL;
         delete pblocktree;
         pblocktree = NULL;
-        
+
         //Already flushed to disk by FlushStateToDisk, and already deleted by shared_ptr in pcoinsTip.
         ppow2witTip = nullptr;
         delete ppow2witcatcher;
@@ -539,13 +539,13 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcserialversion", strprintf(_("Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)"), DEFAULT_RPC_SERIALIZE_VERSION));
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(_("Set the number of threads to service RPC calls (default: %d)"), DEFAULT_HTTP_THREADS));
     strUsage += HelpMessageOpt("-rpconlylistsecuredtransactions=<bool>", strprintf(_("When enabled RPC listtransactions command only returns transactions that have been secured by a checkpoint and therefore are safe from double spend (default: %u)"), true));
-    
+
     strUsage += HelpMessageGroup(_("Gulden developer options:"));
     strUsage += HelpMessageOpt("-genkeypair", _("Generate a random public/private keypair for use with alert system and other similar functionality."));
     strUsage += HelpMessageOpt("-setwindowtitle", _("Change the window title name, useful for distinguishing multiple program instances during testing."));
     strUsage += HelpMessageOpt("-coinbasesignature", _("Insert value into coinbase of generated (mined or witnessed) blocks, useful during testing."));
     strUsage += HelpMessageOpt("-accountpool", _("Use to increase the default account pool look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)"));
-    
+
     if (showDebug) {
         strUsage += HelpMessageOpt("-rpcworkqueue=<n>", strprintf("Set the depth of the work queue to service RPC calls (default: %d)", DEFAULT_HTTP_WORKQUEUE));
         strUsage += HelpMessageOpt("-rpcservertimeout=<n>", strprintf("Timeout during HTTP requests (default: %d)", DEFAULT_HTTP_SERVER_TIMEOUT));
@@ -566,7 +566,7 @@ std::string LicenseInfo()
            "\n" +
            "\n" +
            _("This is experimental software.") + "\n" +
-           
+
            strprintf(_("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard."), "<https://www.openssl.org>") +
            "\n";
 }
@@ -1266,7 +1266,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         for (int i=0; i<nScriptCheckThreads-1; i++)
             threadGroup.create_thread(&ThreadScriptCheck);
     }
-    
+
     //Gulden - private key for checkpoint system.
     if (IsArgSet("-checkpointkey"))
     {
@@ -1308,9 +1308,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (!CWallet::Verify())
         return false;
 #endif
-    
+
     StartShadowPoolManagerThread(threadGroup);
-    
+
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections
     // until the very end ("start node") as the UTXO/block state
@@ -1514,17 +1514,17 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 pcoinsdbview = new CCoinsViewDB(nCoinDBCache, false, fReindex || fReindexChainState);
                 pcoinscatcher = new CCoinsViewErrorCatcher(pcoinsdbview);
                 pcoinsTip = new CCoinsViewCache(pcoinscatcher);
-                
+
                 delete ppow2witdbview;
                 delete ppow2witcatcher;
                 ppow2witTip = nullptr;
-                
+
                 ppow2witdbview = new CWitViewDB(nCoinDBCache, false, fReindex || fReindexChainState);
                 ppow2witcatcher = new CCoinsViewErrorCatcher(ppow2witdbview);
                 ppow2witTip = std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(ppow2witcatcher));
-                
+
                 pcoinsTip->SetSiblingView(ppow2witTip);
-                
+
 
                 if (fReindex) {
                     pblocktree->WriteReindexing(true);

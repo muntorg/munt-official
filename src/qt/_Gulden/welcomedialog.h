@@ -36,7 +36,7 @@ public:
     void showEvent(QShowEvent *ev);
 Q_SIGNALS:
     void loadWallet();
-    
+
 public Q_SLOTS:
     void recoverWallet();
     void processRecoveryPhrase();
@@ -53,7 +53,7 @@ private:
     QMovie* loadingAnimation;
 
 private Q_SLOTS:
-      
+
 };
 
 #endif // GULDEN_QT_WELCOMEDIALOG_H

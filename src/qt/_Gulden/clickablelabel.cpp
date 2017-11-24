@@ -13,14 +13,14 @@ ClickableLabel::ClickableLabel( QWidget * parent )
 {
     setContentsMargins(0, 0, 0, 0);
     setIndent(0);
-    
+
     setProperty("hover", QVariant(false));
     setProperty("checked", QVariant(false));
     setProperty("pressed", QVariant(false));
-    
+
     mouseIn = false;
 }
- 
+
 void ClickableLabel::mousePressEvent( QMouseEvent * event ) 
 {
     setProperty("pressed", QVariant(true));

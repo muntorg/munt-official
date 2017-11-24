@@ -96,7 +96,7 @@ struct MemoryCheck {
     };
     ~MemoryCheck(){
         fake_allocated_memory -= b;
-    
+
     };
     void swap(MemoryCheck& x) { std::swap(b, x.b); };
 };

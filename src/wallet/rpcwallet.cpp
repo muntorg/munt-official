@@ -113,10 +113,10 @@ void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
 CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
 {
     std::string strAccountUUIDOrLabel = value.get_str();
-          
+
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    
+
     if (strAccountUUIDOrLabel.empty())
     {
         if (!pwallet->getActiveAccount())
@@ -125,7 +125,7 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
         }
         return pwallet->getActiveAccount();
     }
-    
+
     CAccount* foundAccount = NULL;
     if (pwallet->mapAccounts.find(strAccountUUIDOrLabel) != pwallet->mapAccounts.end())
     {
@@ -142,10 +142,10 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
             foundAccount = accountIter.second;
         }
     }
-    
+
     if (!foundAccount)
         throw JSONRPCError(RPC_WALLET_INVALID_ACCOUNT_NAME, "Not a valid account UUID or label.");
-    
+
     return foundAccount;
 }
 
@@ -255,14 +255,14 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
             + HelpExampleCli("getrawchangeaddress", "")
             + HelpExampleRpc("getrawchangeaddress", "")
        );
-        
+
     DS_LOCK2(cs_main, pwallet->cs_wallet);
     CAccount* fromAccount;
     if (request.params.size() > 0)
         fromAccount = AccountFromValue(pwallet, request.params[0], true);
     else
         fromAccount = AccountFromValue(pwallet, UniValue(""), true);
-    
+
     if (!fromAccount)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "No active account for request.");
 
@@ -271,7 +271,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
         pwallet->TopUpKeyPool();
     }
 
-    
+
     CReserveKey reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
@@ -362,7 +362,7 @@ UniValue getaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
 
     UniValue jsonGroupings(UniValue::VARR);
-    
+
     //fixme: (GULDEN) (WATCHONLY)
     for(const auto& accountIter : pwallet->mapAccounts)
     {
@@ -376,7 +376,7 @@ UniValue getaccount(const JSONRPCRequest& request)
             jsonGroupings.push_back(jsonGrouping);
         }
     }
-    
+
     return jsonGroupings;
 }
 
@@ -411,7 +411,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     // Find all addresses that have the given account and are not in the key pool
     std::set<CKeyID> setAddress;
     fromAccount->GetKeys(setAddress);
-    
+
     CWalletDB walletdb(*pwallet->dbw);
     for (const auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
     {
@@ -421,17 +421,17 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
         {
             if (!walletdb.ReadPool(keyIndex, keypoolentry))
                 throw std::runtime_error(std::string(__func__) + ": read failed");
-            
+
             if ( setAddress.find(keypoolentry.vchPubKey.GetID()) != setAddress.end() )
             {
                 setAddress.erase(setAddress.find(keypoolentry.vchPubKey.GetID()));
             }
         }
     }
-    
+
     UniValue ret(UniValue::VARR);
     for(const auto& key : setAddress)
-    {   
+    {
         ret.push_back(CBitcoinAddress(key).ToString());
     }
     return ret;
@@ -443,7 +443,7 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
 
     if (fromAccount->IsReadOnly())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Can't send from a read only account");
-        
+
     // Check amount
     if (nValue <= 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
@@ -547,7 +547,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
     #else
     LOCK(cs_main);
     #endif
-    
+
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
@@ -577,7 +577,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
         );
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
-    
+
     CBitcoinAddress address(request.params[1].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
@@ -884,7 +884,7 @@ UniValue getbalance(const JSONRPCRequest& request)
 
     if (request.params.size() == 0)
         return ValueFromAmount(pwallet->GetBalance());
-    
+
     /*
     const std::string& account_param = request.params[0].get_str();
     const std::string* account = account_param != "*" ? &account_param : nullptr;
@@ -893,7 +893,7 @@ UniValue getbalance(const JSONRPCRequest& request)
     int nMinDepth = 1;
     if (request.params.size() > 1)
         nMinDepth = request.params[1].get_int();
-        
+
     bool includeWatchOnly = false;
     if (request.params.size() > 2)
         includeWatchOnly = request.params[2].get_bool();
@@ -954,18 +954,18 @@ UniValue movecmd(const JSONRPCRequest& request)
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CAccount* toAccount = AccountFromValue(pwallet, request.params[1], true);
-    
+
     if (fromAccount->getUUID() == toAccount->getUUID())
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("From and to account are the same"));
     }
-    
+
     std::string strComment = "";
     int nMinDepth = 0;
         nMinDepth = request.params[3].get_int();
     if (request.params.size() > 4)
         strComment = request.params[4].get_str();
-    
+
     bool subtractFeeFromAmount = false;
     std::string fromAccountUUID = fromAccount->getUUID();
     CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
@@ -977,7 +977,7 @@ UniValue movecmd(const JSONRPCRequest& request)
     }
     else
         nAmount = AmountFromValue(request.params[2]);
-    
+
     if (nAmount <= 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
 
@@ -992,17 +992,17 @@ UniValue movecmd(const JSONRPCRequest& request)
     wtx.strFromAccount = fromAccount->getUUID();
     if (!strComment.empty())
         wtx.mapValue["comment"] = request.params[4].get_str();
-    
-    
+
+
     CReserveKey receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!receiveKey.GetReservedKey(vchPubKey))
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
-    
+
     SendMoney(pwallet, fromAccount, vchPubKey.GetID(), nAmount, subtractFeeFromAmount, wtx);
 
     receiveKey.KeepKey();
-    
+
     return true;
 }
 
@@ -1235,7 +1235,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
         ;
         throw std::runtime_error(msg);
     }
-    
+
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
     /*DS_LOCK2(cs_main, pwallet->cs_wallet);
@@ -1267,7 +1267,7 @@ public:
 
     //fixme: (GULDEN) (PoW2) (2.0) - Is this needed
     bool operator()(const CPoW2WitnessDestination &dest) const { return false; }
-    
+
     bool operator()(const CKeyID &keyID) {
         CPubKey pubkey;
         if (pwallet) {
@@ -1330,7 +1330,7 @@ UniValue addwitnessaddress(const JSONRPCRequest& request)
         ;
         throw std::runtime_error(msg);
     }
-    
+
     throw std::runtime_error("segwit not yet enabled.");
 
     {
@@ -1426,16 +1426,16 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
     {
         if (accountIter.second->m_Type == AccountType::Shadow)
             continue;
-        
+
         std::string accountUUID = accountIter.second->getUUID();
         std::string accountLabel = accountIter.second->getLabel();
-        
+
         if (accountIter.second->m_Type == AccountType::Shadow)
         {
             accountUUID = accountIter.second->getParentUUID();
             accountLabel = pwallet->mapAccounts[accountUUID]->getLabel();
         }
-        
+
         std::set<CKeyID> setAddress;
         accountIter.second->GetKeys(setAddress);
         for(const auto& key : setAddress)
@@ -1444,7 +1444,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
             std::map<CBitcoinAddress, tallyitem>::iterator it = mapTally.find(address);
             if (it == mapTally.end() && !fIncludeEmpty)
                 continue;
-            
+
             CAmount nAmount = 0;
             int nConf = std::numeric_limits<int>::max();
             bool fIsWatchonly = false;
@@ -1454,7 +1454,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
                 nConf = (*it).second.nConf;
                 fIsWatchonly = (*it).second.fIsWatchonly;
             }
-            
+
             if (fByAccounts)
             {
                 tallyitem& _item = mapAccountTally[accountUUID];
@@ -1609,7 +1609,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     //fixme: Get checkpoints working for testnet.
     if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !IsArgSet("-testnet") ))
         return;
-    
+
     std::vector<CAccount*> doForAccounts;
     if (strAccount == std::string("*"))
     {
@@ -1626,8 +1626,8 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     {
         doForAccounts.push_back(AccountFromValue(pwallet, strAccount, true));
     }
-    
-    
+
+
     for (auto& account : doForAccounts)
     {
         wtx.GetAmounts(listReceived, listSent, nFee, filter, account);
@@ -1664,8 +1664,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
         if (listReceived.size() > 0 && wtx.GetDepthInMainChain() >= nMinDepth)
         {
             BOOST_FOREACH(const COutputEntry& r, listReceived)
-            {                
-
+            {
                 UniValue entry(UniValue::VOBJ);
                 if (involvesWatchonly || (::IsMine(*pwallet, r.destination) & ISMINE_WATCH_ONLY)) {
                     entry.push_back(Pair("involvesWatchonly", true));
@@ -3065,7 +3064,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
 
     CAmount nFeeOut;
     std::string strFailReason;
-    
+
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[1], true);
     if (!pwallet->FundTransaction(fundingAccount, tx, nFeeOut, changePosition, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl, reserveChangeKey)) {
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);

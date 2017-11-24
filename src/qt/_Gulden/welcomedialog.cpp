@@ -39,28 +39,28 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
 , loadingAnimation( NULL )
 {
     ui->setupUi(this);
-    
+
     ui->labelWelcomeDialogLogo->setContentsMargins( 0, 0, 0, 0 );
     ui->labelWelcomeDialogLogoFrame->setContentsMargins( 0, 0, 0, 0 );
-    
+
     ui->buttonNewWallet->setCursor( Qt::PointingHandCursor );
     ui->buttonRestoreWallet->setCursor( Qt::PointingHandCursor );
     ui->buttonRecoverWallet->setCursor( Qt::PointingHandCursor );
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setCursor( Qt::PointingHandCursor );
-        
+
     connect(ui->buttonNewWallet, SIGNAL( clicked() ), this, SLOT( newWallet() ) );
     connect(ui->buttonRestoreWallet, SIGNAL( clicked() ), this, SLOT( recoverWallet() ) );
     connect(ui->buttonRecoverWallet, SIGNAL( clicked() ), this, SLOT( processRecoveryPhrase() ) );
-    
+
     uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
     uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
-    
+
     //fixme: (Gulden) Remove from future build
     if (!testMnemonics())
     {
         assert(0);
     }
-    
+
     loadingAnimation = new QMovie(":/Gulden/loading_animation");
     if ( loadingAnimation->isValid() )
     {
@@ -68,7 +68,7 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
         ui->labelWelcomeScreenAnimation->setMovie(loadingAnimation);
         loadingAnimation->start();
     }
-    
+
     setAttribute(Qt::WA_DeleteOnClose);
 }
 
@@ -90,9 +90,9 @@ void WelcomeDialog::showEvent(QShowEvent *ev)
         ui->labelEnterRecoveryPhrase->setVisible(false);
         ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogCreateWalletPage);
     }
-    
+
     QFrame::showEvent(ev);
-    
+
 }
 
 void WelcomeDialog::showMessage(const QString& message, int alignment, const QColor &color)
@@ -102,7 +102,7 @@ void WelcomeDialog::showMessage(const QString& message, int alignment, const QCo
 
 void WelcomeDialog::showProgress(const QString& message, int nProgress)
 {
-    
+
     ui->labelWelcomeScreenProgressDisplay->setText( QString(message + "%1%").arg(nProgress) );
 }
 
@@ -113,7 +113,7 @@ void WelcomeDialog::newWallet()
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
     GuldenApplication::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
-    
+
     ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenApplication::gApp->getRecoveryPhrase().c_str()));
     ui->edittextEnterRecoveryPhrase->setReadOnly(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setVisible(true);
@@ -123,7 +123,7 @@ void WelcomeDialog::newWallet()
     ui->labelDescribeRecoveryPhrase->setVisible(true);
     ui->labelEnterRecoveryPhrase->setVisible(false);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
-    
+
     GuldenApplication::gApp->isRecovery = false;
 }
 
@@ -136,14 +136,14 @@ void WelcomeDialog::recoverWallet()
     ui->labelDescribeRecoveryPhrase->setVisible(false);
     ui->labelEnterRecoveryPhrase->setVisible(true);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
-    
+
     GuldenApplication::gApp->isRecovery = true;
 }
 
 void WelcomeDialog::processRecoveryPhrase()
 {
     QString recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
-    
+
     //Strip double whitespace and leading/trailing whitespace, newlines, capitals etc.
     recoveryPhrase = recoveryPhrase.simplified().toLower();
     if(ui->checkboxConfirmRecoveryPhraseWrittenDown->isChecked())
@@ -172,19 +172,19 @@ void WelcomeDialog::processRecoveryPhrase()
                 //Use unmodified recovery phrase.
                 recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
             }
-            
+
             GuldenApplication::gApp->setRecoveryPhrase(recoveryPhrase.toStdString().c_str());
-            
+
             //Try burn memory - just in case - not guaranteed to work everywhere but better than doing nothing.
             burnTextEditMemory(ui->edittextEnterRecoveryPhrase);
-            
+
             ui->labelWelcomeScreenProgressDisplay->setText(tr("Generating wallet"));
-            
+
             ui->buttonFrame->setVisible(false);
             ui->labelDescribeRecoveryPhrase->setVisible(false);
             ui->labelEnterRecoveryPhrase->setVisible(false);
             ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogLoadProgressPage);
-            
+
             Q_EMIT loadWallet();
         }
     }

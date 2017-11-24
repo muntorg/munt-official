@@ -21,20 +21,20 @@ uint256 CBlockHeader::GetHashLegacy() const
 {
     //if (!cachedHash.IsNull())
         //return cachedHash;
-    
+
     //cachedHash = SerializeHash(*this);
     //return cachedHash;
     return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 }
 
 uint256 CBlockHeader::GetHashPoW2(bool force) const
-{   
+{
     if (force)
         assert(nVersionPoW2Witness != 0 || nTimePoW2Witness != 0);
-    
+
     if (nVersionPoW2Witness == 0 || nTimePoW2Witness == 0)
         return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
-        
+
     return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG);
 }
 
@@ -44,7 +44,7 @@ uint256&& CBlock::GetPoWHash() const
         //return cachedPOWHash;
 
     uint256 hashRet;
-    
+
     //CBSU - maybe use a static functor or something here instead of having the branch 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     if (hashCity)

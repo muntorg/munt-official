@@ -111,7 +111,7 @@ void GuldenProxyStyle::drawItemText(QPainter *painter, const QRect &rectangle, i
         alignment |= Qt::TextHideMnemonic;
         alignment &= ~(Qt::TextShowMnemonic);
     }
-    
+
     QProxyStyle::drawItemText(painter, rectangle, alignment, palette, enabled, text, textRole);
 }
 
@@ -139,12 +139,11 @@ bool GuldenEventFilter::eventFilter(QObject *obj, QEvent *evt)
 }
 
 
-    
 void setValid(QWidget* control, bool validity)
 {
     control->setProperty("valid", validity);
     control->style()->unpolish(control);
-    control->style()->polish(control);    
+    control->style()->polish(control);
 }
 
 void burnLineEditMemory(QLineEdit* edit)
@@ -183,7 +182,7 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , toolsMenu( NULL )
 , importPrivateKeyAction( NULL )
 , rescanAction( NULL )
-, accountSummaryWidget( NULL )   
+, accountSummaryWidget( NULL )
 , dialogNewAccount( NULL )
 , dialogAccountSettings( NULL )
 , dialogBackup( NULL )
@@ -213,9 +212,9 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
     //Start the ticker polling off - after the initial call the ticker will schedule the subsequent ones internally.
     ticker->pollTicker();
     nocksSettings->pollSettings();
-    
+
     connect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
-    
+
     uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, this, _1, _2));
 }
 
@@ -251,10 +250,10 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
     watchOnlyBalanceCached = watchOnlyBalance;
     watchUnconfBalanceCached = watchUnconfBalance;
     watchImmatureBalanceCached = watchImmatureBalance;
-    
+
     if (!labelBalance || !labelBalanceForex)
         return;
-    
+
     CAmount displayBalance = balance + unconfirmedBalance + immatureBalance;
     labelBalance->setText(BitcoinUnits::format(BitcoinUnits::BTC, displayBalance, false, BitcoinUnits::separatorStandard, 2));
     if (displayBalance > 0 && optionsModel)
@@ -266,7 +265,7 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
     {
         labelBalanceForex->setVisible(false);
     }
-    
+
     if (accountScrollArea && displayBalance > 999999 * COIN && sideBarWidth != sideBarWidthExtended)
     {
         sideBarWidth = sideBarWidthExtended;
@@ -279,7 +278,7 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         doApplyStyleSheet();
         resizeToolBarsGulden();
     }
-    
+
     labelBalance->setToolTip("");
     if (immatureBalance>0 || unconfirmedBalance>0)
     {
@@ -296,7 +295,6 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         }
         labelBalance->setToolTip(toolTip);
     }
-    
 }
 
 void GuldenGUI::updateExchangeRates()
@@ -313,7 +311,6 @@ void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
     accountSummaryWidget->setOptionsModel(optionsModel);
     connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ) );
     updateExchangeRates();
-    
 }
 
 void GuldenGUI::createMenusGulden()
@@ -322,13 +319,13 @@ void GuldenGUI::createMenusGulden()
 
     importPrivateKeyAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
     importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
-    importPrivateKeyAction->setCheckable(false);   
+    importPrivateKeyAction->setCheckable(false);
     toolsMenu->addAction(importPrivateKeyAction);
     connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
-    
+
     rescanAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
     rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
-    rescanAction->setCheckable(false);   
+    rescanAction->setCheckable(false);
     toolsMenu->addAction(rescanAction);
     connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
 }
@@ -342,7 +339,7 @@ void GuldenGUI::createToolBarsGulden()
     menuBarSpaceFiller->move(sideBarWidth, 0);
     menuBarSpaceFiller->setFixedSize(20000, 21);
     #endif
-        
+
     //Add the 'Account bar' - vertical bar on the left
     accountBar = new QToolBar( QCoreApplication::translate( "toolbar", "Account toolbar" ) );
     accountBar->setObjectName( "account_bar" );
@@ -350,9 +347,7 @@ void GuldenGUI::createToolBarsGulden()
     accountBar->setFixedWidth( sideBarWidth );
     accountBar->setMinimumWidth( sideBarWidth );
     accountBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
-    
-       
-    
+
     //Horizontally lay out 'My accounts' text and 'wallet settings' button side by side.
     {
         QFrame* myAccountsFrame = new QFrame( m_pImpl );
@@ -364,28 +359,27 @@ void GuldenGUI::createToolBarsGulden()
         myAccountsFrame->setContentsMargins( 0, 0, 0, 0 );
         layoutMyAccounts->setSpacing(0);
         layoutMyAccounts->setContentsMargins( 0, 0, 0, 0 );
-        
-        
+
         ClickableLabel* myAccountLabel = new ClickableLabel( myAccountsFrame );
         myAccountLabel->setObjectName( "labelMyAccounts" );
         myAccountLabel->setText( tr("My accounts") );
         layoutMyAccounts->addWidget( myAccountLabel );
         myAccountLabel->setContentsMargins( 0, 0, 0, 0 );
-        
+
         //Spacer to fill width
         {
             QWidget* spacerMid = new QWidget( myAccountsFrame );
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutMyAccounts->addWidget( spacerMid );
         }
-        
+
         ClickableLabel* labelWalletSettings = new ClickableLabel( myAccountsFrame );
         labelWalletSettings->setText( "" );
         labelWalletSettings->setObjectName( "labelWalletSettings" );
         labelWalletSettings->setCursor ( Qt::PointingHandCursor );
         layoutMyAccounts->addWidget( labelWalletSettings );
         labelWalletSettings->setContentsMargins( 0, 0, 0, 0 );
-        
+
         connect( labelWalletSettings, SIGNAL( clicked() ), this, SLOT( gotoPasswordDialog() ) );
     }
 
@@ -397,17 +391,17 @@ void GuldenGUI::createToolBarsGulden()
         scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
         scrollArea->setWidget(accountScrollArea);
         scrollArea->setWidgetResizable(true);
-        
+
         accountScrollArea->setContentsMargins( 0, 0, 0, 0);
         accountScrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Maximum );
-        
-        
+
+
         accountBar->addWidget( scrollArea );
-        
+
         QVBoxLayout* vbox = new QVBoxLayout();
         vbox->setSpacing(0);
         vbox->setContentsMargins( 0, 0, 0, 0 );
-        
+
         accountScrollArea->setLayout( vbox );
     }
 
@@ -436,8 +430,8 @@ void GuldenGUI::createToolBarsGulden()
     guldenBar->setMovable( false );
     guldenBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
     guldenBar->setIconSize( QSize( 18, 18 ) );
-        
-    
+
+
     // We place all the widgets for this action bar inside a frame of fixed width - otherwise the sizing comes out wrong
     {
         balanceContainer = new QFrame();
@@ -448,8 +442,8 @@ void GuldenGUI::createToolBarsGulden()
         layoutBalance->setContentsMargins( 0, 0, 0, 0 );
         layoutBalance->setSpacing(0);
         guldenBar->addWidget( balanceContainer );
-        
-        
+
+
         //Left margin
         {
             QWidget* spacerL = new QWidget();
@@ -457,26 +451,26 @@ void GuldenGUI::createToolBarsGulden()
             spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerL );
         }
-        
+
         QLabel* homeIcon = new ClickableLabel( m_pImpl );
         homeIcon->setText("Ġ");
         layoutBalance->addWidget( homeIcon );
         homeIcon->setObjectName( "home_button" );
         homeIcon->setCursor( Qt::PointingHandCursor );
         connect( homeIcon, SIGNAL( clicked() ), this, SLOT( gotoWebsite() ) );
-        
+
         // Use spacer to push balance label to the right
         {
             QWidget* spacerMid = new QWidget();
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerMid );
         }
-        
+
         labelBalance = new ClickableLabel( m_pImpl );
         labelBalance->setObjectName( "gulden_label_balance" );
         labelBalance->setText( "" );
         layoutBalance->addWidget( labelBalance );
-        
+
         labelBalanceForex = new ClickableLabel( m_pImpl );
         labelBalanceForex->setObjectName( "gulden_label_balance_forex" );
         labelBalanceForex->setText( "" );
@@ -492,12 +486,9 @@ void GuldenGUI::createToolBarsGulden()
             spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerR );
         }
-    
+
         balanceContainer->setMinimumWidth( sideBarWidth );
     }
-    
-    
-    
     m_pImpl->addToolBar( guldenBar );
 
 
@@ -535,27 +526,27 @@ void GuldenGUI::createToolBarsGulden()
     tabsBar->addAction( m_pImpl->receiveCoinsAction );
     tabsBar->addAction( m_pImpl->sendCoinsAction );
     tabsBar->addAction( m_pImpl->historyAction );
-    
+
     passwordAction = new QAction(m_pImpl->platformStyle->SingleColorIcon(":/icons/password"), tr("&Password"), this);
     passwordAction->setStatusTip(tr("Change wallet password"));
     passwordAction->setToolTip(passwordAction->statusTip());
     passwordAction->setCheckable(true);
     passwordAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabsBar->addAction(passwordAction);
-    
+
     backupAction = new QAction(m_pImpl->platformStyle->SingleColorIcon(":/icons/backup"), tr("&Backup"), this);
     backupAction->setStatusTip(tr("Backup wallet"));
     backupAction->setToolTip(backupAction->statusTip());
     backupAction->setCheckable(true);
     backupAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabsBar->addAction(backupAction);
-    
+
     connect(passwordAction, SIGNAL(triggered()), this, SLOT(gotoPasswordDialog()));
     connect(backupAction, SIGNAL(triggered()), this, SLOT(gotoBackupDialog()));
-    
-        
+
+
     m_pImpl->receiveCoinsAction->setChecked( true );
-    
+
     tabsBar->widgetForAction( m_pImpl->historyAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( m_pImpl->sendCoinsAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( m_pImpl->receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
@@ -567,7 +558,7 @@ void GuldenGUI::createToolBarsGulden()
     tabsBar->widgetForAction( m_pImpl->sendCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( m_pImpl->historyAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->setContentsMargins( 0, 0, 0, 0 );
-    
+
     //Spacer to fill width
     {
         QWidget* spacerR = new QWidget();
@@ -607,8 +598,6 @@ void GuldenGUI::createToolBarsGulden()
     m_pImpl->addToolBar( accountInfoBar );
     connect(accountSummaryWidget, SIGNAL( requestAccountSettings() ), this, SLOT( showAccountSettings() ) );
     connect(accountSummaryWidget, SIGNAL( requestExchangeRateDialog() ), this, SLOT( showExchangeRateDialog() ) );
-    
-
 
 
     //Add spacer bar
@@ -625,11 +614,11 @@ void GuldenGUI::createToolBarsGulden()
         spacerBarR->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     }
     m_pImpl->addToolBar( spacerBarR );
-    
+
     //Hide all toolbars until UI fully loaded
     hideToolBars();
-    
-    
+
+
     //Init the welcome dialog inside walletFrame
     welcomeScreen = new WelcomeDialog(m_pImpl->platformStyle, m_pImpl);
     m_pImpl->walletFrame->walletStack->addWidget(welcomeScreen);
@@ -652,7 +641,7 @@ void GuldenGUI::showToolBars()
 {
     welcomeScreen = NULL;
     m_pImpl->appMenuBar->setStyleSheet("");
-    
+
     if(accountBar) accountBar->setVisible(true);
     if(guldenBar) guldenBar->setVisible(true);
     if(spacerBarL) spacerBarL->setVisible(true);
@@ -692,13 +681,13 @@ void GuldenGUI::doApplyStyleSheet()
     {
         style.replace( "SIDE_BAR_WIDTH", SIDE_BAR_WIDTH );
     }
-    
+
     style.replace( "LOGO_FONT_SIZE", QString(LOGO_FONT_SIZE) );
     style.replace( "TOOLBAR_FONT_SIZE", QString(TOOLBAR_FONT_SIZE) );
     style.replace( "BUTTON_FONT_SIZE", QString(BUTTON_FONT_SIZE) );
     style.replace( "SMALL_BUTTON_FONT_SIZE", QString(SMALL_BUTTON_FONT_SIZE) );
     style.replace( "MINOR_LABEL_FONT_SIZE", QString(MINOR_LABEL_FONT_SIZE) );
-    
+
     //Apply the final QSS - after making the 'template substitutions'
     //NB! This should happen last after all object IDs etc. are set.
     m_pImpl->setStyleSheet( style );
@@ -718,48 +707,42 @@ void GuldenGUI::resizeToolBarsGulden()
 }
 
 void GuldenGUI::doPostInit()
-{  
+{
     //Fonts
     // We 'abuse' the translation system here to allow different 'font stacks' for different languages.
     //QString MAIN_FONTSTACK = QObject::tr("Arial, 'Helvetica Neue', Helvetica, sans-serif");
 
     m_pImpl->appMenuBar->setStyleSheet("QMenuBar{background-color: rgba(255, 255, 255, 0%);} QMenu{background-color: #f3f4f6; border: 1px solid #999; color: black;} QMenu::item { color: black; } QMenu::item:disabled {color: #999;} QMenu::separator{background-color: #999; height: 1px; margin-left: 10px; margin-right: 5px;}");
 
-    
-    
 
     {
         // Qt status bar sucks - it is impossible to style nicely, so we just rip the thing out and use a toolbar instead.
         m_pImpl->statusBar()->setVisible(false);
-        
+
         //Allow us to target the progress label for easy styling
         //m_pImpl->statusBar()->removeWidget(m_pImpl->progressBarLabel);
         //m_pImpl->statusBar()->removeWidget(m_pImpl->progressBar);
         //m_pImpl->statusBar()->removeWidget(m_pImpl->frameBlocks);
-        
-        
-          
+
         //Add a spacer to the frameBlocks so that we can force them to expand to same size as the progress text (Needed for proper centering of progress bar)
         /*QFrame* frameBlocksSpacerL = new QFrame(m_pImpl->frameBlocks);
         frameBlocksSpacerL->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
         frameBlocksSpacerL->setContentsMargins( 0, 0, 0, 0);
         ((QHBoxLayout*)m_pImpl->frameBlocks->layout())->insertWidget(0, frameBlocksSpacerL);*/
 
-            
         m_pImpl->frameBlocks->layout()->setContentsMargins( 0, 0, 0, 0 );
         m_pImpl->frameBlocks->layout()->setSpacing( 0 );
-        
+
         //Hide some of the 'task items' we don't need
         m_pImpl->unitDisplayControl->setVisible( false );
         //m_pImpl->labelBlocksIcon->setVisible( false );
-        
-        
+
         //Status bar
         {
             statusBar = new QToolBar( QCoreApplication::translate( "toolbar", "Status toolbar" ) , m_pImpl);
             statusBar->setObjectName( "status_bar" );
             statusBar->setMovable( false );
-            
+
             QFrame* statusBarStatusArea = new QFrame(statusBar);
             statusBarStatusArea->setObjectName("status_bar_status_area");
             statusBarStatusArea->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
@@ -769,17 +752,16 @@ void GuldenGUI::doPostInit()
             statusBarStatusAreaLayout->setSpacing(0);
             statusBarStatusAreaLayout->setContentsMargins( 0, 0, 0, 0 );
             statusBar->addWidget(statusBarStatusArea);
-            
+
             m_pImpl->progressBarLabel->setObjectName("progress_bar_label");
             statusBarStatusAreaLayout->addWidget(m_pImpl->progressBarLabel);
-                       
+
             QFrame* statusProgressSpacerL = new QFrame(statusBar);
             statusProgressSpacerL->setObjectName("progress_bar_spacer_left");
             statusProgressSpacerL->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
             statusProgressSpacerL->setContentsMargins( 0, 0, 0, 0);
             statusBar->addWidget(statusProgressSpacerL);
-            
-            
+
             QFrame* progressBarWrapper = new QFrame(statusBar);
             progressBarWrapper->setObjectName("progress_bar");
             progressBarWrapper->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Preferred);
@@ -789,15 +771,13 @@ void GuldenGUI::doPostInit()
             layoutProgressBarWrapper->addWidget(m_pImpl->progressBar);
             statusBar->addWidget(progressBarWrapper);
             m_pImpl->progressBar->setVisible(false);
-            
-            
-            
+
             QFrame* statusProgressSpacerR = new QFrame(statusBar);
             statusProgressSpacerR->setObjectName("progress_bar_spacer_right");
             statusProgressSpacerR->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
             statusProgressSpacerR->setContentsMargins( 0, 0, 0, 0);
             statusBar->addWidget(statusProgressSpacerR);
-            
+
             m_pImpl->frameBlocks->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
             m_pImpl->frameBlocks->setObjectName("status_bar_frame_blocks");
             //Use spacer to push all the icons to the right
@@ -812,15 +792,14 @@ void GuldenGUI::doPostInit()
             frameBlocksSpacerR->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
             frameBlocksSpacerR->setContentsMargins( 0, 0, 0, 0);
             ((QHBoxLayout*)m_pImpl->frameBlocks->layout())->addWidget(frameBlocksSpacerR);
-            
+
             //Use our own styling - clear the styling that is already applied
             m_pImpl->progressBar->setStyleSheet("");
             //Hide text we don't want it as it looks cluttered.
             m_pImpl->progressBar->setTextVisible(false);
-            
-            
+
             m_pImpl->addToolBar( Qt::BottomToolBarArea, statusBar );
-            
+
             statusBar->setVisible(false);
         }
     }
@@ -834,27 +813,27 @@ void GuldenGUI::doPostInit()
     m_pImpl->historyAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_1 ) );
 
     doApplyStyleSheet();
-    
+
     //Force font antialiasing
     QFont f = QApplication::font();
     f.setStyleStrategy( QFont::PreferAntialias );
     QApplication::setFont( f );
-    
+
     m_pImpl->openAction->setVisible(false);
     m_pImpl->signMessageAction->setVisible(false);
     m_pImpl->verifyMessageAction->setVisible(false);
-    
+
     m_pImpl->setContextMenuPolicy(Qt::NoContextMenu);
-    
+
     m_pImpl->setMinimumSize(860, 520);
-    
+
     disconnect(m_pImpl->backupWalletAction, SIGNAL(triggered()), 0, 0);
     connect(m_pImpl->backupWalletAction, SIGNAL(triggered()), this, SLOT(gotoBackupDialog()));
-    
+
     m_pImpl->encryptWalletAction->setCheckable(false);
     disconnect(m_pImpl->encryptWalletAction, SIGNAL(triggered()), 0, 0);
     connect(m_pImpl->encryptWalletAction, SIGNAL(triggered()), this, SLOT(gotoPasswordDialog()));
-    
+
     disconnect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), 0, 0);
     connect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), this, SLOT(gotoPasswordDialog()));
 }
@@ -887,7 +866,7 @@ QDialog* GuldenGUI::createDialog(QWidget* parent, QString message, QString confi
     QVBoxLayout* vbox = new QVBoxLayout();
     vbox->setSpacing(0);
     vbox->setContentsMargins( 0, 0, 0, 0 );
-    
+
     QLabel* labelDialogMessage = new QLabel(d);
     labelDialogMessage->setText(message);
     labelDialogMessage->setObjectName("labelDialogMessage");
@@ -895,11 +874,11 @@ QDialog* GuldenGUI::createDialog(QWidget* parent, QString message, QString confi
     labelDialogMessage->setIndent(0);
     labelDialogMessage->setWordWrap(true);
     vbox->addWidget(labelDialogMessage);
-    
+
     QWidget* spacer = new QWidget(d);
     spacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     vbox->addWidget(spacer);
-    
+
     QFrame* horizontalLine = new QFrame(d);
     horizontalLine->setFrameStyle(QFrame::HLine);
     horizontalLine->setFixedHeight(1);
@@ -917,11 +896,11 @@ QDialog* GuldenGUI::createDialog(QWidget* parent, QString message, QString confi
         // We use reset button because it shows on the left where we want it.
         buttons |= QDialogButtonBox::Reset;
     }
-    
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(buttons, d);    
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(buttons, d);
     vbox->addWidget(buttonBox);
     buttonBox->setContentsMargins( 0, 0, 0, 0 );
-    
+
     if(!confirmLabel.isEmpty())
     {
         buttonBox->button(QDialogButtonBox::Ok)->setText(confirmLabel);
@@ -929,7 +908,7 @@ QDialog* GuldenGUI::createDialog(QWidget* parent, QString message, QString confi
         buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE);
         QObject::connect(buttonBox, SIGNAL(accepted()), d, SLOT(accept()));
     }
-    
+
     if (!cancelLabel.isEmpty())
     {
         buttonBox->button(QDialogButtonBox::Reset)->setText(cancelLabel);
@@ -937,9 +916,9 @@ QDialog* GuldenGUI::createDialog(QWidget* parent, QString message, QString confi
         buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE);
         QObject::connect(buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), d, SLOT(reject()));
     }
-    
+
     d->setLayout(vbox);
-    
+
     return d;
 }
 
@@ -975,7 +954,7 @@ QString getAccountLabel(CAccount* account)
     {
          accountName.append(QString::fromUtf8(" \uf06e"));
     }
-    
+
     return limitString(accountName, 28);
 }
 
@@ -989,7 +968,7 @@ void GuldenGUI::refreshAccountControls()
 
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
         m_pImpl->receiveCoinsAction->setVisible( false );
-        
+
     for ( const auto& controlPair : m_accountMap )
     {
         controlPair.first->deleteLater();
@@ -1003,16 +982,16 @@ void GuldenGUI::refreshAccountControls()
         {
             //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
             LOCK(pactiveWallet->cs_wallet);
-            
+
             for ( const auto& accountPair : pactiveWallet->mapAccounts )
-            {    
+            {
                 if (accountPair.second->m_Type == AccountType::Normal || (fShowChildAccountsSeperately && accountPair.second->m_Type == AccountType::ShadowChild) )
                 {
                     QString label = getAccountLabel(accountPair.second);
                     ClickableLabel* accLabel = createAccountButton( label );
                     m_accountMap[accLabel] = accountPair.second;
                     sortedAccounts[label] = accLabel;
-                    
+
                     if (accountPair.second == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount())
                         makeActive = accLabel;
                 }
@@ -1020,7 +999,7 @@ void GuldenGUI::refreshAccountControls()
         }
         for ( const auto& iter : sortedAccounts)
         {
-            accountScrollArea->layout()->addWidget( iter.second );                
+            accountScrollArea->layout()->addWidget( iter.second );
         }
         if (makeActive)
         {
@@ -1032,17 +1011,17 @@ void GuldenGUI::refreshAccountControls()
 bool GuldenGUI::setCurrentWallet( const QString& name )
 {
     LogPrintf("GuldenGUI::setCurrentWallet %s\n", name.toStdString());
-    
+
     showToolBars();
     refreshAccountControls();
-    
+
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), accountSummaryWidget , SLOT( balanceChanged() ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), this , SLOT( balanceChanged() ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountListChanged() ), this , SLOT( accountListChanged() ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountDeleted(CAccount*) ), this , SLOT( accountDeleted(CAccount*) ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ) );
-    
+
     return true;
 }
 
@@ -1059,7 +1038,7 @@ ClickableLabel* GuldenGUI::createAccountButton( const QString& accountName )
 void GuldenGUI::setActiveAccountButton( ClickableLabel* activeButton )
 {
     LogPrintf("GuldenGUI::setActiveAccountButton\n");
-    
+
     for ( const auto & button : accountBar->findChildren<ClickableLabel*>( "" ) )
     {
         button->setChecked( false );
@@ -1068,14 +1047,14 @@ void GuldenGUI::setActiveAccountButton( ClickableLabel* activeButton )
     activeButton->setChecked( true );
     activeButton->setCursor( Qt::ArrowCursor );
 
-     // Update the account    
+     // Update the account
     if ( m_pImpl->walletFrame->currentWalletView() )
     {
         if ( m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage )
         {
             accountSummaryWidget->setActiveAccount( m_accountMap[activeButton] );
             m_pImpl->walletFrame->currentWalletView()->walletModel->setActiveAccount( m_accountMap[activeButton] );
-            
+
             updateAccount(m_accountMap[activeButton]);
         }
     }
@@ -1084,10 +1063,10 @@ void GuldenGUI::setActiveAccountButton( ClickableLabel* activeButton )
 void GuldenGUI::updateAccount(CAccount* account)
 {
     LOCK(pactiveWallet->cs_wallet);
-            
+
     if (receiveAddress)
         delete receiveAddress;
-    
+
     receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
     if (receiveAddress->GetReservedKey(pubKey))
@@ -1111,15 +1090,15 @@ void GuldenGUI::balanceChanged()
 
 
 void GuldenGUI::accountListChanged()
-{    
-    refreshAccountControls();    
+{
+    refreshAccountControls();
 }
 
 void GuldenGUI::activeAccountChanged(CAccount* account)
 {
     if (accountSummaryWidget)
         accountSummaryWidget->setActiveAccount(account);
-    
+
     //Update account name 'in place' in account list
     bool haveAccount=false;
     if (pactiveWallet)
@@ -1137,7 +1116,7 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
             }
         }
     }
-    
+
     if(!haveAccount)
     {
         refreshAccountControls();
@@ -1169,14 +1148,14 @@ void GuldenGUI::promptImportPrivKey()
 {
     ImportPrivKeyDialog dlg(this->m_pImpl);
     dlg.exec();
-    
+
     CBitcoinSecret vchSecret;
     bool fGood = vchSecret.SetString(dlg.getPrivKey().c_str());
-    
+
     if (fGood)
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        
+
         CKey key = vchSecret.GetKey();
         if (!key.IsValid())
         {
@@ -1187,14 +1166,14 @@ void GuldenGUI::promptImportPrivKey()
         CPubKey pubkey = key.GetPubKey();
         assert(key.VerifyPubKey(pubkey));
         CKeyID vchAddress = pubkey.GetID();
-        
+
         //Don't import an address that is already in wallet.
         if (pactiveWallet->HaveKey(vchAddress))
         {
             m_pImpl->message(tr("Error importing private key"), tr("Wallet already contains key."), CClientUIInterface::MSG_ERROR, NULL);
             return;
         }
-        
+
         CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
         pactiveWallet->MarkDirty();
         pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
@@ -1227,9 +1206,9 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
     m_pImpl->receiveCoinsAction->setVisible( true );
     m_pImpl->sendCoinsAction->setVisible( true );
-    
+
     m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->update();
-    
+
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
         m_pImpl->sendCoinsAction->setVisible( false );
@@ -1250,7 +1229,7 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
     passwordAction->setVisible( false );
     backupAction->setVisible( false );
     m_pImpl->overviewAction->setVisible( true );
-    
+
     if (dialogPasswordModify)
     {
         m_pImpl->walletFrame->currentWalletView()->removeWidget( dialogPasswordModify );
@@ -1284,7 +1263,7 @@ void GuldenGUI::gotoNewAccountDialog()
     if ( m_pImpl->walletFrame )
     {
         restoreCachedWidgetIfNeeded();
-            
+
         dialogNewAccount = new NewAccountDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView(), m_pImpl->walletFrame->currentWalletView()->walletModel);
         connect( dialogNewAccount, SIGNAL( cancel() ), this, SLOT( cancelNewAccountDialog() ) );
         connect( dialogNewAccount, SIGNAL( accountAdded() ), this, SLOT( acceptNewAccount() ) );
@@ -1300,18 +1279,18 @@ void GuldenGUI::gotoPasswordDialog()
     if ( m_pImpl->walletFrame )
     {
         restoreCachedWidgetIfNeeded();
-        
+
         m_pImpl->receiveCoinsAction->setVisible( false );
         m_pImpl->sendCoinsAction->setVisible( false );
         m_pImpl->historyAction->setVisible( false );
         passwordAction->setVisible( true );
         backupAction->setVisible( true );
         m_pImpl->overviewAction->setVisible( false );
-        
+
         passwordAction->setChecked(true);
         backupAction->setChecked(false);
-    
-    
+
+
         dialogPasswordModify = new PasswordModifyDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView() );
         connect( dialogPasswordModify, SIGNAL( dismiss() ), this, SLOT( dismissPasswordDialog() ) );
         cacheCurrentWidget = m_pImpl->walletFrame->currentWalletView()->currentWidget();
@@ -1325,17 +1304,17 @@ void GuldenGUI::gotoBackupDialog()
     if ( m_pImpl->walletFrame )
     {
         restoreCachedWidgetIfNeeded();
-        
+
         m_pImpl->receiveCoinsAction->setVisible( false );
         m_pImpl->sendCoinsAction->setVisible( false );
         m_pImpl->historyAction->setVisible( false );
         passwordAction->setVisible( true );
         backupAction->setVisible( true );
         m_pImpl->overviewAction->setVisible( false );
-        
+
         passwordAction->setChecked(false);
         backupAction->setChecked(true);
-    
+
         dialogBackup = new BackupDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView(), m_pImpl->walletFrame->currentWalletView()->walletModel);
         connect( dialogBackup, SIGNAL( saveBackupFile() ), m_pImpl->walletFrame, SLOT( backupWallet() ) );
         connect( dialogBackup, SIGNAL( dismiss() ), this, SLOT( dismissBackupDialog() ) );
@@ -1390,11 +1369,11 @@ void GuldenGUI::acceptNewAccountMobile()
 void GuldenGUI::showAccountSettings()
 {
     LogPrintf("GuldenGUI::showAccountSettings\n");
-    
+
     if ( m_pImpl->walletFrame )
     {
         restoreCachedWidgetIfNeeded();
-        
+
         dialogAccountSettings = new AccountSettingsDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView(), m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount(), m_pImpl->walletFrame->currentWalletView()->walletModel);
         connect( dialogAccountSettings, SIGNAL( dismissAccountSettings() ), this, SLOT( dismissAccountSettings() ) );
         connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( activeAccountChanged(CAccount*) ), dialogAccountSettings, SLOT( activeAccountChanged(CAccount*) ) );

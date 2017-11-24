@@ -435,7 +435,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     }
 
     LOCK(wallet->cs_wallet);
-    
+
     //fixme: GULDEN HIGH fShowChildAccountsSeperately
     if (wtx->credit > wtx->debit)
     {
@@ -469,7 +469,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
             }
         }
     }
-    
+
     switch(wtx->type)
     {
     case TransactionRecord::RecvFromOther:

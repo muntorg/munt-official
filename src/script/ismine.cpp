@@ -388,12 +388,12 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
                 return ISMINE_NO;
             }
         }
-        
+
         if (keystore.HaveKey(spendingKeyID))
             keystore.MarkKeyUsed(spendingKeyID, time);
         if (keystore.HaveKey(witnessKeyID))
             keystore.MarkKeyUsed(witnessKeyID, time);
-        
+
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
         //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?

@@ -177,7 +177,7 @@ bool AppInit(int argc, char* argv[])
         fRet = AppInitMain(threadGroup, scheduler);
         fNoUI = true;
 
-        
+
         //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
         // Make sure only a single Bitcoin process is using the data directory.
         fs::path pathLockFile = GetDataDir() / ".lock";
@@ -195,7 +195,6 @@ bool AppInit(int argc, char* argv[])
             fprintf(stderr, _("Cannot obtain a lock on data directory %s. %s is probably already running.").c_str(), GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
             return 1;
         }
-        
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");

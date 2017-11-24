@@ -812,13 +812,13 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
     nHighestFastAnnounce = pindex->nHeight;
 
     bool fWitnessEnabled = IsWitnessEnabled(pindex->pprev, Params().GetConsensus());
-    
+
     uint256 hashBlock;
-    
+
     if (pblock->nVersionPoW2Witness > 0)
     {
         hashBlock = pblock->GetHashLegacy();
-        
+
         {
             LOCK(cs_most_recent_block);
             most_recent_block_hash_pow = hashBlock;
@@ -830,7 +830,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
     else
     {
         hashBlock = pblock->GetHashPoW2();
-        
+
         {
             LOCK(cs_most_recent_block);
             most_recent_block_hash_pow2 = hashBlock;
@@ -840,7 +840,6 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         }
     }
 
-    
 
     connman->ForEachNode([this, &pcmpctblock, pindex, &msgMaker, fWitnessEnabled, &hashBlock](CNode* pnode) {
         // TODO: Avoid the repeated-serialization here
@@ -896,7 +895,7 @@ void PeerLogicValidation::BlockChecked(const CBlock& block, const CValidationSta
     LOCK(cs_main);
 
     const uint256 hash = block.GetHashPoW2();
-            
+
     std::map<uint256, std::pair<NodeId, bool>>::iterator it = mapBlockSource.find(hash);
 
     int nDoS = 0;
@@ -1038,7 +1037,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                 bool fWitnessesPresentInARecentCompactBlock;
                 {
                     LOCK(cs_most_recent_block);
-                    
+
                     //For PoW2 peers we use the most recent block pow or pow2 - otherwise we only ever return pow blocks for old peers.
                     if (pfrom->IsPoW2Capable() && most_recent_block_pow2 && most_recent_block_pow && most_recent_block_pow2->GetHashLegacy() == most_recent_block_pow->GetHashLegacy())
                     {
@@ -1484,7 +1483,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             assert(pfrom->fInbound == false);
             pfrom->fDisconnect = true;
         }
-        
+
         //fixme: (GULDEN) do we need this anymore
         /*if (pfrom->cleanSubVer=="/Guldencoin:1.3.1/" || pfrom->cleanSubVer=="/Guldencoin:1.4.0/")
         {
@@ -1501,11 +1500,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
                 item.second.RelayTo(pfrom);
         }
-        
+
         return true;
     }
-    
-    
+
 
     else if (fAlerts && strCommand == NetMsgType::ALERT)
     {
@@ -1522,7 +1520,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 {
                     g_connman->ForEachNode([alert](CNode* pnode) {
                         alert.RelayTo(pnode);
-                    });     
+                    });
                 }
             }
             else {

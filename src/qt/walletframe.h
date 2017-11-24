@@ -71,7 +71,7 @@ private:
 Q_SIGNALS:
     /** Signal to the app that we are ready for wallet loading to commence */
     void loadWallet();
-    
+
 public Q_SLOTS:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
@@ -102,7 +102,7 @@ public Q_SLOTS:
     void usedReceivingAddresses();
     /** Pass on signal over requested out-of-sync-warning information */
     void outOfSyncWarningClicked();
-    
+
     friend class GuldenGUI;
     friend class BitcoinGUI;
 };

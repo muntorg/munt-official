@@ -277,7 +277,7 @@ private:
     std::unique_ptr<QWidget> shutdownWindow;
 
     void startThread();
-    
+
     // GULDEN - rescan code needs this to tell if we try shut down midway through a rescan.
     bool shutDownRequested;
 };
@@ -410,7 +410,7 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
     pollShutdownTimer = new QTimer(window);
     connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
     pollShutdownTimer->start(200);
-    
+
     window->show();
 }
 
@@ -471,7 +471,7 @@ void BitcoinApplication::requestShutdown()
     window->hide();
     window->setClientModel(0);
     pollShutdownTimer->stop();
-    
+
     shutDownRequested = true;
 
 #ifdef ENABLE_WALLET
@@ -597,7 +597,7 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MAC
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
-    
+
     BitcoinApplication app(argc, argv);
 #if QT_VERSION >= 0x050500
     // Because of the POODLE attack it is recommended to disable SSLv3 (https://disablessl3.com/),
@@ -624,7 +624,7 @@ int main(int argc, char *argv[])
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
     GuldenTranslator qtEmptyTranslator(true), qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden;
-    
+
     // This one exists purely for the Gulden 'translation magic'
     QApplication::installTranslator(&qtEmptyTranslator);
 
@@ -745,7 +745,7 @@ int main(int argc, char *argv[])
         QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(strprintf(_("Cannot obtain a lock on data directory %s. %s is probably already running."), GetDataDir().string(), _(PACKAGE_NAME))));
         return 1;
     }
-    
+
     try
     {
         app.createWindow(networkStyle.data());

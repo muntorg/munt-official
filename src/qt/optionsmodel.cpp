@@ -44,7 +44,7 @@ GuldenOptionsModel::GuldenOptionsModel( OptionsModel* parent )
 GuldenOptionsModel::~GuldenOptionsModel()
 {
 }
-    
+
 void GuldenOptionsModel::InitSettings(QSettings& settings)
 {
     // Local currency defaults to EUR
@@ -65,7 +65,7 @@ QString GuldenOptionsModel::getLocalCurrency()
 {
     return localCurrency;
 }
-    
+
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
@@ -99,7 +99,7 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fHideTrayIcon", false);
     fHideTrayIcon = settings.value("fHideTrayIcon").toBool();
     Q_EMIT hideTrayIconChanged(fHideTrayIcon);
-    
+
     if (!settings.contains("fMinimizeToTray"))
         settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && !fHideTrayIcon;
@@ -189,7 +189,7 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();
-    
+
     currencyTicker = NULL;
     nocksSettings = NULL;
     guldenSettings->InitSettings(settings);
