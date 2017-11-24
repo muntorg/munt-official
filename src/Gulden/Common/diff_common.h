@@ -77,13 +77,13 @@
 #if defined __cplusplus
 extern "C" {
 #endif
-    
+
 extern unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, unsigned int nPowTargetSpacing, unsigned int nPowLimit);
 
 #if defined __cplusplus
 };
 #endif
 #endif
-    
+
 #endif
 

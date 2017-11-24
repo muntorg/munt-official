@@ -41,7 +41,6 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 #endif
 )
 {
-   
     #ifndef BUILD_IOS
     #ifndef __JAVA__
     // These two variables are not used in the calculation at all, but only for logging when -debug is set, to prevent logging the same calculation repeatedly.
@@ -96,7 +95,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
 
     // Used for 'exception 2' (see code below), if a block has taken longer than nLongTimeLimit we perform a difficulty reduction, which increases over time based on nLongTimeStep
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
-    // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.   
+    // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.
     const int64_t nDrift   = 1;
     int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     int64_t nLongTimeStep  = nDrift * 60;
@@ -183,7 +182,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             // Prevent bad/negative block times - switch them for a fixed time.
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
-            
+
             //fixme: (DELTA3)
             //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
             //nDeltaTimespan = nRetargetTimespan;
@@ -305,7 +304,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         {
             bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
             bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
-        }        
+        }
 
         #ifndef __JAVA__
         #ifndef BUILD_IOS
