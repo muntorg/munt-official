@@ -3940,11 +3940,24 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
 {
     AssertLockHeld(cs_main);
 
-    assert(nWitnessCoinbaseIndex != -1);
-    assert(block.vtx.size() >= 2);
-    assert(block.vtx[1]->vout.size() == 2);
-    assert(block.vtx[1]->vin.size() == 1);
-    //fixme: Ensure the above two are witness transactions.
+    if (nWitnessCoinbaseIndex == -1)
+        return error("Invalid coinbase index for embedded witness coinbase info.");
+    if (block.vtx.size() < 2)
+        return error("Missing transactions for witness coinbase index, must be at least two transactions.");
+    if (block.vtx[1]->vout.size() != 2)
+        return error("Missing outputs for witness coinbase index, must be exactly two outputs.");
+    if (block.vtx[1]->vin.size() != 1)
+        return error("Missing input for witness coinbase index, must be exactly one input.");
+    if (!IsPow2WitnessOutput(block.vtx[1]->vout[0]))
+        return error("Invalid transaction type for first witness coinbase output, must be a witness address/output.");
+    if (IsPow2WitnessOutput(block.vtx[1]->vout[1]))
+        return error("Invalid transaction type for second witness coinbase output, must not be a witness address/output.");
+
+    CScript expect = CScript() << OP_RETURN << pindexPrev->nHeight + 1;
+    if (block.vtx[1]->vout[1].output.scriptPubKey.size() < expect.size() || !std::equal(expect.begin(), expect.end(), block.vtx[1]->vout[1].output.scriptPubKey.begin()))
+    {
+        return error("Invalid scriptSig for embedded witness coinbase info.");
+    }
 
     //'identifier' already checked in GetPoW2WitnessCoinbaseIndex - so just skip past it.
     std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.begin() + 6, block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.end());
@@ -3965,19 +3978,17 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     ::Unserialize(serialisedWitnessHeaderInfoStream, NOSIZEVECTOR(prevWitnessBlock.witnessHeaderPoW2Sig));
     ::Unserialize(serialisedWitnessHeaderInfoStream, hashPrevPoWIndex);
 
-    //fixme: (GULDEN) (POW2) (2.0) - Logging for all fails..
-
     // Check prev hash
     if (hashPrevPoWIndex != pindexPrev->GetBlockHashLegacy())
-        return false;
+        return error("Embedded witness coinbase info contains mismatched prevHash.");
 
     // Check for valid signature size
     if (prevWitnessBlock.witnessHeaderPoW2Sig.size() != 65)
-        return false;
+        return error("Embedded witness coinbase info contains invalid signature size.");
 
     // Check that block is a witness block
     if (prevWitnessBlock.nVersionPoW2Witness == 0)
-        return false;
+        return error("Embedded witness coinbase info contains invalid witness version.");
 
     // Reconstruct transaction information of previous witness block from the coinbase of this PoW block.
     CMutableTransaction coinbaseTx(2);
@@ -3986,7 +3997,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     coinbaseTx.vout[0] = block.vtx[1]->vout[0];
     coinbaseTx.vout[1].output.scriptPubKey = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].output.scriptPubKey;
     coinbaseTx.vout[1].nValue = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].nValue;
-    //testme: (GULDEN) (PoW2) (2.0)
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vin[0].nSequence = 0;
     coinbaseTx.vin[0].scriptSig = CScript() << pindexPrev->nHeight;
@@ -4007,7 +4017,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         CPubKey pubkey;
         uint256 hash = prevWitnessBlock.GetHashPoW2();
         if (!pubkey.RecoverCompact(hash, prevWitnessBlock.witnessHeaderPoW2Sig))
-            ret = false;
+            ret = error("Could not recover public key from embedded witness coinbase header");
 
         if (ret)
         {
@@ -4018,11 +4028,11 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
             if (witnessOutput.GetType() <= CTxOutType::ScriptOutput)
             {
                 if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
-                    ret = false;
+                    ret = error("Mismatched witness signature for embedded witness coinbase header");
             }
             else
             {
-                ret = false;
+                ret = error("Invalid transaction type for embedded witness coinbase header");
             }
         }
 
@@ -4051,15 +4061,15 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
 
         if (!ContextualCheckBlockHeader(prevWitnessBlock, state, chainParams.GetConsensus(), pPreviousIndexChain, GetAdjustedTime()))
-            ret = false;
+            ret = error("Failed ContextualCheckBlockHeader for embedded witness block");
         if (!ret || !CheckBlock(prevWitnessBlock, state, chainParams.GetConsensus(), false, true))
-            ret = false;
+            ret = error("Failed CheckBlock for embedded witness block");
         if (!ret || !ContextualCheckBlock(prevWitnessBlock, state, chainParams, pPreviousIndexChain))
-            ret = false;
+            ret = error("Failed ContextualCheckBlock for embedded witness block");
         if (!ret || !ConnectBlock(tempChain, prevWitnessBlock, state, &indexDummy, viewNew, chainParams, true, false))
-            ret = false;
+            ret = error("Failed ConnectBlock for embedded witness block");
         if (!state.IsValid())
-            ret = false;
+            ret = error("Invalid state after ConnectBlock for embedded witness block");
 
         // Avoid leaking of memory - we are done with the cloned chain now.
         tempChain.FreeMemory();
@@ -4069,10 +4079,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         LogPrintf("%s\n", prevWitnessBlock.ToString());
 
     return ret;
-
-    //fixme: NEXTNEXTNEXT
-    //Validate block.vtx[1]->vout[0 and 1]
-    //CTxOut fakeOut; fakeOut.output.scriptSig = CScript() << OP_RETURN << pindexPrev->nHeight + 1; fakeOut.nValue = 0;
 }
 
 /** Store block on disk. If dbp is non-NULL, the file is known to already reside on disk */
