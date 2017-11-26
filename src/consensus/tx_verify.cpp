@@ -282,14 +282,32 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
 {
         // This doesn't trigger the DoS code on purpose; if it did, it would make it easier
         // for an attacker to attempt to split the network.
-        if (!inputs.HaveInputs(tx))
-            return state.Invalid(false, 0, "", "Inputs unavailable");
+        if (tx.IsPoW2WitnessCoinBase())
+        {
+            for (unsigned int i = 0; i < tx.vin.size(); i++)
+            {
+                if (!tx.vin[i].prevout.IsNull())
+                {
+                    if (!inputs.HaveCoin(tx.vin[i].prevout))
+                    {
+                        return state.Invalid(false, 0, "", "Inputs unavailable");
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (!inputs.HaveInputs(tx))
+                return state.Invalid(false, 0, "", "Inputs unavailable");
+        }
 
         CAmount nValueIn = 0;
         CAmount nFees = 0;
         for (unsigned int i = 0; i < tx.vin.size(); i++)
         {
             const COutPoint &prevout = tx.vin[i].prevout;
+            if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
+                continue;
             const Coin& coin = inputs.AccessCoin(prevout);
             assert(!coin.IsSpent());
 

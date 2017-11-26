@@ -1225,13 +1225,7 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
  */
 static bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CScriptCheck> *pvChecks)
 {
-    if (tx.IsPoW2WitnessCoinBase())
-    {
-        //fixme: NEXTNEXTNEXTNEXT
-        //assert(0);
-    }
-
-    if (!tx.IsCoinBase())
+    if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase())
     {
         if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs)))
             return false;
@@ -1251,6 +1245,8 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
         if (fScriptChecks) {
             for (unsigned int i = 0; i < tx.vin.size(); i++) {
                 const COutPoint &prevout = tx.vin[i].prevout;
+                if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
+                    continue;
                 const Coin& coin = inputs.AccessCoin(prevout);
                 assert(!coin.IsSpent());
 
@@ -1834,8 +1830,18 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
         if (tx.IsPoW2WitnessCoinBase())
         {
-            //fixme: NEXTNEXTNEXTNEXT
-            //assert(0);
+            for (unsigned int i = 0; i < tx.vin.size(); i++)
+            {
+                if (!tx.vin[i].prevout.IsNull())
+                {
+                    if (!view.HaveCoin(tx.vin[i].prevout))
+                    {
+                        return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
+                    }
+
+                    //fixme: (GULDEN) (HIGH) (2.0) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
+                }
+            }
         }
         else
         {
@@ -1960,8 +1966,8 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                 return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitness), REJECT_INVALID, "bad-witness-cb-amount");
             }
 
-            //fixme: NEXTNEXTNEXT Any similar restrictions required for phase 4??
-            if (GetPoW2Phase(pindex, chainparams) == 3)
+            int npow2phaseindex = GetPoW2Phase(pindex, chainparams);
+            if (npow2phaseindex == 3)
             {
                 if (block.vtx[nWitnessCoinbaseIndex]->vout.size() != 2)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vout size)"), REJECT_INVALID, "bad-witness-cb");
@@ -1974,6 +1980,10 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
                 if (block.vtx[nWitnessCoinbaseIndex]->vin[0].nSequence != 0)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
+            }
+            else if (npow2phaseindex >= 4)
+            {
+                //fixme: NEXT - Implement witness coinbase restrictions here.
             }
         }
         else
