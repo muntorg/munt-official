@@ -1023,10 +1023,11 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
-    //fixme: NEXTNEXTNEXT temporary test - delme once verified to work
+    //fixme: (GULDEN) (2.0) (FINALRELEASE) - Remove this, it is here for testing purposes only.
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //test we are right here as well?
+        if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
+            assert(0);
     }
     else
     {
