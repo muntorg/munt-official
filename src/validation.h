@@ -424,7 +424,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
 
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
-bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
+bool TestBlockValidity(CChain& chain, CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true, CCoinsViewCache* cacheOverride = nullptr);
 
 /** Check whether witness commitments are required for block. */
 bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params);
@@ -488,10 +488,11 @@ std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uin
 CBlockIndex* GetWitnessOrphanForBlock(const int64_t nHeight, const uint256& prevHash, const uint256& powHash);
 
 bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView);
-void GetWitness(CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight);
+void GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride);
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
+bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams);
 
-std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, CBlock* newBlock=NULL);
+std::map<COutPoint, Coin> getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().

@@ -194,7 +194,7 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params)
         return false;
     }
 
-    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(params, pIndex);
+    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainActive, params, pIndex);
 
     // If any PoW2WitnessOutput remain then we aren't active yet.
     for (auto iter : allWitnessCoins)
@@ -317,7 +317,7 @@ void GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainparams, pIndex);
+    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainActive, chainparams, pIndex);
 
     nNumWitnessAddresses = 0;
     nTotalWeight = 0;

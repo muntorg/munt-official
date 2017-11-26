@@ -4441,6 +4441,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
 bool CWallet::InitLoadWallet()
 {
+    LOCK(cs_main);
+
     if (GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
         return true;

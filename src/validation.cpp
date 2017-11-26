@@ -1618,75 +1618,6 @@ int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
     return commitpos;
 }
 
-bool WitnessCoinbaseInfoIsValid(int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams)
-{
-    assert(nWitnessCoinbaseIndex != -1);
-    assert(block.vtx.size() >= 2);
-    assert(block.vtx[1]->vout.size() == 2);
-    assert(block.vtx[1]->vin.size() == 1);
-    //fixme: Ensure the above two are witness transactions.
-
-    //'identifier' already checked in GetPoW2WitnessCoinbaseIndex - so just skip past it.
-    std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.begin() + 6, block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.end());
-    CDataStream serialisedWitnessHeaderInfoStream(serialisedWitnessHeaderInfo, SER_NETWORK, INIT_PROTO_VERSION);
-
-    uint256 hashPrevPoWIndex;
-
-    // Reconstruct header information of previous witness block from the coinbase of this PoW block.
-    CBlock prevWitnessBlock;
-
-    if (!ReadBlockFromDisk(prevWitnessBlock, pindexPrev, chainParams.GetConsensus()))
-        return false;
-
-    prevWitnessBlock.witnessHeaderPoW2Sig.resize(65);
-    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.nVersionPoW2Witness);
-    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.nTimePoW2Witness);
-    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.hashMerkleRootPoW2Witness);
-    ::Unserialize(serialisedWitnessHeaderInfoStream, NOSIZEVECTOR(prevWitnessBlock.witnessHeaderPoW2Sig));
-    ::Unserialize(serialisedWitnessHeaderInfoStream, hashPrevPoWIndex);
-
-    //fixme: (GULDEN) (POW2) (2.0) - Logging for all fails..
-
-    // Check prev hash
-    if (hashPrevPoWIndex != pindexPrev->GetBlockHashLegacy())
-        return false;
-
-    // Check for valid signature size
-    if (prevWitnessBlock.witnessHeaderPoW2Sig.size() != 65)
-        return false;
-
-    // Check that block is a witness block
-    if (prevWitnessBlock.nVersionPoW2Witness == 0)
-        return false;
-
-    // Reconstruct transaction information of previous witness block from the coinbase of this PoW block.
-    CMutableTransaction coinbaseTx(1);
-    coinbaseTx.vin.resize(2);
-    coinbaseTx.vout.resize(2);
-    coinbaseTx.vout[0] = block.vtx[1]->vout[0];
-    coinbaseTx.vout[1].output.scriptPubKey = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].output.scriptPubKey;
-    coinbaseTx.vout[1].nValue = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].nValue;
-    //testme: (GULDEN) (PoW2) (2.0)
-    coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vin[0].nSequence = 0;
-    coinbaseTx.vin[0].scriptSig = CScript() << pindexPrev->nHeight;
-    coinbaseTx.vin[1] = block.vtx[1]->vin[0];
-    prevWitnessBlock.vtx.emplace_back(MakeTransactionRef(std::move(coinbaseTx)));
-
-    // Now test that the reconstructed witness block is valid, if it is then the 'witness coinbase info' of this PoW block is valid.
-    //checkme: (GULDEN) (PoW2) (2.0) - Is it safe to pass false for PoW check here? It should be - but make sure.
-    //CValidationState witnessValidationState;
-    //fixme: HIGHHIGHHIGH NEXTNEXTNEXT
-    //if (!TestBlockValidity(witnessValidationState, chainParams, prevWitnessBlock, (CBlockIndex*)pindexPrev->pprev, false, true))
-        //return false;
-
-    //fixme: NEXTNEXTNEXT
-    //Validate block.vtx[1]->vout[0 and 1]
-    //CTxOut fakeOut; fakeOut.output.scriptSig = CScript() << OP_RETURN << pindexPrev->nHeight + 1; fakeOut.nValue = 0;
-
-    return true;
-}
-
 // Protected by cs_main
 static ThresholdConditionCache warningcache[VERSIONBITS_NUM_BITS];
 
@@ -1701,7 +1632,7 @@ static int64_t nTimeTotal = 0;
 /** Apply the effects of this block (with given index) on the UTXO set represented by coins.
  *  Validity checks that depend on the UTXO set are also done; ConnectBlock()
  *  can fail if those validity checks fail (among other reasons). */
-static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pindex,
+static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, CBlockIndex* pindex,
                   CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false, bool fVerifyWitness=true)
 {
     AssertLockHeld(cs_main);
@@ -1846,7 +1777,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
             CTxOut witnessOutput;
             COutPoint witnessOutPoint;
             unsigned int witnessBlockHeight;
-            GetWitness(pindex->pprev, block, chainparams, witnessOutput, witnessOutPoint, witnessBlockHeight);
+            GetWitness(chain, pindex->pprev, block, chainparams, witnessOutput, witnessOutPoint, witnessBlockHeight, &view);
             if (witnessOutput.GetType() <= CTxOutType::ScriptOutput)
             {
                 if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
@@ -1861,6 +1792,25 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
             {
                 return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
             }
+        }
+    }
+
+    //fixme: (GULDEN) (2.1) After 2.1 the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
+    //So we can move this down and combine it with the scope where we check:
+    //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
+    //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
+    int pow2phaseprevprev = GetPoW2Phase(pindex->pprev->pprev, chainparams);
+    int nWitnessCoinbaseIndex = 0;
+    if (pow2phaseprevprev == 3)
+    {
+        nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
+        if (nWitnessCoinbaseIndex == -1)
+            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
+
+        if (fVerifyWitness)
+        {
+            if (!WitnessCoinbaseInfoIsValid(chain, nWitnessCoinbaseIndex, pindex->pprev, block, chainparams))
+                return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
         }
     }
 
@@ -1954,16 +1904,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 
     //testme: (2.0) (POW2) (HIGH) Ensure this works as intended.
     // Second block of phase 3 up to and including first block of phase 4 (coinbase of previous witness block embedded in coinbase of current PoW block)
-    int pow2phaseprevprev = GetPoW2Phase(pindex->pprev->pprev, chainparams);
     if (pow2phaseprevprev == 3)
     {
-        int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
-        if (nWitnessCoinbaseIndex == -1)
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
-
-        if (!WitnessCoinbaseInfoIsValid(nWitnessCoinbaseIndex, pindex->pprev, block, chainparams))
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
-
         unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
 
         if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
@@ -2021,10 +1963,10 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
             //fixme: NEXTNEXTNEXT Any similar restrictions required for phase 4??
             if (GetPoW2Phase(pindex, chainparams) == 3)
             {
-                if (block.vtx[nWitnessCoinbaseIndex]->vout.size() != 1)
+                if (block.vtx[nWitnessCoinbaseIndex]->vout.size() != 2)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vout size)"), REJECT_INVALID, "bad-witness-cb");
 
-                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 1)
+                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
 
                 if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
@@ -2074,8 +2016,10 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         }
 
         pindex->RaiseValidity(BLOCK_VALID_SCRIPTS);
-        //fixme: NEXTNEXT (Don't set when called from GetWitness())
-        setDirtyBlockIndex.insert(pindex);
+        if (chain == chainActive)
+        {
+            setDirtyBlockIndex.insert(pindex);
+        }
     }
 
     if (fTxIndex)
@@ -2329,8 +2273,8 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             DoWarning(strWarning);
         }
     }
-    LogPrintf("%s: new best=%s height=%d version=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
-      chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion,
+    LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
+      chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
       log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
       DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
       GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
@@ -2492,7 +2436,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
     {
         CCoinsViewCache view(pcoinsTip);
-        bool rv = ConnectBlock(blockConnecting, state, pindexNew, view, chainparams);
+        bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams);
         GetMainSignals().BlockChecked(blockConnecting, state);
         if (!rv) {
             if (state.IsInvalid())
@@ -2844,7 +2788,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
                 if (!ReadBlockFromDisk(block, pindexConnect, chainparams.GetConsensus()))
                     return false;
             }
-            bool rv = ConnectBlock(pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams);
+            bool rv = ConnectBlock(currentChain, pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams);
             if (!rv)
                 return false;
             currentChain.SetTip(pindexConnect);
@@ -2911,7 +2855,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
 }
 
 
-std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain_, CBlock* newBlock)
+std::map<COutPoint, Coin> getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain_, CBlock* newBlock, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
     assert(pPreviousIndexChain_);
@@ -2921,14 +2865,14 @@ std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainPar
     // It won't necessarily be part of the chain yet; if we are in the process of witnessing; or if the block is an older one on a fork; because only blocks that have already been witnessed can be part of the chain.
     // So we have to temporarily force disconnect/reconnect of blocks as necessary to make a temporary working chain that suits the properties we want.
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
-    CCoinsViewCache viewNew(pcoinsTip);
-    std::shared_ptr<CCoinsViewCache> powViewNew = std::make_shared<CCoinsViewCache>(new CCoinsViewCache(ppow2witTip.get()));
+    CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
+    std::shared_ptr<CCoinsViewCache> powViewNew = std::make_shared<CCoinsViewCache>(new CCoinsViewCache((viewOverride && viewOverride->pChainedWitView)?viewOverride->pChainedWitView.get():ppow2witTip.get()));
     viewNew.SetSiblingView(powViewNew);
 
     // fixme: (GULDEN) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CChain tempChain = chainActive.Clone(pPreviousIndexChain_, pPreviousIndexChain);
+    CChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
 
     // Force the tip of the chain to the block that comes before the block we are examining.
@@ -2963,7 +2907,7 @@ std::map<COutPoint, Coin> getAllUnspentWitnessCoins(const CChainParams& chainPar
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
         //fixme: (GULDEN) (PoW2) Error handling
         //fixme: Better error handling than assert is probably a good idea here.
-        if (!ConnectBlock(*newBlock, state, &indexDummy, viewNew, chainParams, true, false))
+        if (!ConnectBlock(tempChain, *newBlock, state, &indexDummy, viewNew, chainParams, true, false))
             assert(0);
     }
 
@@ -3038,12 +2982,12 @@ const int nMinimumWitnessAmount = 5000;
 const int nMinimumWitnessWeight = 10000;
 const int nMinimumParticipationAge = 100;
 const int nMaximumParticipationAge = 10000;
-void GetWitness(CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight)
+void GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
     // Fetch all unspent witness outputs for the chain in which -block- is the tip of the chain.
-    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainParams, pPreviousIndexChain, &block);
+    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, &block, viewOverride);
 
     uint64_t nBlockHeight = pPreviousIndexChain->nHeight + 1;
 
@@ -3299,6 +3243,32 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
             else
             {
                 pIndex->nChainWork = pIndex->pprev->nChainWork + GetBlockProof(*pIndex);
+            }
+        }
+        //fixme: (GULDEN) (2.1) We can remove this once/if we purge all legacy 'phase 3' blocks from the block index.
+        else if (pIndex->pprev && pIndex->pprev->pprev && pIndex->pprev->nChainWork == pIndex->pprev->pprev->nChainWork)
+        {
+            if (GetPoW2Phase(pIndex->pprev, chainparams) == 3)
+            {
+                pIndex->pprev->nChainWork = pIndex->pprev->pprev->nChainWork + GetBlockProof(*pIndex->pprev);
+                pIndex->nChainWork = pIndex->pprev->nChainWork;
+
+                if (setPrevDirty)
+                {
+                    if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pIndex->pprev->nChainWork)
+                        pindexBestHeader = pIndex->pprev;
+                    setDirtyBlockIndex.insert(pIndex->pprev);
+                }
+
+                if (chainActive.Tip() && pIndex->pprev->nChainWork >= chainActive.Tip()->nChainWork)
+                {
+                    setBlockIndexCandidates.insert(pIndex->pprev);
+                }
+            }
+            else
+            {
+                pIndex->pprev->nChainWork = pIndex->pprev->pprev->nChainWork + GetBlockProof(*pIndex->pprev);
+                pIndex->nChainWork = pIndex->pprev->nChainWork;
             }
         }
         else
@@ -3966,6 +3936,145 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
     return true;
 }
 
+bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams)
+{
+    AssertLockHeld(cs_main);
+
+    assert(nWitnessCoinbaseIndex != -1);
+    assert(block.vtx.size() >= 2);
+    assert(block.vtx[1]->vout.size() == 2);
+    assert(block.vtx[1]->vin.size() == 1);
+    //fixme: Ensure the above two are witness transactions.
+
+    //'identifier' already checked in GetPoW2WitnessCoinbaseIndex - so just skip past it.
+    std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.begin() + 6, block.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.end());
+    CDataStream serialisedWitnessHeaderInfoStream(serialisedWitnessHeaderInfo, SER_NETWORK, INIT_PROTO_VERSION);
+
+    uint256 hashPrevPoWIndex;
+
+    // Reconstruct header information of previous witness block from the coinbase of this PoW block.
+    CBlock prevWitnessBlock;
+
+    if (!ReadBlockFromDisk(prevWitnessBlock, pindexPrev, chainParams.GetConsensus()))
+        return false;
+
+    prevWitnessBlock.witnessHeaderPoW2Sig.resize(65);
+    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.nVersionPoW2Witness);
+    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.nTimePoW2Witness);
+    ::Unserialize(serialisedWitnessHeaderInfoStream, prevWitnessBlock.hashMerkleRootPoW2Witness);
+    ::Unserialize(serialisedWitnessHeaderInfoStream, NOSIZEVECTOR(prevWitnessBlock.witnessHeaderPoW2Sig));
+    ::Unserialize(serialisedWitnessHeaderInfoStream, hashPrevPoWIndex);
+
+    //fixme: (GULDEN) (POW2) (2.0) - Logging for all fails..
+
+    // Check prev hash
+    if (hashPrevPoWIndex != pindexPrev->GetBlockHashLegacy())
+        return false;
+
+    // Check for valid signature size
+    if (prevWitnessBlock.witnessHeaderPoW2Sig.size() != 65)
+        return false;
+
+    // Check that block is a witness block
+    if (prevWitnessBlock.nVersionPoW2Witness == 0)
+        return false;
+
+    // Reconstruct transaction information of previous witness block from the coinbase of this PoW block.
+    CMutableTransaction coinbaseTx(2);
+    coinbaseTx.vin.resize(2);
+    coinbaseTx.vout.resize(2);
+    coinbaseTx.vout[0] = block.vtx[1]->vout[0];
+    coinbaseTx.vout[1].output.scriptPubKey = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].output.scriptPubKey;
+    coinbaseTx.vout[1].nValue = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].nValue;
+    //testme: (GULDEN) (PoW2) (2.0)
+    coinbaseTx.vin[0].prevout.SetNull();
+    coinbaseTx.vin[0].nSequence = 0;
+    coinbaseTx.vin[0].scriptSig = CScript() << pindexPrev->nHeight;
+    coinbaseTx.vin[1] = block.vtx[1]->vin[0];
+    prevWitnessBlock.vtx.emplace_back(MakeTransactionRef(std::move(coinbaseTx)));
+
+    // Ensure that the witness signature itself is actually valid.
+    bool ret = true;
+    if (ret)
+    {
+        CBlockIndex* pPreviousIndexChain = nullptr;
+        CChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CValidationState state;
+        CCoinsViewCache viewNew(pcoinsTip);
+        std::shared_ptr<CCoinsViewCache> powViewNew = std::make_shared<CCoinsViewCache>(new CCoinsViewCache(ppow2witTip.get()));
+        viewNew.SetSiblingView(powViewNew);
+
+        CPubKey pubkey;
+        uint256 hash = prevWitnessBlock.GetHashPoW2();
+        if (!pubkey.RecoverCompact(hash, prevWitnessBlock.witnessHeaderPoW2Sig))
+            ret = false;
+
+        if (ret)
+        {
+            CTxOut witnessOutput;
+            COutPoint witnessOutPoint;
+            unsigned int witnessBlockHeight;
+            GetWitness(tempChain, pPreviousIndexChain, prevWitnessBlock, chainParams, witnessOutput, witnessOutPoint, witnessBlockHeight, &viewNew);
+            if (witnessOutput.GetType() <= CTxOutType::ScriptOutput)
+            {
+                if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
+                    ret = false;
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+
+        // Avoid leaking of memory - we are done with the cloned chain now.
+        tempChain.FreeMemory();
+    }
+
+    // Now test that the reconstructed witness block is valid, if it is then the 'witness coinbase info' of this PoW block is valid.
+    // fixme: (GULDEN) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
+    // We work on a clone of the chain to prevent modifying the actual chain.
+    {
+        CBlockIndex* pPreviousIndexChain = nullptr;
+        CChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CValidationState state;
+        CCoinsViewCache viewNew(pcoinsTip);
+        std::shared_ptr<CCoinsViewCache> powViewNew = std::make_shared<CCoinsViewCache>(new CCoinsViewCache(ppow2witTip.get()));
+        viewNew.SetSiblingView(powViewNew);
+        // Force the tip of the chain to the block that comes before the block we are examining.
+        ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
+
+        CValidationState witnessValidationState;
+        assert(pPreviousIndexChain && pPreviousIndexChain == tempChain.Tip());
+
+        CBlockIndex indexDummy(prevWitnessBlock);
+        indexDummy.pprev = pPreviousIndexChain;
+        indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
+
+        if (!ContextualCheckBlockHeader(prevWitnessBlock, state, chainParams.GetConsensus(), pPreviousIndexChain, GetAdjustedTime()))
+            ret = false;
+        if (!ret || !CheckBlock(prevWitnessBlock, state, chainParams.GetConsensus(), false, true))
+            ret = false;
+        if (!ret || !ContextualCheckBlock(prevWitnessBlock, state, chainParams, pPreviousIndexChain))
+            ret = false;
+        if (!ret || !ConnectBlock(tempChain, prevWitnessBlock, state, &indexDummy, viewNew, chainParams, true, false))
+            ret = false;
+        if (!state.IsValid())
+            ret = false;
+
+        // Avoid leaking of memory - we are done with the cloned chain now.
+        tempChain.FreeMemory();
+    }
+
+    if (!ret)
+        LogPrintf("%s\n", prevWitnessBlock.ToString());
+
+    return ret;
+
+    //fixme: NEXTNEXTNEXT
+    //Validate block.vtx[1]->vout[0 and 1]
+    //CTxOut fakeOut; fakeOut.output.scriptSig = CScript() << OP_RETURN << pindexPrev->nHeight + 1; fakeOut.nValue = 0;
+}
+
 /** Store block on disk. If dbp is non-NULL, the file is known to already reside on disk */
 static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const CDiskBlockPos* dbp, bool* fNewBlock)
 {
@@ -4088,17 +4197,15 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
     return true;
 }
 
-bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW, bool fCheckMerkleRoot)
+bool TestBlockValidity(CChain& chain, CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW, bool fCheckMerkleRoot, CCoinsViewCache* cacheOverride)
 {
     AssertLockHeld(cs_main);
-    //fixme: (GULDEN) We have to disable this assertion because the embedded witness phase 3 stuff needs to test validity on a non-tip block
-    //Is it okay to just disable this?
-    //Is it the utxo thats the issue?
-    assert(pindexPrev && pindexPrev == chainActive.Tip());
+
+    assert(pindexPrev && pindexPrev == chain.Tip());
     if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, block.GetHashPoW2()))
         return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
-    CCoinsViewCache viewNew(pcoinsTip);
+    CCoinsViewCache viewNew(cacheOverride?cacheOverride:pcoinsTip);
     CBlockIndex indexDummy(block);
     indexDummy.pprev = pindexPrev;
     indexDummy.nHeight = pindexPrev->nHeight + 1;
@@ -4110,7 +4217,7 @@ bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams,
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
     if (!ContextualCheckBlock(block, state, chainparams, pindexPrev))
         return error("%s: Consensus::ContextualCheckBlock: %s", __func__, FormatStateMessage(state));
-    if (!ConnectBlock(block, state, &indexDummy, viewNew, chainparams, true))
+    if (!ConnectBlock(chain, block, state, &indexDummy, viewNew, chainparams, true))
         return false;
     assert(state.IsValid());
 
@@ -4351,11 +4458,23 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         CBlockIndex* pindex = item.second;
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
     }
-    sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool 
+    {
+        //Ensure PoW block always comes first in sort before witness block of same height.
+        if (a.first == b.first)
+        {
+            if (a.second->nVersionPoW2Witness == 0 && b.second->nVersionPoW2Witness > 0)
+                return true;
+            if (a.second->nVersionPoW2Witness > 0 && b.second->nVersionPoW2Witness == 0)
+                return false;
+            return a.second < b.second;
+        }
+        return a.first < b.first;
+    }
+    );
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
-        //checkme: (Gulden) (2.0) (POW2) - because we pass false here, I'm not 100% sure we respond right to the 'previous' chainwork updating in phase 3...
         SetChainWorkForIndex(pindex, chainparams, false);
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
         // We can link the chain of blocks for which we've received transactions at some point.
@@ -4372,6 +4491,16 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
                 pindex->nChainTx = pindex->nTx;
             }
         }
+
+        //fixme: (GULDEN) (2.2) We can eventually dump this at some point in the future (well after 2.1).
+        //Doing so may cause some oddities on nodes that have old phase 3 stale data, so we shouldn't be in a rush to do this..
+        //Skip phase 3 PoS blocks, don't let them be part of the chain.
+        if (pindex->nVersionPoW2Witness != 0 && pindex->pprev->nVersionPoW2Witness == 0)
+        {
+            setBlockIndexCandidates.insert(pindex);
+            continue;
+        }
+
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
             setBlockIndexCandidates.insert(pindex);
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
@@ -4551,7 +4680,7 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
             CBlock block;
             if (!ReadBlockFromDisk(block, pindex, chainparams.GetConsensus()))
                 return error("VerifyDB(): *** ReadBlockFromDisk failed at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
-            if (!ConnectBlock(block, state, pindex, coins, chainparams))
+            if (!ConnectBlock(chainActive, block, state, pindex, coins, chainparams))
                 return error("VerifyDB(): *** found unconnectable block at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
         }
     }
