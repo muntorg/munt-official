@@ -26,8 +26,10 @@ uint256 BlockMerkleRoot(const std::vector<CTransactionRef>::const_iterator txSta
  * Compute the Merkle root of the witness transactions in a block.
  * *mutated is set to true if a duplicated subtree was found.
  */
-//fixme: (GULDEN) (2.0) NEXT NEXT NEXT
+#if 0
+//Gulden - We don't need this as for Gulden BlockWitnessMerkleRoot and BlockMerkleRoot are -identical- once transaction version 3 kicks in.
 uint256 BlockWitnessMerkleRoot(const CBlock& block, bool* mutated = NULL);
+#endif
 
 /*
  * Compute the Merkle branch for the tree of transactions in a block, for a

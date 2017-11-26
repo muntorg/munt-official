@@ -175,6 +175,7 @@ uint256 BlockMerkleRoot(const std::vector<CTransactionRef>::const_iterator txSta
     return ComputeMerkleRoot(leaves, mutated);
 }
 
+#if 0
 uint256 BlockWitnessMerkleRoot(const CBlock& block, bool* mutated)
 {
     std::vector<uint256> leaves;
@@ -185,6 +186,7 @@ uint256 BlockWitnessMerkleRoot(const CBlock& block, bool* mutated)
     }
     return ComputeMerkleRoot(leaves, mutated);
 }
+#endif
 
 std::vector<uint256> BlockMerkleBranch(const CBlock& block, uint32_t position)
 {

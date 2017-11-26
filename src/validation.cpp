@@ -3544,7 +3544,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
         {
             uint256 hashMerkleRoot3 = BlockMerkleRoot(block.vtx.begin()+nWitnessCoinbaseIndex, block.vtx.end(), &mutated);
             if (block.hashMerkleRootPoW2Witness != hashMerkleRoot3)
-                return state.DoS(100, false, REJECT_INVALID, "bad-txnmrklroot", true, "witness hashMerkleRoot mismatch");
+                return state.DoS(100, false, REJECT_INVALID, "bad-txnmrklroot", true, "pow2 witness hashMerkleRoot mismatch");
 
             // Check for merkle tree malleability (CVE-2012-2459): repeating sequences
             // of transactions in a block without affecting the merkle root of a block,
@@ -3604,9 +3604,11 @@ bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& pa
     return false;
 }
 
+#if 0
+//GULDEN - We don't implement any of this because our witness commitment just becomes part of the merkle root.
 // Compute at which vout of the block's coinbase transaction the witness
 // commitment occurs, or -1 if not found.
-/*static int GetWitnessCommitmentIndex(const CBlock& block)
+static int GetWitnessCommitmentIndex(const CBlock& block)
 {
     int commitpos = -1;
     if (!block.vtx.empty()) {
@@ -3658,7 +3660,8 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
     }
     UpdateUncommittedBlockStructures(block, pindexPrev, consensusParams);
     return commitment;
-}*/
+}
+#endif
 
 
 
@@ -3821,9 +3824,9 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
     //   multiple, the last one is used.
     bool fHaveWitness = (nPoW2PhasePrev >= 4);
-    //fixme: (HIGH) (GULDEN) (2.0) (SEGSIG) NEXTNEXTNEXT
-    //Make sure we include the witness data in the blockhash...
-    /*if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
+    #if 0
+    //GULDEN - We hash this data as part of the normal merkle root instead.
+    if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
         int commitpos = GetWitnessCommitmentIndex(block);
         if (commitpos != -1) {
             bool malleated = false;
@@ -3840,7 +3843,8 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
             }
             fHaveWitness = true;
         }
-    }*/
+    }
+    #endif
 
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
     if (!fHaveWitness) {
