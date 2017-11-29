@@ -33,7 +33,7 @@ inline void hash_city(const void* pData, arith_uint256& thash)
     thash <<= 64;
     thash |= temphash.second;
     thash <<= 64;
-    temphash = CityHash128((char*)&thash, 80);
+    temphash = CityHash128((char*)ArithToUint256(thash).begin(), 32);
     thash |= temphash.first;
     thash <<= 64;
     thash |= temphash.second;
