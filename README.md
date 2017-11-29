@@ -127,4 +127,4 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |DNS Seed 5|seed.gulden.blue||
 
 ### Official testnet settings
--testnet=C1507484844:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46
+-testnet=C1511943855:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46
