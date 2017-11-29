@@ -936,7 +936,6 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
 //
 // CBlock and CBlockIndex
 //
-
 static bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
 {
     // Open history file to append
@@ -2501,7 +2500,11 @@ static CBlockIndex* FindMostWorkChain() {
         CBlockIndex *pindexTest = pindexNew;
         bool fInvalidAncestor = false;
         while (pindexTest && !chainActive.Contains(pindexTest)) {
-            assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
+            //fixme: (GULDEN) (2.1) See if we can change back to an assert here.
+            //had to remove assert for compatibility with 1.6.x nodes.
+            //assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
+            if(!pindexTest->nChainTx && pindexTest->nHeight != 0)
+                return NULL;
 
             // Pruned nodes may have entries in setBlockIndexCandidates for
             // which block files have been deleted.  Remove those as candidates
@@ -2755,7 +2758,6 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
 static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace, CCoinsViewCache& coinView)
 {
     AssertLockHeld(cs_main);
-    const CBlockIndex *pindexOldTip = currentChain.Tip();
     const CBlockIndex *pindexFork = currentChain.FindFork(pindexMostWork);
 
     // Disconnect active blocks which are no longer in the best chain.
@@ -2813,7 +2815,6 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
 bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView) {
     CBlockIndex* pindexNewTip = nullptr;
     do {
-        const CBlockIndex *pindexFork;
         bool fInitialDownload;
         {
             LOCK(cs_main);
@@ -3671,7 +3672,7 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
 static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
 {
     assert(pindexPrev != NULL);
-    const int nHeight = pindexPrev->nHeight + 1;
+    //const int nHeight = pindexPrev->nHeight + 1;
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
@@ -3730,6 +3731,18 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
 
     int nPoW2PhasePrev = pindexPrev ? GetPoW2Phase(pindexPrev, chainParams) : 1;
     int nPoW2PhasePrevPrev = pindexPrev ? GetPoW2Phase(pindexPrev->pprev, chainParams) : 1;
+
+    // Check that no transactions (from phase2 onward) have transaction version above 4 - this behaviour is no longer allowed
+    if (nPoW2PhasePrev >= 2)
+    {
+        for (const auto& tx : block.vtx)
+        {
+            if (tx->nVersion > 1000)
+            {
+                return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "non-standard transaction versions above 1000 are no longer permitted.");
+            }
+        }
+    }
 
     // Check that no transactions (from phase4 onward) contain a scriptSig - scriptSig is completely deprecated.
     if (nPoW2PhasePrevPrev >= 4)
@@ -4602,6 +4615,173 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(),
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
         GuessVerificationProgress(chainparams.TxData(), chainActive.Tip()));
+
+    return true;
+}
+
+bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion)
+{
+    LOCK(cs_main);
+
+    // Gulden 2.0 onwards
+    // Refresh all blocks on disk - change in serialisation format.
+    if (nPreviousVersion == 0 && nCurrentVersion >= 1)
+    {
+        // Move all the block files into backup files
+        int nFile = 0;
+
+        while (nFile < 1000)
+        {
+            CDiskBlockPos pos(nFile, 0);
+            if (fs::exists(GetBlockPosFilename(pos, "blk")))
+            {
+                fs::rename(GetBlockPosFilename(pos, "blk"), GetBlockPosFilename(pos, "16_blk"));
+            }
+            if (fs::exists(GetBlockPosFilename(pos, "rev")))
+            {
+                fs::rename(GetBlockPosFilename(pos, "rev"), GetBlockPosFilename(pos, "16_rev"));
+            }
+            ++nFile;
+        }
+        vinfoBlockFile.clear();
+
+        // (Optimisation) Sort by height so that the files end up "in order" in the new block files.
+        std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
+        vSortedByHeight.reserve(mapBlockIndex.size());
+        BOOST_FOREACH(const PAIRTYPE(uint256, CBlockIndex*)& item, mapBlockIndex)
+        {
+            CBlockIndex* pindex = item.second;
+            vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
+        }
+        sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool { return a.first < b.first; });
+
+        // Now read the block files in one at a time from the old files and write them into the new files.
+        CBlock* pblock = new CBlock();
+        std::vector<std::pair<int, const CBlockFileInfo*> > vDirtyFiles;
+        std::vector<const CBlockIndex*> vDirtyBlocks;
+        for(const auto& item: vSortedByHeight)
+        {
+            CBlockIndex* pindex = item.second;
+            pblock->SetNull();
+
+            CDiskBlockPos blockpos = pindex->GetBlockPos();
+            CDiskBlockPos undoPos = pindex->GetUndoPos();
+
+            if (blockpos.nFile >= 0)
+            {
+                vDirtyFiles.push_back(std::make_pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+                // Read block in, using old transaction format.
+                {
+                    CAutoFile filein(OpenDiskFile(blockpos, "16_blk", true), SER_DISK, CLIENT_VERSION|SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+                    if (filein.IsNull())
+                        return error("UpgradeBlockIndex: ReadBlockFromDisk: OpenBlockFile failed for %s", blockpos.ToString());
+                    try
+                    {
+                        filein >> *pblock;
+                    }
+                    catch (const std::exception& e)
+                    {
+                        return error("UpgradeBlockIndex: %s: Deserialize or I/O error - %s at %s", __func__, e.what(), blockpos.ToString());
+                    }
+
+                    if ((pindex->nStatus & BLOCK_VALID_MASK) == BLOCK_VALID_MASK)
+                    {
+                        if (!CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, chainparams.GetConsensus()))
+                            return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block header at %s", blockpos.ToString());
+                    }
+                }
+
+                // Write block out using new transaction format.
+                {
+                    unsigned int nSize = ::GetSerializeSize(*pblock, SER_DISK, CLIENT_VERSION);
+                    CValidationState state;
+                    FindBlockPos(state, blockpos, nSize+8, 0, pblock->GetBlockTime());
+                    CAutoFile fileout(OpenBlockFile(blockpos), SER_DISK, CLIENT_VERSION);
+                    if (fileout.IsNull())
+                        return error("UpgradeBlockIndex: WriteBlockToDisk: OpenBlockFile failed");
+                    fileout << FLATDATA(chainparams.MessageStart()) << nSize;
+                    long fileOutPos = ftell(fileout.Get());
+                    if (fileOutPos < 0)
+                        return error("UpgradeBlockIndex: WriteBlockToDisk: ftell failed");
+                    blockpos.nPos = (unsigned int)fileOutPos;
+                    fileout << *pblock;
+                    pindex->nFile = blockpos.nFile;
+                    pindex->nDataPos = blockpos.nPos;
+                }
+
+                if (pindex->nStatus & BLOCK_HAVE_UNDO)
+                {
+                    // Read undo information
+                    CBlockUndo blockundo;
+                    {
+                        CAutoFile filein(OpenDiskFile(undoPos, "16_rev", true), SER_DISK, CLIENT_VERSION|SERIALIZE_TXUNDO_LEGACY_COMPRESSION);
+                        if (filein.IsNull())
+                            return error("UpgradeBlockIndex: OpenUndoFile failed");
+                        uint256 hashChecksum;
+                        CHashVerifier<CAutoFile> verifier(&filein); // We need a CHashVerifier as reserializing may lose data
+                        try {
+                            verifier << pindex->pprev->GetBlockHashPoW2();
+                            verifier >> blockundo;
+                            filein >> hashChecksum;
+                        }
+                        catch (const std::exception& e) {
+                            return error("%s: Deserialize or I/O error - %s", __func__, e.what());
+                        }
+                        if (hashChecksum != verifier.GetHash())
+                            return error("%s: Checksum mismatch", __func__);
+                    }
+
+                    // Write undo information back to disk with modified hash
+                    {
+                        CValidationState state;
+                        CDiskBlockPos undoDiskPos;
+                        if (!FindUndoPos(state, pindex->nFile, undoDiskPos, ::GetSerializeSize(blockundo, SER_DISK, CLIENT_VERSION) + 40))
+                            return error("UpgradeBlockIndex: FindUndoPos failed");
+                        if (!UndoWriteToDisk(blockundo, undoDiskPos, pindex->pprev->GetBlockHashLegacy(), chainparams.MessageStart()))
+                            return AbortNode(state, "UpgradeBlockIndex: Failed to write undo data");
+
+                        // update nUndoPos in block index
+                        pindex->nUndoPos = undoDiskPos.nPos;
+                    }
+                }
+
+                // Update the block index as the position of the block on disk has changed.
+                vDirtyBlocks.push_back(pindex);
+                vDirtyFiles.push_back(std::make_pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+
+                if (pindex->nHeight == chainActive.Tip()->nHeight)
+                {
+                    assert(pindex->nDataPos == chainActive.Tip()->nDataPos);
+                    assert(pindex->nUndoPos == chainActive.Tip()->nUndoPos);
+                }
+            }
+        }
+        delete pblock;
+
+        FlushBlockFile();
+        if (!pblocktree->WriteBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks))
+        {
+            return error("UpgradeBlockIndex: Failed to write to block index database");
+        }
+
+        // Remove the old backup block files as upgrade is done.
+        nFile = 0;
+        while (nFile < 1000)
+        {
+            CDiskBlockPos pos(nFile, 0);
+            if (fs::exists(GetBlockPosFilename(pos, "16_blk")))
+            {
+                if (!fs::remove(GetBlockPosFilename(pos, "16_blk")))
+                    return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, "16_blk"));
+            }
+            if (fs::exists(GetBlockPosFilename(pos, "16_rev")))
+            {
+                if (!fs::remove(GetBlockPosFilename(pos, "16_rev")))
+                    return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, "16_rev"));
+            }
+            ++nFile;
+        }
+    }
 
     return true;
 }

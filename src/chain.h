@@ -367,7 +367,7 @@ public:
             const CBlockIndex* pindex = this;
             for (int i = 0; i < nMedianTimeSpan/2 && pindex; i++, pindex = pindex->pprev)
             {
-                *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->nTimePoW2Witness : pindex->GetBlockTime();
+                *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->GetBlockTime() : pindex->nTimePoW2Witness;
                 *(--pbegin) = pindex->GetBlockTime();
             }
 
@@ -391,7 +391,9 @@ public:
 
     int64_t GetMedianTimePastPoW() const
     {
-        int nMedianTimeSpan = 3;
+        int nMedianTimeSpan = 11;
+        if (nHeight >  437500 || IsArgSet("-testnet"))
+            nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
@@ -407,7 +409,9 @@ public:
 
     int64_t GetMedianTimePastWitness() const
     {
-        int nMedianTimeSpan = 3;
+        int nMedianTimeSpan = 11;
+        if (nHeight >  437500 || IsArgSet("-testnet"))
+            nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
         int64_t* pbegin = &pmedian[nMedianTimeSpan];
@@ -415,7 +419,7 @@ public:
 
         const CBlockIndex* pindex = this;
         for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
-            *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->nTimePoW2Witness : pindex->GetBlockTime();
+            *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->GetBlockTime() : pindex->nTimePoW2Witness;
 
         std::sort(pbegin, pend);
         return pbegin[(pend - pbegin)/2];
@@ -504,7 +508,6 @@ public:
         READWRITE(nBits);
         READWRITE(nNonce);
 
-        //fixme: NEXT NEXT NEXT - does this screw up index reading?
         try
         {
             READWRITE(nVersionPoW2Witness);
@@ -519,7 +522,6 @@ public:
         }
         catch (...)
         {
-
         }
     }
 

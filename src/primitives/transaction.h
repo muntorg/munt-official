@@ -84,7 +84,7 @@ public:
     {
         const CSerActionUnserialize ser_action;
 
-        if (nTransactionVersion < 3)
+        if (nTransactionVersion < 4 || nTransactionVersion > 1000)
         {
             isHash = 1;
             STRREAD(hash);
@@ -116,7 +116,7 @@ public:
     {
         const CSerActionSerialize ser_action;
 
-        if (nTransactionVersion < 3)
+        if (nTransactionVersion < 4 || nTransactionVersion > 1000)
         {
             STRWRITE(hash);
             uint32_t nTemp = (n == UINT31_MAX ? std::numeric_limits<uint32_t>::max() : (uint32_t)n);
@@ -237,7 +237,7 @@ public:
         const CSerActionUnserialize ser_action;
 
         //2.0 onwards we have versioning for CTxIn
-        if (nTransactionVersion >= 3)
+        if (nTransactionVersion >= 4 && nTransactionVersion < 1000)
         {
             uint8_t nTypeAndFlags_;
             STRREAD(nTypeAndFlags_);
@@ -260,9 +260,9 @@ public:
     {
         const CSerActionSerialize ser_action;
 
-        if (nTransactionVersion >= 3)
+        if (nTransactionVersion >= 4 && nTransactionVersion < 1000)
         {
-            uint8_t nTypeAndFlags_;
+            uint8_t nTypeAndFlags_=0;
             STRWRITE(nTypeAndFlags_);
 
             prevout.WriteToStream(s, GetType(), GetFlags(), nTransactionVersion);
@@ -590,6 +590,7 @@ public:
             case CTxOutType::StandardKeyHashOutput:
                 output.standardKeyHash = copyFrom.output.standardKeyHash; break;
         }
+        return *this;
     }
 
     CTxOut()
@@ -761,7 +762,7 @@ template<typename Stream, typename TxType>
 inline void UnserializeTransaction(TxType& tx, Stream& s) {
     const bool fAllowWitness = !(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS);
 
-    //s >> tx.nVersion;
+    s >> tx.nVersion;
     unsigned char flags = 0;
     tx.vin.clear();
     tx.vout.clear();
@@ -865,7 +866,7 @@ enum TransactionFlags : uint8_t
 };
 
 template<typename Stream, typename TxType> inline void SerializeTransaction(const TxType& tx, Stream& s) {
-    if (tx.nVersion < 3)
+    if (tx.nVersion < 4 || tx.nVersion > 1000)
         return SerializeTransactionOld(tx, s);
 
     // Setup flags
@@ -938,17 +939,16 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
 
 template<typename Stream, typename TxType>
 inline void UnserializeTransaction(TxType& tx, Stream& s) {
+    const CSerActionUnserialize ser_action;
+
     //Version
-    //fixme: (GULDEN) (2.0) (ENSURE NO REAL TXES EVER HAVE TRANSACTION VERSION 0)
-    tx.nVersion = ReadVarInt<Stream, int32_t>(s);
-    if (tx.nVersion < 3)
+    STRPEEK(tx.nVersion);
+    if (tx.nVersion < 4 || tx.nVersion > 1000)
     {
-        unsigned char v2, v3, v4;
-        s >> v2; s >> v3; s >> v4;
-        assert(v2 == 0); assert(v3 == 0); assert(v4 == 0);
         UnserializeTransactionOld(tx, s);
         return;
     }
+    tx.nVersion = ReadVarInt<Stream, int32_t>(s);
 
     //Flags + (opt) ExtraFlags
     tx.flags.reset();
@@ -1028,7 +1028,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 
 
 //fixme: (GULDEN) (2.1) Remove
-#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params()) >= 4 ? 3 : 2)
+#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params()) >= 4 ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
@@ -1037,13 +1037,14 @@ class CTransaction
 {
 public:
     // Default transaction version.
-    static const int32_t CURRENT_VERSION=2;
+    static const int32_t CURRENT_VERSION=3;
 
     // Changing the default transaction version requires a two step process: first
     // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
     // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
     // MAX_STANDARD_VERSION will be equal.
-    static const int32_t MAX_STANDARD_VERSION=3;
+    static const int32_t MAX_STANDARD_VERSION=4;
+    static const int32_t SEGSIG_ACTIVATION_VERSION=4;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not

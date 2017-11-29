@@ -92,23 +92,22 @@ public:
 /** wrapper for CTxOut that provides a more compact serialization */
 // This class basically becomes a no-op as our txouts are already compressed.
 #define CTxOutCompressor(x) x
-/*
-class CTxOutCompressor
+
+class CTxOutCompressorLegacy
 {
 private:
     CTxOut &txout;
 
 public:
-    //static uint64_t CompressAmount(uint64_t nAmount);
-    //static uint64_t DecompressAmount(uint64_t nAmount);
+    static uint64_t CompressAmount(uint64_t nAmount);
+    static uint64_t DecompressAmount(uint64_t nAmount);
 
-    CTxOutCompressor(CTxOut &txoutIn) : txout(txoutIn) { }
+    CTxOutCompressorLegacy(CTxOut &txoutIn) : txout(txoutIn) { }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        txout.SerializationOp(s, ser_action);
         if (!ser_action.ForRead()) {
             uint64_t nVal = CompressAmount(txout.nValue);
             READWRITE(VARINT(nVal));
@@ -117,9 +116,8 @@ public:
             READWRITE(VARINT(nVal));
             txout.nValue = DecompressAmount(nVal);
         }
-        CScriptCompressor cscript(REF(txout.scriptPubKey));
+        CScriptCompressor cscript(REF(txout.output.scriptPubKey));
         READWRITE(cscript);
     }
 };
-*/
 #endif // BITCOIN_COMPRESSOR_H

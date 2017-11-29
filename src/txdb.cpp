@@ -32,6 +32,7 @@ static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
+static const char DB_VERSION = '1';
 static const char DB_POW2_PHASE3 = '3';
 static const char DB_POW2_PHASE4 = '4';
 static const char DB_POW2_PHASE5 = '5';
@@ -368,51 +369,103 @@ public:
         // coinbase height
         ::Unserialize(s, VARINT(nHeight));
     }
+
+    template<typename Stream>
+    void UnserializeLegacy(Stream &s) {
+        unsigned int nCode = 0;
+        // version
+        int nVersionDummy;
+        ::Unserialize(s, VARINT(nVersionDummy));
+        // header code
+        ::Unserialize(s, VARINT(nCode));
+        fCoinBase = nCode & 1;
+        std::vector<bool> vAvail(2, false);
+        vAvail[0] = (nCode & 2) != 0;
+        vAvail[1] = (nCode & 4) != 0;
+        unsigned int nMaskCode = (nCode / 8) + ((nCode & 6) != 0 ? 0 : 1);
+        // spentness bitmask
+        while (nMaskCode > 0) {
+            unsigned char chAvail = 0;
+            ::Unserialize(s, chAvail);
+            for (unsigned int p = 0; p < 8; p++) {
+                bool f = (chAvail & (1 << p)) != 0;
+                vAvail.push_back(f);
+            }
+            if (chAvail != 0)
+                nMaskCode--;
+        }
+        // txouts themself
+        vout.assign(vAvail.size(), CTxOut());
+        for (unsigned int i = 0; i < vAvail.size(); i++) {
+            if (vAvail[i])
+                ::Unserialize(s, REF(CTxOutCompressorLegacy(vout[i])));
+        }
+        // coinbase height
+        ::Unserialize(s, VARINT(nHeight));
+    }
 };
 
 }
 
 /** Upgrade the database from older formats.
- *
- * Currently implemented: from the per-tx utxo model (0.8..0.14.x) to per-txout.
  */
 bool CCoinsViewDB::Upgrade() {
     std::unique_ptr<CDBIterator> pcursor(db.NewIterator());
     pcursor->Seek(std::make_pair(DB_COINS, uint256()));
+    nCurrentVersion = 1;
+    nPreviousVersion = 1;
     if (!pcursor->Valid()) {
+        db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
         return true;
     }
 
-    LogPrintf("Upgrading database...\n");
-    size_t batch_size = 1 << 24;
-    CDBBatch batch(db);
-    while (pcursor->Valid()) {
-        boost::this_thread::interruption_point();
-        std::pair<unsigned char, uint256> key;
-        if (pcursor->GetKey(key) && key.first == DB_COINS) {
-            CCoins old_coins;
-            if (!pcursor->GetValue(old_coins)) {
-                return error("%s: cannot parse CCoins record", __func__);
-            }
-            COutPoint outpoint(key.second, 0);
-            for (size_t i = 0; i < old_coins.vout.size(); ++i) {
-                if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable()) {
-                    Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase);
-                    outpoint.n = i;
-                    CoinEntry entry(&outpoint);
-                    batch.Write(entry, newcoin);
-                }
-            }
-            batch.Erase(key);
-            if (batch.SizeEstimate() > batch_size) {
-                db.WriteBatch(batch);
-                batch.Clear();
-            }
-            pcursor->Next();
-        } else {
-            break;
-        }
+    if (db.Exists(DB_VERSION))
+    {
+        db.Read(DB_VERSION, nPreviousVersion);
+        nCurrentVersion = nPreviousVersion;
     }
-    db.WriteBatch(batch);
+    else
+    {
+        nCurrentVersion = nPreviousVersion = 0;
+    }
+
+    // Gulden 2.0 - transaction format changes.
+    // Also simulatenously upgrade from the per-tx utxo model (bitcoin 0.8..0.14.x) to per-txout.
+    if (nCurrentVersion == 0)
+    {
+        LogPrintf("Upgrading database to be segwit compatible...\n");
+        CDBBatch batch(db);
+        size_t batch_size = 1 << 24;
+        while (pcursor->Valid()) {
+            boost::this_thread::interruption_point();
+            std::pair<unsigned char, uint256> key;
+            if (pcursor->GetKey(key) && key.first == DB_COINS) {
+                CCoins old_coins;
+                if (!pcursor->GetValueLegacy(old_coins)) {
+                    return error("%s: cannot parse CCoins record", __func__);
+                }
+                COutPoint outpoint(key.second, 0);
+                for (size_t i = 0; i < old_coins.vout.size(); ++i) {
+                    if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable()) {
+                        Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase);
+                        outpoint.n = i;
+                        CoinEntry entry(&outpoint);
+                        batch.Write(entry, newcoin);
+                    }
+                }
+                batch.Erase(key);
+                if (batch.SizeEstimate() > batch_size) {
+                    db.WriteBatch(batch);
+                    batch.Clear();
+                }
+                pcursor->Next();
+            } else {
+                break;
+            }
+        }
+        nCurrentVersion = 1;
+        batch.Write(DB_VERSION, nCurrentVersion);
+        db.WriteBatch(batch);
+    }
     return true;
 }

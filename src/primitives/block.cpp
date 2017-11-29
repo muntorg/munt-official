@@ -38,7 +38,7 @@ uint256 CBlockHeader::GetHashPoW2(bool force) const
     return SerializeHash(*this, SER_GETHASH, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG);
 }
 
-uint256&& CBlock::GetPoWHash() const
+uint256 CBlock::GetPoWHash() const
 {
     //if (!cachedPOWHash.IsNull())
         //return cachedPOWHash;
@@ -60,7 +60,7 @@ uint256&& CBlock::GetPoWHash() const
     }
     //cachedPOWHash = ArithToUint256(thash);
     //return cachedPOWHash;
-    return std::move(hashRet);
+    return hashRet;
 }
 
 std::string CBlock::ToString() const

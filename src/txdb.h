@@ -89,6 +89,9 @@ public:
     //! Attempt to update from an older database format. Returns whether an error occurred.
     bool Upgrade();
     size_t EstimateSize() const override;
+    // For handling of upgrades.
+    uint32_t nCurrentVersion;
+    uint32_t nPreviousVersion;
 };
 
 /** CWitViewDB backed by the witness database (witstate/) */

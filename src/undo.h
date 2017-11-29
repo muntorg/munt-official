@@ -11,6 +11,8 @@
 #include "primitives/transaction.h"
 #include "serialize.h"
 
+static const int SERIALIZE_TXUNDO_LEGACY_COMPRESSION = 0x40000000;
+
 /** Undo information for a CTxIn
  *
  *  Contains the prevout's CTxOut being spent, and its metadata as well
@@ -54,7 +56,16 @@ public:
             int nVersionDummy;
             ::Unserialize(s, VARINT(nVersionDummy));
         }
-        ::Unserialize(s, REF(CTxOutCompressor(REF(txout->out))));
+        //fixme: (GULDEN) (2.1) CBSU - possibly remove this if statement by just duplicating code for the legacy case
+        // (Or eventually just drop the legacy case)
+        if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
+        {
+            ::Unserialize(s, REF(CTxOutCompressorLegacy(REF(txout->out))));
+        }
+        else
+        {
+            ::Unserialize(s, REF(CTxOutCompressor(REF(txout->out))));
+        }
     }
 
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}

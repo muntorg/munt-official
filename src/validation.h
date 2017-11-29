@@ -491,8 +491,8 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
 void GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride);
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
 bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams);
-
 std::map<COutPoint, Coin> getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
+bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().

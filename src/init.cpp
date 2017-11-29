@@ -1504,6 +1504,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         nStart = GetTimeMillis();
         do {
             try {
+                loadblockindex:
                 UnloadBlockIndex();
                 delete pcoinsTip;
                 delete pcoinsdbview;
@@ -1542,6 +1543,19 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 if (!LoadBlockIndex(chainparams)) {
                     strLoadError = _("Error loading block database");
                     break;
+                }
+
+                //GULDEN - version 2.0 upgrade
+                if (pcoinsdbview->nPreviousVersion < 1)
+                {
+                    uiInterface.InitMessage(_("Upgrading block index..."));
+                    if (!UpgradeBlockIndex(chainparams, pcoinsdbview->nPreviousVersion, pcoinsdbview->nCurrentVersion))
+                    {
+                        strLoadError = _("Error upgrading block database to 2.0 (segsig) format, please clear blockchain data and start again.");
+                        break;
+                    }
+                    uiInterface.InitMessage(_("Reloading block index..."));
+                    goto loadblockindex;
                 }
 
                 // If the loaded chain has a wrong genesis, bail out immediately

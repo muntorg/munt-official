@@ -881,7 +881,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
             //
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
-            uint32_t nNonce =0; 
 
             // Check if something found
             arith_uint256 hashMined;
@@ -936,9 +935,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 pblock->nNonce += 1;
                 ++nHashCounter;
 
-                if ((pblock->nNonce & 0xFF) == 0)
-                    break;
-                if (nNonce >= 0xffff0000)
+                if (pblock->nNonce >= 0xffff0000)
                     break;
                 if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
                     break;

@@ -112,7 +112,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
 
     // Refuse to relay old style transactions once phase 4 is active.
     // fixme: (GULDEN) (2.1) we can combine this with the rule above once we are locked into phase 5.
-    if (GetPoW2Phase(chainActive.Tip(), Params()) >= 4 && tx.nVersion < 1)
+    if (GetPoW2Phase(chainActive.Tip(), Params()) >= 4 && (tx.nVersion < 4 || tx.nVersion > 1000))
     {
         reason = "version";
         return false;

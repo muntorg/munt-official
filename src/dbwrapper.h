@@ -167,6 +167,19 @@ public:
         return true;
     }
 
+    template<typename V> bool GetValueLegacy(V& value) {
+        leveldb::Slice slValue = piter->value();
+        try {
+            CDataStream ssValue(slValue.data(), slValue.data() + slValue.size(), SER_DISK, CLIENT_VERSION);
+            ssValue.Xor(dbwrapper_private::GetObfuscateKey(parent));
+            value.UnserializeLegacy(ssValue);
+        } catch (const std::exception& e) {
+            std::string sDebugInfo = e.what();
+            return false;
+        }
+        return true;
+    }
+
     unsigned int GetValueSize() {
         return piter->value().size();
     }

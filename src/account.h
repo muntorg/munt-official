@@ -91,7 +91,8 @@ public:
     {
         int nVersion = 2;
         READWRITE(nVersion);
-        if (nVersion > 1000000)
+        //fixme: (GULDEN) (FUTURE) - Remove the below if need be in future.
+        if (nVersion > 3)
             nVersion = 1;
 
         if (ser_action.ForRead())
@@ -363,7 +364,7 @@ public:
     {
         int nVersion = 2;
         READWRITE(nVersion);
-        if (nVersion > 1000000)
+        if (nVersion > 3)
             nVersion = 1;
 
 
