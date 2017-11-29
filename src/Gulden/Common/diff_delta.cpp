@@ -50,7 +50,6 @@ public
 
         static int64_t nPrevHeight = 0;
         static int64_t nPrevDifficulty = 0;
-        static bool debugLogging = false;
 
         std::string sLogInfo;
 #endif
@@ -166,7 +165,7 @@ public
             if ((nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 40 / PERCENT_FACTOR)) {
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                     sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
 #endif
 #endif
@@ -211,7 +210,7 @@ public
                     bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                    if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                    if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                         sLogInfo += strprintf("<DELTA> Last block time [%ld] was far below target but adjustment still downward, forcing difficulty up by 5%% instead\n", nLBTimespan);
 #endif
 #endif
@@ -219,7 +218,7 @@ public
                     SET_COMPACT(bnNew, INDEX_TARGET(pindexLast));
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                    if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
+                    if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast)))
                         sLogInfo += strprintf("<DELTA> Last block time [%ld] below target but adjustment still downward, blocking downward adjustment\n", nLBTimespan);
 #endif
 #endif
@@ -236,7 +235,7 @@ public
 
 #ifndef __JAVA__
 #ifndef BUILD_IOS
-                if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty))
+                if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty))
                     sLogInfo += strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
 #endif
 #endif
@@ -248,7 +247,7 @@ public
 
 #ifndef BUILD_IOS
 #ifndef __JAVA__
-            if (debugLogging) {
+            if (fDebug) {
                 if (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty) {
                     static CCriticalSection logCS;
                     LOCK(logCS);

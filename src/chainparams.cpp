@@ -203,16 +203,18 @@ public:
                     genesis.nTime++;
             }
             consensus.hashGenesisBlock = genesis.GetHash();
-            printf("genesis nonce: %d\n", genesis.nNonce);
-            printf("genesis time: %d\n", genesis.nTime);
-            printf("genesis bits: %d\n", genesis.nBits);
-            printf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
 
             pchMessageStart[0] = targetInterval;
             pchMessageStart[3] = sTestnetParams[0];
             pchMessageStart[1] = seedTimestamp >> 8;
             pchMessageStart[2] = seedTimestamp >> 16;
             vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
+
+            printf("genesis nonce: %d\n", genesis.nNonce);
+            printf("genesis time: %d\n", genesis.nTime);
+            printf("genesis bits: %d\n", genesis.nBits);
+            printf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
+            printf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
 
             checkpointData = (CCheckpointData){
                 boost::assign::map_list_of(0, genesis.GetHash()),
