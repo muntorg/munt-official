@@ -4018,7 +4018,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         return error("Embedded witness coinbase info contains invalid witness version.");
 
     // Reconstruct transaction information of previous witness block from the coinbase of this PoW block.
-    CMutableTransaction coinbaseTx(2);
+    CMutableTransaction coinbaseTx(CTransaction::CURRENT_VERSION);
     coinbaseTx.vin.resize(2);
     coinbaseTx.vout.resize(2);
     coinbaseTx.vout[0] = block.vtx[1]->vout[0];
