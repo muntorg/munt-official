@@ -2989,6 +2989,13 @@ std::map<COutPoint, Coin> getAllUnspentWitnessCoins(CChain& chain, const CChainP
 }
 
 
+
+//fixme: HIGH NEXT.
+//Proper error handling.
+//Handle pruning.
+// Check whether we have ever pruned block & undo files
+//pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
+
 const int nMinimumWitnessAmount = 5000;
 const int nMinimumWitnessWeight = 10000;
 const int nMinimumParticipationAge = 100;
@@ -3737,9 +3744,9 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     {
         for (const auto& tx : block.vtx)
         {
-            if (tx->nVersion > 1000)
+            if (tx->nVersion > CTransaction::MAX_STANDARD_VERSION)
             {
-                return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "non-standard transaction versions above 1000 are no longer permitted.");
+                return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "non-standard transaction versions above are no longer permitted.");
             }
         }
     }

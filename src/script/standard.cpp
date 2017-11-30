@@ -341,6 +341,8 @@ public:
 };
 }
 
+
+
 CScript GetScriptForDestination(const CTxDestination& dest)
 {
     CScript script;
@@ -348,6 +350,7 @@ CScript GetScriptForDestination(const CTxDestination& dest)
     boost::apply_visitor(CScriptVisitor(&script), dest);
     return script;
 }
+
 
 CScript GetScriptForRawPubKey(const CPubKey& pubKey)
 {

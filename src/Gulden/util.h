@@ -57,4 +57,14 @@ inline CTxOutPoW2Witness GetPow2WitnessOutput(const CTxOut& out)
     return witnessInput;
 }
 
+inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2WitnessDestination& fromDest)
+{
+    CTxOutPoW2Witness txout;
+    txout.spendingKeyID = fromDest.spendingKey;
+    txout.witnessKeyID = fromDest.witnessKey;
+    txout.lockFromBlock = fromDest.lockFromBlock;
+    txout.lockUntilBlock = fromDest.lockUntilBlock;
+    txout.failCount = fromDest.failCount;
+}
+
 #endif

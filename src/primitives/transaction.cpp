@@ -67,7 +67,7 @@ CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.n
 
 uint256 CMutableTransaction::GetHash() const
 {
-    if (nVersion >= 4 && nVersion < 1000)
+    if (!IsOldTransactionVersion(nVersion))
         return SerializeHash(*this, SER_GETHASH, 0);
     else
         return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_WITNESS);
@@ -75,7 +75,7 @@ uint256 CMutableTransaction::GetHash() const
 
 uint256 CTransaction::ComputeHash() const
 {
-    if (nVersion >= 4 && nVersion < 1000)
+    if (!IsOldTransactionVersion(nVersion))
         return SerializeHash(*this, SER_GETHASH, 0);
     else
         return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_WITNESS);

@@ -23,6 +23,8 @@ static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
 
+inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 || nVersion > 10000; }
+
 struct CBlockPosition
 {
     uint64_t blockNumber; // Position of block on blockchain that contains our transaction.
@@ -55,6 +57,7 @@ enum CTxInType : uint8_t
 // Only 3 bits available for TxInFlags (used as bit flags so only 3 values)
 enum CTxInFlags : uint8_t
 {
+    //fixme: NEXTNEXTNEXT HIGHHIGHHIGH - Implement these two.
     IndexBasedOutpoint,  // Outpoint is an index instead of a hash
     HasSequenceNumber,
     CTxInFutureFlag2
@@ -84,7 +87,7 @@ public:
     {
         const CSerActionUnserialize ser_action;
 
-        if (nTransactionVersion < 4 || nTransactionVersion > 1000)
+        if (IsOldTransactionVersion(nTransactionVersion))
         {
             isHash = 1;
             STRREAD(hash);
@@ -116,7 +119,7 @@ public:
     {
         const CSerActionSerialize ser_action;
 
-        if (nTransactionVersion < 4 || nTransactionVersion > 1000)
+        if (IsOldTransactionVersion(nTransactionVersion))
         {
             STRWRITE(hash);
             uint32_t nTemp = (n == UINT31_MAX ? std::numeric_limits<uint32_t>::max() : (uint32_t)n);
@@ -237,7 +240,7 @@ public:
         const CSerActionUnserialize ser_action;
 
         //2.0 onwards we have versioning for CTxIn
-        if (nTransactionVersion >= 4 && nTransactionVersion < 1000)
+        if (!IsOldTransactionVersion(nTransactionVersion))
         {
             uint8_t nTypeAndFlags_;
             STRREAD(nTypeAndFlags_);
@@ -260,7 +263,7 @@ public:
     {
         const CSerActionSerialize ser_action;
 
-        if (nTransactionVersion >= 4 && nTransactionVersion < 1000)
+        if (!IsOldTransactionVersion(nTransactionVersion))
         {
             uint8_t nTypeAndFlags_=0;
             STRWRITE(nTypeAndFlags_);
@@ -353,6 +356,9 @@ class CTxOutStandardKeyHash
 {
 public:
     CKeyID keyID;
+
+    CTxOutStandardKeyHash(const CKeyID  keyID_) : keyID(keyID_) {}
+    CTxOutStandardKeyHash() { clear(); }
 
     void clear()
     {
@@ -866,7 +872,7 @@ enum TransactionFlags : uint8_t
 };
 
 template<typename Stream, typename TxType> inline void SerializeTransaction(const TxType& tx, Stream& s) {
-    if (tx.nVersion < 4 || tx.nVersion > 1000)
+    if (IsOldTransactionVersion(tx.nVersion))
         return SerializeTransactionOld(tx, s);
 
     // Setup flags
@@ -943,7 +949,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 
     //Version
     STRPEEK(tx.nVersion);
-    if (tx.nVersion < 4 || tx.nVersion > 1000)
+    if (IsOldTransactionVersion(tx.nVersion))
     {
         UnserializeTransactionOld(tx, s);
         return;

@@ -177,12 +177,24 @@ public:
     StringMap destdata;
 };
 
-struct CRecipient
+class CRecipient
 {
+public:
+    CRecipient() : nType(CTxOutType::ScriptOutput) {}
+    CRecipient(CScript scriptPubKey_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::ScriptOutput), scriptPubKey(scriptPubKey_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
+    CRecipient(CTxOutPoW2Witness witnessDetails_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::PoW2WitnessOutput), witnessDetails(witnessDetails_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
+    CRecipient(CTxOutStandardKeyHash standardKeyHash_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::StandardKeyHashOutput), standardKeyHash(standardKeyHash_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
     CScript scriptPubKey;
+    CTxOutPoW2Witness witnessDetails;
+    CTxOutStandardKeyHash standardKeyHash;
+    CTxOutType nType;
     CAmount nAmount;
     bool fSubtractFeeFromAmount;
 };
+
+CRecipient GetRecipientForDestination(const CTxDestination& dest, CAmount nValue, bool fSubtractFeeFromAmount, int nPoW2Phase);
+CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtractFeeFromAmount);
+
 
 typedef std::map<std::string, std::string> mapValue_t;
 

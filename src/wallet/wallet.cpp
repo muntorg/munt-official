@@ -2700,9 +2700,8 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     for (size_t idx = 0; idx < tx.vout.size(); idx++)
     {
         const CTxOut& txOut = tx.vout[idx];
-        //fixme: (GULDEN) (2.0)
-        //CRecipient recipient = {txOut.scriptPubKey, txOut.nValue, setSubtractFeeFromOutputs.count(idx) == 1};
-        //vecSend.push_back(recipient);
+        CRecipient recipient = GetRecipientForTxOut(txOut, txOut.nValue, setSubtractFeeFromOutputs.count(idx) == 1);
+        vecSend.push_back(recipient);
     }
 
     coinControl.fAllowOtherInputs = true;
@@ -4596,6 +4595,65 @@ CWalletKey::CWalletKey(int64_t nExpires)
 {
     nTimeCreated = (nExpires ? GetTime() : 0);
     nTimeExpires = nExpires;
+}
+
+namespace
+{
+    class CRecipientVisitor : public boost::static_visitor<CRecipient>
+    {
+    private:
+        CTxDestination dest;
+        CAmount nValue;
+        bool fSubtractFeeFromAmount;
+    public:
+        CRecipientVisitor(const CTxDestination& dest_, CAmount nValue_, bool fSubtractFeeFromAmount_) : dest(dest_), nValue(nValue_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {  }
+
+        CRecipient operator()(const CNoDestination &dest) const
+        {
+            return CRecipient(GetScriptForDestination(dest), nValue, fSubtractFeeFromAmount);
+        }
+
+        CRecipient operator()(const CKeyID &keyID) const
+        {
+            return CRecipient(CTxOutStandardKeyHash(keyID), nValue, fSubtractFeeFromAmount);
+        }
+
+        CRecipient operator()(const CScriptID &scriptID) const
+        {
+            return CRecipient(GetScriptForDestination(dest), nValue, fSubtractFeeFromAmount);
+        }
+
+        CRecipient operator()(const CPoW2WitnessDestination& destinationPoW2Witness) const
+        {
+            return CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nValue, fSubtractFeeFromAmount);
+        }
+    };
+}
+CRecipient GetRecipientForDestination(const CTxDestination& dest, CAmount nValue, bool fSubtractFeeFromAmount, int nPoW2Phase)
+{
+    if (nPoW2Phase < 4)
+    {
+        return CRecipient(GetScriptForDestination(dest), nValue, fSubtractFeeFromAmount);
+    }
+    else
+    {
+        return boost::apply_visitor(CRecipientVisitor(dest, nValue, fSubtractFeeFromAmount), dest);
+    }
+}
+
+CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtractFeeFromAmount)
+{
+    switch(out.GetType())
+    {
+        case CTxOutType::ScriptLegacyOutput:
+        case CTxOutType::ScriptOutput:
+            return CRecipient(out.output.scriptPubKey, nValue, fSubtractFeeFromAmount);
+        case CTxOutType::PoW2WitnessOutput:
+            return CRecipient(out.output.witnessDetails, nValue, fSubtractFeeFromAmount);
+        case CTxOutType::StandardKeyHashOutput:
+            return CRecipient(out.output.standardKeyHash, nValue, fSubtractFeeFromAmount);
+    }
+    return CRecipient();
 }
 
 void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)

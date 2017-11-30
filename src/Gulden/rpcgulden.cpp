@@ -526,10 +526,12 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
+    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params());
+
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (GetPoW2Phase(chainActive.Tip(), Params()) < 2)
+    if (nPoW2TipPhase < 2)
         throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
 
     // arg1 - 'from' account.
@@ -607,13 +609,13 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         keySpending.KeepKey();
         destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
     }
-    CScript scriptWitness = GetScriptForDestination(destinationPoW2Witness);
 
     CAmount nFeeRequired;
     std::string strError;
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
-    CRecipient recipient = {scriptWitness, nAmount, false};
+
+    CRecipient recipient = ( nPoW2TipPhase >= 4 ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
     vecSend.push_back(recipient);
 
     CWalletTx wtx;

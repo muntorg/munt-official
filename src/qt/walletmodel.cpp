@@ -251,10 +251,11 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 const payments::Output& out = details.outputs(i);
                 if (out.amount() <= 0) continue;
                 subtotal += out.amount();
+                //fixme: (GULDEN) (2.1) (Handle other transaction types here?) (SEGSIG)
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr+out.script().size());
                 CAmount nAmount = out.amount();
-                CRecipient recipient = {scriptPubKey, nAmount, rcp.fSubtractFeeFromAmount};
+                CRecipient recipient = CRecipient(scriptPubKey, nAmount, rcp.fSubtractFeeFromAmount);
                 vecSend.push_back(recipient);
             }
             if (subtotal <= 0)
@@ -279,10 +280,16 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
 
-                if (IsPow2Phase2Active(chainActive.Tip(), Params()) || IsPow2Phase3Active(chainActive.Tip(), Params()))
+                int nTipPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params());
+                if (nTipPoW2Phase > 4)
                 {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
-                    CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
+                    CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
+                    vecSend.push_back(recipient);
+                }
+                else if (nTipPoW2Phase > 2)
+                {
+                    CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
                 }
                 else
@@ -293,7 +300,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             else
             {
                 CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
-                CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
+                CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
                 vecSend.push_back(recipient);
             }
             total += rcp.amount;

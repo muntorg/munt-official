@@ -455,16 +455,13 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
-    // Parse Bitcoin address
-    CScript scriptPubKey = GetScriptForDestination(address);
-
     // Create and send the transaction
     CReserveKey reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
     CAmount nFeeRequired;
     std::string strError;
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
-    CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
+    CRecipient recipient = GetRecipientForDestination(address, nValue, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params()));
     vecSend.push_back(recipient);
     if (!pwallet->CreateTransaction(fromAccount, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
@@ -1156,7 +1153,6 @@ UniValue sendmany(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
         setAddress.insert(address);
 
-        CScript scriptPubKey = GetScriptForDestination(address.Get());
         CAmount nAmount = AmountFromValue(sendTo[name_]);
         if (nAmount <= 0)
             throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
@@ -1169,7 +1165,7 @@ UniValue sendmany(const JSONRPCRequest& request)
                 fSubtractFeeFromAmount = true;
         }
 
-        CRecipient recipient = {scriptPubKey, nAmount, fSubtractFeeFromAmount};
+        CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params()));
         vecSend.push_back(recipient);
     }
 
