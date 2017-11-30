@@ -162,12 +162,12 @@ script: |
 
     CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}"
     mkdir release
-    cp -rf ${BASEPREFIX}/${i}/native/bin/*.dll release/
-    cp -rf ${BASEPREFIX}/${i}/lib/*.dll release/
-    cp -rf ${BASEPREFIX}/${i}/plugins/platforms release/
-    cp -rf ${BASEPREFIX}/${i}/plugins/imageformats release/
-    cp -rf /usr/${i}/lib/libwinpthread-1.dll release/
-    cp -rf /usr/lib/gcc/${i}/4.8/*.dll release/
+    cp -rf ${BASEPREFIX}/${i}/native/bin/*.dll release/ | true
+    cp -rf ${BASEPREFIX}/${i}/lib/*.dll release/ | true
+    cp -rf ${BASEPREFIX}/${i}/plugins/platforms release/ | true
+    cp -rf ${BASEPREFIX}/${i}/plugins/imageformats release/ | true
+    cp -rf /usr/${i}/lib/libwinpthread-1.dll release/ | true
+    cp -rf /usr/lib/gcc/${i}/4.8/*.dll release/ | true
     make ${MAKEOPTS}
 
     make ${MAKEOPTS} -C src check-security
