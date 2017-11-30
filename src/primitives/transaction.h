@@ -85,7 +85,7 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
     {
-        const CSerActionUnserialize ser_action;
+        CSerActionUnserialize ser_action;
 
         if (IsOldTransactionVersion(nTransactionVersion))
         {
@@ -237,7 +237,7 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, int nTransactionVersion)
     {
-        const CSerActionUnserialize ser_action;
+        CSerActionUnserialize ser_action;
 
         //2.0 onwards we have versioning for CTxIn
         if (!IsOldTransactionVersion(nTransactionVersion))
@@ -945,7 +945,7 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
 
 template<typename Stream, typename TxType>
 inline void UnserializeTransaction(TxType& tx, Stream& s) {
-    const CSerActionUnserialize ser_action;
+    CSerActionUnserialize ser_action;
 
     //Version
     STRPEEK(tx.nVersion);
