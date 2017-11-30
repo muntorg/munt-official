@@ -117,7 +117,7 @@ public:
 
     template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion) const
     {
-        const CSerActionSerialize ser_action;
+        CSerActionSerialize ser_action;
 
         if (IsOldTransactionVersion(nTransactionVersion))
         {
@@ -261,7 +261,7 @@ public:
     }
     template <typename Stream> inline void WriteToStream(Stream& s, int nTransactionVersion) const
     {
-        const CSerActionSerialize ser_action;
+        CSerActionSerialize ser_action;
 
         if (!IsOldTransactionVersion(nTransactionVersion))
         {
