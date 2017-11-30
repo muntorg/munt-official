@@ -367,7 +367,7 @@ I ReadVarInt(Stream& is)
 
 #define FLATDATA(obj) REF(CFlatData((char*)&(obj), (char*)&(obj) + sizeof(obj)))
 #define VARINT(obj) REF(WrapVarInt(REF(obj)))
-#define COMPACTSIZE(obj) REF(CCompactSize(REF(obj)))
+#define COMPACTSIZE(obj) REF(MakeCCompactSize(REF(obj)))
 #define LIMITED_STRING(obj,n) REF(LimitedString< n >(REF(obj)))
 
 /** 
@@ -429,12 +429,12 @@ public:
     }
 };
 
-class CCompactSize
+template<typename T> class CCompactSize
 {
 protected:
-    uint64_t &n;
+    T &n;
 public:
-    CCompactSize(uint64_t& nIn) : n(nIn) { }
+    CCompactSize(T& nIn) : n(nIn) { }
 
     template<typename Stream>
     void Serialize(Stream &s) const {
@@ -446,6 +446,11 @@ public:
         n = ReadCompactSize<Stream>(s);
     }
 };
+
+template <class T> CCompactSize<T> MakeCCompactSize(T& t)
+{
+    return CCompactSize<T>(t);
+}
 
 template<size_t Limit>
 class LimitedString
