@@ -872,6 +872,8 @@ enum TransactionFlags : uint8_t
 };
 
 template<typename Stream, typename TxType> inline void SerializeTransaction(const TxType& tx, Stream& s) {
+    CSerActionSerialize ser_action;
+
     if (IsOldTransactionVersion(tx.nVersion))
         return SerializeTransactionOld(tx, s);
 
