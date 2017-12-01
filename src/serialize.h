@@ -510,32 +510,34 @@ template<typename Stream, unsigned int N, typename T, typename V> void Unseriali
 template<typename Stream, unsigned int N, typename T> inline void Unserialize(Stream& is, prevector<N, T>& v);
 
 /**
+ * vectoroverwritewrapper
+ * used by compactsizevectorwrapper, varintvectorwrapper, nosizevectorwrapper to allow template specilisation of serilisation with as little overhead as possible.
+ */
+template <typename VectorType, typename WrapperType> class vectoroverwritewrapper
+{
+public:
+    VectorType& vector;
+    vectoroverwritewrapper(VectorType& vector_) : vector(vector_)
+    {
+    }
+};
+
+/**
  * compactsizevectorwrapper
  * same as normal vector but using compact size to represent the size when serializing
  */
-template <typename T1, typename T2> class pairr
-{
-public:
-    T1& first;
-    T2& second;
-    pairr(T1& first_, T2& second_) : first(first_), second(second_) {};
-};
-
-
 struct compactsizevectorwrapper
 {
     compactsizevectorwrapper() {};
 };
 
-template<typename T> pairr<T, compactsizevectorwrapper> MakeCompactSizeVector(T& obj)
+template<typename T> vectoroverwritewrapper<T, compactsizevectorwrapper> MakeCompactSizeVector(T& obj)
 {
-    compactsizevectorwrapper wrap;
-    return pairr<T, compactsizevectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<T, compactsizevectorwrapper> (obj);
 }
-template<typename T> const pairr<const T, const compactsizevectorwrapper> MakeCompactSizeVector(const T& obj)
+template<typename T> const vectoroverwritewrapper<const T, const compactsizevectorwrapper> MakeCompactSizeVector(const T& obj)
 {
-    const compactsizevectorwrapper wrap;
-    return pairr<const T, const compactsizevectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<const T, const compactsizevectorwrapper> (obj);
 }
 
 #define COMPACTSIZEVECTOR(obj) REF(MakeCompactSizeVector(obj))
@@ -550,15 +552,13 @@ struct varintvectorwrapper
     varintvectorwrapper() {};
 };
 
-template<typename T> pairr<T, varintvectorwrapper> MakeVarIntVector(T& obj)
+template<typename T> vectoroverwritewrapper<T, varintvectorwrapper> MakeVarIntVector(T& obj)
 {
-    varintvectorwrapper wrap;
-    return pairr<T, varintvectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<T, varintvectorwrapper> (obj);
 }
-template<typename T> const pairr<const T, const varintvectorwrapper> MakeVarIntVector(const T& obj)
+template<typename T> const vectoroverwritewrapper<const T, const varintvectorwrapper> MakeVarIntVector(const T& obj)
 {
-    const varintvectorwrapper wrap;
-    return pairr<const T, const varintvectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<const T, const varintvectorwrapper> (obj);
 }
 
 #define VARINTVECTOR(obj) REF(MakeVarIntVector(REF(obj)))
@@ -573,15 +573,13 @@ struct nosizevectorwrapper
     nosizevectorwrapper() {};
 };
 
-template<typename T> pairr<T, nosizevectorwrapper> MakeNoSizeVector(T& obj)
+template<typename T> vectoroverwritewrapper<T, nosizevectorwrapper> MakeNoSizeVector(T& obj)
 {
-    nosizevectorwrapper wrap;
-    return pairr<T, nosizevectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<T, nosizevectorwrapper> (obj);
 }
-template<typename T> const pairr<const T, const nosizevectorwrapper> MakeNoSizeVector(const T& obj)
+template<typename T> const vectoroverwritewrapper<const T, const nosizevectorwrapper> MakeNoSizeVector(const T& obj)
 {
-    const nosizevectorwrapper wrap;
-    return pairr<const T, const nosizevectorwrapper> (obj, wrap);
+    return vectoroverwritewrapper<const T, const nosizevectorwrapper> (obj);
 }
 
 #define NOSIZEVECTOR(obj) REF(MakeNoSizeVector(REF(obj)))
@@ -768,54 +766,54 @@ inline void Unserialize(Stream& is, prevector<N, T>& v)
  * vector
  */
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<const std::vector<K>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<K>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<K>& v = item.first;
+    const std::vector<K>& v = item.vector;
     WriteCompactSize(os, v.size());
     for (typename std::vector<K>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<std::vector<K>, compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<K>, compactsizevectorwrapper>& item)
 {
-    const std::vector<K>& v = item.first;
+    const std::vector<K>& v = item.vector;
     WriteCompactSize(os, v.size());
     for (typename std::vector<K>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<const std::vector<std::vector<K>>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<std::vector<K>>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<std::vector<K>>& v = item.first;
+    const std::vector<std::vector<K>>& v = item.vector;
     WriteCompactSize(os, v.size());
     for (typename std::vector<std::vector<K>>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, COMPACTSIZEVECTOR(*vi));
 }
 
 template<typename Stream>
-void Serialize(Stream& os, const pairr<const std::vector<unsigned char>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<unsigned char>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char>& v = item.first;
+    const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream>
-void Serialize(Stream& os, const pairr<std::vector<unsigned char>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned char>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char>& v = item.first;
+    const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream>
-void Serialize(Stream& os, const pairr<std::vector<unsigned char>, compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned char>, compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char>& v = item.first;
+    const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
@@ -825,27 +823,27 @@ void Serialize(Stream& os, const pairr<std::vector<unsigned char>, compactsizeve
 
 
 template<typename Stream, typename A>
-void Serialize(Stream& os, const pairr<const std::vector<unsigned char, A>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<unsigned char, A>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char, A>& v = item.first;
+    const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream, typename A>
-void Serialize(Stream& os, const pairr<std::vector<unsigned char, A>, const compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned char, A>, const compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char, A>& v = item.first;
+    const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream, typename A>
-void Serialize(Stream& os, const pairr<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
 {
-    const std::vector<unsigned char, A>& v = item.first;
+    const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
@@ -855,9 +853,9 @@ void Serialize(Stream& os, const pairr<std::vector<unsigned char, A>, compactsiz
 
 
 template<typename Stream, typename K>
-void Unserialize(Stream& is, pairr<std::vector<K>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<K>, compactsizevectorwrapper>& item)
 {
-    std::vector<K>& v = item.first;
+    std::vector<K>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -874,9 +872,9 @@ void Unserialize(Stream& is, pairr<std::vector<K>, compactsizevectorwrapper>& it
 }
 
 template<typename Stream, typename K>
-void Unserialize(Stream& is, pairr<std::vector<std::vector<K>>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<std::vector<K>>, compactsizevectorwrapper>& item)
 {
-    std::vector<std::vector<K>>& v = item.first;
+    std::vector<std::vector<K>>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -893,9 +891,9 @@ void Unserialize(Stream& is, pairr<std::vector<std::vector<K>>, compactsizevecto
 }
 
 template<typename Stream>
-void Unserialize(Stream& is, pairr<std::vector<unsigned char>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char>, compactsizevectorwrapper>& item)
 {
-    std::vector<unsigned char>& v = item.first;
+    std::vector<unsigned char>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -909,9 +907,9 @@ void Unserialize(Stream& is, pairr<std::vector<unsigned char>, compactsizevector
 }
 
 template<typename Stream, typename A>
-void Unserialize(Stream& is, pairr<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
 {
-    std::vector<unsigned char, A>& v = item.first;
+    std::vector<unsigned char, A>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -925,9 +923,9 @@ void Unserialize(Stream& is, pairr<std::vector<unsigned char, A>, compactsizevec
 }
 
 template<typename Stream>
-void Unserialize(Stream& is, const pairr<std::vector<unsigned char>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, const vectoroverwritewrapper<std::vector<unsigned char>, compactsizevectorwrapper>& item)
 {
-    std::vector<unsigned char>& v = item.first;
+    std::vector<unsigned char>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -941,9 +939,9 @@ void Unserialize(Stream& is, const pairr<std::vector<unsigned char>, compactsize
 }
 
 template<typename Stream, typename A>
-void Unserialize(Stream& is, const pairr<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, const vectoroverwritewrapper<std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
 {
-    std::vector<unsigned char, A>& v = item.first;
+    std::vector<unsigned char, A>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -957,9 +955,9 @@ void Unserialize(Stream& is, const pairr<std::vector<unsigned char, A>, compacts
 }
 
 template<typename Stream, typename A>
-void Unserialize(Stream& is, pairr<const std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<const std::vector<unsigned char, A>, compactsizevectorwrapper>& item)
 {
-    std::vector<unsigned char, A>& v = item.first;
+    std::vector<unsigned char, A>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
@@ -976,27 +974,27 @@ void Unserialize(Stream& is, pairr<const std::vector<unsigned char, A>, compacts
  * varintvectorwrapper
  */
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<std::vector<K>, varintvectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<K>, varintvectorwrapper>& item)
 {
-    const std::vector<K>& v = item.first;
+    const std::vector<K>& v = item.vector;
     WriteVarInt(os, v.size());
     for (typename std::vector<K>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream, typename K>
-void Serialize(Stream& os, pairr<std::vector<K>, varintvectorwrapper>& item)
+void Serialize(Stream& os, vectoroverwritewrapper<std::vector<K>, varintvectorwrapper>& item)
 {
-    std::vector<K>& v = item.first;
+    std::vector<K>& v = item.vector;
     WriteVarInt(os, v.size());
     for (typename std::vector<K>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<std::vector<std::vector<K>>, varintvectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<std::vector<K>>, varintvectorwrapper>& item)
 {
-    const std::vector<std::vector<K>>& v = item.first;
+    const std::vector<std::vector<K>>& v = item.vector;
     WriteVarInt(os, v.size());
     for (typename std::vector<std::vector<K>>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, VARINTVECTOR(*vi));
@@ -1005,27 +1003,27 @@ void Serialize(Stream& os, const pairr<std::vector<std::vector<K>>, varintvector
 
 
 template<typename Stream>
-void Serialize(Stream& os, const pairr<std::vector<unsigned char>, varintvectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned char>, varintvectorwrapper>& item)
 {
-    const std::vector<unsigned char>& v = item.first;
+    const std::vector<unsigned char>& v = item.vector;
     WriteVarInt(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream>
-void Serialize(Stream& os, pairr<std::vector<unsigned char>, varintvectorwrapper>& item)
+void Serialize(Stream& os, vectoroverwritewrapper<std::vector<unsigned char>, varintvectorwrapper>& item)
 {
-    std::vector<unsigned char>& v = item.first;
+    std::vector<unsigned char>& v = item.vector;
     WriteVarInt(os, v.size());
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream, typename K>
-void Unserialize(Stream& is, pairr<std::vector<K>, varintvectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<K>, varintvectorwrapper>& item)
 {
-    std::vector<K>& v = item.first;
+    std::vector<K>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadVarInt<Stream, unsigned int>(is);
     unsigned int i = 0;
@@ -1042,9 +1040,9 @@ void Unserialize(Stream& is, pairr<std::vector<K>, varintvectorwrapper>& item)
 }
 
 template<typename Stream, typename K>
-void Unserialize(Stream& is, pairr<std::vector<std::vector<K>>, varintvectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<std::vector<K>>, varintvectorwrapper>& item)
 {
-    std::vector<std::vector<K>>& v = item.first;
+    std::vector<std::vector<K>>& v = item.vector;
     v.clear();
     unsigned int nSize = ReadVarInt<Stream, unsigned int>(is);
     unsigned int i = 0;
@@ -1068,25 +1066,25 @@ void Unserialize(Stream& is, pairr<std::vector<std::vector<K>>, varintvectorwrap
  * nosizevectorwrapper
  */
 template<typename Stream, typename K>
-void Serialize(Stream& os, const pairr<std::vector<K>, nosizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<K>, nosizevectorwrapper>& item)
 {
-    const std::vector<K>& v = item.first;
+    const std::vector<K>& v = item.vector;
     for (typename std::vector<K>::const_iterator vi = v.begin(); vi != v.end(); ++vi)
         ::Serialize(os, (*vi));
 }
 
 template<typename Stream>
-void Serialize(Stream& os, const pairr<const std::vector<unsigned char>, nosizevectorwrapper>& item)
+void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<unsigned char>, nosizevectorwrapper>& item)
 {
-    const std::vector<unsigned char>& v = item.first;
+    const std::vector<unsigned char>& v = item.vector;
     if (!v.empty())
         os.write((char*)&v[0], v.size() * sizeof(unsigned char));
 }
 
 template<typename Stream, typename K>
-void Unserialize(Stream& is, pairr<std::vector<K>, nosizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<K>, nosizevectorwrapper>& item)
 {
-    std::vector<K>& v = item.first;
+    std::vector<K>& v = item.vector;
     //v.clear();
     unsigned int nSize = v.size();
     unsigned int i = 0;
@@ -1103,9 +1101,9 @@ void Unserialize(Stream& is, pairr<std::vector<K>, nosizevectorwrapper>& item)
 }
 
 template<typename Stream>
-void Unserialize(Stream& is, pairr<std::vector<unsigned char>, nosizevectorwrapper>& item)
+void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char>, nosizevectorwrapper>& item)
 {
-    std::vector<unsigned char>& v = item.first;
+    std::vector<unsigned char>& v = item.vector;
     //v.clear();
     unsigned int nSize = v.size();
     unsigned int i = 0;
