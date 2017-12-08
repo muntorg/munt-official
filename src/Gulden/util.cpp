@@ -64,7 +64,7 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
 // Phase 2 becomes active after 75% of miners signal upgrade.
 // After activation creation of 'backwards compatible' PoW2 addresses becomes possible.
 std::map<uint256, bool> phase2ActivationCache;
-bool IsPow2Phase2Active(const CBlockIndex* pIndex, const Consensus::Params& params)
+bool IsPow2Phase2Active(const CBlockIndex* pIndex, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
@@ -84,17 +84,13 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const Consensus::Params& para
 
 // prevhash of blocks continue to point to previous PoW block alone.
 // prevhash of witness block is stored in coinbase.
-std::map<uint256, bool> phase3ActivationCache;
 uint256 phase3ActivationHash;
-bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainparams)
+bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    if (!pIndex)
+    if (!pIndex || !pIndex->pprev || pIndex->nHeight < 10 )
         return false;
-
-    if (phase3ActivationCache.find(pIndex->GetBlockHashLegacy()) != phase3ActivationCache.end())
-        return phase3ActivationCache[pIndex->GetBlockHashLegacy()];
 
     if (phase3ActivationHash == uint256())
         phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
@@ -103,9 +99,8 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
         const CBlockIndex* pIndexPrev = pIndex;
         while (pIndexPrev)
         {
-            if (pIndexPrev->GetBlockHashPoW2() == phase3ActivationHash)
+            if (pIndexPrev->phashBlock && pIndexPrev->GetBlockHashPoW2() == phase3ActivationHash)
             {
-                phase3ActivationCache[pIndex->GetBlockHashLegacy()] = true;
                 return true;
             }
             pIndexPrev = pIndexPrev->pprev;
@@ -115,17 +110,16 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
     int64_t nNumWitnessAddresses;
     int64_t nTotalWeight;
 
-    GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight);
+    GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
 
     const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
     const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
     if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > nTotalWeightRequired)
     {
-        phase3ActivationCache[pIndex->GetBlockHashLegacy()] = true;
+        phase3ActivationHash = pIndex->GetBlockHashPoW2();
         ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
         return true;
     }
-    phase3ActivationCache[pIndex->GetBlockHashLegacy()] = false;
     return false;
 }
 
@@ -136,17 +130,13 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
 // All peers of version < 2.0 can no longer transact at this point.
 
 // prevhash of blocks starts to point to witness header instead of PoW header
-std::map<uint256, bool> phase4ActivationCache;
 uint256 phase4ActivationHash;
-bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& params)
+bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    if (!pIndex)
+    if (!pIndex || !pIndex->pprev)
         return false;
-
-    if (phase4ActivationCache.find(pIndex->GetBlockHashLegacy()) != phase4ActivationCache.end())
-        return phase4ActivationCache[pIndex->GetBlockHashLegacy()];
 
     if (phase4ActivationHash == uint256())
         phase4ActivationHash = ppow2witdbview->GetPhase4ActivationHash();
@@ -157,7 +147,6 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& para
         {
             if (pIndexPrev->GetBlockHashPoW2() == phase4ActivationHash)
             {
-                phase4ActivationCache[pIndex->GetBlockHashLegacy()] = true;
                 return true;
             }
             pIndexPrev = pIndexPrev->pprev;
@@ -168,9 +157,8 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& para
     bool ret = (VersionBitsState(pIndex, params, Consensus::DEPLOYMENT_POW2_PHASE4, versionbitscache) == THRESHOLD_ACTIVE);
     if (ret)
     {
-        ppow2witdbview->SetPhase4ActivationHash(phase3ActivationHash);
+        ppow2witdbview->SetPhase4ActivationHash(phase4ActivationHash);
     }
-    phase4ActivationCache[pIndex->GetBlockHashLegacy()] = ret;
     return ret;
 }
 
@@ -178,23 +166,26 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const Consensus::Params& para
 // Phase 5 becomes active after all 'backwards compatible' witness addresses have been flushed from the system.
 // At this point 'backwards compatible' witness addresses in the chain are treated simply as anyone can spend transactions (as they have all been spent this is fine) and old witness data is discarded.
 std::map<uint256, bool> phase5ActivationCache;
-bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params)
+bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    if (!pIndex)
+    if (!pIndex || !pIndex->pprev)
         return false;
 
     if (phase5ActivationCache.find(pIndex->GetBlockHashLegacy()) != phase5ActivationCache.end())
         return phase5ActivationCache[pIndex->GetBlockHashLegacy()];
 
-    if (!IsPow2Phase4Active(pIndex, params.GetConsensus()))
+    if (!IsPow2Phase4Active(pIndex, params.GetConsensus(), chain, viewOverride))
     {
         phase5ActivationCache[pIndex->GetBlockHashLegacy()] = false;
         return false;
     }
 
-    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainActive, params, pIndex);
+    // fixme: (GULDEN) (2.0) Error handling
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chain, params, pIndex, allWitnessCoins, nullptr, viewOverride))
+        return false;
 
     // If any PoW2WitnessOutput remain then we aren't active yet.
     for (auto iter : allWitnessCoins)
@@ -211,41 +202,41 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params)
 }
 
 
-bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams)
+bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    if (!pIndex)
+    if (!pIndex || !pIndex->pprev)
         return false;
 
-    return IsPow2Phase3Active(pIndex, chainparams) || IsPow2Phase4Active(pIndex, chainparams) || IsPow2Phase5Active(pIndex, chainparams);
+    return IsPow2Phase3Active(pIndex, chainparams, chain, viewOverride) || IsPow2Phase4Active(pIndex, chainparams, chain, viewOverride) || IsPow2Phase5Active(pIndex, chainparams, chain, viewOverride);
 }
 
-int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams)
+int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    if (IsPow2Phase5Active(pIndex, chainparams))
+    if (IsPow2Phase5Active(pIndex, chainparams, chain, viewOverride))
     {
         return 5;
     }
-    if (IsPow2Phase4Active(pIndex, chainparams))
+    if (IsPow2Phase4Active(pIndex, chainparams, chain, viewOverride))
     {
         return 4;
     }
-    if (IsPow2Phase3Active(pIndex, chainparams))
+    if (IsPow2Phase3Active(pIndex, chainparams, chain, viewOverride))
     {
         return 3;
     }
-    if (IsPow2Phase2Active(pIndex, chainparams))
+    if (IsPow2Phase2Active(pIndex, chainparams, chain, viewOverride))
     {
         return 2;
     }
     return 1;
 }
 
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase2Active(pindexPrev, chainparams.GetConsensus()); }
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams) { return IsPow2Phase4Active(pindexPrev, chainparams.GetConsensus()); }
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride) { return IsPow2Phase2Active(pindexPrev, chainparams.GetConsensus(), chain, viewOverride); }
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride) { return IsPow2Phase4Active(pindexPrev, chainparams.GetConsensus(), chain, viewOverride); }
 
 
 //NB! nAmount is already in internal monetary format (8 zeros) form when entering this function - i.e. the nAmount for 22 NLG is '2200000000' and not '22'
@@ -283,7 +274,7 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber)
 }
 
 //fixme: Handle reorganisations that invalidate the cache.
-int64_t GetPoW2Phase3ActivationTime()
+int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
 {
     if (phase3ActivationHash == uint256())
         phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
@@ -296,28 +287,28 @@ int64_t GetPoW2Phase3ActivationTime()
             return pIndex->nTime;
         }
     }
-    else
+    if (IsPow2Phase3Active(chain.Tip(), Params(), chain, viewOverride))
     {
-        if (IsPow2Phase3Active(chainActive.Tip(), Params()))
+        CBlockIndex* pIndex = chain.Tip();
+        while (pIndex->pprev && IsPow2Phase3Active(pIndex->pprev, Params(), chain, viewOverride))
         {
-            CBlockIndex* pIndex = chainActive.Tip();
-            while (pIndex->pprev && IsPow2Phase3Active(pIndex->pprev, Params()))
-            {
-                pIndex = pIndex->pprev;
-            }
-            phase3ActivationHash = pIndex->GetBlockHashPoW2();
-            ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
-            return pIndex->nTime;
+            pIndex = pIndex->pprev;
         }
+        phase3ActivationHash = pIndex->GetBlockHashPoW2();
+        ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
+        return pIndex->nTime;
     }
     return std::numeric_limits<int64_t>::max();
 }
 
-void GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight)
+bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    std::map<COutPoint, Coin> allWitnessCoins = getAllUnspentWitnessCoins(chainActive, chainparams, pIndex);
+    //fixme: (GULDEN) (2.0) error handling.
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chain, chainparams, pIndex, allWitnessCoins, nullptr, viewOverride))
+        return false;
 
     nNumWitnessAddresses = 0;
     nTotalWeight = 0;
@@ -332,6 +323,7 @@ void GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
             ++nNumWitnessAddresses;
         }
     }
+    return true;
 }
 
 

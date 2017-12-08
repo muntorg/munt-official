@@ -65,18 +65,19 @@ bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin) const {
 }
 
 void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possible_overwrite) {
-    assert(!coin.IsSpent());
-    if (coin.out.IsUnspendable()) return;
-
-    CTxOut out = coin.out;
-
     if (pChainedWitView)
     {
         if ( IsPow2WitnessOutput(coin.out) )
         {
+            //LogPrintf(">>>CCoinsViewCache: AddCoin %d %s %s\n", GetDepth(), outpoint.ToString(), coin.out.ToString());
             pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase), possible_overwrite);
         }
     }
+
+    assert(!coin.IsSpent());
+    if (coin.out.IsUnspendable()) return;
+
+    CTxOut out = coin.out;
 
     CCoinsMap::iterator it;
     bool inserted;
@@ -107,6 +108,14 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
 }
 
 void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh) {
+    if (pChainedWitView)
+    {
+        //LogPrintf(">>>CCoinsViewCache: SpendCoin %d %s\n", GetDepth(), outpoint.ToString());
+        // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
+        // For chained view we force everything to 'dirty' because we need to know about fresh coins that have been removed and can't just erase them.
+        pChainedWitView->SpendCoin(outpoint, NULL, true);
+    }
+
     CCoinsMap::iterator it = FetchCoin(outpoint);
     if (it == cacheCoins.end()) return;
     cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
@@ -118,13 +127,6 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool n
     } else {
         it->second.flags |= CCoinsCacheEntry::DIRTY;
         it->second.coin.Clear();
-    }
-
-    if (pChainedWitView)
-    {
-        // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
-        // For chained view we force everything to 'dirty' because we need to know about fresh coins that have been removed and can't just erase them.
-        pChainedWitView->SpendCoin(outpoint, NULL, false);
     }
 }
 

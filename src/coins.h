@@ -167,6 +167,12 @@ public:
 
     //! Estimate database size (0 if not implemented)
     virtual size_t EstimateSize() const { return 0; }
+
+    virtual void GetAllCoins(std::map<COutPoint, Coin>&) const {};
+    virtual int GetDepth() const
+    {
+        return 0;
+    }
 };
 
 
@@ -185,6 +191,14 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
     size_t EstimateSize() const override;
+    int GetDepth() const override
+    {
+        return base->GetDepth() + 1;
+    }
+    void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
+    {
+        base->GetAllCoins(allCoins);
+    }
 };
 
 
@@ -215,8 +229,6 @@ public:
     CCoinsViewCursor* Cursor() const override {
         throw std::logic_error("CCoinsViewCache cursor iteration not supported.");
     }
-
-    CCoinsMap& GetCachedCoins() { return cacheCoins; };
 
     /**
      * Check if we have the given utxo already loaded in this cache.
@@ -280,6 +292,31 @@ public:
     // Side view
     void SetSiblingView(std::shared_ptr<CCoinsViewCache> pChainedWitView_) { pChainedWitView = pChainedWitView_; };
     std::shared_ptr<CCoinsViewCache> pChainedWitView;
+
+    int GetDepth() const override
+    {
+        return base->GetDepth() + 1;
+    }
+
+    void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
+    {
+        base->GetAllCoins(allCoins);
+
+        for (auto iter : cacheCoins)
+        {
+            if (iter.second.coin.out.IsNull())
+            {
+                if (allCoins.find(iter.first) != allCoins.end())
+                {
+                    allCoins.erase(iter.first);
+                }
+            }
+            else
+            {
+                allCoins[iter.first] = iter.second.coin;
+            }
+        }
+    }
 
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint) const;

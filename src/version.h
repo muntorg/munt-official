@@ -27,7 +27,7 @@ static const int GETHEADERS_VERSION = 31800;
 //fixme: (GULDEN) (2.1) - After 2.1 bump min proto version to 70015
 //! disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION = 70014;
-#define MIN_PEER_PROTO_VERSION (IsPow2Phase4Active(chainActive.Tip(), chainparams) ? MIN_PEER_PROTO_VERSION + 1 : MIN_PEER_PROTO_VERSION)
+#define MIN_PEER_PROTO_VERSION (IsPow2Phase4Active(chainActive.Tip(), chainparams, chainActive) ? MIN_PEER_PROTO_VERSION + 1 : MIN_PEER_PROTO_VERSION)
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this

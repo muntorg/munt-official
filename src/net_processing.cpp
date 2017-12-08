@@ -1916,9 +1916,13 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         CBlock block;
         bool ret = ReadBlockFromDisk(block, it->second, chainparams.GetConsensus());
-        assert(ret);
 
-        SendBlockTransactions(block, req, pfrom, connman);
+        //fixme: (GULDEN) (HIGH) NEXT - work around assert we are getting here, ideally we should fix this.
+        //assert(ret);
+        if (ret)
+        {
+            SendBlockTransactions(block, req, pfrom, connman);
+        }
     }
 
 

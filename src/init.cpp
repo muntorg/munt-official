@@ -1504,6 +1504,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         nStart = GetTimeMillis();
         do {
             try {
+                static bool upgradeOnceOnly=true;
                 loadblockindex:
                 UnloadBlockIndex();
                 delete pcoinsTip;
@@ -1546,7 +1547,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 }
 
                 //GULDEN - version 2.0 upgrade
-                if (pcoinsdbview->nPreviousVersion < 1)
+                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
                 {
                     uiInterface.InitMessage(_("Upgrading block index..."));
                     if (!UpgradeBlockIndex(chainparams, pcoinsdbview->nPreviousVersion, pcoinsdbview->nCurrentVersion))
@@ -1555,6 +1556,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                         break;
                     }
                     uiInterface.InitMessage(_("Reloading block index..."));
+                    upgradeOnceOnly = false;
                     goto loadblockindex;
                 }
 

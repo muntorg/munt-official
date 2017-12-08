@@ -382,6 +382,10 @@ void SendCoinsDialog::on_sendButton_clicked()
                 forAccount = account;
                 break;
             }
+            if (prepareStatus.status == WalletModel::PoW2NotActive)
+            {
+                processSendCoinsReturn(prepareStatus);
+            }
             if (prepareStatus.status != WalletModel::AmountExceedsBalance)
             {
                 didShowError = true;
@@ -751,6 +755,9 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
     // all others are used only in WalletModel::prepareTransaction()
     switch(sendCoinsReturn.status)
     {
+    case WalletModel::PoW2NotActive:
+        msgParams.first = tr("PoW2 is not yet active, please wait for activation and try again.");
+        break;
     case WalletModel::InvalidAddress:
         msgParams.first = tr("The recipient address is not valid. Please recheck.");
         break;

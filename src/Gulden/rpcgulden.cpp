@@ -83,16 +83,17 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     int64_t nNumWitnessAddresses = 0;
     int64_t nTotalWeight = 0;
 
-    GetPow2NetworkWeight(chainActive.Tip(), Params(), nNumWitnessAddresses, nTotalWeight);
+    if (!GetPow2NetworkWeight(chainActive.Tip(), Params(), nNumWitnessAddresses, nTotalWeight, chainActive, nullptr))
+        throw std::runtime_error("Block does not form part of a valid PoW2 chain.");
 
     std::string sPoW2Phase = "Phase 1";
-    if (IsPow2Phase5Active(chainActive.Tip(), Params()))
+    if (IsPow2Phase5Active(chainActive.Tip(), Params(), chainActive))
         sPoW2Phase = "Phase 5";
-    else if (IsPow2Phase4Active(chainActive.Tip(), Params()))
+    else if (IsPow2Phase4Active(chainActive.Tip(), Params(), chainActive))
         sPoW2Phase = "Phase 4";
-    else if (IsPow2Phase3Active(chainActive.Tip(), Params()))
+    else if (IsPow2Phase3Active(chainActive.Tip(), Params(), chainActive))
         sPoW2Phase = "Phase 3";
-    else if (IsPow2Phase2Active(chainActive.Tip(), Params()))
+    else if (IsPow2Phase2Active(chainActive.Tip(), Params(), chainActive))
         sPoW2Phase = "Phase 2";
 
     UniValue witnessStats(UniValue::VARR);
@@ -490,7 +491,7 @@ UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    if (GetPoW2Phase(chainActive.Tip(), Params()) < 2)
+    if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness");
@@ -526,7 +527,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
-    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params());
+    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 
     // Basic sanity checks.
     if (!pwallet)

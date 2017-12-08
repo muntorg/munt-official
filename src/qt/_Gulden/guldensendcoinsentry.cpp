@@ -418,7 +418,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.destinationPoW2Witness.lockUntilBlock = 0;
     if (isPoW2WitnessCreation())
     {
-        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + ui->pow2LockFundsSlider->value();
+        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + (ui->pow2LockFundsSlider->value()*576);
     }
 
     //fixme: GULDEN - give user a choice here.

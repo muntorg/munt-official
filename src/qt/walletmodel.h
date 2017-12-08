@@ -152,6 +152,7 @@ public:
         TransactionCommitFailed,
         AbsurdFee,
         PaymentRequestExpired,
+        PoW2NotActive,
         ForexFailed
     };
 

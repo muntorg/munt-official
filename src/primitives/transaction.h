@@ -33,12 +33,14 @@ struct CBlockPosition
 
     friend bool operator<(const CBlockPosition& a, const CBlockPosition& b)
     {
-        if (a.blockNumber < b.blockNumber)
-            return true;
-        if (a.blockNumber == b.blockNumber && a.transactionIndex < b.transactionIndex)
-            return true;
-
-        return false;
+        if (a.blockNumber == b.blockNumber)
+        {
+            return a.blockNumber < b.blockNumber;
+        }
+        else
+        {
+            return a.transactionIndex < b.transactionIndex;
+        }
     }
 
     friend bool operator==(const CBlockPosition& a, const CBlockPosition& b)
@@ -147,16 +149,27 @@ public:
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
-        if (a.isHash < b.isHash)
-            return true;
-        if (a.isHash)
+        if (a.isHash == b.isHash)
         {
-            int cmp = a.hash.Compare(b.hash);
-            return cmp < 0 || (cmp == 0 && a.n < b.n);
+            if (a.isHash)
+            {
+                if (a.hash == b.hash)
+                {
+                    return a.n < b.n;
+                }
+                else
+                {
+                    return a.hash < b.hash;
+                }
+            }
+            else
+            {
+                return a.prevBlock < b.prevBlock;
+            }
         }
         else
         {
-            return a.prevBlock < b.prevBlock;
+            return a.isHash < b.isHash;
         }
     }
 
@@ -1036,7 +1049,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 
 
 //fixme: (GULDEN) (2.1) Remove
-#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params()) >= 4 ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
+#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive) >= 4 ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.

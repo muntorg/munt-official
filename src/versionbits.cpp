@@ -190,7 +190,7 @@ protected:
         //fixme: (GULDEN) (POW2) (2.1) We can remove this for 2.1
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
-            return GetPoW2Phase3ActivationTime();
+            return GetPoW2Phase3ActivationTime(chainActive);
         }
 
         return params.vDeployments[id].nStartTime;
@@ -212,7 +212,8 @@ protected:
                 if (nVersionPoW2Witness == 0)
                 {
                     CBlock temp;
-                    assert(ReadBlockFromDisk(temp, pindex, params));
+                    if (!ReadBlockFromDisk(temp, pindex, params))
+                        assert(0);
 
                     //fixme: (GULDEN) (2.0) - Consider using a cache here to speed things up?
                     int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);

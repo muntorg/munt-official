@@ -8,28 +8,31 @@
 
 #include <string>
 #include "wallet/wallet.h"
+#include "chain.h"
+#include "coins.h"
 
 void rescanThread();
 std::string StringFromSeedType(CHDSeed* seed);
 CHDSeed::SeedType SeedTypeFromString(std::string type);
 
 class CBlockIndex;
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
-bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
-bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
-bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams);
-int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams);
+bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
-int64_t GetPoW2Phase3ActivationTime();
+int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
 int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber);
-void GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight);
+
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)

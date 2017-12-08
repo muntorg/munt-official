@@ -280,21 +280,21 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
 
-                int nTipPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params());
-                if (nTipPoW2Phase > 4)
+                int nTipPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+                if (nTipPoW2Phase >= 4)
+                {
+                    CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
+                    vecSend.push_back(recipient);
+                }
+                else if (nTipPoW2Phase >= 2)
                 {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
                     CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
                 }
-                else if (nTipPoW2Phase > 2)
-                {
-                    CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
-                    vecSend.push_back(recipient);
-                }
                 else
                 {
-                    assert(0);
+                    return WalletModel::PoW2NotActive;
                 }
             }
             else
