@@ -108,6 +108,9 @@ bool AppInit(int argc, char* argv[])
         return true;
     }
 
+    //NB! Must be set before AppInitMain.
+    fNoUI = true;
+
     try
     {
         if (!fs::is_directory(GetDataDir(false)))
@@ -175,7 +178,6 @@ bool AppInit(int argc, char* argv[])
         }
 
         fRet = AppInitMain(threadGroup, scheduler);
-        fNoUI = true;
 
 
         //fixme: GULDEN - This is now duplicated, factor this out into a common helper.

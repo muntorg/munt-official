@@ -93,10 +93,10 @@ public:
     uint32_t nCurrentVersion;
     uint32_t nPreviousVersion;
 
-    int GetDepth() const override
+    /*int GetDepth() const override
     {
         return 0;
-    }
+    }*/
 
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
     {

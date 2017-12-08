@@ -2742,20 +2742,6 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         // 1) Activating a PoW block as tip that in turn points to a previous unwitnessed PoW block (phase 3)
         // 2) Activating a PoW block as tip that points to a previous PoW block (phase 4+)
         //fixme: NEXT HIGH IMPLEMENT
-        /*if (pindexNewTip->pprev && IsPow2Phase3Active(pindexNewTip->pprev->pprev, chainparams) && !IsPow2Phase4Active(pindexNewTip->pprev, chainparams))
-        {
-            assert(pindexNewTip->nVersionPoW2Witness == 0);
-            //fixme: (GULDEN) (2.0) See why we are hitting this.
-            if (!GetWitnessOrphanForBlock(pindexNewTip->nHeight, pindexNewTip->pprev->GetBlockHashLegacy(), pindexNewTip->GetBlockHashLegacy()))
-            {
-                //checkme: Is that all we need to do here?
-                pindexNewTip = pindexNewTip->pprev;
-            }
-        }
-        if (GetPoW2Phase(pindexNewTip->pprev, chainparams) >= 4)
-        {
-            assert(pindexNewTip->nVersionPoW2Witness != 0);
-        }*/
 
         // Notifications/callbacks that can run without cs_main
 
@@ -3264,90 +3250,7 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
 
     setBlockIndexCandidates.erase(pIndex);
 
-    #if 0
-    //fixme: (GULDEN) (POW2) (2.1) - We can just hardcode this based on height.
-    if (pIndex->pprev && IsPow2WitnessingActive(pIndex->pprev, chainparams))
-    {
-        // All PoW blocks are zero weight, regardless of work involved (this puts all blocks into consideration for next tip when DELTA does a diff drop)
-        // This also prevents an unwitnessed PoW block from becoming tip.
-        // Once a witness is found the chain work is adjusted to take into account the full weight of the block. (For phase 3 this requires altering the 'previous' blocks nChainWork)
-
-        // fixme: (GULDEN) (2.0) HIGH - I guess we should also count the weight of the witness toward the chain height? Or would that just introduce bias?
-        if (pIndex->nVersionPoW2Witness != 0)
-        {
-            if (GetPoW2Phase(pIndex->pprev, chainparams) == 3)
-            {
-                CBlockIndex* pPrevPow = GetPoWBlockForPoSBlock(pIndex);
-                if (pPrevPow)
-                {
-                    setBlockIndexCandidates.erase(pPrevPow);
-
-                    pPrevPow->nChainWork = pPrevPow->pprev->nChainWork + GetBlockProof(*pPrevPow);
-                    pIndex->nChainWork = pPrevPow->nChainWork;
-
-                    if (setPrevDirty)
-                    {
-                        if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pPrevPow->nChainWork)
-                            pindexBestHeader = pPrevPow;
-                        setDirtyBlockIndex.insert(pPrevPow);
-                    }
-
-                    if (chainActive.Tip() && pPrevPow->nChainWork >= chainActive.Tip()->nChainWork)
-                    {
-                        setBlockIndexCandidates.insert(pPrevPow);
-                    }
-                }
-            }
-            else
-            {
-                pIndex->nChainWork = pIndex->pprev->nChainWork + GetBlockProof(*pIndex);
-            }
-        }
-        //fixme: (GULDEN) (2.1) We can remove this once/if we purge all legacy 'phase 3' blocks from the block index.
-        else if (pIndex->pprev && pIndex->pprev->pprev && pIndex->pprev->nChainWork == pIndex->pprev->pprev->nChainWork)
-        {
-            //NB! We must use IsPow2Phase3Active here and not GetPow2Phase as the later requires the actual block data to be present (IFF nVersionPoW2Witness == 0 - so note that this isn't an issue for other parts of the code e.g. the control block just above this one...).
-            //This cannot be guaranteed in all cases - e.g. if we are called from 'ProcessnewBlockheaders'
-            if (IsPow2Phase3Active(pIndex->pprev, chainparams))
-            {
-                pIndex->pprev->nChainWork = pIndex->pprev->pprev->nChainWork + GetBlockProof(*pIndex->pprev);
-                pIndex->nChainWork = pIndex->pprev->nChainWork;
-
-                if (setPrevDirty)
-                {
-                    if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pIndex->pprev->nChainWork)
-                        pindexBestHeader = pIndex->pprev;
-                    setDirtyBlockIndex.insert(pIndex->pprev);
-                }
-
-                if (chainActive.Tip() && pIndex->pprev->nChainWork >= chainActive.Tip()->nChainWork)
-                {
-                    setBlockIndexCandidates.insert(pIndex->pprev);
-                }
-            }
-            else
-            {
-                pIndex->pprev->nChainWork = pIndex->pprev->pprev->nChainWork + GetBlockProof(*pIndex->pprev);
-                pIndex->nChainWork = pIndex->pprev->nChainWork;
-            }
-        }
-        else
-        {
-            pIndex->nChainWork = pIndex->pprev->nChainWork;
-        }
-    }
-    else
-    {
-        pIndex->nChainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + GetBlockProof(*pIndex);
-    }
-    if (chainActive.Tip() && pIndex->nChainWork >= chainActive.Tip()->nChainWork)
-    {
-        setBlockIndexCandidates.insert(pIndex);
-    }
-    #endif
-
     // fixme: (GULDEN) (2.0) HIGH - I guess we should also count the weight of the witness toward the chain height? Or would that just introduce bias?
-
     // fixme: (GULDEN) (2.0) (HIGH) (NEXT)
     // Figure out how to renable something similar to the below:
     // All PoW blocks are zero weight, regardless of work involved (this puts all blocks into consideration for next tip when DELTA does a diff drop)
@@ -4610,15 +4513,6 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
                 pindex->nChainTx = pindex->nTx;
             }
         }
-
-        //fixme: (GULDEN) (2.2) We can eventually dump this at some point in the future (well after 2.1).
-        //Doing so may cause some oddities on nodes that have old phase 3 stale data, so we shouldn't be in a rush to do this..
-        //Skip phase 3 PoS blocks, don't let them be part of the chain.
-        //if (pindex->nVersionPoW2Witness != 0 && pindex->pprev->nVersionPoW2Witness == 0)
-        //{
-            //setBlockIndexCandidates.insert(pindex);
-            //continue;
-        //}
 
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
             setBlockIndexCandidates.insert(pindex);

@@ -169,10 +169,10 @@ public:
     virtual size_t EstimateSize() const { return 0; }
 
     virtual void GetAllCoins(std::map<COutPoint, Coin>&) const {};
-    virtual int GetDepth() const
+    /*virtual int GetDepth() const
     {
         return 0;
-    }
+    }*/
 };
 
 
@@ -191,10 +191,10 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
     size_t EstimateSize() const override;
-    int GetDepth() const override
+    /*int GetDepth() const override
     {
         return base->GetDepth() + 1;
-    }
+    }*/
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
     {
         base->GetAllCoins(allCoins);
@@ -293,10 +293,10 @@ public:
     void SetSiblingView(std::shared_ptr<CCoinsViewCache> pChainedWitView_) { pChainedWitView = pChainedWitView_; };
     std::shared_ptr<CCoinsViewCache> pChainedWitView;
 
-    int GetDepth() const override
+    /*int GetDepth() const override
     {
         return base->GetDepth() + 1;
-    }
+    }*/
 
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
     {
