@@ -99,11 +99,32 @@ CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndex
         clone.vChain.emplace_back(new CBlockIndex(*index));
         if (pprev)
             clone.vChain.back()->pprev = pprev;
+        clone.vChain.back()->pskip = pprev;
         pprev = clone.vChain.back();
         if (index == retainIndexIn)
             retainIndexOut = pprev;
     }
 
+    if (retainIndexIn && !retainIndexOut)
+    {
+        // Link the pprev(s) of our new potential tip with a new pointer thats inside the cloned chain instead of the old pointer to the old chain.
+        retainIndexOut = new CBlockIndex(*retainIndexIn);
+        {
+            //Don't worry about leaks, these become part of tempChain and are cleaned up along with tempChain.
+            CBlockIndex* pNotInChain = retainIndexOut;
+            // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
+            while (pNotInChain->pprev->nHeight > clone.Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != clone.vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
+            {
+                pNotInChain->pskip = pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
+                pNotInChain = pNotInChain->pprev;
+            }
+            while (pNotInChain->pprev != clone.vChain[pNotInChain->pprev->nHeight])
+            {
+                pNotInChain->pskip = pNotInChain->pprev = clone.vChain[pNotInChain->pprev->nHeight];
+                pNotInChain = pNotInChain->pprev;
+            }
+        }
+    }
     return clone;
 }
 

@@ -221,6 +221,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, int check
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
     }
 
+    //fixme: TODO NEXTNEXTNEXT
     /*Witness transactions inputs/outputs fall into several different categories.
     * 1) Creation of a new witnessing account: This is the only case in which lockfrom can and must be 0.
     * Output only.
@@ -271,6 +272,16 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, int check
             {
                 if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock < (576 * 30))
                     return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
+            }
+            if (witnessInput.lockFromBlock == 0)
+            {
+                if (witnessInput.lockUntilBlock - checkHeight > (3 * 365 * 576))
+                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
+            }
+            else
+            {
+                if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock < (3 * 365 * 576))
+                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
             }
         }
     }

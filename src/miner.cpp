@@ -364,19 +364,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
         CBlockIndex* pindexPrev_ = nullptr;
         CChain tempChain = chainActive.Clone(pParent, pindexPrev_);
-        if (pindexPrev_ == nullptr)
-        {
-            assert(pParent->nVersionPoW2Witness == 0);
-
-            pindexPrev_ = new CBlockIndex(*pParent);
-            pindexPrev_->pprev = tempChain.Tip()->pprev;
-            ForceActivateChainWithBlockAsTip(tempChain.Tip()->pprev, nullptr, state, chainparams, tempChain, viewNew, pindexPrev_);
-            pindexPrev_ = tempChain.Tip();
-        }
-        else
-        {
-            ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
-        }
+        assert(pindexPrev_);
+        ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
 
         if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew)) {
             tempChain.FreeMemory();
@@ -798,6 +787,22 @@ int64_t nHashThrottle=-1;
 static CCriticalSection timerCS;
 static CCriticalSection processBlockCS;
 
+struct CBlockIndexCacheComparator
+{
+    bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+        if (pa->nHeight > pb->nHeight) return false;
+        if (pa->nHeight < pb->nHeight) return true;
+
+        if (pa < pb) return false;
+        if (pa > pb) return true;
+
+        return false;
+    }
+};
+
+//fixme: (GULDEN) (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
+std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessOrphans;
+
 static const unsigned int hashPSTimerInterval = 500;
 void static BitcoinMiner(const CChainParams& chainparams)
 {
@@ -868,7 +873,9 @@ void static BitcoinMiner(const CChainParams& chainparams)
             // Tip if last mined block was a witness block. (Mining new chain tip)
             // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
             //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
+            int nPoW2PhaseGreatGrandParent = GetPoW2Phase(pindexParent->pprev->pprev, Params(), chainActive);
             int nPoW2PhaseGrandParent = GetPoW2Phase(pindexParent->pprev, Params(), chainActive);
+            int nPoW2PhaseParent = GetPoW2Phase(pindexParent, Params(), chainActive);
             boost::this_thread::interruption_point();
 
             CBlockIndex* pWitnessBlockToEmbed = nullptr;
@@ -883,11 +890,87 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 }
                 else
                 {
-                    pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pindexParent->pprev->nHeight, pindexParent->pprev->GetBlockHashLegacy(), pindexParent->pprev->GetBlockHashLegacy());
-                    // Patiently wait for the rest of the network.
-                    if (!pWitnessBlockToEmbed)
-                        continue;
-                    pindexParent = pindexParent->pprev;
+                    // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
+                    bool tryHighLevelCandidate = false;
+                    auto candidateIters = GetTopLevelWitnessOrphans(pindexParent->nHeight);
+                    for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
+                    {
+                        if (cacheAlreadySeenWitnessOrphans.find(*candidateIter) == cacheAlreadySeenWitnessOrphans.end())
+                        {
+                            CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
+                            if (pParentPoW)
+                            {
+                                pWitnessBlockToEmbed = *candidateIter;
+                                pindexParent = pParentPoW;
+                                tryHighLevelCandidate = true;
+                                break;
+                            }
+                            else
+                            {
+                                cacheAlreadySeenWitnessOrphans.insert(*candidateIter);
+                            }
+                        }
+                    }
+
+                    // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
+                    if (!tryHighLevelCandidate)
+                    {
+                        if (nPoW2PhaseGreatGrandParent == 3)
+                        {
+                            int nCount=0;
+                            while (pindexParent->pprev && ++nCount < 10)
+                            {
+                                // Grab the witness from our index.
+                                pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pindexParent->pprev->nHeight, pindexParent->pprev->GetBlockHashLegacy(), pindexParent->pprev->GetBlockHashLegacy());
+
+                                //We don't have it in our index - try extract it from the tip in which we have already embedded it.
+                                if (!pWitnessBlockToEmbed)
+                                {
+                                    std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
+                                    if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params().GetConsensus()))
+                                    {
+                                        int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
+                                        if (nWitnessCoinbaseIndex != -1)
+                                        {
+                                            CBlock embeddedWitnessBlock;
+                                            if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pindexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, embeddedWitnessBlock))
+                                            {
+                                                uint256 hashPoW2Witness = pindexParent->GetBlockHashPoW2();
+                                                if (mapBlockIndex.count(hashPoW2Witness) > 0)
+                                                {
+                                                    pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
+                                                }
+                                                else
+                                                {
+                                                    if (ProcessNewBlock(Params(), pBlockPoWParent, true, nullptr))
+                                                    {
+                                                        if (mapBlockIndex.count(hashPoW2Witness) > 0)
+                                                        {
+                                                            pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!pWitnessBlockToEmbed)
+                                {
+                                    pindexParent = pindexParent->pprev;
+                                    continue;
+                                }
+                            }
+                            pindexParent = pindexParent->pprev;
+                            if (!pWitnessBlockToEmbed)
+                                continue;
+                        }
+                        else
+                        {
+                            pindexParent = pindexParent->pprev;
+                            pWitnessBlockToEmbed = nullptr;
+                        }
+                    }
                 }
             }
             else if (nPoW2PhaseGrandParent >= 4)
@@ -1074,18 +1157,7 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
 }
 
 
-struct CBlockIndexCacheComparator
-{
-    bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-        if (pa->nHeight > pb->nHeight) return false;
-        if (pa->nHeight < pb->nHeight) return true;
 
-        if (pa < pb) return false;
-        if (pa > pb) return true;
-
-        return false;
-    }
-};
 
 
 void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, int nPoW2PhaseParent, unsigned int nSelectedWitnessBlockHeight)
@@ -1241,26 +1313,31 @@ void static GuldenWitness()
             if (nPoW2PhasePrev < 3 || pindexTip->nVersionPoW2Witness != 0)
                 continue;
 
-            int nWitnessHeight = pindexTip->nHeight;
-
             // Use a cache to prevent trying the same blocks over and over.
             // Look for all potential signable blocks at same height as the index tip - don't limit ourselves to just the tip
             // This is important because otherwise the chain can stall if there is an absent signer for the current tip.
             std::vector<CBlockIndex*> candidateOrphans;
-            candidateOrphans.push_back(pindexTip);
-            for (const auto candidateIter : GetTopLevelPoWOrphans(nWitnessHeight, *(pindexTip->phashBlock)))
+            if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
-                if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
-                {
-                    cacheAlreadySeenWitnessCandidates.insert(candidateIter);
-                    candidateOrphans.push_back(candidateIter);
-                }
+                candidateOrphans.push_back(pindexTip);
+                cacheAlreadySeenWitnessCandidates.insert(pindexTip);
             }
-            if (cacheAlreadySeenWitnessCandidates.size() > 50)
+            if (candidateOrphans.size() == 0)
             {
-                auto eraseEnd = cacheAlreadySeenWitnessCandidates.begin();
-                std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 50);
-                cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
+                for (const auto candidateIter : GetTopLevelPoWOrphans(pindexTip->nHeight, *(pindexTip->pprev->phashBlock)))
+                {
+                    if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
+                    {
+                        cacheAlreadySeenWitnessCandidates.insert(candidateIter);
+                        candidateOrphans.push_back(candidateIter);
+                    }
+                }
+                if (cacheAlreadySeenWitnessCandidates.size() > 50)
+                {
+                    auto eraseEnd = cacheAlreadySeenWitnessCandidates.begin();
+                    std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 50);
+                    cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
+                }
             }
 
             if (candidateOrphans.size() > 0)
@@ -1286,7 +1363,7 @@ void static GuldenWitness()
                         if (!GetWitness(chainActive, candidateIter->pprev, *pWitnessBlock, chainparams, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, nullptr))
                             continue;
 
-                        CAmount witnessSubsidy = GetBlockSubsidyWitness(nWitnessHeight, pParams);
+                        CAmount witnessSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
 
                         //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(selectedWitnessOutput) == ISMINE_SPENDABLE)
@@ -1343,7 +1420,7 @@ void static GuldenWitness()
 
                                 //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(nWitnessHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, selectedWitnessAccount);
+                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
 
@@ -1351,7 +1428,7 @@ void static GuldenWitness()
                                 //testme: (GULDEN) (POW2) (2.0)
                                 {
                                     // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
-                                    pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(pindexTip->pprev, pParams);
+                                    pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);
 
                                     // Second witness timestamp gets added to the block as an additional time source to the miner timestamp.
                                     // Witness timestamp must exceed median of previous mined timestamps.

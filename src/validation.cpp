@@ -2093,7 +2093,24 @@ std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uin
     {
         if (candidateIter->nVersionPoW2Witness == 0)
         {
-            if (candidateIter->nHeight == nHeight && candidateIter->pprev && *candidateIter->pprev->phashBlock == prevHash)
+            if (candidateIter->nHeight >= nHeight)
+            {
+                vRet.push_back(candidateIter);
+            }
+        }
+    }
+    return vRet;
+}
+
+std::vector<CBlockIndex*> GetTopLevelWitnessOrphans(const int64_t nHeight)
+{
+    LOCK(cs_main);
+    std::vector<CBlockIndex*> vRet;
+    for (const auto candidateIter : setBlockIndexCandidates)
+    {
+        if (candidateIter->nVersionPoW2Witness != 0)
+        {
+            if (candidateIter->nHeight >= nHeight)
             {
                 vRet.push_back(candidateIter);
             }
@@ -2565,6 +2582,7 @@ static void PruneBlockIndexCandidates() {
     //fixme: NEXT HIGH
     //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW (as we must consider all such blocks as witness candidates even if they are of lower weight).
     //if (nPoW2Version != 0 || (*it)->nHeight < chainActive.Tip()->nHeight-1)
+    //while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork && ((*it)->nVersionPoW2Witness == 0 || (*it)->nHeight < chainActive.Tip()->nHeight-10) ) {
     int nPoW2Version = chainActive.Tip()->nVersionPoW2Witness;
     while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork) {
             setBlockIndexCandidates.erase(it++);
@@ -2770,8 +2788,23 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
     AssertLockHeld(cs_main);
     const CBlockIndex *pindexFork = currentChain.FindFork(pindexMostWork);
 
+    if (!pindexFork)
+    {
+        while (currentChain.Tip() && currentChain.Tip()->nHeight >= pindexMostWork->nHeight - 1)
+        {
+            CBlockIndex* pindexNew = currentChain.Tip()->pprev;
+            std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
+            CBlock& block = *pblock;
+            if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams.GetConsensus()))
+                return false;
+            if (DisconnectBlock(block, currentChain.Tip(), coinView) != DISCONNECT_OK)
+                return false;
+            currentChain.SetTip(pindexNew);
+        }
+        pindexFork = currentChain.FindFork(pindexMostWork);
+    }
+
     // Disconnect active blocks which are no longer in the best chain.
-    DisconnectedBlockTransactions disconnectpool;
     while (currentChain.Tip() && currentChain.Tip() != pindexFork) {
         CBlockIndex* pindexNew = currentChain.Tip()->pprev;
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
@@ -2911,22 +2944,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     CBlockIndex* pPreviousIndexChain = nullptr;
     CChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
-    if (!pPreviousIndexChain)
-    {
-        pPreviousIndexChain = new CBlockIndex(*pPreviousIndexChain_);
-        CBlockIndex* pprev = tempChain.Tip();
-        while (pprev)
-        {
-            if (pPreviousIndexChain->pprev->GetBlockHashPoW2() == pprev->GetBlockHashPoW2())
-            {
-                pPreviousIndexChain->pprev = pprev;
-                break;
-            }
-            pprev = pprev->pprev;
-        }
-        assert(pprev);
-        pPreviousIndexChain->pprev = pprev;
-    }
+    assert(pPreviousIndexChain);
 
     // Force the tip of the chain to the block that comes before the block we are examining.
     // For phase 3 this must be a PoW block - from phase 4 it should be a witness block 
@@ -3062,7 +3080,7 @@ bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, c
             // fixme: Add warning/logging for this.
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
             // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
-            if (nMinAge == 0 || (nMinAge == 10 && WitnessSelectionPool.size() > 0))
+            if (nMinAge == 0 || (nMinAge == 10 && WitnessSelectionPool.size() > 5))
             {
                 break;
             }
@@ -3133,7 +3151,7 @@ bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, c
     resultBlockHeight = selectedWitness->coin.nHeight;
     resultOutPoint = selectedWitness->outpoint;
 
-    //LogPrintf(">>>Selected witness=%s %s fromblockheight=%d currentheight=%d prevout=%s \n",selectedWitness->coin.out.output.GetHex(selectedWitness->coin.out.GetType()), selectedWitness->coin.out.ToString(), resultBlockHeight, nBlockHeight, resultOutPoint.hash.ToString());
+    //LogPrintf(">>>Selected witness=%s %s fromblockhash=%s fromblockheight=%d currentheight=%d prevout=%s \n",selectedWitness->coin.out.output.GetHex(selectedWitness->coin.out.GetType()), selectedWitness->coin.out.ToString(), block.GetHashPoW2().ToString(), resultBlockHeight, nBlockHeight, resultOutPoint.hash.ToString());
     return true;
 }
 
@@ -3342,7 +3360,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
                 setBlockIndexCandidates.erase(pindex);
                 pindex->nSequenceId = nBlockSequenceId++;
             }
-            if (chainActive.Tip() == NULL || pindex->nChainWork >= chainActive.Tip()->nChainWork) {
+            if (chainActive.Tip() == NULL || pindex->nChainWork >= chainActive.Tip()->nChainWork || pindex->nHeight >= chainActive.Tip()->nHeight) {
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);
@@ -3941,10 +3959,8 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
     return true;
 }
 
-bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view)
+bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock)
 {
-    AssertLockHeld(cs_main);
-
     if (nWitnessCoinbaseIndex == -1)
         return error("Invalid coinbase index for embedded witness coinbase info.");
     if (block.vtx.size() < 2)
@@ -3971,8 +3987,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     uint256 hashPrevPoWIndex;
 
     // Reconstruct header information of previous witness block from the coinbase of this PoW block.
-    CBlock embeddedWitnessBlock;
-
     if (!ReadBlockFromDisk(embeddedWitnessBlock, pindexPrev, chainParams.GetConsensus()))
         return false;
 
@@ -4009,6 +4023,16 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     embeddedWitnessBlock.vtx.emplace_back(MakeTransactionRef(std::move(coinbaseTx)));
 
     //LogPrintf(">>>[Embedded] Extract witness block from coinbase: prevheight:%d height:%d \nembedded block: %s\n", pindexPrev->nHeight, pindexPrev->nHeight+1 , embeddedWitnessBlock.ToString());
+    return true;
+}
+
+bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view)
+{
+    AssertLockHeld(cs_main);
+
+    CBlock embeddedWitnessBlock;
+    if (!ExtractWitnessBlockFromWitnessCoinbase(chain, nWitnessCoinbaseIndex, pindexPrev, block, chainParams, view, embeddedWitnessBlock))
+        return error("Could not extract embedded witness information from witness coinbase.");
 
     // Ensure that the witness signature itself is actually valid.
     bool ret = true;
@@ -4149,7 +4173,9 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
 
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
-    if (!IsInitialBlockDownload() && chainActive.Tip() == pindex->pprev)
+    // fixme: (GULDEN) (2.0) (HIGH) This will probably increase forks - but we need to keep pushing tip contenders out in case of stalled witness
+    // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
+    if (!IsInitialBlockDownload() && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
 
     int nHeight = pindex->nHeight;
@@ -4223,7 +4249,9 @@ bool TestBlockValidity(CChain& chain, CValidationState& state, const CChainParam
 {
     AssertLockHeld(cs_main);
 
-    assert(pindexPrev && pindexPrev == chain.Tip());
+    if(!pindexPrev || pindexPrev != chain.Tip())
+        return false;
+
     if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, block.GetHashPoW2()))
         return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 

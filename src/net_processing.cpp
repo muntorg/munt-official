@@ -827,17 +827,13 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
             fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
         }
     }
-    else
+    hashBlock = pblock->GetHashPoW2();
     {
-        hashBlock = pblock->GetHashPoW2();
-
-        {
-            LOCK(cs_most_recent_block);
-            most_recent_block_hash_pow2 = hashBlock;
-            most_recent_block_pow2 = pblock;
-            most_recent_compact_block_pow2 = pcmpctblock;
-            fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
-        }
+        LOCK(cs_most_recent_block);
+        most_recent_block_hash_pow2 = hashBlock;
+        most_recent_block_pow2 = pblock;
+        most_recent_compact_block_pow2 = pcmpctblock;
+        fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
     }
 
 

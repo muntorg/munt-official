@@ -484,6 +484,7 @@ extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
 // NB! It is important that we consider height and not chain weight here.
 // If there is a stalled chain due to absentee signer(s) delta may drop the difficulty so competing PoW blocks will have a lower chain weight, but we still want to sign them to get the chain moving again.
 std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uint256& prevhash);
+std::vector<CBlockIndex*> GetTopLevelWitnessOrphans(const int64_t nHeight);
 // Retrieve the witness for a PoW block (phase 3 only)
 CBlockIndex* GetWitnessOrphanForBlock(const int64_t nHeight, const uint256& prevHash, const uint256& powHash);
 
@@ -491,6 +492,7 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
 bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView, CBlockIndex* pnewblockastip);
 bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride);
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
+bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock);
 bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view);
 bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
 bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion);

@@ -332,7 +332,31 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
 {
     uint256 powHash = pIndex->GetBlockHashLegacy();
     if (!mapBlockIndex.count(powHash))
-        return NULL;
+    {
+        std::shared_ptr<CBlock> pBlockPoW(new CBlock);
+        if (!ReadBlockFromDisk(*pBlockPoW, pIndex, Params().GetConsensus()))
+            return nullptr;
+
+        // Strip any witness information from the block we have been given to get back to the raw PoW block on which it was based.
+        for (unsigned int i = 1; i < pBlockPoW->vtx.size(); i++)
+        {
+            if (pBlockPoW->vtx[i]->IsCoinBase() && pBlockPoW->vtx[i]->IsPoW2WitnessCoinBase())
+            {
+                while (pBlockPoW->vtx.size() > i)
+                {
+                    pBlockPoW->vtx.pop_back();
+                }
+                break;
+            }
+        }
+        pBlockPoW->nVersionPoW2Witness = 0;
+        pBlockPoW->nTimePoW2Witness = 0;
+        pBlockPoW->hashMerkleRootPoW2Witness = uint256();
+        pBlockPoW->witnessHeaderPoW2Sig.clear();
+
+        if (!ProcessNewBlock(Params(), pBlockPoW, true, nullptr))
+            return nullptr;
+    }
     return mapBlockIndex[powHash];
 }
 
