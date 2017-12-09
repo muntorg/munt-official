@@ -890,32 +890,32 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 }
                 else
                 {
-                    // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
-                    bool tryHighLevelCandidate = false;
-                    auto candidateIters = GetTopLevelWitnessOrphans(pindexParent->nHeight);
-                    for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
+                    if (nPoW2PhaseGreatGrandParent == 3)
                     {
-                        if (cacheAlreadySeenWitnessOrphans.find(*candidateIter) == cacheAlreadySeenWitnessOrphans.end())
+                        // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
+                        bool tryHighLevelCandidate = false;
+                        auto candidateIters = GetTopLevelWitnessOrphans(pindexParent->nHeight);
+                        for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
                         {
-                            CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
-                            if (pParentPoW)
+                            if (cacheAlreadySeenWitnessOrphans.find(*candidateIter) == cacheAlreadySeenWitnessOrphans.end())
                             {
-                                pWitnessBlockToEmbed = *candidateIter;
-                                pindexParent = pParentPoW;
-                                tryHighLevelCandidate = true;
-                                break;
-                            }
-                            else
-                            {
-                                cacheAlreadySeenWitnessOrphans.insert(*candidateIter);
+                                CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
+                                if (pParentPoW)
+                                {
+                                    pWitnessBlockToEmbed = *candidateIter;
+                                    pindexParent = pParentPoW;
+                                    tryHighLevelCandidate = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    cacheAlreadySeenWitnessOrphans.insert(*candidateIter);
+                                }
                             }
                         }
-                    }
 
-                    // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
-                    if (!tryHighLevelCandidate)
-                    {
-                        if (nPoW2PhaseGreatGrandParent == 3)
+                        // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
+                        if (!tryHighLevelCandidate)
                         {
                             int nCount=0;
                             while (pindexParent->pprev && ++nCount < 10)
@@ -935,10 +935,11 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                             CBlock embeddedWitnessBlock;
                                             if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pindexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, embeddedWitnessBlock))
                                             {
-                                                uint256 hashPoW2Witness = pindexParent->GetBlockHashPoW2();
+                                                uint256 hashPoW2Witness = embeddedWitnessBlock.GetHashPoW2();
                                                 if (mapBlockIndex.count(hashPoW2Witness) > 0)
                                                 {
                                                     pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
+                                                    break;
                                                 }
                                                 else
                                                 {
@@ -961,15 +962,16 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                     continue;
                                 }
                             }
-                            pindexParent = pindexParent->pprev;
                             if (!pWitnessBlockToEmbed)
                                 continue;
+                            if (pindexParent->nHeight != pWitnessBlockToEmbed->nHeight)
+                                pindexParent = pindexParent->pprev;
                         }
-                        else
-                        {
-                            pindexParent = pindexParent->pprev;
-                            pWitnessBlockToEmbed = nullptr;
-                        }
+                    }
+                    else
+                    {
+                        pindexParent = pindexParent->pprev;
+                        pWitnessBlockToEmbed = nullptr;
                     }
                 }
             }
