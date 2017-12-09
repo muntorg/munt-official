@@ -1637,7 +1637,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                   CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false, bool fVerifyWitness=true)
 {
     if (!ContextualCheckBlock(block, state, chainparams, pindex->pprev, chain, &view, true))
-        return error("Consensus::CheckBlock, failed ContextualCheckBlock with utxo check: %s", __func__, FormatStateMessage(state));
+        return error("%s: Consensus::CheckBlock, failed ContextualCheckBlock with utxo check: %s", __func__, FormatStateMessage(state));
 
     AssertLockHeld(cs_main);
     assert(pindex);
@@ -1942,15 +1942,14 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
         if (block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue != nSubsidyWitness)
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount)"), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
-
-        // First block of phase 4 contains two witness subsidies so miner loses out on 20 NLG for this block
-        // This block is treated special. (but special casing can dissapear for 2.1 release.
-        if(nPoW2PhaseParent == 4)
-            nSubsidy -= nSubsidyWitness;
     }
     else if (nPoW2PhaseParent >= 4)
     {
         nSubsidy -= nSubsidyWitness;
+        // First block of phase 4 contains two witness subsidies so miner loses out on 20 NLG for this block
+        // This block is treated special. (but special casing can dissapear for 2.1 release.
+        if (nPoW2PhaseGrandParent == 3)
+            nSubsidy -= nSubsidyWitness;
     }
 
     if (block.nVersionPoW2Witness == 0)
@@ -3732,6 +3731,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
 
     int nPoW2PhaseParent = ( doUTXOChecks && pindexPrev ? GetPoW2Phase(pindexPrev, chainParams, chainOverride, viewOverride) : 1 );
     int nPoW2PhaseGrandParent = ( (doUTXOChecks && pindexPrev && pindexPrev->pprev) ? GetPoW2Phase(pindexPrev->pprev, chainParams, chainOverride, viewOverride) : 1 );
+    int nPoW2PhaseGreatGrandParent = ( (doUTXOChecks && pindexPrev && pindexPrev->pprev && pindexPrev->pprev->pprev) ? GetPoW2Phase(pindexPrev->pprev->pprev, chainParams, chainOverride, viewOverride) : 1 );
 
     // Check that no transactions (from phase2 onward) have transaction version above 4 - this behaviour is no longer allowed
     if (doUTXOChecks && nPoW2PhaseParent >= 3)
@@ -3746,7 +3746,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     }
 
     // Check that no transactions (from phase4 onward) contain a scriptSig - scriptSig is completely deprecated.
-    if (doUTXOChecks && nPoW2PhaseGrandParent >= 4)
+    if (doUTXOChecks && nPoW2PhaseGreatGrandParent >= 4)
     {
         for (const auto& tx : block.vtx)
         {
