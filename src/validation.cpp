@@ -439,7 +439,10 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     if (pfMissingInputs)
         *pfMissingInputs = false;
 
-    if (!CheckTransaction(tx, state, chainActive.Tip()->nHeight))
+    if (!CheckTransaction(tx, state))
+        return false; // state filled in by CheckTransaction
+
+    if (!CheckTransactionContextual(tx, state, chainActive.Tip()->nHeight))
         return false; // state filled in by CheckTransaction
 
     // Coinbase is only valid in a block, not as a loose transaction
@@ -1658,6 +1661,11 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
             view.SetBestBlock(pindex->GetBlockHashLegacy());
         return true;
     }
+
+    // Check transactions
+    for (const auto& tx : block.vtx)
+        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, false))
+            return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
 
     bool fScriptChecks = true;
     if (!hashAssumeValid.IsNull()) {

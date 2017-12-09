@@ -166,7 +166,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     return nSigOps;
 }
 
-bool CheckTransaction(const CTransaction& tx, CValidationState &state, int checkHeight, bool fCheckDuplicateInputs)
+bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs)
 {
     // Basic checks that don't depend on any context
     if (tx.vin.empty())
@@ -221,6 +221,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, int check
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
     }
 
+    return true;
+}
+
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state, int checkHeight, bool fCheckDuplicateInputs)
+{
     //fixme: TODO NEXTNEXTNEXT
     /*Witness transactions inputs/outputs fall into several different categories.
     * 1) Creation of a new witnessing account: This is the only case in which lockfrom can and must be 0.
