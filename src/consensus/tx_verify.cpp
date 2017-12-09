@@ -280,7 +280,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, int check
             }
             else
             {
-                if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock < (3 * 365 * 576))
+                if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock > (3 * 365 * 576))
                     return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
             }
         }
