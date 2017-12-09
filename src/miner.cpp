@@ -873,8 +873,8 @@ void static BitcoinMiner(const CChainParams& chainparams)
             // Tip if last mined block was a witness block. (Mining new chain tip)
             // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
             //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
-            int nPoW2PhaseGreatGrandParent = GetPoW2Phase(pindexParent->pprev->pprev, Params(), chainActive);
-            int nPoW2PhaseGrandParent = GetPoW2Phase(pindexParent->pprev, Params(), chainActive);
+            int nPoW2PhaseGreatGrandParent = pindexParent->pprev && pindexParent->pprev->pprev ? GetPoW2Phase(pindexParent->pprev->pprev, Params(), chainActive) : 1;
+            int nPoW2PhaseGrandParent = pindexParent->pprev ? GetPoW2Phase(pindexParent->pprev, Params(), chainActive) : 1;
             int nPoW2PhaseParent = GetPoW2Phase(pindexParent, Params(), chainActive);
             boost::this_thread::interruption_point();
 
