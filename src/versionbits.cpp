@@ -31,6 +31,8 @@ const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_B
     }
 };
 
+#define PREVHASH (!pindexPrev?uint256():pindexPrev->GetBlockHeader().GetHashPoW2())
+
 ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex* pindexPrev, const Consensus::Params& params, ThresholdConditionCache& cache) const
 {
     int nPeriod = Period(params);
@@ -45,15 +47,15 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
 
     // Walk backwards in steps of nPeriod to find a pindexPrev whose information is known
     std::vector<const CBlockIndex*> vToCompute;
-    while (cache.count(pindexPrev) == 0) {
+    while (cache.count(PREVHASH) == 0) {
         if (pindexPrev == NULL) {
             // The genesis block is by definition defined.
-            cache[pindexPrev] = THRESHOLD_DEFINED;
+            cache[PREVHASH] = THRESHOLD_DEFINED;
             break;
         }
         if (pindexPrev->GetMedianTimePast() < nTimeStart) {
             // Optimization: don't recompute down further, as we know every earlier block will be before the start time
-            cache[pindexPrev] = THRESHOLD_DEFINED;
+            cache[PREVHASH] = THRESHOLD_DEFINED;
             break;
         }
         vToCompute.push_back(pindexPrev);
@@ -61,8 +63,8 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
     }
 
     // At this point, cache[pindexPrev] is known
-    assert(cache.count(pindexPrev));
-    ThresholdState state = cache[pindexPrev];
+    assert(cache.count(PREVHASH));
+    ThresholdState state = cache[PREVHASH];
 
     // Now walk forward and compute the state of descendants of pindexPrev
     while (!vToCompute.empty()) {
@@ -109,7 +111,7 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
                 break;
             }
         }
-        cache[pindexPrev] = state = stateNext;
+        cache[PREVHASH] = state = stateNext;
     }
 
     return state;
@@ -190,7 +192,8 @@ protected:
         //fixme: (GULDEN) (POW2) (2.1) We can remove this for 2.1
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
-            return GetPoW2Phase3ActivationTime(chainActive);
+            int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
+            return nActivationTime;
         }
 
         return params.vDeployments[id].nStartTime;
@@ -208,14 +211,13 @@ protected:
             case Consensus::DEPLOYMENT_WITNESS:
             {
                 //fixme: (GULDEN) (2.1) This can be removed/simplified for 2.1
-                int nVersionPoW2Witness = pindex->nVersionPoW2Witness;
+                int32_t nVersionPoW2Witness = pindex->nVersionPoW2Witness;
                 if (nVersionPoW2Witness == 0)
                 {
                     CBlock temp;
                     if (!ReadBlockFromDisk(temp, pindex, params))
                         assert(0);
 
-                    //fixme: (GULDEN) (2.0) - Consider using a cache here to speed things up?
                     int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);
                     if (nWitnessCoinbaseIndex != -1)
                     {

@@ -1556,6 +1556,7 @@ bool HaveRequiredPeerUpgradePercent(int nRequiredProtoVersion, unsigned int nReq
     return (100 * nUpgradeCount) / vstats.size() > nRequiredPercent;
 }
 
+//fixme: next high - does this need to take a chain paramater?
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)
 {
     LOCK(cs_main);
@@ -1813,6 +1814,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
     int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev, chainparams, chain, &view);
     int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev, chainparams, chain, &view);
+    int nPoW2PhaseGreatGrandParent = ( (pindex->pprev && pindex->pprev->pprev && pindex->pprev->pprev->pprev) ? GetPoW2Phase(pindex->pprev->pprev->pprev, chainparams, chain, &view) : 1 );
     //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
     //Do and store all such tests above this point in the code.
 
@@ -3872,7 +3874,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     }
     else
     {
-        if (nPoW2PhaseGrandParent >=4)
+        if (nPoW2PhaseGreatGrandParent >=4)
         {
             for (const auto& tx : block.vtx) {
                 if (!tx->HasWitness()) {

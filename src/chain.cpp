@@ -99,7 +99,8 @@ CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndex
         clone.vChain.emplace_back(new CBlockIndex(*index));
         if (pprev)
             clone.vChain.back()->pprev = pprev;
-        clone.vChain.back()->pskip = pprev;
+        clone.vChain.back()->pskip = nullptr;
+        clone.vChain.back()->BuildSkip();
         pprev = clone.vChain.back();
         if (index == retainIndexIn)
             retainIndexOut = pprev;
@@ -115,12 +116,14 @@ CChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndex
             // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
             while (pNotInChain->pprev->nHeight > clone.Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != clone.vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
             {
-                pNotInChain->pskip = pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
+                pNotInChain->pskip = nullptr;
+                pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
                 pNotInChain = pNotInChain->pprev;
             }
             while (pNotInChain->pprev != clone.vChain[pNotInChain->pprev->nHeight])
             {
-                pNotInChain->pskip = pNotInChain->pprev = clone.vChain[pNotInChain->pprev->nHeight];
+                pNotInChain->pskip = nullptr;
+                pNotInChain->pprev = clone.vChain[pNotInChain->pprev->nHeight];
                 pNotInChain = pNotInChain->pprev;
             }
         }
