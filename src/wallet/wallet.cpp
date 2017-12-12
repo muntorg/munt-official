@@ -1104,7 +1104,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
         if (mapWallet.count(txin.prevout.hash)) {
             CWalletTx& prevtx = mapWallet[txin.prevout.hash];
             if (prevtx.nIndex == -1 && !prevtx.hashUnset()) {
-                MarkConflicted(prevtx.hashBlock, wtx.GetHash());
+                //MarkConflicted(prevtx.hashBlock, wtx.GetHash());
             }
         }
     }
