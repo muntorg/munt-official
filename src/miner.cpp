@@ -148,7 +148,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed)
+void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -178,7 +178,14 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         assert(serialisedWitnessHeaderInfo.size() == 137);
 
         CTxOut out;
-        out.SetType(CTxOutType::ScriptLegacyOutput);
+        if (nParentPoW2Phase >= 4)
+        {
+            out.SetType(CTxOutType::ScriptOutput);
+        }
+        else
+        {
+            out.SetType(CTxOutType::ScriptLegacyOutput);
+        }
 
         out.nValue = 0;
         out.output.scriptPubKey.resize(143); // 1 + 5 + 137
@@ -307,6 +314,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
 
+    if (nParentPoW2Phase >= 4)
+        coinbaseTx.vout[0].SetType(CTxOutType::ScriptOutput);
+    else
+        coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
+
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
     // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)
     std::string coinbaseSignature = GetArg("-coinbasesignature", "");
@@ -332,7 +344,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     {
         if (pWitnessBlockToEmbed)
         {
-            InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed);
+            InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed, nParentPoW2Phase);
         }
     }
 

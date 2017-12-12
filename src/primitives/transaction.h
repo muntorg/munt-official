@@ -637,13 +637,17 @@ public:
     template <typename Stream> void WriteToStream(Stream& s, int32_t nTransactionVersion) const
     {
         static CSerActionSerialize ser_action;
-        if (GetType() == CTxOutType::ScriptLegacyOutput)
+        if (IsOldTransactionVersion(nTransactionVersion))
         {
+            assert(output.nType == CTxOutType::ScriptLegacyOutput);
+
             // Old transaction format.
             STRWRITE(nValue);
         }
         else
         {
+            assert(output.nType != CTxOutType::ScriptLegacyOutput);
+
             CAmount nValueWrite = nValue;
 
             output.nValueBase = 0; // 8 decimal precision.
