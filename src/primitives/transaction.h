@@ -430,7 +430,7 @@ public:
     struct output
     {
         uint8_t nType: 5;
-        uint8_t nValueBase: 3;
+        mutable uint8_t nValueBase: 3;
         union
         {
             CScript scriptPubKey;
@@ -482,18 +482,33 @@ public:
             }
         }
 
-        template <typename Stream, typename Operation>
-        inline void SerializeOp(Stream& s, Operation ser_action)
+        template <typename Stream> inline void WriteToStream(Stream& s) const
         {
+            static CSerActionSerialize ser_action;
             switch(nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
                 case CTxOutType::ScriptOutput:
-                    READWRITE(*(CScriptBase*)(&scriptPubKey)); break;
+                    STRWRITE(*(CScriptBase*)(&scriptPubKey)); break;
                 case CTxOutType::PoW2WitnessOutput:
-                    READWRITE(witnessDetails); break;
+                    STRWRITE(witnessDetails); break;
                 case CTxOutType::StandardKeyHashOutput:
-                    READWRITE(standardKeyHash); break;
+                    STRWRITE(standardKeyHash); break;
+            }
+        }
+
+        template <typename Stream> inline void ReadFromStream(Stream& s)
+        {
+            static CSerActionUnserialize ser_action;
+            switch(nType)
+            {
+                case CTxOutType::ScriptLegacyOutput:
+                case CTxOutType::ScriptOutput:
+                    STRREAD(*(CScriptBase*)(&scriptPubKey)); break;
+                case CTxOutType::PoW2WitnessOutput:
+                    STRREAD(witnessDetails); break;
+                case CTxOutType::StandardKeyHashOutput:
+                    STRREAD(standardKeyHash); break;
             }
         }
 
@@ -502,7 +517,7 @@ public:
             std::vector<unsigned char> serData;
             {
                 CVectorWriter serialisedWitnessHeaderInfoStream(SER_NETWORK, INIT_PROTO_VERSION, serData, 0);
-                const_cast<output*>(this)->SerializeOp(serialisedWitnessHeaderInfoStream, CSerActionSerialize());
+                const_cast<output*>(this)->WriteToStream(serialisedWitnessHeaderInfoStream);
             }
             return HexStr(serData);
         }
@@ -619,105 +634,82 @@ public:
 
     CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
 
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        if (ser_action.ForRead())
+    template <typename Stream> void WriteToStream(Stream& s, int32_t nTransactionVersion) const
+    {
+        static CSerActionSerialize ser_action;
+        if (GetType() == CTxOutType::ScriptLegacyOutput)
         {
-            // Test whether we are dealing with the new or old transaction format by reading in 64 bits and testing them.
-            // If the 10 leading bits are zero or the stream does not contain 64 bits
-            // a) Old transaction format should always have 10 most significant bits as zero when reading the initial 64 bit value that it starts with.
-            // Largest output is 170'000'000'00000000 to have existed as this number greatly exceeds total supply at the point in time when old transactions existed. This number only occupies 5 bytes of a 64 bit integer....
-            // b) Old transaction format must always have >8 bytes as it starts with 64 bit amount.
-            try
-            {
-                STRPEEK(nValue);
-                if (nValue & 0b1111111111000000000000000000000000000000000000000000000000000000)
-                {
-                    nValue = -1;
-                }
-                else
-                {
-                    //fixme: SBSU - Ideally we should simply 'skip' here instead of incurring read overhead, unfortunately the behaviour of CHashVerifier makes this complicated
-                    //STRSKIP(nValue);
-                    STRREAD(nValue);
-                }
-            }
-            catch (std::ios_base::failure& e)
-            {
-                nValue = -1;
-            }
-
-            // Read in the new transaction format value, which is specified in a format that is much more compact in most circumstances.
-            if (nValue == -1)
-            {
-                uint8_t nTypeAndValueBase;
-                STRREAD(nTypeAndValueBase);
-                output.nValueBase = (nTypeAndValueBase & 0b00000111);
-                SetType(CTxOutType((nTypeAndValueBase & 0b11111000) >> 3));
-
-                assert(output.nType != CTxOutType::ScriptLegacyOutput);
-
-                STRREAD(VARINT(nValue)); // Compacted value is stored as a varint.
-                switch(output.nValueBase) // Which further needs to be multiplied by base to get the full int64 value.
-                {
-                    case 0: break;                          // 8 decimal precision  (0.00000008, 87654321.12345678 etc.)
-                    case 1: nValue *= 100; break;           // 6 decimal precision  (0.00000600, 87654321.12345600 etc.)
-                    case 2: nValue *= 10000; break;         // 4 decimal precision  (0.00040000, 87654321.12340000 etc.)
-                    case 3: nValue *= 1000000; break;       // 2 decimal precision  (0.02000000, 87654321.12000000 etc.)
-                    case 4: nValue *= 10000000; break;      // 1 decimal precision  (0.10000000, 87654321.10000000 etc.)
-                    case 5: nValue *= 100000000; break;     // 1 significant digit precision (1.00000000, 87654321.00000000 etc.)
-                    case 6: nValue *= 10000000000; break;   // 3 significant digit precision (200.00000000, 876543200.00000000 etc.)
-                    case 7: nValue *= 1000000000000; break; // 5 significant digit precision (40000.00000000, 876540000.00000000 etc.)
-                };
-            }
+            // Old transaction format.
+            STRWRITE(nValue);
         }
         else
         {
-            if (GetType() == CTxOutType::ScriptLegacyOutput)
-            {
-                // Old transaction format.
-                STRWRITE(nValue);
-            }
-            else
-            {
-                CAmount nValueWrite = nValue;
+            CAmount nValueWrite = nValue;
 
-                // If we don't already have a 'base' set calculate the best one.
-                if (output.nValueBase == 0)
-                {
-                    //fixme: (Gulden) - Is there some 'trick' to calculate this faster without so much branching?
-                    if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; } // 4 significant digit precision
-                    else if (nValue % 10000000000 == 0) { output.nValueBase = 6; } // 2 significant digit precision
-                    else if (nValue % 100000000 == 0)   { output.nValueBase = 5; } // 1 significant digit precision
-                    else if (nValue % 10000000 == 0)    { output.nValueBase = 4; } // 1 decimal precision
-                    else if (nValue % 1000000 == 0)     { output.nValueBase = 3; } // 2 decimal precision
-                    else if (nValue % 10000 == 0)       { output.nValueBase = 2; } // 4 decimal precision
-                    else if (nValue % 100 == 0)         { output.nValueBase = 1; } // 6 decimal precision
-                    // 8 decimal precision.
-                }
-                // Adjust nValueWrite to the new base.
-                switch (output.nValueBase)
-                {
-                    case 7: nValueWrite /= 1000000000000; break;
-                    case 6: nValueWrite /= 10000000000; break;
-                    case 5: nValueWrite /= 100000000; break;
-                    case 4: nValueWrite /= 10000000; break;
-                    case 3: nValueWrite /= 1000000; break;
-                    case 2: nValueWrite /= 10000; break;
-                    case 1: nValueWrite /= 100; break;
-                }
+            output.nValueBase = 0; // 8 decimal precision.
+            //fixme: (Gulden) - Is there some 'trick' to calculate this faster without so much branching?
+            if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; } // 4 significant digit precision
+            else if (nValue % 10000000000 == 0) { output.nValueBase = 6; } // 2 significant digit precision
+            else if (nValue % 100000000 == 0)   { output.nValueBase = 5; } // 1 significant digit precision
+            else if (nValue % 10000000 == 0)    { output.nValueBase = 4; } // 1 decimal precision
+            else if (nValue % 1000000 == 0)     { output.nValueBase = 3; } // 2 decimal precision
+            else if (nValue % 10000 == 0)       { output.nValueBase = 2; } // 4 decimal precision
+            else if (nValue % 100 == 0)         { output.nValueBase = 1; } // 6 decimal precision
 
-                uint8_t nTypeAndValueBase = 0;
-                nTypeAndValueBase = output.nType;
-                nTypeAndValueBase <<= 3;
-                nTypeAndValueBase |= output.nValueBase;
-                STRWRITE(nTypeAndValueBase);
-                STRWRITE(VARINT(nValueWrite));
+            // Adjust nValueWrite to the new base.
+            switch (output.nValueBase)
+            {
+                case 7: nValueWrite /= 1000000000000; break;
+                case 6: nValueWrite /= 10000000000; break;
+                case 5: nValueWrite /= 100000000; break;
+                case 4: nValueWrite /= 10000000; break;
+                case 3: nValueWrite /= 1000000; break;
+                case 2: nValueWrite /= 10000; break;
+                case 1: nValueWrite /= 100; break;
             }
+
+            uint8_t nTypeAndValueBase = 0;
+            nTypeAndValueBase = output.nType;
+            nTypeAndValueBase <<= 3;
+            nTypeAndValueBase |= output.nValueBase;
+            STRWRITE(nTypeAndValueBase);
+            STRWRITE(VARINT(nValueWrite));
         }
-        output.SerializeOp(s, ser_action);
+        output.WriteToStream(s);
+    }
+
+    template <typename Stream> void ReadFromStream(Stream& s, int32_t nTransactionVersion)
+    {
+        static CSerActionUnserialize ser_action;
+        if (IsOldTransactionVersion(nTransactionVersion))
+        {
+            SetType(CTxOutType::ScriptLegacyOutput);
+            output.nValueBase = 0;
+            STRREAD(nValue);
+        }
+        else // Read in the new transaction format value, which is specified in a format that is much more compact in most circumstances.
+        {
+            uint8_t nTypeAndValueBase;
+            STRREAD(nTypeAndValueBase);
+            output.nValueBase = (nTypeAndValueBase & 0b00000111);
+            SetType(CTxOutType((nTypeAndValueBase & 0b11111000) >> 3));
+
+            assert(output.nType != CTxOutType::ScriptLegacyOutput);
+
+            STRREAD(VARINT(nValue)); // Compacted value is stored as a varint.
+            switch(output.nValueBase) // Which further needs to be multiplied by base to get the full int64 value.
+            {
+                case 0: break;                          // 8 decimal precision  (0.00000008, 87654321.12345678 etc.)
+                case 1: nValue *= 100; break;           // 6 decimal precision  (0.00000600, 87654321.12345600 etc.)
+                case 2: nValue *= 10000; break;         // 4 decimal precision  (0.00040000, 87654321.12340000 etc.)
+                case 3: nValue *= 1000000; break;       // 2 decimal precision  (0.02000000, 87654321.12000000 etc.)
+                case 4: nValue *= 10000000; break;      // 1 decimal precision  (0.10000000, 87654321.10000000 etc.)
+                case 5: nValue *= 100000000; break;     // 1 significant digit precision (1.00000000, 87654321.00000000 etc.)
+                case 6: nValue *= 10000000000; break;   // 3 significant digit precision (200.00000000, 876543200.00000000 etc.)
+                case 7: nValue *= 1000000000000; break; // 5 significant digit precision (40000.00000000, 876540000.00000000 etc.)
+            };
+        }
+        output.ReadFromStream(s);
     }
 
     void SetNull()
@@ -804,11 +796,22 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
             {
                 in.ReadFromStream(s, tx.nVersion);
             }
-            s >> COMPACTSIZEVECTOR(tx.vout);
+            s >> COMPACTSIZE(nSize);
+            tx.vout.resize(nSize);
+            for (auto& out : tx.vout)
+            {
+                out.ReadFromStream(s, tx.nVersion);
+            }
         }
     } else {
         /* We read a non-empty vin. Assume a normal vout follows. */
-        s >> COMPACTSIZEVECTOR(tx.vout);
+            uint64_t nSize;
+            s >> COMPACTSIZE(nSize);
+            tx.vout.resize(nSize);
+            for (auto& out : tx.vout)
+            {
+                out.ReadFromStream(s, tx.nVersion);
+            }
     }
     if ((flags & 1) && fAllowWitness) {
         /* The witness flag is present, and we support witnesses. */
@@ -849,7 +852,11 @@ inline void SerializeTransaction(const TxType& tx, Stream& s) {
     {
         in.WriteToStream(s, tx.nVersion);
     }
-    s << COMPACTSIZEVECTOR(tx.vout);
+    s << COMPACTSIZE(tx.vout.size());
+    for (const auto& out : tx.vout)
+    {
+        out.WriteToStream(s, tx.nVersion);
+    }
     if (flags & 1) {
         for (size_t i = 0; i < tx.vin.size(); i++) {
             s << COMPACTSIZEVECTOR(tx.vin[i].scriptWitness.stack);
@@ -938,9 +945,20 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
 
     //(opt) Output count + Outputs
     if (tx.flags[HasOneOutput] || tx.flags[HasTwoOutputs] || tx.flags[HasThreeOutputs])
-        s << NOSIZEVECTOR(tx.vout);
+    {
+        for (const auto& out : tx.vout)
+        {
+            out.WriteToStream(s, tx.nVersion);
+        }
+    }
     else
-        s << VARINTVECTOR(tx.vout);
+    {
+        s << VARINT(tx.vout.size());
+        for (const auto& out : tx.vout)
+        {
+            out.WriteToStream(s, tx.nVersion);
+        }
+    }
 
     //Witness data
     if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
@@ -1013,21 +1031,24 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     if (tx.flags[HasOneOutput])
     {
         tx.vout.resize(1);
-        s >> NOSIZEVECTOR(tx.vout);
     }
     else if (tx.flags[HasTwoOutputs])
     {
         tx.vout.resize(2);
-        s >> NOSIZEVECTOR(tx.vout);
     }
     else if (tx.flags[HasThreeOutputs])
     {
         tx.vout.resize(3);
-        s >> NOSIZEVECTOR(tx.vout);
     }
     else
     {
-        s >> VARINTVECTOR(tx.vout);
+        uint64_t nSize;
+        s >> VARINT(nSize);
+        tx.vout.resize(nSize);
+    }
+    for (auto & txOut : tx.vout)
+    {
+        txOut.ReadFromStream(s, tx.nVersion);
     }
 
     if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {

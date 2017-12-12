@@ -27,14 +27,10 @@ class TxInUndoSerializer
 public:
     template<typename Stream>
     void Serialize(Stream &s) const {
-        ::Serialize(s, VARINT(txout->nHeight * 2 + (txout->fCoinBase ? 1 : 0)));
-        if (txout->nHeight > 0) {
-            // Required to maintain compatibility with older undo format.
-            ::Serialize(s, (unsigned char)0);
-        }
-        ::Serialize(s, CTxOutCompressor(REF(txout->out)));
+        uint32_t code = (txout->nHeight<<2) | (txout->fSegSig << 1) | txout->fCoinBase;
+        ::Serialize(s, VARINT(code));
+        txout->out.WriteToStream(s, (txout->fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
     }
-
     TxInUndoSerializer(const Coin* coin) : txout(coin) {}
 };
 
@@ -45,17 +41,29 @@ class TxInUndoDeserializer
 public:
     template<typename Stream>
     void Unserialize(Stream &s) {
-        unsigned int nCode = 0;
-        ::Unserialize(s, VARINT(nCode));
-        txout->nHeight = nCode / 2;
-        txout->fCoinBase = nCode & 1;
-        if (txout->nHeight > 0) {
-            // Old versions stored the version number for the last spend of
-            // a transaction's outputs. Non-final spends were indicated with
-            // height = 0.
-            int nVersionDummy;
-            ::Unserialize(s, VARINT(nVersionDummy));
+        uint32_t nCode = 0;
+        if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
+        {
+            ::Unserialize(s, VARINT(nCode));
+            txout->nHeight = nCode / 2;
+            txout->fCoinBase = nCode & 1;
+            txout->fSegSig = 0;
+            if (txout->nHeight > 0) {
+                // Old versions stored the version number for the last spend of
+                // a transaction's outputs. Non-final spends were indicated with
+                // height = 0.
+                int nVersionDummy;
+                ::Unserialize(s, VARINT(nVersionDummy));
+            }
         }
+        else
+        {
+            ::Unserialize(s, VARINT(nCode));
+            txout->nHeight   = ( ((nCode & 0b11111111111111111111111111111100) >> 2));
+            txout->fSegSig   = (  (nCode & 0b00000000000000000000000000000010)  > 0 );
+            txout->fCoinBase = (  (nCode & 0b00000000000000000000000000000001)  > 0 );
+        }
+
         //fixme: (GULDEN) (2.1) CBSU - possibly remove this if statement by just duplicating code for the legacy case
         // (Or eventually just drop the legacy case)
         if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
@@ -64,7 +72,7 @@ public:
         }
         else
         {
-            ::Unserialize(s, REF(CTxOutCompressor(REF(txout->out))));
+            txout->out.ReadFromStream(s, (txout->fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
         }
     }
 

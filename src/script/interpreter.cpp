@@ -1115,9 +1115,9 @@ public:
     void SerializeOutput(S &s, unsigned int nOutput) const {
         if (fHashSingle && nOutput != nIn)
             // Do not lock-in the txout payee at other indices as txin
-            ::Serialize(s, CTxOut());
+            CTxOut().WriteToStream(s, txTo.nVersion);
         else
-            ::Serialize(s, txTo.vout[nOutput]);
+            txTo.vout[nOutput].WriteToStream(s, txTo.nVersion);
     }
 
     /** Serialize txTo */
@@ -1159,7 +1159,7 @@ uint256 GetSequenceHash(const CTransaction& txTo) {
 uint256 GetOutputsHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
     for (const auto& txout : txTo.vout) {
-        ss << txout;
+        txout.WriteToStream(ss, txTo.nVersion);
     }
     return ss.GetHash();
 }
@@ -1193,7 +1193,7 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
             hashOutputs = cache ? cache->hashOutputs : GetOutputsHash(txTo);
         } else if ((nHashType & 0x1f) == SIGHASH_SINGLE && nIn < txTo.vout.size()) {
             CHashWriter ss(SER_GETHASH, 0);
-            ss << txTo.vout[nIn];
+            txTo.vout[nIn].WriteToStream(ss, txTo.nVersion);
             hashOutputs = ss.GetHash();
         }
 

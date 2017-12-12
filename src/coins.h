@@ -34,22 +34,25 @@ public:
 
     //! whether containing transaction was a coinbase
     unsigned int fCoinBase : 1;
+    unsigned int fSegSig : 1;
 
     //! at which height this containing transaction was included in the active block chain
-    uint32_t nHeight : 31;
+    //NB! fixme: (FUTURE) This limits us to ~5000 years before we need to update serialisation format :)
+    uint32_t nHeight : 30;
 
     //! construct a Coin from a CTxOut and height/coinbase information.
-    Coin(CTxOut&& outIn, int nHeightIn, bool fCoinBaseIn) : out(std::move(outIn)), fCoinBase(fCoinBaseIn), nHeight(nHeightIn) {}
-    Coin(const CTxOut& outIn, int nHeightIn, bool fCoinBaseIn) : out(outIn), fCoinBase(fCoinBaseIn),nHeight(nHeightIn) {}
+    Coin(CTxOut&& outIn, int nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(std::move(outIn)), fCoinBase(fCoinBaseIn), fSegSig(fSegSigIn), nHeight(nHeightIn) {}
+    Coin(const CTxOut& outIn, int nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(outIn), fCoinBase(fCoinBaseIn),fSegSig(fSegSigIn),nHeight(nHeightIn) {}
 
     void Clear() {
         out.SetNull();
         fCoinBase = false;
+        fSegSig = false;
         nHeight = 0;
     }
 
     //! empty constructor
-    Coin() : fCoinBase(false), nHeight(0) { }
+    Coin() : fCoinBase(false), fSegSig(false), nHeight(0) { }
 
     bool IsCoinBase() const {
         return fCoinBase;
@@ -58,18 +61,19 @@ public:
     template<typename Stream>
     void Serialize(Stream &s) const {
         assert(!IsSpent());
-        uint32_t code = nHeight * 2 + fCoinBase;
+        uint32_t code = (fSegSig << 31) + (nHeight<<1) + fCoinBase;
         ::Serialize(s, VARINT(code));
-        ::Serialize(s, CTxOutCompressor(REF(out)));
+        out.WriteToStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
     }
 
     template<typename Stream>
     void Unserialize(Stream &s) {
         uint32_t code = 0;
         ::Unserialize(s, VARINT(code));
-        nHeight = code >> 1;
-        fCoinBase = code & 1;
-        ::Unserialize(s, REF(CTxOutCompressor(out)));
+        nHeight = ( ((code  & 0b01111111111111111111111111111110) >> 1) );
+        fSegSig = ( (code   & 0b10000000000000000000000000000000) > 0 );
+        fCoinBase = ( (code & 0b00000000000000000000000000000001) > 0 );
+        out.ReadFromStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
     }
 
     bool IsSpent() const {

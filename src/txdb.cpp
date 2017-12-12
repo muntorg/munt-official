@@ -435,7 +435,7 @@ bool CCoinsViewDB::Upgrade() {
     // Also simulatenously upgrade from the per-tx utxo model (bitcoin 0.8..0.14.x) to per-txout.
     if (nCurrentVersion == 0)
     {
-        LogPrintf("Upgrading database to be segwit compatible...\n");
+        LogPrintf("Upgrading database to be segsig compatible...\n");
         CDBBatch batch(db);
         size_t batch_size = 1 << 24;
         while (pcursor->Valid()) {
@@ -449,7 +449,7 @@ bool CCoinsViewDB::Upgrade() {
                 COutPoint outpoint(key.second, 0);
                 for (size_t i = 0; i < old_coins.vout.size(); ++i) {
                     if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable()) {
-                        Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase);
+                        Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase, false);
                         outpoint.n = i;
                         CoinEntry entry(&outpoint);
                         batch.Write(entry, newcoin);

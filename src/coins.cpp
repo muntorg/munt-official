@@ -70,7 +70,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
         if ( IsPow2WitnessOutput(coin.out) )
         {
             //LogPrintf(">>>CCoinsViewCache: AddCoin %d %s %s\n", GetDepth(), outpoint.ToString(), coin.out.ToString());
-            pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase), possible_overwrite);
+            pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase, coin.fSegSig), possible_overwrite);
         }
     }
 
@@ -103,7 +103,7 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
     for (size_t i = 0; i < tx.vout.size(); ++i) {
         // Pass fCoinbase as the possible_overwrite flag to AddCoin, in order to correctly
         // deal with the pre-BIP30 occurrences of duplicate coinbase transactions.
-        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase), fCoinbase);
+        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase, (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)), fCoinbase);
     }
 }
 
@@ -273,7 +273,8 @@ bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
     return true;
 }
 
-static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE /  ::GetSerializeSize(CTxOut(), SER_NETWORK, PROTOCOL_VERSION); // TODO: merge with similar definition in undo.h.
+//fixme: (GULDEN) (HIGH)
+static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE /  2;//::GetSerializeSize(CTxOut(), SER_NETWORK, PROTOCOL_VERSION); // TODO: merge with similar definition in undo.h.
 
 const Coin& AccessByTxid(const CCoinsViewCache& view, const uint256& txid)
 {

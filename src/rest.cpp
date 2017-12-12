@@ -42,21 +42,33 @@ static const struct {
 };
 
 struct CCoin {
-    uint32_t nHeight;
+    uint32_t fSegSig : 1;
+    uint32_t nHeight : 31;
     CTxOut out;
 
     ADD_SERIALIZE_METHODS;
 
     CCoin() : nHeight(0) {}
-    CCoin(Coin&& in) : nHeight(in.nHeight), out(std::move(in.out)) {}
+    CCoin(Coin&& in) : fSegSig(in.fSegSig), nHeight(in.nHeight), out(std::move(in.out)) {}
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
         uint32_t nTxVerDummy = 0;
         READWRITE(nTxVerDummy);
-        READWRITE(nHeight);
-        READWRITE(out);
+        uint32_t nHeight_ = nHeight;
+        nHeight_ |= (fSegSig << 31);
+        READWRITE(nHeight_);
+        nHeight = (nHeight_   & (0b01111111111111111111111111111111));
+        fSegSig = ( (nHeight_ & (0b10000000000000000000000000000000)) > 0);
+        if (ser_action.ForRead())
+        {
+            out.ReadFromStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
+        }
+        else
+        {
+            out.WriteToStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
+        }
     }
 };
 

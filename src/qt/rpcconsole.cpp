@@ -491,11 +491,13 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
             break;
         case Qt::Key_Return:
         case Qt::Key_Enter:
+            #ifndef DEBUG
             // forward these events to lineEdit
             if(obj == autoCompleter->popup()) {
                 QApplication::postEvent(ui->lineEdit, new QKeyEvent(*keyevt));
                 return true;
             }
+            #endif
             break;
         default:
             // Typing in messages widget brings focus to line edit, and redirects key there
@@ -834,7 +836,13 @@ void RPCConsole::on_lineEdit_returnPressed()
         cmdBeforeBrowsing = QString();
 
         message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
+
+        #ifdef DEBUG
+        // Prevent window manager freeze when hitting a breakpoint from console RPC in debug mode
+        std::thread([=] { MilliSleep(1000); Q_EMIT cmdRequest(cmd); }).detach();
+        #else
         Q_EMIT cmdRequest(cmd);
+        #endif
 
         cmd = QString::fromStdString(strFilteredCmd);
 
