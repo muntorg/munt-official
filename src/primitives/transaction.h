@@ -315,7 +315,6 @@ enum CTxOutType : uint8_t
 {
     //General purpose output types start from 0 counting upward
     ScriptLegacyOutput = 0,
-    ScriptOutput = 1,
 
     //Specific/fixed purpose output types start from max counting backwards
     PoW2WitnessOutput = 31,
@@ -408,7 +407,6 @@ public:
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 return "SCRIPT";
             case CTxOutType::PoW2WitnessOutput:
                 return "POW2WITNESS";
@@ -450,7 +448,6 @@ public:
             switch(nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
-                case CTxOutType::ScriptOutput:
                 {
                     scriptPubKey.clear();
                     scriptPubKey.~CScript(); break;
@@ -473,7 +470,6 @@ public:
             switch(nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
-                case CTxOutType::ScriptOutput:
                     new(&scriptPubKey) CScript(); break;
                 case CTxOutType::PoW2WitnessOutput:
                     new(&witnessDetails) CTxOutPoW2Witness(); break;
@@ -488,7 +484,6 @@ public:
             switch(nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
-                case CTxOutType::ScriptOutput:
                     STRWRITE(*(CScriptBase*)(&scriptPubKey)); break;
                 case CTxOutType::PoW2WitnessOutput:
                     STRWRITE(witnessDetails); break;
@@ -503,7 +498,6 @@ public:
             switch(nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
-                case CTxOutType::ScriptOutput:
                     STRREAD(*(CScriptBase*)(&scriptPubKey)); break;
                 case CTxOutType::PoW2WitnessOutput:
                     STRREAD(witnessDetails); break;
@@ -530,7 +524,6 @@ public:
             switch(CTxOutType(nType))
             {
                 case CTxOutType::ScriptLegacyOutput:
-                case CTxOutType::ScriptOutput:
                     return scriptPubKey == compare.scriptPubKey;
                 case CTxOutType::PoW2WitnessOutput:
                     return witnessDetails == compare.witnessDetails;
@@ -544,7 +537,7 @@ public:
 
     bool IsUnspendable() const
     {
-        if (GetType() <= CTxOutType::ScriptOutput)
+        if (GetType() <= CTxOutType::ScriptLegacyOutput)
             return output.scriptPubKey.IsUnspendable();
 
         //fixme: (GULDEN) (2.0) - Can our 'standard' outputs still be unspendable?
@@ -565,7 +558,6 @@ public:
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 output.scriptPubKey = copyFrom.output.scriptPubKey; break;
             case CTxOutType::PoW2WitnessOutput:
                 output.witnessDetails = copyFrom.output.witnessDetails; break;
@@ -583,7 +575,6 @@ public:
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 output.scriptPubKey = copyFrom.output.scriptPubKey; break;
             case CTxOutType::PoW2WitnessOutput:
                 output.witnessDetails = copyFrom.output.witnessDetails; break;
@@ -600,7 +591,6 @@ public:
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 output.scriptPubKey = copyFrom.output.scriptPubKey; break;
             case CTxOutType::PoW2WitnessOutput:
                 output.witnessDetails = copyFrom.output.witnessDetails; break;
@@ -617,7 +607,6 @@ public:
         switch(CTxOutType(output.nType))
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 output.scriptPubKey = copyFrom.output.scriptPubKey; break;
             case CTxOutType::PoW2WitnessOutput:
                 output.witnessDetails = copyFrom.output.witnessDetails; break;
@@ -646,8 +635,6 @@ public:
         }
         else
         {
-            assert(output.nType != CTxOutType::ScriptLegacyOutput);
-
             CAmount nValueWrite = nValue;
 
             output.nValueBase = 0; // 8 decimal precision.
@@ -687,7 +674,7 @@ public:
         static CSerActionUnserialize ser_action;
         if (IsOldTransactionVersion(nTransactionVersion))
         {
-            SetType(CTxOutType::ScriptLegacyOutput);
+            assert(output.nType == CTxOutType::ScriptLegacyOutput);
             output.nValueBase = 0;
             STRREAD(nValue);
         }
@@ -697,8 +684,6 @@ public:
             STRREAD(nTypeAndValueBase);
             output.nValueBase = (nTypeAndValueBase & 0b00000111);
             SetType(CTxOutType((nTypeAndValueBase & 0b11111000) >> 3));
-
-            assert(output.nType != CTxOutType::ScriptLegacyOutput);
 
             STRREAD(VARINT(nValue)); // Compacted value is stored as a varint.
             switch(output.nValueBase) // Which further needs to be multiplied by base to get the full int64 value.
@@ -724,7 +709,6 @@ public:
         switch(output.nType)
         {
             case CTxOutType::ScriptLegacyOutput:
-            case CTxOutType::ScriptOutput:
                 output.scriptPubKey.clear(); break;
             case CTxOutType::PoW2WitnessOutput:
                 output.witnessDetails.clear(); break;

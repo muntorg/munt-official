@@ -231,7 +231,7 @@ static CScript PushAll(const std::vector<valtype>& values)
 
 bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type)
 {
-    if (fromOutput.GetType() <= CTxOutType::ScriptOutput)
+    if (fromOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
         CScript script = fromOutput.output.scriptPubKey;
         std::vector<valtype> result;

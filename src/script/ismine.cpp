@@ -190,7 +190,7 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
 {
     switch (txout.GetType())
     {
-        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+        case CTxOutType::ScriptLegacyOutput:
             return IsMine(keystore, txout.output.scriptPubKey);
         case CTxOutType::PoW2WitnessOutput:
         {
@@ -215,7 +215,7 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
 {
     switch (txout.GetType())
     {
-        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+        case CTxOutType::ScriptLegacyOutput:
             return RemoveAddressFromKeypoolIfIsMine(keystore, txout.output.scriptPubKey, time);
         case CTxOutType::PoW2WitnessOutput:
         {

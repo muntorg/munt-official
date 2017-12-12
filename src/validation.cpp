@@ -1606,7 +1606,7 @@ int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
     int commitpos = -1;
     if (!block.vtx.empty()) {
         for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
-            if (block.vtx[0]->vout[o].GetType() <= CTxOutType::ScriptOutput)
+            if (block.vtx[0]->vout[o].GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 if (block.vtx[0]->vout[o].output.scriptPubKey.size() == 143 && block.vtx[0]->vout[o].output.scriptPubKey[0] == OP_RETURN && block.vtx[0]->vout[o].output.scriptPubKey[1] == 0x50 && block.vtx[0]->vout[o].output.scriptPubKey[2] == 0x6f && block.vtx[0]->vout[o].output.scriptPubKey[3] == 0x57 && block.vtx[0]->vout[o].output.scriptPubKey[4] == 0xc2 && block.vtx[0]->vout[o].output.scriptPubKey[5] == 0xb2) {
                     commitpos = o;
@@ -1790,7 +1790,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
             //fixme: (HIGH) (NEXT) Witness is actually for -this- block not previous one.
             /*if (!GetWitness(chain, pindex->pprev, block, chainparams, witnessOutput, witnessOutPoint, witnessBlockHeight, &view))
                 return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
-            if (witnessOutput.GetType() <= CTxOutType::ScriptOutput)
+            if (witnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
                     return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
@@ -4070,7 +4070,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
             }
             else
             {
-                if (witnessOutput.GetType() <= CTxOutType::ScriptOutput)
+                if (witnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
                 {
                     if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
                         ret = error("Mismatched witness signature for embedded witness coinbase header");

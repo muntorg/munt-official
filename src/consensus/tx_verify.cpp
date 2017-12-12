@@ -118,7 +118,7 @@ unsigned int GetLegacySigOpCount(const CTransaction& tx)
     {
         switch (txout.GetType())
         {
-            case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput: nSigOps += txout.output.scriptPubKey.GetSigOpCount(false); break;
+            case CTxOutType::ScriptLegacyOutput: nSigOps += txout.output.scriptPubKey.GetSigOpCount(false); break;
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
             case CTxOutType::PoW2WitnessOutput: nSigOps += 1; break;
         }
@@ -135,7 +135,7 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
-        if (prevout.GetType() <= CTxOutType::ScriptOutput && prevout.output.scriptPubKey.IsPayToScriptHash())
+        if (prevout.GetType() <= CTxOutType::ScriptLegacyOutput && prevout.output.scriptPubKey.IsPayToScriptHash())
             nSigOps += prevout.output.scriptPubKey.GetSigOpCount(tx.vin[i].scriptSig);
     }
     return nSigOps;
@@ -158,7 +158,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
-            case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput: nSigOps += CountWitnessSigOps(tx.vin[i].scriptSig, prevout.output.scriptPubKey, &tx.vin[i].scriptWitness, flags);
+            case CTxOutType::ScriptLegacyOutput: nSigOps += CountWitnessSigOps(tx.vin[i].scriptSig, prevout.output.scriptPubKey, &tx.vin[i].scriptWitness, flags);
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
             case CTxOutType::PoW2WitnessOutput: nSigOps += 1; break;
         }

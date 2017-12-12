@@ -32,7 +32,7 @@ static inline size_t RecursiveDynamicUsage(const CTxOut& out) {
             return sizeof(CTxOutPoW2Witness);
         case CTxOutType::StandardKeyHashOutput:
             return sizeof(CTxOutStandardKeyHash);
-        case CTxOutType::ScriptLegacyOutput: case CTxOutType::ScriptOutput:
+        case CTxOutType::ScriptLegacyOutput:
             break;
     };
 

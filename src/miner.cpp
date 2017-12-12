@@ -207,16 +207,6 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         CMutableTransaction coinbaseTx(*block.vtx[0]);
         coinbaseTx.vout.push_back(out);
         coinbaseTx.vout.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1]); // Witness subsidy
-        if (nParentPoW2Phase >= 4)
-        {
-            coinbaseTx.vout[0].output.nType = CTxOutType::ScriptOutput;
-            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptOutput;
-        }
-        else
-        {
-            coinbaseTx.vout[0].output.nType = CTxOutType::ScriptLegacyOutput;
-            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptLegacyOutput;
-        }
         block.vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
 
         // Straight after coinbase we must contain the witness transaction, which contains a single input and two outputs, the single witness output and a 'fake' output containing nothing but OP_RETURN and the blockheight.
@@ -314,11 +304,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     //fixme: (GULDEN) (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
-
-    if (nParentPoW2Phase >= 4)
-        coinbaseTx.vout[0].output.nType = CTxOutType::ScriptOutput;
-    else
-        coinbaseTx.vout[0].output.nType = CTxOutType::ScriptLegacyOutput;
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
     // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)
@@ -1131,7 +1116,7 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
     {
         witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
     }
-    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (GULDEN) (2.1) We can remove this.
+    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (GULDEN) (2.1) We can remove this.
     {
         std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
         witnessKeyID = CKeyID(uint160(hashWitnessBytes));
@@ -1224,15 +1209,6 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     }
     else
     {
-        //fixme: (GULDEN) (2.0) (SEGSIG)
-        if (nPoW2PhaseParent >= 4)
-        {
-            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptOutput;
-        }
-        else
-        {
-            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptLegacyOutput;
-        }
         coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
         coinbaseTx.vout[1].nValue = witnessSubsidy;
     }

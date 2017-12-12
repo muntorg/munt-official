@@ -100,7 +100,7 @@ bool CheckTxScriptsSanity(const CMutableTransaction& tx)
     }
     // Check output scripts
     for (unsigned int i = 0; i < tx.vout.size(); i++) {
-        if (tx.vout[i].GetType()  <= CTxOutType::ScriptOutput)
+        if (tx.vout[i].GetType()  <= CTxOutType::ScriptLegacyOutput)
         {
             if (!tx.vout[i].output.scriptPubKey.HasValidOps() || tx.vout[i].output.scriptPubKey.size() > MAX_SCRIPT_SIZE) {
                 return false;

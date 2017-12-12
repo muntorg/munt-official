@@ -1018,7 +1018,7 @@ UniValue gettxout(const JSONRPCRequest& request)
     }
     ret.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
     //fixme: (GULDEN) (2.0) - Implement something here for other output types.
-    if (coin.out.GetType() <= CTxOutType::ScriptOutput)
+    if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
         UniValue o(UniValue::VOBJ);
         ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);

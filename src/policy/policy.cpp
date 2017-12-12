@@ -150,7 +150,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     unsigned int nDataOut = 0;
     txnouttype whichType;
     BOOST_FOREACH(const CTxOut& txout, tx.vout) {
-        if (txout.GetType() <= CTxOutType::ScriptOutput)
+        if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
         {
             if (!::IsStandard(txout.output.scriptPubKey, whichType, witnessEnabled)) {
                 reason = "scriptpubkey";
@@ -190,7 +190,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         std::vector<std::vector<unsigned char> > vSolutions;
         txnouttype whichType;
         // get the scriptPubKey corresponding to this input:
-        if (prev.GetType() <= CTxOutType::ScriptOutput)
+        if (prev.GetType() <= CTxOutType::ScriptLegacyOutput)
         {
             const CScript& prevScript = prev.output.scriptPubKey;
             if (!Solver(prevScript, whichType, vSolutions))
@@ -230,7 +230,7 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         const CTxOut &prev = mapInputs.AccessCoin(tx.vin[i].prevout).out;
 
         // get the scriptPubKey corresponding to this input:
-        if (prev.GetType() <= CTxOutType::ScriptOutput)
+        if (prev.GetType() <= CTxOutType::ScriptLegacyOutput)
         {
             CScript prevScript = prev.output.scriptPubKey;
 

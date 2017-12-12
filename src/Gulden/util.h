@@ -37,7 +37,7 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {
-    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
+    if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
         return true;
     return false;
 }
@@ -49,7 +49,7 @@ inline CTxOutPoW2Witness GetPow2WitnessOutput(const CTxOut& out)
     {
         witnessInput = out.output.witnessDetails;
     }
-    else if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (GULDEN) (2.1) we can remove this
+    else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (GULDEN) (2.1) we can remove this
     {
         out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessInput);
     }

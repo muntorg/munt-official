@@ -50,7 +50,6 @@ CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
     SetNull();
 
     nValue = nValueIn;
-    //fixme: (GULDEN) (HIGH) - This should change to ScriptOutput (for phase 4) but should remain as is for phases before that, have to figure out the best way to switch over...
     SetType(CTxOutType::ScriptLegacyOutput);
     output.scriptPubKey = scriptPubKeyIn;
 }

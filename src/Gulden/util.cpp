@@ -260,7 +260,7 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber)
 {
     //fixme: (GULDEN) (2.0) - Check for off by 1 error (lockUntil - lockFrom)
-    if ( (out.GetType() <= CTxOutType::ScriptOutput && out.output.scriptPubKey.IsPoW2Witness()) )
+    if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;
         out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);

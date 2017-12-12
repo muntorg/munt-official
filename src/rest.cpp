@@ -579,7 +579,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
             utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
 
             //fixme: (GULDEN) (2.0) - Implement something here for other output types.
-            if (coin.out.GetType() <= CTxOutType::ScriptOutput)
+            if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 // include the script in a json output
                 UniValue o(UniValue::VOBJ);

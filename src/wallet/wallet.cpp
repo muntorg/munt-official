@@ -4646,7 +4646,6 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
     switch(out.GetType())
     {
         case CTxOutType::ScriptLegacyOutput:
-        case CTxOutType::ScriptOutput:
             return CRecipient(out.output.scriptPubKey, nValue, fSubtractFeeFromAmount);
         case CTxOutType::PoW2WitnessOutput:
             return CRecipient(out.output.witnessDetails, nValue, fSubtractFeeFromAmount);

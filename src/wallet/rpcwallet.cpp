@@ -2867,7 +2867,7 @@ UniValue listunspent(const JSONRPCRequest& request)
         pwallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
         BOOST_FOREACH(const COutput& out, vecOutputs) {
             CTxDestination address;
-            if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptOutput)
+            if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 const CScript& scriptPubKey = out.tx->tx->vout[out.i].output.scriptPubKey;
                 bool fValidAddress = ExtractDestination(scriptPubKey, address);
