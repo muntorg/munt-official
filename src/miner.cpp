@@ -178,15 +178,6 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         assert(serialisedWitnessHeaderInfo.size() == 137);
 
         CTxOut out;
-        if (nParentPoW2Phase >= 4)
-        {
-            out.SetType(CTxOutType::ScriptOutput);
-        }
-        else
-        {
-            out.SetType(CTxOutType::ScriptLegacyOutput);
-        }
-
         out.nValue = 0;
         out.output.scriptPubKey.resize(143); // 1 + 5 + 137
         out.output.scriptPubKey[0] = OP_RETURN;
@@ -216,6 +207,16 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         CMutableTransaction coinbaseTx(*block.vtx[0]);
         coinbaseTx.vout.push_back(out);
         coinbaseTx.vout.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1]); // Witness subsidy
+        if (nParentPoW2Phase >= 4)
+        {
+            coinbaseTx.vout[0].output.nType = CTxOutType::ScriptOutput;
+            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptOutput;
+        }
+        else
+        {
+            coinbaseTx.vout[0].output.nType = CTxOutType::ScriptLegacyOutput;
+            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptLegacyOutput;
+        }
         block.vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
 
         // Straight after coinbase we must contain the witness transaction, which contains a single input and two outputs, the single witness output and a 'fake' output containing nothing but OP_RETURN and the blockheight.
@@ -315,9 +316,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
 
     if (nParentPoW2Phase >= 4)
-        coinbaseTx.vout[0].SetType(CTxOutType::ScriptOutput);
+        coinbaseTx.vout[0].output.nType = CTxOutType::ScriptOutput;
     else
-        coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
+        coinbaseTx.vout[0].output.nType = CTxOutType::ScriptLegacyOutput;
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
     // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)
@@ -1226,11 +1227,11 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
         //fixme: (GULDEN) (2.0) (SEGSIG)
         if (nPoW2PhaseParent >= 4)
         {
-            coinbaseTx.vout[1].SetType(CTxOutType::ScriptOutput);
+            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptOutput;
         }
         else
         {
-            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+            coinbaseTx.vout[1].output.nType = CTxOutType::ScriptLegacyOutput;
         }
         coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
         coinbaseTx.vout[1].nValue = witnessSubsidy;
