@@ -570,9 +570,10 @@ public:
     }
 };
 
+class CCloneChain;
 /** An in-memory indexed chain of blocks. */
 class CChain {
-private:
+protected:
     std::vector<CBlockIndex*> vChain;
 
 public:
@@ -631,8 +632,22 @@ public:
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
 
     // Create a duplicate (deep copy) of this chain, update retainIndex to the pointer of the equivalent block in the new chain.
-    CChain Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
+    CCloneChain Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
+
+    virtual ~CChain(){};
+};
+
+// Simple helper class to control memory of cloned chains.
+class CCloneChain : public CChain
+{
+    public:
+    CCloneChain() : CChain() {};
+    virtual ~CCloneChain()
+    {
+        FreeMemory();
+    }
     void FreeMemory();
+    std::vector<CBlockIndex*> vFree;
 };
 
 #endif // BITCOIN_CHAIN_H

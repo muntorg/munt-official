@@ -2942,7 +2942,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // fixme: (GULDEN) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
+    CCloneChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
     assert(pPreviousIndexChain);
 
@@ -2993,9 +2993,6 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
             return false;
         }
     }
-
-    // Avoid leaking of memory - we are done with the cloned chain now.
-    tempChain.FreeMemory();
 
     /** Gather a list of all unspent witness outputs.
         NB!!! There are multiple layers of cache at play here, with insertions/deletions possibly having taken place at each layer.
@@ -4040,7 +4037,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     if (ret)
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
 
@@ -4073,9 +4070,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
             }
         }
 
-        // Avoid leaking of memory - we are done with the cloned chain now.
-        tempChain.FreeMemory();
-
         if (!ret)
         {
             LogPrintf("%s\n", embeddedWitnessBlock.ToString());
@@ -4088,7 +4082,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
         // Force the tip of the chain to the block that comes before the block we are examining.
@@ -4111,9 +4105,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
             ret = error("Failed ConnectBlock for embedded witness block");
         if (!state.IsValid())
             ret = error("Invalid state after ConnectBlock for embedded witness block");
-
-        // Avoid leaking of memory - we are done with the cloned chain now.
-        tempChain.FreeMemory();
 
         if (!ret)
             LogPrintf("%s\n", embeddedWitnessBlock.ToString());

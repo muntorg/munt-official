@@ -361,15 +361,13 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         CCoinsViewCache viewNew(pcoinsTip);
 
         CBlockIndex* pindexPrev_ = nullptr;
-        CChain tempChain = chainActive.Clone(pParent, pindexPrev_);
+        CCloneChain tempChain = chainActive.Clone(pParent, pindexPrev_);
         assert(pindexPrev_);
         ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
 
         if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew)) {
-            tempChain.FreeMemory();
             throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
         }
-        tempChain.FreeMemory();
     }
     else
     {
@@ -1331,6 +1329,7 @@ void static GuldenWitness()
                     cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
                 }
             }
+            boost::this_thread::interruption_point();
 
             if (candidateOrphans.size() > 0)
             {
@@ -1343,12 +1342,15 @@ void static GuldenWitness()
 
                 for (const auto candidateIter : candidateOrphans)
                 {
+                    boost::this_thread::interruption_point();
+
                     cacheAlreadySeenWitnessCandidates.insert(candidateIter);
 
                     //Create new block
                     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
                     if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, pParams))
                     {
+                        boost::this_thread::interruption_point();
                         CTxOut selectedWitnessOutput;
                         COutPoint selectedWitnessOutPoint;
                         unsigned int nSelectedWitnessBlockHeight;
@@ -1357,6 +1359,7 @@ void static GuldenWitness()
                         if (!GetWitness(chainActive, candidateIter->pprev, *pWitnessBlock, chainparams, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, nullptr))
                             continue;
 
+                        boost::this_thread::interruption_point();
                         CAmount witnessSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
 
                         //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
@@ -1449,11 +1452,13 @@ void static GuldenWitness()
     }
     catch (const boost::thread_interrupted&)
     {
+        cacheAlreadySeenWitnessCandidates.clear();
         LogPrintf("GuldenWitness terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
+        cacheAlreadySeenWitnessCandidates.clear();
         LogPrintf("GuldenWitness runtime error: %s\n", e.what());
         return;
     }
