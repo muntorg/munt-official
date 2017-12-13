@@ -974,7 +974,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     }
                 }
             }
-            else if (nPoW2PhaseGrandParent >= 4)
+            else if (nPoW2PhaseGreatGrandParent >= 4)
             {
                 if (pindexParent->nVersionPoW2Witness == 0)
                 {
