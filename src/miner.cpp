@@ -930,10 +930,10 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                         int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
                                         if (nWitnessCoinbaseIndex != -1)
                                         {
-                                            CBlock embeddedWitnessBlock;
-                                            if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pindexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, embeddedWitnessBlock))
+                                            std::shared_ptr<CBlock> embeddedWitnessBlock(new CBlock);
+                                            if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pindexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, *embeddedWitnessBlock.get()))
                                             {
-                                                uint256 hashPoW2Witness = embeddedWitnessBlock.GetHashPoW2();
+                                                uint256 hashPoW2Witness = embeddedWitnessBlock->GetHashPoW2();
                                                 if (mapBlockIndex.count(hashPoW2Witness) > 0)
                                                 {
                                                     pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
@@ -941,7 +941,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                                 }
                                                 else
                                                 {
-                                                    if (ProcessNewBlock(Params(), pBlockPoWParent, true, nullptr))
+                                                    if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr))
                                                     {
                                                         if (mapBlockIndex.count(hashPoW2Witness) > 0)
                                                         {
