@@ -581,7 +581,15 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
     nLockPeriodInBlocks *=  nMultiplier;
 
+    if (nLockPeriodInBlocks >= 3 * 365 * 576)
+        throw("Maximum lock period of 3 years exceeded.");
 
+    if (nLockPeriodInBlocks < 30 * 576)
+        throw("Minimum lock period of 1 month exceeded.");
+
+    // Add a small buffer to give us time to enter the blockchain
+    if (nLockPeriodInBlocks == 30 * 576)
+        nLockPeriodInBlocks += 50;
 
     // Finally attempt to create and send the witness transaction.
     CPoW2WitnessDestination destinationPoW2Witness;
