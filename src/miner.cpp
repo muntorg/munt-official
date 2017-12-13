@@ -1314,7 +1314,6 @@ void static GuldenWitness()
             if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
                 candidateOrphans.push_back(pindexTip);
-                cacheAlreadySeenWitnessCandidates.insert(pindexTip);
             }
             if (candidateOrphans.size() == 0)
             {
@@ -1322,7 +1321,6 @@ void static GuldenWitness()
                 {
                     if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
                     {
-                        cacheAlreadySeenWitnessCandidates.insert(candidateIter);
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
@@ -1345,6 +1343,8 @@ void static GuldenWitness()
 
                 for (const auto candidateIter : candidateOrphans)
                 {
+                    cacheAlreadySeenWitnessCandidates.insert(candidateIter);
+
                     //Create new block
                     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
                     if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, pParams))
