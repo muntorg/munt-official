@@ -581,7 +581,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
     nLockPeriodInBlocks *=  nMultiplier;
 
-    if (nLockPeriodInBlocks >= 3 * 365 * 576)
+    if (nLockPeriodInBlocks > 3 * 365 * 576)
         throw("Maximum lock period of 3 years exceeded.");
 
     if (nLockPeriodInBlocks < 30 * 576)

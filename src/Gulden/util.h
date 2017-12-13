@@ -68,6 +68,7 @@ inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2W
     txout.lockFromBlock = fromDest.lockFromBlock;
     txout.lockUntilBlock = fromDest.lockUntilBlock;
     txout.failCount = fromDest.failCount;
+    return txout;
 }
 
 #endif

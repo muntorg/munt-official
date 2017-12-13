@@ -2909,18 +2909,9 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
 
 bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView, CBlockIndex* pnewblockastip)
 {
-    ForceActivateChain(pActivateIndex, pblock, state, chainparams, currentChain, coinView);
-
-    /*// Place the block in question at the tip of the chain.
-    // Don't worry about memory leak currentChain takes ownership.
-    CBlockIndex* pindexDummy = new CBlockIndex(*pnewblockastip);
-    pindexDummy->pprev = currentChain.Tip();
-    pindexDummy->nHeight = currentChain.Tip()->nHeight+1;
-    uint256 hash = pnewblockastip->GetHashPoW2();
-    pindexDummy->phashBlock = new uint256(hash);
-    pindexDummy->nDataPos =  */
-    ForceActivateChain(pnewblockastip, nullptr, state, chainparams, currentChain, coinView);
-    //coinView.SetBestBlock(pnewblockastip->GetBlockHashPoW2());
+    if(!ForceActivateChain(pActivateIndex, pblock, state, chainparams, currentChain, coinView))
+        return false;
+    return ForceActivateChain(pnewblockastip, nullptr, state, chainparams, currentChain, coinView);
 }
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
