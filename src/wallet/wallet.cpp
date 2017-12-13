@@ -4359,7 +4359,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     if (GuldenApplication::gApp->isRecovery)
     {
-        walletInstance->nTimeFirstKey = chainActive.Genesis()->nTime;
+        walletInstance->nTimeFirstKey = Params().GenesisBlock().nTime;
     }
 
     LogPrintf(" wallet      %15dms\n", GetTimeMillis() - nStart);
