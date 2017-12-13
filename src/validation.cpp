@@ -3279,11 +3279,6 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
         //In order to prevent a PoW block of larger weight than the one we witnessed from overtaking us.
         //pIndex->nChainWork += (20 * nBlockProof);
         pIndex->nChainWork += 1;
-        CBlockIndex* pPrevPow = GetPoWBlockForPoSBlock(pIndex);
-        if (pPrevPow)
-        {
-            setBlockIndexCandidates.erase(pPrevPow);
-        }
     }
     setBlockIndexCandidates.insert(pIndex);
 }
