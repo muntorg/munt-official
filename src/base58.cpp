@@ -296,10 +296,17 @@ CTxDestination CBitcoinAddress::Get() const
         return CKeyID(id);
     else if (vchVersion == Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS))
         return CScriptID(id);
+    else if (vchVersion == Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
+    {
+        uint160 idWitnessKey;
+        memcpy(&idWitnessKey, &vchData[20], 20);
+        return CPoW2WitnessDestination(id, idWitnessKey);
+    }
     else
         return CNoDestination();
 }
 
+//fixme: (GULDEN) (2.0) Any instances where we might want to call this for POW2_WITNESS_ADDRESS? I think not but make sure.
 bool CBitcoinAddress::GetKeyID(CKeyID& keyID) const
 {
     if (!IsValid() || vchVersion != Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))

@@ -933,8 +933,8 @@ UniValue movecmd(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"fromaccount\"   (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
             "2. \"toaccount\"     (string, required) The UUID or unique label of the account to move funds to. May be the currently active account using \"\".\n"
-            "3. amount            (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
-            "4. (dummy)           (numeric, optional) Ignored. Remains for backward compatibility.\n"
+            "3. \"amount\"        (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
+            "4. \"minconf\"       (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"       (string, optional) An optional comment, stored in the wallet only.\n"
             "\nResult:\n"
             "true|false           (boolean) true if successful.\n"
@@ -958,7 +958,8 @@ UniValue movecmd(const JSONRPCRequest& request)
     }
 
     std::string strComment = "";
-    int nMinDepth = 0;
+    int nMinDepth = 1;
+    if (request.params.size() > 3)
         nMinDepth = request.params[3].get_int();
     if (request.params.size() > 4)
         strComment = request.params[4].get_str();
