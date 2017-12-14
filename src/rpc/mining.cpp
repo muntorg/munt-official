@@ -282,7 +282,14 @@ UniValue setgenerate(const JSONRPCRequest& request)
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     PoWMineGulden(fGenerate, nGenProcLimit, Params());
 
-    return NullUniValue;
+    if (!fGenerate)
+    {
+        return "Mining disabled.";
+    }
+    else
+    {
+        return strprintf("Mining enabled, thread limit: [%d].", nGenProcLimit);
+    }
 }
 
 UniValue generatetoaddress(const JSONRPCRequest& request)
