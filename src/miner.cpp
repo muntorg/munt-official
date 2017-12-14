@@ -962,7 +962,11 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                 }
                             }
                             if (!pWitnessBlockToEmbed)
+                            {
+                                if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                                    dHashesPerSec = 0;
                                 continue;
+                            }
                             if (pindexParent->nHeight != pWitnessBlockToEmbed->nHeight)
                                 pindexParent = pindexParent->pprev;
                         }
@@ -980,7 +984,11 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 {
                     pindexParent = pindexParent->pprev;
                     if (pindexParent->nVersionPoW2Witness == 0)
+                    {
+                        if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                            dHashesPerSec = 0;
                         continue;
+                    }
                 }
             }
 
