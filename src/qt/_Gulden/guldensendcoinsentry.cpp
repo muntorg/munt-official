@@ -422,7 +422,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         // Add a small buffer to give us time to enter the blockchain
         if (nLockPeriodInBlocks == 30*576)
             nLockPeriodInBlocks += 50;
-        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + (ui->pow2LockFundsSlider->value()*576);
+        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     }
 
     //fixme: GULDEN - give user a choice here.
