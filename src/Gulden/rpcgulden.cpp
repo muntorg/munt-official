@@ -520,7 +520,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "1. \"fundingaccount\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
             "2. \"witnessaccount\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\" or \"d\" to work in years months weeks or days instead.\n"
+            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "\"txid\"               (string) The transaction id.\n"
             "\nExamples:\n"
@@ -577,19 +577,26 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         nMultiplier = 576;
         sLockPeriodInBlocks.pop_back();
     }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
+    {
+        nMultiplier = 576;
+        sLockPeriodInBlocks.pop_back();
+    }
     if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
     nLockPeriodInBlocks *=  nMultiplier;
 
     if (nLockPeriodInBlocks > 3 * 365 * 576)
-        throw("Maximum lock period of 3 years exceeded.");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
     if (nLockPeriodInBlocks < 30 * 576)
-        throw("Minimum lock period of 1 month exceeded.");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
     if (nLockPeriodInBlocks == 30 * 576)
         nLockPeriodInBlocks += 50;
+
+    EnsureWalletIsUnlocked(pwallet);
 
     // Finally attempt to create and send the witness transaction.
     CPoW2WitnessDestination destinationPoW2Witness;
@@ -602,7 +609,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         CReserveKey keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keyWitness.GetReservedKey(pubWitnessKey))
-            throw("Error allocating witness key for witness account.");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
 
         keyWitness.KeepKey();
         destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
@@ -613,7 +620,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         CReserveKey keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
-            throw("Error allocating spending key for witness account.");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
 
         keySpending.KeepKey();
         destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
