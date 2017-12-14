@@ -1101,8 +1101,6 @@ public:
 
     bool DelAddressBook(const std::string& address);
 
-    const std::string& GetAccountName(const CScript& scriptPubKey) const;
-
     CAccount* FindAccountForTransaction(const CTxOut& out);
 
     void Inventory(const uint256 &hash)

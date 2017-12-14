@@ -266,6 +266,16 @@ UniValue setgenerate(const JSONRPCRequest& request)
     if (Params().MineBlocksOnDemand())
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
 
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    if (!pactiveWallet->activeAccount)
+        throw std::runtime_error("Cannot mine without an active account selected, first select an active account.");
+
+    if (pactiveWallet->activeAccount->IsPoW2Witness())
+        throw std::runtime_error("Cannot mine into a witness account, first select a regular account as the active account.");
+
     bool fGenerate = true;
     if (request.params.size() > 0)
         fGenerate = request.params[0].get_bool();
@@ -288,7 +298,7 @@ UniValue setgenerate(const JSONRPCRequest& request)
     }
     else
     {
-        return strprintf("Mining enabled, thread limit: [%d].", nGenProcLimit);
+        return strprintf("Mining enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
     }
 }
 
