@@ -413,6 +413,10 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
 void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
     AssertLockHeld(cs_main);
     CNodeState* nodestate = State(nodeid);
+    
+    //fixme: GULDEN 2.0
+    return;
+    #if 0
     if (!nodestate || !nodestate->fSupportsDesiredCmpctVersion) {
         // Never ask from peers who can't provide witnesses.
         return;
@@ -443,6 +447,7 @@ void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
             return true;
         });
     }
+    #endif
 }
 
 // Requires cs_main
@@ -1579,6 +1584,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // nodes)
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDHEADERS));
         }
+        //fixme: GULDEN 2.0
+        #if 0
         if (pfrom->nVersion >= SHORT_IDS_BLOCKS_VERSION) {
             // Tell our peer we are willing to provide version 1 or 2 cmpctblocks
             // However, we do not request new block announcements using
@@ -1592,6 +1599,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             nCMPCTBLOCKVersion = 1;
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion));
         }
+        #endif
         pfrom->fSuccessfullyConnected = true;
     }
 
@@ -1658,6 +1666,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::SENDCMPCT)
     {
+        //fixme: GULDEN 2.0
+        #if 0
         bool fAnnounceUsingCMPCTBLOCK = false;
         uint64_t nCMPCTBLOCKVersion = 0;
         vRecv >> fAnnounceUsingCMPCTBLOCK >> nCMPCTBLOCKVersion;
@@ -1677,6 +1687,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     State(pfrom->GetId())->fSupportsDesiredCmpctVersion = (nCMPCTBLOCKVersion == 1);
             }
         }
+        #endif
     }
 
 
