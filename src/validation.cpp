@@ -2071,29 +2071,6 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     return true;
 }
 
-struct RouletteItem
-{
-public:
-    RouletteItem(COutPoint& outpoint_, Coin& coin_, int64_t nWeight_, int64_t nAge_) : outpoint(outpoint_), coin(coin_), nWeight(nWeight_), nAge(nAge_), nCumulativeWeight(0) {};
-    COutPoint outpoint;
-    Coin coin;
-    uint64_t nWeight;
-    uint64_t nAge;
-    uint64_t nCumulativeWeight;
-
-    friend inline bool operator<(const RouletteItem& a, const RouletteItem& b)
-    {
-        if (a.nAge == b.nAge)
-            return a.outpoint < b.outpoint;
-        return a.nAge < b.nAge;
-    }
-    friend inline bool operator<(const RouletteItem& a, const uint64_t& b)
-    {
-        return a.nCumulativeWeight < b;
-    }
-};
-
-
 std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uint256& prevHash)
 {
     LOCK(cs_main);
@@ -3017,35 +2994,33 @@ const int nMinimumWitnessAmount = 5000;
 const int nMinimumWitnessWeight = 10000;
 const int nMinimumParticipationAge = 100;
 const int nMaximumParticipationAge = 10000;
-bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride)
+
+bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
-    //fixme: (GULDEN) (2.0) error handling.
-    // Fetch all unspent witness outputs for the chain in which -block- is the tip of the chain.
-    std::map<COutPoint, Coin> allWitnessCoins;
-    if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, allWitnessCoins, &block, viewOverride))
+    // Fetch all unspent witness outputs for the chain in which -block- is the tip of the chain->
+    if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
         return false;
 
-    /*LogPrintf(">>>GetWitness: selection size=%d\n",allWitnessCoins.size());
-    for (const auto item : allWitnessCoins)
-    {
-        LogPrintf(">>>GetWitness: candidate %s %s\n", item.first.ToString(), item.second.out.ToString());
-    }*/
+    return GetWitness(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo);
+}
+
+bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo)
+{
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
     uint64_t nBlockHeight = pPreviousIndexChain->nHeight + 1;
 
     /** Generate the pool of potential witnesses for the given block index **/
     /** Addresses older than 10000 blocks or younger than 100 blocks are discarded **/
-    std::vector<RouletteItem> WitnessSelectionPool;
-    uint64_t totalWeight;
     uint64_t nMinAge = nMinimumParticipationAge;
     while (true)
     {
-        WitnessSelectionPool.clear();
-        totalWeight = 0;
+        witnessInfo.witnessSelectionPool.clear();
+        witnessInfo.nTotalWeight = 0;
 
-        for (auto coinIter : allWitnessCoins)
+        for (auto coinIter : witnessInfo.allWitnessCoins)
         {
             //testme: (GULDEN) (POW2) (2.0) (HIGH) - Make sure no off by 1 error here.
             uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
@@ -3055,36 +3030,37 @@ bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, c
                 Coin coin = coinIter.second;
                 if (coin.out.nValue >= nMinimumWitnessAmount)
                 {
-                    int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight));
+                    uint64_t nUnused;
+                    int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused, nUnused));
                     if (nWeight >= nMinimumWitnessWeight)
                     {
-                        WitnessSelectionPool.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
-                        totalWeight += nWeight;
+                        witnessInfo.witnessSelectionPool.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
+                        witnessInfo.nTotalWeight += nWeight;
                     }
                 }
             }
         }
 
         /** Eliminate addresses that have not witnessed within the expected period of time that they should have **/
-        std::remove_if(WitnessSelectionPool.begin(), WitnessSelectionPool.end(), [&](RouletteItem& x){ return x.nAge > expectedWitnessBlockPeriod(x.nWeight, totalWeight); }); 
+        std::remove_if(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), [&](RouletteItem& x){ return x.nAge > expectedWitnessBlockPeriod(x.nWeight, witnessInfo.nTotalWeight); }); 
 
-        /** Eliminate addresses that are within 100 blocks from lock period expiring. **/
         //fixme: (GULDEN) (2.0) check for off by 1 error.
-        std::remove_if(WitnessSelectionPool.begin(), WitnessSelectionPool.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details = GetPow2WitnessOutput(x.coin.out); return details.lockUntilBlock > nBlockHeight + 100; });
+        /** Eliminate addresses that are within 100 blocks from lock period expiring. **/
+        std::remove_if(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details = GetPow2WitnessOutput(x.coin.out); return details.lockUntilBlock > nBlockHeight + nMinAge; });
 
-        if (WitnessSelectionPool.size() < 100)
+        if (witnessInfo.witnessSelectionPool.size() < nMinimumParticipationAge)
         {
             // fixme: Add warning/logging for this.
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
             // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
-            if (nMinAge == 0 || (nMinAge == 10 && WitnessSelectionPool.size() > 5))
+            if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPool.size() > 5))
             {
                 break;
             }
             else
             {
                 // Try again to reach 100 candidates with a smaller min age.
-                nMinAge -= 10;
+                nMinAge -= 5;
             }
         }
         else
@@ -3093,60 +3069,48 @@ bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, c
         }
     }
 
-    if (WitnessSelectionPool.size() == 0)
+    if (witnessInfo.witnessSelectionPool.size() == 0)
     {
-        assert(0);
+        return error("Unable to determine any witnesses for block.");
     }
 
     /** Ensure the pool is sorted deterministically **/
-    std::sort(WitnessSelectionPool.begin(), WitnessSelectionPool.end());
-
-    /*for (const auto item : allWitnessCoins)
-    {
-        LogPrintf(">>>GetWitness: sorted-candidate %s %s\n", item.first.ToString(), item.second.out.ToString());
-    }*/
-
-    // 100 candidates don't exist, double up the current candidates until they reach 100
-    while (WitnessSelectionPool.size() < 100)
-    {
-        WitnessSelectionPool.insert(WitnessSelectionPool.end(), WitnessSelectionPool.begin(), WitnessSelectionPool.end());
-        totalWeight *= 2;
-    }
+    std::sort(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end());
 
     /** Reduce larger weightings to a maximum weighting of 1% of network weight. **/
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    uint64_t maxWeight = totalWeight / 100;
-    totalWeight = 0;
-    for (auto& item : WitnessSelectionPool)
+    uint64_t maxWeight = witnessInfo.nTotalWeight / 100;
+    witnessInfo.nReducedTotalWeight = 0;
+    for (auto& item : witnessInfo.witnessSelectionPool)
     {
         if (item.nWeight > maxWeight)
             item.nWeight = maxWeight;
-        totalWeight += item.nWeight;
-        item.nCumulativeWeight = totalWeight;
+        witnessInfo.nReducedTotalWeight += item.nWeight;
+        item.nCumulativeWeight = witnessInfo.nReducedTotalWeight;
     }
 
     /** sha256 as random roulette spin/seed - NB! We deliritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
-    arith_uint256 rouletteSelectionSeed = UintToArith256(block.GetHashLegacy());
+    arith_uint256 rouletteSelectionSeed = UintToArith256(blockHash);
 
     //checkme: (GULDEN) (2.0) (POW2) - Is this necessary? I don't think so, so disabling.
     /** ensure random seed exceeds one full spin of the wheel to prevent any possible bias towards low numbers **/
-    //while (rouletteSelectionSeed < totalWeight)
+    //while (rouletteSelectionSeed < witnessInfo.nReducedTotalWeight)
     //{
         //rouletteSelectionSeed = rouletteSelectionSeed * 2;
     //}
 
-    if (rouletteSelectionSeed > arith_uint256(totalWeight))
+    if (rouletteSelectionSeed > arith_uint256(witnessInfo.nReducedTotalWeight))
     {
-        // 'BigNum' Modulo operator bia mathematical identity:  a % b = a - (b * int(a/b))
-        rouletteSelectionSeed = rouletteSelectionSeed - (arith_uint256(totalWeight) * arith_uint256(rouletteSelectionSeed/arith_uint256(totalWeight)));
+        // 'BigNum' Modulo operator via mathematical identity:  a % b = a - (b * int(a/b))
+        rouletteSelectionSeed = rouletteSelectionSeed - (arith_uint256(witnessInfo.nReducedTotalWeight) * arith_uint256(rouletteSelectionSeed/arith_uint256(witnessInfo.nReducedTotalWeight)));
     }
 
-    auto selectedWitness = std::lower_bound(WitnessSelectionPool.begin(), WitnessSelectionPool.end(), rouletteSelectionSeed.GetLow64());
-    resultTxOut = selectedWitness->coin.out;
-    resultBlockHeight = selectedWitness->coin.nHeight;
-    resultOutPoint = selectedWitness->outpoint;
+    auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), rouletteSelectionSeed.GetLow64());
+    witnessInfo.selectedWitnessTransaction = selectedWitness->coin.out;
+    witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
+    witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
 
     //LogPrintf(">>>Selected witness=%s %s fromblockhash=%s fromblockheight=%d currentheight=%d prevout=%s \n",selectedWitness->coin.out.output.GetHex(selectedWitness->coin.out.GetType()), selectedWitness->coin.out.ToString(), block.GetHashPoW2().ToString(), resultBlockHeight, nBlockHeight, resultOutPoint.hash.ToString());
     return true;
@@ -4044,18 +4008,16 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
 
         if (ret)
         {
-            CTxOut witnessOutput;
-            COutPoint witnessOutPoint;
-            unsigned int witnessBlockHeight;
-            if (!GetWitness(tempChain, pPreviousIndexChain, embeddedWitnessBlock, chainParams, witnessOutput, witnessOutPoint, witnessBlockHeight, &viewNew))
+            CGetWitnessInfo witInfo;
+            if (!GetWitness(tempChain, chainParams, &viewNew, pPreviousIndexChain, embeddedWitnessBlock, witInfo))
             {
                 ret = error("Could not determine a valid witness for embedded witness coinbase header");
             }
             else
             {
-                if (witnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
+                if (witInfo.selectedWitnessTransaction.GetType() <= CTxOutType::ScriptLegacyOutput)
                 {
-                    if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
+                    if (CKeyID(uint160(witInfo.selectedWitnessTransaction.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
                         ret = error("Mismatched witness signature for embedded witness coinbase header");
                 }
                 else

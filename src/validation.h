@@ -490,12 +490,48 @@ CBlockIndex* GetWitnessOrphanForBlock(const int64_t nHeight, const uint256& prev
 
 bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView);
 bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView, CBlockIndex* pnewblockastip);
-bool GetWitness(CChain& chain, CBlockIndex* pPreviousIndexChain, CBlock block, const CChainParams& chainParams, CTxOut& resultTxOut, COutPoint& resultOutPoint, unsigned int& resultBlockHeight, CCoinsViewCache* viewOverride);
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
 bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock);
 bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view);
 bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
 bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion);
+
+struct RouletteItem
+{
+public:
+    RouletteItem(const COutPoint& outpoint_, const Coin& coin_, int64_t nWeight_, int64_t nAge_) : outpoint(outpoint_), coin(coin_), nWeight(nWeight_), nAge(nAge_), nCumulativeWeight(0) {};
+    COutPoint outpoint;
+    Coin coin;
+    uint64_t nWeight;
+    uint64_t nAge;
+    uint64_t nCumulativeWeight;
+
+    friend inline bool operator<(const RouletteItem& a, const RouletteItem& b)
+    {
+        if (a.nAge == b.nAge)
+            return a.outpoint < b.outpoint;
+        return a.nAge < b.nAge;
+    }
+    friend inline bool operator<(const RouletteItem& a, const uint64_t& b)
+    {
+        return a.nCumulativeWeight < b;
+    }
+};
+struct CGetWitnessInfo
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    std::vector<RouletteItem> witnessSelectionPool;
+    CTxOut selectedWitnessTransaction;
+    COutPoint selectedWitnessOutpoint;
+    Coin selectedWitnessCoin;
+    uint64_t selectedWitnessBlockHeight;
+
+    uint64_t nTotalWeight;
+    uint64_t nReducedTotalWeight;
+};
+uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight);
+bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo);
+bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().

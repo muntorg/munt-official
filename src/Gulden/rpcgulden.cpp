@@ -75,41 +75,244 @@ UniValue sethashlimit(const JSONRPCRequest& request)
 
 UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
-    if (request.fHelp)
+    if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
-            "getwitnessinfo\n"
-            "\nReturns statistics on witness info for the current chain tip, including overall network weight and number of witnesses.\n");
+            "getwitnessinfo \"blockspecifier\" verbose\n"
+            "\nReturns statistics and witness related info for a block:"
+            "\nNumber of witnesses."
+            "\nOverall network weight."
+            "\nCurrent phase of PoW2 activation.\n"
+            "\nAdditional information when verbose is on:"
+            "\nList of all witness addresses with individual weights.\n"
+            "\nArguments:\n"
+            "1. \"blockspecifier\" (string, optional, default=tip) The blockspecifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
+            "blockspecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
+            "2. verbose            (bool, optional, default=false) Display additional verbose information.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getwitnessinfo tip false", "")
+            + HelpExampleCli("getwitnessinfo tip~2 true", "")
+            + HelpExampleCli("getwitnessinfo 400000 true", "")
+            + HelpExampleCli("getwitnessinfo \"8383d8e9999ade8ad0c9f84e7816afec3b9e4855341f678bb0fdc3af46ee6f31\" true", ""));
 
-    int64_t nNumWitnessAddresses = 0;
-    int64_t nTotalWeight = 0;
 
-    if (!GetPow2NetworkWeight(chainActive.Tip(), Params(), nNumWitnessAddresses, nTotalWeight, chainActive, nullptr))
-        throw std::runtime_error("Block does not form part of a valid PoW2 chain.");
+    int64_t nTotalWeightAll = 0;
+    int64_t nNumWitnessAddressesAll = 0;
+    int64_t nPow2Phase = 1;
+    std::string sWitnessAddress;
+    UniValue jsonAllWitnessAddresses(UniValue::VARR);
+    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessWeightStats;
+    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessAmountStats;
+    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > lockPeriodWeightStats;
+    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > ageStats;
 
-    std::string sPoW2Phase = "Phase 1";
-    if (IsPow2Phase5Active(chainActive.Tip(), Params(), chainActive))
-        sPoW2Phase = "Phase 5";
-    else if (IsPow2Phase4Active(chainActive.Tip(), Params(), chainActive))
-        sPoW2Phase = "Phase 4";
-    else if (IsPow2Phase3Active(chainActive.Tip(), Params(), chainActive))
-        sPoW2Phase = "Phase 3";
-    else if (IsPow2Phase2Active(chainActive.Tip(), Params(), chainActive))
-        sPoW2Phase = "Phase 2";
+    CBlockIndex* pTipIndex = nullptr;
+    bool fVerbose = false;
+    uint256 blockHash = uint256();
+    if (request.params.size() > 0)
+    {
+        std::string sTipHash = request.params[0].get_str();
+        int32_t nTipHeight;
+        if (ParseInt32(sTipHash, &nTipHeight))
+        {
+            pTipIndex = chainActive[nTipHeight];
+            if (!pTipIndex)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+        }
+        else
+        {
+            if (sTipHash == "tip" || sTipHash.empty())
+            {
+                pTipIndex = chainActive.Tip();
+                if (!pTipIndex)
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
+            }
+            else if(boost::starts_with(sTipHash, "tip~"))
+            {
+                int nReverseHeight;
+                if (!ParseInt32(sTipHash.substr(4,std::string::npos), &nReverseHeight))
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier.");
+                pTipIndex = chainActive.Tip();
+                if (!pTipIndex)
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
+                while(pTipIndex && nReverseHeight>0)
+                {
+                    pTipIndex = pTipIndex->pprev;
+                    --nReverseHeight;
+                }
+                if (!pTipIndex)
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier, chain does not go back that far.");
+            }
+            else
+            {
+                uint256 hash(uint256S(sTipHash));
+                if (mapBlockIndex.count(hash) == 0)
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+                pTipIndex = mapBlockIndex[hash];
+            }
+        }
+    }
+    else
+    {
+        pTipIndex = chainActive.Tip();
+    }
 
-    UniValue witnessStats(UniValue::VARR);
+    if (request.params.size() == 2)
+    {
+        fVerbose = request.params[1].get_bool() ? true : false;
+    }
+
+    CBlockIndex* pTipIndex_ = nullptr;
+    CCloneChain tempChain = chainActive.Clone(pTipIndex, pTipIndex_);
+
+    if (!pTipIndex_)
+        throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
+    CCoinsViewCache viewNew(pcoinsTip);
+    CValidationState state;
+    if (!ForceActivateChain(pTipIndex_, nullptr, state, Params(), tempChain, viewNew))
+        throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
+    if (!state.IsValid())
+        throw JSONRPCError(RPC_DATABASE_ERROR, state.GetRejectReason());
+
+    if (IsPow2Phase5Active(pTipIndex_, Params(), tempChain, &viewNew))
+        nPow2Phase = 5;
+    else if (IsPow2Phase4Active(pTipIndex_, Params(), tempChain, &viewNew))
+        nPow2Phase = 4;
+    else if (IsPow2Phase3Active(pTipIndex_, Params(), tempChain, &viewNew))
+        nPow2Phase = 3;
+    else if (IsPow2Phase2Active(pTipIndex_, Params(), tempChain, &viewNew))
+        nPow2Phase = 2;
+
+    CGetWitnessInfo witInfo;
+    if (nPow2Phase >= 3)
+    {
+        if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_, witInfo.allWitnessCoins, nullptr, &viewNew))
+            throw std::runtime_error("Could not enumerate all PoW² witness for block.");
+
+        if (!GetWitness(tempChain, Params(), &viewNew, pTipIndex_->pprev, pTipIndex_->GetBlockHashLegacy(), witInfo))
+            throw std::runtime_error("Could not select a valid PoW² witness for block.");
+
+        if (!GetPow2NetworkWeight(pTipIndex_, Params(), nNumWitnessAddressesAll, nTotalWeightAll, tempChain, &viewNew))
+            throw std::runtime_error("Block does not form part of a valid PoW² chain.");
+
+        CTxDestination selectedWitnessAddress;
+        if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
+            throw std::runtime_error("Could not extract PoW² witness for block.");
+
+         sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+
+        if (fVerbose)
+        {
+            for (auto& iter : witInfo.allWitnessCoins)
+            {
+                bool fEligible = false;
+                {
+                    const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
+                    auto findIter = std::lower_bound(witInfo.witnessSelectionPool.begin(), witInfo.witnessSelectionPool.end(), findItem);
+                    while (findIter != witInfo.witnessSelectionPool.end())
+                    {
+                        if (findIter->outpoint == iter.first)
+                        {
+                            if (findIter->coin.out == iter.second.out)
+                            {
+                                fEligible = true;
+                                break;
+                            }
+                            ++findIter;
+                        }
+                        else break;
+                    }
+                }
+
+                CTxDestination address;
+                if (!ExtractDestination(iter.second.out, address))
+                    throw std::runtime_error("Could not extract PoW² witness for block.");
+
+                uint64_t nLastActiveBlock = iter.second.nHeight;
+                uint64_t nLockFromBlock = 0;
+                uint64_t nLockUntilBlock = 0;
+                uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
+                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
+                uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
+                CAmount nValue = iter.second.out.nValue;
+
+                UniValue rec(UniValue::VOBJ);
+                rec.push_back(Pair("address", CBitcoinAddress(address).ToString()));
+                rec.push_back(Pair("amount", ValueFromAmount(nValue)));
+                rec.push_back(Pair("weight", nRawWeight));
+                rec.push_back(Pair("eligible_to_witness", fEligible));
+                rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
+                rec.push_back(Pair("last_active_block", nLastActiveBlock));
+                rec.push_back(Pair("age", nAge));
+                rec.push_back(Pair("lock_from_block", nLockFromBlock));
+                rec.push_back(Pair("lock_until_block", nLockUntilBlock));
+                rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+
+                witnessWeightStats(nRawWeight);
+                lockPeriodWeightStats(nLockPeriodInBlocks);
+                witnessAmountStats(nValue);
+                ageStats(nAge);
+
+                jsonAllWitnessAddresses.push_back(rec);
+            }
+        }
+    }
+
+    UniValue witnessInfoForBlock(UniValue::VARR);
     UniValue rec(UniValue::VOBJ);
-    rec.push_back(Pair("number_of_witnesses", nNumWitnessAddresses));
-    rec.push_back(Pair("total_witness_weight", nTotalWeight));
-    rec.push_back(Pair("pow2_phase", sPoW2Phase));
-    witnessStats.push_back(rec);
+    rec.push_back(Pair("pow2_phase", nPow2Phase));
+    rec.push_back(Pair("number_of_witnesses_raw", nNumWitnessAddressesAll));
+    rec.push_back(Pair("number_of_witnesses_eligible", witInfo.witnessSelectionPool.size()));
+    rec.push_back(Pair("total_witness_weight_raw", nTotalWeightAll));
+    rec.push_back(Pair("total_witness_weight_eligible_raw", witInfo.nTotalWeight));
+    rec.push_back(Pair("total_witness_weight_eligible_adjusted", witInfo.nReducedTotalWeight));
+    rec.push_back(Pair("selected_witness_address", sWitnessAddress));
+    if (fVerbose)
+    {
+        UniValue averages(UniValue::VOBJ);
+        {
+            UniValue weight(UniValue::VOBJ);
+            weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
+            weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
+            weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
+            weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
+            averages.push_back(Pair("weight", weight));
+        }
+        {
+            UniValue amount(UniValue::VOBJ);
+            amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
+            amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
+            amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
+            amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
+            averages.push_back(Pair("amount", amount));
+        }
+        {
+            UniValue lockPeriod(UniValue::VOBJ);
+            lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
+            lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
+            lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
+            lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
+            averages.push_back(Pair("lock_period", lockPeriod));
+        }
+        {
+            UniValue age(UniValue::VOBJ);
+            age.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(ageStats))));
+            age.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(ageStats))));
+            age.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(ageStats))));
+            age.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(ageStats))));
+            averages.push_back(Pair("age", age));
+        }
+        rec.push_back(Pair("witness_statistics", averages));
+        rec.push_back(Pair("witness_address_list", jsonAllWitnessAddresses));
+    }
+    witnessInfoForBlock.push_back(rec);
 
-    return witnessStats;
+    return witnessInfoForBlock;
 }
 
 
 UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
@@ -1232,7 +1435,7 @@ static const CRPCCommand commands[] =
     { "mining",             "gethashps",              &gethashps,              true,    {} },
     { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
 
-    { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {""} },
+    { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {"blockspecifier", "verbose"} },
     { "witness",            "createwitnessaccount",   &createwitnessaccount,   true,    {"name"} },
     { "witness",            "fundwitnessaccount",     &fundwitnessaccount,     true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
 

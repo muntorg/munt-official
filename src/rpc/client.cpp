@@ -144,6 +144,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setgenerate", 0, "generate" },
     { "setgenerate", 1, "genproclimit" },
     { "importseed", 1, "read only" },
+    { "getwitnessinfo", 1, "verbose" },
     { "sethashlimit", 0, "limit" },
     { "dumpdiffarray", 0, "height" },
     { "dumpblockgaps", 0, "startheight" },

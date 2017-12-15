@@ -257,20 +257,22 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 }
 
 
-int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber)
+int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {
     //fixme: (GULDEN) (2.0) - Check for off by 1 error (lockUntil - lockFrom)
     if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;
         out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
-        return witnessDetails.lockUntilBlock - ( witnessDetails.lockFromBlock == 0 ? txBlockNumber : witnessDetails.lockFromBlock);
+        nFromBlockOut =  witnessDetails.lockFromBlock == 0 ? txBlockNumber : witnessDetails.lockFromBlock;
+        nUntilBlockOut = witnessDetails.lockUntilBlock;
     }
     else if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        return out.output.witnessDetails.lockUntilBlock - ( out.output.witnessDetails.lockFromBlock == 0 ? txBlockNumber : out.output.witnessDetails.lockFromBlock);
+        nFromBlockOut = out.output.witnessDetails.lockFromBlock == 0 ? txBlockNumber : out.output.witnessDetails.lockFromBlock;
+        nUntilBlockOut = out.output.witnessDetails.lockUntilBlock;
     }
-    return 0;
+    return nUntilBlockOut - nFromBlockOut;
 }
 
 //fixme: Handle reorganisations that invalidate the cache.
@@ -319,7 +321,8 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
         {
             CTxOut output = iter.second.out;
 
-            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight));
+            uint64_t nUnused;
+            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused, nUnused));
             ++nNumWitnessAddresses;
         }
     }

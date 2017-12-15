@@ -1359,21 +1359,19 @@ void static GuldenWitness()
                     if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, pParams))
                     {
                         boost::this_thread::interruption_point();
-                        CTxOut selectedWitnessOutput;
-                        COutPoint selectedWitnessOutPoint;
-                        unsigned int nSelectedWitnessBlockHeight;
+                        CGetWitnessInfo witnessInfo;
 
                         //fixme: (GULDEN) (2.0) Error handling
-                        if (!GetWitness(chainActive, candidateIter->pprev, *pWitnessBlock, chainparams, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, nullptr))
+                        if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                             continue;
 
                         boost::this_thread::interruption_point();
                         CAmount witnessSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
 
                         //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
-                        if (pactiveWallet->IsMine(selectedWitnessOutput) == ISMINE_SPENDABLE)
+                        if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
                         {
-                            CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(selectedWitnessOutput);
+                            CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
                             if (selectedWitnessAccount)
                             {
                                 //We must do this before we add the blank coinbase otherwise GetBlockWeight crashes on a NULL pointer dereference.
@@ -1425,7 +1423,7 @@ void static GuldenWitness()
 
                                 //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, nSelectedWitnessBlockHeight, selectedWitnessAccount);
+                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
 
@@ -1445,7 +1443,7 @@ void static GuldenWitness()
 
 
                                 /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
-                                if (SignBlockAsWitness(pWitnessBlock, selectedWitnessOutput))
+                                if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
                                 {
                                     LogPrintf("GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
                                     ProcessBlockFound(pWitnessBlock, chainparams);

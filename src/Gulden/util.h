@@ -31,7 +31,7 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
 int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
-int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber);
+int64_t GetPoW2LockLengthInBlocksFromOutput(CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut);
 
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
