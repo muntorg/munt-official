@@ -269,36 +269,48 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     {
         UniValue averages(UniValue::VOBJ);
         {
-            UniValue weight(UniValue::VOBJ);
-            weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
-            weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
-            weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
-            weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
-            averages.push_back(Pair("weight", weight));
+            if (boost::accumulators::count(witnessWeightStats) > 0)
+            {
+                UniValue weight(UniValue::VOBJ);
+                weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
+                weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
+                weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
+                weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
+                averages.push_back(Pair("weight", weight));
+            }
         }
         {
-            UniValue amount(UniValue::VOBJ);
-            amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
-            amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
-            amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
-            amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
-            averages.push_back(Pair("amount", amount));
+            if (boost::accumulators::count(witnessAmountStats) > 0)
+            {
+                UniValue amount(UniValue::VOBJ);
+                amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
+                amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
+                amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
+                amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
+                averages.push_back(Pair("amount", amount));
+            }
         }
         {
-            UniValue lockPeriod(UniValue::VOBJ);
-            lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
-            lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
-            lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
-            lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
-            averages.push_back(Pair("lock_period", lockPeriod));
+            if (boost::accumulators::count(lockPeriodWeightStats) > 0)
+            {
+                UniValue lockPeriod(UniValue::VOBJ);
+                lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
+                lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
+                lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
+                lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
+                averages.push_back(Pair("lock_period", lockPeriod));
+            }
         }
         {
-            UniValue age(UniValue::VOBJ);
-            age.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(ageStats))));
-            age.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(ageStats))));
-            age.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(ageStats))));
-            age.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(ageStats))));
-            averages.push_back(Pair("age", age));
+            if (boost::accumulators::count(ageStats) > 0)
+            {
+                UniValue age(UniValue::VOBJ);
+                age.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(ageStats))));
+                age.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(ageStats))));
+                age.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(ageStats))));
+                age.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(ageStats))));
+                averages.push_back(Pair("age", age));
+            }
         }
         rec.push_back(Pair("witness_statistics", averages));
         rec.push_back(Pair("witness_address_list", jsonAllWitnessAddresses));
