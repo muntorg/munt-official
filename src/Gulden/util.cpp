@@ -321,8 +321,8 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
         {
             CTxOut output = iter.second.out;
 
-            uint64_t nUnused;
-            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused, nUnused));
+            uint64_t nUnused1, nUnused2;
+            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused1, nUnused2));
             ++nNumWitnessAddresses;
         }
     }

@@ -524,10 +524,10 @@ struct CGetWitnessInfo
     CTxOut selectedWitnessTransaction;
     COutPoint selectedWitnessOutpoint;
     Coin selectedWitnessCoin;
-    uint64_t selectedWitnessBlockHeight;
+    uint64_t selectedWitnessBlockHeight = 0;
 
-    uint64_t nTotalWeight;
-    uint64_t nReducedTotalWeight;
+    uint64_t nTotalWeight = 0;
+    uint64_t nReducedTotalWeight = 0;
 };
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight);
 bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo);

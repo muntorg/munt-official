@@ -6,7 +6,8 @@ CORE - New PoW2 witness system that combines witnessing with existing proof of w
 CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assist with testing so that multiple program instances can be easily distinguished.
 RPC - New command 'createwitnessaccount' as a convenience call to 'createaccount witness' used to create an account for witnessing.
 RPC - New command 'fundwitnessaccount' used to lock funds into a witness account that has previously been created.
-RPC - New command 'getwitnessinfo' used to get various info about witness system (current network weight etc.)
+RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
+RPC - add new "sub_type" paramater to 'listaccounts' command.
 
 1.6.4.6
 
