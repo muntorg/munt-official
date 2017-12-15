@@ -107,7 +107,6 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     CBlockIndex* pTipIndex = nullptr;
     bool fVerbose = false;
-    uint256 blockHash = uint256();
     if (request.params.size() > 0)
     {
         std::string sTipHash = request.params[0].get_str();
@@ -1295,6 +1294,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
                 rec.push_back(Pair("UUID", accountPair.first));
                 rec.push_back(Pair("label", accountPair.second->getLabel()));
                 rec.push_back(Pair("type", "legacy"));
+                rec.push_back(Pair("sub_type", ""));
                 allAccounts.push_back(rec);
             }
             continue;
@@ -1308,6 +1308,14 @@ UniValue listallaccounts(const JSONRPCRequest& request)
         rec.push_back(Pair("UUID", accountPair.first));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
         rec.push_back(Pair("type", "HD"));
+
+        if (((CAccountHD*)accountPair.second)->IsMobi())
+            rec.push_back(Pair("sub_type", "mobile"));
+        else if (((CAccountHD*)accountPair.second)->IsPoW2Witness())
+            rec.push_back(Pair("sub_type", "witness"));
+        else
+            rec.push_back(Pair("sub_type", "regular"));
+
         rec.push_back(Pair("HDindex", (uint64_t) dynamic_cast<CAccountHD*>(accountPair.second)->getIndex()));
 
         allAccounts.push_back(rec);
