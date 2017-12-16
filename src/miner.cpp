@@ -148,7 +148,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
+bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -159,9 +159,7 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
     assert(pWitnessBlockToEmbed);
     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
     if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
-        assert(0);
-
-    //LogPrintf(">>>[Before] Embed witness block into coinbase: prevheight:%d height:%d \nembedded block: %s\n", pindexPrev->nHeight, pindexPrev->nHeight+1 , pWitnessBlock->ToString());
+        return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
 
     if (commitpos == -1)
     {
@@ -218,7 +216,7 @@ void InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
         witnessTx.vout.push_back(fakeOut);
         block.vtx.insert(block.vtx.begin()+1, MakeTransactionRef(std::move(witnessTx)));
     }
-    //LogPrintf(">>>[After] Embed witness block into coinbase: prevheight:%d height:%d \nembedded block: %s\n", pindexPrev->nHeight, pindexPrev->nHeight+1 , pWitnessBlock->ToString());
+    return true;
 }
 
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, const CScript& scriptPubKeyIn, bool fMineWitnessTx, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
@@ -330,7 +328,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     {
         if (pWitnessBlockToEmbed)
         {
-            InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed, nParentPoW2Phase);
+            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed, nParentPoW2Phase))
+                return nullptr;
         }
     }
 
@@ -1003,8 +1002,10 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript->reserveScript, true, pWitnessBlockToEmbed);
                 if (!pblocktemplate.get())
                 {
-                    LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
-                    return;
+                    LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill.\n");
+                    if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                            dHashesPerSec = 0;
+                    continue;
                 }
             }
             CBlock *pblock = &pblocktemplate->block;
