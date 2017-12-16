@@ -245,6 +245,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
                 rec.push_back(Pair("lock_from_block", nLockFromBlock));
                 rec.push_back(Pair("lock_until_block", nLockUntilBlock));
                 rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+                rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
 
                 witnessWeightStats(nRawWeight);
                 lockPeriodWeightStats(nLockPeriodInBlocks);
@@ -305,10 +306,10 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             if (boost::accumulators::count(ageStats) > 0)
             {
                 UniValue age(UniValue::VOBJ);
-                age.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(ageStats))));
-                age.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(ageStats))));
-                age.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(ageStats))));
-                age.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(ageStats))));
+                age.push_back(Pair("largest", boost::accumulators::max(ageStats)));
+                age.push_back(Pair("smallest", boost::accumulators::min(ageStats)));
+                age.push_back(Pair("mean", boost::accumulators::mean(ageStats)));
+                age.push_back(Pair("median", boost::accumulators::median(ageStats)));
                 averages.push_back(Pair("age", age));
             }
         }
