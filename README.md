@@ -93,7 +93,7 @@ Binaries are output as follows by the build process:
 |Gulden RPC client|src/Gulden-cli|
 |Gulden tx utility|src/Gulden-tx|
 
-Alternatively binaries are also available https://developer.gulden.com/apps/
+Alternatively pre-compiled binaries are also available at https://github.com/Gulden/gulden-official/releases
 
 
 ### Additional technical information
