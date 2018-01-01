@@ -38,6 +38,7 @@ class UnitDisplayStatusBarControl;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
+class ModalOverlay;
 
 class CWallet;
 
@@ -128,6 +129,7 @@ private:
     Notificator* notificator;
     RPCConsole* rpcConsole;
     HelpMessageDialog* helpMessageDialog;
+    ModalOverlay* modalOverlay;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
@@ -240,6 +242,8 @@ private Q_SLOTS:
 
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);
+
+    void showModalOverlay();
 };
 
 class UnitDisplayStatusBarControl : public QLabel {

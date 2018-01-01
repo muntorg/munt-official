@@ -19,6 +19,7 @@
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
+#include "modaloverlay.h"
 #include "networkstyle.h"
 #include "notificator.h"
 #include "openuridialog.h"
@@ -76,6 +77,8 @@
 #include <QUrlQuery>
 #endif
 
+#include "consensus/validation.h"
+
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
     "macosx"
@@ -126,6 +129,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle* platformStyle, const NetworkStyle* n
     , notificator(0)
     , rpcConsole(0)
     , helpMessageDialog(0)
+    , modalOverlay(0)
     , prevBlocks(0)
     , spinnerFrame(0)
     , platformStyle(platformStyle)
@@ -255,6 +259,14 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle* platformStyle, const NetworkStyle* n
     subscribeToCoreSignals();
 
     m_pGuldenImpl->doPostInit();
+    modalOverlay = new ModalOverlay(this->centralWidget());
+#ifdef ENABLE_WALLET
+    if (enableWallet) {
+        connect(walletFrame, SIGNAL(requestedSyncWarningInfo()), this, SLOT(showModalOverlay()));
+        connect(labelBlocksIcon, SIGNAL(clicked(QPoint)), this, SLOT(showModalOverlay()));
+        connect(progressBar, SIGNAL(clicked(QPoint)), this, SLOT(showModalOverlay()));
+    }
+#endif
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -473,6 +485,7 @@ void BitcoinGUI::setClientModel(ClientModel* clientModel)
         setNumConnections(clientModel->getNumConnections());
         connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
+        modalOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
         setNumBlocks(clientModel->getNumBlocks(), clientModel->getLastBlockDate(), clientModel->getVerificationProgress(NULL), false);
         connect(clientModel, SIGNAL(numBlocksChanged(int, QDateTime, double, bool)), this, SLOT(setNumBlocks(int, QDateTime, double, bool)));
 
@@ -738,6 +751,12 @@ void BitcoinGUI::setNumConnections(int count)
 
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
+    if (modalOverlay) {
+        if (header)
+            modalOverlay->setKnownBestHeight(count, blockDate);
+        else
+            modalOverlay->tipUpdate(count, blockDate, nVerificationProgress);
+    }
     if (!clientModel)
         return;
 
@@ -777,13 +796,21 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 
     tooltip += tr("Processed %n block(s) of transaction history.", "", count);
 
+    if (IsInitialBlockDownload()) {
+        m_pGuldenImpl->hideBalances();
+    } else {
+        m_pGuldenImpl->showBalances();
+    }
+
     if (secs < 90 * 60) {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
         labelBlocksIcon->setPixmap(QIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
 #ifdef ENABLE_WALLET
-        if (walletFrame)
+        if (walletFrame) {
             walletFrame->showOutOfSyncWarning(false);
+            modalOverlay->showHide(true, true);
+        }
 #endif // ENABLE_WALLET
 
         m_pGuldenImpl->hideProgressBarLabel();
@@ -827,8 +854,10 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
         prevBlocks = count;
 
 #ifdef ENABLE_WALLET
-        if (walletFrame)
+        if (walletFrame) {
             walletFrame->showOutOfSyncWarning(true);
+            modalOverlay->showHide();
+        }
 #endif // ENABLE_WALLET
 
         tooltip += QString("<br>");
@@ -1110,6 +1139,12 @@ void BitcoinGUI::setTrayIconVisible(bool fHideTrayIcon)
     if (trayIcon) {
         trayIcon->setVisible(!fHideTrayIcon);
     }
+}
+
+void BitcoinGUI::showModalOverlay()
+{
+    if (modalOverlay && (progressBar->isVisible() || modalOverlay->isLayerVisible()))
+        modalOverlay->toggleVisibility();
 }
 
 static bool ThreadSafeMessageBox(BitcoinGUI* gui, const std::string& message, const std::string& caption, unsigned int style)

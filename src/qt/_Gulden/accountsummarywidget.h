@@ -30,6 +30,8 @@ public:
 
     void setActiveAccount(const CAccount* account);
     void setOptionsModel(OptionsModel* model);
+    void hideBalances();
+    void showBalances();
 
 public Q_SLOTS:
 
