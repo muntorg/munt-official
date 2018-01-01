@@ -114,7 +114,8 @@ void NocksRequest::netRequestFinished(QNetworkReply* reply)
 {
     if (reply->error() != QNetworkReply::NetworkError::NoError) {
 
-        m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
+        if (m_recipient)
+            m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
         Q_EMIT requestProcessed();
         return;
     } else {
@@ -181,7 +182,8 @@ void NocksRequest::netRequestFinished(QNetworkReply* reply)
 
 void NocksRequest::reportSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
 {
-    m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
+    if (m_recipient)
+        m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
     Q_EMIT requestProcessed();
 
     this->deleteLater();

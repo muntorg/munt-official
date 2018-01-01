@@ -1022,32 +1022,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenAccountSummaryWidget</name>
-    <message>
-        <source>Private</source>
-        <translation>Prive</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>20 000</source>
-        <translation>20 000</translation>
-    </message>
-    <message>
-        <source>(€ 200.00)</source>
-        <translation>(€ 200.00)</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenExchangeRateDialog</name>
-    <message>
-        <source>Select currency</source>
-        <translation>Selecteer valuta</translation>
-    </message>
-</context>
-<context>
     <name>GuldenGUI</name>
     <message>
         <source>&amp;Password</source>
@@ -1121,143 +1095,9 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation>Toevoegen van een sleutel aan de portemonnee mislukt.</translation>
     </message>
-</context>
-<context>
-    <name>GuldenNewAccountDialog</name>
     <message>
-        <source>Enter name of account.</source>
-        <translation>Voer naam in van account.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source> Connect to mobile Gulden app</source>
-        <translation>Link met je mobiele Gulden app</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Scan QR om te verbinden met je mobiele Gulden app</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenReceiveCoinsDialog</name>
-    <message>
-        <source>My receiving address</source>
-        <translation>Mijn ontvangstadres</translation>
-    </message>
-    <message>
-        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
-    </message>
-    <message>
-        <source>QR code</source>
-        <translation>QR code</translation>
-    </message>
-    <message>
-        <source>Choose amount</source>
-        <translation>Kies bedrag</translation>
-    </message>
-    <message>
-        <source>1000</source>
-        <translation>1000</translation>
-    </message>
-    <message>
-        <source>€ 10.00</source>
-        <translation>€ 10.00</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>2500</source>
-        <translation>2500</translation>
-    </message>
-    <message>
-        <source>€ 25.00</source>
-        <translation>€ 25.00</translation>
-    </message>
-    <message>
-        <source>5000</source>
-        <translation>5000</translation>
-    </message>
-    <message>
-        <source>€ 50.00</source>
-        <translation>€ 50.00</translation>
-    </message>
-    <message>
-        <source>More</source>
-        <translation>Meer</translation>
-    </message>
-    <message>
-        <source>Your details</source>
-        <translation>Jouw gegevens</translation>
-    </message>
-    <message>
-        <source>Enter email address</source>
-        <translation>Voer e-mailadres in</translation>
-    </message>
-    <message>
-        <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation>Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
-    </message>
-    <message>
-        <source>Enter label</source>
-        <translation>Voer beschrijving in</translation>
-    </message>
-    <message>
-        <source>Request 10 000 Gulden</source>
-        <translation>Verzoek 10 000 Gulden</translation>
-    </message>
-    <message>
-        <source>Payment request URI</source>
-        <translation>Betaalverzoek URI</translation>
-    </message>
-    <message>
-        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopieer adres naar klembord</translation>
-    </message>
-    <message>
-        <source>Save QR as image</source>
-        <translation>Bewaar QR als afbeelding</translation>
-    </message>
-    <message>
-        <source>Request payment</source>
-        <translation>Verzoek betaling</translation>
-    </message>
-    <message>
-        <source>Generate request</source>
-        <translation>Genereer verzoek</translation>
-    </message>
-    <message>
-        <source>Buy Gulden</source>
-        <translation>Koop Gulden</translation>
-    </message>
-    <message>
-        <source>Buy</source>
-        <translation>Koop</translation>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1267,8 +1107,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Ontvangstadres</translation>
     </message>
     <message>
-        <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
-        <translation>Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Voer ontvangstadres in (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -1439,6 +1279,61 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Formulier</translation>
+    </message>
+    <message>
+        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of blocks left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation type="unfinished">Tijd laatste blok</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progress increase per hour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>calculating...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Estimated time left until synced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished">Verbergen</translation>
+    </message>
+    <message>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Let op&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Je wallet synchroniseert momenteel met het Gulden netwerk.&lt;br/&gt;Zodra het synchroniseren is afgerond, zullen je balans en recente transacties zichtbaar worden.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1)...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2006,10 +1901,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Algemeen</translation>
     </message>
     <message>
-        <source>Client name</source>
-        <translation>Clientnaam</translation>
-    </message>
-    <message>
         <source>N/A</source>
         <translation>N.v.t.</translation>
     </message>
@@ -2018,16 +1909,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Clientversie</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Gebruikt OpenSSL versie</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Gebruikt BerkeleyDB versie</translation>
-    </message>
-    <message>
-        <source>Build date</source>
-        <translation>Bouwdatum</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -2060,10 +1943,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Debug log file</source>
         <translation>Debuglogbestand</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het Bitcoin Core debuglogbestand van de huidige gegevensdirectory. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -2122,14 +2001,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Services</translation>
     </message>
     <message>
-        <source>Starting Height</source>
-        <translation>Aanvangshoogte</translation>
-    </message>
-    <message>
-        <source>Sync Height</source>
-        <translation>Synchronisatiehoogte</translation>
-    </message>
-    <message>
         <source>Ban Score</source>
         <translation>Ban score</translation>
     </message>
@@ -2144,14 +2015,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Last Receive</source>
         <translation>Laatst ontvangen</translation>
-    </message>
-    <message>
-        <source>Bytes Sent</source>
-        <translation>Bytes verzonden</translation>
-    </message>
-    <message>
-        <source>Bytes Received</source>
-        <translation>Bytes ontvangen</translation>
     </message>
     <message>
         <source>Ping Time</source>

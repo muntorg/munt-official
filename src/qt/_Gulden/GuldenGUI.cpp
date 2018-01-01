@@ -159,6 +159,7 @@ GuldenGUI::GuldenGUI(BitcoinGUI* pImpl)
     , toolsMenu(NULL)
     , importPrivateKeyAction(NULL)
     , rescanAction(NULL)
+    , currencyAction(NULL)
     , accountSummaryWidget(NULL)
     , dialogNewAccount(NULL)
     , dialogAccountSettings(NULL)
@@ -225,7 +226,8 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
     labelBalance->setText(BitcoinUnits::format(BitcoinUnits::BTC, displayBalance, false, BitcoinUnits::separatorStandard, 2));
     if (displayBalance > 0 && optionsModel) {
         labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, BitcoinUnits::separatorAlways, 2) + QString(")"));
-        labelBalanceForex->setVisible(true);
+        if (labelBalance->isVisible())
+            labelBalanceForex->setVisible(true);
     } else {
         labelBalanceForex->setVisible(false);
     }
@@ -286,6 +288,12 @@ void GuldenGUI::createMenusGulden()
     rescanAction->setCheckable(false);
     toolsMenu->addAction(rescanAction);
     connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
+
+    currencyAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
+    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    currencyAction->setCheckable(false);
+    m_pImpl->settingsMenu->addAction(currencyAction);
+    connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()));
 }
 
 void GuldenGUI::createToolBarsGulden()
@@ -704,6 +712,7 @@ void GuldenGUI::doPostInit()
             m_pImpl->progressBar->setStyleSheet("");
 
             m_pImpl->progressBar->setTextVisible(false);
+            m_pImpl->progressBar->setCursor(Qt::PointingHandCursor);
 
             m_pImpl->addToolBar(Qt::BottomToolBarArea, statusBar);
 
@@ -741,6 +750,8 @@ void GuldenGUI::doPostInit()
 
     disconnect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), 0, 0);
     connect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), this, SLOT(gotoPasswordDialog()));
+
+    labelBalance->setVisible(false);
 }
 
 void GuldenGUI::hideProgressBarLabel()
@@ -756,6 +767,23 @@ void GuldenGUI::showProgressBarLabel()
     m_pImpl->progressBarLabel->setVisible(true);
     if (statusBar)
         statusBar->setVisible(true);
+}
+
+void GuldenGUI::hideBalances()
+{
+    labelBalance->setVisible(false);
+    labelBalanceForex->setVisible(false);
+    accountSummaryWidget->hideBalances();
+}
+
+void GuldenGUI::showBalances()
+{
+    if (!labelBalance->isVisible()) {
+        labelBalance->setVisible(true);
+
+        updateExchangeRates();
+        accountSummaryWidget->showBalances();
+    }
 }
 
 bool GuldenGUI::welcomeScreenIsVisible()

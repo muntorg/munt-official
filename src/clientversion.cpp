@@ -49,8 +49,8 @@ const std::string CLIENT_NAME("Gulden");
 
 #define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
-#define GIT_COMMIT_ID "af9402b"
-#define GIT_COMMIT_DATE "Tue, 28 Nov 2017 23:09:34 -0500"
+#define GIT_COMMIT_ID "17b2395"
+#define GIT_COMMIT_DATE "Mon, 1 Jan 2018 10:57:23 -0500"
 #endif
 
 #define BUILD_DESC_WITH_SUFFIX(maj, min, rev, build, suffix) \

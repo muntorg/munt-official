@@ -68,7 +68,7 @@
             <item>
              <widget class="QLineEdit" name="receivingAddress">
               <property name="placeholderText">
-               <string>Enter receiving address (Gulden, BCOIN, IBAN)</string>
+                 <string>Enter receiving address (Gulden, IBAN)</string>
               </property>
              </widget>
             </item>

@@ -56,6 +56,8 @@ public:
 
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     int getNumBlocks() const;
+    int getHeaderTipHeight() const;
+    int64_t getHeaderTipTime() const;
 
     long getMempoolSize() const;
 
@@ -78,6 +80,9 @@ public:
     bool isReleaseVersion() const;
     QString formatClientStartupTime() const;
     QString dataDir() const;
+
+    mutable std::atomic<int> cachedBestHeaderHeight;
+    mutable std::atomic<int64_t> cachedBestHeaderTime;
 
 private:
     OptionsModel* optionsModel;
