@@ -336,11 +336,13 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
     else
     {
         QString compareModified = recipient.address;        
+        #ifdef SUPPORT_BITCOIN_AS_FOREX
         if (model->validateAddressBCOIN(compareModified))
         {
             ret = SendCoinsRecipient::PaymentType::BCOINPayment;
         }
         else
+        #endif
         {
             // IBAN
             if (model->validateAddressIBAN(recipient.address))

@@ -1267,8 +1267,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Ontvangstadres</translation>
     </message>
     <message>
-        <source>Enter receiving address (Gulden, BCOIN, IBAN)</source>
-        <translation>Voer ontvangstadres in (Gulden, BCOIN, IBAN)</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Voer ontvangstadres in (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>

@@ -114,6 +114,8 @@ public:
     void createToolBarsGulden();
     void hideToolBars();
     void showToolBars();
+    void hideBalances();
+    void showBalances();
     
     void hideProgressBarLabel();
     void showProgressBarLabel();
@@ -142,6 +144,7 @@ private:
     QMenu* toolsMenu;
     QAction* importPrivateKeyAction;
     QAction* rescanAction;
+    QAction* currencyAction;
     
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;

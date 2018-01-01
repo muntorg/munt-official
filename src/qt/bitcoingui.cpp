@@ -870,6 +870,15 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 
     tooltip += tr("Processed %n block(s) of transaction history.", "", count);
 
+    if (IsInitialBlockDownload())
+    {
+        m_pGuldenImpl->hideBalances();
+    }
+    else
+    {
+        m_pGuldenImpl->showBalances();
+    }
+
     // Set icon state: spinning if catching up, tick otherwise
     if(secs < 90*60)
     {
