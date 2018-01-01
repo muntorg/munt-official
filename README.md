@@ -93,7 +93,7 @@ Binaries are output as follows by the build process:
 |Gulden RPC client|src/Gulden-cli|
 |Gulden tx utility|src/Gulden-tx|
 
-Alternatively binaries are also available https://developer.gulden.com/apps/
+Alternatively pre-compiled binaries are also available at https://github.com/Gulden/gulden-official/releases
 
 
 ### Additional technical information
@@ -127,4 +127,4 @@ Alternatively binaries are also available https://developer.gulden.com/apps/
 |DNS Seed 5|seed.gulden.blue||
 
 ### Official testnet settings
--testnet=C1507484844:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46
+-testnet=C1511943855:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46
