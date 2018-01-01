@@ -39,6 +39,23 @@ QMainWindow QMenu
     color: black;
 }
 
+/* Informational widget when syncing for the first time*/
+#bgWidget
+{
+    background-color: white;
+    color: black;
+}
+
+#contentWidget QLabel
+{
+    margin-left: 40px;
+}
+
+#contentWidget #closeButton
+{
+    margin-right: 40px;
+}
+
 QMenu::item
 {
     color: black;
@@ -152,7 +169,7 @@ BitcoinGUI QDialog:window *
 {
     color: black;
 }
-   
+
 BitcoinGUI QDialog, BitcoinGUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAccountDialog, #scanToConnectPage, #newAccountPage
 {
     background-color: transparent;
@@ -967,9 +984,9 @@ QToolTip
 
 #progress_bar_spacer_left
 {
-    width: 32px;
-    min-width: 32px;
-    max-width: 32px;
+    width: 29px;
+    min-width: 29px;
+    max-width: 29px;
 }
 
 #rightMargin

@@ -26,6 +26,7 @@
 #include <QSystemTrayIcon>
 
 #include "_Gulden/GuldenGUI.h"
+#include "validation.h"
 
 class ClientModel;
 class NetworkStyle;

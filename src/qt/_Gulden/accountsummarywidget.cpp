@@ -78,6 +78,18 @@ void AccountSummaryWidget::setOptionsModel( OptionsModel* model )
     connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ) );
 }
 
+void AccountSummaryWidget::hideBalances()
+{
+    ui->accountBalance->setVisible(false);
+    ui->accountBalanceForex->setVisible(false);
+}
+
+void AccountSummaryWidget::showBalances()
+{
+    ui->accountBalance->setVisible(true);
+    updateExchangeRates();
+}
+
 
 void AccountSummaryWidget::balanceChanged()
 {
@@ -120,7 +132,8 @@ void AccountSummaryWidget::updateExchangeRates()
         if (forexAmount > 0)
         {
             ui->accountBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(currencyCode) + "\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, forexAmount, false, BitcoinUnits::separatorAlways, 2) + QString(")") );
-            ui->accountBalanceForex->setVisible( true );
+            if (ui->accountBalance->isVisible())
+                ui->accountBalanceForex->setVisible( true );
         }
         else
         {

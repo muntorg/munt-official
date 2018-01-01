@@ -304,7 +304,7 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     amountSeperator->setCursor(Qt::PointingHandCursor);
 
     secondaryAmountDisplay = new ClickableLabel(this);
-    secondaryAmountDisplay->setText(QString("(€\u20090.00)"));
+    secondaryAmountDisplay->setText(QString("€\u20090.00"));
     layout->addWidget(secondaryAmountDisplay);
     secondaryAmountDisplay->setObjectName("secondaryAmountDisplay");
     secondaryAmountDisplay->setCursor(Qt::PointingHandCursor);
@@ -343,6 +343,10 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent) :
     connect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
     connect(tertiaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToTertiaryCurrency()));
     connect(quadAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToQuadCurrency()));
+
+    #ifndef SUPPORT_BITCOIN_AS_FOREX
+    tertiaryAmountDisplay->setVisible(false);
+    #endif
 
     update();
     // Set default based on configuration
@@ -692,6 +696,9 @@ void BitcoinAmountField::update()
         nocksRequestNLGtoEUR = NULL;
     }
 
+    secondaryAmountDisplay->setVisible(true);
+    tertiaryAmountDisplay->setVisible(true);
+
     if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" ) 
     {
         quadAmountDisplay->setVisible(false);
@@ -712,6 +719,9 @@ void BitcoinAmountField::update()
         unit->setText("Gulden");
         forexError->setText("");
 
+        #ifndef SUPPORT_BITCOIN_AS_FOREX
+        tertiaryAmountDisplay->setVisible(false);
+        #endif
 
         if (amount > 0)
         {
@@ -756,6 +766,10 @@ void BitcoinAmountField::update()
         unit->setText("Bitcoin");
         forexError->setText("");
 
+        secondaryAmountDisplay->setVisible(true);
+        tertiaryAmountDisplay->setVisible(true);
+        quadAmountDisplay->setVisible(true);
+
         if (amount > 0)
         {
             CAmount guldenAmount = ticker->convertForexToGulden(amount, "BTC");
@@ -795,6 +809,10 @@ void BitcoinAmountField::update()
         // [...] Euro <> G... (B...) (R...)
         unit->setText("Euro");
         forexError->setText("");
+
+        #ifndef SUPPORT_BITCOIN_AS_FOREX
+        tertiaryAmountDisplay->setVisible(false);
+        #endif
 
         if (amount > 0)
         {
@@ -836,6 +854,10 @@ void BitcoinAmountField::update()
         // [...] ZAR <> G... (E...) (B...)
         unit->setText(optionsModel->guldenSettings->getLocalCurrency());
         forexError->setText("");
+
+        #ifndef SUPPORT_BITCOIN_AS_FOREX
+        quadAmountDisplay->setVisible(false);
+        #endif
 
         if (amount > 0)
         {
