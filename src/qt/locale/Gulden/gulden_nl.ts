@@ -1329,12 +1329,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Verbergen</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Let op&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Je wallet synchroniseert momenteel met het Gulden netwerk.&lt;br/&gt;Zodra het synchroniseren is afgerond, zullen je balans en recente transacties zichtbaar worden.</source>
+        <source>Unknown. Syncing Headers (%1)...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Let op&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Je wallet synchroniseert momenteel met het Gulden netwerk.&lt;br/&gt;Zodra het synchroniseren is afgerond, zullen je balans en recente transacties zichtbaar worden.</translation>
     </message>
 </context>
 <context>
