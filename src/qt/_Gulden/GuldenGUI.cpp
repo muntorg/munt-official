@@ -260,7 +260,7 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
     if (displayBalance > 0 && optionsModel)
     {
         labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, BitcoinUnits::separatorAlways, 2) + QString(")"));
-        if (!labelBalance->isVisible())
+        if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
     else
