@@ -9,6 +9,20 @@ RPC - New command 'fundwitnessaccount' used to lock funds into a witness account
 RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
 RPC - add new "sub_type" paramater to 'listaccounts' command.
 
+1.6.4.8
+
+Minor maintenence release.
+UI - Introduce a new informational widget and other minor UI improvements that make it move obvious to users that the wallet is not yet available during initial sync.
+UI - Add a new menu item for setting the currency.
+UI - Fix a crash in the send dialog on machines with no network connection.
+UI - Remove bitcoin payment option from send screen
+CORE - Update checkpoints, static difficulties, static seeds and other static information to help assist new users with better syncing experience.
+
+
+1.6.4.7
+
+Minor testnet related release.
+
 1.6.4.6
 
 RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
