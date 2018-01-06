@@ -544,7 +544,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 // We consider the chain that this peer is on invalid.
                 return;
             }
-            if (!State(nodeid)->fHaveWitness && IsWitnessEnabled(pindex->pprev, consensusParams)) {
+            if (!State(nodeid)->fHaveWitness && IsWitnessEnabled(pindex->pprev, Params(), chainActive, nullptr)) {
                 // We wouldn't download this block or its descendants from this peer.
                 return;
             }
@@ -816,7 +816,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         return;
     nHighestFastAnnounce = pindex->nHeight;
 
-    bool fWitnessEnabled = IsWitnessEnabled(pindex->pprev, Params().GetConsensus());
+    bool fWitnessEnabled = IsWitnessEnabled(pindex->pprev, Params(), chainActive, nullptr);
 
     uint256 hashBlock;
 
@@ -2266,7 +2266,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         CNodeState *nodestate = State(pfrom->GetId());
 
-        if (IsWitnessEnabled(pindex->pprev, chainparams.GetConsensus()) && !nodestate->fSupportsDesiredCmpctVersion) {
+        if (IsWitnessEnabled(pindex->pprev, chainparams, chainActive, nullptr) && !nodestate->fSupportsDesiredCmpctVersion) {
             // Don't bother trying to process compact blocks from v1 peers
             // after segwit activates.
             return true;
@@ -2563,7 +2563,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             while (pindexWalk && !chainActive.Contains(pindexWalk) && vToFetch.size() <= MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
                 if (!(pindexWalk->nStatus & BLOCK_HAVE_DATA) &&
                         !mapBlocksInFlight.count(pindexWalk->GetBlockHashPoW2()) &&
-                        (!IsWitnessEnabled(pindexWalk->pprev, chainparams.GetConsensus()) || State(pfrom->GetId())->fHaveWitness)) {
+                        (!IsWitnessEnabled(pindexWalk->pprev, chainparams, chainActive, nullptr) || State(pfrom->GetId())->fHaveWitness)) {
                     // We don't have this block, and it's not yet in flight.
                     vToFetch.push_back(pindexWalk);
                 }
@@ -3380,7 +3380,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 // No reason to drain out at many times the network's capacity,
                 // especially since we have many peers and some will draw much shorter delays.
                 unsigned int nRelayedTransactions = 0;
-                LOCK(pto->cs_filter);
+                LOCK2(mempool.cs, pto->cs_filter);
                 while (!vInvTx.empty() && nRelayedTransactions < INVENTORY_BROADCAST_MAX) {
                     // Fetch the top element from the heap
                     std::pop_heap(vInvTx.begin(), vInvTx.end(), compareInvMempoolOrder);

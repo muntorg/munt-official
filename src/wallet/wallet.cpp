@@ -2095,7 +2095,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) co
             //fixme: GULDEN (FUT) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
-                if (pcoin->IsTrusted())
+                if (pcoin->IsTrusted() && !pcoin->isAbandoned())
                 {
                     nTotal += pcoin->GetAvailableCredit(true, forAccount);
                 }
@@ -2231,7 +2231,7 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     for (const auto& entry : mapWallet) {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain();
-        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity() > 0) {
+        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity() > 0 || wtx.isAbandoned()) {
             continue;
         }
 
@@ -2672,8 +2672,10 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             return false;
         }
         const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
+        //fixme: (GULDEN) (HIGH) (sign type)
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], SignType::Spend);
         SignatureData sigdata;
-        if (!ProduceSignature(TransactionSignatureCreator(fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -2836,7 +2838,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // vouts to the payees
                 for (const auto& recipient : vecSend)
                 {
-                    CTxOut txout(recipient.nAmount, recipient.scriptPubKey);
+                    CTxOut txout = recipient.GetTxOut();
 
                     if (recipient.fSubtractFeeFromAmount)
                     {
@@ -2878,25 +2880,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 const CAmount nChange = nValueIn - nValueToSelect;
                 if (nChange > 0)
                 {
-                    // Fill a vout to ourself
-                    // TODO: pass in scriptChange instead of reservekey so
-                    // change transaction isn't always pay-to-bitcoin-address
-                    CScript scriptChange;
-
-                    // coin control: send change to custom address
-                    if (coinControl && !boost::get<CNoDestination>(&coinControl->destChange))
-                        scriptChange = GetScriptForDestination(coinControl->destChange);
-
-                    // no coin control: send change to newly generated address
-                    else
+                    std::shared_ptr<CTxOut> newTxOut = nullptr;
+                    if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
                     {
-                        // Note: We use a new key here to keep it from being obvious which side is the change.
-                        //  The drawback is that by not reusing a previous key, the change may be lost if a
-                        //  backup is restored, if the backup doesn't have the new private key for the change.
-                        //  If we reused the old key, it would be possible to add code to look for and
-                        //  rediscover unknown transactions that were written with keys of ours to recover
-                        //  post-backup change.
-
+                        //fixme: (GULDEN) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
                         CPubKey vchPubKey;
                         bool ret;
@@ -2907,18 +2894,51 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                             return false;
                         }
 
-                        scriptChange = GetScriptForDestination(vchPubKey.GetID());
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
                     }
+                    else
+                    {
+                        // Fill a vout to ourself
+                        // TODO: pass in scriptChange instead of reservekey so
+                        // change transaction isn't always pay-to-bitcoin-address
+                        CScript scriptChange;
 
-                    CTxOut newTxOut(nChange, scriptChange);
+                        // coin control: send change to custom address
+                        if (coinControl && !boost::get<CNoDestination>(&coinControl->destChange))
+                            scriptChange = GetScriptForDestination(coinControl->destChange);
+
+                        // no coin control: send change to newly generated address
+                        else
+                        {
+                            // Note: We use a new key here to keep it from being obvious which side is the change.
+                            //  The drawback is that by not reusing a previous key, the change may be lost if a
+                            //  backup is restored, if the backup doesn't have the new private key for the change.
+                            //  If we reused the old key, it would be possible to add code to look for and
+                            //  rediscover unknown transactions that were written with keys of ours to recover
+                            //  post-backup change.
+
+                            // Reserve a new key pair from key pool
+                            CPubKey vchPubKey;
+                            bool ret;
+                            ret = reservekey.GetReservedKey(vchPubKey);
+                            if (!ret)
+                            {
+                                strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                                return false;
+                            }
+
+                            scriptChange = GetScriptForDestination(vchPubKey.GetID());
+                        }
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, scriptChange));
+                    }
 
                     // We do not move dust-change to fees, because the sender would end up paying more than requested.
                     // This would be against the purpose of the all-inclusive feature.
                     // So instead we raise the change and deduct from the recipient.
-                    if (nSubtractFeeFromAmount > 0 && IsDust(newTxOut, ::dustRelayFee))
+                    if (nSubtractFeeFromAmount > 0 && IsDust(*newTxOut, ::dustRelayFee))
                     {
-                        CAmount nDust = GetDustThreshold(newTxOut, ::dustRelayFee) - newTxOut.nValue;
-                        newTxOut.nValue += nDust; // raise change until no more dust
+                        CAmount nDust = GetDustThreshold(*newTxOut, ::dustRelayFee) - newTxOut->nValue;
+                        newTxOut->nValue += nDust; // raise change until no more dust
                         for (unsigned int i = 0; i < vecSend.size(); i++) // subtract from first recipient
                         {
                             if (vecSend[i].fSubtractFeeFromAmount)
@@ -2936,7 +2956,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 
                     // Never create dust outputs; if we would, just
                     // add the dust to the fee.
-                    if (IsDust(newTxOut, ::dustRelayFee))
+                    if (IsDust(*newTxOut, ::dustRelayFee))
                     {
                         nChangePosInOut = -1;
                         nFeeRet += nChange;
@@ -2956,7 +2976,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                         }
 
                         std::vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosInOut;
-                        txNew.vout.insert(position, newTxOut);
+                        txNew.vout.insert(position, *newTxOut);
                     }
                 } else {
                     reservekey.ReturnKey();
@@ -2974,16 +2994,52 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // and in the spirit of "smallest possible change from prior
                 // behavior."
                 bool rbf = coinControl ? coinControl->signalRbf : fWalletRbf;
-                const uint32_t nSequence = rbf ? MAX_BIP125_RBF_SEQUENCE : (std::numeric_limits<unsigned int>::max() - 1);
+                uint8_t nFlags = 0;
+                uint32_t nSequence = 0;
+                if (txNew.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+                {
+                    if (rbf)
+                    {
+                        // Use sequence number to signal RBF
+                        nSequence = MAX_BIP125_RBF_SEQUENCE;
+                    }
+                    else if(txNew.nLockTime == 0)
+                    {
+                        // Use sequence number to signal locktime
+                        nSequence = std::numeric_limits<unsigned int>::max() - 1;
+                    }
+                    else
+                    {
+                        // Final sequence number
+                        nSequence = std::numeric_limits<unsigned int>::max();
+                    }
+                }
+                else
+                {
+                    if (rbf)
+                    {
+                        nFlags |= CTxInFlags::OptInRBF;
+                    }
+                    else if(txNew.nLockTime == 0)
+                    {
+                        //fixme: (GULDEN) (2.0) - Do we have to set relative lock time on the inputs?
+                        //Whats the relationship between relative and absolute locktime?
+                        //nFlags |= CTxInFlags::OptInRBF;
+                    }
+                    else
+                    {
+                        // Final sequence number
+                        nSequence = std::numeric_limits<unsigned int>::max();
+                    }
+                }
                 for (const auto& coin : setCoins)
-                    txNew.vin.push_back(CTxIn(coin.outpoint,CScript(),
-                                              nSequence));
+                    txNew.vin.push_back(CTxIn(coin.outpoint,CScript(), nSequence, nFlags));
 
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
                     //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
-                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend))
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -3064,7 +3120,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                if (!ProduceSignature(TransactionSignatureCreator(forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend))
+                //fixme: (GULDEN) (HIGH) (sign type)
+                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
+
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;

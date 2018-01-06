@@ -232,8 +232,18 @@ CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConf
 
     // Mark new tx not replaceable, if requested.
     if (!newTxReplaceable) {
-        for (auto& input : mtx.vin) {
-            if (input.nSequence < 0xfffffffe) input.nSequence = 0xfffffffe;
+        if (mtx.nVersion <= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        {
+            for (auto& input : mtx.vin)
+            {
+                input.UnsetFlag(CTxInFlags::OptInRBF);
+            }
+        }
+        else
+        {
+            for (auto& input : mtx.vin) {
+                if (input.GetSequence(mtx.nVersion) < 0xfffffffe) input.SetSequence(0xfffffffe, mtx.nVersion, CTxInFlags::None);
+            }
         }
     }
 

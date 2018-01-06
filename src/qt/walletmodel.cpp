@@ -236,6 +236,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
     QSet<QString> setAddress; // Used to detect duplicates
     int nAddresses = 0;
 
+    int nTipPrevPoW2Phase = GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive);
     // Pre-check input data for validity
     Q_FOREACH(const SendCoinsRecipient &rcp, recipients)
     {
@@ -280,13 +281,12 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
 
-                int nTipPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
-                if (nTipPoW2Phase >= 4)
+                if (nTipPrevPoW2Phase >= 4)
                 {
                     CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
                 }
-                else if (nTipPoW2Phase >= 2)
+                else if (nTipPrevPoW2Phase >= 2)
                 {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
                     CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
@@ -299,9 +299,21 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             }
             else
             {
-                CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
-                CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
-                vecSend.push_back(recipient);
+                if (nTipPrevPoW2Phase >= 4)
+                {
+                    CKeyID key;
+                    if (!CBitcoinAddress(rcp.address.toStdString()).GetKeyID(key))
+                        return InvalidAddress;
+
+                    CRecipient recipient = CRecipient(CTxOutStandardKeyHash(key), rcp.amount, rcp.fSubtractFeeFromAmount);
+                    vecSend.push_back(recipient);
+                }
+                else
+                {
+                    CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+                    CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
+                    vecSend.push_back(recipient);
+                }
             }
             total += rcp.amount;
         }

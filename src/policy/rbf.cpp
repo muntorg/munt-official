@@ -4,10 +4,24 @@
 
 #include "policy/rbf.h"
 
-bool SignalsOptInRBF(const CTransaction &tx)
+//fixme: (GULDEN) (2.1) we can make this the only behaviour and remove the previous behaviour.
+bool SignalsOptInRBFSegSig(const CTransaction &tx)
 {
     BOOST_FOREACH(const CTxIn &txin, tx.vin) {
-        if (txin.nSequence < std::numeric_limits<unsigned int>::max()-1) {
+        if (txin.FlagIsSet(CTxInFlags::OptInRBF)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SignalsOptInRBF(const CTransaction &tx)
+{
+    if (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        return SignalsOptInRBFSegSig(tx);
+
+    BOOST_FOREACH(const CTxIn &txin, tx.vin) {
+        if (txin.GetSequence(tx.nVersion) < std::numeric_limits<unsigned int>::max()-1) {
             return true;
         }
     }

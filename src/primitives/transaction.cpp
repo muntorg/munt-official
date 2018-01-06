@@ -14,18 +14,20 @@ std::string COutPoint::ToString() const
     return strprintf("COutPoint(%s, %u)", hash.ToString().substr(0,10), n);
 }
 
-CTxIn::CTxIn(COutPoint prevoutIn, CScript scriptSigIn, uint32_t nSequenceIn)
+CTxIn::CTxIn(COutPoint prevoutIn, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn)
 {
     prevout = prevoutIn;
     scriptSig = scriptSigIn;
     nSequence = nSequenceIn;
+    nTypeAndFlags = CURRENT_TYPE | nFlagsIn;
 }
 
-CTxIn::CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nSequenceIn)
+CTxIn::CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn)
 {
     prevout = COutPoint(hashPrevTx, nOut);
     scriptSig = scriptSigIn;
     nSequence = nSequenceIn;
+    nTypeAndFlags = CURRENT_TYPE | nFlagsIn;
 }
 
 std::string CTxIn::ToString() const
@@ -37,6 +39,7 @@ std::string CTxIn::ToString() const
         str += strprintf(", coinbase %s", HexStr(scriptSig));
     else
         str += strprintf(", scriptSig=%s", HexStr(scriptSig).substr(0, 24));
+    //fixme: (GULDEN) (2.1)
     if (nSequence != SEQUENCE_FINAL)
         str += strprintf(", nSequence=%u", nSequence);
     str += ")";
@@ -52,6 +55,28 @@ CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
     nValue = nValueIn;
     SetType(CTxOutType::ScriptLegacyOutput);
     output.scriptPubKey = scriptPubKeyIn;
+}
+
+CTxOut::CTxOut(const CAmount& nValueIn, CTxOutPoW2Witness witnessDetails)
+{
+    //NB! Important otherwise we fail to initialise some member variables.
+    //CBSU - possibly initialise only those variables instead of double assigning nValue and nType
+    SetNull();
+
+    nValue = nValueIn;
+    SetType(CTxOutType::PoW2WitnessOutput);
+    output.witnessDetails = witnessDetails;
+}
+
+CTxOut::CTxOut(const CAmount& nValueIn, CTxOutStandardKeyHash standardKeyHash)
+{
+    //NB! Important otherwise we fail to initialise some member variables.
+    //CBSU - possibly initialise only those variables instead of double assigning nValue and nType
+    SetNull();
+
+    nValue = nValueIn;
+    SetType(CTxOutType::StandardKeyHashOutput);
+    output.standardKeyHash = standardKeyHash;
 }
 
 std::string CTxOut::ToString() const

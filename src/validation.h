@@ -390,10 +390,12 @@ private:
     bool cacheStore;
     ScriptError error;
     PrecomputedTransactionData *txdata;
+    CKeyID signingKeyID;
 
 public:
-    CScriptCheck(): amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
-    CScriptCheck(const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
+    CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
+    CScriptCheck(CKeyID signingKeyID_, const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
+        signingKeyID(signingKeyID_),
         scriptPubKey(scriptPubKeyIn), amount(amountIn),
         ptxTo(&txToIn), nIn(nInIn), nFlags(nFlagsIn), cacheStore(cacheIn), error(SCRIPT_ERR_UNKNOWN_ERROR), txdata(txdataIn) { }
 
@@ -408,6 +410,7 @@ public:
         std::swap(cacheStore, check.cacheStore);
         std::swap(error, check.error);
         std::swap(txdata, check.txdata);
+        std::swap(signingKeyID, check.signingKeyID);
     }
 
     ScriptError GetScriptError() const { return error; }
@@ -427,7 +430,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 bool TestBlockValidity(CChain& chain, CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true, CCoinsViewCache* cacheOverride = nullptr);
 
 /** Check whether witness commitments are required for block. */
-bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride);
 
 /** When there are blocks in the active chain with missing data, rewind the chainstate and remove them from the block index */
 bool RewindBlockIndex(const CChainParams& params);

@@ -11,12 +11,13 @@
 #include "primitives/transaction.h"
 #include "script/standard.h"
 #include "uint256.h"
+#include "validation.h"
 
 #include <boost/foreach.hpp>
 
 typedef std::vector<unsigned char> valtype;
 
-TransactionSignatureCreator::TransactionSignatureCreator(const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(keystoreIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(txTo, nIn, amountIn) {}
+TransactionSignatureCreator::TransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(keystoreIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(signingKeyID, txTo, nIn, amountIn) {}
 
 bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, const CKeyID& address, const CScript& scriptCode, SigVersion sigversion) const
 {
@@ -28,9 +29,22 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     if (sigversion == SIGVERSION_WITNESS_V0 && !key.IsCompressed())
         return false;
 
+    //LogPrintf(">>>>SignSignatureSigHash scriptcode=%s txto=%s nIn=%d nHashType=%d amount=%d sigversion=%d\n", HexStr(scriptCode.begin(), scriptCode.end()), txTo->ToString(), nIn, nHashType, amount, sigversion);
+    //LogPrintf(">>>>SignSignatureSigHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", this->txdata->hashPrevouts.ToString(), this->txdata->hashSequence.ToString(), this->txdata->hashOutputs.ToString());
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
-    if (!key.Sign(hash, vchSig))
-        return false;
+    if (sigversion == SIGVERSION_SEGSIG)
+    {
+        //fixme: (GULDEN) (HIGH) (2.0) MAKE SURE THIS WORKS FOR NORMAL (BITCOIN STYLE) TRANSACTIONS!!!
+        if (!key.SignCompact(hash, vchSig))
+            return false;
+    }
+    else
+    {
+        if (!key.Sign(hash, vchSig))
+            return false;
+    }
+    CPubKey pub = key.GetPubKey();
+    //LogPrintf(">>>>SignSignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pub.begin(), pub.end()), HexStr(hash.begin(), hash.end()));
     vchSig.push_back((unsigned char)nHashType);
     return true;
 }
@@ -167,12 +181,13 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
 }
 
 //fixme: (GULDEN) (HIGH) testme...
-static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witness& pow2Witness, std::vector<valtype>& ret, txnouttype& whichTypeRet, SigVersion sigversion, SignType type)
+static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witness& pow2Witness, std::vector<valtype>& ret, SigVersion sigversion, SignType type)
 {
     CScript scriptRet;
     uint160 h160;
     ret.clear();
 
+    //fixme: (GULDEN) (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
     std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
     CScript scriptWitnessPlaceholder(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
 
@@ -214,6 +229,21 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     return false;
 }
 
+static bool SignStep(const BaseSignatureCreator& creator, const CTxOutStandardKeyHash& standardKeyHash, std::vector<valtype>& ret, SigVersion sigversion, SignType type)
+{
+    CScript scriptRet;
+    uint160 h160;
+    ret.clear();
+
+    //fixme: (GULDEN) (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
+    std::vector<unsigned char> sKeyHashPlaceholder = {'k','e','y','h','a','s','h'};
+    CScript scriptKeyHashPlaceholder(sKeyHashPlaceholder.begin(), sKeyHashPlaceholder.end());
+
+    if (!Sign1(standardKeyHash.keyID, creator, scriptKeyHashPlaceholder, ret, SIGVERSION_SEGSIG))
+        return false;
+    return true;
+}
+
 static CScript PushAll(const std::vector<valtype>& values)
 {
     CScript result;
@@ -229,7 +259,74 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type)
+//fixme: (GULDEN) (HIGH) (MULTISIG?)
+class CSigningKeysVisitor : public boost::static_visitor<void> {
+public:
+    std::vector<CKeyID> vKeys;
+    SignType type;
+    CSigningKeysVisitor(SignType type_) : type(type_) {}
+
+    void Process(const CTxDestination& dest)
+    {
+        boost::apply_visitor(*this, dest);
+    }
+
+    void operator()(const CKeyID &keyId)
+    {
+        vKeys.push_back(keyId);
+    }
+
+    void operator()(const CScriptID &scriptId)
+    {
+        //fixme: (GULDEN) (HIGH)
+    }
+
+    void operator()(const CPoW2WitnessDestination &dest) {
+        //fixme: GULDEN (stacked signing?) HIGH NEXT
+        if (type == SignType::Witness)
+            vKeys.push_back(dest.witnessKey);
+        else if (type == SignType::Spend)
+            vKeys.push_back(dest.spendingKey);
+    }
+
+    void operator()(const CNoDestination &none) {}
+};
+
+CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
+{
+    switch(txOut.GetType())
+    {
+        case ScriptLegacyOutput:
+        {
+            //fixme: (GULDEN) HIGH NEXT - implement.
+            //=== CDestination(pubkey))
+            CTxDestination dest;
+            if (!ExtractDestination(txOut.output.scriptPubKey, dest))
+                return CKeyID();
+
+            CSigningKeysVisitor getSigningKeys(type);
+            getSigningKeys.Process(dest);
+            //fixme: (GULDEN) (HIGH) (NEXT) MULTISIG
+            if (getSigningKeys.vKeys.size() != 1)
+                return CKeyID();
+            return getSigningKeys.vKeys[0];
+        }
+        case PoW2WitnessOutput:
+        {
+            //fixme: GULDEN (stacked signing?) HIGH NEXT
+            if (type == SignType::Spend)
+                return txOut.output.witnessDetails.spendingKeyID;
+            else if(type == SignType::Witness)
+                return txOut.output.witnessDetails.witnessKeyID;
+            return CKeyID();
+        }
+        case StandardKeyHashOutput:
+            return txOut.output.standardKeyHash.keyID;
+    }
+    return CKeyID();
+}
+
+bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type, uint64_t nVersion)
 {
     if (fromOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
@@ -237,20 +334,36 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
         std::vector<valtype> result;
         txnouttype whichType;
         bool solved = SignStep(creator, script, result, whichType, SIGVERSION_BASE, type);
-        bool P2SH = false;
         CScript subscript;
         sigdata.scriptWitness.stack.clear();
 
-        if (solved && whichType == TX_SCRIPTHASH)
+        if (nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
         {
-            // Solver returns the subscript that needs to be evaluated;
-            // the final scriptSig is the signatures from that
-            // and then the serialized subscript:
-            script = subscript = CScript(result[0].begin(), result[0].end());
-            solved = solved && SignStep(creator, script, result, whichType, SIGVERSION_BASE, type) && whichType != TX_SCRIPTHASH;
-            P2SH = true;
+            if (solved && whichType == TX_SCRIPTHASH)
+            {
+                //fixme: NEXTNEXTNEXT HIGH
+                 sigdata.scriptWitness.stack = result;
+            }
+            else
+            {
+                sigdata.scriptWitness.stack = result;
+            }
+        }
+        else
+        {
+            if (solved && whichType == TX_SCRIPTHASH)
+            {
+                // Solver returns the subscript that needs to be evaluated;
+                // the final scriptSig is the signatures from that
+                // and then the serialized subscript:
+                script = subscript = CScript(result[0].begin(), result[0].end());
+                solved = solved && SignStep(creator, script, result, whichType, SIGVERSION_BASE, type) && whichType != TX_SCRIPTHASH;
+                result.push_back(std::vector<unsigned char>(subscript.begin(), subscript.end()));
+            }
+            sigdata.scriptSig = PushAll(result);
         }
 
+        #if 0
         if (solved && whichType == TX_WITNESS_V0_KEYHASH)
         {
             CScript witnessscript;
@@ -269,11 +382,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
             sigdata.scriptWitness.stack = result;
             result.clear();
         }
-
-        if (P2SH) {
-            result.push_back(std::vector<unsigned char>(subscript.begin(), subscript.end()));
-        }
-        sigdata.scriptSig = PushAll(result);
+        #endif
 
         // Test solution
         return solved;
@@ -282,19 +391,24 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     {
         //fixme: (GULDEN) (2.0) TESTME
         std::vector<valtype> result;
-        txnouttype whichType;
-        bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, whichType, SIGVERSION_BASE, type);
+        bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, SIGVERSION_BASE, type);
         sigdata.scriptWitness.stack = result;
-        result.clear();
-        sigdata.scriptSig = PushAll(result);
 
         //fixme: (GULDEN) (2.0) - Do we need to verify anything here?
         return solved;
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
-        //fixme: (GULDEN) (SEGSIG) (2.0) implement me.
-        return true;
+        //fixme: (GULDEN) (2.0) TESTME
+        std::vector<valtype> result;
+        bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, SIGVERSION_BASE, type);
+        sigdata.scriptWitness.stack = result;
+
+        return solved;
+    }
+    else
+    {
+        assert(0);
     }
     return false;
 }
@@ -320,10 +434,12 @@ bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutable
     assert(nIn < txTo.vin.size());
 
     CTransaction txToConst(txTo);
-    TransactionSignatureCreator creator(&keystore, &txToConst, nIn, amount, nHashType);
+    //fixme: (GULDEN) (HIGH) (sign type)
+    CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(fromOutput, SignType::Spend);
+    TransactionSignatureCreator creator(signingKeyID, &keystore, &txToConst, nIn, amount, nHashType);
 
     SignatureData sigdata;
-    bool ret = ProduceSignature(creator, fromOutput, sigdata, type);
+    bool ret = ProduceSignature(creator, fromOutput, sigdata, type, txToConst.nVersion);
     UpdateTransaction(txTo, nIn, sigdata);
     return ret;
 }

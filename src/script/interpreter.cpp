@@ -12,6 +12,7 @@
 #include "pubkey.h"
 #include "script/script.h"
 #include "uint256.h"
+#include <util.h>
 
 typedef std::vector<unsigned char> valtype;
 
@@ -414,8 +415,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // To provide for future soft-fork extensibility, if the
                     // operand has the disabled lock-time flag set,
                     // CHECKSEQUENCEVERIFY behaves as a NOP.
-                    if ((nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG) != 0)
-                        break;
+                    //fixme: GULDEN HIGH
+                    //if ((tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasSequenceNumberMask)))) {
+                        //break;
 
                     // Compare the specified sequence number with the input.
                     if (!checker.CheckSequence(nSequence))
@@ -897,6 +899,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         //serror is set
                         return false;
                     }
+                    //LogPrintf(">>>>checker.CheckSig=%s %s %s %d\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(vchPubKey.begin(), vchPubKey.end()), HexStr(scriptCode.begin(), scriptCode.end()), sigversion);
                     bool fSuccess = checker.CheckSig(vchSig, vchPubKey, scriptCode, sigversion);
 
                     if (!fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL) && vchSig.size())
@@ -1102,12 +1105,29 @@ public:
             ::Serialize(s, CScriptBase());
         else
             SerializeScriptCode(s);
-        // Serialize the nSequence
-        if (nInput != nIn && (fHashSingle || fHashNone))
-            // let the others update at will
-            ::Serialize(s, (int)0);
+        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        {
+            if (nInput != nIn && (fHashSingle || fHashNone))
+            {
+                //fixme: (GULDEN) (2.0) HIGH - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
+                // let the others update at will
+                ::Serialize(s, (int)0);
+            }
+            else
+            {
+                s << txTo.vin[nInput].nTypeAndFlags;
+                s << txTo.vin[nInput].GetSequence(txTo.nVersion);
+            }
+        }
         else
-            ::Serialize(s, txTo.vin[nInput].nSequence);
+        {
+            // Serialize the nSequence
+            if (nInput != nIn && (fHashSingle || fHashNone))
+                // let the others update at will
+                ::Serialize(s, (int)0);
+            else
+                ::Serialize(s, txTo.vin[nInput].GetSequence(txTo.nVersion));
+        }
     }
 
     /** Serialize an output of txTo */
@@ -1151,7 +1171,9 @@ uint256 GetPrevoutHash(const CTransaction& txTo) {
 uint256 GetSequenceHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
     for (const auto& txin : txTo.vin) {
-        ss << txin.nSequence;
+        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+            ss << txin.nTypeAndFlags;
+        ss << txin.GetSequence(txTo.nVersion);
     }
     return ss.GetHash();
 }
@@ -1197,6 +1219,8 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
             hashOutputs = ss.GetHash();
         }
 
+        //LogPrintf(">>>>SignatureHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", hashPrevouts.ToString(), hashSequence.ToString(), hashOutputs.ToString());
+
         CHashWriter ss(SER_GETHASH, 0);
         // Version
         ss << txTo.nVersion;
@@ -1209,7 +1233,10 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         txTo.vin[nIn].prevout.WriteToStream(ss, txTo.vin[nIn].GetType(), txTo.vin[nIn].GetFlags(), txTo.nVersion);
         ss << static_cast<const CScriptBase&>(scriptCode);
         ss << amount;
-        ss << txTo.vin[nIn].nSequence;
+
+        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+            ss << txTo.vin[nIn].nTypeAndFlags;
+        ss << txTo.vin[nIn].GetSequence(txTo.nVersion);
         // Outputs (none/one/all, depending on flags)
         ss << hashOutputs;
         // Locktime
@@ -1250,10 +1277,6 @@ bool TransactionSignatureChecker::VerifySignature(const std::vector<unsigned cha
 
 bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vchSigIn, const std::vector<unsigned char>& vchPubKey, const CScript& scriptCode, SigVersion sigversion) const
 {
-    CPubKey pubkey(vchPubKey);
-    if (!pubkey.IsValid())
-        return false;
-
     // Hash type is one byte tacked on to the end of the signature
     std::vector<unsigned char> vchSig(vchSigIn);
     if (vchSig.empty())
@@ -1261,10 +1284,33 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
     int nHashType = vchSig.back();
     vchSig.pop_back();
 
+    //LogPrintf(">>>>VerifySignatureSigHash scriptcode=%s txto=%s nIn=%d nHashType=%d amount=%d sigversion=%d\n", HexStr(scriptCode.begin(), scriptCode.end()), txTo->ToString(), nIn, nHashType, amount, sigversion);
+    //LogPrintf(">>>>VerifySignatureSigHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", this->txdata->hashPrevouts.ToString(), this->txdata->hashSequence.ToString(), this->txdata->hashOutputs.ToString());
     uint256 sighash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion, this->txdata);
 
-    if (!VerifySignature(vchSig, pubkey, sighash))
-        return false;
+    if (sigversion == SIGVERSION_SEGSIG)
+    {
+        CPubKey pubkey;
+
+        if (!pubkey.RecoverCompact(sighash, vchSig))
+            return false;
+        //LogPrintf(">>>>VerifySignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pubkey.begin(), pubkey.end()), HexStr(sighash.begin(), sighash.end()));
+        if (!pubkey.IsValid())
+            return false;
+        // fixme: (GULDEN) (HIGH) (2.0) (MULTISIG?!?!?)
+        // Ensure that the recovered pubkey is the correct one for the address in question
+        if (signatureKeyID == CKeyID() || signatureKeyID != pubkey.GetID())
+            return false;
+    }
+    else
+    {
+        CPubKey pubkey = CPubKey(vchPubKey);
+        if (!pubkey.IsValid())
+            return false;
+        //LogPrintf(">>>>VerifySignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pubkey.begin(), pubkey.end()), HexStr(sighash.begin(), sighash.end()));
+        if (!VerifySignature(vchSig, pubkey, sighash))
+            return false;
+    }
 
     return true;
 }
@@ -1299,7 +1345,8 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // prevent this condition. Alternatively we could test all
     // inputs, but testing just this input minimizes the data
     // required to prove correct CHECKLOCKTIMEVERIFY execution.
-    if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].nSequence)
+    //fixme: (GULDEN) (HIGH) - CHECK FOR SEQUENCE FLAGS
+    if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].GetSequence(txTo->nVersion))
         return false;
 
     return true;
@@ -1309,7 +1356,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
 {
     // Relative lock times are supported by comparing the passed
     // in operand to the sequence number of the input.
-    const int64_t txToSequence = (int64_t)txTo->vin[nIn].nSequence;
+    const int64_t txToSequence = (int64_t)txTo->vin[nIn].GetSequence(txTo->nVersion);
 
     // Fail if the transaction's version number is not set high
     // enough to trigger BIP 68 rules.
@@ -1320,12 +1367,13 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     // consensus constrained. Testing that the transaction's sequence
     // number do not have this bit set prevents using this property
     // to get around a CHECKSEQUENCEVERIFY check.
-    if (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)
+    if ((txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
+        || (txTo->nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasRelativeLock))))
         return false;
 
     // Mask off any bits that do not have consensus-enforced meaning
     // before doing the integer comparisons
-    const uint32_t nLockTimeMask = CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK;
+    const uint32_t nLockTimeMask = (txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION) ? (CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK) : (std::numeric_limits<uint32_t>::max());
     const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
     const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
 
@@ -1336,11 +1384,18 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     // We want to compare apples to apples, so fail the script
     // unless the type of nSequenceMasked being tested is the same as
     // the nSequenceMasked in the transaction.
-    if (!(
-        (txToSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) ||
-        (txToSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG)
-    )) {
-        return false;
+    if (txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+    {
+        if (!(
+            (txToSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) ||
+            (txToSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG)
+        )) {
+            return false;
+        }
+    }
+    else
+    {
+        //fixme: (GULDEN) (2.0) HIGH
     }
 
     // Now that we know we're comparing apples-to-apples, the
@@ -1404,6 +1459,21 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
     return true;
 }
 
+static CScript PushAll(const std::vector<valtype>& values)
+{
+    CScript result;
+    for(const valtype& v : values) {
+        if (v.size() == 0) {
+            result << OP_0;
+        } else if (v.size() == 1 && v[0] >= 1 && v[0] <= 16) {
+            result << CScript::EncodeOP_N(v[0]);
+        } else {
+            result << v;
+        }
+    }
+    return result;
+}
+
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
 {
     static const CScriptWitness emptyWitness;
@@ -1419,14 +1489,33 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
 
     std::vector<std::vector<unsigned char> > stack, stackCopy;
-    if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror))
-        // serror is set
-        return false;
+    if (scriptSig.size() == 0 && witness)
+    {
+        CScript scriptSigTemp = PushAll(witness->stack);
+        if (!EvalScript(stack, scriptSigTemp, flags, checker, SIGVERSION_BASE, serror))
+            // serror is set
+            return false;
+    }
+    else
+    {
+        if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror))
+            // serror is set
+            return false;
+    }
     if (flags & SCRIPT_VERIFY_P2SH)
-        stackCopy = stack;
+            stackCopy = stack;
+    //LogPrintf(">>>>VerifyScript stacksize=%d scriptPubKey=%s flags=%d\n", stack.size(), HexStr(scriptPubKey.begin(), scriptPubKey.end()), flags);
+    //for (auto item : stack)
+    //{
+        //LogPrintf(">>>>VerifyScript stackitem=%s\n", HexStr(item.begin(), item.end()));
+    //}
     if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+    {
+        //LogPrintf(">>>>VerifyScript false\n");
         // serror is set
         return false;
+    }
+    //LogPrintf(">>>>VerifyScript true\n");
     if (stack.empty())
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
     if (CastToBool(stack.back()) == false)
@@ -1510,6 +1599,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         }
     }
 
+    #if 0
     if (flags & SCRIPT_VERIFY_WITNESS) {
         // We can't check for correct unexpected witness data if P2SH was off, so require
         // that WITNESS implies P2SH. Otherwise, going from WITNESS->P2SH+WITNESS would be
@@ -1519,6 +1609,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             return set_error(serror, SCRIPT_ERR_WITNESS_UNEXPECTED);
         }
     }
+    #endif
 
     return set_success(serror);
 }

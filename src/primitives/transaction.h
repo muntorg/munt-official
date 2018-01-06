@@ -23,7 +23,8 @@ static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
 
-inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 || nVersion > 10000; }
+//fxime: (GULDEN) (NEXT) (HIGH)
+inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 /*|| nVersion > 10000*/; }
 
 struct CBlockPosition
 {
@@ -50,19 +51,24 @@ struct CBlockPosition
 };
 
 
-// Represented in class as 5 bits - so maximum of 32 values
+// Represented in class as 3 bits - so maximum of 8 values
 enum CTxInType : uint8_t
 {
     //fixme: (GULDEN) (2.0) What types do we even need here?
 };
 
-// Only 3 bits available for TxInFlags (used as bit flags so only 3 values)
+// Only 5 bits available for TxInFlags (used as bit flags so only 5 values)
 enum CTxInFlags : uint8_t
 {
-    //fixme: NEXTNEXTNEXT HIGHHIGHHIGH - Implement these two.
-    IndexBasedOutpoint,  // Outpoint is an index instead of a hash
-    HasSequenceNumber,
-    CTxInFutureFlag2
+    //fixme: NEXTNEXTNEXT HIGHHIGHHIGH - Implement these three.
+    None = 0,
+    IndexBasedOutpoint = 1,  // Outpoint is an index instead of a hash
+    OptInRBF = 2,
+    HasAbsoluteLock = 4,
+    HasTimeBasedRelativeLock = 8,
+    HasBlockBasedRelativeLock = 16,
+    HasRelativeLock = HasTimeBasedRelativeLock | HasBlockBasedRelativeLock,
+    HasLock = HasRelativeLock | HasAbsoluteLock
 };
 
 #define UINT31_MAX 2147483647
@@ -193,24 +199,64 @@ public:
 class CTxIn
 {
 public:
-    // First 5 bits are type, last 3 bits are flags.
-    uint8_t nTypeAndFlags;
+    static const uint8_t CURRENT_TYPE=0;
+    // First 3 bits are type, last 5 bits are flags.
+    mutable uint8_t nTypeAndFlags;
     //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxInType GetType() const
     {
-        return (CTxInType) ( (nTypeAndFlags & 0b11111000) >> 3 );
+        return (CTxInType) ( (nTypeAndFlags & 0b11100000) >> 5 );
     }
     CTxInFlags GetFlags() const
     {
-        return (CTxInFlags) ( nTypeAndFlags & 0b00000111 );
+        return (CTxInFlags) ( nTypeAndFlags & 0b00011111 );
     }
     bool FlagIsSet(CTxInFlags flag) const
     {
         return (GetFlags() & flag) != 0;
     }
+    void SetFlag(CTxInFlags flag) const
+    {
+        nTypeAndFlags |= flag;
+        if (!FlagIsSet(CTxInFlags::HasRelativeLock))
+        {
+            nSequence = 0;
+        }
+    }
+    void UnsetFlag(CTxInFlags flag) const
+    {
+        nTypeAndFlags &= ~flag;
+        if (!FlagIsSet(CTxInFlags::HasRelativeLock))
+        {
+            nSequence = 0;
+        }
+    }
+    uint32_t GetSequence(int nTransactionVersion) const
+    {
+        if (IsOldTransactionVersion(nTransactionVersion) || FlagIsSet(CTxInFlags::HasRelativeLock))
+            return nSequence;
+        return 0;
+    }
+    void SetSequence(uint32_t nSequence_, int nTransactionVersion, CTxInFlags sequenceType)
+    {
+        if (IsOldTransactionVersion(nTransactionVersion))
+        {
+            nSequence = nSequence_;
+        }
+        else
+        {
+            SetFlag(sequenceType);
+            if (FlagIsSet(CTxInFlags::HasRelativeLock))
+            {
+                nSequence = nSequence_;
+            }
+        }
+    }
     COutPoint prevout;
     CScript scriptSig;
-    uint32_t nSequence;
+private:
+    mutable uint32_t nSequence;
+public:
     CScriptWitness scriptWitness; //! Only serialized through CTransaction
 
     /* Setting nSequence to this value for every input in a transaction
@@ -233,20 +279,21 @@ public:
 
     /* In order to use the same number of bits to encode roughly the
      * same wall-clock duration, and because blocks are naturally
-     * limited to occur every 600s on average, the minimum granularity
-     * for time-based relative lock-time is fixed at 512 seconds.
+     * limited to occur every 150s on average, the minimum granularity
+     * for time-based relative lock-time is fixed at 128 seconds.
      * Converting from CTxIn::nSequence to seconds is performed by
-     * multiplying by 512 = 2^9, or equivalently shifting up by
-     * 9 bits. */
-    static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
+     * multiplying by 128 = 2^7, or equivalently shifting up by
+     * 7 bits. */
+    static const int SEQUENCE_LOCKTIME_GRANULARITY = 7;
 
     CTxIn()
     {
         nSequence = SEQUENCE_FINAL;
+        nTypeAndFlags = CURRENT_TYPE;
     }
 
-    explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
-    CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=SEQUENCE_FINAL);
+    explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn);
+    CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn);
 
     template <typename Stream> inline void ReadFromStream(Stream& s, int nTransactionVersion)
     {
@@ -260,7 +307,7 @@ public:
 
             prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
             //scriptSig is no longer used - everything goes in scriptWitness.
-            if (FlagIsSet(HasSequenceNumber))
+            if (FlagIsSet(CTxInFlags::HasRelativeLock))
             {
                 s >> VARINT(nSequence);
             }
@@ -278,12 +325,13 @@ public:
 
         if (!IsOldTransactionVersion(nTransactionVersion))
         {
-            uint8_t nTypeAndFlags_=0;
-            STRWRITE(nTypeAndFlags_);
+            //if (nSequence != SEQUENCE_FINAL)
+                //nTypeAndFlags |= HasSequenceNumberMask;
+            STRWRITE(nTypeAndFlags);
 
             prevout.WriteToStream(s, GetType(), GetFlags(), nTransactionVersion);
 
-            if (FlagIsSet(HasSequenceNumber))
+            if (FlagIsSet(CTxInFlags::HasRelativeLock))
             {
                 s << VARINT(nSequence);
             }
@@ -622,6 +670,8 @@ public:
     }
 
     CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CAmount& nValueIn, CTxOutPoW2Witness witnessDetails);
+    CTxOut(const CAmount& nValueIn, CTxOutStandardKeyHash standardKeyHash);
 
     template <typename Stream> void WriteToStream(Stream& s, int32_t nTransactionVersion) const
     {
@@ -930,20 +980,13 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
     }
 
     //(opt) Output count + Outputs
-    if (tx.flags[HasOneOutput] || tx.flags[HasTwoOutputs] || tx.flags[HasThreeOutputs])
-    {
-        for (const auto& out : tx.vout)
-        {
-            out.WriteToStream(s, tx.nVersion);
-        }
-    }
-    else
+    if (!tx.flags[HasOneOutput] && !tx.flags[HasTwoOutputs] && !tx.flags[HasThreeOutputs])
     {
         s << VARINT(tx.vout.size());
-        for (const auto& out : tx.vout)
-        {
-            out.WriteToStream(s, tx.nVersion);
-        }
+    }
+    for (const auto& out : tx.vout)
+    {
+        out.WriteToStream(s, tx.nVersion);
     }
 
     //Witness data

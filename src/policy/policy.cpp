@@ -246,6 +246,8 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
                 prevScript = CScript(stack.back().begin(), stack.back().end());
             }
 
+            //fixme: (GULDEN) (NEXT)
+            #if 0
             int witnessversion = 0;
             std::vector<unsigned char> witnessprogram;
 
@@ -265,6 +267,7 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
                         return false;
                 }
             }
+            #endif
         }
     }
     return true;

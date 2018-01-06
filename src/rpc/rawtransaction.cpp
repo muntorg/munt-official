@@ -369,12 +369,24 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, vout must be positive");
 
         uint32_t nSequence;
-        if (rbfOptIn) {
-            nSequence = MAX_BIP125_RBF_SEQUENCE;
-        } else if (rawTx.nLockTime) {
-            nSequence = std::numeric_limits<uint32_t>::max() - 1;
-        } else {
-            nSequence = std::numeric_limits<uint32_t>::max();
+        uint8_t nFlags;
+        if (rawTx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+        {
+            if (rbfOptIn) {
+                nSequence = MAX_BIP125_RBF_SEQUENCE;
+            } else if (rawTx.nLockTime) {
+                nSequence = std::numeric_limits<uint32_t>::max() - 1;
+            } else {
+                nSequence = std::numeric_limits<uint32_t>::max();
+            }
+        }
+        else
+        {
+            if (rbfOptIn)
+                nFlags |= CTxInFlags::OptInRBF;
+            //fixme: (GULDEN) (2.0) (HIGH) Also handle block based sequence number?
+            if (rawTx.nLockTime)
+                nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
 
         // set the sequence number if passed in the parameters object
@@ -388,7 +400,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
             }
         }
 
-        CTxIn in(COutPoint(txid, nOutput), CScript(), nSequence);
+        CTxIn in(COutPoint(txid, nOutput), CScript(), nSequence, nFlags);
 
         rawTx.vin.push_back(in);
     }
@@ -545,7 +557,7 @@ UniValue decodescript(const JSONRPCRequest& request)
 }
 
 /** Pushes a JSON object for script verification or signing errors to vErrorsRet. */
-static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::string& strMessage)
+static void TxInErrorToJSON(const uint64_t nTransactionVersion, const CTxIn& txin, UniValue& vErrorsRet, const std::string& strMessage)
 {
     UniValue entry(UniValue::VOBJ);
     entry.push_back(Pair("txid", txin.prevout.hash.ToString()));
@@ -556,7 +568,7 @@ static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::
     }
     entry.push_back(Pair("witness", witness));
     entry.push_back(Pair("scriptSig", HexStr(txin.scriptSig.begin(), txin.scriptSig.end())));
-    entry.push_back(Pair("sequence", (uint64_t)txin.nSequence));
+    entry.push_back(Pair("sequence", (uint64_t)txin.GetSequence(nTransactionVersion)));
     entry.push_back(Pair("error", strMessage));
     vErrorsRet.push_back(entry);
 }
@@ -811,30 +823,33 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         CTxIn& txin = mergedTx.vin[i];
         const Coin& coin = view.AccessCoin(txin.prevout);
         if (coin.IsSpent()) {
-            TxInErrorToJSON(txin, vErrors, "Input not found or already spent");
+            TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
         //fixme: (GULDEN) (2.0) (SEGSIG) Other transaction types
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
+        //fixme: (GULDEN) (HIGH) (sign type)
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType);
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType, mergedTx.nVersion);
 
         // ... and merge in other signatures:
         BOOST_FOREACH(const CMutableTransaction& txv, txVariants) {
             if (txv.vin.size() > i) {
-                sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(&txConst, i, amount), sigdata, DataFromTransaction(txv, i));
+                sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, &txConst, i, amount), sigdata, DataFromTransaction(txv, i));
             }
         }
 
         UpdateTransaction(mergedTx, i, sigdata);
 
         ScriptError serror = SCRIPT_ERR_OK;
-        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(&txConst, i, amount), &serror)) {
-            TxInErrorToJSON(txin, vErrors, ScriptErrorString(serror));
+        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, &txConst, i, amount), &serror)) {
+            TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, ScriptErrorString(serror));
         }
     }
     bool fComplete = vErrors.empty();

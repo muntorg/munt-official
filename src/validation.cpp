@@ -450,7 +450,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates (override with -prematurewitness)
-    bool witnessEnabled = IsWitnessEnabled(chainActive.Tip(), chainparams.GetConsensus());
+    bool witnessEnabled = IsWitnessEnabled(chainActive.Tip(), chainparams, chainActive, nullptr);
     if (!GetBoolArg("-prematurewitness",false) && tx.HasWitness() && !witnessEnabled) {
         return state.DoS(0, false, REJECT_NONSTANDARD, "no-witness-yet", true);
     }
@@ -499,7 +499,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 {
                     BOOST_FOREACH(const CTxIn &_txin, ptxConflicting->vin)
                     {
-                        if (_txin.nSequence < std::numeric_limits<unsigned int>::max()-1)
+                        //fixme: (GULDEN) (2.0)
+                        if (_txin.GetSequence(ptxConflicting->nVersion) < std::numeric_limits<unsigned int>::max()-1)
                         {
                             fReplacementOptOut = false;
                             break;
@@ -1210,7 +1211,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight)
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CScriptWitness *witness = &ptxTo->vin[nIn].scriptWitness;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(ptxTo, nIn, amount, cacheStore, *txdata), &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -1219,6 +1220,26 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
     CBlockIndex* pindexPrev = mapBlockIndex.find(inputs.GetBestBlock())->second;
     return pindexPrev->nHeight + 1;
 }
+
+CScript&& GetScriptForNonScriptOutput(const CTxOut& out)
+{
+    if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
+    {
+        std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
+        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+    }
+    else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
+    {
+        std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
+        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+    }
+    else
+    {
+        assert(0);
+    }
+    return std::move(CScript());
+}
+
 
 /**
  * Check whether all inputs of this transaction are valid (no double spends, scripts & sigs, amounts)
@@ -1257,12 +1278,49 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                 // a sanity check that our caching is not introducing consensus
                 // failures through additional data in, eg, the coins being
                 // spent being checked as a part of CScriptCheck.
-                //fixme: (GULDEN) (2.0) (SEGSIG) - other transaction types.
-                const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 const CAmount amount = coin.out.nValue;
 
+                //fixme: (GULDEN) (HIGH) (sign type)
+                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+                if (coin.out.GetType() > CTxOutType::ScriptLegacyOutput)
+                {
+                    if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput || coin.out.GetType() == CTxOutType::PoW2WitnessOutput)
+                    {
+                        if (tx.vin[i].scriptWitness.stack.size() != 1)
+                            return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (standard-key-hash-output should always have a scriptwitness stack size of exactly 1)", tx.vin[i].scriptWitness.stack.size()));
+
+                        CachingTransactionSignatureChecker check(signingKeyID, &tx, i, amount, cacheStore, txdata);
+
+                        CScript scriptCodePlaceHolder;
+                        if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
+                        {
+                            std::vector<unsigned char> sKeyHashPlaceholder = {'k','e','y','h','a','s','h'};
+                            scriptCodePlaceHolder = CScript(sKeyHashPlaceholder.begin(), sKeyHashPlaceholder.end());
+                        }
+                        else
+                        {
+                            std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
+                            scriptCodePlaceHolder = CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
+                        }
+
+                        //We extract the pubkey from the sig so just pass in an empty pubkey
+                        std::vector<unsigned char> vchEmptyPubKey;
+                        if (!check.CheckSig(tx.vin[i].scriptWitness.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //fixme: ERROR HANDLING
+                        return false;
+                    }
+                    return true;
+                }
+
                 // Verify signature
-                CScriptCheck check(scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
+                const CScript& scriptPubKey = coin.out.output.scriptPubKey;
+                CScriptCheck check(signingKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
                 if (pvChecks) {
                     pvChecks->push_back(CScriptCheck());
                     check.swap(pvChecks->back());
@@ -1274,7 +1332,7 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                         // arguments; if so, don't trigger DoS protection to
                         // avoid splitting the network between upgraded and
                         // non-upgraded nodes.
-                        CScriptCheck check2(scriptPubKey, amount, tx, i,
+                        CScriptCheck check2(signingKeyID, scriptPubKey, amount, tx, i,
                                 flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
                         if (check2())
                             return state.Invalid(false, REJECT_NONSTANDARD, strprintf("non-mandatory-script-verify-flag (%s)", ScriptErrorString(check.GetScriptError())));
@@ -1762,7 +1820,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     }
 
     // Start enforcing WITNESS rules using versionbits logic.
-    if (IsWitnessEnabled(pindex->pprev, chainparams.GetConsensus())) {
+    if (IsWitnessEnabled(pindex->pprev, chainparams, chain, &view)) {
         flags |= SCRIPT_VERIFY_WITNESS;
         flags |= SCRIPT_VERIFY_NULLDUMMY;
     }
@@ -2001,7 +2059,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                 if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
 
-                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].nSequence != 0)
+                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
             }
             else if (nPoW2PhaseParent >= 4)
@@ -3294,7 +3352,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
     pindexNew->nDataPos = pos.nPos;
     pindexNew->nUndoPos = 0;
     pindexNew->nStatus |= BLOCK_HAVE_DATA;
-    if (IsWitnessEnabled(pindexNew->pprev, consensusParams)) {
+    if (IsWitnessEnabled(pindexNew->pprev, Params(), chainActive, nullptr)) {
         pindexNew->nStatus |= BLOCK_OPT_WITNESS;
     }
     pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
@@ -3542,12 +3600,11 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
     return true;
 }
 
-bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params)
+bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
 {
     LOCK(cs_main);
-    //fixme: (GULDEN) (2.0)
-    //return (VersionBitsState(pindexPrev, params, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE);
-    //fixme: (GULDEN) (2.0) - segsig
+    if (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride) || IsPow2Phase5Active(pindexPrev, chainParams, chainOverride, viewOverride))
+        return true;
     return false;
 }
 
@@ -3974,7 +4031,7 @@ bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseI
     coinbaseTx.vout[1].output.scriptPubKey = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].output.scriptPubKey;
     coinbaseTx.vout[1].nValue = block.vtx[0]->vout[nWitnessCoinbaseIndex+1].nValue;
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vin[0].nSequence = 0;
+    coinbaseTx.vin[0].SetSequence(0, coinbaseTx.nVersion, CTxInFlags::None) ;
     coinbaseTx.vin[0].scriptSig = CScript() << pindexPrev->nHeight;
     coinbaseTx.vin[1] = block.vtx[1]->vin[0];
     embeddedWitnessBlock.vtx.emplace_back(MakeTransactionRef(std::move(coinbaseTx)));
@@ -4854,7 +4911,7 @@ bool RewindBlockIndex(const CChainParams& params)
 
     int nHeight = 1;
     while (nHeight <= chainActive.Height()) {
-        if (IsWitnessEnabled(chainActive[nHeight - 1], params.GetConsensus()) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS)) {
+        if (IsWitnessEnabled(chainActive[nHeight - 1], params, chainActive, nullptr) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS)) {
             break;
         }
         nHeight++;
@@ -4891,7 +4948,7 @@ bool RewindBlockIndex(const CChainParams& params)
         // this block or some successor doesn't HAVE_DATA, so we were unable to
         // rewind all the way.  Blocks remaining on chainActive at this point
         // must not have their validity reduced.
-        if (IsWitnessEnabled(pindexIter->pprev, params.GetConsensus()) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
+        if (IsWitnessEnabled(pindexIter->pprev, params, chainActive, nullptr) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
             // Reduce validity
             pindexIter->nStatus = std::min<unsigned int>(pindexIter->nStatus & BLOCK_VALID_MASK, BLOCK_VALID_TREE) | (pindexIter->nStatus & ~BLOCK_VALID_MASK);
             // Remove have-data flags.

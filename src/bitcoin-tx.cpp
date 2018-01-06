@@ -227,15 +227,29 @@ static void MutateTxRBFOptIn(CMutableTransaction& tx, const std::string& strInId
         throw std::runtime_error("Invalid TX input index '" + strInIdx + "'");
     }
 
+    //fixme: (GULDEN) (2.1) We can eliminate the top loop.
     // set the nSequence to MAX_INT - 2 (= RBF opt in flag)
     int cnt = 0;
-    for (CTxIn& txin : tx.vin) {
-        if (strInIdx == "" || cnt == inIdx) {
-            if (txin.nSequence > MAX_BIP125_RBF_SEQUENCE) {
-                txin.nSequence = MAX_BIP125_RBF_SEQUENCE;
+    if (tx.nVersion <= CTransaction::SEGSIG_ACTIVATION_VERSION)
+    {
+        for (CTxIn& txin : tx.vin) {
+            if (strInIdx == "" || cnt == inIdx) {
+                if (txin.GetSequence(tx.nVersion) > MAX_BIP125_RBF_SEQUENCE) {
+                    //fixme: (GULDEN) (2.0) - Make sure we are setting the right flag here.
+                    txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
+                }
             }
+            ++cnt;
         }
-        ++cnt;
+    }
+    else
+    {
+        for (CTxIn& txin : tx.vin) {
+            if (strInIdx == "" || cnt == inIdx) {
+                txin.SetFlag(CTxInFlags::OptInRBF);
+            }
+            ++cnt;
+        }
     }
 }
 
@@ -269,7 +283,8 @@ static void MutateTxAddInput(CMutableTransaction& tx, const std::string& strInpu
         nSequenceIn = std::stoul(vStrInputParts[2]);
 
     // append to transaction input list
-    CTxIn txin(txid, vout, CScript(), nSequenceIn);
+    //fixme: (GULDEN) (2.0) (HIGH) - pass appropriate flags here
+    CTxIn txin(txid, vout, CScript(), nSequenceIn, 0);
     tx.vin.push_back(txin);
 }
 
@@ -648,17 +663,20 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
+        //fixme: (GULDEN) (HIGH) (sign type)
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend);//fixme: (GULDEN) (2.0) - We must somehow detect if this is a spend or a witness here.
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);//fixme: (GULDEN) (2.0) - We must somehow detect if this is a spend or a witness here.
 
         // ... and merge in other signatures:
         BOOST_FOREACH(const CTransaction& txv, txVariants)
-            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(&mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
+            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(signingKeyID, &mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
         UpdateTransaction(mergedTx, i, sigdata);
 
-        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&mergedTx, i, amount)))
+        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(signingKeyID, &mergedTx, i, amount)))
             fComplete = false;
     }
 

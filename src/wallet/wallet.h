@@ -190,6 +190,26 @@ public:
     CTxOutStandardKeyHash standardKeyHash;
     CAmount nAmount;
     bool fSubtractFeeFromAmount;
+    CTxOut GetTxOut() const
+    {
+        if (nType <= ScriptLegacyOutput)
+        {
+            return CTxOut(nAmount, scriptPubKey);
+        }
+        else if (nType == PoW2WitnessOutput)
+        {
+            return CTxOut(nAmount, witnessDetails);
+        }
+        else if (nType == StandardKeyHashOutput)
+        {
+            return CTxOut(nAmount, standardKeyHash);
+        }
+        else
+        {
+            assert(0);
+        }
+        return CTxOut();
+    }
 };
 
 CRecipient GetRecipientForDestination(const CTxDestination& dest, CAmount nValue, bool fSubtractFeeFromAmount, int nPoW2Phase);
@@ -1303,7 +1323,7 @@ bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, cons
     {
         SignatureData sigdata;
 
-        if (!ProduceSignature(DummySignatureCreator(forAccount), coin.txout, sigdata, type))
+        if (!ProduceSignature(DummySignatureCreator(forAccount), coin.txout, sigdata, type, txNew.nVersion))
         {
             return false;
         } else {

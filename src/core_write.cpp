@@ -144,6 +144,34 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
     out.pushKV("addresses", a);
 }
 
+void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
+{
+    txnouttype type;
+
+    if (fIncludeHex)
+        out.pushKV("hex", txout.output.GetHex(CTxOutType::StandardKeyHashOutput));
+
+    out.pushKV("address", CBitcoinAddress(txout.output.standardKeyHash.keyID).ToString());
+}
+
+void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
+{
+    txnouttype type;
+
+    if (fIncludeHex)
+        out.pushKV("hex", txout.output.GetHex(CTxOutType::PoW2WitnessOutput));
+
+    out.pushKV("lock_from_block", txout.output.witnessDetails.lockFromBlock);
+    out.pushKV("lock_until_block", txout.output.witnessDetails.lockUntilBlock);
+    out.pushKV("fail_count", txout.output.witnessDetails.failCount);
+    out.pushKV("pubkey_spend", txout.output.witnessDetails.spendingKeyID.ToString());
+    out.pushKV("pubkey_witness", txout.output.witnessDetails.witnessKeyID.ToString());
+
+    out.pushKV("address", CBitcoinAddress(CPoW2WitnessDestination(txout.output.witnessDetails.spendingKeyID, txout.output.witnessDetails.witnessKeyID)).ToString());
+}
+
+
+
 void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
 {
     entry.pushKV("txid", tx.GetHash().GetHex());
@@ -174,7 +202,12 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
                 in.pushKV("txinwitness", txinwitness);
             }
         }
-        in.pushKV("sequence", (int64_t)txin.nSequence);
+        if (tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION || txin.FlagIsSet(CTxInFlags::HasRelativeLock))
+            in.pushKV("sequence", (int64_t)txin.GetSequence(tx.nVersion));
+        if (txin.FlagIsSet(CTxInFlags::OptInRBF))
+            in.pushKV("rbf", true);
+        else
+            in.pushKV("rbf", false);
         vin.push_back(in);
     }
     entry.pushKV("vin", vin);
@@ -189,13 +222,30 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         out.pushKV("value", outValue);
         out.pushKV("n", (int64_t)i);
 
-        //fixme: (GULDEN) (2.0) HIGH
         if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
         {
             UniValue o(UniValue::VOBJ);
             ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
             out.pushKV("scriptPubKey", o);
             vout.push_back(out);
+        }
+        else if (txout.GetType() == CTxOutType::PoW2WitnessOutput)
+        {
+            UniValue o(UniValue::VOBJ);
+            PoW2WitnessToUniv(txout, o, true);
+            out.pushKV("PoW²-witness", o);
+            vout.push_back(out);
+        }
+        else if (txout.GetType() == CTxOutType::StandardKeyHashOutput)
+        {
+            UniValue o(UniValue::VOBJ);
+            StandardKeyHashToUniv(txout, o, true);
+            out.pushKV("standard-key-hash", o);
+            vout.push_back(out);
+        }
+        else
+        {
+            assert(0);
         }
     }
     entry.pushKV("vout", vout);

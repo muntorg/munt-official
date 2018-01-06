@@ -282,7 +282,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // -promiscuousmempoolflags is used.
     // TODO: replace this with a call to main to assess validity of a mempool
     // transaction (which in most cases can be a no-op).
-    //fIncludeWitness = IsWitnessEnabled(pParent, consensusParams) && fMineWitnessTx;
+    fIncludeWitness = IsWitnessEnabled(pParent, chainparams, chainActive, nullptr) && fMineWitnessTx;
 
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
@@ -364,8 +364,10 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         assert(pindexPrev_);
         ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
 
-        if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew)) {
-            throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
+        if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew))
+        {
+            LogPrintf("Error in CreateNewBlock: TestBlockValidity failed.\n");
+            return nullptr;
         }
     }
     else
@@ -529,7 +531,7 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
     // and modifying them for their already included ancestors
     UpdatePackagesForAdded(inBlock, mapModifiedTx);
 
-    //fixme: (GULDEN) (2.0) (POW2) - We need to avoid adding any transactions from possible 'tip candidates' here (only for witness blocks) - figure out best way to do that.
+
 
     CTxMemPool::indexed_transaction_set::index<ancestor_score>::type::iterator mi = mempool.mapTx.get<ancestor_score>().begin();
     CTxMemPool::txiter iter;
@@ -798,9 +800,6 @@ struct CBlockIndexCacheComparator
     }
 };
 
-//fixme: (GULDEN) (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
-std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessOrphans;
-
 static const unsigned int hashPSTimerInterval = 500;
 void static BitcoinMiner(const CChainParams& chainparams)
 {
@@ -878,42 +877,55 @@ void static BitcoinMiner(const CChainParams& chainparams)
 
             CBlockIndex* pWitnessBlockToEmbed = nullptr;
 
-            if (nPoW2PhaseGrandParent == 3)
+            if (nPoW2PhaseGrandParent >= 3)
             {
                 if (pindexParent->nVersionPoW2Witness != 0)
                 {
-                    pWitnessBlockToEmbed = pindexParent;
-                    pindexParent = GetPoWBlockForPoSBlock(pindexParent);
-                    assert(pindexParent);
+                    if (nPoW2PhaseGrandParent == 3)
+                    {
+                        pWitnessBlockToEmbed = pindexParent;
+                        pindexParent = GetPoWBlockForPoSBlock(pindexParent);
+                        assert(pindexParent);
+                    }
                 }
                 else
                 {
-                    if (nPoW2PhaseGreatGrandParent == 3)
+                    if (nPoW2PhaseGreatGrandParent >= 3)
                     {
                         // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
                         bool tryHighLevelCandidate = false;
                         auto candidateIters = GetTopLevelWitnessOrphans(pindexParent->nHeight);
                         for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
                         {
-                            if (cacheAlreadySeenWitnessOrphans.find(*candidateIter) == cacheAlreadySeenWitnessOrphans.end())
+                            if (nPoW2PhaseGreatGrandParent >= 4)
+                            {
+                                if ((*candidateIter)->nVersionPoW2Witness != 0)
+                                {
+                                    pindexParent = *candidateIter;
+                                    tryHighLevelCandidate = true;
+                                    break;
+                                }
+                            }
+                            else
                             {
                                 CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
                                 if (pParentPoW)
                                 {
-                                    pWitnessBlockToEmbed = *candidateIter;
+                                    if (nPoW2PhaseGrandParent == 3)
+                                        pWitnessBlockToEmbed = *candidateIter;
                                     pindexParent = pParentPoW;
                                     tryHighLevelCandidate = true;
                                     break;
-                                }
-                                else
-                                {
-                                    cacheAlreadySeenWitnessOrphans.insert(*candidateIter);
                                 }
                             }
                         }
 
                         // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
-                        if (!tryHighLevelCandidate)
+                        if (!tryHighLevelCandidate && nPoW2PhaseGrandParent >= 4)
+                        {
+                            pindexParent = pindexParent->pprev;
+                        }
+                        else if (!tryHighLevelCandidate)
                         {
                             int nCount=0;
                             while (pindexParent->pprev && ++nCount < 10)
@@ -963,7 +975,10 @@ void static BitcoinMiner(const CChainParams& chainparams)
                             if (!pWitnessBlockToEmbed)
                             {
                                 if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                                {
+                                    LogPrintf("Error in GuldenMiner: mining stalled, unable to locate suitable witness block to embed.\n");
                                     dHashesPerSec = 0;
+                                }
                                 continue;
                             }
                             if (pindexParent->nHeight != pWitnessBlockToEmbed->nHeight)
@@ -977,17 +992,17 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     }
                 }
             }
-            else if (nPoW2PhaseGreatGrandParent >= 4)
+
+            if (nPoW2PhaseGreatGrandParent >= 4)
             {
                 if (pindexParent->nVersionPoW2Witness == 0)
                 {
-                    pindexParent = pindexParent->pprev;
-                    if (pindexParent->nVersionPoW2Witness == 0)
+                    if (GetTimeMillis() - nUpdateTimeStart > 5000)
                     {
-                        if (GetTimeMillis() - nUpdateTimeStart > 5000)
-                            dHashesPerSec = 0;
-                        continue;
+                        dHashesPerSec = 0;
+                        LogPrintf("Error in GuldenMiner: mining stalled, unable to locate suitable witness tip on which to build.\n");
                     }
+                    continue;
                 }
             }
 
@@ -1229,9 +1244,9 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhasePare
     CMutableTransaction coinbaseTx(CURRENT_TX_VERSION_POW2);
     coinbaseTx.vin.resize(2);
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vin[0].nSequence = 0;
+    coinbaseTx.vin[0].SetSequence(0, CURRENT_TX_VERSION_POW2, CTxInFlags::None);
     coinbaseTx.vin[1].prevout = selectedWitnessOutPoint;
-    coinbaseTx.vin[1].nSequence = 0;
+    coinbaseTx.vin[1].SetSequence(0, CURRENT_TX_VERSION_POW2, CTxInFlags::None);
 
     // Phase 3 - we restrict the coinbase signature to only the block height.
     // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
@@ -1399,7 +1414,7 @@ void static GuldenWitness()
                                     assemblerOptions.nBlockMaxWeight = DEFAULT_BLOCK_MAX_WEIGHT - nStartingBlockWeight;
                                     assemblerOptions.nBlockMaxSize = assemblerOptions.nBlockMaxWeight;
 
-                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(pindexTip->pprev, coinbaseScript->reserveScript, true, nullptr, true));
+                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(pindexTip, coinbaseScript->reserveScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
                                         LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");

@@ -558,6 +558,7 @@ std::string LicenseInfo()
 {
     const std::string URL_WEBSITE = "Gulden.com";
 
+    //fixme: (GULDEN) (HIGH) (2.0) - Fix copyright and also add license info.
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +
            strprintf(_("Please contribute if you find %s useful. "

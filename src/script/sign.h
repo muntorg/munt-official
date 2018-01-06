@@ -39,7 +39,7 @@ class TransactionSignatureCreator : public BaseSignatureCreator {
     const TransactionSignatureChecker checker;
 
 public:
-    TransactionSignatureCreator(const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn=SIGHASH_ALL);
+    TransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn=SIGHASH_ALL);
     const BaseSignatureChecker& Checker() const { return checker; }
     bool CreateSig(std::vector<unsigned char>& vchSig, const CKeyID& keyid, const CScript& scriptCode, SigVersion sigversion) const;
 };
@@ -48,7 +48,7 @@ class MutableTransactionSignatureCreator : public TransactionSignatureCreator {
     CTransaction tx;
 
 public:
-    MutableTransactionSignatureCreator(const CKeyStore* keystoreIn, const CMutableTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : TransactionSignatureCreator(keystoreIn, &tx, nInIn, amountIn, nHashTypeIn), tx(*txToIn) {}
+    MutableTransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CMutableTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : TransactionSignatureCreator(signingKeyID, keystoreIn, &tx, nInIn, amountIn, nHashTypeIn), tx(*txToIn) {}
 };
 
 /** A signature creator that just produces 72-byte empty signatures. */
@@ -73,8 +73,11 @@ enum SignType
     Witness
 };
 
+/** Get the CKeyID of the pubkey for the key that should be used to sign an output */
+CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type);
+
 /** Produce a script signature using a generic signature creator. */
-bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type);
+bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type, uint64_t nVersion);
 
 /** Produce a script signature for a transaction. */
 bool SignSignature(const CKeyStore& keystore, const CTxOut& fromOutput, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType, SignType type);
