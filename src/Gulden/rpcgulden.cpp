@@ -260,11 +260,11 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     UniValue witnessInfoForBlock(UniValue::VARR);
     UniValue rec(UniValue::VOBJ);
     rec.push_back(Pair("pow2_phase", nPow2Phase));
-    rec.push_back(Pair("number_of_witnesses_raw", nNumWitnessAddressesAll));
-    rec.push_back(Pair("number_of_witnesses_eligible", witInfo.witnessSelectionPool.size()));
-    rec.push_back(Pair("total_witness_weight_raw", nTotalWeightAll));
-    rec.push_back(Pair("total_witness_weight_eligible_raw", witInfo.nTotalWeight));
-    rec.push_back(Pair("total_witness_weight_eligible_adjusted", witInfo.nReducedTotalWeight));
+    rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
+    rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPool.size()));
+    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)nTotalWeightAll));
+    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeight));
+    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nReducedTotalWeight));
     rec.push_back(Pair("selected_witness_address", sWitnessAddress));
     if (fVerbose)
     {
