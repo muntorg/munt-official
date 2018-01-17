@@ -2483,7 +2483,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     nTimeFlush += nTime4 - nTime3;
     LogPrint("bench", "  - Flush: %.2fms [%.2fs]\n", (nTime4 - nTime3) * 0.001, nTimeFlush * 0.000001);
 
-    if (!FlushStateToDisk(state, FLUSH_STATE_IF_NEEDED))
+    if (!FlushStateToDisk(state, (pindexNew->nHeight % 30000 == 0) ? FLUSH_STATE_ALWAYS : FLUSH_STATE_IF_NEEDED))
         return false;
     int64_t nTime5 = GetTimeMicros();
     nTimeChainState += nTime5 - nTime4;
@@ -4488,6 +4488,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
                                strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
             pfrom->fDisconnect = true;
+            CNode::Ban(pfrom->addr, BanReasonOutdatedVersion, 3600 + (rand() % 300));
             return false;
         }
 
@@ -4510,13 +4511,16 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 pfrom->fRelayTxes = true;
         }
 
-        if (pfrom->cleanSubVer == "/Guldencoin:1.3.1/" || pfrom->cleanSubVer == "/Guldencoin:1.4.0/" /* || pfrom->cleanSubVer=="/Guldencoin:1.5.0/"*/) {
+#if 0
+        if (pfrom->cleanSubVer=="/Guldencoin:1.3.1/" || pfrom->cleanSubVer=="/Guldencoin:1.4.0/"/* || pfrom->cleanSubVer=="/Guldencoin:1.5.0/"*/)
+        {
 
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
-            pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE, strprintf("Client version must be 1.5.1 or greater [%s]", pfrom->cleanSubVer));
+            pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,strprintf("Client version must be 1.5.1 or greater [%s]", pfrom->cleanSubVer));
             pfrom->fDisconnect = true;
             return false;
         }
+#endif
 
         if (nNonce == nLocalHostNonce && nNonce > 1) {
             LogPrintf("connected to self at %s, disconnecting\n", pfrom->addr.ToString());
