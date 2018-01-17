@@ -33,6 +33,8 @@
 #include <QDebug>
 #include <QTimer>
 
+#include "Gulden/util.h"
+
 class CBlockIndex;
 
 static const int64_t nClientStartupTime = GetTime();
@@ -48,6 +50,7 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
 {
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
+    cachedPoW2Phase = 1;
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
     pollTimer = new QTimer(this);
@@ -324,6 +327,8 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
     }
     // if we are in-sync, update the UI regardless of last update time
     if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
+        //fixme: (GULDEN) (2.1) We can remove this for 2.1
+        clientmodel->cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
         //pass a async signal to the UI thread
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),

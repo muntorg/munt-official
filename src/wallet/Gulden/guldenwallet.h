@@ -40,6 +40,7 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
 //fixme: GULDEN Make configurable option
 extern bool fShowChildAccountsSeperately;
 
+std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& dest);
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
 isminetype IsMine(const CWallet &wallet, const CTxOut& out);
 

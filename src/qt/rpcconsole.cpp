@@ -528,6 +528,8 @@ void RPCConsole::setClientModel(ClientModel *model)
         setNumBlocks(model->getNumBlocks(), model->getLastBlockDate(), model->getVerificationProgress(NULL), false);
         connect(model, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
+        ui->pow2phasevalue->setText(QString::number(model->cachedPoW2Phase));
+
         updateNetworkState();
         connect(model, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)));
 
@@ -801,6 +803,8 @@ void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, double nVer
         ui->numberOfBlocks->setText(QString::number(count));
         ui->lastBlockTime->setText(blockDate.toString());
     }
+    if (clientModel)
+        ui->pow2phasevalue->setText(QString::number(clientModel->cachedPoW2Phase));
 }
 
 void RPCConsole::setMempoolSize(long numberOfTxs, size_t dynUsage)

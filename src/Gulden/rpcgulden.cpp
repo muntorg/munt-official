@@ -94,6 +94,9 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             + HelpExampleCli("getwitnessinfo 400000 true", "")
             + HelpExampleCli("getwitnessinfo \"8383d8e9999ade8ad0c9f84e7816afec3b9e4855341f678bb0fdc3af46ee6f31\" true", ""));
 
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
 
     int64_t nTotalWeightAll = 0;
     int64_t nNumWitnessAddressesAll = 0;
@@ -182,78 +185,83 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
         nPow2Phase = 2;
 
     CGetWitnessInfo witInfo;
-    if (nPow2Phase >= 3)
+
+    if (nPow2Phase >= 2)
     {
         if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_, witInfo.allWitnessCoins, nullptr, &viewNew))
             throw std::runtime_error("Could not enumerate all PoW² witness for block.");
 
-        if (!GetWitness(tempChain, Params(), &viewNew, pTipIndex_->pprev, pTipIndex_->GetBlockHashLegacy(), witInfo))
-            throw std::runtime_error("Could not select a valid PoW² witness for block.");
-
         if (!GetPow2NetworkWeight(pTipIndex_, Params(), nNumWitnessAddressesAll, nTotalWeightAll, tempChain, &viewNew))
             throw std::runtime_error("Block does not form part of a valid PoW² chain.");
+    }
+
+    if (nPow2Phase >= 3)
+    {
+        if (!GetWitness(tempChain, Params(), &viewNew, pTipIndex_->pprev, pTipIndex_->GetBlockHashLegacy(), witInfo))
+            throw std::runtime_error("Could not select a valid PoW² witness for block.");
 
         CTxDestination selectedWitnessAddress;
         if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
             throw std::runtime_error("Could not extract PoW² witness for block.");
 
-         sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+        sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+    }
 
-        if (fVerbose)
+    if (fVerbose)
+    {
+        for (auto& iter : witInfo.allWitnessCoins)
         {
-            for (auto& iter : witInfo.allWitnessCoins)
+            bool fEligible = false;
             {
-                bool fEligible = false;
+                const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
+                auto findIter = std::lower_bound(witInfo.witnessSelectionPool.begin(), witInfo.witnessSelectionPool.end(), findItem);
+                while (findIter != witInfo.witnessSelectionPool.end())
                 {
-                    const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
-                    auto findIter = std::lower_bound(witInfo.witnessSelectionPool.begin(), witInfo.witnessSelectionPool.end(), findItem);
-                    while (findIter != witInfo.witnessSelectionPool.end())
+                    if (findIter->outpoint == iter.first)
                     {
-                        if (findIter->outpoint == iter.first)
+                        if (findIter->coin.out == iter.second.out)
                         {
-                            if (findIter->coin.out == iter.second.out)
-                            {
-                                fEligible = true;
-                                break;
-                            }
-                            ++findIter;
+                            fEligible = true;
+                            break;
                         }
-                        else break;
+                        ++findIter;
                     }
+                    else break;
                 }
-
-                CTxDestination address;
-                if (!ExtractDestination(iter.second.out, address))
-                    throw std::runtime_error("Could not extract PoW² witness for block.");
-
-                uint64_t nLastActiveBlock = iter.second.nHeight;
-                uint64_t nLockFromBlock = 0;
-                uint64_t nLockUntilBlock = 0;
-                uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
-                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
-                uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
-                CAmount nValue = iter.second.out.nValue;
-
-                UniValue rec(UniValue::VOBJ);
-                rec.push_back(Pair("address", CBitcoinAddress(address).ToString()));
-                rec.push_back(Pair("amount", ValueFromAmount(nValue)));
-                rec.push_back(Pair("weight", nRawWeight));
-                rec.push_back(Pair("eligible_to_witness", fEligible));
-                rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
-                rec.push_back(Pair("last_active_block", nLastActiveBlock));
-                rec.push_back(Pair("age", nAge));
-                rec.push_back(Pair("lock_from_block", nLockFromBlock));
-                rec.push_back(Pair("lock_until_block", nLockUntilBlock));
-                rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
-                rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
-
-                witnessWeightStats(nRawWeight);
-                lockPeriodWeightStats(nLockPeriodInBlocks);
-                witnessAmountStats(nValue);
-                ageStats(nAge);
-
-                jsonAllWitnessAddresses.push_back(rec);
             }
+
+            CTxDestination address;
+            if (!ExtractDestination(iter.second.out, address))
+                throw std::runtime_error("Could not extract PoW² witness for block.");
+
+            uint64_t nLastActiveBlock = iter.second.nHeight;
+            uint64_t nLockFromBlock = 0;
+            uint64_t nLockUntilBlock = 0;
+            uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
+            uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
+            uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
+            CAmount nValue = iter.second.out.nValue;
+
+            UniValue rec(UniValue::VOBJ);
+            rec.push_back(Pair("address", CBitcoinAddress(address).ToString()));
+            rec.push_back(Pair("amount", ValueFromAmount(nValue)));
+            rec.push_back(Pair("weight", nRawWeight));
+            rec.push_back(Pair("eligible_to_witness", fEligible));
+            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
+            rec.push_back(Pair("last_active_block", nLastActiveBlock));
+            rec.push_back(Pair("age", nAge));
+            rec.push_back(Pair("lock_from_block", nLockFromBlock));
+            rec.push_back(Pair("lock_until_block", nLockUntilBlock));
+            rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+            rec.push_back(Pair("ismine_accountname", accountNameForAddress(*pwallet, address)));
+            rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
+
+            witnessWeightStats(nRawWeight);
+            lockPeriodWeightStats(nLockPeriodInBlocks);
+            witnessAmountStats(nValue);
+            ageStats(nAge);
+
+            jsonAllWitnessAddresses.push_back(rec);
         }
     }
 

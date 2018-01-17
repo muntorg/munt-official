@@ -157,6 +157,29 @@ void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "shadowpoolmanager", &ThreadShadowPoolManager));
 }
 
+std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& dest)
+{
+    LOCK(wallet.cs_wallet);
+    std::string accountNameForAddress;
+
+    isminetype ret = isminetype::ISMINE_NO;
+    for (const auto& accountItem : wallet.mapAccounts)
+    {
+        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        {
+            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
+            if (temp > ret)
+            {
+                ret = temp;
+                accountNameForAddress = accountItem.second->getLabel();
+            }
+        }
+    }
+    if (ret < isminetype::ISMINE_WATCH_ONLY)
+        return "";
+    return accountNameForAddress;
+}
+
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
 {
     LOCK(wallet.cs_wallet);

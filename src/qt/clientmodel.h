@@ -93,6 +93,7 @@ public:
     // caches for the best header
     mutable std::atomic<int> cachedBestHeaderHeight;
     mutable std::atomic<int64_t> cachedBestHeaderTime;
+    mutable std::atomic<int> cachedPoW2Phase;
 
 private:
     OptionsModel *optionsModel;

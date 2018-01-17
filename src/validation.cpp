@@ -2951,6 +2951,9 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
+    if (networkTotalWeight == 0)
+        return 0;
+
     static const arith_uint256 base = arith_uint256(100000000) * arith_uint256(100000000) * arith_uint256(100000000);
     #define BASE(x) (arith_uint256(x)*base)
     #define AI(x) arith_uint256(x)
