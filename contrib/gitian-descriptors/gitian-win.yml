@@ -28,7 +28,7 @@ packages:
 - "flex"
 - "libssl-dev"
 remotes:
-- "url": /home/debian/guldencoin-build-manager/gulden-dev
+- "url": https://github.com/Gulden/gulden-official.git
   "dir": "Gulden"
 files:
 - "osslsigncode-1.4.tar.gz" #Optional (only needed for official builds)
