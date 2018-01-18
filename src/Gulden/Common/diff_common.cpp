@@ -38,7 +38,8 @@ unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE bl
 
     if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
     {
-        if (INDEX_HEIGHT(indexLast)+1 >= nDeltaSwitchoverBlock)
+        // Delta can't handle a target spacing of 1 - so we just assume a static diff for testnets where target spacing is 1.
+        if (nPowTargetSpacing>1 && INDEX_HEIGHT(indexLast)+1 >= nDeltaSwitchoverBlock)
         {
             #ifdef __JAVA__
             return GetNextWorkRequired_DELTA(indexLast, block, (int)nPowTargetSpacing, nPowLimit, nDeltaSwitchoverBlock, blockStore);
