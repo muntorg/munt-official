@@ -26,10 +26,10 @@ inline void str_replace(std::string& str, const std::string& from, const std::st
     CMD(S,"bitcoin.com","Gulden.com"); \
     CMD(S,"bitcoin:","Gulden:"); \
     CMD(S,"bitcoin.conf","Gulden.conf"); \
-    CMD(S,"bitcoin-cli","Gulden-cli"); \
-    CMD(S,"bitcoin-tx","Gulden-tx"); \
+    CMD(S,"Gulden-cli","Gulden-cli"); \
+    CMD(S,"Gulden-tx","Gulden-tx"); \
     CMD(S,"bitcoin-qt","Gulden"); \
-    CMD(S,"bitcoind","Gulden-daemon"); \
+    CMD(S,"GuldenD","Gulden-daemon"); \
     CMD(S,"bitcoin core","Gulden"); \
     CMD(S,"Bitcoin Core","Gulden"); \
     CMD(S,"bitcoin Core","Gulden"); \

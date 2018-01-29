@@ -18,7 +18,7 @@ import time
 from .util import (
     PortSeed,
     MAX_NODES,
-    bitcoind_processes,
+    GuldenD_processes,
     check_json_precision,
     connect_nodes_bi,
     disable_mocktime,
@@ -38,7 +38,7 @@ from .util import (
     _stop_nodes,
     sync_blocks,
     sync_mempools,
-    wait_for_bitcoind_start,
+    wait_for_GuldenD_start,
 )
 from .authproxy import JSONRPCException
 
@@ -107,11 +107,11 @@ class BitcoinTestFramework(object):
 
         parser = optparse.OptionParser(usage="%prog [options]")
         parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                          help="Leave bitcoinds and test.* datadir on exit or error")
+                          help="Leave GuldenDs and test.* datadir on exit or error")
         parser.add_option("--noshutdown", dest="noshutdown", default=False, action="store_true",
-                          help="Don't stop bitcoinds after the test execution")
+                          help="Don't stop GuldenDs after the test execution")
         parser.add_option("--srcdir", dest="srcdir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../../src"),
-                          help="Source directory containing bitcoind/bitcoin-cli (default: %default)")
+                          help="Source directory containing GuldenD/Gulden-cli (default: %default)")
         parser.add_option("--cachedir", dest="cachedir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../cache"),
                           help="Directory for caching pregenerated datadirs")
         parser.add_option("--tmpdir", dest="tmpdir", help="Root directory for datadirs")
@@ -170,7 +170,7 @@ class BitcoinTestFramework(object):
             if self.nodes:
                 self.stop_nodes()
         else:
-            self.log.info("Note: bitcoinds were not stopped and may still be running")
+            self.log.info("Note: GuldenDs were not stopped and may still be running")
 
         if not self.options.nocleanup and not self.options.noshutdown and success != TestStatus.FAILED:
             self.log.info("Cleaning up")
@@ -255,7 +255,7 @@ class BitcoinTestFramework(object):
         # User can provide log level as a number or string (eg DEBUG). loglevel was caught as a string, so try to convert it to an int
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
-        # Format logs the same as bitcoind's debug.log with microprecision (so log files can be concatenated and sorted)
+        # Format logs the same as GuldenD's debug.log with microprecision (so log files can be concatenated and sorted)
         formatter = logging.Formatter(fmt = '%(asctime)s.%(msecs)03d000 %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
         formatter.converter = time.gmtime
         fh.setFormatter(formatter)
@@ -292,15 +292,15 @@ class BitcoinTestFramework(object):
                 if os.path.isdir(os.path.join(cachedir, "node" + str(i))):
                     shutil.rmtree(os.path.join(cachedir, "node" + str(i)))
 
-            # Create cache directories, run bitcoinds:
+            # Create cache directories, run GuldenDs:
             for i in range(MAX_NODES):
                 datadir = initialize_datadir(cachedir, i)
-                args = [os.getenv("BITCOIND", "bitcoind"), "-server", "-keypool=1", "-datadir=" + datadir, "-discover=0"]
+                args = [os.getenv("BITCOIND", "GuldenD"), "-server", "-keypool=1", "-datadir=" + datadir, "-discover=0"]
                 if i > 0:
                     args.append("-connect=127.0.0.1:" + str(p2p_port(0)))
-                bitcoind_processes[i] = subprocess.Popen(args)
-                self.log.debug("initialize_chain: bitcoind started, waiting for RPC to come up")
-                wait_for_bitcoind_start(bitcoind_processes[i], rpc_url(i), i)
+                GuldenD_processes[i] = subprocess.Popen(args)
+                self.log.debug("initialize_chain: GuldenD started, waiting for RPC to come up")
+                wait_for_GuldenD_start(GuldenD_processes[i], rpc_url(i), i)
                 self.log.debug("initialize_chain: RPC successfully started")
 
             self.nodes = []
@@ -353,7 +353,7 @@ class BitcoinTestFramework(object):
         for i in range(num_nodes):
             initialize_datadir(test_dir, i)
 
-# Test framework for doing p2p comparison testing, which sets up some bitcoind
+# Test framework for doing p2p comparison testing, which sets up some GuldenD
 # binaries:
 # 1 binary: test binary
 # 2 binaries: 1 test binary, 1 ref binary
@@ -373,11 +373,11 @@ class ComparisonTestFramework(BitcoinTestFramework):
 
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("BITCOIND", "bitcoind"),
-                          help="bitcoind binary to test")
+                          default=os.getenv("BITCOIND", "GuldenD"),
+                          help="GuldenD binary to test")
         parser.add_option("--refbinary", dest="refbinary",
-                          default=os.getenv("BITCOIND", "bitcoind"),
-                          help="bitcoind binary to use for reference nodes (if any)")
+                          default=os.getenv("BITCOIND", "GuldenD"),
+                          help="GuldenD binary to use for reference nodes (if any)")
 
     def setup_network(self):
         self.nodes = self.start_nodes(

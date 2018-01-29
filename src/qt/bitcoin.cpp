@@ -148,19 +148,19 @@ static void initTranslations(GuldenTranslator &qtTranslatorBase, GuldenTranslato
     if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTranslator);
 
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
+    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in Gulden.qrc)
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
-    // Load e.g. gulden_de.qm (shortcut "gulden_de" needs to be defined in bitcoin.qrc)
+    // Load e.g. gulden_de.qm (shortcut "gulden_de" needs to be defined in Gulden.qrc)
     if (translatorBaseGulden.load(lang, ":/gulden_translations/"))
         QApplication::installTranslator(&translatorBaseGulden);
 
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
+    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in Gulden.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
 
-    // Load e.g. gulden_de_DE.qm (shortcut "gulden_de_DE" needs to be defined in bitcoin.qrc)
+    // Load e.g. gulden_de_DE.qm (shortcut "gulden_de_DE" needs to be defined in Gulden.qrc)
     if (translatorGulden.load(lang_territory, ":/gulden_translations/"))
         QApplication::installTranslator(&translatorGulden);
 
@@ -532,7 +532,7 @@ void BitcoinApplication::initializeResult(bool success)
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
-        // bitcoin: URIs or payment requests:
+        // Gulden: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
                          window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
@@ -697,7 +697,7 @@ int main(int argc, char *argv[])
         exit(EXIT_SUCCESS);
 
     // Start up the payment server early, too, so impatient users that click on
-    // bitcoin: links repeatedly have their payment requests routed to this process:
+    // Gulden: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
 #endif
 
@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
 */
 
     //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
-    // Make sure only a single Bitcoin process is using the data directory.
+    // Make sure only a single Gulden process is using the data directory.
     fs::path pathLockFile = GetDataDir() / ".lock";
     FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
     if (file) fclose(file);

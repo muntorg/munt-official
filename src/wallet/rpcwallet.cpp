@@ -455,7 +455,7 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
-    // Parse Bitcoin address
+    // Parse Gulden address
     CScript scriptPubKey = GetScriptForDestination(address);
 
     // Create and send the transaction
@@ -749,7 +749,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
-    // Bitcoin address
+    // Gulden address
     CBitcoinAddress address = CBitcoinAddress(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");

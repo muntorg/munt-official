@@ -647,7 +647,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             "WARNING! If a dumped private key from an HD account is exposed or given out -all- keys within that account (current and future) are also at risk, if the attacker can also get hold of your public key for that account.\n"
             "It is strongly advised not to use this function with an HD wallet, please proceed at your own risk.\n"
             "\nArguments:\n"
-            "1. \"filename\"    (string, required) The filename with path (either absolute or relative to bitcoind)\n"
+            "1. \"filename\"    (string, required) The filename with path (either absolute or relative to GuldenD)\n"
             "2. \"HDConsent\"        (string, optional) If dumping from an HD account please pass the string 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY' for this paramater, if you do not understand the risk then please do not do this.\n"
             "\nResult:\n"
             "{                           (json object)\n"
@@ -1196,7 +1196,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                                       "block from time %d, which is after or within %d seconds of key creation, and "
                                       "could contain transactions pertaining to the key. As a result, transactions "
                                       "and coins using this key may not appear in the wallet. This error could be "
-                                      "caused by pruning or data corruption (see bitcoind log for details) and could "
+                                      "caused by pruning or data corruption (see GuldenD log for details) and could "
                                       "be dealt with by downloading and rescanning the relevant blocks (see -reindex "
                                       "and -rescan options).",
                                 GetImportTimestamp(request, now), scanFailed->GetBlockTimeMax(), TIMESTAMP_WINDOW)));

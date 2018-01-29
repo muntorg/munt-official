@@ -288,7 +288,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     if(_WIN32 && !GetBoolArg("-testbuypage32", false))
     {
         // Workaround for bug page crash on 32 bit windows builds
-        // https://github.com/Gulden/gulden-official/issues/41
+        // https://github.com/bitcoin/gulden-official/issues/41
         QDesktopServices::openUrl(QUrl("https://gulden.com/purchase")); 
         return;
     }

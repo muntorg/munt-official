@@ -24,7 +24,7 @@ const std::string CBaseChainParams::REGTEST = "regtest";
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
     strUsage += HelpMessageGroup(_("Chain selection options:"));
-    strUsage += HelpMessageOpt("-testnet", _("Use or create a test blockchain. Specify the chain using the format <hashtype><genesistimestamp>:<blockintervaltarget> e.g. S1505211751:20 (Scrypt with 20 second block target) or C1505211751:10 (City hash with 10 second block target). For 'official' testnet chain specifiers visit https://github.com/Gulden/gulden-official where the latest chains will always be listed."));
+    strUsage += HelpMessageOpt("-testnet", _("Use or create a test blockchain. Specify the chain using the format <hashtype><genesistimestamp>:<blockintervaltarget> e.g. S1505211751:20 (Scrypt with 20 second block target) or C1505211751:10 (City hash with 10 second block target). For 'official' testnet chain specifiers visit https://github.com/bitcoin/gulden-official where the latest chains will always be listed."));
     if (debugHelp) {
         strUsage += HelpMessageOpt("-regtest", "Enter regression test mode, which uses a special chain in which blocks can be solved instantly. "
                                    "This is intended for regression testing tools and app development.");

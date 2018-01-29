@@ -410,7 +410,7 @@ CAmount BitcoinAmountField::valueForCurrency(bool *valid_out) const
     else
     {
         // [...] Gulden <> E... (B...) (R...)
-        // [...] Bitcoin <> G... (E...) (R...)
+        // [...] Gulden <> G... (E...) (R...)
         // [...] Euro <> G... (B...) (R...)
         // [...] ZAR <> G... (E...) (B...)
         switch(displayCurrency)
@@ -516,7 +516,7 @@ void BitcoinAmountField::unitChanged(int idx)
 void BitcoinAmountField::changeToSecondaryCurrency()
 {   
     // [...] Gulden <> E... (B...) (R...)
-    // [...] Bitcoin <> G... (E...) (R...)
+    // [...] Gulden <> G... (E...) (R...)
     // [...] Euro <> G... (B...) (R...)
     // [...] ZAR <> G... (E...) (B...)
     switch(displayCurrency)
@@ -550,7 +550,7 @@ void BitcoinAmountField::changeToSecondaryCurrency()
 void BitcoinAmountField::changeToTertiaryCurrency()
 {
     // [...] Gulden <> E... (B...) (R...)
-    // [...] Bitcoin <> G... (E...) (R...)
+    // [...] Gulden <> G... (E...) (R...)
     // [...] Euro <> G... (B...) (R...)
     // [...] ZAR <> G... (E...) (B...)
     switch(displayCurrency)
@@ -584,7 +584,7 @@ void BitcoinAmountField::changeToTertiaryCurrency()
 void BitcoinAmountField::changeToQuadCurrency()
 {
     // [...] Gulden <> E... (B...) (R...)
-    // [...] Bitcoin <> G... (E...) (R...)
+    // [...] Gulden <> G... (E...) (R...)
     // [...] Euro <> G... (B...) (R...)
     // [...] ZAR <> G... (E...) (B...)
     switch(displayCurrency)
@@ -751,7 +751,7 @@ void BitcoinAmountField::update()
     }
     else if(displayCurrency == AmountFieldCurrency::CurrencyBCOIN)
     {
-        // [...] Bitcoin <> G... (E...) (R...)
+        // [...] Gulden <> G... (E...) (R...)
         
         unit->setText("Bitcoin");
         forexError->setText("");
@@ -920,7 +920,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
     if (displayCurrency != currency_)
     {
         // [...] Gulden <> E... (B...) (R...)
-        // [...] Bitcoin <> G... (E...) (R...)
+        // [...] Gulden <> G... (E...) (R...)
         // [...] Euro <> G... (B...) (R...)
         // [...] ZAR <> G... (E...) (B...)
         switch(displayCurrency)

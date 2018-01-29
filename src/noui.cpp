@@ -77,7 +77,7 @@ static void NotifyRequestUnlockS(CWallet* wallet, std::string reason)
 
 void noui_connect()
 {
-    // Connect bitcoind signal handlers
+    // Connect GuldenD signal handlers
     uiInterface.ThreadSafeMessageBox.connect(noui_ThreadSafeMessageBox);
     uiInterface.ThreadSafeQuestion.connect(noui_ThreadSafeQuestion);
     uiInterface.InitMessage.connect(noui_InitMessage);
