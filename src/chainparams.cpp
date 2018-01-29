@@ -134,10 +134,10 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed.gulden.com", false));
-        vSeeds.push_back(CDNSSeedData("seed 1",  "amsterdam.gulden.com", false));
-        vSeeds.push_back(CDNSSeedData("seed 2",  "seed.gulden.network", false));
+//        vSeeds.push_back(CDNSSeedData("seed 1",  "amsterdam.gulden.com"));
+//        vSeeds.push_back(CDNSSeedData("seed 2",  "seed.gulden.network"));
         vSeeds.push_back(CDNSSeedData("seed 3",  "rotterdam.gulden.network", false));
-        vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue", false));
+//        vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);// 'G'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);// 'g'
@@ -185,7 +185,7 @@ public:
                 { 505000, uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb")}
             }
         };
-            
+
         chainTxData = ChainTxData{
             1491810603, // * UNIX timestamp of last checkpoint block
             1208446,    // * total number of transactions between genesis and last checkpoint
@@ -201,14 +201,6 @@ public:
 class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
-        std::string sTestnetParams = GetArg("-testnet", "");
-        assert(!sTestnetParams.empty());
-        assert(sTestnetParams.find(":")!=std::string::npos);
-        assert(sTestnetParams[0] == 'S' || sTestnetParams[0] == 'C');
-        
-        int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
-        int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
-        
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.BIP34Height = 21111;
@@ -217,56 +209,68 @@ public:
         consensus.BIP66Height = 330776; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
         consensus.powLimit =  uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = targetInterval;
-        consensus.fPowAllowMinDifficultyBlocks = false;
-        consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 15; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 20; // nPowTargetTimespan / nPowTargetSpacing
-        
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
 
-        // Deployment of BIP68, BIP112, and BIP113.
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
-
-        // Deployment of SegWit (BIP141, BIP143, and BIP147)
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
-        
-
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("");
-
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("");
-        
-        pchMessageStart[0] = targetInterval; 
-        pchMessageStart[3] = sTestnetParams[0]; 
-        pchMessageStart[1] = seedTimestamp >> 8; 
-        pchMessageStart[2] = seedTimestamp >> 16; 
-        
-        vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
-        nDefaultPort = 9924;
-        nPruneAfterHeight = 1000;
-
-        genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
-        genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-
-        while(UintToArith256(genesis.GetPoWHash()) > UintToArith256(consensus.powLimit))
+        std::string sTestnetParams = GetArg("-testnet", "");
+        if (!sTestnetParams.empty())
         {
-            genesis.nNonce++;
-            if(genesis.nNonce == 0)
-                genesis.nTime++;
+            assert(sTestnetParams.find(":")!=std::string::npos);
+            assert(sTestnetParams[0] == 'S' || sTestnetParams[0] == 'C');
+
+            int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
+            int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
+
+            consensus.nPowTargetSpacing = targetInterval;
+            consensus.fPowAllowMinDifficultyBlocks = false;
+            consensus.fPowNoRetargeting = false;
+            consensus.nRuleChangeActivationThreshold = 15; // 75% for testchains
+            consensus.nMinerConfirmationWindow = 20; // nPowTargetTimespan / nPowTargetSpacing
+
+            consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 0;
+            consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
+            consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
+
+            // Deployment of BIP68, BIP112, and BIP113.
+            consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
+            consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
+            consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
+
+            // Deployment of SegWit (BIP141, BIP143, and BIP147)
+            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
+            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL;
+            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
+
+            // The best chain should have at least this much work.
+            consensus.nMinimumChainWork = uint256S("");
+
+            // By default assume that the signatures in ancestors of this block are valid.
+            consensus.defaultAssumeValid = uint256S("");
+
+            genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
+            genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+
+            while(UintToArith256(genesis.GetPoWHash()) > UintToArith256(consensus.powLimit))
+            {
+                genesis.nNonce++;
+                if(genesis.nNonce == 0)
+                    genesis.nTime++;
+            }
+            consensus.hashGenesisBlock = genesis.GetHash();
+            LogPrintf("genesis nonce: %d\n",genesis.nNonce);
+            LogPrintf("genesis time: %d\n",genesis.nTime);
+            LogPrintf("genesis bits: %d\n",genesis.nBits);
+            LogPrintf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
+
+            pchMessageStart[0] = targetInterval;
+            pchMessageStart[3] = sTestnetParams[0];
+            pchMessageStart[1] = seedTimestamp >> 8;
+            pchMessageStart[2] = seedTimestamp >> 16;
+
+            LogPrintf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
         }
-        consensus.hashGenesisBlock = genesis.GetHash();
-        printf("genesis nonce: %d\n",genesis.nNonce);
-        printf("genesis time: %d\n",genesis.nTime);
-        printf("genesis bits: %d\n",genesis.nBits);        
-        printf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
+
+        vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
+        nDefaultPort = 9923;
+        nPruneAfterHeight = 1000;
 
         vFixedSeeds.clear();
         vSeeds.clear();
