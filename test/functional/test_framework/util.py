@@ -175,7 +175,7 @@ def sync_mempools(rpc_connections, *, wait=1, timeout=60):
         timeout -= wait
     raise AssertionError("Mempool sync failed")
 
-bitcoind_processes = {}
+GuldenD_processes = {}
 
 def initialize_datadir(dirname, n):
     datadir = os.path.join(dirname, "node"+str(n))
@@ -206,14 +206,14 @@ def rpc_url(i, rpchost=None):
             host = rpchost
     return "http://%s:%s@%s:%d" % (rpc_u, rpc_p, host, int(port))
 
-def wait_for_bitcoind_start(process, url, i):
+def wait_for_GuldenD_start(process, url, i):
     '''
-    Wait for bitcoind to start. This means that RPC is accessible and fully initialized.
-    Raise an exception if bitcoind exits during initialization.
+    Wait for GuldenD to start. This means that RPC is accessible and fully initialized.
+    Raise an exception if GuldenD exits during initialization.
     '''
     while True:
         if process.poll() is not None:
-            raise Exception('bitcoind exited with status %i during initialization' % process.returncode)
+            raise Exception('GuldenD exited with status %i during initialization' % process.returncode)
         try:
             rpc = get_rpc_proxy(url, i)
             blocks = rpc.getblockcount()
@@ -228,19 +228,19 @@ def wait_for_bitcoind_start(process, url, i):
 
 
 def _start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=None, stderr=None):
-    """Start a bitcoind and return RPC connection to it
+    """Start a GuldenD and return RPC connection to it
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
     datadir = os.path.join(dirname, "node"+str(i))
     if binary is None:
-        binary = os.getenv("BITCOIND", "bitcoind")
+        binary = os.getenv("BITCOIND", "GuldenD")
     args = [binary, "-datadir=" + datadir, "-server", "-keypool=1", "-discover=0", "-rest", "-logtimemicros", "-debug", "-debugexclude=libevent", "-debugexclude=leveldb", "-mocktime=" + str(get_mocktime()), "-uacomment=testnode%d" % i]
     if extra_args is not None: args.extend(extra_args)
-    bitcoind_processes[i] = subprocess.Popen(args, stderr=stderr)
-    logger.debug("initialize_chain: bitcoind started, waiting for RPC to come up")
+    GuldenD_processes[i] = subprocess.Popen(args, stderr=stderr)
+    logger.debug("initialize_chain: GuldenD started, waiting for RPC to come up")
     url = rpc_url(i, rpchost)
-    wait_for_bitcoind_start(bitcoind_processes[i], url, i)
+    wait_for_GuldenD_start(GuldenD_processes[i], url, i)
     logger.debug("initialize_chain: RPC successfully started")
     proxy = get_rpc_proxy(url, i, timeout=timewait)
 
@@ -255,7 +255,7 @@ def assert_start_raises_init_error(i, dirname, extra_args=None, expected_msg=Non
             node = _start_node(i, dirname, extra_args, stderr=log_stderr)
             _stop_node(node, i)
         except Exception as e:
-            assert 'bitcoind exited' in str(e) #node must have shutdown
+            assert 'GuldenD exited' in str(e) #node must have shutdown
             if expected_msg is not None:
                 log_stderr.seek(0)
                 stderr = log_stderr.read().decode('utf-8')
@@ -263,13 +263,13 @@ def assert_start_raises_init_error(i, dirname, extra_args=None, expected_msg=Non
                     raise AssertionError("Expected error \"" + expected_msg + "\" not found in:\n" + stderr)
         else:
             if expected_msg is None:
-                assert_msg = "bitcoind should have exited with an error"
+                assert_msg = "GuldenD should have exited with an error"
             else:
-                assert_msg = "bitcoind should have exited with expected error " + expected_msg
+                assert_msg = "GuldenD should have exited with expected error " + expected_msg
             raise AssertionError(assert_msg)
 
 def _start_nodes(num_nodes, dirname, extra_args=None, rpchost=None, timewait=None, binary=None):
-    """Start multiple bitcoinds, return RPC connections to them
+    """Start multiple GuldenDs, return RPC connections to them
     
     This function should only be called from within test_framework, not by individual test scripts."""
 
@@ -290,7 +290,7 @@ def log_filename(dirname, n_node, logname):
     return os.path.join(dirname, "node"+str(n_node), "regtest", logname)
 
 def _stop_node(node, i):
-    """Stop a bitcoind test node
+    """Stop a GuldenD test node
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
@@ -299,18 +299,18 @@ def _stop_node(node, i):
         node.stop()
     except http.client.CannotSendRequest as e:
         logger.exception("Unable to stop node")
-    return_code = bitcoind_processes[i].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
+    return_code = GuldenD_processes[i].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
     assert_equal(return_code, 0)
-    del bitcoind_processes[i]
+    del GuldenD_processes[i]
 
 def _stop_nodes(nodes):
-    """Stop multiple bitcoind test nodes
+    """Stop multiple GuldenD test nodes
 
     This function should only be called from within test_framework, not by individual test scripts."""
 
     for i, node in enumerate(nodes):
         _stop_node(node, i)
-    assert not bitcoind_processes.values() # All connections must be gone now
+    assert not GuldenD_processes.values() # All connections must be gone now
 
 def set_node_times(nodes, t):
     for node in nodes:

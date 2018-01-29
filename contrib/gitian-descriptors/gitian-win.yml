@@ -1,5 +1,5 @@
 ---
-name: "bitcoin-win-0.15"
+name: "Gulden-win-0.15"
 enable_cache: true
 suites:
 - "trusty"
@@ -28,8 +28,8 @@ packages:
 - "flex"
 - "libssl-dev"
 remotes:
-- "url": "https://github.com/bitcoin/bitcoin.git"
-  "dir": "bitcoin"
+- "url": "https://github.com/Gulden/gulden-dev.git"
+  "dir": "Gulden"
 files:
 - "osslsigncode-1.4.tar.gz" #Optional (only needed for official builds)
 - "codesign.tar.gz" #Optional (only needed for official builds)
@@ -80,7 +80,7 @@ script: |
 
   function create_per-host_linker_wrapper {
   # This is only needed for trusty, as the mingw linker leaks a few bytes of
-  # heap, causing non-determinism. See discussion in https://github.com/bitcoin/bitcoin/pull/6900
+  # heap, causing non-determinism. See discussion in https://github.com/Gulden/Gulden/pull/6900
   for i in $HOSTS; do
     mkdir -p ${WRAP_DIR}/${i}
     for prog in collect2; do
@@ -119,7 +119,7 @@ script: |
   tar -xf codesign.tar.gz || true
   mkdir codesign || true
 
-  cd bitcoin
+  cd Gulden
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -138,14 +138,14 @@ script: |
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
-  SOURCEDIST=`echo bitcoin-*.tar.gz`
+  SOURCEDIST=`echo Gulden-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find bitcoin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Gulden-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   mkdir -p $OUTDIR/src
   cp ../$SOURCEDIST $OUTDIR/src
   popd
@@ -185,7 +185,7 @@ script: |
      (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i}) || true
     done
 
-    cp -f bitcoin-*setup*.exe $OUTDIR/
+    cp -f Gulden-*setup*.exe $OUTDIR/
     cd installed
     find . -name "lib*.la" -delete
     find . -name "lib*.a" -delete
@@ -201,7 +201,7 @@ script: |
   #cp -rf contrib/windeploy $BUILD_DIR
   #cd $BUILD_DIR/windeploy
   #mkdir unsigned
-  #cp $OUTDIR/bitcoin-*setup-unsigned.exe unsigned/
+  #cp $OUTDIR/Gulden-*setup-unsigned.exe unsigned/
   #find . | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-win-unsigned.tar.gz
   mv ${OUTDIR}/${DISTNAME}-x86_64-*-debug.zip ${OUTDIR}/${DISTNAME}-win64-debug.zip
   mv ${OUTDIR}/${DISTNAME}-i686-*-debug.zip ${OUTDIR}/${DISTNAME}-win32-debug.zip

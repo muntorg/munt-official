@@ -432,7 +432,7 @@ bool CCoinsViewDB::Upgrade() {
     }
 
     // Gulden 2.0 - transaction format changes.
-    // Also simulatenously upgrade from the per-tx utxo model (bitcoin 0.8..0.14.x) to per-txout.
+    // Also simulatenously upgrade from the per-tx utxo model (Gulden 0.8..0.14.x) to per-txout.
     if (nCurrentVersion == 0)
     {
         LogPrintf("Upgrading database to be segsig compatible...\n");

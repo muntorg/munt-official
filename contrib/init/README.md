@@ -1,11 +1,11 @@
 Sample configuration files for:
 ```
-SystemD: bitcoind.service
-Upstart: bitcoind.conf
-OpenRC:  bitcoind.openrc
-         bitcoind.openrcconf
-CentOS:  bitcoind.init
-OS X:    org.bitcoin.bitcoind.plist
+SystemD: GuldenD.service
+Upstart: GuldenD.conf
+OpenRC:  GuldenD.openrc
+         GuldenD.openrcconf
+CentOS:  GuldenD.init
+OS X:    org.gulden.GuldenD.plist
 ```
 have been made available to assist packagers in creating node packages here.
 
