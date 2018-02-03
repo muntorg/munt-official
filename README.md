@@ -127,4 +127,4 @@ Alternatively pre-compiled binaries are also available at https://github.com/Gul
 |DNS Seed 5|seed.gulden.blue||
 
 ### Official testnet settings
--testnet=C1511943855:60 -addnode=178.62.195.19 -addnode=45.32.253.142 -addnode=199.247.1.84 -addnode=104.238.189.72 -addnode=149.210.165.218
+-testnet=C1511943855:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46
