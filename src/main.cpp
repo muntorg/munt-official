@@ -3237,7 +3237,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         assert(pindexPrev);
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
-            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, FormatStateMessage(state));
+            return state.DoS(5, error("%s: block invalidated by checkpoint", __func__), REJECT_INVALID, "bad-blk-fork");
 
         if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
