@@ -24,6 +24,9 @@
 
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()
 #include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
+#include <boost/asio.hpp>
+
+using namespace boost::asio::ip;
 
 #if !defined(HAVE_MSG_NOSIGNAL)
 #define MSG_NOSIGNAL 0
@@ -39,6 +42,12 @@ bool fNameLookup = DEFAULT_NAME_LOOKUP;
 // Need ample time for negotiation for very slow proxies such as Tor (milliseconds)
 static const int SOCKS5_RECV_TIMEOUT = 20 * 1000;
 static std::atomic<bool> interruptSocks5Recv(false);
+
+static boost::asio::io_context _io_context;
+
+boost::asio::io_context& get_io_context() {
+    return _io_context;
+}
 
 enum Network ParseNetwork(std::string net) {
     boost::to_lower(net);
@@ -89,44 +98,25 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
         }
     }
 
-    struct addrinfo aiHint;
-    memset(&aiHint, 0, sizeof(struct addrinfo));
+    try {
+        tcp::resolver resolver(get_io_context());
+        auto endpoints =
+                resolver.resolve(pszName,
+                                 "",
+                                 fAllowLookup ?
+                                     tcp::resolver::flags::address_configured
+                                   : tcp::resolver::flags::numeric_host);
 
-    aiHint.ai_socktype = SOCK_STREAM;
-    aiHint.ai_protocol = IPPROTO_TCP;
-    aiHint.ai_family = AF_UNSPEC;
-#ifdef WIN32
-    aiHint.ai_flags = fAllowLookup ? 0 : AI_NUMERICHOST;
-#else
-    aiHint.ai_flags = fAllowLookup ? AI_ADDRCONFIG : AI_NUMERICHOST;
-#endif
-    struct addrinfo *aiRes = NULL;
-    int nErr = getaddrinfo(pszName, NULL, &aiHint, &aiRes);
-    if (nErr)
+        for (auto it = endpoints.begin(); it != endpoints.end() && vIP.size()<nMaxSolutions; it++) {
+            vIP.push_back(it->endpoint().address());
+        }
+    }
+    catch (boost::system::error_code& ec) {
+        std::cerr << ec.message() << std::endl;
         return false;
-
-    struct addrinfo *aiTrav = aiRes;
-    while (aiTrav != NULL && (nMaxSolutions == 0 || vIP.size() < nMaxSolutions))
-    {
-        if (aiTrav->ai_family == AF_INET)
-        {
-            assert(aiTrav->ai_addrlen >= sizeof(sockaddr_in));
-            vIP.push_back(CNetAddr(((struct sockaddr_in*)(aiTrav->ai_addr))->sin_addr));
-        }
-
-        if (aiTrav->ai_family == AF_INET6)
-        {
-            assert(aiTrav->ai_addrlen >= sizeof(sockaddr_in6));
-            struct sockaddr_in6* s6 = (struct sockaddr_in6*) aiTrav->ai_addr;
-            vIP.push_back(CNetAddr(s6->sin6_addr, s6->sin6_scope_id));
-        }
-
-        aiTrav = aiTrav->ai_next;
     }
 
-    freeaddrinfo(aiRes);
-
-    return (vIP.size() > 0);
+    return true;
 }
 
 bool LookupHost(const char *pszName, std::vector<CNetAddr>& vIP, unsigned int nMaxSolutions, bool fAllowLookup)
