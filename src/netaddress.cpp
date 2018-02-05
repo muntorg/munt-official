@@ -61,6 +61,18 @@ CNetAddr::CNetAddr()
     Init();
 }
 
+CNetAddr::CNetAddr(const boost::asio::ip::address& addr)
+{
+    if (addr.is_v4()) {
+        SetRaw(NET_IPV4, addr.to_v4().to_bytes().data());
+    }
+    else if (addr.is_v6()) {
+        auto addr_v6 = addr.to_v6();
+        SetRaw(NET_IPV6, addr_v6.to_bytes().data());
+        scopeId = addr_v6.scope_id();
+    }
+}
+
 CNetAddr::CNetAddr(const struct in_addr& ipv4Addr)
 {
     SetRaw(NET_IPV4, (const uint8_t*)&ipv4Addr);

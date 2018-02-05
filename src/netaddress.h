@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <boost/asio.hpp>
 
 enum Network
 {
@@ -36,6 +37,7 @@ class CNetAddr
     public:
         CNetAddr();
         CNetAddr(const struct in_addr& ipv4Addr);
+        CNetAddr(const boost::asio::ip::address& addr);
         void Init();
         void SetIP(const CNetAddr& ip);
 
