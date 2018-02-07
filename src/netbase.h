@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <boost/asio.hpp>
 
 extern int nConnectTimeout;
 extern bool fNameLookup;
@@ -66,5 +67,7 @@ bool SetSocketNoDelay(SOCKET& hSocket);
  */
 struct timeval MillisToTimeval(int64_t nTimeout);
 void InterruptSocks5(bool interrupt);
+
+boost::asio::io_context& get_io_context();
 
 #endif // BITCOIN_NETBASE_H
