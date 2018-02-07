@@ -273,12 +273,12 @@ UniValue setgenerate(const JSONRPCRequest& request)
     if (!pactiveWallet->activeAccount)
         throw std::runtime_error("Cannot mine without an active account selected, first select an active account.");
 
-    if (pactiveWallet->activeAccount->IsPoW2Witness())
-        throw std::runtime_error("Cannot mine into a witness account, first select a regular account as the active account.");
-
     bool fGenerate = true;
     if (request.params.size() > 0)
         fGenerate = request.params[0].get_bool();
+
+    if (fGenerate && pactiveWallet->activeAccount->IsPoW2Witness())
+        throw std::runtime_error("Cannot mine into a witness account, first select a regular account as the active account.");
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
