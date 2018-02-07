@@ -1192,7 +1192,7 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
         compoundWitnessEarnings = false;
 
     // First obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
-    CTxOutPoW2Witness witnessInput = GetPow2WitnessOutput(selectedWitnessOutput);
+    CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
 
     // Now ammend some details of the input that must change in the new output.
     CPoW2WitnessDestination witnessDestination;

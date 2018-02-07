@@ -51,6 +51,9 @@ void GuldenOptionsModel::InitSettings(QSettings& settings)
     if (!settings.contains("localCurrencySymbol"))
         settings.setValue("localCurrencySymbol", QString("EUR"));
     localCurrency = settings.value("localCurrencySymbol").toString();
+    if (!settings.contains("witnessGraphScale"))
+        settings.setValue("witnessGraphScale", 0);
+    witnessGraphScale = settings.value("witnessGraphScale").toInt();
 }
 
 void GuldenOptionsModel::setLocalCurrency(const QString& value)
@@ -64,6 +67,18 @@ void GuldenOptionsModel::setLocalCurrency(const QString& value)
 QString GuldenOptionsModel::getLocalCurrency()
 {
     return localCurrency;
+}
+
+void GuldenOptionsModel::setWitnessGraphScale(int scale)
+{
+    QSettings settings;
+    settings.setValue("witnessGraphScale", scale);
+    witnessGraphScale = scale;
+}
+
+int GuldenOptionsModel::getWitnessGraphScale()
+{
+    return witnessGraphScale;
 }
 
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :

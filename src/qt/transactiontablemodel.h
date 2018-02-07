@@ -73,6 +73,8 @@ public:
         TxHashRole,
         /** Transaction data, hex-encoded */
         TxHexRole,
+        /** Block height of transaction, or 0 if not in block */
+        TxBlockHeightRole,
         /** Whole transaction as plain text */
         TxPlainTextRole,
         /** Is transaction confirmed? */

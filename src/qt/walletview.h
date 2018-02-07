@@ -22,6 +22,7 @@ class OverviewPage;
 class PlatformStyle;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
+class WitnessDialog;
 class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
@@ -69,6 +70,7 @@ private:
     QWidget *transactionsPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
+    WitnessDialog *witnessDialogPage;
     AddressBookPage *usedSendingAddressesPage;
     AddressBookPage *usedReceivingAddressesPage;
 
@@ -87,6 +89,8 @@ public Q_SLOTS:
     void gotoHistoryPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
+    /** Switch to witness information page */
+    void gotoWitnessPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 

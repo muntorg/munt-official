@@ -36,9 +36,12 @@ public:
     void InitSettings(QSettings& settings);
     void setLocalCurrency(const QString &value);
     QString getLocalCurrency();
+    void setWitnessGraphScale(int scale);
+    int getWitnessGraphScale();
 private:
     OptionsModel* m_pImpl;
     QString localCurrency;
+    int witnessGraphScale;
 
 Q_SIGNALS:
     void localCurrencyChanged(QString currency);
@@ -78,6 +81,7 @@ public:
         SpendZeroConfChange,    // bool
         Listen,                 // bool
         OptionIDRowCount,
+        WitnessInfoUnit         // int
     };
 
     void Init(bool resetSettings = false);

@@ -53,6 +53,11 @@ class QMenu;
 #define GULDEN_DIALOG_HLINE_STYLE_NOMARGIN "QFrame{max-height: 1px; margin: 0px; padding: 0px; background-color: #ebebeb; margin-bottom: 18px;}"
 extern std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode);
 
+//Colors
+extern const char* ACCENT_COLOR_1;
+extern const char* ACCENT_COLOR_2;
+extern const char* TEXT_COLOR_1;
+extern const char* COLOR_VALIDATION_FAILED;
 
 //Helpers
 void setValid(QWidget* control, bool validity);
@@ -145,6 +150,7 @@ private:
     QAction* importPrivateKeyAction;
     QAction* rescanAction;
     QAction* currencyAction;
+    QAction* witnessDialogAction;
 
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
@@ -211,6 +217,7 @@ private Q_SLOTS:
     void showAccountSettings();
     void dismissAccountSettings();
     void showExchangeRateDialog();
+    void showWitnessDialog();
     void updateExchangeRates();
 };
 

@@ -33,6 +33,8 @@
 #include <QIcon>
 #include <QList>
 
+#include <Gulden/util.h>
+
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {
         Qt::AlignLeft|Qt::AlignVCenter, /* status */
@@ -242,6 +244,21 @@ public:
             return QString::fromStdString(strHex);
         }
         return QString();
+    }
+
+    int getTxBlockNumber(TransactionRecord *rec)
+    {
+        LOCK2(cs_main, wallet->cs_wallet);
+        auto walletTxIter = wallet->mapWallet.find(rec->hash);
+        if(walletTxIter != wallet->mapWallet.end())
+        {
+            auto blockIter = mapBlockIndex.find(walletTxIter->second.hashBlock);
+            if (blockIter != mapBlockIndex.end())
+            {
+                return blockIter->second->nHeight;
+            }
+        }
+        return 0;
     }
 };
 
@@ -726,6 +743,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return QString::fromStdString(rec->hash.ToString());
     case TxHexRole:
         return priv->getTxHex(rec);
+    case TxBlockHeightRole:
+        return priv->getTxBlockNumber(rec);
     case TxPlainTextRole:
         {
             QString details;

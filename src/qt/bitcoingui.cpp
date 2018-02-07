@@ -744,14 +744,14 @@ void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
-    if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
+    //if (walletFrame) walletFrame->currentWalletView()->historyPage->update();
 }
 
 void BitcoinGUI::gotoReceiveCoinsPage()
 {
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
-    if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
+    //if (walletFrame) walletFrame->currentWalletView()->receiveCoinsPage->update();
 }
 
 void BitcoinGUI::gotoSendCoinsPage(QString addr)

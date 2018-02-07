@@ -49,6 +49,7 @@
 #include <_Gulden/importprivkeydialog.h>
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
+#include <_Gulden/witnessdialog.h>
 #include <Gulden/util.h>
 #include "sendcoinsdialog.h"
 #include "wallet/wallet.h"
@@ -80,6 +81,10 @@ const char* MINOR_LABEL_FONT_SIZE = "12px";
 
 //Colors
 const char* ACCENT_COLOR_1 = "#007aff";
+const char* ACCENT_COLOR_2 = "#0067d9";
+const char* TEXT_COLOR_1 = "#999";
+const char* COLOR_VALIDATION_FAILED = "#FF8080";
+
 
 //Toolbar constants
 unsigned int sideBarWidthNormal = 300;
@@ -183,6 +188,7 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , importPrivateKeyAction( NULL )
 , rescanAction( NULL )
 , currencyAction ( NULL )
+, witnessDialogAction ( NULL )
 , accountSummaryWidget( NULL )
 , dialogNewAccount( NULL )
 , dialogAccountSettings( NULL )
@@ -518,6 +524,11 @@ void GuldenGUI::createToolBarsGulden()
     m_pImpl->addToolBar( spacerBarL );
 
 
+    witnessDialogAction = new QAction(m_pImpl->platformStyle->TextColorIcon(":/icons/options"), tr("&Overview"), this);
+    witnessDialogAction->setStatusTip(tr("View statistics and information for witness account."));
+    witnessDialogAction->setCheckable(true);
+    m_pImpl->settingsMenu->addAction(witnessDialogAction);
+    connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showWitnessDialog()));
 
     tabsBar = m_pImpl->findChildren<QToolBar*>( "" )[0];
     //Add the main toolbar - middle (tabs)
@@ -531,6 +542,7 @@ void GuldenGUI::createToolBarsGulden()
     tabsBar->removeAction( m_pImpl->sendCoinsAction );
     tabsBar->removeAction( m_pImpl->receiveCoinsAction );
     //Setup the tab toolbar
+    tabsBar->addAction( witnessDialogAction );
     tabsBar->addAction( m_pImpl->receiveCoinsAction );
     tabsBar->addAction( m_pImpl->sendCoinsAction );
     tabsBar->addAction( m_pImpl->historyAction );
@@ -558,6 +570,7 @@ void GuldenGUI::createToolBarsGulden()
     tabsBar->widgetForAction( m_pImpl->historyAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( m_pImpl->sendCoinsAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( m_pImpl->receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( witnessDialogAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( passwordAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( backupAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( m_pImpl->receiveCoinsAction )->setObjectName( "receive_coins_button" );
@@ -565,6 +578,7 @@ void GuldenGUI::createToolBarsGulden()
     tabsBar->widgetForAction( m_pImpl->receiveCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( m_pImpl->sendCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( m_pImpl->historyAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( witnessDialogAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->setContentsMargins( 0, 0, 0, 0 );
 
     //Spacer to fill width
@@ -681,6 +695,10 @@ void GuldenGUI::doApplyStyleSheet()
     //Replace variables in the 'template' with actual values
     QString style( styleFile.readAll() );
     style.replace( "ACCENT_COLOR_1", QString(ACCENT_COLOR_1) );
+    style.replace( "ACCENT_COLOR_2", QString(ACCENT_COLOR_2) );
+    style.replace( "TEXT_COLOR_1", QString(TEXT_COLOR_1) );
+    style.replace( "COLOR_VALIDATION_FAILED", QString(COLOR_VALIDATION_FAILED) );
+    
     if (sideBarWidth == sideBarWidthExtended)
     {
         style.replace( "SIDE_BAR_WIDTH", SIDE_BAR_WIDTH_EXTENDED );
@@ -996,7 +1014,15 @@ void GuldenGUI::refreshAccountControls()
         m_pImpl->sendCoinsAction->setVisible( false );
 
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
+    {
         m_pImpl->receiveCoinsAction->setVisible( false );
+        m_pImpl->sendCoinsAction->setVisible( false );
+        witnessDialogAction->setVisible( true );
+    }
+    else
+    {
+        witnessDialogAction->setVisible( false );
+    }
 
     for ( const auto& controlPair : m_accountMap )
     {
@@ -1237,6 +1263,7 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
     m_pImpl->sendCoinsAction->setVisible( true );
 
     m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->update();
+    m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
@@ -1246,14 +1273,25 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
             m_pImpl->gotoReceiveCoinsPage();
         }
     }
-    else if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
+    if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
+        witnessDialogAction->setVisible( true );
         m_pImpl->receiveCoinsAction->setVisible( false );
-        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage )
+        m_pImpl->sendCoinsAction->setVisible( false );
+        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage || m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
         {
-            m_pImpl->gotoSendCoinsPage();
+            showWitnessDialog();
         }
     }
+    else
+    {
+        witnessDialogAction->setVisible( false );
+        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->witnessDialogPage )
+        {
+            m_pImpl->gotoReceiveCoinsPage();
+        }
+    }
+
     m_pImpl->historyAction->setVisible( true );
     passwordAction->setVisible( false );
     backupAction->setVisible( false );
@@ -1429,6 +1467,14 @@ void GuldenGUI::showExchangeRateDialog()
     }
     dialogExchangeRate->show();
 }
+
+void GuldenGUI::showWitnessDialog()
+{
+    witnessDialogAction->setChecked(true);
+    m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
+    m_pImpl->walletFrame->currentWalletView()->setCurrentWidget(m_pImpl->walletFrame->currentWalletView()->witnessDialogPage);
+}
+
 
 
 std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode)

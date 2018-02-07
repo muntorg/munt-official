@@ -42,22 +42,19 @@ inline bool IsPow2WitnessOutput(const CTxOut& out)
     return false;
 }
 
-inline CTxOutPoW2Witness GetPow2WitnessOutput(const CTxOut& out)
+inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessInput)
 {
-    CTxOutPoW2Witness witnessInput;
     if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         witnessInput = out.output.witnessDetails;
+        return true;
     }
     else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (GULDEN) (2.1) we can remove this
     {
         out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessInput);
+        return true;
     }
-    else
-    {
-        assert(0);
-    }
-    return witnessInput;
+    return false;
 }
 
 inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2WitnessDestination& fromDest)

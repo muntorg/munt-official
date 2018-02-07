@@ -286,7 +286,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             if ( txout.nValue < (5000 * COIN) )
                 return state.DoS(10, false, REJECT_INVALID, "PoW2 witness output smaller than 5000 NLG not allowed.");
 
-            CTxOutPoW2Witness witnessInput = GetPow2WitnessOutput(txout);
+            CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(txout, witnessInput);
             if (witnessInput.lockFromBlock == 0)
             {
                 if (witnessInput.lockUntilBlock - checkHeight < (576 * 30))
