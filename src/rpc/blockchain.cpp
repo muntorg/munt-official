@@ -793,6 +793,7 @@ struct CCoinsStats
     uint256 hashSerialized;
     uint64_t nDiskSize;
     CAmount nTotalAmount;
+    std::map<int, int> nTypeCount;
 
     CCoinsStats() : nHeight(0), nTransactions(0), nTransactionOutputs(0), nBogoSize(0), nDiskSize(0), nTotalAmount(0) {}
 };
@@ -808,6 +809,14 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
         //fixme: (GULDEN) (2.0) (SEGSIG) (HIGH) - Other output types
         ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
         ss << VARINT(output.second.out.nValue);
+        {
+            std::vector<CTxDestination> addresses;
+            txnouttype whichType;
+            int nRequired;
+            ExtractDestinations(output.second.out.output.scriptPubKey, whichType, addresses, nRequired);
+            stats.nTypeCount[whichType]++;
+        }
+        
         stats.nTransactionOutputs++;
         stats.nTotalAmount += output.second.out.nValue;
         stats.nBogoSize += 32 /* txid */ + 4 /* vout index */ + 4 /* height + coinbase */ + 8 /* amount */ +
@@ -939,6 +948,10 @@ UniValue gettxoutsetinfo(const JSONRPCRequest& request)
         ret.push_back(Pair("hash_serialized_2", stats.hashSerialized.GetHex()));
         ret.push_back(Pair("disk_size", stats.nDiskSize));
         ret.push_back(Pair("total_amount", ValueFromAmount(stats.nTotalAmount)));
+        for (auto& item : stats.nTypeCount)
+        {
+            ret.push_back(Pair(GetTxnOutputType((txnouttype)item.first), item.second));
+        }
     } else {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read UTXO set");
     }
