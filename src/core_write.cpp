@@ -149,7 +149,7 @@ void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
     txnouttype type;
 
     if (fIncludeHex)
-        out.pushKV("hex", txout.output.GetHex(CTxOutType::StandardKeyHashOutput));
+        out.pushKV("hex", txout.output.GetHex());
 
     out.pushKV("address", CBitcoinAddress(txout.output.standardKeyHash.keyID).ToString());
 }
@@ -159,7 +159,7 @@ void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
     txnouttype type;
 
     if (fIncludeHex)
-        out.pushKV("hex", txout.output.GetHex(CTxOutType::PoW2WitnessOutput));
+        out.pushKV("hex", txout.output.GetHex());
 
     out.pushKV("lock_from_block", txout.output.witnessDetails.lockFromBlock);
     out.pushKV("lock_until_block", txout.output.witnessDetails.lockUntilBlock);

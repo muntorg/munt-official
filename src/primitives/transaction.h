@@ -24,7 +24,7 @@ static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 static const int WITNESS_SCALE_FACTOR = 4;
 
 //fxime: (GULDEN) (NEXT) (HIGH)
-inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 /*|| nVersion > 10000*/; }
+inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 || nVersion > 10000; }
 
 struct CBlockPosition
 {
@@ -554,7 +554,7 @@ public:
             }
         }
 
-        std::string GetHex(CTxOutType nType) const
+        std::string GetHex() const
         {
             std::vector<unsigned char> serData;
             {
@@ -562,6 +562,12 @@ public:
                 const_cast<output*>(this)->WriteToStream(serialisedWitnessHeaderInfoStream);
             }
             return HexStr(serData);
+        }
+
+        uint256 GetHash() const
+        {
+            std::string sHex = GetHex();
+            return Hash(sHex.begin(), sHex.end());
         }
 
         bool operator==(const output& compare) const

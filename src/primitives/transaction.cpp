@@ -81,7 +81,7 @@ CTxOut::CTxOut(const CAmount& nValueIn, CTxOutStandardKeyHash standardKeyHash)
 
 std::string CTxOut::ToString() const
 {
-    return strprintf("CTxOut(nValue=%d.%08d, type=%s, data=%s)", nValue / COIN, nValue % COIN, GetTypeAsString(), output.GetHex(GetType()).substr(0, 30));
+    return strprintf("CTxOut(nValue=%d.%08d, type=%s, data=%s)", nValue / COIN, nValue % COIN, GetTypeAsString(), output.GetHex().substr(0, 30));
 }
 
 //fixme: (GULDEN) (2.1) restore CURRENT_VERSION behaviour here.

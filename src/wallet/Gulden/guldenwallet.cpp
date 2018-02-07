@@ -201,14 +201,30 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
 
+    uint256 outHash = out.output.GetHash();
+
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, out) : IsMine(accountItem.second->internalKeyStore, out) );
-            if (temp > ret)
-                ret = temp;
+            auto iter = accountItem.second->isminecache.find(outHash);
+            if (iter != accountItem.second->isminecache.end())
+            {
+                if (iter->second > ret)
+                    ret = iter->second;
+            }
+            else
+            {
+                isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, out) : IsMine(accountItem.second->internalKeyStore, out) );
+                if (temp > ret)
+                    ret = temp;
+                //fixme: keep trimmed by MRU
+                accountItem.second->isminecache[outHash] = ret;
+            }
+            // No need to keep going through the remaining accounts at this point.
+            if (ret >= ISMINE_SPENDABLE)
+                return ret;
         }
     }
     return ret;
