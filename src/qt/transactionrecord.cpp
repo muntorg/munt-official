@@ -47,7 +47,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
     LOCK(wallet->cs_wallet);
-    if (nNet > 0 || (wtx.IsCoinBase() && !wtx.IsPoW2WitnessCoinBase()))
+    if (nNet > 0 && !wtx.IsCoinBase())
     {
         //
         // Credit
@@ -55,6 +55,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
+            bool firsttime=true;
             for(const CTxOut& txout: wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);
@@ -124,6 +125,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         }
                     }
 
+                    if (sub.credit == 0 && sub.debit == 0)
+                    {
+                        continue;
+                    }
                     parts.append(sub);
                 }
             }
@@ -168,6 +173,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 sub.actionAccountUUID = sub.receiveAccountUUID = sub.fromAccountUUID = account->getUUID();
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
 
+                if (sub.credit == 0 && sub.debit == 0)
+                {
+                    continue;
+                }
                 parts.append(sub);
                 parts.last().involvesWatchAddress = involvesWatchAddress;   // maybe pass to TransactionRecord as constructor argument
             }
@@ -249,6 +258,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     sub.debit = nValue;
 
+                    if (sub.credit == 0 && sub.debit == 0)
+                    {
+                        continue;
+                    }
                     parts.append(sub);
                 }
             }
@@ -299,9 +312,20 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     else if (wtx.IsCoinBase())
                     {
-                        sub.type = TransactionRecord::Generated;
+                        if (sub.credit == 20 * COIN && sub.debit == 0)
+                        {
+                            sub.type = TransactionRecord::GeneratedWitness;
+                        }
+                        else
+                        {
+                            sub.type = TransactionRecord::Generated;
+                        }
                     }
 
+                    if (sub.credit == 0 && sub.debit == 0)
+                    {
+                        continue;
+                    }
                     parts.append(sub);
                     parts.last().involvesWatchAddress = involvesWatchAddress;
                 }
