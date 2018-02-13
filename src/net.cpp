@@ -103,6 +103,15 @@ unsigned short GetListenPort()
     return (unsigned short)(GetArg("-port", Params().GetDefaultPort()));
 }
 
+void CloseSocket(socket_t& sock)
+{
+    try {
+        sock.close();
+    }
+    catch (const boost::system::error_code& ec) {
+    }
+}
+
 // find 'best' local address for a particular peer
 bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
 {
@@ -348,17 +357,14 @@ bool CConnman::CheckIncomingNonce(uint64_t nonce)
 }
 
 /** Get the bind address for a socket as CAddress */
-static CAddress GetBindAddress(SOCKET sock)
+static CAddress GetBindAddress(socket_t& sock)
 {
     CAddress addr_bind;
-    struct sockaddr_storage sockaddr_bind;
-    socklen_t sockaddr_bind_len = sizeof(sockaddr_bind);
-    if (sock != INVALID_SOCKET) {
-        if (!getsockname(sock, (struct sockaddr*)&sockaddr_bind, &sockaddr_bind_len)) {
-            addr_bind.SetSockAddr((const struct sockaddr*)&sockaddr_bind);
-        } else {
-            LogPrint(BCLog::NET, "Warning: getsockname failed\n");
-        }
+    try {
+        addr_bind.SetSockAddr(sock.local_endpoint());
+    }
+    catch (boost::system::error_code& ec) {
+        LogPrint(BCLog::NET, "Warning: getsockname failed\n");
     }
     return addr_bind;
 }
@@ -408,10 +414,13 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         addrman.Attempt(addrConnect, fCountFailure);
 
         // Add node
+        boost::asio::ip::tcp::socket sock(get_io_context());
+        auto protocol = addrConnect.IsIPv4() ? boost::asio::ip::tcp::v4() : boost::asio::ip::tcp::v6();
+        sock.assign(protocol, hSocket);
         NodeId id = GetNewNodeId();
         uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-        CAddress addr_bind = GetBindAddress(hSocket);
-        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
+        CAddress addr_bind = GetBindAddress(sock);
+        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(sock), addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
         pnode->nServicesExpected = ServiceFlags(addrConnect.nServices & nRelevantServices);
         pnode->AddRef();
 
@@ -448,12 +457,8 @@ void CConnman::DumpBanlist()
 void CNode::CloseSocketDisconnect()
 {
     fDisconnect = true;
-    LOCK(cs_hSocket);
-    if (hSocket != INVALID_SOCKET)
-    {
-        LogPrint(BCLog::NET, "disconnecting peer=%d\n", id);
-        CloseSocket(hSocket);
-    }
+    LogPrint(BCLog::NET, "disconnecting peer=%d\n", id);
+    CloseSocket(hSocket);
 }
 
 void CConnman::ClearBanned()
@@ -840,67 +845,6 @@ const uint256& CNetMessage::GetMessageHash() const
     return data_hash;
 }
 
-
-
-
-
-
-
-
-
-// requires LOCK(cs_vSend)
-size_t CConnman::SocketSendData(CNode *pnode) const
-{
-    auto it = pnode->vSendMsg.begin();
-    size_t nSentSize = 0;
-
-    while (it != pnode->vSendMsg.end()) {
-        const auto &data = *it;
-        assert(data.size() > pnode->nSendOffset);
-        int nBytes = 0;
-        {
-            LOCK(pnode->cs_hSocket);
-            if (pnode->hSocket == INVALID_SOCKET)
-                break;
-            nBytes = send(pnode->hSocket, reinterpret_cast<const char*>(data.data()) + pnode->nSendOffset, data.size() - pnode->nSendOffset, MSG_NOSIGNAL | MSG_DONTWAIT);
-        }
-        if (nBytes > 0) {
-            pnode->nLastSend = GetSystemTimeInSeconds();
-            pnode->nSendBytes += nBytes;
-            pnode->nSendOffset += nBytes;
-            nSentSize += nBytes;
-            if (pnode->nSendOffset == data.size()) {
-                pnode->nSendOffset = 0;
-                pnode->nSendSize -= data.size();
-                pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
-                it++;
-            } else {
-                // could not send full message; stop sending more
-                break;
-            }
-        } else {
-            if (nBytes < 0) {
-                // error
-                int nErr = WSAGetLastError();
-                if (nErr != WSAEWOULDBLOCK && nErr != WSAEMSGSIZE && nErr != WSAEINTR && nErr != WSAEINPROGRESS)
-                {
-                    LogPrintf("socket send error %s\n", NetworkErrorString(nErr));
-                    pnode->CloseSocketDisconnect();
-                }
-            }
-            // couldn't send anything at all
-            break;
-        }
-    }
-
-    if (it == pnode->vSendMsg.end()) {
-        assert(pnode->nSendOffset == 0);
-        assert(pnode->nSendSize == 0);
-    }
-    pnode->vSendMsg.erase(pnode->vSendMsg.begin(), it);
-    return nSentSize;
-}
-
 struct NodeEvictionCandidate
 {
     NodeId id;
@@ -1047,85 +991,18 @@ bool CConnman::AttemptToEvictConnection()
     return false;
 }
 
-void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
-    struct sockaddr_storage sockaddr;
-    socklen_t len = sizeof(sockaddr);
-    SOCKET hSocket = accept(hListenSocket.socket, (struct sockaddr*)&sockaddr, &len);
-    CAddress addr;
-    int nInbound = 0;
-    int nMaxInbound = nMaxConnections - (nMaxOutbound + nMaxFeeler);
 
-    if (hSocket != INVALID_SOCKET) {
-        if (!addr.SetSockAddr((const struct sockaddr*)&sockaddr)) {
-            LogPrintf("Warning: Unknown socket family\n");
-        }
-    }
 
-    bool whitelisted = hListenSocket.whitelisted || IsWhitelistedRange(addr);
-    {
-        LOCK(cs_vNodes);
-        BOOST_FOREACH(CNode* pnode, vNodes)
-            if (pnode->fInbound)
-                nInbound++;
-    }
-
-    if (hSocket == INVALID_SOCKET)
-    {
-        int nErr = WSAGetLastError();
-        if (nErr != WSAEWOULDBLOCK)
-            LogPrintf("socket error accept failed: %s\n", NetworkErrorString(nErr));
-        return;
-    }
-
-    if (!fNetworkActive) {
-        LogPrintf("connection from %s dropped: not accepting new connections\n", addr.ToString());
-        CloseSocket(hSocket);
-        return;
-    }
-
-    // According to the internet TCP_NODELAY is not carried into accepted sockets
-    // on all platforms.  Set it again here just to be sure.
-    SetSocketNoDelay(hSocket);
-
-    if (IsBanned(addr) && !whitelisted)
-    {
-        LogPrintf("connection from %s dropped (banned)\n", addr.ToString());
-        CloseSocket(hSocket);
-        return;
-    }
-
-    if (nInbound >= nMaxInbound)
-    {
-        if (!AttemptToEvictConnection()) {
-            // No connection to evict, disconnect the new connection
-            LogPrint(BCLog::NET, "failed to find an eviction candidate - connection dropped (full)\n");
-            CloseSocket(hSocket);
-            return;
-        }
-    }
-
-    NodeId id = GetNewNodeId();
-    uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-    CAddress addr_bind = GetBindAddress(hSocket);
-
-    CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
-    pnode->AddRef();
-    pnode->fWhitelisted = whitelisted;
-    GetNodeSignals().InitializeNode(pnode, *this);
-
-    LogPrint(BCLog::NET, "connection from %s accepted\n", addr.ToString());
-
-    {
-        LOCK(cs_vNodes);
-        vNodes.push_back(pnode);
-    }
-}
-
-void CConnman::ThreadSocketHandler()
+void CConnman::NodeDisconnectAndDeleter()
 {
-    unsigned int nPrevNodeCount = 0;
-    while (!interruptNet)
-    {
+    const int INTERVAL_SEC = 1;
+
+    boost::asio::deadline_timer timer(get_io_context());
+    timer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
+    timer.async_wait([this](const boost::system::error_code& ec) {
+        if (ec)
+            return;
+
         //
         // Disconnect nodes
         //
@@ -1176,6 +1053,22 @@ void CConnman::ThreadSocketHandler()
                 }
             }
         }
+
+        NodeDisconnectAndDeleter();
+    });
+}
+
+void CConnman::NumConnectionsNotifier()
+{
+    const int INTERVAL_SEC = 1;
+    static unsigned int nPrevNodeCount = 0;
+
+    boost::asio::deadline_timer timer(get_io_context());
+    timer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
+    timer.async_wait([this](const boost::system::error_code& ec) {
+        if (ec)
+            return;
+
         size_t vNodesSize;
         {
             LOCK(cs_vNodes);
@@ -1187,198 +1080,21 @@ void CConnman::ThreadSocketHandler()
                 clientInterface->NotifyNumConnectionsChanged(nPrevNodeCount);
         }
 
-        //
-        // Find which sockets have data to receive
-        //
-        struct timeval timeout;
-        timeout.tv_sec  = 0;
-        timeout.tv_usec = 50000; // frequency to poll pnode->vSend
+        NumConnectionsNotifier();
+    });
+}
 
-        fd_set fdsetRecv;
-        fd_set fdsetSend;
-        fd_set fdsetError;
-        FD_ZERO(&fdsetRecv);
-        FD_ZERO(&fdsetSend);
-        FD_ZERO(&fdsetError);
-        SOCKET hSocketMax = 0;
-        bool have_fds = false;
+void CConnman::NodeInactivityChecker(CNode* pnode)
+{
+    pnode->AddRef();
 
-        BOOST_FOREACH(const ListenSocket& hListenSocket, vhListenSocket) {
-            FD_SET(hListenSocket.socket, &fdsetRecv);
-            hSocketMax = std::max(hSocketMax, hListenSocket.socket);
-            have_fds = true;
-        }
+    const int INTERVAL_SEC = 1;
 
-        {
-            LOCK(cs_vNodes);
-            BOOST_FOREACH(CNode* pnode, vNodes)
-            {
-                // Implement the following logic:
-                // * If there is data to send, select() for sending data. As this only
-                //   happens when optimistic write failed, we choose to first drain the
-                //   write buffer in this case before receiving more. This avoids
-                //   needlessly queueing received data, if the remote peer is not themselves
-                //   receiving data. This means properly utilizing TCP flow control signalling.
-                // * Otherwise, if there is space left in the receive buffer, select() for
-                //   receiving data.
-                // * Hand off all complete messages to the processor, to be handled without
-                //   blocking here.
+    boost::asio::deadline_timer timer(get_io_context());
+    timer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
+    timer.async_wait([this, pnode](const boost::system::error_code& ec) {
 
-                bool select_recv = !pnode->fPauseRecv;
-                bool select_send;
-                {
-                    LOCK(pnode->cs_vSend);
-                    select_send = !pnode->vSendMsg.empty();
-                }
-
-                LOCK(pnode->cs_hSocket);
-                if (pnode->hSocket == INVALID_SOCKET)
-                    continue;
-
-                FD_SET(pnode->hSocket, &fdsetError);
-                hSocketMax = std::max(hSocketMax, pnode->hSocket);
-                have_fds = true;
-
-                if (select_send) {
-                    FD_SET(pnode->hSocket, &fdsetSend);
-                    continue;
-                }
-                if (select_recv) {
-                    FD_SET(pnode->hSocket, &fdsetRecv);
-                }
-            }
-        }
-
-        int nSelect = select(have_fds ? hSocketMax + 1 : 0,
-                             &fdsetRecv, &fdsetSend, &fdsetError, &timeout);
-        if (interruptNet)
-            return;
-
-        if (nSelect == SOCKET_ERROR)
-        {
-            if (have_fds)
-            {
-                int nErr = WSAGetLastError();
-                LogPrintf("socket select error %s\n", NetworkErrorString(nErr));
-                for (unsigned int i = 0; i <= hSocketMax; i++)
-                    FD_SET(i, &fdsetRecv);
-            }
-            FD_ZERO(&fdsetSend);
-            FD_ZERO(&fdsetError);
-            if (!interruptNet.sleep_for(std::chrono::milliseconds(timeout.tv_usec/1000)))
-                return;
-        }
-
-        //
-        // Accept new connections
-        //
-        BOOST_FOREACH(const ListenSocket& hListenSocket, vhListenSocket)
-        {
-            if (hListenSocket.socket != INVALID_SOCKET && FD_ISSET(hListenSocket.socket, &fdsetRecv))
-            {
-                AcceptConnection(hListenSocket);
-            }
-        }
-
-        //
-        // Service each socket
-        //
-        std::vector<CNode*> vNodesCopy;
-        {
-            LOCK(cs_vNodes);
-            vNodesCopy = vNodes;
-            BOOST_FOREACH(CNode* pnode, vNodesCopy)
-                pnode->AddRef();
-        }
-        BOOST_FOREACH(CNode* pnode, vNodesCopy)
-        {
-            if (interruptNet)
-                return;
-
-            //
-            // Receive
-            //
-            bool recvSet = false;
-            bool sendSet = false;
-            bool errorSet = false;
-            {
-                LOCK(pnode->cs_hSocket);
-                if (pnode->hSocket == INVALID_SOCKET)
-                    continue;
-                recvSet = FD_ISSET(pnode->hSocket, &fdsetRecv);
-                sendSet = FD_ISSET(pnode->hSocket, &fdsetSend);
-                errorSet = FD_ISSET(pnode->hSocket, &fdsetError);
-            }
-            if (recvSet || errorSet)
-            {
-                // typical socket buffer is 8K-64K
-                char pchBuf[0x10000];
-                int nBytes = 0;
-                {
-                    LOCK(pnode->cs_hSocket);
-                    if (pnode->hSocket == INVALID_SOCKET)
-                        continue;
-                    nBytes = recv(pnode->hSocket, pchBuf, sizeof(pchBuf), MSG_DONTWAIT);
-                }
-                if (nBytes > 0)
-                {
-                    bool notify = false;
-                    if (!pnode->ReceiveMsgBytes(pchBuf, nBytes, notify))
-                        pnode->CloseSocketDisconnect();
-                    RecordBytesRecv(nBytes);
-                    if (notify) {
-                        size_t nSizeAdded = 0;
-                        auto it(pnode->vRecvMsg.begin());
-                        for (; it != pnode->vRecvMsg.end(); ++it) {
-                            if (!it->complete())
-                                break;
-                            nSizeAdded += it->vRecv.size() + CMessageHeader::HEADER_SIZE;
-                        }
-                        {
-                            LOCK(pnode->cs_vProcessMsg);
-                            pnode->vProcessMsg.splice(pnode->vProcessMsg.end(), pnode->vRecvMsg, pnode->vRecvMsg.begin(), it);
-                            pnode->nProcessQueueSize += nSizeAdded;
-                            pnode->fPauseRecv = pnode->nProcessQueueSize > nReceiveFloodSize;
-                        }
-                        WakeMessageHandler();
-                    }
-                }
-                else if (nBytes == 0)
-                {
-                    // socket closed gracefully
-                    if (!pnode->fDisconnect) {
-                        LogPrint(BCLog::NET, "socket closed\n");
-                    }
-                    pnode->CloseSocketDisconnect();
-                }
-                else if (nBytes < 0)
-                {
-                    // error
-                    int nErr = WSAGetLastError();
-                    if (nErr != WSAEWOULDBLOCK && nErr != WSAEMSGSIZE && nErr != WSAEINTR && nErr != WSAEINPROGRESS)
-                    {
-                        if (!pnode->fDisconnect)
-                            LogPrintf("socket recv error %s\n", NetworkErrorString(nErr));
-                        pnode->CloseSocketDisconnect();
-                    }
-                }
-            }
-
-            //
-            // Send
-            //
-            if (sendSet)
-            {
-                LOCK(pnode->cs_vSend);
-                size_t nBytes = SocketSendData(pnode);
-                if (nBytes) {
-                    RecordBytesSent(nBytes);
-                }
-            }
-
-            //
-            // Inactivity checking
-            //
+        if (!ec) {
             int64_t nTime = GetSystemTimeInSeconds();
             if (nTime - pnode->nTimeConnected > 60)
             {
@@ -1408,12 +1124,87 @@ void CConnman::ThreadSocketHandler()
                     pnode->fDisconnect = true;
                 }
             }
+            NodeInactivityChecker(pnode);
         }
-        {
-            LOCK(cs_vNodes);
-            BOOST_FOREACH(CNode* pnode, vNodesCopy)
-                pnode->Release();
+        pnode->Release();
+    });
+}
+
+void CConnman::ResumeReceive(CNode* pnode)
+{
+    // Implement the following logic:
+    // * If there is (too much) data to send halt receiving and first drain the write buffer.
+    //   This avoids needlessly queueing received data, if the remote peer is not themselves
+    //   receiving data. This means properly utilizing TCP flow control signalling.
+    // * Otherwise, if there is space left in the receive buffer handle incoming data.
+    // * Hand off all complete messages to the processor, to be handled without
+    //   blocking here.
+
+    if (interruptNet)
+        return;
+
+    if (pnode->fPauseRecv)
+        return;
+
+    pnode->AddRef();
+
+    pnode->hSocket.async_receive(boost::asio::mutable_buffer(pnode->pchBuf, sizeof(pnode->pchBuf)),
+                                 [this,pnode] (const boost::system::error_code& ec, std::size_t bytes_transferred) {
+        if (!ec) {
+            bool msgcomplete = false;
+            if (!pnode->ReceiveMsgBytes(pnode->pchBuf, bytes_transferred, msgcomplete))
+                pnode->CloseSocketDisconnect();
+            RecordBytesRecv(bytes_transferred);
+            if (msgcomplete) {
+                size_t nSizeAdded = 0;
+                auto it(pnode->vRecvMsg.begin());
+                for (; it != pnode->vRecvMsg.end(); ++it) {
+                    if (!it->complete())
+                        break;
+                    nSizeAdded += it->vRecv.size() + CMessageHeader::HEADER_SIZE;
+                }
+                {
+                    LOCK(pnode->cs_vProcessMsg);
+                    pnode->vProcessMsg.splice(pnode->vProcessMsg.end(), pnode->vRecvMsg, pnode->vRecvMsg.begin(), it);
+                    pnode->nProcessQueueSize += nSizeAdded;
+                    pnode->fPauseRecv = pnode->nProcessQueueSize > nReceiveFloodSize;
+                }
+                WakeMessageHandler();
+            }
+            this->ResumeReceive(pnode);
         }
+        else {
+            if (boost::asio::error::eof == ec) {
+                // socket closed gracefully
+                if (!pnode->fDisconnect) {
+                    LogPrint(BCLog::NET, "socket closed\n");
+                }
+            }
+            else {
+                if (!pnode->fDisconnect)
+                    LogPrintf("socket recv error %s\n", ec.message());
+            }
+            pnode->CloseSocketDisconnect();
+        }
+
+        pnode->Release();
+    });
+}
+
+void CConnman::ThreadSocketHandler()
+{
+    NodeDisconnectAndDeleter();
+    NumConnectionsNotifier();
+
+    struct timeval timeout;
+    timeout.tv_sec  = 0;
+    timeout.tv_usec = 50000;
+
+    while (!interruptNet) {
+        get_io_context().run();
+        if (!interruptNet.sleep_for(std::chrono::milliseconds(timeout.tv_usec/1000)))
+            return;
+        get_io_context().restart();
     }
 }
 
@@ -2028,95 +1819,120 @@ void CConnman::ThreadMessageHandler()
     }
 }
 
+void CConnman::AcceptIncoming(ListenSocket& listener)
+{
+    auto pPeer_endpoint  = std::shared_ptr<boost::asio::ip::tcp::endpoint>(new boost::asio::ip::tcp::endpoint());
 
+    listener.acceptor.async_accept(*pPeer_endpoint,
+                                   [this, &listener, pPeer_endpoint](const boost::system::error_code& ec, boost::asio::ip::tcp::socket peer) {
+        // this handler runs in io_context.run() thread!
 
+        if (ec) {
+            LogPrintf("socket error acceptor failed: %s\n", ec.message());
+            return;
+        }
 
+        CAddress addr;
+        addr.SetSockAddr(*pPeer_endpoint);
 
+        bool connection_ok = true;
+
+        if (!fNetworkActive) {
+            LogPrintf("connection from %s dropped: not accepting new connections\n", addr.ToString());
+            connection_ok = false;
+        }
+
+        bool whitelisted = listener.whitelisted || IsWhitelistedRange(addr);
+        if (connection_ok && IsBanned(addr) && !whitelisted)
+        {
+            LogPrintf("connection from %s dropped (banned)\n", addr.ToString());
+            connection_ok = false;
+        }
+
+        if (connection_ok)
+        {
+            int nInbound = 0;
+            int nMaxInbound = nMaxConnections - (nMaxOutbound + nMaxFeeler);
+            {
+                LOCK(cs_vNodes);
+                BOOST_FOREACH(CNode* pnode, vNodes)
+                        if (pnode->fInbound)
+                        nInbound++;
+            }
+            if (nInbound >= nMaxInbound)
+            {
+                if (!AttemptToEvictConnection()) {
+                    // No connection to evict, disconnect the new connection
+                    LogPrint(BCLog::NET, "failed to find an eviction candidate - connection dropped (full)\n");
+                    connection_ok = false;
+                }
+            }
+        }
+
+        if (connection_ok) {
+            // According to the internet TCP_NODELAY is not carried into accepted sockets
+            // on all platforms.  Set it again here just to be sure.
+            peer.set_option(boost::asio::ip::tcp::no_delay(true));
+
+            NodeId id = GetNewNodeId();
+            uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
+            CAddress addr_bind = GetBindAddress(peer);
+
+            CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(peer), addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
+            pnode->AddRef();
+            pnode->fWhitelisted = whitelisted;
+            GetNodeSignals().InitializeNode(pnode, *this);
+
+            LogPrint(BCLog::NET, "connection from %s accepted\n", addr.ToString());
+
+            {
+                LOCK(cs_vNodes);
+                vNodes.push_back(pnode);
+            }
+        }
+        else {
+            CloseSocket(peer);
+        }
+
+        // re-run for another incoming connection
+        this->AcceptIncoming(listener);
+    });
+}
 
 bool CConnman::BindListenPort(const CService &addrBind, std::string& strError, bool fWhitelisted)
 {
-    strError = "";
-    int nOne = 1;
+    try {
+        boost::asio::ip::tcp::endpoint endpoint(addrBind.GetSockAddr());
 
-    // Create socket for listening for incoming connections
-    struct sockaddr_storage sockaddr;
-    socklen_t len = sizeof(sockaddr);
-    if (!addrBind.GetSockAddr((struct sockaddr*)&sockaddr, &len))
-    {
-        strError = strprintf("Error: Bind address family for %s not supported", addrBind.ToString());
-        LogPrintf("%s\n", strError);
-        return false;
-    }
-
-    SOCKET hListenSocket = socket(((struct sockaddr*)&sockaddr)->sa_family, SOCK_STREAM, IPPROTO_TCP);
-    if (hListenSocket == INVALID_SOCKET)
-    {
-        strError = strprintf("Error: Couldn't open socket for incoming connections (socket returned error %s)", NetworkErrorString(WSAGetLastError()));
-        LogPrintf("%s\n", strError);
-        return false;
-    }
-
-#ifndef WIN32
-#ifdef SO_NOSIGPIPE
-    // Different way of disabling SIGPIPE on BSD
-    setsockopt(hListenSocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&nOne, sizeof(int));
-#endif
-    // Allow binding if the port is still in TIME_WAIT state after
-    // the program was closed and restarted.
-    setsockopt(hListenSocket, SOL_SOCKET, SO_REUSEADDR, (void*)&nOne, sizeof(int));
-    // Disable Nagle's algorithm
-    setsockopt(hListenSocket, IPPROTO_TCP, TCP_NODELAY, (void*)&nOne, sizeof(int));
-#else
-    setsockopt(hListenSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&nOne, sizeof(int));
-    setsockopt(hListenSocket, IPPROTO_TCP, TCP_NODELAY, (const char*)&nOne, sizeof(int));
-#endif
-
-    // Set to non-blocking, incoming connections will also inherit this
-    if (!SetSocketNonBlocking(hListenSocket, true)) {
-        strError = strprintf("BindListenPort: Setting listening socket to non-blocking failed, error %s\n", NetworkErrorString(WSAGetLastError()));
-        LogPrintf("%s\n", strError);
-        return false;
-    }
-
-    // some systems don't have IPV6_V6ONLY but are always v6only; others do have the option
-    // and enable it by default or not. Try to enable it, if possible.
-    if (addrBind.IsIPv6()) {
+        boost::asio::ip::tcp::acceptor acceptor(get_io_context());
+        acceptor.open(endpoint.protocol());
+        acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+        // some systems don't have IPV6_V6ONLY but are always v6only; others do have the option
+        // and enable it by default or not. Try to enable it, if possible.
 #ifdef IPV6_V6ONLY
-#ifdef WIN32
-        setsockopt(hListenSocket, IPPROTO_IPV6, IPV6_V6ONLY, (const char*)&nOne, sizeof(int));
-#else
-        setsockopt(hListenSocket, IPPROTO_IPV6, IPV6_V6ONLY, (void*)&nOne, sizeof(int));
+        if (endpoint.protocol()==boost::asio::ip::tcp::v6()) {
+            acceptor.set_option(boost::asio::ip::v6_only(true));
+        }
 #endif
-#endif
-#ifdef WIN32
-        int nProtLevel = PROTECTION_LEVEL_UNRESTRICTED;
-        setsockopt(hListenSocket, IPPROTO_IPV6, IPV6_PROTECTION_LEVEL, (const char*)&nProtLevel, sizeof(int));
-#endif
-    }
+        acceptor.set_option(boost::asio::ip::tcp::no_delay(true));
+        acceptor.bind(endpoint);
+        acceptor.listen(SOMAXCONN);
 
-    if (::bind(hListenSocket, (struct sockaddr*)&sockaddr, len) == SOCKET_ERROR)
-    {
-        int nErr = WSAGetLastError();
-        if (nErr == WSAEADDRINUSE)
-            strError = strprintf(_("Unable to bind to %s on this computer. %s is probably already running."), addrBind.ToString(), _(PACKAGE_NAME));
-        else
-            strError = strprintf(_("Unable to bind to %s on this computer (bind returned error %s)"), addrBind.ToString(), NetworkErrorString(nErr));
-        LogPrintf("%s\n", strError);
-        CloseSocket(hListenSocket);
+        // There is no equivalent for this in Boost.Asio
+        //#ifdef WIN32
+        //        int nProtLevel = PROTECTION_LEVEL_UNRESTRICTED;
+        //        setsockopt(hListenSocket, IPPROTO_IPV6, IPV6_PROTECTION_LEVEL, (const char*)&nProtLevel, sizeof(int));
+        //#endif
+
+        vhListenSocket.push_back(ListenSocket(std::move(acceptor), fWhitelisted));
+        ListenSocket& listener = vhListenSocket.back();
+        AcceptIncoming(listener);
+    }
+    catch(boost::system::error_code& ec) {
+        LogPrintf("Listening connections on [%s] failed (%s)\n", addrBind.ToString(), ec.message());
+        vhListenSocket.pop_back();
         return false;
     }
-    LogPrintf("Bound to %s\n", addrBind.ToString());
-
-    // Listen for incoming connections
-    if (listen(hListenSocket, SOMAXCONN) == SOCKET_ERROR)
-    {
-        strError = strprintf(_("Error: Listening for incoming connections failed (listen returned error %s)"), NetworkErrorString(WSAGetLastError()));
-        LogPrintf("%s\n", strError);
-        CloseSocket(hListenSocket);
-        return false;
-    }
-
-    vhListenSocket.push_back(ListenSocket(hListenSocket, fWhitelisted));
 
     if (addrBind.IsRoutable() && fDiscover && !fWhitelisted)
         AddLocal(addrBind, LOCAL_BIND);
@@ -2388,10 +2204,8 @@ void CConnman::Stop()
     // Close sockets
     BOOST_FOREACH(CNode* pnode, vNodes)
         pnode->CloseSocketDisconnect();
-    BOOST_FOREACH(ListenSocket& hListenSocket, vhListenSocket)
-        if (hListenSocket.socket != INVALID_SOCKET)
-            if (!CloseSocket(hListenSocket.socket))
-                LogPrintf("CloseSocket(hListenSocket) failed with error %s\n", NetworkErrorString(WSAGetLastError()));
+
+    vhListenSocket.clear();
 
     // clean up some globals (to help leak detection)
     BOOST_FOREACH(CNode *pnode, vNodes) {
@@ -2647,7 +2461,7 @@ int CConnman::GetBestHeight() const
 unsigned int CConnman::GetReceiveFloodSize() const { return nReceiveFloodSize; }
 unsigned int CConnman::GetSendBufferSize() const{ return nSendBufferMaxSize; }
 
-CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress& addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string& addrNameIn, bool fInboundIn) :
+CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, socket_t hSocketIn, const CAddress& addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string& addrNameIn, bool fInboundIn) :
     nTimeConnected(GetSystemTimeInSeconds()),
     addr(addrIn),
     addrBind(addrBindIn),
@@ -2659,11 +2473,11 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     nLocalHostNonce(nLocalHostNonceIn),
     nLocalServices(nLocalServicesIn),
     nMyStartingHeight(nMyStartingHeightIn),
+    hSocket(std::move(hSocketIn)),
     nSendVersion(0)
 {
     nServices = NODE_NONE;
     nServicesExpected = NODE_NONE;
-    hSocket = hSocketIn;
     nRecvVersion = INIT_PROTO_VERSION;
     nLastSend = 0;
     nLastRecv = 0;
@@ -2782,10 +2596,8 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
     CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, serializedHeader, 0, hdr};
 
-    size_t nBytesSent = 0;
     {
         LOCK(pnode->cs_vSend);
-        bool optimisticSend(pnode->vSendMsg.empty());
 
         //log total amount of bytes per command
         pnode->mapSendBytesPerMsgCmd[msg.command] += nTotalSize;
@@ -2796,13 +2608,71 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
         pnode->vSendMsg.push_back(std::move(serializedHeader));
         if (nMessageSize)
             pnode->vSendMsg.push_back(std::move(msg.data));
-
-        // If write queue empty, attempt "optimistic write"
-        if (optimisticSend == true)
-            nBytesSent = SocketSendData(pnode);
     }
-    if (nBytesSent)
-        RecordBytesSent(nBytesSent);
+
+    boost::asio::post(get_io_context(), [this, pnode]() {
+        if (!pnode->fSendInProgress) {
+            pnode->fSendInProgress = true;
+            this->ResumeSend(pnode);
+        }
+    });
+}
+
+void CConnman::ResumeSend(CNode *pnode)
+{
+    // assumes that there is data to send
+    assert(pnode->fSendInProgress);
+
+    boost::asio::const_buffer buffer;
+    {
+        LOCK(pnode->cs_vSend);
+        assert(pnode->vSendMsg.size() > 0);
+        const auto &data = *pnode->vSendMsg.begin();
+        buffer = boost::asio::buffer(reinterpret_cast<const char*>(data.data()) + pnode->nSendOffset,
+                                     data.size() - pnode->nSendOffset);
+    }
+
+    boost::asio::async_write(pnode->hSocket, buffer,
+                             [this, pnode](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+        if (ec) {
+            LogPrintf("socket send error %s\n", ec.message());
+            pnode->CloseSocketDisconnect();
+            // TODO WDJ see what more is needed to finalize the node here, deactivate transfer
+            // make sure that it gets picked up for cleaning somewhere
+            return;
+        }
+
+        RecordBytesSent(bytes_transferred);
+
+        // TODO WDJ when it works remove nSendOffset stuff (whole message is always send before the handler is invoked)
+        pnode->nLastSend = GetSystemTimeInSeconds();
+        pnode->nSendBytes += bytes_transferred;
+        pnode->nSendOffset += bytes_transferred;
+        if (pnode->nSendOffset == bytes_transferred) {
+            pnode->nSendOffset = 0;
+            pnode->nSendSize -= bytes_transferred;
+            pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
+
+            bool moreToSend;
+            {
+                LOCK(pnode->cs_vSend);
+                pnode->vSendMsg.pop_front();
+                moreToSend = !pnode->vSendMsg.empty();
+            }
+
+            if (moreToSend) {
+                this->ResumeSend(pnode);
+            }
+            else {
+                assert(pnode->nSendOffset == 0);
+                assert(pnode->nSendSize == 0);
+                pnode->fSendInProgress = false;
+            }
+        }
+        else {
+            assert(false);
+        }
+    });
 }
 
 bool CConnman::ForNode(NodeId id, std::function<bool(CNode* pnode)> func)

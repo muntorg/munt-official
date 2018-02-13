@@ -285,6 +285,7 @@ void InitializeNode(CNode *pnode, CConnman& connman) {
     }
     if(!pnode->fInbound)
         PushNodeVersion(pnode, connman, GetTime());
+    connman.ResumeReceive(pnode);
 }
 
 void FinalizeNode(NodeId nodeid, bool& fUpdateConnectionTime) {
@@ -2768,7 +2769,11 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
         // Just take one message
         msgs.splice(msgs.begin(), pfrom->vProcessMsg, pfrom->vProcessMsg.begin());
         pfrom->nProcessQueueSize -= msgs.front().vRecv.size() + CMessageHeader::HEADER_SIZE;
+        bool prev_fPauseRecv = pfrom->fPauseRecv;
         pfrom->fPauseRecv = pfrom->nProcessQueueSize > connman.GetReceiveFloodSize();
+        if (!pfrom->fPauseRecv && prev_fPauseRecv) {
+            connman.ResumeReceive(pfrom);
+        }
         fMoreWork = !pfrom->vProcessMsg.empty();
     }
     CNetMessage& msg(msgs.front());
