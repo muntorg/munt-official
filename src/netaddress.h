@@ -73,6 +73,9 @@ class CNetAddr
         unsigned int GetByte(int n) const;
         uint64_t GetHash() const;
         bool GetInAddr(struct in_addr* pipv4Addr) const;
+        boost::asio::ip::address GetAddress() const;
+        boost::asio::ip::address_v4 GetInAddr() const;
+        boost::asio::ip::address_v6 GetIn6Addr() const;
         std::vector<unsigned char> GetGroup() const;
         int GetReachabilityFrom(const CNetAddr *paddrPartner = NULL) const;
 
@@ -141,11 +144,13 @@ class CService : public CNetAddr
         CService(const CNetAddr& ip, unsigned short port);
         CService(const struct in_addr& ipv4Addr, unsigned short port);
         CService(const struct sockaddr_in& addr);
+        CService(const boost::asio::ip::tcp::endpoint& endpoint);
         void Init();
         void SetPort(unsigned short portIn);
         unsigned short GetPort() const;
         bool GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const;
-        bool SetSockAddr(const struct sockaddr* paddr);
+        boost::asio::ip::tcp::endpoint GetSockAddr() const;
+        bool SetSockAddr(const boost::asio::ip::tcp::endpoint& endpoint);
         friend bool operator==(const CService& a, const CService& b);
         friend bool operator!=(const CService& a, const CService& b);
         friend bool operator<(const CService& a, const CService& b);

@@ -11,6 +11,8 @@
 #include "hash.h"
 #include "utilstrencodings.h"
 #include "tinyformat.h"
+#include "netbase.h"
+#include "util.h"
 
 static const unsigned char pchIPv4[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff };
 static const unsigned char pchOnionCat[] = {0xFD,0x87,0xD8,0x7E,0xEB,0x43};
@@ -250,14 +252,15 @@ std::string CNetAddr::ToStringIP() const
 {
     if (IsTor())
         return EncodeBase32(&ip[6], 10) + ".onion";
-    CService serv(*this, 0);
-    struct sockaddr_storage sockaddr;
-    socklen_t socklen = sizeof(sockaddr);
-    if (serv.GetSockAddr((struct sockaddr*)&sockaddr, &socklen)) {
-        char name[1025] = "";
-        if (!getnameinfo((const struct sockaddr*)&sockaddr, socklen, name, sizeof(name), NULL, 0, NI_NUMERICHOST))
-            return std::string(name);
+
+    try {
+        boost::asio::ip::tcp::resolver resolver(get_io_context());
+        auto endpoints = resolver.resolve(GetAddress().to_string(), "", boost::asio::ip::tcp::resolver::flags::numeric_host);
+        return endpoints.begin()->host_name();
     }
+    catch (const boost::system::error_code& ec) {
+    }
+
     if (IsIPv4())
         return strprintf("%u.%u.%u.%u", GetByte(3), GetByte(2), GetByte(1), GetByte(0));
     else
@@ -286,6 +289,28 @@ bool operator!=(const CNetAddr& a, const CNetAddr& b)
 bool operator<(const CNetAddr& a, const CNetAddr& b)
 {
     return (memcmp(a.ip, b.ip, 16) < 0);
+}
+
+boost::asio::ip::address CNetAddr::GetAddress() const
+{
+    if (IsIPv4())
+        return GetInAddr();
+    else
+        return GetIn6Addr();
+}
+
+boost::asio::ip::address_v4 CNetAddr::GetInAddr() const
+{
+    boost::asio::ip::address_v4::bytes_type bytes;
+    memcpy(bytes.data(), (const unsigned char*)ip+12, 4);
+    return boost::asio::ip::address_v4(bytes);
+}
+
+boost::asio::ip::address_v6 CNetAddr::GetIn6Addr() const
+{
+    boost::asio::ip::address_v6::bytes_type bytes;
+    memcpy(bytes.data(), (const unsigned char*)ip, 16);
+    return boost::asio::ip::address_v6(bytes);
 }
 
 bool CNetAddr::GetInAddr(struct in_addr* pipv4Addr) const
@@ -483,18 +508,17 @@ CService::CService(const struct sockaddr_in6 &addr) : CNetAddr(addr.sin6_addr, a
    assert(addr.sin6_family == AF_INET6);
 }
 
-bool CService::SetSockAddr(const struct sockaddr *paddr)
+CService::CService(const boost::asio::ip::tcp::endpoint& endpoint) : CNetAddr(endpoint.address()), port(endpoint.port())
 {
-    switch (paddr->sa_family) {
-    case AF_INET:
-        *this = CService(*(const struct sockaddr_in*)paddr);
-        return true;
-    case AF_INET6:
-        *this = CService(*(const struct sockaddr_in6*)paddr);
-        return true;
-    default:
-        return false;
+}
+
+bool CService::SetSockAddr(const boost::asio::ip::tcp::endpoint& endpoint)
+{
+    auto protocol = endpoint.protocol();
+    if (protocol == boost::asio::ip::tcp::v4() || protocol == boost::asio::ip::tcp::v4()) {
+        *this = CService(endpoint);
     }
+    return true;
 }
 
 unsigned short CService::GetPort() const
@@ -515,6 +539,12 @@ bool operator!=(const CService& a, const CService& b)
 bool operator<(const CService& a, const CService& b)
 {
     return (CNetAddr)a < (CNetAddr)b || ((CNetAddr)a == (CNetAddr)b && a.port < b.port);
+}
+
+boost::asio::ip::tcp::endpoint CService::GetSockAddr() const
+{
+    boost::asio::ip::tcp::endpoint endpoint(GetAddress(), port);
+    return endpoint;
 }
 
 bool CService::GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const
