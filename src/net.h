@@ -50,6 +50,8 @@ namespace boost {
     class thread_group;
 } // namespace boost
 
+typedef boost::asio::ip::tcp::socket socket_t;
+
 /** Time between pings automatically sent out for latency probing and keepalive (in seconds). */
 static const int PING_INTERVAL = 2 * 60;
 /** Time after which to disconnect, after waiting for a ping response (or inactivity). */
@@ -289,17 +291,24 @@ public:
     unsigned int GetReceiveFloodSize() const;
 
     void WakeMessageHandler();
+
+    void ResumeReceive(CNode* pnode);
+
 private:
     struct ListenSocket {
-        SOCKET socket;
+        boost::asio::ip::tcp::acceptor acceptor;
         bool whitelisted;
 
-        ListenSocket(SOCKET socket_, bool whitelisted_) : socket(socket_), whitelisted(whitelisted_) {}
+        ListenSocket(boost::asio::ip::tcp::acceptor acceptor_, bool whitelisted_) : acceptor(std::move(acceptor_)), whitelisted(whitelisted_) {}
     };
+    void AcceptIncoming(ListenSocket& listener);
 
     void ThreadOpenAddedConnections();
     void AddOneShot(const std::string& strDest);
     void ProcessOneShot();
+    void NodeDisconnectAndDeleter();
+    void NumConnectionsNotifier();
+    void NodeInactivityChecker(CNode* pnode);
     void ThreadOpenConnections();
     void ThreadMessageHandler();
     void AcceptConnection(const ListenSocket& hListenSocket);
@@ -321,7 +330,7 @@ private:
 
     NodeId GetNewNodeId();
 
-    size_t SocketSendData(CNode *pnode) const;
+    void ResumeSend(CNode *pnode);
     //!check is the banlist has unwritten changes
     bool BannedSetIsDirty();
     //!set the "dirty" flag for the banlist
@@ -574,13 +583,12 @@ public:
     // socket
     std::atomic<ServiceFlags> nServices;
     ServiceFlags nServicesExpected;
-    SOCKET hSocket;
+    socket_t hSocket;
     size_t nSendSize; // total size of all vSendMsg entries
     size_t nSendOffset; // offset inside the first vSendMsg already sent
     uint64_t nSendBytes;
     std::deque<std::vector<unsigned char>> vSendMsg;
     CCriticalSection cs_vSend;
-    CCriticalSection cs_hSocket;
     CCriticalSection cs_vRecv;
 
     CCriticalSection cs_vProcessMsg;
@@ -691,7 +699,7 @@ public:
     CAmount lastSentFeeFilter;
     int64_t nextSendTimeFeeFilter;
 
-    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string &addrNameIn = "", bool fInboundIn = false);
+    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, socket_t hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string &addrNameIn = "", bool fInboundIn = false);
     ~CNode();
 
 private:
@@ -713,6 +721,12 @@ private:
     // Our address, as reported by the peer
     CService addrLocal;
     mutable CCriticalSection cs_addrLocal;
+
+    bool fSendInProgress;
+
+    // typical socket buffer is 8K-64K
+    char pchBuf[0x10000];
+
 public:
 
     NodeId GetId() const {
