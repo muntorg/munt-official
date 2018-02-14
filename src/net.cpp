@@ -2171,6 +2171,24 @@ void CConnman::Interrupt()
     }
     condMsgProc.notify_all();
 
+    // close all sockets and end io_context event loop
+    boost::asio::post(get_io_context(), [this]() {
+        LogPrint(BCLog::NET, "closing all sockets\n");
+        LOCK(cs_vNodes);
+        BOOST_FOREACH(CNode* pnode, vNodes)
+            pnode->CloseSocketDisconnect();
+
+        BOOST_FOREACH(ListenSocket& ls, vhListenSocket){
+            try {
+                ls.acceptor.close();
+            }
+            catch (const boost::system::error_code& ec) {
+                LogPrint(BCLog::NET, "close listening socket: %s\n", ec.message());
+            }
+        }
+        get_io_context().stop();
+    });
+
     interruptNet();
     InterruptSocks5(true);
 
