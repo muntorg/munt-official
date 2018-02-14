@@ -103,15 +103,6 @@ unsigned short GetListenPort()
     return (unsigned short)(GetArg("-port", Params().GetDefaultPort()));
 }
 
-void CloseSocket(socket_t& sock)
-{
-    try {
-        sock.close();
-    }
-    catch (const boost::system::error_code& ec) {
-    }
-}
-
 // find 'best' local address for a particular peer
 bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
 {
@@ -458,7 +449,12 @@ void CNode::CloseSocketDisconnect()
 {
     fDisconnect = true;
     LogPrint(BCLog::NET, "disconnecting peer=%d\n", id);
-    CloseSocket(hSocket);
+    try {
+        hSocket.close();
+    }
+    catch(const boost::system::error_code& ec) {
+        LogPrint(BCLog::NET, "disconnecting peer=%d socket close:\n", id, ec.message());
+    }
 }
 
 void CConnman::ClearBanned()
@@ -1868,7 +1864,7 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
             {
                 if (!AttemptToEvictConnection()) {
                     // No connection to evict, disconnect the new connection
-                    LogPrint(BCLog::NET, "failed to find an eviction candidate - connection dropped (full)\n");
+                    LogPrint(BCLog::NET, "failed to find an eviction candidate - connection from %s dropped (full)\n", addr.ToString());
                     connection_ok = false;
                 }
             }
@@ -1896,7 +1892,12 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
             }
         }
         else {
-            CloseSocket(peer);
+            try {
+                peer.close();
+            }
+            catch (const boost::system::error_code& ec) {
+                LogPrint(BCLog::NET, "connection from  %s closed: %s\n", addr.ToString(), ec.message());
+            }
         }
 
         // re-run for another incoming connection
@@ -2542,8 +2543,6 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
 
 CNode::~CNode()
 {
-    CloseSocket(hSocket);
-
     if (pfilter)
         delete pfilter;
 }
