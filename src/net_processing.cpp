@@ -286,6 +286,9 @@ void InitializeNode(CNode *pnode, CConnman& connman) {
     if(!pnode->fInbound)
         PushNodeVersion(pnode, connman, GetTime());
     connman.ResumeReceive(pnode);
+    boost::asio::post(get_io_context(), [pnode, &connman]() {
+        connman.NodeInactivityChecker(pnode);
+    });
 }
 
 void FinalizeNode(NodeId nodeid, bool& fUpdateConnectionTime) {

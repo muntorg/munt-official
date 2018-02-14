@@ -1091,9 +1091,8 @@ void CConnman::NodeInactivityChecker(CNode* pnode)
 
     const int INTERVAL_SEC = 1;
 
-    boost::asio::deadline_timer timer(get_io_context());
-    timer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
-    timer.async_wait([this, pnode](const boost::system::error_code& ec) {
+    pnode->inactivityTimer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
+    pnode->inactivityTimer.async_wait([this, pnode](const boost::system::error_code& ec) {
 
         if (!ec) {
             int64_t nTime = GetSystemTimeInSeconds();
@@ -1125,7 +1124,11 @@ void CConnman::NodeInactivityChecker(CNode* pnode)
                     pnode->fDisconnect = true;
                 }
             }
-            NodeInactivityChecker(pnode);
+            if (!pnode->fDisconnect)
+                NodeInactivityChecker(pnode);
+        }
+        else {
+            LogPrintf("inactivity timer for %d stopped\n", pnode->GetId());
         }
         pnode->Release();
     });
@@ -1197,13 +1200,9 @@ void CConnman::ThreadSocketHandler()
     NodeDisconnectAndDeleter();
     NumConnectionsNotifier();
 
-    struct timeval timeout;
-    timeout.tv_sec  = 0;
-    timeout.tv_usec = 50000;
-
     while (!interruptNet) {
         get_io_context().run();
-        if (!interruptNet.sleep_for(std::chrono::milliseconds(timeout.tv_usec/1000)))
+        if (!interruptNet.sleep_for(std::chrono::milliseconds(50)))
             return;
         get_io_context().restart();
     }
@@ -2468,6 +2467,7 @@ unsigned int CConnman::GetReceiveFloodSize() const { return nReceiveFloodSize; }
 unsigned int CConnman::GetSendBufferSize() const{ return nSendBufferMaxSize; }
 
 CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, socket_t hSocketIn, const CAddress& addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string& addrNameIn, bool fInboundIn) :
+    hSocket(std::move(hSocketIn)),
     nTimeConnected(GetSystemTimeInSeconds()),
     addr(addrIn),
     addrBind(addrBindIn),
@@ -2479,8 +2479,8 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     nLocalHostNonce(nLocalHostNonceIn),
     nLocalServices(nLocalServicesIn),
     nMyStartingHeight(nMyStartingHeightIn),
-    hSocket(std::move(hSocketIn)),
-    nSendVersion(0)
+    nSendVersion(0),
+    inactivityTimer(get_io_context())
 {
     nServices = NODE_NONE;
     nServicesExpected = NODE_NONE;
