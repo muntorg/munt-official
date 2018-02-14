@@ -293,6 +293,7 @@ public:
     void WakeMessageHandler();
 
     void ResumeReceive(CNode* pnode);
+    void NodeInactivityChecker(CNode* pnode);
 
 private:
     struct ListenSocket {
@@ -308,7 +309,6 @@ private:
     void ProcessOneShot();
     void NodeDisconnectAndDeleter();
     void NumConnectionsNotifier();
-    void NodeInactivityChecker(CNode* pnode);
     void ThreadOpenConnections();
     void ThreadMessageHandler();
     void AcceptConnection(const ListenSocket& hListenSocket);
@@ -726,6 +726,8 @@ private:
 
     // typical socket buffer is 8K-64K
     char pchBuf[0x10000];
+
+    boost::asio::deadline_timer inactivityTimer;
 
 public:
 
