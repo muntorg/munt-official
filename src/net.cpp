@@ -999,9 +999,8 @@ void CConnman::NodeDisconnectAndDeleter()
 {
     const int INTERVAL_SEC = 1;
 
-    boost::asio::deadline_timer timer(get_io_context());
-    timer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
-    timer.async_wait([this](const boost::system::error_code& ec) {
+    disconnectAndDeleterTimer.expires_from_now(boost::posix_time::seconds(INTERVAL_SEC));
+    disconnectAndDeleterTimer.async_wait([this](const boost::system::error_code& ec) {
         if (ec)
             return;
 
@@ -2016,7 +2015,7 @@ void CConnman::SetNetworkActive(bool active)
     uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
 }
 
-CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) : nSeed0(nSeed0In), nSeed1(nSeed1In)
+CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) : nSeed0(nSeed0In), nSeed1(nSeed1In), disconnectAndDeleterTimer(get_io_context())
 {
     fNetworkActive = true;
     setBannedIsDirty = false;
