@@ -2175,10 +2175,11 @@ void CConnman::Interrupt()
     boost::asio::post(get_io_context(), [this]() {
         LogPrint(BCLog::NET, "closing all sockets\n");
         LOCK(cs_vNodes);
-        BOOST_FOREACH(CNode* pnode, vNodes)
+        for (CNode* pnode : vNodes) {
             pnode->CloseSocketDisconnect();
+        }
 
-        BOOST_FOREACH(ListenSocket& ls, vhListenSocket){
+        for (ListenSocket& ls : vhListenSocket) {
             try {
                 ls.acceptor.close();
             }
@@ -2642,8 +2643,10 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
 void CConnman::ResumeSend(CNode *pnode)
 {
-    // assumes that there is data to send
-    assert(pnode->fSendInProgress);
+    if (!pnode->fSendInProgress) {
+        LogPrint(BCLog::NET, "Expected fSendInProgress, disconnecting %d", pnode->GetId());
+        pnode->fDisconnect = true;
+    }
 
     boost::asio::const_buffer buffer;
     {

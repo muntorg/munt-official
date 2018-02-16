@@ -112,7 +112,7 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
         }
     }
     catch (boost::system::error_code& ec) {
-        std::cerr << ec.message() << std::endl;
+        LogPrintf("LookupIntern for %s failed: %s", pszName, ec.message());
         return false;
     }
 
