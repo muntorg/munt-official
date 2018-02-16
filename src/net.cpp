@@ -2521,7 +2521,6 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     fDisconnect = false;
     nRefCount = 0;
     nSendSize = 0;
-    nSendOffset = 0;
     hashContinue = uint256();
     nStartingHeight = -1;
     filterInventoryKnown.reset();
@@ -2653,28 +2652,22 @@ void CConnman::ResumeSend(CNode *pnode)
         LOCK(pnode->cs_vSend);
         assert(pnode->vSendMsg.size() > 0);
         const auto &data = *pnode->vSendMsg.begin();
-        buffer = boost::asio::buffer(reinterpret_cast<const char*>(data.data()) + pnode->nSendOffset,
-                                     data.size() - pnode->nSendOffset);
+        buffer = boost::asio::buffer(reinterpret_cast<const char*>(data.data()), data.size());
     }
 
     boost::asio::async_write(pnode->hSocket, buffer,
-                             [this, pnode](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+                             [this, pnode, buffer](const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (ec) {
-            LogPrintf("socket send error %s\n", ec.message());
+            LogPrint(BCLog::NET, "socket send error %s\n", ec.message());
             pnode->CloseSocketDisconnect();
-            // TODO WDJ see what more is needed to finalize the node here, deactivate transfer
-            // make sure that it gets picked up for cleaning somewhere
             return;
         }
 
         RecordBytesSent(bytes_transferred);
 
-        // TODO WDJ when it works remove nSendOffset stuff (whole message is always send before the handler is invoked)
         pnode->nLastSend = GetSystemTimeInSeconds();
         pnode->nSendBytes += bytes_transferred;
-        pnode->nSendOffset += bytes_transferred;
-        if (pnode->nSendOffset == bytes_transferred) {
-            pnode->nSendOffset = 0;
+        if (buffer.size() == bytes_transferred) {
             pnode->nSendSize -= bytes_transferred;
             pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
 
@@ -2689,13 +2682,12 @@ void CConnman::ResumeSend(CNode *pnode)
                 this->ResumeSend(pnode);
             }
             else {
-                assert(pnode->nSendOffset == 0);
-                assert(pnode->nSendSize == 0);
                 pnode->fSendInProgress = false;
             }
         }
         else {
-            assert(false);
+            LogPrint(BCLog::NET, "async_write to %d not fully transferred (%d != %d) \n", pnode->GetId(), buffer.size(), bytes_transferred);
+            pnode->CloseSocketDisconnect();
         }
     });
 }
