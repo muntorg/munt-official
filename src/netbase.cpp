@@ -107,12 +107,12 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
                                      tcp::resolver::flags::address_configured
                                    : tcp::resolver::flags::numeric_host);
 
-        for (auto it = endpoints.begin(); it != endpoints.end() && vIP.size()<nMaxSolutions; it++) {
+        for (auto it = endpoints.begin(); it != endpoints.end() && (nMaxSolutions==0 || vIP.size()<nMaxSolutions); it++) {
             vIP.push_back(it->endpoint().address());
         }
     }
-    catch (boost::system::error_code& ec) {
-        LogPrintf("LookupIntern for %s failed: %s", pszName, ec.message());
+    catch (const boost::system::system_error& err) {
+        LogPrint(BCLog::NET, "LookupIntern for %s failed: %s\n", pszName, err.what());
         return false;
     }
 
