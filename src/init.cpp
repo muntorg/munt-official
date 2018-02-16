@@ -61,6 +61,7 @@
 
 #ifndef WIN32
 #include <signal.h>
+#include <sys/resource.h>
 #endif
 
 #include <boost/algorithm/string/classification.hpp>
@@ -923,7 +924,19 @@ bool AppInitParameterInteraction()
     nMaxConnections = std::max(nUserMaxConnections, 0);
 
     // Trim requested connection counts, to fit into system limitations
-    nMaxConnections = std::max(std::min(nMaxConnections, (int)(FD_SETSIZE - nBind - MIN_CORE_FILEDESCRIPTORS - MAX_ADDNODE_CONNECTIONS)), 0);
+    int nSystemMaxConnections = FD_SETSIZE;
+#ifndef WIN32
+    rlimit rlim;
+    int err = getrlimit(RLIMIT_NOFILE, &rlim);
+    if (err) {
+        LogPrintf("Could not determine max system file descriptors, assuming %d", nSystemMaxConnections);
+    }
+    else {
+        nSystemMaxConnections = rlim.rlim_cur;
+    }
+#endif
+
+    nMaxConnections = std::max(std::min(nMaxConnections, (int)(nSystemMaxConnections - nBind - MIN_CORE_FILEDESCRIPTORS - MAX_ADDNODE_CONNECTIONS)), 0);
     nFD = RaiseFileDescriptorLimit(nMaxConnections + MIN_CORE_FILEDESCRIPTORS + MAX_ADDNODE_CONNECTIONS);
     if (nFD < MIN_CORE_FILEDESCRIPTORS)
         return InitError(_("Not enough file descriptors available."));
