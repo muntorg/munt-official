@@ -451,6 +451,7 @@ void CNode::CloseSocketDisconnect()
     LogPrint(BCLog::NET, "disconnecting peer=%d\n", id);
     try {
         hSocket.close();
+        inactivityTimer.cancel();
     }
     catch(const boost::system::error_code& ec) {
         LogPrint(BCLog::NET, "disconnecting peer=%d socket close:\n", id, ec.message());
