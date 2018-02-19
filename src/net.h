@@ -418,6 +418,7 @@ private:
     std::thread threadMessageHandler;
 
     boost::asio::deadline_timer disconnectAndDeleterTimer;
+    boost::asio::deadline_timer connectionsNotifierTimer;
 };
 extern std::unique_ptr<CConnman> g_connman;
 void Discover(boost::thread_group& threadGroup);
