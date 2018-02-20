@@ -54,7 +54,7 @@ public:
         nRPCPort = 9924;
         std::string testnetArgs = GetArg("-testnet", "");
         std::replace( testnetArgs.begin(), testnetArgs.end(), ':', '_');
-        strDataDir = (fs::path("testnet") / testnetArgs).c_str();
+        strDataDir = (fs::path("testnet") / testnetArgs).string();
     }
 };
 
