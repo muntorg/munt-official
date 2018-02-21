@@ -21,7 +21,7 @@
 //fixme: Future - mingw doesn't work with web engine view - for now we just use webkit everywhere but in future we should use web engine view
 //Leaving the code here as it's already done and maybe someone can use it.
 #ifndef WIN32
-#define HAVE_WEBENGINE_VIEW
+//#define HAVE_WEBENGINE_VIEW
 #endif
 
 class OptionsModel;
@@ -60,7 +60,7 @@ public Q_SLOTS:
     void cancelRequestPayment();
     void gotoReceievePage();
     void activeAccountChanged();
-  
+
 protected:
 
 private:
@@ -85,7 +85,6 @@ private Q_SLOTS:
   #ifndef HAVE_WEBENGINE_VIEW
   void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
   #endif
-  
 };
 
 #endif // BITCOIN_QT_GULDENRECEIVECOINSDIALOG_H
