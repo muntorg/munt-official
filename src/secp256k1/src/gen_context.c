@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Could not open src/ecmult_static_context.h for writing!\n");
         return -1;
     }
-    
+
     fprintf(fp, "#ifndef _SECP256K1_ECMULT_STATIC_CONTEXT_\n");
     fprintf(fp, "#define _SECP256K1_ECMULT_STATIC_CONTEXT_\n");
     fprintf(fp, "#include \"group.h\"\n");
@@ -65,10 +65,10 @@ int main(int argc, char **argv) {
     }
     fprintf(fp,"};\n");
     secp256k1_ecmult_gen_context_clear(&ctx);
-    
+
     fprintf(fp, "#undef SC\n");
     fprintf(fp, "#endif\n");
     fclose(fp);
-    
+
     return 0;
 }
