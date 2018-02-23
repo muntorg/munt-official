@@ -24,7 +24,6 @@
 #include "crypto/sha256.h"
 #include "hash.h"
 #include "primitives/transaction.h"
-#include "netbase.h"
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "utilstrencodings.h"
@@ -1815,10 +1814,8 @@ void CConnman::ThreadMessageHandler()
 
 void CConnman::AcceptIncoming(ListenSocket& listener)
 {
-    auto pPeer_endpoint  = std::shared_ptr<boost::asio::ip::tcp::endpoint>(new boost::asio::ip::tcp::endpoint());
-
-    listener.acceptor.async_accept(*pPeer_endpoint,
-                                   [this, &listener, pPeer_endpoint](const boost::system::error_code& ec, boost::asio::ip::tcp::socket peer) {
+    listener.acceptor.async_accept(listener.peer, listener.peerEndpoint,
+                                   [this, &listener](const boost::system::error_code& ec) {
         // this handler runs in io_context.run() thread!
 
         if (ec) {
@@ -1827,7 +1824,7 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         }
 
         CAddress addr;
-        addr.SetSockAddr(*pPeer_endpoint);
+        addr.SetSockAddr(listener.peerEndpoint);
 
         bool connection_ok = true;
 
@@ -1866,13 +1863,13 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         if (connection_ok) {
             // According to the internet TCP_NODELAY is not carried into accepted sockets
             // on all platforms.  Set it again here just to be sure.
-            peer.set_option(boost::asio::ip::tcp::no_delay(true));
+            listener.peer.set_option(boost::asio::ip::tcp::no_delay(true));
 
             NodeId id = GetNewNodeId();
             uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-            CAddress addr_bind = GetBindAddress(peer);
+            CAddress addr_bind = GetBindAddress(listener.peer);
 
-            CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(peer), addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
+            CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(listener.peer), addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
             pnode->AddRef();
             pnode->fWhitelisted = whitelisted;
             GetNodeSignals().InitializeNode(pnode, *this);
@@ -1886,7 +1883,7 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         }
         else {
             try {
-                peer.close();
+                listener.peer.close();
             }
             catch (const boost::system::error_code& ec) {
                 LogPrint(BCLog::NET, "connection from  %s closed: %s\n", addr.ToString(), ec.message());
