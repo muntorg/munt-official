@@ -28,6 +28,7 @@
 #include "sync.h"
 #include "uint256.h"
 #include "threadinterrupt.h"
+#include "netbase.h"
 
 #include <atomic>
 #include <deque>
@@ -299,8 +300,13 @@ private:
     struct ListenSocket {
         boost::asio::ip::tcp::acceptor acceptor;
         bool whitelisted;
+        boost::asio::ip::tcp::endpoint peerEndpoint;
+        boost::asio::ip::tcp::socket peer;
 
-        ListenSocket(boost::asio::ip::tcp::acceptor acceptor_, bool whitelisted_) : acceptor(std::move(acceptor_)), whitelisted(whitelisted_) {}
+        ListenSocket(boost::asio::ip::tcp::acceptor acceptor_, bool whitelisted_) :
+            acceptor(std::move(acceptor_)), whitelisted(whitelisted_),
+            peer(get_io_context())
+        {}
     };
     void AcceptIncoming(ListenSocket& listener);
 
