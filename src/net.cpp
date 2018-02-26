@@ -380,10 +380,10 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         pszDest ? 0.0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
 
     // Connect
-    SOCKET hSocket;
+    socket_t socket(get_io_context());
     bool proxyConnectionFailed = false;
-    if (pszDest ? ConnectSocketByName(addrConnect, hSocket, pszDest, Params().GetDefaultPort(), nConnectTimeout, &proxyConnectionFailed) :
-                  ConnectSocket(addrConnect, hSocket, nConnectTimeout, &proxyConnectionFailed))
+    if (pszDest ? ConnectSocketByName(addrConnect, socket, pszDest, Params().GetDefaultPort(), nConnectTimeout, &proxyConnectionFailed) :
+                  ConnectSocket(addrConnect, socket, nConnectTimeout, &proxyConnectionFailed))
     {
         if (pszDest && addrConnect.IsValid()) {
             // It is possible that we already have a connection to the IP/port pszDest resolved to.
@@ -395,7 +395,12 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
             if (pnode)
             {
                 pnode->MaybeSetAddrName(std::string(pszDest));
-                CloseSocket(hSocket);
+                try {
+                    socket.close();
+                }
+                catch (const boost::system::error_code& ec) {
+                    LogPrint(BCLog::NET, "ConnectNode close error: %s\n", ec.message());
+                }
                 LogPrintf("Failed to open new connection, already connected\n");
                 return NULL;
             }
@@ -404,13 +409,10 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         addrman.Attempt(addrConnect, fCountFailure);
 
         // Add node
-        boost::asio::ip::tcp::socket sock(get_io_context());
-        auto protocol = addrConnect.IsIPv4() ? boost::asio::ip::tcp::v4() : boost::asio::ip::tcp::v6();
-        sock.assign(protocol, hSocket);
         NodeId id = GetNewNodeId();
         uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-        CAddress addr_bind = GetBindAddress(sock);
-        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(sock), addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
+        CAddress addr_bind = GetBindAddress(socket);
+        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(socket), addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
         pnode->nServicesExpected = ServiceFlags(addrConnect.nServices & nRelevantServices);
         pnode->AddRef();
 
