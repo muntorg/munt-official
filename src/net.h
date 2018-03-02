@@ -51,8 +51,6 @@ namespace boost {
     class thread_group;
 } // namespace boost
 
-typedef boost::asio::ip::tcp::socket socket_t;
-
 /** Time between pings automatically sent out for latency probing and keepalive (in seconds). */
 static const int PING_INTERVAL = 2 * 60;
 /** Time after which to disconnect, after waiting for a ping response (or inactivity). */
