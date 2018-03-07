@@ -334,7 +334,6 @@ private:
 
     NodeId GetNewNodeId();
 
-    void ResumeSend(CNode *pnode);
     //!check is the banlist has unwritten changes
     bool BannedSetIsDirty();
     //!set the "dirty" flag for the banlist
@@ -591,7 +590,7 @@ public:
     std::atomic<ServiceFlags> nServices;
     ServiceFlags nServicesExpected;
     socket_t hSocket;
-    size_t nSendSize; // total size of all vSendMsg entries
+    size_t nSendSize; // total size of all vSendMsg entries, requires cs_vSend mutex to access
     uint64_t nSendBytes;
     std::deque<std::vector<unsigned char>> vSendMsg;
     CCriticalSection cs_vSend;
@@ -646,7 +645,7 @@ public:
     std::atomic_bool fPauseSend;
 protected:
 
-    mapMsgCmdSize mapSendBytesPerMsgCmd;
+    mapMsgCmdSize mapSendBytesPerMsgCmd; // requires cs_vSend mutex to access
     mapMsgCmdSize mapRecvBytesPerMsgCmd;
 
 public:
@@ -727,8 +726,6 @@ private:
     // Our address, as reported by the peer
     CService addrLocal;
     mutable CCriticalSection cs_addrLocal;
-
-    bool fSendInProgress;
 
     // typical socket buffer is 8K-64K
     char pchBuf[0x10000];
