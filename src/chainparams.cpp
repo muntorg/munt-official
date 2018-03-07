@@ -294,10 +294,10 @@ public:
             LogPrintf("genesis bits: %d\n",genesis.nBits);
             LogPrintf("genesis hash: %s\n", consensus.hashGenesisBlock.ToString().c_str());
 
-            pchMessageStart[0] = targetInterval;
+            pchMessageStart[0] = targetInterval & 0xFF;
+            pchMessageStart[1] = (seedTimestamp >> 8) & 0xFF;
+            pchMessageStart[2] = (seedTimestamp >> 16) & 0xFF;
             pchMessageStart[3] = sTestnetParams[0];
-            pchMessageStart[1] = seedTimestamp >> 8;
-            pchMessageStart[2] = seedTimestamp >> 16;
 
             LogPrintf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
         }
