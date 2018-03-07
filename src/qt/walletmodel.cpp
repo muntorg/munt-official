@@ -576,7 +576,6 @@ static void NotifyActiveAccountChanged(WalletModel *walletmodel, CWallet *wallet
     QMetaObject::invokeMethod(walletmodel, "activeAccountChanged", Q_ARG(CAccount*, account));
 }
 
-Q_DECLARE_METATYPE(CAccount*);
 static void NotifyAccountAdded(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
     LogPrintf("NotifyAccountAdded\n");

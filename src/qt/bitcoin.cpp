@@ -89,6 +89,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
+Q_DECLARE_METATYPE(CAccount*)
 Q_DECLARE_METATYPE(CAmount)
 
 static void InitMessage(const std::string &message)
@@ -609,6 +610,7 @@ int main(int argc, char *argv[])
 
     // Register meta types used for QMetaObject::invokeMethod
     qRegisterMetaType< bool* >();
+    qRegisterMetaType< CAccount* >();
     //   Need to pass name here as CAmount is a typedef (see http://qt-project.org/doc/qt-5/qmetatype.html#qRegisterMetaType)
     //   IMPORTANT if it is no longer a typedef use the normal variant above
     qRegisterMetaType< CAmount >("CAmount");
