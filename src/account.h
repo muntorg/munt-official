@@ -49,6 +49,21 @@ enum AccountType
     Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
 
+static std::string GetAccountTypeString(AccountType type)
+{
+    switch(type)
+    {
+        case Normal:
+            return "Normal";
+        case Shadow:
+            return "Shadow";
+        case ShadowChild:
+            return "ShadowChild";
+        case Deleted:
+            return "Deleted";
+    }
+}
+
 static std::string getUUIDAsString(const boost::uuids::uuid& uuid)
 {
     return boost::uuids::to_string(uuid);
@@ -73,6 +88,19 @@ enum AccountSubType
     Mobi = 1,          // Mobile phone. (Android, iOS)
     PoW2Witness = 2    // PoW2 witness account.
 };
+
+static std::string GetAccountSubTypeString(AccountSubType type)
+{
+    switch(type)
+    {
+        case Desktop:
+            return "Desktop";
+        case Mobi:
+            return "Mobi";
+        case PoW2Witness:
+            return "PoW2Witness";
+    }
+}
 
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex = 100000;
