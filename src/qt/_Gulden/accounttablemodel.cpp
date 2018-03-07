@@ -131,6 +131,8 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 
 void AccountTableModel::accountAdded(CAccount* account)
 {
+    LOCK(m_wallet->cs_wallet);
+
     beginResetModel();
     endResetModel();
     //fixme: We should instead use something like the below...
