@@ -20,6 +20,7 @@ public:
 
     enum AccountTableRoles {
         TypeRole = Qt::UserRole + 1,
+        SubTypeRole,
         ActiveAccountRole,
         SelectedAccountRole
     };

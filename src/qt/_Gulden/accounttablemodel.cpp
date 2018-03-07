@@ -9,7 +9,6 @@
 
 #include <wallet/wallet.h>
 
-const QString AccountTableModel::Normal = "Normal";
 const QString AccountTableModel::Active = "A";
 const QString AccountTableModel::Inactive = "I";
 
@@ -82,11 +81,11 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
     }
     else if (role == TypeRole)
     {
-        if (account->m_Type == AccountType::Normal)
-        {
-            return Normal;
-        }
-        //fixme: GULDEN Add other type, shadow etc. here. 
+        return GetAccountTypeString(account->m_Type).c_str();
+    }
+    else if (role == SubTypeRole)
+    {
+        return GetAccountSubTypeString(account->m_SubType).c_str();
     }
     else if (role == ActiveAccountRole)
     {
