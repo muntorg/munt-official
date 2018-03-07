@@ -562,12 +562,6 @@ static void NotifyAccountNameChanged(WalletModel *walletmodel, CWallet *wallet, 
     }
 }
 
-static void NotifyUpdateAccountList(WalletModel *walletmodel, CWallet *wallet)
-{
-    Q_UNUSED(wallet);
-    LogPrintf("NotifyAccountNameChanged\n");
-    QMetaObject::invokeMethod(walletmodel, "accountListChanged");
-}
 
 static void NotifyActiveAccountChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
@@ -581,7 +575,6 @@ static void NotifyAccountAdded(WalletModel *walletmodel, CWallet *wallet, CAccou
     LogPrintf("NotifyAccountAdded\n");
     Q_UNUSED(wallet);
     QMetaObject::invokeMethod(walletmodel, "accountAdded", Q_ARG(CAccount*, account));
-    walletmodel->setActiveAccount(account);
 }
 
 static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
@@ -637,7 +630,6 @@ void WalletModel::subscribeToCoreSignals()
     wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
     wallet->NotifyAccountNameChanged.connect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
     wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
-    wallet->NotifyUpdateAccountList.connect(boost::bind(NotifyUpdateAccountList, this, _1));
     wallet->NotifyAccountAdded.connect(boost::bind(NotifyAccountAdded, this, _1, _2));
     wallet->NotifyAccountDeleted.connect(boost::bind(NotifyAccountDeleted, this, _1, _2));
     wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
@@ -657,7 +649,6 @@ void WalletModel::unsubscribeFromCoreSignals()
     wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
     wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
     wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
-    wallet->NotifyUpdateAccountList.connect(boost::bind(NotifyUpdateAccountList, this, _1));
     wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
     wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
     wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));

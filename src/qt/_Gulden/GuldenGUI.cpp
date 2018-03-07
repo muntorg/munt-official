@@ -43,6 +43,7 @@
 #include <QProxyStyle>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QCollator>
 
 #include <_Gulden/accountsummarywidget.h>
 #include <_Gulden/newaccountdialog.h>
@@ -985,13 +986,21 @@ QString limitString(const QString& string, int maxLength)
 QString getAccountLabel(CAccount* account)
 {
     QString accountName = QString::fromStdString( account->getLabel() );
+    accountName = limitString(accountName, 26);
     if ( account->IsMobi() )
     {
         accountName.append(QString::fromUtf8(" \uf10b"));
     }
     else if ( account->IsPoW2Witness() )
     {
-        accountName.append(QString::fromUtf8(" \uf19c"));
+        if (account->HasWarningFlag())
+        {
+            accountName.append(QString::fromUtf8(" <span style='color: #c97676;'>\uf06a</span>"));
+        }
+        else
+        {
+            accountName.append(QString::fromUtf8(" \uf19c"));
+        }
     }
     else if ( !account->IsHD() )
     {
@@ -1002,7 +1011,7 @@ QString getAccountLabel(CAccount* account)
          accountName.append(QString::fromUtf8(" \uf06e"));
     }
 
-    return limitString(accountName, 28);
+    return accountName;
 }
 
 void GuldenGUI::refreshAccountControls()
@@ -1024,15 +1033,23 @@ void GuldenGUI::refreshAccountControls()
         witnessDialogAction->setVisible( false );
     }
 
-    for ( const auto& controlPair : m_accountMap )
-    {
-        controlPair.first->deleteLater();
-    }
-    m_accountMap.clear();
     if (pactiveWallet)
     {
+        //Disable layout to prevent updating to changes immediately
+        accountScrollArea->layout()->setEnabled(false);
+
+        for ( const auto& controlPair : m_accountMap )
+        {
+            accountScrollArea->layout()->removeWidget(controlPair.first);
+            controlPair.first->deleteLater();
+        }
+        m_accountMap.clear();
+
         // Sort the accounts.
-        std::map<QString, ClickableLabel*> sortedAccounts;
+        QCollator coll;
+        coll.setNumericMode(true);
+        auto cmp = [&](const QString& s1, const QString& s2){ return coll.compare(s1, s2) < 0; };
+        std::map<QString, ClickableLabel*, decltype(cmp)> sortedAccounts(cmp);
         ClickableLabel* makeActive = NULL;
         {
             //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
@@ -1060,6 +1077,8 @@ void GuldenGUI::refreshAccountControls()
         {
             setActiveAccountButton( makeActive );
         }
+        // Force layout to update now that all the changes are made.
+        accountScrollArea->layout()->setEnabled(true);
     }
 }
 
@@ -1084,6 +1103,7 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
 ClickableLabel* GuldenGUI::createAccountButton( const QString& accountName )
 {
     ClickableLabel* newAccountButton = new ClickableLabel( m_pImpl );
+    newAccountButton->setTextFormat( Qt::RichText );
     newAccountButton->setText( accountName );
     newAccountButton->setCursor( Qt::PointingHandCursor );
     m_pImpl->connect( newAccountButton, SIGNAL( clicked() ), this, SLOT( accountButtonPressed() ) );
@@ -1167,6 +1187,7 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
                 {
                     setActiveAccountButton(accountPair.first);
                 }
+                accountPair.first->setTextFormat( Qt::RichText );
                 accountPair.first->setText( getAccountLabel(account) );
             }
         }
@@ -1178,12 +1199,54 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
     }
 }
 
-//fixme: Gulden - lazy accountAdded/accountDeleted should instead update only the specific controls affected...
+// fixme: Gulden - introduce better code sharing here between this function and refreshaccountcontrols...
+// For performance reasons we update only the specific control that is added instead of regenerating all controls.
 void GuldenGUI::accountAdded(CAccount* account)
 {
-    refreshAccountControls();
+    if (pactiveWallet)
+    {
+        //Disable layout to prevent updating to changes immediately
+        accountScrollArea->layout()->setEnabled(false);
+
+        // Sort the accounts.
+        QCollator coll;
+        coll.setNumericMode(true);
+        auto cmp = [&](const QString& s1, const QString& s2){ return coll.compare(s1, s2) < 0; };
+        std::map<QString, ClickableLabel*, decltype(cmp)> sortedAccounts(cmp);
+        ClickableLabel* makeActive = NULL;
+        {
+            //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
+            LOCK(pactiveWallet->cs_wallet);
+
+            QString thisAccountLabel = "";
+            ClickableLabel* accLabel = nullptr;
+            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            {
+                if (accountPair.second->m_Type == AccountType::Normal || (fShowChildAccountsSeperately && accountPair.second->m_Type == AccountType::ShadowChild) )
+                {
+                    QString label = getAccountLabel(accountPair.second);
+                    if (accountPair.first == account->getUUID())
+                    {
+                        accLabel = createAccountButton( label );
+                        m_accountMap[accLabel] = accountPair.second;
+                        thisAccountLabel = label;
+                        sortedAccounts[label] = accLabel;
+                    }
+                    else
+                    {
+                        sortedAccounts[label] = nullptr;
+                    }
+                }
+            }
+            int pos = std::distance(sortedAccounts.begin(), sortedAccounts.find(thisAccountLabel));
+            ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(pos, accLabel);
+        }
+        // Force layout to update now that all the changes are made.
+        accountScrollArea->layout()->setEnabled(true);
+    }
 }
 
+//fixme: Gulden - lazy accountAdded/accountDeleted should instead update only the specific controls affected...
 void GuldenGUI::accountDeleted(CAccount* account)
 {
     refreshAccountControls();

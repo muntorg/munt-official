@@ -278,8 +278,6 @@ public:
     // Account marked as deleted.
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountDeleted;
 
-    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyUpdateAccountList;
-
     // Currently active account changed
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyActiveAccountChanged;
 };
