@@ -57,9 +57,12 @@ void ClickableLabel::leaveEvent(QEvent * event)
 
 void ClickableLabel::setChecked(bool checked)
 {
-    setProperty("checked", QVariant(checked));
-    style()->unpolish(this);
-    style()->polish(this);
+    if (isChecked() != checked)
+    {
+        setProperty("checked", QVariant(checked));
+        style()->unpolish(this);
+        style()->polish(this);
+    }
 }
 
 bool ClickableLabel::isChecked()
