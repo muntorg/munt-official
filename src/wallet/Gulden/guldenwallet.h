@@ -261,9 +261,9 @@ public:
     mutable bool didDelayLock;
 
 
-    std::map<std::string, CHDSeed*> mapSeeds;
-    std::map<std::string, CAccount*> mapAccounts;
-    std::map<std::string, std::string> mapAccountLabels;
+    std::map<boost::uuids::uuid, CHDSeed*> mapSeeds;
+    std::map<boost::uuids::uuid, CAccount*> mapAccounts;
+    std::map<boost::uuids::uuid, std::string> mapAccountLabels;
     std::map<uint256, CWalletTx> mapWallet;
 
     CAccount* activeAccount;

@@ -1038,7 +1038,7 @@ public:
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
-    CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const;
+    CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID) const;
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
     /**

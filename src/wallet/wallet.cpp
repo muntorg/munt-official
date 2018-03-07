@@ -206,7 +206,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
 
     if (!IsCrypted())
     {
-        return CWalletDB(*dbw).WriteKey(pubkey, secret.GetPrivKey(), mapKeyMetadata[pubkey.GetID()], forAccount.getUUID(), nKeyChain);
+        return CWalletDB(*dbw).WriteKey(pubkey, secret.GetPrivKey(), mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
     }
     else
     {
@@ -217,7 +217,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
             {
                 return false;
             }
-            return CWalletDB(*dbw).WriteCryptedKey(pubkey, encryptedKeyOut, mapKeyMetadata[pubkey.GetID()], forAccount.getUUID(), nKeyChain);
+            return CWalletDB(*dbw).WriteCryptedKey(pubkey, encryptedKeyOut, mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
         }
         else
         {
@@ -225,7 +225,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
             {
                 return false;
             }
-            return CWalletDB(*dbw).WriteCryptedKey(pubkey, encryptedKeyOut, mapKeyMetadata[pubkey.GetID()], forAccount.getUUID(), nKeyChain);
+            return CWalletDB(*dbw).WriteCryptedKey(pubkey, encryptedKeyOut, mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
         }
     }
     return true;
@@ -266,10 +266,10 @@ bool CWallet::LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
 {
     LOCK(cs_wallet);
 
-    if (mapAccounts.find(forAccount) == mapAccounts.end())
+    if (mapAccounts.find(getUUIDFromString(forAccount)) == mapAccounts.end())
         return false;
  
-    return mapAccounts[forAccount]->AddCryptedKey(vchPubKey, vchCryptedSecret, nKeyChain);
+    return mapAccounts[getUUIDFromString(forAccount)]->AddCryptedKey(vchPubKey, vchCryptedSecret, nKeyChain);
 }
 
 void CWallet::UpdateTimeFirstKey(int64_t nCreateTime)
@@ -748,7 +748,7 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
                 // die and let the user reload the unencrypted wallet.
                 assert(false);
             }
-            pwalletdbEncryption->WriteAccount(accountPair.second->getUUID(), accountPair.second);
+            pwalletdbEncryption->WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second);
         }
 
         // Encryption was introduced in version 0.4.0
@@ -1023,7 +1023,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         {
             if (accountPair.second->HaveWalletTx(wtx))
             {
-                wtx.strFromAccount = accountPair.first;
+                wtx.strFromAccount = getUUIDAsString(accountPair.first);
             }
         }
     }
@@ -2216,13 +2216,13 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
 // wallet, and then subtracts the values of TxIns spending from the wallet. This
 // also has fewer restrictions on which unconfirmed transactions are considered
 // trusted.
-CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const
+CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID) const
 {
     LOCK2(cs_main, cs_wallet);
 
     CAccount* forAccount = NULL;
-    if (account && mapAccounts.find(*account) != mapAccounts.end())
-        forAccount = mapAccounts.find(*account)->second;
+    if (accountUUID && mapAccounts.find(*accountUUID) != mapAccounts.end())
+        forAccount = mapAccounts.find(*accountUUID)->second;
 
     CAmount balance = 0;
 
@@ -3470,7 +3470,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
                     auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
                     while (keyPool.size() < (accountTargetSize))
                     {
-                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), accountPair.first, keyChain ) ) )
+                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), getUUIDAsString(accountPair.first), keyChain ) ) )
                             throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
                         keyPool.insert(nIndex);
                         LogPrintf("keypool [%s:%s] added key %d, size=%u\n", accountPair.second->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
@@ -4270,7 +4270,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             // Write the primary account into wallet file
             {
                 CWalletDB walletdb(*walletInstance->dbw);
-                if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
+                if (!walletdb.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
                 {
                     throw std::runtime_error("Writing legacy account failed");
                 }
@@ -4327,7 +4327,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     {
                         CWalletDB walletdb(*walletInstance->dbw);
                         walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
-                        if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
+                        if (!walletdb.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
                         {
                             throw std::runtime_error("Writing legacy account failed");
                         }
@@ -4389,7 +4389,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 {
                     CWalletDB walletdb(*walletInstance->dbw);
                     walletInstance->changeAccountName(walletInstance->activeAccount, _("Legacy account"), true);
-                    if (!walletdb.WriteAccount(walletInstance->activeAccount->getUUID(), walletInstance->activeAccount))
+                    if (!walletdb.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
                     {
                         throw std::runtime_error("Writing legacy account failed");
                     }

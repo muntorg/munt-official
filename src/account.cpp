@@ -193,10 +193,9 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
     }
 }
 
-
-std::string CHDSeed::getUUID() const
+boost::uuids::uuid CHDSeed::getUUID() const
 {
-    return boost::uuids::to_string(m_UUID);
+    return m_UUID;
 }
 
 
@@ -548,7 +547,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
 
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
-    metadata.hdAccountUUID = getUUID();
+    metadata.hdAccountUUID = getUUIDAsString(getUUID());
 
     if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
@@ -573,9 +572,9 @@ SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
     return CBitcoinSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
 }
 
-std::string CAccountHD::getSeedUUID() const
+boost::uuids::uuid CAccountHD::getSeedUUID() const
 {
-    return boost::uuids::to_string(m_SeedID);
+    return m_SeedID;
 }
 
 uint32_t CAccountHD::getIndex()
@@ -763,7 +762,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                 }
                 if (pactiveWallet->pwalletdbEncryption)
                 {
-                    if (!pactiveWallet->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    if (!pactiveWallet->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUIDAsString(getUUID()), KEYCHAIN_EXTERNAL))
                     {
                         LogPrintf("CAccount::EncryptKeys(): Failed to write key");
                         return false;
@@ -771,7 +770,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
                 }
                 else
                 {
-                    if (!CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUID(), KEYCHAIN_EXTERNAL))
+                    if (!CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUIDAsString(getUUID()), KEYCHAIN_EXTERNAL))
                     {
                         LogPrintf("CAccount::EncryptKeys(): Failed to write key");
                         return false;
@@ -870,9 +869,9 @@ bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
         {
             LOCK(pactiveWallet->cs_wallet);
             if (pactiveWallet->pwalletdbEncryption)
-                return pactiveWallet->pwalletdbEncryption->WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
+                return pactiveWallet->pwalletdbEncryption->WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUIDAsString(getUUID()), nKeyChain);
             else
-                return CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUID(), nKeyChain);
+                return CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(vchPubKey, vchCryptedSecret, pactiveWallet->mapKeyMetadata[vchPubKey.GetID()], getUUIDAsString(getUUID()), nKeyChain);
         }
     }
     else
@@ -895,7 +894,7 @@ void CAccount::possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db)
     //fixme: GULDEN Can we just set dirty or something and then it gets saved later?
     if (Db)
     {
-        Db->WriteAccount(getUUID(), this);
+        Db->WriteAccount(getUUIDAsString(getUUID()), this);
     }
 }
 
@@ -921,26 +920,24 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     accountLabel = label;
     if (Db)
     {
-        Db->EraseAccountLabel(getUUID());
-        Db->WriteAccountLabel(getUUID(), label);
+        Db->EraseAccountLabel(getUUIDAsString(getUUID()));
+        Db->WriteAccountLabel(getUUIDAsString(getUUID()), label);
     }
 }
 
-std::string CAccount::getUUID() const
+boost::uuids::uuid CAccount::getUUID() const
 {
-    return boost::uuids::to_string(accountUUID);
+    return accountUUID;
 }
 
 void CAccount::setUUID(const std::string& stringUUID)
 {
-    accountUUID = boost::lexical_cast<boost::uuids::uuid>(stringUUID);
+    accountUUID = getUUIDFromString(stringUUID);
 }
 
-std::string CAccount::getParentUUID() const
+boost::uuids::uuid CAccount::getParentUUID() const
 {
-    if (parentUUID == boost::uuids::nil_generator()())
-        return "";
-    return boost::uuids::to_string(parentUUID);
+    return parentUUID;
 }
 
 

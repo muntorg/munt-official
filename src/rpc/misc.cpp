@@ -244,7 +244,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
         {
             if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
             {
-                ret.push_back(Pair("account", accountIter.second->getUUID()));
+                ret.push_back(Pair("account", getUUIDAsString(accountIter.second->getUUID())));
                 ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
             }
         }

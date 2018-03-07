@@ -337,13 +337,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     //fixme: Can this try harder?
     for (TransactionRecord& record : parts)
     {
-        if (record.fromAccountUUID == "")
+        if (record.fromAccountUUID == boost::uuids::nil_generator()())
         {
             for (TransactionRecord& comp : parts)
             {
                 if(&record != &comp)
                 {
-                    if(comp.fromAccountUUID != "" && comp.receiveAccountUUID == "")
+                    if(comp.fromAccountUUID != boost::uuids::nil_generator()() && comp.receiveAccountUUID == boost::uuids::nil_generator()())
                     {
                         if(record.time == comp.time)
                         {
@@ -360,13 +360,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
             }
         }
-        else if(record.receiveAccountUUID == "")
+        else if(record.receiveAccountUUID == boost::uuids::nil_generator()())
         {
             for (TransactionRecord& comp : parts)
             {
                 if(&record != &comp)
                 {
-                    if(comp.receiveAccountUUID != "" && comp.fromAccountUUID == "")
+                    if(comp.receiveAccountUUID != boost::uuids::nil_generator()() && comp.fromAccountUUID == boost::uuids::nil_generator()())
                     {
                         if(record.time == comp.time)
                         {

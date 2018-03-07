@@ -255,11 +255,11 @@ void GuldenSendCoinsEntry::myAccountsSelectionChanged()
     if (selection.count() > 0)
     {
         QModelIndex index = selection.at(0);
-        QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
+        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
 
         LOCK(pactiveWallet->cs_wallet);
 
-        CAccount* pAccount = pactiveWallet->mapAccounts[sAccountUUID.toStdString()];
+        CAccount* pAccount = pactiveWallet->mapAccounts[accountUUID];
         if ( pAccount->IsPoW2Witness() )
         {
             ui->sendCoinsRecipientStack->setCurrentIndex(1);
@@ -477,7 +477,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                 if (selection.count() > 0)
                 {
                     QModelIndex index = selection.at(0);
-                    QString sAccountUUID = index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString();
+                    boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
 
                     LOCK(pactiveWallet->cs_wallet);
 
@@ -486,7 +486,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         {
                             //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
                             //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
-                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_WITNESS);
+                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_WITNESS);
                             CPubKey pubWitnessKey;
                             if (!keyWitness.GetReservedKey(pubWitnessKey))
                             {
@@ -521,7 +521,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     else
                     {
                         //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
-                        CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_EXTERNAL);
+                        CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {
@@ -534,7 +534,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         CKeyID keyID = pubSpendingKey.GetID();
                         recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
                     }
-                    recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[sAccountUUID.toStdString()]);
+                    recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                 }
             }
             break;

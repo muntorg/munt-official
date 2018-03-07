@@ -26,7 +26,8 @@
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <boost/lexical_cast.hpp>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/nil_generator.hpp>
 
 
 #define KEYCHAIN_EXTERNAL 0
@@ -102,7 +103,7 @@ public:
             m_type = (SeedType)type;
             std::string sUUID;
             READWRITE(sUUID);
-            m_UUID = boost::lexical_cast<boost::uuids::uuid>(sUUID);
+            m_UUID = getUUIDFromString(sUUID);
         }
         else
         {
@@ -150,7 +151,7 @@ public:
         }
     }
 
-    std::string getUUID() const;
+    boost::uuids::uuid getUUID() const;
     SecureString getMnemonic();
     SecureString getPubkey();
 
@@ -236,7 +237,7 @@ public:
             {
                 std::string sParentUUID;
                 READWRITE(sParentUUID);
-                parentUUID = boost::lexical_cast<boost::uuids::uuid>(sParentUUID);
+                parentUUID = getUUIDFromString(sParentUUID);
             }
         }
         else
@@ -295,9 +296,9 @@ public:
     unsigned int GetKeyPoolSize();
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
-    std::string getUUID() const;
+    boost::uuids::uuid getUUID() const;
     void setUUID(const std::string& stringUUID);
-    std::string getParentUUID() const;
+    boost::uuids::uuid getParentUUID() const;
 
     bool IsReadOnly() { return m_readOnly; };
 
@@ -321,7 +322,7 @@ protected:
 
     bool m_readOnly;
 
-    CKeyingMaterial vMasterKey;//Memory only.
+    CKeyingMaterial vMasterKey; // Memory only.
     friend class CGuldenWallet;
     friend class CWallet;
 };
@@ -354,7 +355,7 @@ public:
     void GetPubKey(CExtPubKey& childKey, int nChain) const;
     bool IsHD() const override {return true;};
     uint32_t getIndex();
-    std::string getSeedUUID() const;
+    boost::uuids::uuid getSeedUUID() const;
     CExtKey* GetAccountMasterPrivKey();
     SecureString GetAccountMasterPubKeyEncoded();
 
@@ -373,7 +374,7 @@ public:
         {
             std::string sUUID;
             READWRITE(sUUID);
-            m_SeedID = boost::lexical_cast<boost::uuids::uuid>(sUUID);
+            m_SeedID = getUUIDFromString(sUUID);
         }
         else
         {

@@ -17,7 +17,7 @@
 #include "base58.h"
 #include "wallet/wallet.h"
 
-#include <boost/foreach.hpp>
+#include <boost/uuid/nil_generator.hpp>
 
 #include <QFont>
 #include <QDebug>
@@ -367,7 +367,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     std::string strAddress = address.toStdString();
 
     //fixme: GULDEN (FUT) (1.6.1) 
-    std::string strAccount = "";
+    boost::uuids::uuid accountUUID = boost::uuids::nil_generator()();
     editStatus = OK;
 
     if(type == Send)
@@ -394,10 +394,10 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
 
         LOCK(wallet->cs_wallet);
 
-        if(wallet->mapAccounts.count(strAccount) == 0)
+        if(wallet->mapAccounts.count(accountUUID) == 0)
             return QString();
 
-        if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[strAccount], KEYCHAIN_EXTERNAL))
+        if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL))
         {
             WalletModel::UnlockContext ctx(walletModel->requestUnlock());
             if(!ctx.isValid())
@@ -406,7 +406,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
                 editStatus = WALLET_UNLOCK_FAILURE;
                 return QString();
             }
-            if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[strAccount], KEYCHAIN_EXTERNAL))
+            if(!wallet->GetKeyFromPool(newKey, wallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL))
             {
                 editStatus = KEY_GENERATION_FAILURE;
                 return QString();

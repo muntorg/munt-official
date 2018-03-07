@@ -127,9 +127,9 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     }
 
     CAccount* foundAccount = NULL;
-    if (pwallet->mapAccounts.find(strAccountUUIDOrLabel) != pwallet->mapAccounts.end())
+    if (pwallet->mapAccounts.find(getUUIDFromString(strAccountUUIDOrLabel)) != pwallet->mapAccounts.end())
     {
-        foundAccount = pwallet->mapAccounts[strAccountUUIDOrLabel];
+        foundAccount = pwallet->mapAccounts[getUUIDFromString(strAccountUUIDOrLabel)];
     }
     for (const auto& accountIter : pwallet->mapAccounts)
     {
@@ -370,7 +370,7 @@ UniValue getaccount(const JSONRPCRequest& request)
         {
             UniValue jsonGrouping(UniValue::VARR);
             UniValue addressInfo(UniValue::VARR);
-            addressInfo.push_back(accountIter.second->getUUID());
+            addressInfo.push_back(getUUIDAsString(accountIter.second->getUUID()));
             addressInfo.push_back(accountIter.second->getLabel());
             jsonGrouping.push_back(addressInfo);
             jsonGroupings.push_back(jsonGrouping);
@@ -897,7 +897,7 @@ UniValue getbalance(const JSONRPCRequest& request)
 
     CAccount* forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
     //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
-    std::string accountUUID = forAccount->getUUID();
+    boost::uuids::uuid accountUUID = forAccount->getUUID();
     return ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountUUID));
 }
 
@@ -965,7 +965,7 @@ UniValue movecmd(const JSONRPCRequest& request)
         strComment = request.params[4].get_str();
 
     bool subtractFeeFromAmount = false;
-    std::string fromAccountUUID = fromAccount->getUUID();
+    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
     CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
     CAmount nAmount = 0;
     if (request.params[2].getValStr() == "-1")
@@ -987,7 +987,7 @@ UniValue movecmd(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
     CWalletTx wtx;
-    wtx.strFromAccount = fromAccount->getUUID();
+    wtx.strFromAccount = getUUIDAsString(fromAccount->getUUID());
     if (!strComment.empty())
         wtx.mapValue["comment"] = request.params[4].get_str();
 
@@ -1055,7 +1055,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
         nMinDepth = request.params[3].get_int();
 
     CWalletTx wtx;
-    wtx.strFromAccount = fromAccount->getUUID();
+    wtx.strFromAccount = getUUIDAsString(fromAccount->getUUID());
     if (request.params.size() > 4 && !request.params[4].isNull() && !request.params[4].get_str().empty())
         wtx.mapValue["comment"] = request.params[4].get_str();
     if (request.params.size() > 5 && !request.params[5].isNull() && !request.params[5].get_str().empty())
@@ -1064,7 +1064,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     // Check funds
-    std::string fromAccountUUID = fromAccount->getUUID();
+    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
     CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
@@ -1131,7 +1131,7 @@ UniValue sendmany(const JSONRPCRequest& request)
         nMinDepth = request.params[2].get_int();
 
     CWalletTx wtx;
-    wtx.strFromAccount = fromAccount->getUUID();
+    wtx.strFromAccount = getUUIDAsString(fromAccount->getUUID());
     if (request.params.size() > 3 && !request.params[3].isNull() && !request.params[3].get_str().empty())
         wtx.mapValue["comment"] = request.params[3].get_str();
 
@@ -1173,7 +1173,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     // Check funds
-    std::string fromAccountUUID = fromAccount->getUUID();
+    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
     CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
     if (totalAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
@@ -1418,13 +1418,13 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
 
     // Reply
     UniValue ret(UniValue::VARR);
-    std::map<std::string, tallyitem> mapAccountTally;
+    std::map<boost::uuids::uuid, tallyitem> mapAccountTally;
     for (const auto &accountIter : pwallet->mapAccounts)
     {
         if (accountIter.second->m_Type == AccountType::Shadow)
             continue;
 
-        std::string accountUUID = accountIter.second->getUUID();
+        boost::uuids::uuid accountUUID = accountIter.second->getUUID();
         std::string accountLabel = accountIter.second->getLabel();
 
         if (accountIter.second->m_Type == AccountType::Shadow)
@@ -1465,7 +1465,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
                 if(fIsWatchonly)
                     obj.push_back(Pair("involvesWatchonly", true));
                 obj.push_back(Pair("address",       address.ToString()));
-                obj.push_back(Pair("account",       accountUUID));
+                obj.push_back(Pair("account",       getUUIDAsString(accountUUID)));
                 obj.push_back(Pair("accountlabel",  accountLabel));
                 obj.push_back(Pair("amount",        ValueFromAmount(nAmount)));
                 obj.push_back(Pair("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf)));
@@ -1487,14 +1487,14 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
 
     if (fByAccounts)
     {
-        for (std::map<std::string, tallyitem>::iterator it = mapAccountTally.begin(); it != mapAccountTally.end(); ++it)
+        for (auto it = mapAccountTally.begin(); it != mapAccountTally.end(); ++it)
         {
             CAmount nAmount = (*it).second.nAmount;
             int nConf = (*it).second.nConf;
             UniValue obj(UniValue::VOBJ);
             if((*it).second.fIsWatchonly)
                 obj.push_back(Pair("involvesWatchonly", true));
-            obj.push_back(Pair("account",       (*it).first));
+            obj.push_back(Pair("account",       getUUIDAsString((*it).first)));
             obj.push_back(Pair("amount",        ValueFromAmount(nAmount)));
             obj.push_back(Pair("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf)));
             ret.push_back(obj);
@@ -1639,7 +1639,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                 UniValue entry(UniValue::VOBJ);
                 if(involvesWatchonly || (::IsMine(*pwallet, s.destination) & ISMINE_WATCH_ONLY))
                     entry.push_back(Pair("involvesWatchonly", true));
-                entry.push_back(Pair("account", account->getUUID()));
+                entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
                 entry.push_back(Pair("accountlabel", account->getLabel()));
                 MaybePushAddress(entry, s.destination);
                 entry.push_back(Pair("category", "send"));
@@ -1666,7 +1666,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                 if (involvesWatchonly || (::IsMine(*pwallet, r.destination) & ISMINE_WATCH_ONLY)) {
                     entry.push_back(Pair("involvesWatchonly", true));
                 }
-                entry.push_back(Pair("account", account->getUUID()));
+                entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
                 entry.push_back(Pair("accountlabel", account->getLabel()));
                 MaybePushAddress(entry, r.destination);
                 if (wtx.IsCoinBase())
@@ -2883,7 +2883,7 @@ UniValue listunspent(const JSONRPCRequest& request)
                 if (fValidAddress) {
                     entry.push_back(Pair("address", CBitcoinAddress(address).ToString()));
 
-                    entry.push_back(Pair("account", account->getUUID()));
+                    entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
                     entry.push_back(Pair("accountlabel", account->getLabel()));
                 }
 

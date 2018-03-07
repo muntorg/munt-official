@@ -737,7 +737,7 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
     return wallet->IsSpent(outpoint.hash, outpoint.n);
 }
 
-QString WalletModel::getAccountLabel(std::string uuid)
+QString WalletModel::getAccountLabel(const boost::uuids::uuid& uuid)
 {
     LOCK(wallet->cs_wallet);
     if (wallet->mapAccountLabels.count(uuid) > 0)

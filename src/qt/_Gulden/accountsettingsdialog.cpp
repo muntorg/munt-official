@@ -138,7 +138,7 @@ void AccountSettingsDialog::deleteAccount()
 {
     if (activeAccount)
     {
-        std::string accountUUID = activeAccount->getUUID();
+        boost::uuids::uuid accountUUID = activeAccount->getUUID();
         CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {

@@ -607,7 +607,7 @@ UniValue deleteaccount(const JSONRPCRequest& request)
 
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
-        std::string accountUUID = account->getUUID();
+        boost::uuids::uuid accountUUID = account->getUUID();
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
@@ -645,7 +645,7 @@ UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::str
     if (!account)
         throw std::runtime_error("Unable to create account.");
 
-    return account->getUUID();
+    return getUUIDAsString(account->getUUID());
 }
 
 UniValue createaccount(const JSONRPCRequest& request)
@@ -905,7 +905,7 @@ UniValue getactiveaccount(const JSONRPCRequest& request)
     if (!pwallet->activeAccount)
         throw std::runtime_error("No account active");
 
-    return pwallet->activeAccount->getUUID();
+    return getUUIDAsString(pwallet->activeAccount->getUUID());
 }
 
 UniValue getreadonlyaccount(const JSONRPCRequest& request)
@@ -990,7 +990,7 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
     pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
 
-    return account->getUUID();
+    return getUUIDAsString(account->getUUID());
 }
 
 UniValue getactiveseed(const JSONRPCRequest& request)
@@ -1022,7 +1022,7 @@ UniValue getactiveseed(const JSONRPCRequest& request)
     if (!pwallet->activeSeed)
         throw std::runtime_error("No seed active");
 
-    return pwallet->activeSeed->getUUID();
+    return getUUIDAsString(pwallet->activeSeed->getUUID());
 }
 
 UniValue setactiveaccount(const JSONRPCRequest& request)
@@ -1054,7 +1054,7 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
     pwallet->setActiveAccount(account);
-    return account->getUUID();
+    return getUUIDAsString(account->getUUID());
 }
 
 CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
@@ -1073,10 +1073,12 @@ CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultI
         return pwallet->getActiveSeed();
     }
 
+    boost::uuids::uuid seedUUID = getUUIDFromString(strSeedUUID);
+
     CHDSeed* foundSeed = NULL;
-    if (pwallet->mapSeeds.find(strSeedUUID) != pwallet->mapSeeds.end())
+    if (pwallet->mapSeeds.find(seedUUID) != pwallet->mapSeeds.end())
     {
-        foundSeed = pwallet->mapSeeds[strSeedUUID];
+        foundSeed = pwallet->mapSeeds[seedUUID];
     }
 
     if (!foundSeed)
@@ -1113,7 +1115,7 @@ UniValue setactiveseed(const JSONRPCRequest& request)
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], false);
 
     pwallet->setActiveSeed(seed);
-    return seed->getUUID();
+    return getUUIDAsString(seed->getUUID());
 }
 
 
@@ -1164,7 +1166,7 @@ UniValue createseed(const JSONRPCRequest& request)
     if(!newSeed)
         throw std::runtime_error("Failed to generate seed");
 
-    return newSeed->getUUID();
+    return getUUIDAsString(newSeed->getUUID());
 }
 
 UniValue deleteseed(const JSONRPCRequest& request)
@@ -1268,7 +1270,7 @@ UniValue importseed(const JSONRPCRequest& request)
     pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
 
-    return newSeed->getUUID();
+    return getUUIDAsString(newSeed->getUUID());
 }
 
 UniValue listallaccounts(const JSONRPCRequest& request)
@@ -1312,7 +1314,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
             if (!forSeed)
             {
                 UniValue rec(UniValue::VOBJ);
-                rec.push_back(Pair("UUID", accountPair.first));
+                rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
                 rec.push_back(Pair("label", accountPair.second->getLabel()));
                 rec.push_back(Pair("type", "legacy"));
                 rec.push_back(Pair("sub_type", ""));
@@ -1326,7 +1328,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
             continue;
 
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", accountPair.first));
+        rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
         rec.push_back(Pair("type", "HD"));
 
@@ -1447,7 +1449,7 @@ UniValue listseeds(const JSONRPCRequest& request)
     for (const auto& seedPair : pwallet->mapSeeds)
     {
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", seedPair.first));
+        rec.push_back(Pair("UUID", getUUIDAsString(seedPair.first)));
         rec.push_back(Pair("type", StringFromSeedType(seedPair.second)));
         if (seedPair.second->IsReadOnly())
             rec.push_back(Pair("readonly", "true"));

@@ -456,10 +456,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     //fixme: GULDEN HIGH fShowChildAccountsSeperately
     if (wtx->credit > wtx->debit)
     {
-        if ( wtx->fromAccountUUID != "")
+        if ( wtx->fromAccountUUID != boost::uuids::nil_generator()())
         {
-            std::string fromUUID = wtx->fromAccountUUID;
-            if (!fShowChildAccountsSeperately && wtx->fromAccountParentUUID != "")
+            boost::uuids::uuid fromUUID = wtx->fromAccountUUID;
+            if (!fShowChildAccountsSeperately && wtx->fromAccountParentUUID != boost::uuids::nil_generator()())
             {
                 fromUUID = wtx->fromAccountParentUUID;
             }
@@ -472,10 +472,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     }
     else if (wtx->debit > wtx->credit)
     {
-        if ( wtx->receiveAccountUUID != "")
+        if ( wtx->receiveAccountUUID != boost::uuids::nil_generator()())
         {
-            std::string receiveUUID = wtx->receiveAccountUUID;
-            if (!fShowChildAccountsSeperately && wtx->receiveAccountParentUUID != "")
+            boost::uuids::uuid receiveUUID = wtx->receiveAccountUUID;
+            if (!fShowChildAccountsSeperately && wtx->receiveAccountParentUUID != boost::uuids::nil_generator()())
             {
                 receiveUUID = wtx->receiveAccountParentUUID;
             }
@@ -730,9 +730,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case AddressRole:
         return QString::fromStdString(rec->address);
     case AccountRole:
-        return QString::fromStdString(rec->actionAccountUUID);
+        return QString::fromStdString(getUUIDAsString(rec->actionAccountUUID));
     case AccountParentRole:
-        return QString::fromStdString(rec->actionAccountParentUUID);
+        return QString::fromStdString(getUUIDAsString(rec->actionAccountParentUUID));
     case LabelRole:
         return walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
     case AmountRole:

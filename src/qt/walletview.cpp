@@ -40,6 +40,8 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 
+#include <boost/uuid/nil_generator.hpp>
+
 
 
 WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
@@ -203,18 +205,18 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
         QString label = ttm->data(index, TransactionTableModel::LabelRole).toString();
 
 
-        QString accountUUID = ttm->data(index, TransactionTableModel::AccountRole).toString();
+        boost::uuids::uuid accountUUID = getUUIDFromString(ttm->data(index, TransactionTableModel::AccountRole).toString().toStdString());
         if (fShowChildAccountsSeperately)
         {
             QString accountParentUUID = ttm->data(index, TransactionTableModel::AccountParentRole).toString();
             if (!accountParentUUID.isEmpty())
-                accountUUID = accountParentUUID;
+                accountUUID = getUUIDFromString(accountParentUUID.toStdString());
         }
 
         QString account;
-        if(!accountUUID.isEmpty())
+        if(accountUUID != boost::uuids::nil_generator()())
         {
-            account = walletModel->getAccountLabel(accountUUID.toStdString());
+            account = walletModel->getAccountLabel(accountUUID);
         }
 
         Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, account, label);

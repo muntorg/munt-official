@@ -17,6 +17,8 @@
 
 #include <QList>
 #include <QString>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/nil_generator.hpp>
 
 class CWallet;
 class CWalletTx;
@@ -95,13 +97,13 @@ public:
     static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
-            hash(), time(0), type(Other), address(""), debit(0), credit(0), fee(0), idx(0)
+            hash(), time(0), type(Other), address(""), debit(0), credit(0), fee(0), idx(0), actionAccountUUID(boost::uuids::nil_generator()()), actionAccountParentUUID(boost::uuids::nil_generator()()), fromAccountUUID(boost::uuids::nil_generator()()), fromAccountParentUUID(boost::uuids::nil_generator()()), receiveAccountUUID(boost::uuids::nil_generator()()), receiveAccountParentUUID(boost::uuids::nil_generator()())
     {
     }
 
     TransactionRecord(uint256 _hash, qint64 _time):
             hash(_hash), time(_time), type(Other), address(""), debit(0),
-            credit(0), fee(0), idx(0)
+            credit(0), fee(0), idx(0), actionAccountUUID(boost::uuids::nil_generator()()), actionAccountParentUUID(boost::uuids::nil_generator()()), fromAccountUUID(boost::uuids::nil_generator()()), fromAccountParentUUID(boost::uuids::nil_generator()()), receiveAccountUUID(boost::uuids::nil_generator()()), receiveAccountParentUUID(boost::uuids::nil_generator()())
     {
     }
 
@@ -109,7 +111,7 @@ public:
                 Type _type, const std::string &_address,
                 const CAmount& _debit, const CAmount& _credit):
             hash(_hash), time(_time), type(_type), address(_address), debit(_debit), credit(_credit),
-            idx(0)
+            idx(0), actionAccountUUID(boost::uuids::nil_generator()()), actionAccountParentUUID(boost::uuids::nil_generator()()), fromAccountUUID(boost::uuids::nil_generator()()), fromAccountParentUUID(boost::uuids::nil_generator()()), receiveAccountUUID(boost::uuids::nil_generator()()), receiveAccountParentUUID(boost::uuids::nil_generator()())
     {
     }
 
@@ -125,14 +127,14 @@ public:
     Type type;
     std::string address;
     //Which account the record belongs too - i.e. a send belongs to a sender account while a receive belongs to a receiver account.
-    std::string actionAccountUUID;
-    std::string actionAccountParentUUID;
+    boost::uuids::uuid actionAccountUUID;
+    boost::uuids::uuid actionAccountParentUUID;
     //Sender account
-    std::string fromAccountUUID;
-    std::string fromAccountParentUUID;
+    boost::uuids::uuid fromAccountUUID;
+    boost::uuids::uuid fromAccountParentUUID;
     //Receiver account
-    std::string receiveAccountUUID;
-    std::string receiveAccountParentUUID;
+    boost::uuids::uuid receiveAccountUUID;
+    boost::uuids::uuid receiveAccountParentUUID;
     CAmount debit;
     CAmount credit;
     CAmount fee;

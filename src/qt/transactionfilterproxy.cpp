@@ -49,13 +49,13 @@ bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &
     QDateTime datetime = index.data(TransactionTableModel::DateRole).toDateTime();
     bool involvesWatchAddress = index.data(TransactionTableModel::WatchonlyRole).toBool();
     QString address = index.data(TransactionTableModel::AddressRole).toString();
-    QString accountUUID = index.data(TransactionTableModel::AccountRole).toString();
-    QString accountParentUUID = index.data(TransactionTableModel::AccountParentRole).toString();
+    boost::uuids::uuid accountUUID = getUUIDFromString(index.data(TransactionTableModel::AccountRole).toString().toStdString());
+    boost::uuids::uuid  accountParentUUID = getUUIDFromString(index.data(TransactionTableModel::AccountParentRole).toString().toStdString());
     QString label = index.data(TransactionTableModel::LabelRole).toString();
     qint64 amount = llabs(index.data(TransactionTableModel::AmountRole).toLongLong());
     int status = index.data(TransactionTableModel::StatusRole).toInt();
 
-    if(account && account->getUUID() != accountUUID.toStdString() && (fShowChildAccountsSeperately || account->getUUID() != accountParentUUID.toStdString()))
+    if(account && account->getUUID() != accountUUID && (fShowChildAccountsSeperately || account->getUUID() != accountParentUUID))
         return false;
     //if(account && !fShowChildAccountsSeperately && )
         //return false;

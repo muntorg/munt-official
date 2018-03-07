@@ -55,7 +55,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
 
     CAccount* account = NULL;
     std::string accountLabel;
-    std::string accountUUID;
+    boost::uuids::uuid accountUUID;
     {
         LOCK(m_wallet->cs_wallet);
         auto iter = m_wallet->mapAccountLabels.begin();
@@ -101,7 +101,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
     }
     else if(role == SelectedAccountRole)
     {
-        return QString::fromStdString(accountUUID);
+        return QString::fromStdString(getUUIDAsString(accountUUID));
     }
     else if(role == Qt::TextAlignmentRole)
     {

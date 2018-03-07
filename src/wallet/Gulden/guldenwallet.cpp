@@ -376,7 +376,7 @@ void CGuldenWallet::deleteAccount(CAccount* account)
         account->setLabel(newLabel, &db);
         account->m_Type = AccountType::Deleted;
         mapAccountLabels[account->getUUID()] = newLabel;
-        if (!db.WriteAccount(account->getUUID(), account))
+        if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
         {
             throw std::runtime_error("Writing account failed");
         }
@@ -390,7 +390,7 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName)
         LOCK(cs_wallet);
 
         CWalletDB walletdb(*dbw);
-        if (!walletdb.WriteAccount(account->getUUID(), account))
+        if (!walletdb.WriteAccount(getUUIDAsString(account->getUUID()), account))
         {
             throw std::runtime_error("Writing account failed");
         }
@@ -729,7 +729,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
                     throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all keys");
                 }
                 walletDB.EraseKey(keyPair.GetPubKey());
-                if (!walletDB.WriteKey(keyPair.GetPubKey(), keyPair.GetPrivKey(), static_cast<CWallet*>(this)->mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
+                if (!walletDB.WriteKey(keyPair.GetPubKey(), keyPair.GetPrivKey(), static_cast<CWallet*>(this)->mapKeyMetadata[keyID], getUUIDAsString(forAccount.getUUID()), KEYCHAIN_EXTERNAL))
                 {
                     throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
                 }
@@ -747,7 +747,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
                 { 
                     throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade all encrypted keys");
                 }
-                if (!walletDB.WriteCryptedKey(pubKey, secret, static_cast<CWallet*>(this)->mapKeyMetadata[keyID], forAccount.getUUID(), KEYCHAIN_EXTERNAL))
+                if (!walletDB.WriteCryptedKey(pubKey, secret, static_cast<CWallet*>(this)->mapKeyMetadata[keyID], getUUIDAsString(forAccount.getUUID()), KEYCHAIN_EXTERNAL))
                 {
                     throw std::runtime_error("Fatal error upgrading legacy wallet - could not write all upgraded keys");
                 }
@@ -768,7 +768,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
         {
             throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
-        keypoolentry.accountName = forAccount.getUUID();
+        keypoolentry.accountName = getUUIDAsString(forAccount.getUUID());
         keypoolentry.nChain = KEYCHAIN_CHANGE;
         if ( !walletDB.WritePool( nIndex, keypoolentry ) )
         {
@@ -786,7 +786,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
         {
             throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
-        keypoolentry.accountName = forAccount.getUUID();
+        keypoolentry.accountName = getUUIDAsString(forAccount.getUUID());
         keypoolentry.nChain = KEYCHAIN_EXTERNAL;
         if ( !walletDB.WritePool( nIndex, keypoolentry ) )
         {
@@ -811,14 +811,14 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], forAccount.getUUID());
+    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
 }
 
 
 bool CGuldenWallet::LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
 {
     LOCK(cs_wallet);
-    return mapAccounts[forAccount]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);
+    return mapAccounts[getUUIDFromString(forAccount)]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);
 }
 
 CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
@@ -840,5 +840,5 @@ CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
 bool CWallet::LoadKey(const CKey& key, const CPubKey &pubkey, const std::string& forAccount, int64_t nKeyChain)
 {
     LOCK(cs_wallet);
-    return mapAccounts[forAccount]->AddKeyPubKey(key, pubkey, nKeyChain);
+    return mapAccounts[getUUIDFromString(forAccount)]->AddKeyPubKey(key, pubkey, nKeyChain);
 }

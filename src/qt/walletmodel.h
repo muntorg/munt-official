@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QRegularExpression>
 
+#include <boost/uuid/uuid.hpp>
+
 class AddressTableModel;
 class AccountTableModel;
 class OptionsModel;
@@ -263,7 +265,7 @@ public:
     //fixme: GULDEN (FUT) - Move this into a gulden specific subclass to keep diffs to a minimum
     void setActiveAccount( CAccount* account );
     CAccount* getActiveAccount();
-    QString getAccountLabel(std::string uuid);
+    QString getAccountLabel(const boost::uuids::uuid& uuid);
 
 private:
     CWallet *wallet;

@@ -66,7 +66,7 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
     ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 35) );
 
     //fixme: GULDEN - Use AccountTableModel.
-    std::string accountUUID = m_account->getUUID();
+    boost::uuids::uuid accountUUID = m_account->getUUID();
     m_accountBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
 
     updateExchangeRates();

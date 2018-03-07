@@ -456,7 +456,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
             catch (...)
             {
-                forAccount = pwallet->activeAccount->getUUID();
+                forAccount = getUUIDAsString(pwallet->activeAccount->getUUID());
                 nKeyChain = KEYCHAIN_EXTERNAL;
             }
 
@@ -534,7 +534,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
             catch (...)
             {
-                forAccount = pwallet->activeAccount->getUUID();
+                forAccount = getUUIDAsString(pwallet->activeAccount->getUUID());
                 nKeyChain = KEYCHAIN_EXTERNAL;
             }
 
@@ -582,12 +582,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
             else
             {
-                if ( pwallet->mapAccounts.count(accountUUID) == 0 )
+                if ( pwallet->mapAccounts.count(getUUIDFromString(accountUUID)) == 0 )
                 {
                     strErr = "Wallet contains key for non existent account";
                     return false;
                 }
-                forAccount = pwallet->mapAccounts[accountUUID];
+                forAccount = pwallet->mapAccounts[getUUIDFromString(accountUUID)];
             }
 
             if (keypool.nChain == KEYCHAIN_EXTERNAL)
@@ -661,12 +661,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             std::string strAccountUUID;
             ssKey >> strAccountUUID;
-            if (pwallet->mapAccounts.count(strAccountUUID) == 0)
+            if (pwallet->mapAccounts.count(getUUIDFromString(strAccountUUID)) == 0)
             {
                 CAccount* newAccount = new CAccount();
                 newAccount->setUUID(strAccountUUID);
                 ssValue >> *newAccount;
-                pwallet->mapAccounts[strAccountUUID] = newAccount;
+                pwallet->mapAccounts[getUUIDFromString(strAccountUUID)] = newAccount;
                 //fixme: (GULDEN) Reconsider if this is a good idea or not.
                 //If no active account saved (for whatever reason) - make the first one we run into the active one.
                 if (!pwallet->activeAccount)
@@ -677,12 +677,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             std::string strAccountUUID;
             ssKey >> strAccountUUID;
-            if (pwallet->mapAccounts.count(strAccountUUID) == 0)
+            if (pwallet->mapAccounts.count(getUUIDFromString(strAccountUUID)) == 0)
             {
                 CAccountHD* newAccount = new CAccountHD();
                 newAccount->setUUID(strAccountUUID);
                 ssValue >> *newAccount;
-                pwallet->mapAccounts[strAccountUUID] = newAccount;
+                pwallet->mapAccounts[getUUIDFromString(strAccountUUID)] = newAccount;
                 //fixme: (FUT) (1.6.1) - Re-evaluate whether this is necessary.
                 if (!pwallet->activeAccount)
                     pwallet->activeAccount = newAccount;
@@ -695,7 +695,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> strAccountUUID;
             ssValue >> strAccountLabel;
 
-            pwallet->mapAccountLabels[strAccountUUID] = strAccountLabel;
+            pwallet->mapAccountLabels[getUUIDFromString(strAccountUUID)] = strAccountLabel;
         }
     } catch (...)
     {
@@ -803,14 +803,14 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         if (!primaryAccountString.empty())
         {
             nExtraLoadState = EXISTING_WALLET;
-            if (pwallet->mapAccounts.count(primaryAccountString) == 0)
+            if (pwallet->mapAccounts.count(getUUIDFromString(primaryAccountString)) == 0)
             {
                 LogPrintf("Error - missing primary account for UUID [%s]\n", primaryAccountString);
                 fNoncriticalErrors = true;
             }
             else
             {
-                pwallet->activeAccount = pwallet->mapAccounts[primaryAccountString];
+                pwallet->activeAccount = pwallet->mapAccounts[getUUIDFromString(primaryAccountString)];
             }
         }
         else if (isPreHDWallet && !haveAnyAccounts)
@@ -910,7 +910,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         }
     if (!primarySeedString.empty())
     {
-        if (pwallet->mapSeeds.count(primarySeedString) == 0)
+        if (pwallet->mapSeeds.count(getUUIDFromString(primarySeedString)) == 0)
         {
             //fixme: Treat this more severely?
             LogPrintf("Error - missing primary seed for UUID [%s]\n", primarySeedString);
@@ -918,7 +918,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
         }
         else
         {
-            pwallet->activeSeed = pwallet->mapSeeds[primarySeedString];
+            pwallet->activeSeed = pwallet->mapSeeds[getUUIDFromString(primarySeedString)];
         }
     }
 
@@ -1202,21 +1202,21 @@ bool CWalletDB::WriteVersion(int nVersion)
 
 bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
 {
-    return WriteIC(std::make_pair(std::string("hdseed"), seed.getUUID()), seed);
+    return WriteIC(std::make_pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())), seed);
 }
 
 bool CWalletDB::DeleteHDSeed(const CHDSeed& seed)
 {
-    return EraseIC(std::make_pair(std::string("hdseed"), seed.getUUID()));
+    return EraseIC(std::make_pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())));
 }
 
 bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
 {
-    return WriteIC(std::string("primaryseed"), seed.getUUID());
+    return WriteIC(std::string("primaryseed"), getUUIDAsString(seed.getUUID()));
 }
 
 bool CWalletDB::WritePrimaryAccount(const CAccount* account)
 {
-    return WriteIC(std::string("primaryaccount"), account->getUUID());
+    return WriteIC(std::string("primaryaccount"), getUUIDAsString(account->getUUID()));
 }
 
