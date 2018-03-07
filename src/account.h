@@ -348,6 +348,9 @@ public:
 
     bool IsReadOnly() { return m_readOnly; };
 
+    bool HasWarningFlag() { return warningFlag; };
+    void SetWarningFlag(bool warningFlag_) { warningFlag = warningFlag_; };
+
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
     mutable CCriticalSection cs_keypool;
@@ -371,6 +374,8 @@ protected:
     CKeyingMaterial vMasterKey; // Memory only.
     friend class CGuldenWallet;
     friend class CWallet;
+
+    bool warningFlag=false; // Memory only
 };
 
 
