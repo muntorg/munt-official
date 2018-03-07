@@ -14,9 +14,6 @@ bool fShowChildAccountsSeperately = false;
 
 void ThreadShadowPoolManager()
 {
-    boost::mutex condition_mutex;
-    boost::unique_lock<boost::mutex> lock(condition_mutex);
-
     int depth = 1;
     while (true)
     {
@@ -323,7 +320,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     }
 
     //Only assign the bare minimum keys - let the background thread do the rest.
-    static_cast<CWallet*>(this)->TopUpKeyPool(10);
+    static_cast<CWallet*>(this)->TopUpKeyPool(1);
 }
 
 void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newName, bool notify)
@@ -673,7 +670,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
 
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
-        static_cast<CWallet*>(this)->TopUpKeyPool(2);//We only assign the bare minimum addresses here - and let the background thread do the rest
+        static_cast<CWallet*>(this)->TopUpKeyPool(1, 0, activeAccount);//We only assign the bare minimum addresses here - and let the background thread do the rest
 
     return newAccount;
 }
@@ -708,7 +705,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     addAccount(newAccount, strAccount);
 
     //We only assign the bare minimum addresses here - and let the background thread do the rest
-    static_cast<CWallet*>(this)->TopUpKeyPool(2);
+    static_cast<CWallet*>(this)->TopUpKeyPool(2, 0, newAccount);
 
     return newAccount;
 }

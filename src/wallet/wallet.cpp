@@ -3430,7 +3430,7 @@ bool CWallet::NewKeyPool()
 }
 
 //fixme: (FUT)) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
-int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
+int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* forAccount)
 {
     unsigned int nNew = 0;
     {
@@ -3443,8 +3443,8 @@ int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
 
         // Top up key pool
         unsigned int nTargetSize;
-        if (kpSize > 0)
-            nTargetSize = kpSize;
+        if (nTargetKeypoolSize > 0)
+            nTargetSize = nTargetKeypoolSize;
         else
             nTargetSize = GetArg("-keypool", 5);
 
@@ -3462,21 +3462,24 @@ int CWallet::TopUpKeyPool(unsigned int kpSize, unsigned int maxNew)
 
         for (auto accountPair : mapAccounts)
         {
-            unsigned int accountTargetSize = nTargetSize;
-            for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+            if (forAccount == nullptr || forAccount->getUUID() == accountPair.first)
             {
-                auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
-                while (keyPool.size() < (accountTargetSize + 1))
+                unsigned int accountTargetSize = nTargetSize;
+                for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
                 {
-                    if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), accountPair.first, keyChain ) ) )
-                        throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
-                    keyPool.insert(nIndex);
-                    LogPrintf("keypool [%s:%s] added key %d, size=%u\n", accountPair.second->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
+                    auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
+                    while (keyPool.size() < (accountTargetSize))
+                    {
+                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), accountPair.first, keyChain ) ) )
+                            throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
+                        keyPool.insert(nIndex);
+                        LogPrintf("keypool [%s:%s] added key %d, size=%u\n", accountPair.second->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
 
-                    // Limit generation for this loop - rest will be generated later
-                    ++nNew;
-                    if (maxNew != 0 && nNew >= maxNew)
-                        return nNew;
+                        // Limit generation for this loop - rest will be generated later
+                        ++nNew;
+                        if (nMaxNewAllocations != 0 && nNew >= nMaxNewAllocations)
+                            return nNew;
+                    }
                 }
             }
         }
@@ -3492,7 +3495,7 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         LOCK(cs_wallet);
 
         if (!IsLocked())
-            TopUpKeyPool(2);//Only assign the bare minimum here, let the background thread do the rest.
+            TopUpKeyPool(1, 0, forAccount);//Only assign the bare minimum here, let the background thread do the rest.
 
         auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? forAccount->setKeyPoolExternal : forAccount->setKeyPoolInternal );
 
@@ -4255,8 +4258,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
             GuldenApplication::gApp->BurnRecoveryPhrase();
 
-            //Assign the bare minimum keys here, let the rest take place in the bakcground thread
-            walletInstance->TopUpKeyPool(2);
+            //Assign the bare minimum keys here, let the rest take place in the background thread
+            walletInstance->TopUpKeyPool(1);
         }
         else
         {
@@ -4275,7 +4278,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             }
 
             //Assign the bare minimum keys here, let the rest take place in the bakcground thread
-            walletInstance->TopUpKeyPool(2);
+            walletInstance->TopUpKeyPool(1);
         }
 
         pactiveWallet = walletInstance;

@@ -1080,7 +1080,7 @@ public:
     /*
     size_t KeypoolCountExternalKeys();
     */
-    int TopUpKeyPool(unsigned int kpSize = 0, unsigned int maxNew = 0);
+    int TopUpKeyPool(unsigned int nTargetKeypoolSize = 0, unsigned int nMaxNewAllocations = 0, CAccount* forAccount = nullptr);
     void ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool, CAccount* forAccount, int64_t keyChain);
     void KeepKey(int64_t nIndex);
     void ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain);
