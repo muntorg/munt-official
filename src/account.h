@@ -49,6 +49,24 @@ enum AccountType
     Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
 
+static std::string getUUIDAsString(const boost::uuids::uuid& uuid)
+{
+    return boost::uuids::to_string(uuid);
+}
+
+static boost::uuids::uuid getUUIDFromString(const std::string& uuid)
+{
+    try
+    {
+        boost::uuids::string_generator generator;
+        return generator(uuid);
+    }
+    catch(...)
+    {
+        return boost::uuids::nil_generator()();
+    }
+}
+
 enum AccountSubType
 {
     Desktop = 0,       // Standard desktop account.
