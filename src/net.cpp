@@ -43,7 +43,6 @@
 
 
 #include <math.h>
-#include <memory>
 
 // Dump addresses to peers.dat and banlist.dat every 15 minutes (900s)
 #define DUMP_ADDRESSES_INTERVAL 900
@@ -2605,37 +2604,53 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     size_t nTotalSize = nMessageSize + CMessageHeader::HEADER_SIZE;
     LogPrint(BCLog::NET, "sending %s (%d bytes) peer=%d\n",  SanitizeString(msg.command.c_str()), nMessageSize, pnode->GetId());
 
-    // buffer to hold and own the message data, Asio buffer don't ake ownership
-    using BufferHolder = std::shared_ptr<std::vector<unsigned char> >;
-    auto bufferHolder = BufferHolder(new std::vector<unsigned char>);
-
-    // compose data buffer
-    bufferHolder->reserve(nTotalSize);
+    std::vector<unsigned char> serializedHeader;
+    serializedHeader.reserve(CMessageHeader::HEADER_SIZE);
     uint256 hash = Hash(msg.data.data(), msg.data.data() + nMessageSize);
     CMessageHeader hdr(Params().MessageStart(), msg.command.c_str(), nMessageSize);
     memcpy(hdr.pchChecksum, hash.begin(), CMessageHeader::CHECKSUM_SIZE);
 
-    CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, *bufferHolder, 0, hdr};
-
-    bufferHolder->insert(bufferHolder->end(), msg.data.begin(), msg.data.end());
+    CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, serializedHeader, 0, hdr};
 
     {
-        //log total amount of bytes per command
         LOCK(pnode->cs_vSend);
+
+        //log total amount of bytes per command
         pnode->mapSendBytesPerMsgCmd[msg.command] += nTotalSize;
         pnode->nSendSize += nTotalSize;
+
+        if (pnode->nSendSize > nSendBufferMaxSize)
+            pnode->fPauseSend = true;
+        pnode->vSendMsg.push_back(std::move(serializedHeader));
+        if (nMessageSize)
+            pnode->vSendMsg.push_back(std::move(msg.data));
     }
 
-    if (pnode->nSendSize > nSendBufferMaxSize)
-        pnode->fPauseSend = true;
+    boost::asio::post(get_io_context(), [this, pnode]() {
+        if (!pnode->fSendInProgress) {
+            pnode->fSendInProgress = true;
+            this->ResumeSend(pnode);
+        }
+    });
+}
 
-    // wrap data buffer in Asio buffer
-    boost::asio::const_buffer buffer(bufferHolder->data(), bufferHolder->size());
+void CConnman::ResumeSend(CNode *pnode)
+{
+    if (!pnode->fSendInProgress) {
+        LogPrint(BCLog::NET, "Expected fSendInProgress, disconnecting %d", pnode->GetId());
+        pnode->fDisconnect = true;
+    }
 
-    // send the data buffer async, myData is a reference as the actual object is held in the  bind
-    boost::asio::async_write(pnode->hSocket, buffer, std::bind([this, pnode](BufferHolder& myData,
-                                                               const boost::system::error_code& ec,
-                                                               std::size_t bytes_transferred) {
+    boost::asio::const_buffer buffer;
+    {
+        LOCK(pnode->cs_vSend);
+        assert(pnode->vSendMsg.size() > 0);
+        const auto &data = *pnode->vSendMsg.begin();
+        buffer = boost::asio::buffer(reinterpret_cast<const char*>(data.data()), data.size());
+    }
+
+    boost::asio::async_write(pnode->hSocket, buffer,
+                             [this, pnode, buffer](const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (ec) {
             LogPrint(BCLog::NET, "socket send error %s\n", ec.message());
             pnode->CloseSocketDisconnect();
@@ -2646,11 +2661,29 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
         pnode->nLastSend = GetSystemTimeInSeconds();
         pnode->nSendBytes += bytes_transferred;
+        if (buffer.size() == bytes_transferred) {
+            pnode->nSendSize -= bytes_transferred;
+            pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
 
-        pnode->nSendSize -= bytes_transferred;
-        pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
+            bool moreToSend;
+            {
+                LOCK(pnode->cs_vSend);
+                pnode->vSendMsg.pop_front();
+                moreToSend = !pnode->vSendMsg.empty();
+            }
 
-    }, std::move(bufferHolder), std::placeholders::_1, std::placeholders::_2));
+            if (moreToSend) {
+                this->ResumeSend(pnode);
+            }
+            else {
+                pnode->fSendInProgress = false;
+            }
+        }
+        else {
+            LogPrint(BCLog::NET, "async_write to %d not fully transferred (%d != %d) \n", pnode->GetId(), buffer.size(), bytes_transferred);
+            pnode->CloseSocketDisconnect();
+        }
+    });
 }
 
 bool CConnman::ForNode(NodeId id, std::function<bool(CNode* pnode)> func)
