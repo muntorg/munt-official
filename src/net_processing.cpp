@@ -1868,6 +1868,39 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
     }
 
 
+    else if (strCommand == NetMsgType::GETRHEADERS)
+    {
+        uint256 hash, hashStop;
+        vRecv >> hash >> hashStop;
+
+        LOCK(cs_main);
+        if (IsInitialBlockDownload() && !pfrom->fWhitelisted) {
+            LogPrint(BCLog::NET, "Ignoring getrheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
+            return true;
+        }
+
+        BlockMap::iterator mi = mapBlockIndex.find(hash);
+        if (mi == mapBlockIndex.end()) {
+            LogPrint(BCLog::NET, "getrheaders from peer=%d is requesting an unknown block\n", pfrom->GetId());
+            return true;
+        }
+
+        const CBlockIndex* pindex = mi->second;
+
+        std::vector<CBlockHeader> vHeaders;
+        int nLimit = MAX_HEADERS_RESULTS;
+        LogPrint(BCLog::NET, "getrheaders %d to %s from peer=%d\n", pindex->nHeight, hashStop.IsNull() ? "begin" : hashStop.ToString(), pfrom->GetId());
+
+        for (; pindex; pindex = chainActive.Prev(pindex))
+        {
+            vHeaders.push_back(pindex->GetBlockHeader());
+            if (--nLimit <= 0 || pindex->GetBlockHash() == hashStop)
+                break;
+        }
+
+        connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::RHEADERS, vHeaders));
+    }
+
     else if (strCommand == NetMsgType::TX)
     {
         // Stop processing the transaction early if
