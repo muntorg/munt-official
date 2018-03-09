@@ -2627,30 +2627,25 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     }
 
     boost::asio::post(get_io_context(), [this, pnode]() {
-        if (!pnode->fSendInProgress) {
-            pnode->fSendInProgress = true;
-            this->ResumeSend(pnode);
-        }
+        this->ResumeSend(pnode);
     });
 }
 
 void CConnman::ResumeSend(CNode *pnode)
 {
-    if (!pnode->fSendInProgress) {
-        LogPrint(BCLog::NET, "Expected fSendInProgress, disconnecting %d", pnode->GetId());
-        pnode->fDisconnect = true;
-    }
+    LOCK(pnode->cs_vSend);
 
-    boost::asio::const_buffer buffer;
-    {
-        LOCK(pnode->cs_vSend);
-        assert(pnode->vSendMsg.size() > 0);
-        const auto &data = *pnode->vSendMsg.begin();
-        buffer = boost::asio::buffer(reinterpret_cast<const char*>(data.data()), data.size());
-    }
+    if (pnode->vSendMsg.empty())
+        return;
+
+    // buffer to hold and own the message data, Asio buffers don't take ownership
+    using BufferHolder = std::shared_ptr<std::vector<unsigned char> >;
+    auto bufferHolder = BufferHolder(new std::vector<unsigned char>(std::move(pnode->vSendMsg.front())));
+    pnode->vSendMsg.pop_front();
+    boost::asio::const_buffer buffer = boost::asio::buffer(reinterpret_cast<const char*>(bufferHolder->data()), bufferHolder->size());
 
     boost::asio::async_write(pnode->hSocket, buffer,
-                             [this, pnode, buffer](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+                             [this, pnode, bufferHolder](const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (ec) {
             LogPrint(BCLog::NET, "socket send error %s\n", ec.message());
             pnode->CloseSocketDisconnect();
@@ -2659,30 +2654,15 @@ void CConnman::ResumeSend(CNode *pnode)
 
         RecordBytesSent(bytes_transferred);
 
+        LOCK(pnode->cs_vSend);
+
         pnode->nLastSend = GetSystemTimeInSeconds();
         pnode->nSendBytes += bytes_transferred;
-        if (buffer.size() == bytes_transferred) {
-            pnode->nSendSize -= bytes_transferred;
-            pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
 
-            bool moreToSend;
-            {
-                LOCK(pnode->cs_vSend);
-                pnode->vSendMsg.pop_front();
-                moreToSend = !pnode->vSendMsg.empty();
-            }
+        pnode->nSendSize -= bytes_transferred;
+        pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
 
-            if (moreToSend) {
-                this->ResumeSend(pnode);
-            }
-            else {
-                pnode->fSendInProgress = false;
-            }
-        }
-        else {
-            LogPrint(BCLog::NET, "async_write to %d not fully transferred (%d != %d) \n", pnode->GetId(), buffer.size(), bytes_transferred);
-            pnode->CloseSocketDisconnect();
-        }
+        this->ResumeSend(pnode);
     });
 }
 

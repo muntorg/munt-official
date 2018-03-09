@@ -728,8 +728,6 @@ private:
     CService addrLocal;
     mutable CCriticalSection cs_addrLocal;
 
-    bool fSendInProgress;
-
     // typical socket buffer is 8K-64K
     char pchBuf[0x10000];
 
