@@ -125,6 +125,13 @@ extern const char *GETBLOCKS;
  */
 extern const char *GETHEADERS;
 /**
+ * The getrheaders message requests a rheaders message that provides block
+ * headers in reversed order starting from a particular point in the block chain.
+ * @since protocol version 70016.
+ * @see https://Gulden.org/en/developer-reference#getrheaders
+ */
+extern const char *GETRHEADERS;
+/**
  * The tx message transmits a single transaction.
  * @see https://Gulden.org/en/developer-reference#tx
  */
@@ -136,6 +143,13 @@ extern const char *TX;
  * @see https://Gulden.org/en/developer-reference#headers
  */
 extern const char *HEADERS;
+/**
+ * The rheaders message sends one or more block headers in reverse order to a node which
+ * previously requested certain headers with a getrheaders message.
+ * @since protocol version 70016.
+ * @see https://Gulden.org/en/developer-reference#headers
+ */
+extern const char *RHEADERS;
 /**
  * The block message transmits a single serialized block.
  * @see https://Gulden.org/en/developer-reference#block
