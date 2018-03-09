@@ -26,7 +26,7 @@
     #define BIGINT_MULTIPLY(x, y) x.multiply(y)
     #define BIGINT_DIVIDE(x, y) x.divide(y)
     #define BIGINT_GREATER_THAN(x, y) (x.compareTo(y) == 1)
-#elif defined(TARGET_OS_IPHONE)
+#elif defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0 // it's defined, but as 0 on macOS
     @class BRMerkleBlock;
     #define BUILD_IOS
     #define fDebug false
@@ -86,4 +86,3 @@ extern unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_
 #endif
 
 #endif
-
