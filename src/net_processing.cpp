@@ -2582,7 +2582,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             std::reverse(std::begin(vReverseHeaders), std::end(vReverseHeaders));
             CValidationState state;
             const CBlockIndex *pindexLast = NULL;
-            if (!ProcessNewBlockHeaders(vReverseHeaders, state, chainparams, &pindexLast)) {
+            // ProcessNewBlockHeaders is skipping PoW checking here as passing checkpoint verification
+            // is a stronger validation already. Skipping the PoW check saves a huge amount of CPU time,
+            // each PoW check takes 0.39ms (timed on 1st gen i7).
+            if (!ProcessNewBlockHeaders(vReverseHeaders, state, chainparams, &pindexLast, false)) {
                 int nDoS;
                 if (state.IsInvalid(nDoS)) {
                     // If processing the reverse headers fails there is something very wrong as
