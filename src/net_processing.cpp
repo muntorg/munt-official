@@ -131,6 +131,9 @@ namespace {
     MapRelay mapRelay;
     /** Expiration-time ordered list of (expire time, relay map entry) pairs, protected by cs_main). */
     std::deque<std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
+
+    /** Headers received through RHEADERS and checkpoint verified. */
+    std::vector<CBlockHeader> vReverseHeaders;
 } // anon namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -2500,6 +2503,116 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
     }
 
+    else if (strCommand == NetMsgType::RHEADERS && !fImporting && !fReindex) // Ignore headers received while importing
+    {
+        LogPrint(BCLog::NET, "Received reverse headers peer=%d\n", pfrom->GetId());
+
+        std::vector<CBlockHeader> headers;
+
+        // Get number of headers and check againt maximum allowed
+        unsigned int nCount = ReadCompactSize(vRecv);
+        if (nCount > MAX_HEADERS_RESULTS) {
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 20);
+            return error("rheaders message size = %u", nCount);
+        }
+
+        // Nothing interesting. Stop asking this peers for more headers.
+        if (nCount == 0) {
+            return true;
+        }
+
+        int nRHeadersConnected = 0;
+        auto lastCheckpoint = chainparams.Checkpoints().mapCheckpoints.rbegin();
+        int lastCheckPointHeight = lastCheckpoint->first;
+        const uint256& lastCheckPointHash = lastCheckpoint->second;
+        for (unsigned int n = 0; n < nCount; n++) {
+            CBlockHeader header;
+            vRecv >> header;
+
+            uint256 hash = header.GetHash();
+            unsigned int expectedHeight = lastCheckPointHeight - vReverseHeaders.size();
+
+            // if a checkpoint exsists at the expected height verify it
+            auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
+            if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
+                if (hash != it->second) {
+                    Misbehaving(pfrom->GetId(), 100);
+                    return error("rheaders from %d mismatch checkpoint");
+                }
+                else {
+                    LogPrint(BCLog::NET, "Reverse headers passed checkpoint %d, peer=%d\n",
+                             expectedHeight, pfrom->GetId());
+                }
+            }
+
+            // verify that the header connects
+            if (vReverseHeaders.size()>0 && vReverseHeaders.back().hashPrevBlock != hash) {
+                LogPrint(BCLog::NET, "Received reverse header does not connect, peer=%d\n", pfrom->GetId());
+
+                // if one or more headers have already connected to vReverseHeaders but this header
+                // does not connect then the peer tries to trick us
+                if (nRHeadersConnected>0) {
+                    Misbehaving(pfrom->GetId(), 100);
+                    return error("non-continuous reverse headers sequence");
+                }
+
+                // if it "just" doesn't connect there could be incoming rheaders from multiple peers
+                // just ignore these ones, new ones will be requested
+                break;
+            }
+
+            // never process more then lastCheckPointHeight
+            if ((int)vReverseHeaders.size()<lastCheckPointHeight)
+                vReverseHeaders.push_back(header);
+
+            nRHeadersConnected++;
+
+        }
+
+        LogPrint(BCLog::NET, "Processed %d connected reverse headers peer=%d, total %d\n",
+                 nRHeadersConnected, pfrom->GetId(), vReverseHeaders.size());
+
+        int headerHeight = pindexBestHeader ? pindexBestHeader->nHeight : 0;
+        int headerGap = lastCheckPointHeight - headerHeight - (int)vReverseHeaders.size();
+
+        if (headerGap <= 0) {
+            LogPrint(BCLog::NET, "Reverse headers complete, connecting to tip\n");
+
+            std::reverse(std::begin(vReverseHeaders), std::end(vReverseHeaders));
+            CValidationState state;
+            const CBlockIndex *pindexLast = NULL;
+            if (!ProcessNewBlockHeaders(vReverseHeaders, state, chainparams, &pindexLast)) {
+                int nDoS;
+                if (state.IsInvalid(nDoS)) {
+                    // If processing the reverse headers fails there is something very wrong as
+                    // all headers have connecting sha hashes and passed the checkpoints.
+                    // Consider aborting here.
+                    vReverseHeaders.clear();
+                    return error("Something went very wrong when putting reverse headers into chain!");
+                }
+            }
+
+            LogPrint(BCLog::NET, "Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
+
+            vReverseHeaders.clear();
+            return true;
+        }
+
+        // request more reverse headers if there is still a gap between the chain tip and the reverse headers
+        if (headerGap > 0) {
+            LogPrint(BCLog::NET, "more reverse getrheaders (%d) to peer=%d (startheight:%d)\n",
+                     lastCheckPointHeight-(int)vReverseHeaders.size(), pfrom->GetId(), pfrom->nStartingHeight);
+            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETRHEADERS,
+                                                   vReverseHeaders.size() > 0 ? vReverseHeaders.back().hashPrevBlock
+                                                                              : lastCheckPointHash,
+                                                   pindexBestHeader ? pindexBestHeader->GetBlockHash()
+                                                                    : chainActive.Tip()->GetBlockHash()));
+        }
+
+        return true;
+    }
+
     else if (strCommand == NetMsgType::BLOCK && !fImporting && !fReindex) // Ignore blocks received while importing
     {
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
@@ -3000,24 +3113,42 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
         bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
-        if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex) {
+//        if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex) {
+//            // Only actively request headers from a single peer, unless we're close to today.
+//            if ((nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
+//                state.fSyncStarted = true;
+//                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
+//                nSyncStarted++;
+//                const CBlockIndex *pindexStart = pindexBestHeader;
+//                /* If possible, start at the block preceding the currently
+//                   best known header.  This ensures that we always get a
+//                   non-empty list of headers back as long as the peer
+//                   is up-to-date.  With a non-empty response, we can initialise
+//                   the peer's known best block.  This wouldn't be possible
+//                   if we requested starting at pindexBestHeader and
+//                   got back an empty response.  */
+//                if (pindexStart->pprev)
+//                    pindexStart = pindexStart->pprev;
+//                LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
+//                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexStart), uint256()));
+//            }
+        if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex && pto->nVersion>=REVERSEHEADERS_VERSION) {
+            // TODO WDJ conditions to really start here with this, ie. if tip height already past checkpoint
+            // it is not possible, make it cooperate with old fashioned header download etc...
+            // current version is just copy&mod from above to get it going
+
             // Only actively request headers from a single peer, unless we're close to today.
-            if ((nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
+            auto lastCheckpoint = Params().Checkpoints().mapCheckpoints.rbegin();
+            int lastCheckPointHeight = lastCheckpoint->first;
+            const uint256& lastCheckPointHash = lastCheckpoint->second;
+            if (nSyncStarted == 0 && fFetch && pto->nStartingHeight > lastCheckPointHeight) {
                 state.fSyncStarted = true;
                 state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
                 nSyncStarted++;
-                const CBlockIndex *pindexStart = pindexBestHeader;
-                /* If possible, start at the block preceding the currently
-                   best known header.  This ensures that we always get a
-                   non-empty list of headers back as long as the peer
-                   is up-to-date.  With a non-empty response, we can initialise
-                   the peer's known best block.  This wouldn't be possible
-                   if we requested starting at pindexBestHeader and
-                   got back an empty response.  */
-                if (pindexStart->pprev)
-                    pindexStart = pindexStart->pprev;
-                LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
-                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexStart), uint256()));
+                LogPrint(BCLog::NET, "initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight, pto->GetId(), pto->nStartingHeight);
+                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETRHEADERS, lastCheckPointHash,
+                                                       pindexBestHeader ? pindexBestHeader->GetBlockHash()
+                                                                        : chainActive.Tip()->GetBlockHash()));
             }
         }
 
