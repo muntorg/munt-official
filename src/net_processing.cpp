@@ -2566,7 +2566,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 if (hash != it->second) {
                     LOCK(cs_main);
                     Misbehaving(pfrom->GetId(), 100);
-                    return error("rheaders from %d mismatch checkpoint");
+                    return error("rheaders from %d mismatch checkpoint", pfrom->GetId());
                 }
                 else {
                     LogPrint(BCLog::NET, "Reverse headers passed checkpoint %d, peer=%d\n",
