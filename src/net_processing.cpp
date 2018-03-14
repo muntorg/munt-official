@@ -76,6 +76,9 @@ namespace {
     /** Number of nodes with fSyncStarted. */
     int nSyncStarted = 0;
 
+    /** Number of nodes with fRHeaderSyncStarted. */
+    int nRHeaderSyncStarted = 0;
+
     /**
      * Sources of received blocks, saved to be able to send them reject
      * messages or ban them when processing happens afterwards. Protected by
@@ -178,8 +181,10 @@ struct CNodeState {
     const CBlockIndex *pindexBestHeaderSent;
     //! Length of current-streak of unconnecting headers announcements
     int nUnconnectingHeaders;
-    //! Whether we've started headers synchronization with this peer.
+    //! Whether we've started (forward) headers synchronization with this peer.
     bool fSyncStarted;
+    //! Whether we've started reverse headers synchronization with this peer.
+    bool fRHeadersSyncStarted;
     //! When to potentially disconnect peer for stalling headers download
     int64_t nHeadersSyncTimeout;
     //! Since when we're stalling block download progress (in microseconds), or 0.
@@ -221,6 +226,7 @@ struct CNodeState {
         pindexBestHeaderSent = NULL;
         nUnconnectingHeaders = 0;
         fSyncStarted = false;
+        fRHeadersSyncStarted = false;
         nHeadersSyncTimeout = 0;
         nStallingSince = 0;
         nDownloadingSince = 0;
@@ -301,6 +307,9 @@ void FinalizeNode(NodeId nodeid, bool& fUpdateConnectionTime) {
 
     if (state->fSyncStarted)
         nSyncStarted--;
+
+    if (state->fRHeadersSyncStarted)
+        nRHeaderSyncStarted--;
 
     if (state->nMisbehavior == 0 && state->fCurrentlyConnected) {
         fUpdateConnectionTime = true;
@@ -2451,6 +2460,18 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // Headers message had its maximum size; the peer may have more headers.
             // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
             // from there instead.
+
+            // If there is reverse header sync in progress stop this slow forward header sync,
+            // it is severly slowing down progress. Reverse header sync will go in lock step
+            // with forward header sync. The peer connection is appreciated however and so
+            // the fSyncStarted is reset so header download migth start again later from this peer.
+            if (nodestate->fSyncStarted && nRHeaderSyncStarted > 0) {
+                nodestate->fSyncStarted = false;
+                nSyncStarted--;
+                LogPrint(BCLog::NET, "Giving up forward header sync in favor of reverse headers, peer=%d\n",
+                         pfrom->GetId());
+                return true;
+            }
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexLast), uint256()));
         }
@@ -2606,6 +2627,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     return error("Something went very wrong when putting reverse headers into chain, blaming peer=%d!", pfrom->GetId());
                 }
             }
+
+            LOCK(cs_main);
+            CNodeState *nodestate = State(pfrom->GetId());
+            nodestate->fRHeadersSyncStarted = false;
+            nRHeaderSyncStarted--;
 
             LogPrint(BCLog::NET, "Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
 
@@ -3127,42 +3153,44 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
         bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
-//        if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex) {
-//            // Only actively request headers from a single peer, unless we're close to today.
-//            if ((nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
-//                state.fSyncStarted = true;
-//                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
-//                nSyncStarted++;
-//                const CBlockIndex *pindexStart = pindexBestHeader;
-//                /* If possible, start at the block preceding the currently
-//                   best known header.  This ensures that we always get a
-//                   non-empty list of headers back as long as the peer
-//                   is up-to-date.  With a non-empty response, we can initialise
-//                   the peer's known best block.  This wouldn't be possible
-//                   if we requested starting at pindexBestHeader and
-//                   got back an empty response.  */
-//                if (pindexStart->pprev)
-//                    pindexStart = pindexStart->pprev;
-//                LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
-//                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexStart), uint256()));
-//            }
-        if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex && pto->nVersion>=REVERSEHEADERS_VERSION) {
-            // TODO WDJ conditions to really start here with this, ie. if tip height already past checkpoint
-            // it is not possible, make it cooperate with old fashioned header download etc...
-            // current version is just copy&mod from above to get it going
+        if (!state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
 
-            // Only actively request headers from a single peer, unless we're close to today.
             auto lastCheckpoint = Params().Checkpoints().mapCheckpoints.rbegin();
             int lastCheckPointHeight = lastCheckpoint->first;
             const uint256& lastCheckPointHash = lastCheckpoint->second;
-            if (nSyncStarted == 0 && fFetch && pto->nStartingHeight > lastCheckPointHeight) {
-                state.fSyncStarted = true;
-                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
-                nSyncStarted++;
+
+            // Prefer reverse header sync if possible
+            if (pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
+                    && pto->nStartingHeight > lastCheckPointHeight
+                    && pindexBestHeader->nHeight<lastCheckPointHeight) {
+
+                state.fRHeadersSyncStarted = true;
+                nRHeaderSyncStarted++;
+
+                // state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
                 LogPrint(BCLog::NET, "initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight, pto->GetId(), pto->nStartingHeight);
                 connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETRHEADERS, lastCheckPointHash,
                                                        pindexBestHeader ? pindexBestHeader->GetBlockHash()
                                                                         : chainActive.Tip()->GetBlockHash()));
+            }
+            // fallback to old (forward) header sync
+            // Only actively request headers from a single peer, unless we're close to today.
+            else if ((nRHeaderSyncStarted == 0 && nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
+                state.fSyncStarted = true;
+                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
+                nSyncStarted++;
+                const CBlockIndex *pindexStart = pindexBestHeader;
+                /* If possible, start at the block preceding the currently
+                   best known header.  This ensures that we always get a
+                   non-empty list of headers back as long as the peer
+                   is up-to-date.  With a non-empty response, we can initialise
+                   the peer's known best block.  This wouldn't be possible
+                   if we requested starting at pindexBestHeader and
+                   got back an empty response.  */
+                if (pindexStart->pprev)
+                    pindexStart = pindexStart->pprev;
+                LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
+                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexStart), uint256()));
             }
         }
 
