@@ -3177,7 +3177,13 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             // Only actively request headers from a single peer, unless we're close to today.
             else if ((nRHeaderSyncStarted == 0 && nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
                 state.fSyncStarted = true;
-                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
+                // The timeout is based on the timestamp of the last header, the genesis however has a date of 2002-01-01
+                // which will lead to a bogus timeout. Therefore the timestamp of block 1 is used. This has a datetime
+                // of Mar 29, 2014 12:09:22 PM which is equal to 1396094962 seconds since epoch
+                int64_t startTime = pindexBestHeader->nHeight == 0 ? 1396094962
+                                                                   : pindexBestHeader->GetBlockTime();
+                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
+                        + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
                 nSyncStarted++;
                 const CBlockIndex *pindexStart = pindexBestHeader;
                 /* If possible, start at the block preceding the currently
