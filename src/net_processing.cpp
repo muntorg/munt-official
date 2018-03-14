@@ -3167,9 +3167,14 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 state.fRHeadersSyncStarted = true;
                 nRHeaderSyncStarted++;
 
-                // state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - pindexBestHeader->GetBlockTime())/(consensusParams.nPowTargetSpacing);
-                LogPrint(BCLog::NET, "initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight, pto->GetId(), pto->nStartingHeight);
-                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETRHEADERS, lastCheckPointHash,
+                state.nHeadersSyncTimeout = GetTimeMicros() + RHEADERS_DOWNLOAD_TIMEOUT_BASE
+                        + RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (lastCheckPointHeight - pindexBestHeader->nHeight);
+
+                LogPrint(BCLog::NET, "initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight - vReverseHeaders.size(),
+                         pto->GetId(), pto->nStartingHeight);
+                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETRHEADERS,
+                                                       vReverseHeaders.size() > 0 ? vReverseHeaders.back().hashPrevBlock
+                                                                                  : lastCheckPointHash,
                                                        pindexBestHeader ? pindexBestHeader->GetBlockHash()
                                                                         : chainActive.Tip()->GetBlockHash()));
             }
@@ -3508,10 +3513,10 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             }
         }
         // Check for headers sync timeouts
-        if (state.fSyncStarted && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
+        if ((state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
             // Detect whether this is a stalling initial-headers-sync peer
             if (pindexBestHeader->GetBlockTime() <= GetAdjustedTime() - 24*60*60) {
-                if (nNow > state.nHeadersSyncTimeout && nSyncStarted == 1 && (nPreferredDownload - state.fPreferredDownload >= 1)) {
+                if (nNow > state.nHeadersSyncTimeout && (nSyncStarted + nRHeaderSyncStarted) == 1 && (nPreferredDownload - state.fPreferredDownload >= 1)) {
                     // Disconnect a (non-whitelisted) peer if it is our only sync peer,
                     // and we have others we could be using instead.
                     // Note: If all our peers are inbound, then we won't
@@ -3528,6 +3533,14 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                         // Note: this will also result in at least one more
                         // getheaders message to be sent to
                         // this peer (eventually).
+                        if (state.fSyncStarted) {
+                            state.fSyncStarted = false;
+                            nSyncStarted--;
+                        }
+                        else {
+                            state.fRHeadersSyncStarted = false;
+                            nRHeaderSyncStarted--;
+                        }
                         state.fSyncStarted = false;
                         nSyncStarted--;
                         state.nHeadersSyncTimeout = 0;
