@@ -2560,20 +2560,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             uint256 hash = header.GetHash();
             unsigned int expectedHeight = lastCheckPointHeight - vReverseHeaders.size();
 
-            // if a checkpoint exsists at the expected height verify it
-            auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
-            if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
-                if (hash != it->second) {
-                    LOCK(cs_main);
-                    Misbehaving(pfrom->GetId(), 100);
-                    return error("rheaders from %d mismatch checkpoint", pfrom->GetId());
-                }
-                else {
-                    LogPrint(BCLog::NET, "Reverse headers passed checkpoint %d, peer=%d\n",
-                             expectedHeight, pfrom->GetId());
-                }
-            }
-
             // verify that the header connects
             if (vReverseHeaders.size()>0 && vReverseHeaders.back().hashPrevBlock != hash) {
                 LogPrint(BCLog::NET, "Received reverse header does not connect, peer=%d\n", pfrom->GetId());
@@ -2588,6 +2574,20 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 // if it "just" doesn't connect there could be incoming rheaders from multiple peers
                 // just ignore these ones, new ones will be requested
                 break;
+            }
+
+            // if a checkpoint exsists at the expected height verify it
+            auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
+            if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
+                if (hash != it->second) {
+                    LOCK(cs_main);
+                    Misbehaving(pfrom->GetId(), 100);
+                    return error("rheaders from %d mismatch checkpoint", pfrom->GetId());
+                }
+                else {
+                    LogPrint(BCLog::NET, "Reverse headers passed checkpoint %d, peer=%d\n",
+                             expectedHeight, pfrom->GetId());
+                }
             }
 
             // never process more then lastCheckPointHeight
