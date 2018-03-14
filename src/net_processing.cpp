@@ -1886,6 +1886,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         BlockMap::iterator mi = mapBlockIndex.find(hash);
         if (mi == mapBlockIndex.end()) {
             LogPrint(BCLog::NET, "getrheaders from peer=%d is requesting an unknown block\n", pfrom->GetId());
+
+            // Misbehaving peer, it should know that all blocks before latest checkpoint are present.
+            // That it how it should decide to start requesting reverse headers in the first place.
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100);
             return true;
         }
 
@@ -2538,6 +2543,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
             if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
                 if (hash != it->second) {
+                    LOCK(cs_main);
                     Misbehaving(pfrom->GetId(), 100);
                     return error("rheaders from %d mismatch checkpoint");
                 }
@@ -2593,7 +2599,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     // all headers have connecting sha hashes and passed the checkpoints.
                     // Consider aborting here.
                     vReverseHeaders.clear();
-                    return error("Something went very wrong when putting reverse headers into chain!");
+
+                    // Blame peer latest reverse headers came from
+                    LOCK(cs_main);
+                    Misbehaving(pfrom->GetId(), 100);
+                    return error("Something went very wrong when putting reverse headers into chain, blaming peer=%d!", pfrom->GetId());
                 }
             }
 
