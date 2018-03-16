@@ -1057,6 +1057,57 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
+//fixme: Improve help for this.
+UniValue getaccountbalances(const JSONRPCRequest& request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 2)
+        throw std::runtime_error(
+            "getaccountbalances ( minconf include_watchonly )\n"
+            "Returns a list of balances for all accounts in the wallet.\n"
+            "\nArguments:\n"
+            "1. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
+            "2. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
+            "\nResult:\n"
+            "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
+            "\nExamples:\n"
+            "\nThe total amount in the wallet\n"
+            + HelpExampleCli("getaccountbalances", "") +
+            "\nThe total amount in the wallet at least 5 blocks confirmed\n"
+            + HelpExampleCli("getaccountbalances", "6") +
+            "\nAs a json rpc call\n"
+            + HelpExampleRpc("getaccountbalances", "6")
+        );
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    int nMinDepth = 1;
+    if (request.params.size() > 0)
+        nMinDepth = request.params[1].get_int();
+
+    bool includeWatchOnly = false;
+    if (request.params.size() > 1)
+        includeWatchOnly = request.params[1].get_bool();
+
+    UniValue allAccounts(UniValue::VARR);
+
+    //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
+    for (const auto& accountPair : pwallet->mapAccounts)
+    {
+        UniValue rec(UniValue::VOBJ);
+        rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
+        rec.push_back(Pair("label", accountPair.second->getLabel()));
+        rec.push_back(Pair("balance", ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountPair.first))));
+        allAccounts.push_back(rec);
+    }
+
+    return allAccounts;
+}
+
 CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
 {
     std::string strSeedUUID = value.get_str();
@@ -1482,6 +1533,7 @@ static const CRPCCommand commands[] =
     { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true,    {"name", "encodedkey"} },
     { "accounts",           "listaccounts",           &listallaccounts,        true,    {"seed"} },
     { "accounts",           "setactiveaccount",       &setactiveaccount,       true,    {"account"} },
+    { "accounts",           "getaccountbalances",     &getaccountbalances,     false,   {"minconf","include_watchonly"} },
 
     { "mnemonics",          "createseed",             &createseed,             true,    {"type"} },
     { "mnemonics",          "deleteseed",             &deleteseed,             true,    {"seed"} },
