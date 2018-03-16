@@ -52,7 +52,7 @@ void GuldenOptionsModel::InitSettings(QSettings& settings)
         settings.setValue("localCurrencySymbol", QString("EUR"));
     localCurrency = settings.value("localCurrencySymbol").toString();
     if (!settings.contains("witnessGraphScale"))
-        settings.setValue("witnessGraphScale", 0);
+        settings.setValue("witnessGraphScale", GraphScale::Days);
     witnessGraphScale = settings.value("witnessGraphScale").toInt();
 }
 

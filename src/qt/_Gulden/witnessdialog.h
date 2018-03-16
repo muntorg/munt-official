@@ -24,13 +24,7 @@ namespace Ui {
     class WitnessDialog;
 }
 
-enum GraphScale
-{
-    Blocks,
-    Days,
-    Weeks,
-    Months
-};
+
 
 class WitnessDialog : public QFrame
 {

@@ -25,6 +25,14 @@ QT_END_NAMESPACE
 class OptionsModel;
 class QSettings;
 
+enum GraphScale
+{
+    Blocks,
+    Days,
+    Weeks,
+    Months
+};
+
 // Gulden specific settings go here
 class GuldenOptionsModel : public QObject
 {
