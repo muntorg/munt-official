@@ -1461,7 +1461,7 @@ void static GuldenWitness()
                                 /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
                                 if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
                                 {
-                                    LogPrintf("GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
+                                    LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
                                     ProcessBlockFound(pWitnessBlock, chainparams);
                                     continue;
                                 }
