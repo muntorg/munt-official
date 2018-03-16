@@ -897,7 +897,7 @@ UniValue getbalance(const JSONRPCRequest& request)
 
     CAccount* forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
     //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
-    boost::uuids::uuid accountUUID = forAccount->getUUID();
+    boost::uuids::uuid accountUUID = forAccount ? forAccount->getUUID() : boost::uuids::nil_generator()();
     return ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountUUID));
 }
 
@@ -1084,14 +1084,14 @@ UniValue sendmany(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 5)
         throw std::runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" [\"address\",...] )\n"
+            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" [\"address_or_account\",...] )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"         (string, required) The UUID or unique label of the account to send the funds from. Should be \"\" for the active account\n"
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
-            "      \"address\":amount   (numeric or string) The bitcoin address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
+            "      \"address_or_account\":amount   (numeric or string) The Gulden address or account is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
             "      ,...\n"
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
@@ -1101,7 +1101,7 @@ UniValue sendmany(const JSONRPCRequest& request)
             "                           Those recipients will receive less bitcoins than you enter in their corresponding amount field.\n"
             "                           If no addresses are specified here, the sender pays the fee.\n"
             "    [\n"
-            "      \"address\"          (string) Subtract fee from this address\n"
+            "      \"address_or_account\"          (string) Subtract fee from this address or account\n"
             "      ,...\n"
             "    ]\n"
             "\nResult:\n"
@@ -1144,15 +1144,32 @@ UniValue sendmany(const JSONRPCRequest& request)
 
     CAmount totalAmount = 0;
     std::vector<std::string> keys = sendTo.getKeys();
+    std::vector<CReserveKey> reservedKeys;
     BOOST_FOREACH(const std::string& name_, keys)
     {
         CBitcoinAddress address(name_);
+
+        CAccount* toAccount = AccountFromValue(pwallet, name_, false);
+        if (toAccount)
+        {
+            CReserveKey receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
+            CPubKey vchPubKey;
+            if (!receiveKey.GetReservedKey(vchPubKey))
+                throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
+
+            address = CBitcoinAddress(vchPubKey.GetID());
+
+            reservedKeys.emplace_back(std::move(receiveKey));
+        }
+        else
+        {
+            if (setAddress.count(address))
+                throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
+            setAddress.insert(address);
+        }
+
         if (!address.IsValid())
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Bitcoin address: ")+name_);
-
-        if (setAddress.count(address))
-            throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
-        setAddress.insert(address);
 
         CAmount nAmount = AmountFromValue(sendTo[name_]);
         if (nAmount <= 0)
@@ -1190,6 +1207,11 @@ UniValue sendmany(const JSONRPCRequest& request)
     if (!pwallet->CommitTransaction(wtx, keyChange, g_connman.get(), state)) {
         strFailReason = strprintf("Transaction commit failed:: %s", state.GetRejectReason());
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
+    }
+
+    for (auto& reservedKey : reservedKeys)
+    {
+        reservedKey.KeepKey();
     }
 
     return wtx.GetHash().GetHex();
