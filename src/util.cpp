@@ -247,6 +247,7 @@ const CLogCategoryDesc LogCategories[] =
     {BCLog::LIBEVENT, "libevent"},
     {BCLog::COINDB, "coindb"},
     {BCLog::DELTA, "delta"},
+    {BCLog::WITNESS, "witness"},
     {BCLog::QT, "qt"},
     {BCLog::LEVELDB, "leveldb"},
     {BCLog::ALL, "1"},
