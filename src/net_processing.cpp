@@ -2613,7 +2613,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // ProcessNewBlockHeaders is skipping PoW checking here as passing checkpoint verification
             // is a stronger validation already. Skipping the PoW check saves a huge amount of CPU time,
             // each PoW check takes 0.39ms (timed on 1st gen i7).
-            if (!ProcessNewBlockHeaders(vReverseHeaders, state, chainparams, &pindexLast, false)) {
+            if (!ProcessNewBlockHeaders(vReverseHeaders, state, chainparams, &pindexLast, true)) {
                 int nDoS;
                 if (state.IsInvalid(nDoS)) {
                     // If processing the reverse headers fails there is something very wrong as
@@ -2670,6 +2670,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // Such an unrequested block may still be processed, subject to the
         // conditions in AcceptBlock().
         bool forceProcessing = pfrom->fWhitelisted && !IsInitialBlockDownload();
+        bool fAssumePOWGood = false;
         const uint256 hash(pblock->GetHash());
         {
             LOCK(cs_main);
@@ -2679,9 +2680,15 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // mapBlockSource is only used for sending reject messages and DoS scores,
             // so the race between here and cs_main in ProcessNewBlock is fine.
             mapBlockSource.emplace(hash, std::make_pair(pfrom->GetId(), true));
+
+            // Blocks we already know of that pass BLOCK_VALID_TREE don't need PoW checked again (it would checkout fine)
+            auto mi = mapBlockIndex.find(hash);
+            if (mi!=mapBlockIndex.end()) {
+                fAssumePOWGood = mi->second->IsValid(BLOCK_VALID_TREE);
+            }
         }
         bool fNewBlock = false;
-        ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock);
+        ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock, fAssumePOWGood);
         if (fNewBlock)
             pfrom->nLastBlockTime = GetTime();
     }
