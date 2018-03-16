@@ -59,7 +59,7 @@ NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget 
 
     QStringListModel* accountTypeModel = new QStringListModel();
     QStringList accountTypeList;
-    accountTypeList << tr("Transactional account") << tr("Fixed deposit savings account");
+    accountTypeList << tr("Transactional account") << tr("Witness account");
     accountTypeModel->setStringList(accountTypeList);
     ui->newAccountType->setModel(accountTypeModel);
 
