@@ -2635,6 +2635,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
             LogPrint(BCLog::NET, "Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
 
+            // Reverse headers are only requested from peers that have at least up to the last checkpoint
+            // so we can update the block availability of the current reverse header peer even if
+            // it is not the same as the reverse header peer initally started with
+            UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHash());
+
             vReverseHeaders.clear();
             return true;
         }
