@@ -105,6 +105,12 @@ static std::string GetAccountSubTypeString(AccountSubType type)
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex = 100000;
 
+enum AccountStatus
+{
+    Default,
+    WitnessExpired,
+    WitnessEnded
+};
 
 class CHDSeed
 {
@@ -348,8 +354,8 @@ public:
 
     bool IsReadOnly() { return m_readOnly; };
 
-    bool HasWarningFlag() { return warningFlag; };
-    void SetWarningFlag(bool warningFlag_) { warningFlag = warningFlag_; };
+    AccountStatus GetWarningState() { return nWarningState; };
+    void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
 
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
@@ -375,7 +381,7 @@ protected:
     friend class CGuldenWallet;
     friend class CWallet;
 
-    bool warningFlag=false; // Memory only
+    AccountStatus nWarningState = AccountStatus::Default; // Memory only
 };
 
 

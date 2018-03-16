@@ -74,6 +74,8 @@
 #include "walletview.h"
 #include "sendcoinsdialog.h"
 
+#include <Gulden/util.h>
+
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
 #include <QUrl>
@@ -90,6 +92,60 @@ const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
         "other"
 #endif
         ;
+
+#ifdef ENABLE_WALLET
+static void UpdateWitnessAccountStates()
+{
+    static uint64_t nUpdateTimerStart = 0;
+    // Only update at most once every 60 seconds (prevent this from being a bottleneck on testnet)
+    if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 60000))
+    {
+        nUpdateTimerStart = GetTimeMillis();
+
+        if (chainActive.Tip() && chainActive.Tip()->pprev)
+        {
+            CGetWitnessInfo witnessInfo;
+            CBlock block;
+            //fixme: Error handling.
+            if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+                return;
+            if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                return;
+
+            LOCK(pactiveWallet->cs_wallet);
+
+            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            {
+                AccountStatus prevState = accountPair.second->GetWarningState();
+                accountPair.second->SetWarningState(AccountStatus::Default);
+                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+                {
+                    if (IsMine(*accountPair.second, witCoin.coin.out))
+                    {
+                        CTxOutPoW2Witness details;
+                        GetPow2WitnessOutput(witCoin.coin.out, details);
+                        if (details.lockUntilBlock < chainActive.Tip()->nHeight)
+                        {
+                            accountPair.second->SetWarningState(AccountStatus::WitnessEnded);
+                        }
+                        else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                        {
+                            accountPair.second->SetWarningState(AccountStatus::WitnessExpired);
+                        }
+                    }
+                }
+                if (prevState != accountPair.second->GetWarningState())
+                    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, accountPair.second);
+            }
+        }
+    }
+}
+
+static void BlockTipChangedHandler(bool ibd, const CBlockIndex *)
+{
+    UpdateWitnessAccountStates();
+}
+#endif
 
 /** Display name for default wallet name. Uses tilde to avoid name
  * collisions in the future with additional wallets */
@@ -586,6 +642,9 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
 
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+
+    // Force this to run once to pre-prime the 'validaty' state of witness accounts.
+    UpdateWitnessAccountStates();
 
     return walletFrame->addWallet(name, walletModel);
 }
@@ -1295,6 +1354,9 @@ void BitcoinGUI::subscribeToCoreSignals()
     // Connect signals to client
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    #ifdef ENABLE_WALLET
+    uiInterface.NotifyBlockTip.connect(BlockTipChangedHandler);
+    #endif
 }
 
 void BitcoinGUI::unsubscribeFromCoreSignals()
@@ -1302,6 +1364,9 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     // Disconnect signals from client
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    #ifdef ENABLE_WALLET
+    uiInterface.NotifyBlockTip.disconnect(BlockTipChangedHandler);
+    #endif
 }
 
 void BitcoinGUI::toggleNetworkActive()

@@ -272,6 +272,9 @@ public:
     // Account changed (name change)
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountNameChanged;
 
+    // Account warning state changed (witness account expired)
+    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountWarningChanged;
+
     // New account added to the wallet
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountAdded;
 
