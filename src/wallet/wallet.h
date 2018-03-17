@@ -576,6 +576,12 @@ public:
         txout = walletTx->tx->vout[i];
     }
 
+    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_)
+    {
+        outpoint = outpoint_;
+        txout = txout_;
+    }
+
     COutPoint outpoint;
     CTxOut txout;
 
@@ -1047,6 +1053,9 @@ public:
      */
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, bool keepReserveKey = true);
     bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
+
+    void AddTxInput(CMutableTransaction& tx, const CInputCoin& inputCoin, bool rbf);
+    void AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoins, bool rbf);
 
     /**
      * Create a new transaction paying the recipients with a set of coins

@@ -2748,6 +2748,58 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     return true;
 }
 
+
+void CWallet::AddTxInput(CMutableTransaction& tx, const CInputCoin& inputCoin, bool rbf)
+{
+    std::set<CInputCoin> setCoins;
+    setCoins.insert(inputCoin);
+    AddTxInputs(tx, setCoins, rbf);
+}
+
+void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoins, bool rbf)
+{
+    uint8_t nFlags = 0;
+    uint32_t nSequence = 0;
+    if (tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+    {
+        if (rbf)
+        {
+            // Use sequence number to signal RBF
+            nSequence = MAX_BIP125_RBF_SEQUENCE;
+        }
+        else if(tx.nLockTime == 0)
+        {
+            // Use sequence number to signal locktime
+            nSequence = std::numeric_limits<unsigned int>::max() - 1;
+        }
+        else
+        {
+            // Final sequence number
+            nSequence = std::numeric_limits<unsigned int>::max();
+        }
+    }
+    else
+    {
+        if (rbf)
+        {
+            nFlags |= CTxInFlags::OptInRBF;
+        }
+        else if(tx.nLockTime == 0)
+        {
+            //fixme: (GULDEN) (2.0) - Do we have to set relative lock time on the inputs?
+            //Whats the relationship between relative and absolute locktime?
+            //nFlags |= CTxInFlags::OptInRBF;
+        }
+        else
+        {
+            // Final sequence number
+            nSequence = std::numeric_limits<unsigned int>::max();
+        }
+    }
+    for (const auto& coin : setCoins)
+        tx.vin.push_back(CTxIn(coin.outpoint,CScript(), nSequence, nFlags));
+}
+
 bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
@@ -2994,46 +3046,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // and in the spirit of "smallest possible change from prior
                 // behavior."
                 bool rbf = coinControl ? coinControl->signalRbf : fWalletRbf;
-                uint8_t nFlags = 0;
-                uint32_t nSequence = 0;
-                if (txNew.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
-                {
-                    if (rbf)
-                    {
-                        // Use sequence number to signal RBF
-                        nSequence = MAX_BIP125_RBF_SEQUENCE;
-                    }
-                    else if(txNew.nLockTime == 0)
-                    {
-                        // Use sequence number to signal locktime
-                        nSequence = std::numeric_limits<unsigned int>::max() - 1;
-                    }
-                    else
-                    {
-                        // Final sequence number
-                        nSequence = std::numeric_limits<unsigned int>::max();
-                    }
-                }
-                else
-                {
-                    if (rbf)
-                    {
-                        nFlags |= CTxInFlags::OptInRBF;
-                    }
-                    else if(txNew.nLockTime == 0)
-                    {
-                        //fixme: (GULDEN) (2.0) - Do we have to set relative lock time on the inputs?
-                        //Whats the relationship between relative and absolute locktime?
-                        //nFlags |= CTxInFlags::OptInRBF;
-                    }
-                    else
-                    {
-                        // Final sequence number
-                        nSequence = std::numeric_limits<unsigned int>::max();
-                    }
-                }
-                for (const auto& coin : setCoins)
-                    txNew.vin.push_back(CTxIn(coin.outpoint,CScript(), nSequence, nFlags));
+                AddTxInputs(txNew, setCoins , rbf);
 
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
