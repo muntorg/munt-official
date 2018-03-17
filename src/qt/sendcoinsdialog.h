@@ -57,6 +57,8 @@ public:
 
     void update();
 
+    void gotoWitnessTab(CAccount* targetAccount);
+
 public Q_SLOTS:
     void clear();
     void reject();
