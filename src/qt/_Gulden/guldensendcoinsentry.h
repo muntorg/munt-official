@@ -56,6 +56,8 @@ public:
     void deleteAddressBookEntry();
     void editAddressBookEntry();
 
+    void gotoWitnessTab(CAccount* targetAccount);
+
 public Q_SLOTS:
     void clear();
     void addressChanged();
@@ -81,6 +83,8 @@ private Q_SLOTS:
     void payAmountChanged();
 
 private:
+    CAccount* targetWitnessAccount;
+
     bool isPoW2WitnessCreation();
     SendCoinsRecipient recipient;
     Ui::GuldenSendCoinsEntry *ui;

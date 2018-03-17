@@ -159,7 +159,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModel->setDynamicSortFilter(true);
             proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModel->setFilterRole(AccountTableModel::TypeRole);
-            proxyModel->setFilterFixedString(AccountTableModel::Normal);
+            proxyModel->setFilterFixedString(GetAccountTypeString(AccountType::Normal).c_str());
 
             QSortFilterProxyModel *proxyInactive = new QSortFilterProxyModel(this);
             proxyInactive->setSourceModel(proxyModel);
@@ -167,8 +167,14 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyInactive->setFilterRole(AccountTableModel::ActiveAccountRole);
             proxyInactive->setFilterFixedString(AccountTableModel::Inactive);
 
+            QSortFilterProxyModel *proxyFilterBySubType = new QSortFilterProxyModel(this);
+            proxyFilterBySubType->setSourceModel(proxyInactive);
+            proxyFilterBySubType->setDynamicSortFilter(true);
+            proxyFilterBySubType->setFilterRole(AccountTableModel::SubTypeRole);
+            proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountSubTypeString(AccountSubType::PoW2Witness)+").*$").c_str());
+
             proxyModelAddresses = new QSortFilterProxyModel(this);
-            proxyModelAddresses->setSourceModel(proxyInactive);
+            proxyModelAddresses->setSourceModel(proxyFilterBySubType);
             proxyModelAddresses->setDynamicSortFilter(true);
             proxyModelAddresses->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModelAddresses->setFilterFixedString("");
@@ -446,80 +452,60 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     //fixme: GULDEN - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();
 
-    switch(ui->sendCoinsRecipientBook->currentIndex())
+    if (isPoW2WitnessCreation())
     {
-        case 0:
+        //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
+        CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_EXTERNAL);
+        CPubKey pubSpendingKey;
+        if (!keySpending.GetReservedKey(pubSpendingKey))
         {
-            recipient.address = ui->receivingAddress->text();
-            recipient.label = ui->receivingAddressLabel->text();
-            recipient.addToAddressBook = ui->checkBoxAddToAddressBook->isChecked();
-            break;
+            //fixme: (GULDEN) Better error handling
+            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+            recipient.address = QString("error");
+            return recipient;
         }
-        case 1:
+        keySpending.KeepKey();
+        CKeyID keyID = pubSpendingKey.GetID();
+        recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
+    }
+    else
+    {
+        switch(ui->sendCoinsRecipientBook->currentIndex())
         {
-            if (proxyModelRecipients)
+            case 0:
             {
-                QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
-                if (selection.count() > 0)
-                {
-                    QModelIndex index = selection.at(0);
-                    recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
-                    recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
-                }
+                recipient.address = ui->receivingAddress->text();
+                recipient.label = ui->receivingAddressLabel->text();
+                recipient.addToAddressBook = ui->checkBoxAddToAddressBook->isChecked();
+                break;
             }
-            break;
-        }
-        case 2:
-        {
-            if (proxyModelAddresses)
+            case 1:
             {
-                QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
-                if (selection.count() > 0)
+                if (proxyModelRecipients)
                 {
-                    QModelIndex index = selection.at(0);
-                    boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-
-                    LOCK(pactiveWallet->cs_wallet);
-
-                    if (isPoW2WitnessCreation())
+                    QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
+                    if (selection.count() > 0)
                     {
-                        {
-                            //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
-                            //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
-                            CReserveKey keyWitness(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_WITNESS);
-                            CPubKey pubWitnessKey;
-                            if (!keyWitness.GetReservedKey(pubWitnessKey))
-                            {
-                                //fixme: (GULDEN) Better error handling
-                                recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-                                recipient.address = QString("error");
-                                return recipient;
-                            }
-                            keyWitness.KeepKey();
-                            recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
-                        }
-                        {
-                            //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
-                            //Code should be refactored to only call 'KeepKey' - after- success, a bit tricky to get there though.
-                            CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[sAccountUUID.toStdString()], KEYCHAIN_SPENDING);
-                            CPubKey pubSpendingKey;
-                            if (!keySpending.GetReservedKey(pubSpendingKey))
-                            {
-                                //fixme: (GULDEN) Better error handling
-                                recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-                                recipient.address = QString("error");
-                                return recipient;
-                            }
-                            keySpending.KeepKey();
-                            recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
-                        }
-
-                        recipient.destinationPoW2Witness.failCount = 0;
-                        recipient.address = QString::fromStdString(CBitcoinAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
-
+                        QModelIndex index = selection.at(0);
+                        recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
+                        recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
                     }
-                    else
+                }
+                break;
+            }
+            case 2:
+            {
+                if (proxyModelAddresses)
+                {
+                    QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
+                    if (selection.count() > 0)
                     {
+                        QModelIndex index = selection.at(0);
+                        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
+
+                        LOCK(pactiveWallet->cs_wallet);
+
                         //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
                         CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
@@ -533,11 +519,11 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         keySpending.KeepKey();
                         CKeyID keyID = pubSpendingKey.GetID();
                         recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+                        recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                     }
-                    recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                 }
+                break;
             }
-            break;
         }
     }
 
@@ -747,6 +733,12 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
     }
 }
 
+void GuldenSendCoinsEntry::gotoWitnessTab(CAccount* targetAccount)
+{
+    targetWitnessAccount = targetAccount;
+    ui->sendCoinsRecipientStack->setCurrentIndex(1);
+}
+
 void GuldenSendCoinsEntry::updateDisplayUnit()
 {
     /*if(model && model->getOptionsModel())
@@ -774,7 +766,7 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
     ui->myAccountsTabTable->selectionModel()->setCurrentIndex ( proxyModelAddresses->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
 
-
+#define WITNESS_SUBSIDY 20
 void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
     //fixme: (GULDEN) (2.0) (POW2) (CLEANUP)
@@ -816,9 +808,9 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     if (fBlocksPerDay > 5.76)
         fBlocksPerDay = 5.76;
 
-    nEarnings = fBlocksPerDay * nDays * 25;
+    nEarnings = fBlocksPerDay * nDays * WITNESS_SUBSIDY;
 
-    float fPercent = (fBlocksPerDay * 30 * 25)/((nAmount/100000000))*100;
+    float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/100000000))*100;
 
 
     QString sSecondTimeUnit = "";
