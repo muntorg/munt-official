@@ -29,7 +29,10 @@ qt/_Gulden/res/LoadingAnimation.gif \
 qt/_Gulden/res/Lock.png \
 qt/_Gulden/res/Lock@2x.png \
 qt/_Gulden/res/LogoBlue.png \
-qt/_Gulden/res/MainBackground.png
+qt/_Gulden/res/MainBackground.png \
+qt/_Gulden/res/SliderHandle.png \
+qt/_Gulden/res/SliderHandle@2x.png
+
 
 GDN_MOCS = qt/_Gulden/moc_GuldenTranslator.cpp \
 qt/_Gulden/moc_guldensendcoinsentry.cpp \

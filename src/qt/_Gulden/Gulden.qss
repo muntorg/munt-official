@@ -77,7 +77,7 @@ QMenu::separator
 
 
 
-#forexError, #pow2WeightExceedsMaxPercentWarning
+#forexError, #pow2WeightExceedsMaxPercentWarning, #labelExpiredWitnessAccount
 {
     color: COLOR_VALIDATION_FAILED;
 }
@@ -470,7 +470,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #renewWitnessButton
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -483,9 +483,9 @@ BitcoinGUI QDialog:window QPushButton:pressed
     margin-bottom: 18px;
 }
 
-#unitButton
+#unitButton, #viewWitnessGraphButton
 {
-     font-size: SMALL_BUTTON_FONT_SIZE;
+    font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
     color: ACCENT_COLOR_1;
     border-radius: 2px; 
@@ -507,7 +507,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
 }
 
 /* The special 'focus' buttons*/
-#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton
+#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #fundWitnessButton, #renewWitnessButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -520,7 +520,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
     padding-right: 20px;
     margin-bottom: 18px;
 }
-#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed
+#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed
 {
     background-color: ACCENT_COLOR_2;
 }
@@ -720,7 +720,7 @@ QHeaderView::up-arrow:hover
     image: url(':/Gulden/angle_up_blue');
 }
 
-#addressBookTabTable, #myAccountsTabTable
+#addressBookTabTable, #myAccountsTabTable, #fundWitnessAccountTableView, #renewWitnessAccountTableView
 {
     alternate-background-color: transparent;
     background-color: transparent;
@@ -814,12 +814,7 @@ QHeaderView::up-arrow:hover
     color: TEXT_COLOR_1;
 }
 
-#pow2LockFundsSlider::handle:horizontal
-{
-    border: 1px solid ACCENT_COLOR_1;
-    background-color: ACCENT_COLOR_1;
-    border-radius: 4px;   
-}
+
 
 #pow2LockFundsSliderMinLabel
 {
@@ -842,12 +837,45 @@ QHeaderView::up-arrow:hover
     padding-top: 25px;
 }
 
-QSlider::handle:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b4b4b4, stop:1 #8f8f8f);
-    border: 1px solid #5c5c5c;
-    width: 18px;
-    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
-    border-radius: 3px;
+QSlider
+{
+    height: 16px;
+    background-color: transparent;
+}
+
+QSlider::groove:horizontal
+{
+    height: 16px;
+    background-color: transparent;
+}
+
+QSlider::sub-page
+{
+    margin-top: 6px;
+    height: 4px;
+    margin-bottom: 6px;
+    background-color: #dfe0e3;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+QSlider::add-page 
+{
+    margin-top: 6px;
+    height: 4px;
+    margin-bottom: 6px;
+    background-color: #dfe0e3;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+QSlider::handle
+{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    background-image: url(':/Gulden/slider_handle');
+    height: 10px;
+    width: 10px;
 }
 
 #labelEULAREesponsibility
@@ -1033,7 +1061,7 @@ QToolTip
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount
 {
     margin: 0px;
     padding: 0px;
@@ -1044,7 +1072,21 @@ QToolTip
     text-transform: uppercase;
 }
 
-#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader
+#labelInactiveWitnessAccountInfo
+{
+    margin-top: 6px;
+}
+
+#labelInactiveWitnessAccountInfo
+{
+    margin: 0px;
+    padding: 0px;
+    height:20px;
+    font-size: MINOR_LABEL_FONT_SIZE;
+    color: TEXT_COLOR_1;
+}
+
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount
 {
     margin-top: 35px;
     margin-bottom: 10px;
