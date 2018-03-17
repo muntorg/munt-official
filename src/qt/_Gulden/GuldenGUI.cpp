@@ -468,7 +468,7 @@ void GuldenGUI::createToolBarsGulden()
         }
 
         QLabel* homeIcon = new ClickableLabel( m_pImpl );
-        homeIcon->setText("Ġ");
+        homeIcon->setText("\u0120");
         layoutBalance->addWidget( homeIcon );
         homeIcon->setObjectName( "home_button" );
         homeIcon->setCursor( Qt::PointingHandCursor );
@@ -993,9 +993,13 @@ QString getAccountLabel(CAccount* account)
     }
     else if ( account->IsPoW2Witness() )
     {
-        if (account->HasWarningFlag())
+        if (account->GetWarningState() == AccountStatus::WitnessExpired)
         {
             accountName.append(QString::fromUtf8(" <span style='color: #c97676;'>\uf06a</span>"));
+        }
+        else if (account->GetWarningState() == AccountStatus::WitnessEnded)
+        {
+            accountName.append(QString::fromUtf8(" <span style='color: #40c294;'>\uf00c</span>"));
         }
         else
         {
@@ -1014,9 +1018,10 @@ QString getAccountLabel(CAccount* account)
     return accountName;
 }
 
-void GuldenGUI::refreshAccountControls()
+void GuldenGUI::refreshTabVisibilities()
 {
-    LogPrintf("GuldenGUI::refreshAccountControls\n");
+    m_pImpl->receiveCoinsAction->setVisible( true );
+    m_pImpl->sendCoinsAction->setVisible( true );
 
     //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
@@ -1027,11 +1032,22 @@ void GuldenGUI::refreshAccountControls()
         m_pImpl->receiveCoinsAction->setVisible( false );
         m_pImpl->sendCoinsAction->setVisible( false );
         witnessDialogAction->setVisible( true );
+        if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage || m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
+        {
+            showWitnessDialog();
+        }
     }
     else
     {
         witnessDialogAction->setVisible( false );
     }
+}
+
+void GuldenGUI::refreshAccountControls()
+{
+    LogPrintf("GuldenGUI::refreshAccountControls\n");
+
+    refreshTabVisibilities();
 
     if (pactiveWallet)
     {
@@ -1173,6 +1189,8 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
 {
     if (accountSummaryWidget)
         accountSummaryWidget->setActiveAccount(account);
+
+    refreshTabVisibilities();
 
     //Update account name 'in place' in account list
     bool haveAccount=false;
@@ -1655,7 +1673,7 @@ std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode)
         {"VND", "₫"},
         {"YER", "﷼"},
         {"ZWD", "Z$"},
-        {"NLG", "Ġ"}
+        {"NLG", "\u0120"}
     };
 
     if (currencyCodeSymbolMap.find(currencyCode) != currencyCodeSymbolMap.end())

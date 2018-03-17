@@ -107,6 +107,7 @@ public:
     void doPostInit();
     void doApplyStyleSheet();
     void resizeToolBarsGulden();
+    void refreshTabVisibilities();
     void refreshAccountControls();
     bool setCurrentWallet(const QString& name);
 
