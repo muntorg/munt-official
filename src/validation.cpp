@@ -3051,11 +3051,6 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 // Check whether we have ever pruned block & undo files
 //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
 
-const int nMinimumWitnessAmount = 5000;
-const int nMinimumWitnessWeight = 10000;
-const int nMinimumParticipationAge = 100;
-const int nMaximumParticipationAge = 10000;
-
 bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);

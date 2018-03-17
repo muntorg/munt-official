@@ -8,6 +8,14 @@
 
 #include <string>
 
+static const int nMinimumWitnessAmount = 5000;
+static const int nMinimumWitnessWeight = 10000;
+static const int nMinimumParticipationAge = 100;    // This forces an attacker to split funds into at least 200 accounts to have a high precentage chance of controlling the network.
+static const int nMaximumParticipationAge = 210240; // Witnesses will essentially be required to download and parse the utxo for this many blocks back from current tip.
+                                                    // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.
+                                                    // Currently set at - 1 year (365 days * 576 blocks).
+static const int nStartingWitnessNetworkWeightEstimate = 10000000;
+
 /** "reject" message codes */
 static const unsigned char REJECT_MALFORMED = 0x01;
 static const unsigned char REJECT_INVALID = 0x10;
