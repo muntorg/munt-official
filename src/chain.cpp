@@ -175,7 +175,7 @@ int static inline GetSkipHeight(int height) {
 
 CBlockIndex* CBlockIndex::GetAncestor(int height)
 {
-    if (height > nHeight || height < 0)
+    if (height > (int)nHeight || height < 0)
         return NULL;
 
     CBlockIndex* pindexWalk = this;

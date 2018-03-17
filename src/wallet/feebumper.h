@@ -49,11 +49,11 @@ private:
 
     const uint256 txid;
     uint256 bumpedTxid;
+    CAmount nOldFee;
+    CAmount nNewFee;
     CMutableTransaction mtx;
     std::vector<std::string> vErrors;
     BumpFeeResult currentResult;
-    CAmount nOldFee;
-    CAmount nNewFee;
 };
 
 #endif // BITCOIN_WALLET_FEEBUMPER_H

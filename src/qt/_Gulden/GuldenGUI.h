@@ -185,12 +185,12 @@ private:
     GuldenEventFilter* guldenEventFilter;
 
     //Cache the balances so that we can easily re-use them when the currency ticker changes.
-    CAmount balanceCached;
-    CAmount unconfirmedBalanceCached;
-    CAmount immatureBalanceCached;
-    CAmount watchOnlyBalanceCached;
-    CAmount watchUnconfBalanceCached;
-    CAmount watchImmatureBalanceCached;
+    CAmount balanceCached = 0;
+    CAmount unconfirmedBalanceCached = 0;
+    CAmount immatureBalanceCached = 0;
+    CAmount watchOnlyBalanceCached = 0;
+    CAmount watchUnconfBalanceCached = 0;
+    CAmount watchImmatureBalanceCached = 0;
 
 Q_SIGNALS:
 

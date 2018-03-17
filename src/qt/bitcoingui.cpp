@@ -124,7 +124,7 @@ static void UpdateWitnessAccountStates()
                     {
                         CTxOutPoW2Witness details;
                         GetPow2WitnessOutput(witCoin.coin.out, details);
-                        if (details.lockUntilBlock < chainActive.Tip()->nHeight)
+                        if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
                         {
                             accountPair.second->SetWarningState(AccountStatus::WitnessEnded);
                         }

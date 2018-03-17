@@ -368,8 +368,8 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         if (nOutput < 0)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, vout must be positive");
 
-        uint32_t nSequence;
-        uint8_t nFlags;
+        uint32_t nSequence = 0;
+        uint8_t nFlags = 0;
         if (rawTx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
         {
             if (rbfOptIn) {

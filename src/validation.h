@@ -382,6 +382,7 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp = NULL
 class CScriptCheck
 {
 private:
+    CKeyID signingKeyID;
     CScript scriptPubKey;
     CAmount amount;
     const CTransaction *ptxTo;
@@ -390,7 +391,6 @@ private:
     bool cacheStore;
     ScriptError error;
     PrecomputedTransactionData *txdata;
-    CKeyID signingKeyID;
 
 public:
     CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}

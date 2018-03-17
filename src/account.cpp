@@ -15,6 +15,53 @@
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/nil_generator.hpp>
 
+std::string GetAccountTypeString(AccountType type)
+{
+    switch(type)
+    {
+        case Normal:
+            return "Normal";
+        case Shadow:
+            return "Shadow";
+        case ShadowChild:
+            return "ShadowChild";
+        case Deleted:
+            return "Deleted";
+    }
+    return "";
+}
+
+std::string getUUIDAsString(const boost::uuids::uuid& uuid)
+{
+    return boost::uuids::to_string(uuid);
+}
+
+boost::uuids::uuid getUUIDFromString(const std::string& uuid)
+{
+    try
+    {
+        boost::uuids::string_generator generator;
+        return generator(uuid);
+    }
+    catch(...)
+    {
+        return boost::uuids::nil_generator()();
+    }
+}
+
+std::string GetAccountSubTypeString(AccountSubType type)
+{
+    switch(type)
+    {
+        case Desktop:
+            return "Desktop";
+        case Mobi:
+            return "Mobi";
+        case PoW2Witness:
+            return "PoW2Witness";
+    }
+    return "";
+}
 
 
 CHDSeed::CHDSeed()

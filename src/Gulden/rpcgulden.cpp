@@ -363,17 +363,16 @@ UniValue dumpdiffarray(const JSONRPCRequest& request)
 
     std::string reverseOutBuffer;
     std::string scratchBuffer;
-    int nNumToOutput = request.params[0].get_int();
+    unsigned int nNumToOutput = request.params[0].get_int();
     reverseOutBuffer.reserve(16*nNumToOutput);
 
     CBlockIndex* pBlock = chainActive.Tip();
-    while(pBlock->pprev && pBlock->nHeight>nNumToOutput)
+    while(pBlock->pprev && (unsigned int)pBlock->nHeight > nNumToOutput)
         pBlock = pBlock->pprev;
 
     int count=1;
     while(pBlock)
     {
-        --nNumToOutput;
         scratchBuffer = itostr(pBlock->nBits);
         std::reverse(scratchBuffer.begin(), scratchBuffer.end());
         if (count!= 1)
@@ -833,7 +832,6 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         nLockPeriodInBlocks += 50;
 
     // Enforce minimum weight
-    uint64_t nUnused1, nUnused2;
     int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
     if (nWeight < nMinimumWitnessWeight)
     {

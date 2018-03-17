@@ -152,11 +152,11 @@ public:
 class TransactionSignatureChecker : public BaseSignatureChecker
 {
 private:
+    const CKeyID signatureKeyID;
     const CTransaction* txTo;
     unsigned int nIn;
     const CAmount amount;
     const PrecomputedTransactionData* txdata;
-    const CKeyID signatureKeyID;
 
 protected:
     virtual bool VerifySignature(const std::vector<unsigned char>& vchSig, const CPubKey& vchPubKey, const uint256& sighash) const;

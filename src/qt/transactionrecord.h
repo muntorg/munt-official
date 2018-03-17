@@ -126,6 +126,14 @@ public:
     qint64 time;
     Type type;
     std::string address;
+    CAmount debit;
+    CAmount credit;
+    CAmount fee;
+    /**@}*/
+
+    /** Subtransaction index, for sort key */
+    int idx;
+
     //Which account the record belongs too - i.e. a send belongs to a sender account while a receive belongs to a receiver account.
     boost::uuids::uuid actionAccountUUID;
     boost::uuids::uuid actionAccountParentUUID;
@@ -135,13 +143,6 @@ public:
     //Receiver account
     boost::uuids::uuid receiveAccountUUID;
     boost::uuids::uuid receiveAccountParentUUID;
-    CAmount debit;
-    CAmount credit;
-    CAmount fee;
-    /**@}*/
-
-    /** Subtransaction index, for sort key */
-    int idx;
 
     /** Status: can change with block chain update */
     TransactionStatus status;

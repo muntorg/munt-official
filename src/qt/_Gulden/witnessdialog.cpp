@@ -255,7 +255,8 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
         expectedEarningsCurve->attach( ui->witnessEarningsPlot );
     }
 
-    PlotMouseTracker* tracker = new PlotMouseTracker( ui->witnessEarningsPlot->canvas() );
+    //checkme: Leak?
+    new PlotMouseTracker( ui->witnessEarningsPlot->canvas() );
 
     QAction* unitBlocksAction = new QAction(tr("&Blocks"), this);
     QAction* unitDaysAction = new QAction(tr("&Days"), this);
@@ -424,7 +425,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
                 nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
 
                 // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
-                CBlockIndex* sampleWeightIndex = chainActive[nOriginBlock+100 > chainActive.Tip()->nHeight ? nOriginBlock : nOriginBlock+100];
+                CBlockIndex* sampleWeightIndex = chainActive[nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? nOriginBlock : nOriginBlock+100];
                 int64_t nUnused1;
                 if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, nOriginNetworkWeight, chainActive))
                 {
@@ -443,7 +444,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
                     return;
                 }
 
-                for (int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
+                for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
                 {
                     //fixme: Handle multiple in one tx. Check ismine. Handle none (regular transaction)
                     if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
@@ -544,7 +545,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
 
 
     // Update all the info labels with values calculated above.
-    uint64_t nLockBlocksRemaining = witnessDetails.lockUntilBlock <= chainActive.Tip()->nHeight ? 0 : witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight;
+    uint64_t nLockBlocksRemaining = witnessDetails.lockUntilBlock <= (uint64_t)chainActive.Tip()->nHeight ? 0 : witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight;
     ui->labelWeightValue->setText(nOriginWeight<=0 ? tr("n/a") : QString::number(nOriginWeight));
     ui->labelLockedFromValue->setText(originDate.isNull() ? tr("n/a") : originDate.toString("dd/MM/yy hh:mm"));
     if (!chainActive.Tip())

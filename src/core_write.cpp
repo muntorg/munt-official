@@ -146,8 +146,6 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
 
 void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
 {
-    txnouttype type;
-
     if (fIncludeHex)
         out.pushKV("hex", txout.output.GetHex());
 
@@ -156,8 +154,6 @@ void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
 
 void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
 {
-    txnouttype type;
-
     if (fIncludeHex)
         out.pushKV("hex", txout.output.GetHex());
 
