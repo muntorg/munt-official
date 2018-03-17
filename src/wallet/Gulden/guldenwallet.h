@@ -236,10 +236,10 @@ public:
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time);
 
     virtual void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
-    virtual void addAccount(CAccount* account, const std::string& newName);
+    virtual void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
     virtual void deleteAccount(CAccount* account);
 
-    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType);
+    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType, bool bMakeActive=true);
     virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
     virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 

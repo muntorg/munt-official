@@ -393,7 +393,7 @@ void CGuldenWallet::deleteAccount(CAccount* account)
     NotifyAccountDeleted(static_cast<CWallet*>(this), account);
 }
 
-void CGuldenWallet::addAccount(CAccount* account, const std::string& newName)
+void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bool bMakeActive)
 {
     {
         LOCK(cs_wallet);
@@ -410,8 +410,10 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName)
     if (account->m_Type == AccountType::Normal)
     {
         NotifyAccountAdded(static_cast<CWallet*>(this), account);
-        NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
-        NotifyUpdateAccountList(static_cast<CWallet*>(this), account);
+        if (bMakeActive)
+        {
+            setActiveAccount(account);
+        }
     }
 }
 
@@ -609,7 +611,7 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 // Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect those.
 // So we keep these 'shadow' accounts, and if they ever receive a transaction we automatically 'convert' them into normal accounts in the UI.
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
-CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType)
+CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType, bool bMakeActive)
 {
 
     assert(type != AccountType::ShadowChild);
@@ -675,7 +677,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
 
     // Write new account
     //NB! We have to do this -after- we create the new shadow account, otherwise the shadow account ends up being the active account.
-    addAccount(newAccount, strAccount);
+    addAccount(newAccount, strAccount, bMakeActive);
 
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
