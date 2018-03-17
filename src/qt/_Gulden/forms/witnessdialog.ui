@@ -46,19 +46,9 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="witnessEarningsGraphHeader">
-         <property name="text">
-          <string>Projected earnings graph</string>
-         </property>
-         <property name="indent">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QStackedWidget" name="receiveCoinsStackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="emptyAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -78,29 +68,41 @@
             <number>0</number>
            </property>
            <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="labelEmptyWitnessAccount">
              <property name="text">
-              <string>To begin witnessing, fund your witness account by selecting it in the send dialog of another account.</string>
+              <string>To begin witnessing, select an account from which to lock funds:</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignCenter</set>
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
              <property name="indent">
               <number>0</number>
              </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTableView" name="fundWitnessAccountTableView">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
            <item>
@@ -141,10 +143,20 @@
               <number>14</number>
              </property>
              <item row="0" column="0" colspan="5">
-              <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
+              <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1">
                <property name="spacing">
                 <number>0</number>
                </property>
+               <item>
+                <widget class="QLabel" name="witnessEarningsGraphHeader">
+                 <property name="text">
+                  <string>Projected earnings graph</string>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QwtPlot" name="witnessEarningsPlot" native="true"/>
                </item>
@@ -377,6 +389,86 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="expiredAccountPage">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QLabel" name="labelInactiveWitnessAccount">
+             <property name="text">
+              <string>Inactive witness account</string>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelInactiveWitnessAccountInfo1">
+             <property name="text">
+              <string>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTableView" name="renewWitnessAccountTableView">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>100</number>
+             </attribute>
+             <attribute name="horizontalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>29</number>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>30</number>
+             </attribute>
+             <attribute name="verticalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>30</number>
+             </attribute>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>179</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
@@ -444,6 +536,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="viewWitnessGraphButton">
+            <property name="text">
+             <string>View graph</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="accountButtonSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -458,6 +557,13 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="emptyWitnessButton2">
+            <property name="text">
+             <string>Empty account</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QFrame" name="confirmButtonGroup">
@@ -490,19 +596,6 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="renewWitnessButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Renew account</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <spacer name="horizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -516,6 +609,13 @@
               </spacer>
              </item>
              <item>
+              <widget class="QPushButton" name="fundWitnessButton">
+               <property name="text">
+                <string>Fund account</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="emptyWitnessButton">
                <property name="text">
                 <string>Empty account</string>
@@ -523,6 +623,19 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="renewWitnessButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Renew account</string>
+            </property>
            </widget>
           </item>
          </layout>

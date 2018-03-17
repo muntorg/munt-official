@@ -38,12 +38,19 @@ public:
     void setModel(WalletModel *model);
 
 Q_SIGNALS:
+    void requestEmptyWitness();
+    void requestFundWitness(CAccount* funderAccount);
+    void requestRenewWitness(CAccount* funderAccount);
 
 public Q_SLOTS:
     void updateUnit(int nNewUnit_);
     void plotGraphForAccount(CAccount* account);
     void update();
     void unitButtonClicked();
+    void viewWitnessInfoClicked();
+    void emptyWitnessClicked();
+    void fundWitnessClicked();
+    void renewWitnessClicked();
 protected:
 
 private:
@@ -52,9 +59,11 @@ private:
     ClientModel *clientModel;
     WalletModel *model;
 
-    QwtPlotCurve* expectedEarningsCurve;
-    QwtPlotCurve* currentEarningsCurve;
-    QwtPlotCurve* currentEarningsCurveForecast;
+    QwtPlotCurve* expectedEarningsCurve = nullptr;
+    QwtPlotCurve* currentEarningsCurveShadow = nullptr;
+    QwtPlotCurve* currentEarningsCurveForecastShadow = nullptr;
+    QwtPlotCurve* currentEarningsCurve = nullptr;
+    QwtPlotCurve* currentEarningsCurveForecast = nullptr;
 
     QMenu* unitSelectionMenu;
 
