@@ -362,7 +362,7 @@ public:
     mutable CCriticalSection cs_keypool;
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
-    std::map<uint256, isminetype> isminecache;
+    mutable std::map<uint256, isminetype> isminecache;
     AccountType m_Type;
     AccountSubType m_SubType;
 

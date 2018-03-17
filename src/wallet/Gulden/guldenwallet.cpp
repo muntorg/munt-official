@@ -162,6 +162,7 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
+        //fixme: Use new isminecache caching
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
             isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
@@ -182,6 +183,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     LOCK(wallet.cs_wallet);
 
     isminetype ret = isminetype::ISMINE_NO;
+    //fixme: Use new isminecache caching
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -194,6 +196,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     return ret;
 }
 
+//fixme: (HIGH) invalidate ismine cache when doing actions like importkey (anything that rescans?)
 isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
@@ -203,26 +206,23 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        auto iter = accountItem.second->isminecache.find(outHash);
+        if (iter != accountItem.second->isminecache.end())
         {
-            auto iter = accountItem.second->isminecache.find(outHash);
-            if (iter != accountItem.second->isminecache.end())
-            {
-                if (iter->second > ret)
-                    ret = iter->second;
-            }
-            else
-            {
-                isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, out) : IsMine(accountItem.second->internalKeyStore, out) );
-                if (temp > ret)
-                    ret = temp;
-                //fixme: keep trimmed by MRU
-                accountItem.second->isminecache[outHash] = ret;
-            }
-            // No need to keep going through the remaining accounts at this point.
-            if (ret >= ISMINE_SPENDABLE)
-                return ret;
+            if (iter->second > ret)
+                ret = iter->second;
         }
+        else
+        {
+            isminetype temp = IsMine(*accountItem.second, out);
+            if (temp > ret)
+                ret = temp;
+            //fixme: keep trimmed by MRU
+            accountItem.second->isminecache[outHash] = ret;
+        }
+        // No need to keep going through the remaining accounts at this point.
+        if (ret >= ISMINE_SPENDABLE)
+            return ret;
     }
     return ret;
 }
@@ -232,18 +232,27 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& txout : tx.tx->vout)
     {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        uint256 outHash = txout.output.GetHash();
+        auto iter = forAccount->isminecache.find(outHash);
+        if (iter != forAccount->isminecache.end())
         {
-            isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(forAccount->externalKeyStore, txout) : IsMine(forAccount->internalKeyStore, txout) );
+            if (iter->second > ret)
+                ret = iter->second;
+        }
+        else
+        {
+            isminetype temp = IsMine(*forAccount, txout);
             if (temp > ret)
                 ret = temp;
+            //fixme: keep trimmed by MRU
+            forAccount->isminecache[outHash] = ret;
         }
+        // No need to keep going through the remaining outputs at this point.
         if (ret > isminetype::ISMINE_NO)
             return true;
     }
     return false;
 }
-
 
 isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
 {

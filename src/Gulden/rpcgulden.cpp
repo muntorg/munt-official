@@ -188,23 +188,27 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     if (nPow2Phase >= 2)
     {
-        if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_, witInfo.allWitnessCoins, nullptr, &viewNew))
-            throw std::runtime_error("Could not enumerate all PoW² witness for block.");
+        CBlock block;
+        if (!ReadBlockFromDisk(block, pTipIndex_, Params().GetConsensus()))
+            throw std::runtime_error("Could not load block to obtain PoW² information.");
+
+        if (!GetWitnessInfo(tempChain, Params(), &viewNew, pTipIndex_->pprev, block, witInfo, pTipIndex_->nHeight))
+            throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
 
         if (!GetPow2NetworkWeight(pTipIndex_, Params(), nNumWitnessAddressesAll, nTotalWeightAll, tempChain, &viewNew))
             throw std::runtime_error("Block does not form part of a valid PoW² chain.");
-    }
 
-    if (nPow2Phase >= 3)
-    {
-        if (!GetWitness(tempChain, Params(), &viewNew, pTipIndex_->pprev, pTipIndex_->GetBlockHashLegacy(), witInfo))
-            throw std::runtime_error("Could not select a valid PoW² witness for block.");
+        if (nPow2Phase >= 3)
+        {
+            if (!GetWitnessHelper(tempChain, Params(), &viewNew, pTipIndex_->pprev, block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
+                throw std::runtime_error("Could not select a valid PoW² witness for block.");
 
-        CTxDestination selectedWitnessAddress;
-        if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
-            throw std::runtime_error("Could not extract PoW² witness for block.");
+            CTxDestination selectedWitnessAddress;
+            if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
+                throw std::runtime_error("Could not extract PoW² witness for block.");
 
-        sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+            sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+        }
     }
 
     if (fVerbose)
@@ -214,8 +218,8 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             bool fEligible = false;
             {
                 const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
-                auto findIter = std::lower_bound(witInfo.witnessSelectionPool.begin(), witInfo.witnessSelectionPool.end(), findItem);
-                while (findIter != witInfo.witnessSelectionPool.end())
+                auto findIter = std::lower_bound(witInfo.witnessSelectionPoolFiltered.begin(), witInfo.witnessSelectionPoolFiltered.end(), findItem);
+                while (findIter != witInfo.witnessSelectionPoolFiltered.end())
                 {
                     if (findIter->outpoint == iter.first)
                     {
@@ -229,6 +233,12 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
                     else break;
                 }
             }
+            //fixme: HIGH witnessSelectionPoolUnfiltered
+            bool fExpired = false;
+            /*if (witnessHasExpired(iter.second.nAge, iter.second.Coin.nWeight, witInfo.nTotalWeight))
+            {
+                fExpired = true;
+            }*/
 
             CTxDestination address;
             if (!ExtractDestination(iter.second.out, address))
@@ -247,6 +257,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
             rec.push_back(Pair("weight", nRawWeight));
             rec.push_back(Pair("eligible_to_witness", fEligible));
+            rec.push_back(Pair("expired", fExpired));
             rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));
             rec.push_back(Pair("age", nAge));
@@ -269,7 +280,9 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     UniValue rec(UniValue::VOBJ);
     rec.push_back(Pair("pow2_phase", nPow2Phase));
     rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
-    rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPool.size()));
+    //fixme: unfiltered?
+    //rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
+    rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
     rec.push_back(Pair("total_witness_weight_raw", (uint64_t)nTotalWeightAll));
     rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeight));
     rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nReducedTotalWeight));
@@ -620,21 +633,21 @@ UniValue deleteaccount(const JSONRPCRequest& request)
 }
 
 
-UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType)
+UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
 {
     CAccount* account = NULL;
 
     if (accountType == "HD")
     {
-        account = pwallet->GenerateNewAccount(accountName, AccountType::Normal, AccountSubType::Desktop);
+        account = pwallet->GenerateNewAccount(accountName, AccountType::Normal, AccountSubType::Desktop, bMakeActive);
     }
     else if (accountType == "Mobile")
     {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::Mobi);
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::Mobi, bMakeActive);
     }
     else if (accountType == "Witness")
     {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::PoW2Witness);
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::PoW2Witness, bMakeActive);
     }
     else if (accountType == "Legacy")
     {
@@ -717,7 +730,7 @@ UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
-    return createaccounthelper(pwallet, request.params[0].get_str(), "Witness");
+    return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
 }
 
 
@@ -772,8 +785,8 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < 5000*COIN)
-        throw JSONRPCError(RPC_TYPE_ERROR, "Witness amount must be 5000 or larger");
+    if (nAmount < nMinimumWitnessAmount*COIN)
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -818,6 +831,14 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
     // Add a small buffer to give us time to enter the blockchain
     if (nLockPeriodInBlocks == 30 * 576)
         nLockPeriodInBlocks += 50;
+
+    // Enforce minimum weight
+    uint64_t nUnused1, nUnused2;
+    int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
+    if (nWeight < nMinimumWitnessWeight)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+    }
 
     EnsureWalletIsUnlocked(pwallet);
 
