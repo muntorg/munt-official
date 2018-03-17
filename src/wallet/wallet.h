@@ -1267,6 +1267,8 @@ public:
     CReserveKey() = default;
     CReserveKey(const CReserveKey&) = delete;
     CReserveKey& operator=(const CReserveKey&) = delete;
+    CReserveKey(CReserveKey&&) = default;
+    CReserveKey& operator=(CReserveKey&&) = default;
 
     ~CReserveKey()
     {
