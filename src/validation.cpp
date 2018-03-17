@@ -2954,10 +2954,29 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
     if (networkTotalWeight == 0)
         return 0;
 
+    if (nWeight > networkTotalWeight/100)
+        nWeight = networkTotalWeight/100;
+
     static const arith_uint256 base = arith_uint256(100000000) * arith_uint256(100000000) * arith_uint256(100000000);
     #define BASE(x) (arith_uint256(x)*base)
     #define AI(x) arith_uint256(x)
-    return std::max((BASE(1) / ((BASE(nWeight)/AI(networkTotalWeight))*AI(2))).GetLow64(), (uint64_t)200);
+    return 100 + std::max(( ((BASE(1)/((BASE(nWeight)/AI(networkTotalWeight))))).GetLow64() * 10 ), (uint64_t)900);
+    #undef AI
+    #undef BASE
+}
+
+uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
+{
+    if (networkTotalWeight == 0)
+        return 0;
+
+    if (nWeight > networkTotalWeight/100)
+        nWeight = networkTotalWeight/100;
+
+    static const arith_uint256 base = arith_uint256(100000000) * arith_uint256(100000000) * arith_uint256(100000000);
+    #define BASE(x) (arith_uint256(x)*base)
+    #define AI(x) arith_uint256(x)
+    return 100 + ((BASE(1)/((BASE(nWeight)/AI(networkTotalWeight))))).GetLow64();
     #undef AI
     #undef BASE
 }
@@ -3050,66 +3069,41 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 //Handle pruning.
 // Check whether we have ever pruned block & undo files
 //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
-
-bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo)
+bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
-
-    // Fetch all unspent witness outputs for the chain in which -block- is the tip of the chain->
-    if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
-        return false;
-
-    return GetWitness(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo);
-}
-
-bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo)
-{
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
-
-    uint64_t nBlockHeight = pPreviousIndexChain->nHeight + 1;
 
     /** Generate the pool of potential witnesses for the given block index **/
     /** Addresses older than 10000 blocks or younger than 100 blocks are discarded **/
     uint64_t nMinAge = nMinimumParticipationAge;
     while (true)
     {
-        witnessInfo.witnessSelectionPool.clear();
-        witnessInfo.nTotalWeight = 0;
+        witnessInfo.witnessSelectionPoolFiltered.clear();
+        witnessInfo.witnessSelectionPoolFiltered = witnessInfo.witnessSelectionPoolUnfiltered;
 
-        for (auto coinIter : witnessInfo.allWitnessCoins)
-        {
-            //testme: (GULDEN) (POW2) (2.0) (HIGH) - Make sure no off by 1 error here.
-            uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
-            if (nAge < nMaximumParticipationAge && nAge > nMinAge)
-            {
-                COutPoint outPoint = coinIter.first;
-                Coin coin = coinIter.second;
-                if (coin.out.nValue >= nMinimumWitnessAmount)
-                {
-                    uint64_t nUnused1, nUnused2;
-                    int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
-                    if (nWeight >= nMinimumWitnessWeight)
-                    {
-                        witnessInfo.witnessSelectionPool.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
-                        witnessInfo.nTotalWeight += nWeight;
-                    }
-                }
-            }
-        }
+        //LogPrint(BCLog::WITNESS, "Witness pool size1b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
+        /** Eliminate addresses that have witnessed within the last `nMinimumParticipationAge` blocks **/
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return (x.nAge <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
+        //LogPrint(BCLog::WITNESS, "Witness pool size1a %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         /** Eliminate addresses that have not witnessed within the expected period of time that they should have **/
-        std::remove_if(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), [&](RouletteItem& x){ return x.nAge > expectedWitnessBlockPeriod(x.nWeight, witnessInfo.nTotalWeight); }); 
+        //LogPrint(BCLog::WITNESS, "Witness pool size2b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
+        //LogPrint(BCLog::WITNESS, "Witness pool size2a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         //fixme: (GULDEN) (2.0) check for off by 1 error.
-        /** Eliminate addresses that are within 100 blocks from lock period expiring. **/
-        std::remove_if(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details = GetPow2WitnessOutput(x.coin.out); return details.lockUntilBlock > nBlockHeight + nMinAge; });
+        /** Eliminate addresses that are within 100 blocks from lock period expiring, or whose lock period has expired. **/
+        //LogPrint(BCLog::WITNESS, "Witness pool size3b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return !(details.lockUntilBlock - nMinAge >= nBlockHeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
+        //LogPrint(BCLog::WITNESS, "Witness pool size3a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
-        if (witnessInfo.witnessSelectionPool.size() < nMinimumParticipationAge)
+        // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
+        if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
             // fixme: Add warning/logging for this.
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
             // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
-            if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPool.size() > 5))
+            if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
             {
                 break;
             }
@@ -3125,13 +3119,13 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
         }
     }
 
-    if (witnessInfo.witnessSelectionPool.size() == 0)
+    if (witnessInfo.witnessSelectionPoolFiltered.size() == 0)
     {
         return error("Unable to determine any witnesses for block.");
     }
 
     /** Ensure the pool is sorted deterministically **/
-    std::sort(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end());
+    std::sort(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end());
 
     /** Reduce larger weightings to a maximum weighting of 1% of network weight. **/
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
@@ -3139,7 +3133,7 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     /** So we delibritely make no attempt to compensate for this. **/
     uint64_t maxWeight = witnessInfo.nTotalWeight / 100;
     witnessInfo.nReducedTotalWeight = 0;
-    for (auto& item : witnessInfo.witnessSelectionPool)
+    for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
         if (item.nWeight > maxWeight)
             item.nWeight = maxWeight;
@@ -3157,19 +3151,68 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
         //rouletteSelectionSeed = rouletteSelectionSeed * 2;
     //}
 
+    //LogPrint(BCLog::WITNESS, "RNG1 %d %d\n", rouletteSelectionSeed.GetLow64(), witnessInfo.nReducedTotalWeight);
     if (rouletteSelectionSeed > arith_uint256(witnessInfo.nReducedTotalWeight))
     {
         // 'BigNum' Modulo operator via mathematical identity:  a % b = a - (b * int(a/b))
         rouletteSelectionSeed = rouletteSelectionSeed - (arith_uint256(witnessInfo.nReducedTotalWeight) * arith_uint256(rouletteSelectionSeed/arith_uint256(witnessInfo.nReducedTotalWeight)));
     }
+    //LogPrint(BCLog::WITNESS, "RNG2 %d %d\n", rouletteSelectionSeed.GetLow64(), witnessInfo.nReducedTotalWeight);
 
-    auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPool.begin(), witnessInfo.witnessSelectionPool.end(), rouletteSelectionSeed.GetLow64());
+    auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), rouletteSelectionSeed.GetLow64());
+    //LogPrint(BCLog::WITNESS, "Selected witness age %d\n", selectedWitness->nAge);
     witnessInfo.selectedWitnessTransaction = selectedWitness->coin.out;
     witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
     witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
 
     //LogPrintf(">>>Selected witness=%s %s fromblockhash=%s fromblockheight=%d currentheight=%d prevout=%s \n",selectedWitness->coin.out.output.GetHex(selectedWitness->coin.out.GetType()), selectedWitness->coin.out.ToString(), block.GetHashPoW2().ToString(), resultBlockHeight, nBlockHeight, resultOutPoint.hash.ToString());
     return true;
+}
+
+bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
+{
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+
+    // Fetch all unspent witness outputs for the chain in which -block- acts as the tip.
+    if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
+        return false;
+
+    // Calculate network weight based on current block, exclude witnesses that are too old.
+    for (auto coinIter : witnessInfo.allWitnessCoins)
+    {
+        //testme: (GULDEN) (POW2) (2.0) (HIGH) - Make sure no off by 1 error here.
+        uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
+        COutPoint outPoint = coinIter.first;
+        Coin coin = coinIter.second;
+        if (coin.out.nValue >= nMinimumWitnessAmount)
+        {
+            uint64_t nUnused1, nUnused2;
+            int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
+            if (nWeight < nMinimumWitnessWeight)
+                continue;
+            witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
+            witnessInfo.nTotalWeight += nWeight;
+        }
+    }
+    return true;
+}
+
+bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo)
+{
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+
+    // Fetch all the chain info (for specific block) we will need to calculate the witness.
+    uint64_t nBlockHeight = pPreviousIndexChain->nHeight + 1;
+    if (!GetWitnessInfo(chain, chainParams, viewOverride, pPreviousIndexChain, block, witnessInfo, nBlockHeight))
+        return false;
+
+    return GetWitnessHelper(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo, nBlockHeight);
+}
+
+bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
+{
+    uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
+    return ( nWitnessAge > nMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
 
 

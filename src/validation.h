@@ -523,7 +523,8 @@ public:
 struct CGetWitnessInfo
 {
     std::map<COutPoint, Coin> allWitnessCoins;
-    std::vector<RouletteItem> witnessSelectionPool;
+    std::vector<RouletteItem> witnessSelectionPoolUnfiltered;
+    std::vector<RouletteItem> witnessSelectionPoolFiltered;
     CTxOut selectedWitnessTransaction;
     COutPoint selectedWitnessOutpoint;
     Coin selectedWitnessCoin;
@@ -532,9 +533,14 @@ struct CGetWitnessInfo
     uint64_t nTotalWeight = 0;
     uint64_t nReducedTotalWeight = 0;
 };
+// The period in which we are required to witness before we are forcefully removed from the pool.
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight);
-bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo);
+// The average frequency which we are expected to witness in.
+uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight);
+bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight);
+bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo);
+bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 
 /**
  * Return the spend height, which is one more than the inputs.GetBestBlock().
