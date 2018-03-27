@@ -583,6 +583,11 @@ void GuldenSendCoinsEntry::setValue(const SendCoinsRecipient &value)
     }*/
 }
 
+void GuldenSendCoinsEntry::setAmount(const CAmount amount)
+{
+    ui->payAmount->setValue(amount);
+}
+
 void GuldenSendCoinsEntry::setAddress(const QString &address)
 {
     /*ui->payTo->setText(address);
@@ -788,6 +793,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
+    //fixme:
     int64_t nNetworkWeight = 239990000;
 
 

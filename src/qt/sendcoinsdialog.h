@@ -58,6 +58,7 @@ public:
     void update();
 
     void gotoWitnessTab(CAccount* targetAccount);
+    void setAmount(CAmount amount);
 
 public Q_SLOTS:
     void clear();

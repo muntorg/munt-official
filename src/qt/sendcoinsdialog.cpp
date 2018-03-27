@@ -266,6 +266,15 @@ void SendCoinsDialog::gotoWitnessTab(CAccount* targetAccount)
     entry->gotoWitnessTab(targetAccount);
 }
 
+void SendCoinsDialog::setAmount(CAmount amount)
+{
+    if (ui->entries->count() > 0)
+    {
+        GuldenSendCoinsEntry* entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(0)->widget());
+        entry->setAmount(amount);
+    }
+}
+
 void SendCoinsDialog::on_sendButton_clicked()
 {
     ui->sendButton->setEnabled(true);

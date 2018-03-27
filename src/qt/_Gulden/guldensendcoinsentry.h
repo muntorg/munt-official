@@ -40,6 +40,7 @@ public:
     void update();
 
     void setValue(const SendCoinsRecipient &value);
+    void setAmount(const CAmount amount);
     void setAddress(const QString &address);
 
     /** Set up the tab chain manually, as Qt messes up the tab chain by default in some cases
