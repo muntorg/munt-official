@@ -42,16 +42,16 @@ inline bool IsPow2WitnessOutput(const CTxOut& out)
     return false;
 }
 
-inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessInput)
+inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessDetails)
 {
     if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        witnessInput = out.output.witnessDetails;
+        witnessDetails = out.output.witnessDetails;
         return true;
     }
     else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (GULDEN) (2.1) we can remove this
     {
-        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessInput);
+        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
         return true;
     }
     return false;
@@ -66,6 +66,15 @@ inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2W
     txout.lockUntilBlock = fromDest.lockUntilBlock;
     txout.failCount = fromDest.failCount;
     return txout;
+}
+
+inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
+{
+    CTxOutPoW2Witness witnessDetails;
+    if (!GetPow2WitnessOutput(out, witnessDetails))
+        return false;
+    if (witnessDetails.lockUntilBlock >= nTipHeight)
+        return true;
 }
 
 #endif
