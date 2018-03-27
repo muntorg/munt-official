@@ -24,7 +24,6 @@
 #include "crypto/sha256.h"
 #include "hash.h"
 #include "primitives/transaction.h"
-#include "netbase.h"
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "utilstrencodings.h"
@@ -381,10 +380,10 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         pszDest ? 0.0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
 
     // Connect
-    SOCKET hSocket;
+    socket_t socket(get_io_context());
     bool proxyConnectionFailed = false;
-    if (pszDest ? ConnectSocketByName(addrConnect, hSocket, pszDest, Params().GetDefaultPort(), nConnectTimeout, &proxyConnectionFailed) :
-                  ConnectSocket(addrConnect, hSocket, nConnectTimeout, &proxyConnectionFailed))
+    if (pszDest ? ConnectSocketByName(addrConnect, socket, pszDest, Params().GetDefaultPort(), nConnectTimeout, &proxyConnectionFailed) :
+                  ConnectSocket(addrConnect, socket, nConnectTimeout, &proxyConnectionFailed))
     {
         if (pszDest && addrConnect.IsValid()) {
             // It is possible that we already have a connection to the IP/port pszDest resolved to.
@@ -396,7 +395,12 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
             if (pnode)
             {
                 pnode->MaybeSetAddrName(std::string(pszDest));
-                CloseSocket(hSocket);
+                try {
+                    socket.close();
+                }
+                catch (const boost::system::error_code& ec) {
+                    LogPrint(BCLog::NET, "ConnectNode close error: %s\n", ec.message());
+                }
                 LogPrintf("Failed to open new connection, already connected\n");
                 return NULL;
             }
@@ -405,13 +409,10 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         addrman.Attempt(addrConnect, fCountFailure);
 
         // Add node
-        boost::asio::ip::tcp::socket sock(get_io_context());
-        auto protocol = addrConnect.IsIPv4() ? boost::asio::ip::tcp::v4() : boost::asio::ip::tcp::v6();
-        sock.assign(protocol, hSocket);
         NodeId id = GetNewNodeId();
         uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-        CAddress addr_bind = GetBindAddress(sock);
-        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(sock), addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
+        CAddress addr_bind = GetBindAddress(socket);
+        CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(socket), addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
         pnode->nServicesExpected = ServiceFlags(addrConnect.nServices & nRelevantServices);
         pnode->AddRef();
 
@@ -1820,10 +1821,8 @@ void CConnman::ThreadMessageHandler()
 
 void CConnman::AcceptIncoming(ListenSocket& listener)
 {
-    auto pPeer_endpoint  = std::shared_ptr<boost::asio::ip::tcp::endpoint>(new boost::asio::ip::tcp::endpoint());
-
-    listener.acceptor.async_accept(*pPeer_endpoint,
-                                   [this, &listener, pPeer_endpoint](const boost::system::error_code& ec, boost::asio::ip::tcp::socket peer) {
+    listener.acceptor.async_accept(listener.peer, listener.peerEndpoint,
+                                   [this, &listener](const boost::system::error_code& ec) {
         // this handler runs in io_context.run() thread!
 
         if (ec) {
@@ -1832,7 +1831,7 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         }
 
         CAddress addr;
-        addr.SetSockAddr(*pPeer_endpoint);
+        addr.SetSockAddr(listener.peerEndpoint);
 
         bool connection_ok = true;
 
@@ -1871,13 +1870,13 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         if (connection_ok) {
             // According to the internet TCP_NODELAY is not carried into accepted sockets
             // on all platforms.  Set it again here just to be sure.
-            peer.set_option(boost::asio::ip::tcp::no_delay(true));
+            listener.peer.set_option(boost::asio::ip::tcp::no_delay(true));
 
             NodeId id = GetNewNodeId();
             uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-            CAddress addr_bind = GetBindAddress(peer);
+            CAddress addr_bind = GetBindAddress(listener.peer);
 
-            CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(peer), addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
+            CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), std::move(listener.peer), addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
             pnode->AddRef();
             pnode->fWhitelisted = whitelisted;
             GetNodeSignals().InitializeNode(pnode, *this);
@@ -1891,7 +1890,7 @@ void CConnman::AcceptIncoming(ListenSocket& listener)
         }
         else {
             try {
-                peer.close();
+                listener.peer.close();
             }
             catch (const boost::system::error_code& ec) {
                 LogPrint(BCLog::NET, "connection from  %s closed: %s\n", addr.ToString(), ec.message());

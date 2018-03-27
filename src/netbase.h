@@ -38,6 +38,8 @@ public:
     bool randomize_credentials;
 };
 
+typedef boost::asio::ip::tcp::socket socket_t;
+
 enum Network ParseNetwork(std::string net);
 std::string GetNetworkName(enum Network net);
 void SplitHostPort(std::string in, int &portOut, std::string &hostOut);
@@ -52,8 +54,8 @@ bool Lookup(const char *pszName, CService& addr, int portDefault, bool fAllowLoo
 bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault, bool fAllowLookup, unsigned int nMaxSolutions);
 CService LookupNumeric(const char *pszName, int portDefault = 0);
 bool LookupSubNet(const char *pszName, CSubNet& subnet);
-bool ConnectSocket(const CService &addr, SOCKET& hSocketRet, int nTimeout, bool *outProxyConnectionFailed = 0);
-bool ConnectSocketByName(CService &addr, SOCKET& hSocketRet, const char *pszDest, int portDefault, int nTimeout, bool *outProxyConnectionFailed = 0);
+bool ConnectSocket(const CService &addr, socket_t& socketRet, int nTimeout, bool *outProxyConnectionFailed = 0);
+bool ConnectSocketByName(CService &addr, socket_t& socketRet, const char *pszDest, int portDefault, int nTimeout, bool *outProxyConnectionFailed = 0);
 /** Return readable error string for a network error code */
 std::string NetworkErrorString(int err);
 /** Close socket and set hSocket to INVALID_SOCKET */
