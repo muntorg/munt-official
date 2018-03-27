@@ -2746,16 +2746,125 @@ UniValue resendwallettransactions(const JSONRPCRequest& request)
     return result;
 }
 
+
+UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForAccounts, const UniValue* pMinDepth, const UniValue* pMaxDepth, const UniValue* pFilterAddresses, const UniValue* pIncludeUnsafe, const UniValue* pOptions)
+{
+    int nMinDepth = 1;
+    if (pMinDepth)
+    {
+        RPCTypeCheckArgument(*pMinDepth, UniValue::VNUM);
+        nMinDepth = pMinDepth->get_int();
+    }
+
+    int nMaxDepth = 9999999;
+    if (pMaxDepth)
+    {
+        RPCTypeCheckArgument(*pMaxDepth, UniValue::VNUM);
+        nMaxDepth = pMaxDepth->get_int();
+    }
+
+    std::set<CBitcoinAddress> setAddress;
+    if (pFilterAddresses)
+    {
+        RPCTypeCheckArgument(*pFilterAddresses, UniValue::VARR);
+        UniValue inputs = pFilterAddresses->get_array();
+        for (unsigned int idx = 0; idx < inputs.size(); idx++) {
+            const UniValue& input = inputs[idx];
+            CBitcoinAddress address(input.get_str());
+            if (!address.IsValid())
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Bitcoin address: ")+input.get_str());
+            if (setAddress.count(address))
+                throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+input.get_str());
+           setAddress.insert(address);
+        }
+    }
+
+    bool include_unsafe = true;
+    if (pIncludeUnsafe)
+    {
+        RPCTypeCheckArgument(*pIncludeUnsafe, UniValue::VBOOL);
+        include_unsafe = pIncludeUnsafe->get_bool();
+    }
+
+    CAmount nMinimumAmount = 0;
+    CAmount nMaximumAmount = MAX_MONEY;
+    CAmount nMinimumSumAmount = MAX_MONEY;
+    uint64_t nMaximumCount = 0;
+
+    if (pOptions)
+    {
+        const UniValue& options = pOptions->get_obj();
+
+        if (options.exists("minimumAmount"))
+            nMinimumAmount = AmountFromValue(options["minimumAmount"]);
+
+        if (options.exists("maximumAmount"))
+            nMaximumAmount = AmountFromValue(options["maximumAmount"]);
+
+        if (options.exists("minimumSumAmount"))
+            nMinimumSumAmount = AmountFromValue(options["minimumSumAmount"]);
+
+        if (options.exists("maximumCount"))
+            nMaximumCount = options["maximumCount"].get_int64();
+    }
+
+    UniValue results(UniValue::VARR);
+    for (auto& account : doForAccounts)
+    {
+        std::vector<COutput> vecOutputs;
+        pWallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
+        BOOST_FOREACH(const COutput& out, vecOutputs) {
+            CTxDestination address;
+            bool fValidAddress = ExtractDestination(out.tx->tx->vout[out.i], address);
+
+            if (setAddress.size() && (!fValidAddress || !setAddress.count(address)))
+                continue;
+
+            UniValue entry(UniValue::VOBJ);
+            entry.push_back(Pair("txid", out.tx->GetHash().GetHex()));
+            entry.push_back(Pair("vout", out.i));
+
+            if (fValidAddress) {
+                entry.push_back(Pair("address", CBitcoinAddress(address).ToString()));
+
+                entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
+                entry.push_back(Pair("accountlabel", account->getLabel()));
+            }
+
+            if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptLegacyOutput)
+            {
+                const CScript& scriptPubKey = out.tx->tx->vout[out.i].output.scriptPubKey;
+                if (scriptPubKey.IsPayToScriptHash()) {
+                    const CScriptID& hash = boost::get<CScriptID>(address);
+                    CScript redeemScript;
+                    if (pWallet->GetCScript(hash, redeemScript))
+                        entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
+                }
+                entry.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
+            }
+
+            entry.push_back(Pair("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue)));
+            entry.push_back(Pair("confirmations", out.nDepth));
+            entry.push_back(Pair("spendable", out.fSpendable));
+            entry.push_back(Pair("solvable", out.fSolvable));
+            entry.push_back(Pair("safe", out.fSafe));
+            results.push_back(entry);
+        }
+    }
+
+    return results;
+}
+
 UniValue listunspent(const JSONRPCRequest& request)
 {
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+    CWallet * const pWallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pWallet, request.fHelp)) {
         return NullUniValue;
     }
 
     if (request.fHelp || request.params.size() > 5)
         throw std::runtime_error(
-            "listunspent account ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
+            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
             "\nReturns array of unspent transaction outputs\n"
             "with between minconf and maxconf (inclusive) confirmations.\n"
             "Optionally filter to only include txouts paid to specified addresses.\n"
@@ -2804,130 +2913,128 @@ UniValue listunspent(const JSONRPCRequest& request)
             + HelpExampleRpc("listunspent", "6, 9999999, [] , true, { \"minimumAmount\": 0.005 } ")
         );
 
-    int nMinDepth = 1;
-    if (request.params.size() > 0 && !request.params[0].isNull()) {
-        RPCTypeCheckArgument(request.params[0], UniValue::VNUM);
-        nMinDepth = request.params[0].get_int();
-    }
+    const UniValue* pMinDepth = nullptr;
+    if (request.params.size() > 0 && !request.params[0].isNull())
+        pMinDepth = &request.params[0];
 
-    int nMaxDepth = 9999999;
-    if (request.params.size() > 1 && !request.params[1].isNull()) {
-        RPCTypeCheckArgument(request.params[1], UniValue::VNUM);
-        nMaxDepth = request.params[1].get_int();
-    }
+    const UniValue* pMaxDepth = nullptr;
+    if (request.params.size() > 1 && !request.params[1].isNull())
+        pMaxDepth = &request.params[1];
 
-    std::set<CBitcoinAddress> setAddress;
-    if (request.params.size() > 2 && !request.params[2].isNull()) {
-        RPCTypeCheckArgument(request.params[2], UniValue::VARR);
-        UniValue inputs = request.params[2].get_array();
-        for (unsigned int idx = 0; idx < inputs.size(); idx++) {
-            const UniValue& input = inputs[idx];
-            CBitcoinAddress address(input.get_str());
-            if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Bitcoin address: ")+input.get_str());
-            if (setAddress.count(address))
-                throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+input.get_str());
-           setAddress.insert(address);
-        }
-    }
+    const UniValue* pFilterAddresses = nullptr;
+    if (request.params.size() > 2 && !request.params[2].isNull())
+        pFilterAddresses = &request.params[2];
 
-    bool include_unsafe = true;
-    if (request.params.size() > 3 && !request.params[3].isNull()) {
-        RPCTypeCheckArgument(request.params[3], UniValue::VBOOL);
-        include_unsafe = request.params[3].get_bool();
-    }
+    const UniValue* pIncludeUnsafe = nullptr;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        pIncludeUnsafe = &request.params[3];
 
-    CAmount nMinimumAmount = 0;
-    CAmount nMaximumAmount = MAX_MONEY;
-    CAmount nMinimumSumAmount = MAX_MONEY;
-    uint64_t nMaximumCount = 0;
+    const UniValue* pOptions = nullptr;
+    if (request.params.size() > 4 && !request.params[4].isNull())
+        pOptions = &request.params[4];
 
-    if (request.params.size() > 4) {
-        const UniValue& options = request.params[4].get_obj();
-
-        if (options.exists("minimumAmount"))
-            nMinimumAmount = AmountFromValue(options["minimumAmount"]);
-
-        if (options.exists("maximumAmount"))
-            nMaximumAmount = AmountFromValue(options["maximumAmount"]);
-
-        if (options.exists("minimumSumAmount"))
-            nMinimumSumAmount = AmountFromValue(options["minimumSumAmount"]);
-
-        if (options.exists("maximumCount"))
-            nMaximumCount = options["maximumCount"].get_int64();
-    }
-
-    UniValue results(UniValue::VARR);
-    //std::vector<COutput> vecOutputs;
-    assert(pwallet != NULL);
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-    //fixme: (FUT) (1.6.1) - Take an account as an optional paramater for this call
-    std::string strAccount = "*";
+    assert(pWallet != NULL);
+    DS_LOCK2(cs_main, pWallet->cs_wallet);
     std::vector<CAccount*> doForAccounts;
-    if (strAccount == std::string("*"))
+    for (const auto& accountIter : pWallet->mapAccounts)
     {
-        for (const auto& accountIter : pwallet->mapAccounts)
+        if (accountIter.second->m_Type != AccountType::Shadow)
         {
-            if (accountIter.second->m_Type != AccountType::Shadow)
-            {
-                doForAccounts.push_back(accountIter.second);
-            }
-            //fixme: (FUT) - Handle shadow children
+            doForAccounts.push_back(accountIter.second);
         }
-    }
-    else
-    {
-        doForAccounts.push_back(AccountFromValue(pwallet, strAccount, true));
+        //fixme: (FUT) - Handle shadow children
     }
 
-    //fixme: (MERGE)
-    for (auto& account : doForAccounts)
-    {
-        std::vector<COutput> vecOutputs;
-        pwallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, true);
+    return listunspentforaccounts(pWallet, doForAccounts, pMinDepth, pMaxDepth, pFilterAddresses, pIncludeUnsafe, pOptions);
+}
 
-        pwallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
-        BOOST_FOREACH(const COutput& out, vecOutputs) {
-            CTxDestination address;
-            if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptLegacyOutput)
-            {
-                const CScript& scriptPubKey = out.tx->tx->vout[out.i].output.scriptPubKey;
-                bool fValidAddress = ExtractDestination(scriptPubKey, address);
-
-                if (setAddress.size() && (!fValidAddress || !setAddress.count(address)))
-                    continue;
-
-                UniValue entry(UniValue::VOBJ);
-                entry.push_back(Pair("txid", out.tx->GetHash().GetHex()));
-                entry.push_back(Pair("vout", out.i));
-
-                if (fValidAddress) {
-                    entry.push_back(Pair("address", CBitcoinAddress(address).ToString()));
-
-                    entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
-                    entry.push_back(Pair("accountlabel", account->getLabel()));
-                }
-
-                if (scriptPubKey.IsPayToScriptHash()) {
-                    const CScriptID& hash = boost::get<CScriptID>(address);
-                    CScript redeemScript;
-                    if (pwallet->GetCScript(hash, redeemScript))
-                        entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
-                }
-
-                entry.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
-                entry.push_back(Pair("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue)));
-                entry.push_back(Pair("confirmations", out.nDepth));
-                entry.push_back(Pair("spendable", out.fSpendable));
-                entry.push_back(Pair("solvable", out.fSolvable));
-                entry.push_back(Pair("safe", out.fSafe));
-                results.push_back(entry);
-            }
-        }
+UniValue listunspentforaccount(const JSONRPCRequest& request)
+{
+    CWallet * const pWallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pWallet, request.fHelp)) {
+        return NullUniValue;
     }
 
-    return results;
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 6)
+        throw std::runtime_error(
+            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
+            "\nReturns array of unspent transaction outputs\n"
+            "with between minconf and maxconf (inclusive) confirmations.\n"
+            "Optionally filter to only include txouts paid to specified addresses.\n"
+            "\nArguments:\n"
+            "1. account\n"
+            "2. minconf          (numeric, optional, default=1) The minimum confirmations to filter\n"
+            "3. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter\n"
+            "4. \"addresses\"      (string) A json array of bitcoin addresses to filter\n"
+            "    [\n"
+            "      \"address\"     (string) bitcoin address\n"
+            "      ,...\n"
+            "    ]\n"
+            "5. include_unsafe (bool, optional, default=true) Include outputs that are not safe to spend\n"
+            "                  See description of \"safe\" attribute below.\n"
+            "6. query_options    (json, optional) JSON with query options\n"
+            "    {\n"
+            "      \"minimumAmount\"    (numeric or string, default=0) Minimum value of each UTXO in " + CURRENCY_UNIT + "\n"
+            "      \"maximumAmount\"    (numeric or string, default=unlimited) Maximum value of each UTXO in " + CURRENCY_UNIT + "\n"
+            "      \"maximumCount\"     (numeric or string, default=unlimited) Maximum number of UTXOs\n"
+            "      \"minimumSumAmount\" (numeric or string, default=unlimited) Minimum sum value of all UTXOs in " + CURRENCY_UNIT + "\n"
+            "    }\n"
+            "\nResult\n"
+            "[                   (array of json object)\n"
+            "  {\n"
+            "    \"txid\" : \"txid\",          (string) the transaction id \n"
+            "    \"vout\" : n,               (numeric) the vout value\n"
+            "    \"address\" : \"address\",    (string) the bitcoin address\n"
+            "    \"account\" : \"account\",    (string) The associated account."
+            "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
+            "    \"amount\" : x.xxx,         (numeric) the transaction output amount in " + CURRENCY_UNIT + "\n"
+            "    \"confirmations\" : n,      (numeric) The number of confirmations\n"
+            "    \"redeemScript\" : n        (string) The redeemScript if scriptPubKey is P2SH\n"
+            "    \"spendable\" : xxx,        (bool) Whether we have the private keys to spend this output\n"
+            "    \"solvable\" : xxx,         (bool) Whether we know how to spend this output, ignoring the lack of keys\n"
+            "    \"safe\" : xxx              (bool) Whether this output is considered safe to spend. Unconfirmed transactions\n"
+            "                              from outside keys and unconfirmed replacement transactions are considered unsafe\n"
+            "                              and are not eligible for spending by fundrawtransaction and sendtoaddress.\n"
+            "  }\n"
+            "  ,...\n"
+            "]\n"
+
+            "\nExamples\n"
+            + HelpExampleCli("listunspent", "")
+            + HelpExampleCli("listunspent", "6 9999999 \"[\\\"1PGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"1LtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\"")
+            + HelpExampleRpc("listunspent", "6, 9999999 \"[\\\"1PGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"1LtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\"")
+            + HelpExampleCli("listunspent", "6 9999999 '[]' true '{ \"minimumAmount\": 0.005 }'")
+            + HelpExampleRpc("listunspent", "6, 9999999, [] , true, { \"minimumAmount\": 0.005 } ")
+        );
+
+    CAccount* forAccount = AccountFromValue(pWallet, request.params[0], true);
+
+    const UniValue* pMinDepth = nullptr;
+    if (request.params.size() > 1 && !request.params[1].isNull())
+        pMinDepth = &request.params[1];
+
+    const UniValue* pMaxDepth = nullptr;
+    if (request.params.size() > 2 && !request.params[2].isNull())
+        pMaxDepth = &request.params[2];
+
+    const UniValue* pFilterAddresses = nullptr;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        pFilterAddresses = &request.params[3];
+
+    const UniValue* pIncludeUnsafe = nullptr;
+    if (request.params.size() > 4 && !request.params[4].isNull())
+        pIncludeUnsafe = &request.params[4];
+
+    const UniValue* pOptions = nullptr;
+    if (request.params.size() > 5 && !request.params[5].isNull())
+        pOptions = &request.params[5];
+
+    assert(pWallet != NULL);
+    DS_LOCK2(cs_main, pWallet->cs_wallet);
+    std::vector<CAccount*> doForAccounts;
+    doForAccounts.push_back(forAccount);
+
+    return listunspentforaccounts(pWallet, doForAccounts, pMinDepth, pMaxDepth, pFilterAddresses, pIncludeUnsafe, pOptions);
 }
 
 UniValue fundrawtransaction(const JSONRPCRequest& request)
@@ -3286,6 +3393,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listsinceblock",           &listsinceblock,           false,  {"blockhash","target_confirmations","include_watchonly"} },
     { "wallet",             "listtransactions",         &listtransactions,         false,  {"account","count","skip","include_watchonly"} },
     { "wallet",             "listunspent",              &listunspent,              false,  {"minconf","maxconf","addresses","include_unsafe","query_options"} },
+    { "wallet",             "listunspentforaccount",    &listunspentforaccount,    false,  {"account","minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "lockunspent",              &lockunspent,              true,   {"unlock","transactions"} },
     { "wallet",             "move",                     &movecmd,                  false,  {"fromaccount","toaccount","amount","minconf","comment"} },
     { "wallet",             "sendfrom",                 &sendfrom,                 false,  {"fromaccount","toaddress","amount","minconf","comment","comment_to"} },

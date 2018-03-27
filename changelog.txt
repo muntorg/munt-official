@@ -10,7 +10,10 @@ CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assi
 RPC - New command 'createwitnessaccount' as a convenience call to 'createaccount witness' used to create an account for witnessing.
 RPC - New command 'fundwitnessaccount' used to lock funds into a witness account that has previously been created.
 RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
-RPC - add new "sub_type" paramater to 'listaccounts' command.
+RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
+RPC - New command 'listunspentforaccount' as account specific counterpart for listunspent.
+RPC - Add account capability to 'sendmany' command.
+RPC - Add new "sub_type" paramater to 'listaccounts' command.
 
 1.6.4.8
 
