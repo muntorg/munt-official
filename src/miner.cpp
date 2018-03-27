@@ -1234,6 +1234,8 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     }
     else
     {
+        //fixme: standard key hash?
+        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
         coinbaseTx.vout[1].nValue = witnessSubsidy;
     }
@@ -1414,7 +1416,7 @@ void static GuldenWitness()
                                     assemblerOptions.nBlockMaxWeight = DEFAULT_BLOCK_MAX_WEIGHT - nStartingBlockWeight;
                                     assemblerOptions.nBlockMaxSize = assemblerOptions.nBlockMaxWeight;
 
-                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(pindexTip, coinbaseScript->reserveScript, true, nullptr, true));
+                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript->reserveScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
                                         LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
@@ -1423,22 +1425,34 @@ void static GuldenWitness()
 
                                     // Skip the coinbase as we obviously don't want this included again, it is already in the PoW part of the block.
                                     size_t nSkipCoinbase = 1;
-                                    if (nPoW2PhaseParent == 3)
-                                        nSkipCoinbase = 2;
                                     //fixme: (GULDEN) (CBSU)? pre-allocate for vtx.size().
-                                    for (size_t i=nSkipCoinbase; i < pblocktemplate->block.vtx.size(); ++i)
+                                    for (size_t i=nSkipCoinbase; i < pblocktemplate->block.vtx.size(); i++)
                                     {
-                                        //fixme: (GULDEN) (CBSU)? emplace_back?
-                                        pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
+                                        bool bSkip = false;
+                                        // fixme: Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
+                                        // Exclude any duplicates that somehow creep in.
+                                        for(size_t j=0; j < nWitnessCoinbaseIndex; j++)
+                                        {
+                                            if (pWitnessBlock->vtx[j]->GetHash() == pblocktemplate->block.vtx[i]->GetHash())
+                                            {
+                                                bSkip = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!bSkip)
+                                        {
+                                            //fixme: (GULDEN) (CBSU)? emplace_back?
+                                            pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
+                                            //testme: (GULDEN) (2.0) (HIGH) test this is right.
+                                            witnessSubsidy += (pblocktemplate->vTxFees[i]);
+                                        }
                                     }
-
-                                    //testme: (GULDEN) (2.0) (HIGH) test this is right.
-                                    witnessSubsidy += (-pblocktemplate->vTxFees[0]);
                                 }
 
 
                                 //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
+                                //fixme: (HIGH) (NEXT) PASS FEES SEPEREATELY CANT COMPOUND FEES
                                 CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
