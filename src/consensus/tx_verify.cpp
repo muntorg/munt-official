@@ -259,7 +259,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
     * Input only
     * Signed by spending key.
     *
-    * 4) Renewal, only failcount should change, must increase by 1.
+    * 4) Renewal, only failcount should change, must be multiplied by 2 then increased by 1.
     * Input/Output.
     * Signed by witness key.
     *
@@ -283,8 +283,8 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
     {
         if (IsPow2WitnessOutput(txout))
         {
-            if ( txout.nValue < (5000 * COIN) )
-                return state.DoS(10, false, REJECT_INVALID, "PoW2 witness output smaller than 5000 NLG not allowed.");
+            if ( txout.nValue < (nMinimumWitnessAmount * COIN) )
+                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW2 witness output smaller than %d NLG not allowed.", nMinimumWitnessAmount));
 
             CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(txout, witnessInput);
             if (witnessInput.lockFromBlock == 0)
@@ -306,6 +306,13 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             {
                 if (witnessInput.lockUntilBlock - witnessInput.lockFromBlock > (3 * 365 * 576))
                     return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
+            }
+
+            uint64_t nUnused1, nUnused2;
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2));
+            if (nWeight < nMinimumWitnessWeight)
+            {
+                return state.DoS(10, false, REJECT_INVALID, "PoW2 witness has insufficient weight.");
             }
         }
     }
