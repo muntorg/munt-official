@@ -305,6 +305,15 @@ void GuldenGUI::updateExchangeRates()
     setBalance(balanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached);
 }
 
+void GuldenGUI::requestFundWitness(CAccount* funderAccount)
+{
+    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+    pactiveWallet->setActiveAccount(funderAccount);
+    refreshAccountControls();
+    m_pImpl->gotoSendCoinsPage();
+    m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->gotoWitnessTab(targetWitnessAccount);
+}
+
 void GuldenGUI::requestEmptyWitness()
 {
     CAccount* fromWitnessAccount = pactiveWallet->getActiveAccount();
@@ -1114,6 +1123,7 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountDeleted(CAccount*) ), this , SLOT( accountDeleted(CAccount*) ) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ) );
     connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestEmptyWitness()), this, SLOT(requestEmptyWitness()) );
+    connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestFundWitness(CAccount*)), this, SLOT(requestFundWitness(CAccount*)) );
 
     return true;
 }

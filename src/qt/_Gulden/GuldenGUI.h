@@ -220,6 +220,7 @@ private Q_SLOTS:
     void showExchangeRateDialog();
     void showWitnessDialog();
     void updateExchangeRates();
+    void requestFundWitness(CAccount* funderAccount);
     void requestEmptyWitness();
 };
 
