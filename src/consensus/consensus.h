@@ -17,9 +17,10 @@ static const unsigned int MAX_BLOCK_BASE_SIZE = MAX_BLOCK_SERIALIZED_SIZE;
 /** The maximum allowed number of signature check operations in a block (network rule) */
 static const int64_t MAX_BLOCK_SIGOPS_COST = 80000;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
-static const int COINBASE_MATURITY = 100;
+static const int COINBASE_MATURITY_MAINNET = 100;
+static const int COINBASE_MATURITY_TESTNET = 10;
 
-#define COINBASE_MATURITY (IsArgSet("-testnet") ? 10 : COINBASE_MATURITY)
+#define COINBASE_MATURITY (IsArgSet("-testnet") ? COINBASE_MATURITY_TESTNET : COINBASE_MATURITY_MAINNET)
 
 /** Flags for nSequence and nLockTime locks */
 enum {

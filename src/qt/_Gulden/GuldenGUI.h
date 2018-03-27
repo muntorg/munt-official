@@ -220,6 +220,7 @@ private Q_SLOTS:
     void showExchangeRateDialog();
     void showWitnessDialog();
     void updateExchangeRates();
+    void requestEmptyWitness();
 };
 
 #endif // GULDEN_QT_GULDENGUI_H
