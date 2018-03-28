@@ -109,7 +109,7 @@ void ExchangeRateDialog::setOptionsModel(OptionsModel* model)
     }
 
 
-    connect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),  SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)));
+    connect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),  SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 }
 
 void ExchangeRateDialog::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)

@@ -129,7 +129,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
 
     if (model && model->getOptionsModel())
     {
-        connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+        connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         ui->payAmount->setCurrency(model->getOptionsModel(), model->getOptionsModel()->getTicker(), BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
     }
 
@@ -183,21 +183,21 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModelAddresses->setSortRole(Qt::DisplayRole);
             proxyModelAddresses->sort(0);
 
-            connect(proxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
-            connect(proxyModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
-            connect(proxyModel, SIGNAL(columnsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
-            connect(proxyModel, SIGNAL(columnsRemoved(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()));
-            connect(proxyModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()));
-            connect(proxyModel, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()));
+            connect(proxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(proxyModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(proxyModel, SIGNAL(columnsInserted(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(proxyModel, SIGNAL(columnsRemoved(QModelIndex,int,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(proxyModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(proxyModel, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), proxyModelAddresses, SLOT(invalidate()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
             connect(proxyModel, SIGNAL(modelReset()), proxyModelAddresses, SLOT(invalidate()));
 
             ui->myAccountsTabTable->setModel(proxyModelAddresses);
         }
-        connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged())); 
-        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged()));
+        connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
+        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(sendTabChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-        connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged())); 
-        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged())); 
+        connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
+        connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
     }
 
     clear();
