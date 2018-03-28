@@ -644,7 +644,7 @@ void WitnessDialog::update()
                     }
                 }
             }
-            if (pactiveWallet->GetBalance(forAccount, true) > 0)
+            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
             {
                 ui->fundWitnessButton->setVisible(false);
                 if (bAnyExpired || !bAnyAreMine)

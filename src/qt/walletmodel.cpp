@@ -86,7 +86,7 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
         return wallet->GetAvailableBalance(coinControl);
     }*/
 
-    return wallet->GetBalance(forAccount);
+    return wallet->GetBalance(forAccount, true, false);
 }
 
 CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const

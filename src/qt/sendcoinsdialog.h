@@ -116,8 +116,10 @@ private Q_SLOTS:
     void updateGlobalFeeVariables();
 
 Q_SIGNALS:
-    // Fired when a message should be reported to the user
+    // Sent when a message should be reported to the user.
     void message(const QString &title, const QString &message, unsigned int style);
+    // Sent when a succesful payment has been made by the user.
+    void notifyPaymentAccepted();
 };
 
 

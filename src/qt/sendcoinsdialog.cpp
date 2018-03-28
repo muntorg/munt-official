@@ -580,6 +580,7 @@ void SendCoinsDialog::reject()
 void SendCoinsDialog::accept()
 {
     clear();
+    Q_EMIT notifyPaymentAccepted();
 }
 
 void SendCoinsDialog::deleteAddressBookEntry()

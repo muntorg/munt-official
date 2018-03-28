@@ -95,7 +95,7 @@ void AccountSummaryWidget::balanceChanged()
 {
     if (pactiveWallet && m_account)
     {
-        m_accountBalance = pactiveWallet->GetBalance(m_account);
+        m_accountBalance = pactiveWallet->GetBalance(m_account, true, true);
         updateExchangeRates();
     }
 }

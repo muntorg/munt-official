@@ -1917,6 +1917,42 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
             const CTxOut &txout = tx->vout[i];
             if (!forAccount || IsMine(*forAccount, txout))
             {
+                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                {
+                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                    if (!MoneyRange(nCredit))
+                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                }
+            }
+        }
+    }
+
+    availableCreditCached[forAccount] = nCredit;
+
+    return nCredit;
+}
+
+CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount) const
+{
+    if (pwallet == 0)
+        return 0;
+
+    // Must wait until coinbase is safely deep enough in the chain before valuing it
+    if (IsCoinBase() && GetBlocksToMaturity() > 0)
+        return 0;
+
+    if (fUseCache && availableCreditCachedIncludingLockedWitnesses.find(forAccount) != availableCreditCachedIncludingLockedWitnesses.end())
+        return availableCreditCachedIncludingLockedWitnesses[forAccount];
+
+    CAmount nCredit = 0;
+    uint256 hashTx = GetHash();
+    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    {
+        if (!pwallet->IsSpent(hashTx, i))
+        {
+            const CTxOut &txout = tx->vout[i];
+            if (!forAccount || IsMine(*forAccount, txout))
+            {
                 nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                 if (!MoneyRange(nCredit))
                     throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
@@ -1924,7 +1960,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
         }
     }
 
-    availableCreditCached[forAccount] = nCredit;
+    availableCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
 
     return nCredit;
 }
@@ -2084,7 +2120,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman
 
 extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 
-CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) const
+CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -2097,7 +2133,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) co
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned())
                 {
-                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
                 }
             }
 
@@ -2110,7 +2146,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includeChildren) co
             const auto& childAccount = accountItem.second;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
-                nTotal += GetBalance(childAccount, false);
+                nTotal += GetBalance(childAccount, includePoW2LockedWitnesses, false);
             }
         }
     }
@@ -2334,6 +2370,10 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
                 continue;
 
             for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
+                // If coin is a witness transaction output that is currently locked (current tip) then the coin is not available for spending.
+                if (IsPoW2WitnessLocked(pcoin->tx->vout[i], (uint64_t)chainActive.Tip()->nHeight))
+                    continue;
+
                 if (pcoin->tx->vout[i].nValue < nMinimumAmount || pcoin->tx->vout[i].nValue > nMaximumAmount)
                     continue;
 

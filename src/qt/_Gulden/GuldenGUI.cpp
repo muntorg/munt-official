@@ -52,6 +52,7 @@
 #include <_Gulden/accountsettingsdialog.h>
 #include <_Gulden/witnessdialog.h>
 #include <Gulden/util.h>
+#include <consensus/consensus.h>
 #include "sendcoinsdialog.h"
 #include "wallet/wallet.h"
 #include "walletframe.h"
@@ -235,6 +236,11 @@ void GuldenGUI::NotifyRequestUnlock(void* wallet, QString reason)
     }
 }
 
+void GuldenGUI::handlePaymentAccepted()
+{
+    refreshTabVisibilities();
+}
+
 GuldenGUI::~GuldenGUI()
 {
     if (guldenEventFilter)
@@ -317,9 +323,19 @@ void GuldenGUI::requestFundWitness(CAccount* funderAccount)
 void GuldenGUI::requestEmptyWitness()
 {
     CAccount* fromWitnessAccount = pactiveWallet->getActiveAccount();
-    m_pImpl->walletFrame->gotoSendCoinsPage();
-    boost::uuids::uuid forAccountUUID = fromWitnessAccount->getUUID();
-    m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->setAmount(pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, COINBASE_MATURITY_MAINNET, &forAccountUUID));
+    CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
+    if (availableAmount > 0)
+    {
+        m_pImpl->walletFrame->gotoSendCoinsPage();
+        boost::uuids::uuid forAccountUUID = fromWitnessAccount->getUUID();
+        m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->setAmount(availableAmount);
+    }
+    else
+    {
+        QString message = tr("The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.");
+        QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
+        d->exec();
+    }
 }
 
 void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
@@ -1124,6 +1140,7 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestEmptyWitness()), this, SLOT(requestEmptyWitness()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestFundWitness(CAccount*)), this, SLOT(requestFundWitness(CAccount*)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( m_pImpl->walletFrame->currentWalletView()->sendCoinsPage, SIGNAL(notifyPaymentAccepted()), this, SLOT(handlePaymentAccepted()) );
 
     return true;
 }

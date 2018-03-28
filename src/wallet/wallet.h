@@ -383,29 +383,13 @@ public:
     int64_t nOrderPos; //!< position in ordered transaction list
 
     // memory only
-    //mutable bool fDebitCached;
-    //mutable bool fCreditCached;
-    //mutable bool fImmatureCreditCached;
-    //mutable bool fAvailableCreditCached;
-    //mutable bool fWatchDebitCached;
-    //mutable bool fWatchCreditCached;
-    //mutable bool fImmatureWatchCreditCached;
-    //mutable bool fAvailableWatchCreditCached;
     mutable bool fChangeCached;
-    //mutable CAmount nDebitCached;
-    //mutable CAmount nCreditCached;
-    //mutable CAmount nImmatureCreditCached;
-    //mutable CAmount nAvailableCreditCached;
-    //mutable CAmount nWatchDebitCached;
-    //mutable CAmount nWatchCreditCached;
-    //mutable CAmount nImmatureWatchCreditCached;
-    //mutable CAmount nAvailableWatchCreditCached;
     mutable CAmount nChangeCached;
-    //fixme: (GULDEN) (SBSU) - Caching would be faster but seems to become invalid if we do internal transfers between accounts.
     mutable std::map<const CAccount*, CAmount> debitCached;
     mutable std::map<const CAccount*, CAmount> creditCached;
     mutable std::map<const CAccount*, CAmount> immatureCreditCached;
     mutable std::map<const CAccount*, CAmount> availableCreditCached;
+    mutable std::map<const CAccount*, CAmount> availableCreditCachedIncludingLockedWitnesses;
     mutable std::map<const CAccount*, CAmount> watchDebitCached;
     mutable std::map<const CAccount*, CAmount> watchCreditCached;
     mutable std::map<const CAccount*, CAmount> immatureWatchCreditCached;
@@ -452,6 +436,7 @@ public:
         creditCached.clear();
         immatureCreditCached.clear();
         availableCreditCached.clear();
+        availableCreditCachedIncludingLockedWitnesses.clear();
         watchDebitCached.clear();
         watchCreditCached.clear();
         immatureWatchCreditCached.clear();
@@ -506,14 +491,6 @@ public:
     //! make sure balances are recalculated
     void MarkDirty()
     {
-        //fCreditCached = false;
-        //fAvailableCreditCached = false;
-        //fImmatureCreditCached = false;
-        //fWatchDebitCached = false;
-        //fWatchCreditCached = false;
-        //fAvailableWatchCreditCached = false;
-        //fImmatureWatchCreditCached = false;
-        //fDebitCached = false;
         fChangeCached = false;
         debitCached.clear();
         creditCached.clear();
@@ -536,6 +513,7 @@ public:
     CAmount GetCredit(const isminefilter& filter, CAccount* forAccount=NULL) const;
     CAmount GetImmatureCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetAvailableCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
+    CAmount GetAvailableCreditIncludingLockedWitnesses(bool fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
     CAmount GetChange() const;
@@ -1038,7 +1016,7 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
-    CAmount GetBalance(const CAccount* forAccount = NULL, bool includeChildren=false) const;
+    CAmount GetBalance(const CAccount* forAccount = NULL, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = NULL, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = NULL) const;
     CAmount GetWatchOnlyBalance() const;

@@ -196,6 +196,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void NotifyRequestUnlock(void* wallet, QString reason);
+    void handlePaymentAccepted();
 
 private Q_SLOTS:
     void activeAccountChanged(CAccount* account);
