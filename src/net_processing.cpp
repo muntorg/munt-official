@@ -1906,7 +1906,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         const CBlockIndex* pindex = mi->second;
 
         std::vector<CBlockHeader> vHeaders;
-        int nLimit = MAX_HEADERS_RESULTS;
+        int nLimit = MAX_RHEADERS_RESULTS;
         LogPrint(BCLog::NET, "getrheaders %d to %s from peer=%d\n", pindex->nHeight, hashStop.IsNull() ? "begin" : hashStop.ToString(), pfrom->GetId());
 
         for (; pindex; pindex = chainActive.Prev(pindex))
@@ -2538,7 +2538,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Get number of headers and check againt maximum allowed
         unsigned int nCount = ReadCompactSize(vRecv);
-        if (nCount > MAX_HEADERS_RESULTS) {
+        if (nCount > MAX_RHEADERS_RESULTS) {
             LOCK(cs_main);
             Misbehaving(pfrom->GetId(), 20);
             return error("rheaders message size = %u", nCount);
