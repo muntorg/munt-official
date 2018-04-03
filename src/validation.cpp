@@ -881,8 +881,10 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
                 fseek(file.Get(), postx.nTxOffset, SEEK_CUR);
                 file >> txOut;
             } catch (const std::exception& e) {
+                file.release();
                 return error("%s: Deserialize or I/O error - %s", __func__, e.what());
             }
+            file.release();
             hashBlock = header.GetHash();
             if (txOut->GetHash() != hash)
                 return error("%s: txid mismatch", __func__);
@@ -938,6 +940,7 @@ static bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMes
         return error("WriteBlockToDisk: ftell failed");
     pos.nPos = (unsigned int)fileOutPos;
     fileout << block;
+    fileout.release();
 
     return true;
 }
@@ -956,8 +959,10 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         filein >> block;
     }
     catch (const std::exception& e) {
+        filein.release();
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
+    filein.release();
 
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
@@ -1281,6 +1286,7 @@ bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint
     hasher << hashBlock;
     hasher << blockundo;
     fileout << hasher.GetHash();
+    fileout.release();
 
     return true;
 }
@@ -1301,8 +1307,10 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uin
         filein >> hashChecksum;
     }
     catch (const std::exception& e) {
+        filein.release();
         return error("%s: Deserialize or I/O error - %s", __func__, e.what());
     }
+    filein.release();
 
     // Verify checksum
     if (hashChecksum != verifier.GetHash())
@@ -1444,7 +1452,7 @@ void static FlushBlockFile(bool fFinalize = false)
         if (fFinalize)
             TruncateFile(fileOld, vinfoBlockFile[nLastBlockFile].nSize);
         FileCommit(fileOld);
-        fclose(fileOld);
+        // fclose(fileOld);
     }
 
     fileOld = OpenUndoFile(posOld);
@@ -1452,7 +1460,7 @@ void static FlushBlockFile(bool fFinalize = false)
         if (fFinalize)
             TruncateFile(fileOld, vinfoBlockFile[nLastBlockFile].nUndoSize);
         FileCommit(fileOld);
-        fclose(fileOld);
+        // fclose(fileOld);
     }
 }
 
@@ -2633,7 +2641,7 @@ static bool FindBlockPos(CValidationState &state, CDiskBlockPos &pos, unsigned i
                 if (file) {
                     LogPrintf("Pre-allocating up to position 0x%x in blk%05u.dat\n", nNewChunks * BLOCKFILE_CHUNK_SIZE, pos.nFile);
                     AllocateFileRange(file, pos.nPos, nNewChunks * BLOCKFILE_CHUNK_SIZE - pos.nPos);
-                    fclose(file);
+                    // fclose(file);
                 }
             }
             else
@@ -2666,7 +2674,7 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
             if (file) {
                 LogPrintf("Pre-allocating up to position 0x%x in rev%05u.dat\n", nNewChunks * UNDOFILE_CHUNK_SIZE, pos.nFile);
                 AllocateFileRange(file, pos.nPos, nNewChunks * UNDOFILE_CHUNK_SIZE - pos.nPos);
-                fclose(file);
+                // fclose(file);
             }
         }
         else
@@ -3333,25 +3341,43 @@ bool CheckDiskSpace(uint64_t nAdditionalBytes)
     return true;
 }
 
+static std::map<std::string, FILE*> block_file_map;
+
 static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fReadOnly)
 {
     if (pos.IsNull())
         return NULL;
     fs::path path = GetBlockPosFilename(pos, prefix);
-    fs::create_directories(path.parent_path());
-    FILE* file = fsbridge::fopen(path, "rb+");
-    if (!file && !fReadOnly)
-        file = fsbridge::fopen(path, "wb+");
-    if (!file) {
-        LogPrintf("Unable to open file %s\n", path.string());
-        return NULL;
+
+    FILE* file = NULL;
+
+    auto it = block_file_map.find(path.native());
+    if (it!=block_file_map.end()) {
+        file = it->second;
     }
+    else {
+        fs::create_directories(path.parent_path());
+        file = fsbridge::fopen(path, "rb+");
+        if (!file && !fReadOnly)
+            file = fsbridge::fopen(path, "wb+");
+        if (!file) {
+            LogPrintf("Unable to open file %s\n", path.string());
+            return NULL;
+        }
+        block_file_map.insert(std::make_pair(path.native(), file));
+    }
+
     if (pos.nPos) {
         if (fseek(file, pos.nPos, SEEK_SET)) {
             LogPrintf("Unable to seek to position %u of %s\n", pos.nPos, path.string());
+            auto it = block_file_map.find(path.native());
+            block_file_map.erase(it);
             fclose(file);
             return NULL;
         }
+    }
+    else {
+        fseek(file, 0, SEEK_SET);
     }
     return file;
 }
