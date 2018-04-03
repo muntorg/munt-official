@@ -3341,7 +3341,7 @@ bool CheckDiskSpace(uint64_t nAdditionalBytes)
     return true;
 }
 
-static std::map<std::string, FILE*> block_file_map;
+static std::map<fs::path::string_type, FILE*> block_file_map;
 
 static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fReadOnly)
 {
