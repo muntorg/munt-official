@@ -19,14 +19,14 @@ fs::path GetBlockPosFilename(const CDiskBlockPos &pos, const char *prefix)
     return GetDataDir() / "blocks" / strprintf("%s%05u.dat", prefix, pos.nFile);
 }
 
-static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fReadOnly)
+static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fNoCreate)
 {
     if (pos.IsNull())
         return NULL;
     fs::path path = GetBlockPosFilename(pos, prefix);
     fs::create_directories(path.parent_path());
     FILE* file = fsbridge::fopen(path, "rb+");
-    if (!file && !fReadOnly)
+    if (!file && !fNoCreate)
         file = fsbridge::fopen(path, "wb+");
     if (!file) {
         LogPrintf("Unable to open file %s\n", path.string());
@@ -42,13 +42,13 @@ static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fRe
     return file;
 }
 
-FILE* OpenBlockFile(const CDiskBlockPos &pos, bool fReadOnly) {
-    return OpenDiskFile(pos, "blk", fReadOnly);
+FILE* OpenBlockFile(const CDiskBlockPos &pos, bool fNoCreate) {
+    return OpenDiskFile(pos, "blk", fNoCreate);
 }
 
 /** Open an undo file (rev?????.dat) */
-FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fReadOnly) {
-    return OpenDiskFile(pos, "rev", fReadOnly);
+FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fNoCreate) {
+    return OpenDiskFile(pos, "rev", fNoCreate);
 }
 
 
