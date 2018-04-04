@@ -18,6 +18,7 @@
 
 #include "addrman.h"
 #include "amount.h"
+#include "blockstore.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"

@@ -20,7 +20,6 @@
 #include "amount.h"
 #include "coins.h"
 #include "fs.h"
-#include "protocol.h" // For CMessageHeader::MessageStartChars
 #include "policy/feerate.h"
 #include "script/script_error.h"
 #include "sync.h"
@@ -270,10 +269,6 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& block, CValidationS
 
 /** Check whether enough disk space is available for an incoming block */
 bool CheckDiskSpace(uint64_t nAdditionalBytes = 0);
-/** Open a block file (blk?????.dat) */
-FILE* OpenBlockFile(const CDiskBlockPos &pos, bool fReadOnly = false);
-/** Translation to a filesystem path */
-fs::path GetBlockPosFilename(const CDiskBlockPos &pos, const char *prefix);
 /** Import blocks from an external file */
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskBlockPos *dbp = NULL);
 /** Initialize a new block tree database + block data on disk */
@@ -307,11 +302,6 @@ double GuessVerificationProgress(const ChainTxData& data, CBlockIndex* pindex);
  *  Mark one block file as pruned.
  */
 void PruneOneBlockFile(const int fileNumber);
-
-/**
- *  Actually unlink the specified files
- */
-void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune);
 
 /** Create a new block index entry for a given block hash */
 CBlockIndex * InsertBlockIndex(uint256 hash);
@@ -413,7 +403,6 @@ public:
 
 
 /** Functions for disk access for blocks */
-bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams);
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams);
 
 /** Functions for validating blocks and updating the block tree */
