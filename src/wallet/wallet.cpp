@@ -3232,6 +3232,344 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     return true;
 }
 
+
+bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
+{
+    CWalletTx wtxNew;
+    if (forAccount->IsReadOnly())
+    {
+        strFailReason = _("Can't send from read only (watch) account.");
+        return false;
+    }
+
+    CAmount nValue = 0;
+
+    {
+        std::set<CInputCoin> setCoins;
+        int nChangePos = -1;
+        LOCK2(cs_main, cs_wallet);
+        {
+            std::vector<COutput> vAvailableCoins;
+            AvailableCoins(forAccount, vAvailableCoins, true, nullptr);
+
+            //fixme: (NEXT) (HIGH) Add to block validation as well.
+            CAmount nMandatoryWitnessPenaltyFee = CalculateWitnessPenaltyFee(txNew);
+            CAmount nFee = nMandatoryWitnessPenaltyFee;
+
+            // Start with no fee and loop until there is enough fee
+            while (true)
+            {
+                // Choose coins to use
+                CAmount nValueSelected = 0;
+                setCoins.clear();
+                //fixme: GULDEN HIGH ACCOUNTS - ensure this only selects from forAccount - in theory it should because AvailableCoins is doing a forAccount check?
+                if (!SelectCoins(vAvailableCoins, nFee, setCoins, nValueSelected, coinControl))
+                {
+                    strFailReason = _("Insufficient funds");
+                    return false;
+                }
+
+                const CAmount nChange = nValueSelected - nFee;
+                if (nChange > 0)
+                {
+                    std::shared_ptr<CTxOut> newTxOut = nullptr;
+                    if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+                    {
+                        //fixme: (GULDEN) (COINCONTROL) - coin control could still produce script in this instance.
+                        // Reserve a new key pair from key pool
+                        CPubKey vchPubKey;
+                        bool ret;
+                        ret = reservekey.GetReservedKey(vchPubKey);
+                        if (!ret)
+                        {
+                            strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                            return false;
+                        }
+
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
+                    }
+                    else
+                    {
+                        // Fill a vout to ourself
+                        // TODO: pass in scriptChange instead of reservekey so
+                        // change transaction isn't always pay-to-Gulden-address
+                        CScript scriptChange;
+
+                        // coin control: send change to custom address
+                        if (coinControl && !boost::get<CNoDestination>(&coinControl->destChange))
+                        {
+                            scriptChange = GetScriptForDestination(coinControl->destChange);
+                        }
+                        else // no coin control: send change to newly generated address
+                        {
+                            // Note: We use a new key here to keep it from being obvious which side is the change.
+                            //  The drawback is that by not reusing a previous key, the change may be lost if a
+                            //  backup is restored, if the backup doesn't have the new private key for the change.
+                            //  If we reused the old key, it would be possible to add code to look for and
+                            //  rediscover unknown transactions that were written with keys of ours to recover
+                            //  post-backup change.
+
+                            // Reserve a new key pair from key pool
+                            CPubKey vchPubKey;
+                            bool ret;
+                            ret = reservekey.GetReservedKey(vchPubKey);
+                            if (!ret)
+                            {
+                                strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                                return false;
+                            }
+
+                            scriptChange = GetScriptForDestination(vchPubKey.GetID());
+                        }
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, scriptChange));
+                    }
+
+                    // Never create dust outputs; if we would, just
+                    // add the dust to the fee.
+                    if (IsDust(*newTxOut, ::dustRelayFee))
+                    {
+                        //fixme:
+                        nFee += nChange;
+                        reservekey.ReturnKey();
+                    }
+                    else
+                    {
+                        txNew.vout.push_back(*newTxOut);
+                        nChangePos = txNew.vout.size()-1;
+                    }
+                }
+                else
+                {
+                    reservekey.ReturnKey();
+                }
+
+                // Add inputs
+                AddTxInputs(txNew, setCoins, false);
+
+                // Fill in dummy signatures for fee calculation.
+                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
+                    SignatureData sigdata;
+                    //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
+                    {
+                        strFailReason = _("Signing transaction failed");
+                        return false;
+                    }
+                }
+
+                unsigned int nBytes = GetVirtualTransactionSize(txNew);
+
+                CTransaction txNewConst(txNew);
+
+                // Remove scriptSigs to eliminate the fee calculation dummy signatures
+                for (auto& vin : txNew.vin) {
+                    vin.scriptSig = CScript();
+                    vin.scriptWitness.SetNull();
+                }
+
+                // Allow to override the default confirmation target over the CoinControl instance
+                int currentConfirmationTarget = nTxConfirmTarget;
+                if (coinControl && coinControl->nConfirmTarget > 0)
+                    currentConfirmationTarget = coinControl->nConfirmTarget;
+
+                CAmount nFeeNeeded = GetMinimumFee(nBytes, currentConfirmationTarget, ::mempool, ::feeEstimator) + nMandatoryWitnessPenaltyFee;
+                if (coinControl && coinControl->fOverrideFeeRate)
+                    nFeeNeeded = coinControl->nFeeRate.GetFee(nBytes);
+
+                // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
+                // because we must be at the maximum allowed fee.
+                if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytes))
+                {
+                    strFailReason = _("Transaction too large for fee policy");
+                    return false;
+                }
+
+                if (nFee >= nFeeNeeded) {
+                    // Reduce fee to only the needed amount if we have change
+                    // output to increase.  This prevents potential overpayment
+                    // in fees if the coins selected to meet nFeeNeeded result
+                    // in a transaction that requires less fee than the prior
+                    // iteration.
+                    // TODO: The case where there is no change output remains
+                    // to be addressed so we avoid creating too small an output.
+                    if (nFee > nFeeNeeded && nChangePos != -1)
+                    {
+                        CAmount extraFeePaid = nFee - nFeeNeeded;
+                        std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePos;
+                        change_position->nValue += extraFeePaid;
+                        nFee -= extraFeePaid;
+                    }
+                    break; // Done, enough fee included.
+                }
+
+                // Try to reduce change to include necessary fee
+                if (nChangePos != -1)
+                {
+                    CAmount additionalFeeNeeded = nFeeNeeded - nFee;
+                    std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePos;
+                    // Only reduce change if remaining amount is still a large enough output.
+                    if (change_position->nValue >= MIN_FINAL_CHANGE + additionalFeeNeeded) {
+                        change_position->nValue -= additionalFeeNeeded;
+                        nFee += additionalFeeNeeded;
+                        break; // Done, able to increase fee from change
+                    }
+                }
+
+                // Include more fee and try again.
+                nFee = nFeeNeeded;
+                continue;
+            }
+        }
+
+        if (sign)
+        {
+            CTransaction txNewConst(txNew);
+            int nIn = 0;
+            for (const auto& coin : setCoins)
+            {
+                //const CScript& scriptPubKey = coin.txout.scriptPubKey;
+                SignatureData sigdata;
+
+                //fixme: (GULDEN) (HIGH) (sign type)
+                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
+
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
+                {
+                    strFailReason = _("Signing transaction failed");
+                    return false;
+                } else {
+                    UpdateTransaction(txNew, nIn, sigdata);
+                }
+
+                nIn++;
+            }
+        }
+
+        // Embed the constructed transaction data in wtxNew.
+        wtxNew.SetTx(MakeTransactionRef(txNew));
+
+        // Limit size
+        if (GetTransactionWeight(wtxNew) >= MAX_STANDARD_TX_WEIGHT)
+        {
+            strFailReason = _("Transaction too large");
+            return false;
+        }
+    }
+
+    if (GetBoolArg("-walletrejectlongchains", DEFAULT_WALLET_REJECT_LONG_CHAINS)) {
+        // Lastly, ensure this tx will pass the mempool's chain limits
+        LockPoints lp;
+        CTxMemPoolEntry entry(wtxNew.tx, 0, 0, 0, false, 0, lp);
+        CTxMemPool::setEntries setAncestors;
+        size_t nLimitAncestors = GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+        size_t nLimitAncestorSize = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT)*1000;
+        size_t nLimitDescendants = GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+        size_t nLimitDescendantSize = GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT)*1000;
+        std::string errString;
+        if (!mempool.CalculateMemPoolAncestors(entry, setAncestors, nLimitAncestors, nLimitAncestorSize, nLimitDescendants, nLimitDescendantSize, errString)) {
+            strFailReason = _("Transaction has too long of a mempool chain");
+            return false;
+        }
+    }
+    return true;
+}
+
+
+bool CWallet::RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitnessAccount, std::string& strError)
+{
+    LOCK2(cs_main, cs_wallet);
+
+    CGetWitnessInfo witnessInfo;
+    CBlock block;
+    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+    {
+        strError = "Error reading block from disk.";
+        return false;
+    }
+    GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
+    for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+    {
+        if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
+        {
+            if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+            {
+                CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+
+                // Add witness input
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+
+                // Add witness output
+                CTxOut renewedWitnessTxOutput;
+                CTxOutPoW2Witness witnessDestination;
+                if (!GetPow2WitnessOutput(witCoin.coin.out, witnessDestination))
+                {
+                    strError = "Unable to correctly retrieve data";
+                    return false;
+                }
+
+                // Increment fail count (Multiply by 2 then increase by 1, so will increase in a sequence like: 0, 1, 3, 7, 15, 31)
+                witnessDestination.failCount *= 2;
+                ++witnessDestination.failCount;
+
+                if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) >= 4)
+                {
+                    renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
+                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
+                    renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
+                    renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
+                    renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+                }
+                else
+                {
+                    CPoW2WitnessDestination dest;
+                    dest.spendingKey = witnessDestination.spendingKeyID;
+                    dest.witnessKey = witnessDestination.witnessKeyID;
+                    dest.lockFromBlock = witnessDestination.lockFromBlock;
+                    dest.lockUntilBlock = witnessDestination.lockUntilBlock;
+                    dest.failCount = witnessDestination.failCount;
+                    renewedWitnessTxOutput.SetType(CTxOutType::ScriptLegacyOutput);
+                    renewedWitnessTxOutput.output.scriptPubKey = GetScriptForDestination(dest);
+                }
+                renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
+                tx.vout.push_back(renewedWitnessTxOutput);
+
+                // Add fee input and change output
+                std::string sFailReason;
+                CReserveKey changeReserveKey(this, funderAccount, KEYCHAIN_EXTERNAL);
+                //fixme: coincontrol
+                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, true, sFailReason, nullptr))
+                {
+                    strError = "Unable to add fee";
+                    return false;
+                }
+
+                if (!SignTransaction(nullptr, tx, SignType::Spend))
+                {
+                    strError = "Unable to sign transaction";
+                    return false;
+                }
+
+                // Accept the transaction to wallet and broadcast.
+                CWalletTx wtxNew;
+                wtxNew.fTimeReceivedIsTxTime = true;
+                wtxNew.BindWallet(this);
+                wtxNew.SetTx(MakeTransactionRef(std::move(tx)));
+                CValidationState state;
+                if (!CommitTransaction(wtxNew, changeReserveKey, g_connman.get(), state))
+                {
+                    strError = "Unable to commit transaction";
+                    return false;
+                }
+
+                return true;
+            }
+        }
+    }
+    strError = "Unable to add fee";
+    return false;
+}
+
 /**
  * Call after CreateTransaction unless you want to abort
  */

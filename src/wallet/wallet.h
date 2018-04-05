@@ -1042,6 +1042,16 @@ public:
      */
     bool CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
+    /**
+     * Add fee (and change if necessary) for a transaction that is otherwise already constructed.
+     * Used currently by the witnessing code to add the fee for a witness renewal transaction.
+     */
+    bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
+    /**
+     * Renew a witness account that has expired.
+     */
+    bool RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitnessAccount, std::string& strError);
+
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);

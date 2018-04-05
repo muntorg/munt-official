@@ -311,6 +311,20 @@ void GuldenGUI::updateExchangeRates()
     setBalance(balanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached);
 }
 
+void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
+{
+    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+
+    std::string strError;
+    if (!pactiveWallet->RenewWitnessAccount(funderAccount, targetWitnessAccount, strError))
+    {
+        //fixme: Improve error message
+        QString message = QString::fromStdString(strError.c_str());
+        QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
+        d->exec();
+    }
+}
+
 void GuldenGUI::requestFundWitness(CAccount* funderAccount)
 {
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
@@ -1140,6 +1154,7 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestEmptyWitness()), this, SLOT(requestEmptyWitness()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestFundWitness(CAccount*)), this, SLOT(requestFundWitness(CAccount*)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( m_pImpl->walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestRenewWitness(CAccount*)), this, SLOT(requestRenewWitness(CAccount*)) );
     connect( m_pImpl->walletFrame->currentWalletView()->sendCoinsPage, SIGNAL(notifyPaymentAccepted()), this, SLOT(handlePaymentAccepted()) );
 
     return true;
