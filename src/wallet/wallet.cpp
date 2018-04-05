@@ -671,11 +671,16 @@ void CWallet::AddToSpends(const uint256& wtxid)
 {
     assert(mapWallet.count(wtxid));
     CWalletTx& thisTx = mapWallet[wtxid];
-    if (thisTx.IsCoinBase()) // Coinbases don't spend anything!
+    if (thisTx.IsCoinBase() && !thisTx.IsPoW2WitnessCoinBase()) // Coinbases don't spend anything!
         return;
 
     BOOST_FOREACH(const CTxIn& txin, thisTx.tx->vin)
-        AddToSpends(txin.prevout, wtxid);
+    {
+        if (!txin.prevout.IsNull() || !thisTx.IsPoW2WitnessCoinBase())
+        {
+            AddToSpends(txin.prevout, wtxid);
+        }
+    }
 }
 
 bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
@@ -2707,15 +2712,25 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     CTransaction txNewConst(tx);
     int nIn = 0;
     for (const auto& input : tx.vin) {
+        if (input.prevout.IsNull() && txNewConst.IsPoW2WitnessCoinBase())
+        {
+            nIn++;
+            continue;
+        }
+
         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.hash);
         if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
             return false;
         }
         const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
-        //fixme: (GULDEN) (HIGH) (sign type)
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], SignType::Spend);
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], type);
         SignatureData sigdata;
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, fromAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        CAccount *signAccount=fromAccount;
+        if (!signAccount)
+            signAccount = FindAccountForTransaction(mi->second.tx->vout[input.prevout.n]);
+        if (!signAccount)
+            return false;
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, signAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);

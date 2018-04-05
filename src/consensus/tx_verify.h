@@ -5,6 +5,8 @@
 #ifndef BITCOIN_CONSENSUS_TX_VERIFY_H
 #define BITCOIN_CONSENSUS_TX_VERIFY_H
 
+#include "primitives/transaction.h"
+
 #include <stdint.h>
 #include <vector>
 
@@ -13,21 +15,69 @@ class CCoinsViewCache;
 class CTransaction;
 class CValidationState;
 
+/*Witness transactions inputs/outputs fall into several different categories.
+* Creating a new witness account
+* Perform a witness operation
+* Spending coins (when the lock is expired only)
+* Reactivating (renewing) a witness that has been kicked out for non-participation
+* Increasing the lock amount/time on an existing account
+* Splitting or re-merging existing accounts where the weight exceeds the ideal
+* Changing the witness key if it has been compromised
+* 
+* Depending on the type of operation that is being performed, different constraints apply - can only spend when lock expired but other actions allowed all the time etc.
+* Worse, because we can have multiple inputs/outputs mixed in a transaction we could have one transaction performing more than one operation.
+* When doing CheckTransactionContextual/CheckInputs we first perform an algorithm to try identify the type of operation and categorise the inputs/outputs into 'bundles' of the types.
+* And then ensure the constraints for those types apply.
+* It is important that this acts in a deterministic way.
+* 
+* WitnessTxBundle class is used to do this - for more specific details on the constraints/detection of the various types see the details comments in tx_verify.cpp starting at function HasSpendKey()
+*/ 
+struct CWitnessTxBundle
+{
+    enum WitnessTxType
+    {
+        CreationType,
+        WitnessType,
+        SpendType,
+        RenewType,
+        IncreaseType,
+        SplitType,
+        MergeType,
+        ChangeWitnessKeyType
+    };
+    CWitnessTxBundle(WitnessTxType bundleType_, std::pair<const CTxOut, CTxOutPoW2Witness> output)
+    : bundleType(bundleType_)
+    {
+        outputs.push_back(output);
+    }
+    CWitnessTxBundle(WitnessTxType bundleType_) : bundleType(bundleType_) {}
+
+    inline bool IsValidSplitBundle();
+    inline bool IsValidMergeBundle();
+    inline bool IsValidSpendBundle(uint64_t nHeight);
+
+    WitnessTxType bundleType=CreationType;
+    std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;
+    std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
+};
+
 /** Transaction validation functions */
 
 /** Context-independent validity checks */
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true);
 
 /** Context-independent validity checks */
-bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, bool fCheckDuplicateInputs=true);
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles, bool fCheckDuplicateInputs=true);
 
 namespace Consensus {
 /**
  * Check whether all inputs of this transaction are valid (no double spends and amounts)
  * This does not modify the UTXO set. This does not check scripts and sigs.
- * Preconditions: tx.IsCoinBase() is false.
+ * Also verifies that all witness input/outputs are groupable in a 'valid' way in terms of the constraints outlined for CWitnessTxBundle for their given type of operation (spend/witness/renew etc.) if witnessBundles
+ * witnessBundles should be prepopulated for outputs first by calling CheckTransactionContextual
+ * Preconditions: tx.IsCoinBase() is false. witnessBundles is not null if witness transactions are to be verified.
  */
-bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight);
+bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, std::vector<CWitnessTxBundle>* pWitnessBundles);
 } // namespace Consensus
 
 /** Auxiliary functions for transaction validation (ideally should not be exposed) */

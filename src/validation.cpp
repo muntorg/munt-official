@@ -223,7 +223,7 @@ enum FlushStateMode {
 static bool FlushStateToDisk(const CChainParams& chainParams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight=0);
 static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight);
 static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfterHeight);
-static bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CScriptCheck> *pvChecks = NULL);
+static bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks = NULL);
 static FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fReadOnly = false);
 
 bool CheckFinalTx(const CTransaction &tx, int flags)
@@ -442,7 +442,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     if (!CheckTransaction(tx, state))
         return false; // state filled in by CheckTransaction
 
-    if (!CheckTransactionContextual(tx, state, chainActive.Tip()->nHeight))
+    std::vector<CWitnessTxBundle> witnessBundles;
+    if (!CheckTransactionContextual(tx, state, chainActive.Tip()->nHeight, &witnessBundles))
         return false; // state filled in by CheckTransaction
 
     // Coinbase is only valid in a block, not as a loose transaction
@@ -787,13 +788,13 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
         PrecomputedTransactionData txdata(tx);
-        if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata)) {
+        if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata, &witnessBundles)) {
             // SCRIPT_VERIFY_CLEANSTACK requires SCRIPT_VERIFY_WITNESS, so we
             // need to turn both off, and compare against just turning off CLEANSTACK
             // to see if the failure is specifically due to witness validation.
             CValidationState stateDummy; // Want reported failures to be from first CheckInputs
-            if (!tx.HasWitness() && CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, txdata) &&
-                !CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata)) {
+            if (!tx.HasWitness() && CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, txdata, nullptr) &&
+                !CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata, nullptr)) {
                 // Only the witness is missing, so the transaction itself may be fine.
                 state.SetCorruptionPossible();
             }
@@ -809,7 +810,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // There is a similar check in CreateNewBlock() to prevent creating
         // invalid blocks, however allowing such transactions into the mempool
         // can be exploited as a DoS attack.
-        if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata))
+        if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata, nullptr))
         {
             return error("%s: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags %s, %s",
                 __func__, hash.ToString(), FormatStateMessage(state));
@@ -1246,11 +1247,11 @@ CScript&& GetScriptForNonScriptOutput(const CTxOut& out)
  * This does not modify the UTXO set. If pvChecks is not NULL, script checks are pushed onto it
  * instead of being performed inline.
  */
-static bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CScriptCheck> *pvChecks)
+static bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks)
 {
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase())
     {
-        if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs)))
+        if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs), pWitnessBundles))
             return false;
 
         if (pvChecks)
@@ -1280,16 +1281,40 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                 // spent being checked as a part of CScriptCheck.
                 const CAmount amount = coin.out.nValue;
 
-                //fixme: (GULDEN) (HIGH) (sign type)
-                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Witness);
                 if (coin.out.GetType() > CTxOutType::ScriptLegacyOutput)
                 {
                     if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput || coin.out.GetType() == CTxOutType::PoW2WitnessOutput)
                     {
-                        if (tx.vin[i].scriptWitness.stack.size() != 1)
-                            return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (standard-key-hash-output should always have a scriptwitness stack size of exactly 1)", tx.vin[i].scriptWitness.stack.size()));
-
-                        CachingTransactionSignatureChecker check(signingKeyID, &tx, i, amount, cacheStore, txdata);
+                        CKeyID spendSigningKeyID;
+                        if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
+                        {
+                            if (tx.vin[i].scriptWitness.stack.size() != 1)
+                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (standard-key-hash-input should always have a scriptwitness stack size of exactly 1)", tx.vin[i].scriptWitness.stack.size()));
+                        }
+                        else
+                        {
+                            // NB! The checks in tx_verify ensure that we have the right number of signatures (2 or 1) based on the type of witness operation.
+                            // So we can assume at this point in the code that a spend will always have 2 signatures and won't try trick the system by providing only 1 signature.
+                            // We therefore just validate here based on number of signatures provided.
+                            if (tx.vin[i].scriptWitness.stack.size() == 2)
+                            {
+                                spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+                                if (spendSigningKeyID.IsNull())
+                                    return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid spending key from prevout)"));
+                                if (signingKeyID.IsNull())
+                                    return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
+                            }
+                            else if (tx.vin[i].scriptWitness.stack.size() == 1)
+                            {
+                                if (signingKeyID.IsNull())
+                                    return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
+                            }
+                            else
+                            {
+                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (witness-input should always have a scriptwitness stack size of either 1 or 2 depending on whether it is a spend or witness operation)", tx.vin[i].scriptWitness.stack.size()));
+                            }
+                        }
 
                         CScript scriptCodePlaceHolder;
                         if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
@@ -1303,11 +1328,21 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                             scriptCodePlaceHolder = CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
                         }
 
-                        //We extract the pubkey from the sig so just pass in an empty pubkey
+                        //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
-                        if (!check.CheckSig(tx.vin[i].scriptWitness.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
+                        CachingTransactionSignatureChecker check1(signingKeyID, &tx, i, amount, cacheStore, txdata);
+                        if (!check1.CheckSig(tx.vin[i].scriptWitness.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
+                        }
+                        // For a witness spend operation we have a second key that also needs checking.
+                        if (!spendSigningKeyID.IsNull())
+                        {
+                            CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
+                            if (!check2.CheckSig(tx.vin[i].scriptWitness.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
+                            {
+                                return false;
+                            }
                         }
                     }
                     else
@@ -1722,9 +1757,15 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     }
 
     // Check transactions
+    std::vector<std::vector<CWitnessTxBundle>> witnessBundles;
     for (const auto& tx : block.vtx)
-        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, false))
+    {
+        witnessBundles.push_back(std::vector<CWitnessTxBundle>());
+        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, &witnessBundles.back(), false))
+        {
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
+        }
+    }
 
     bool fScriptChecks = true;
     if (!hashAssumeValid.IsNull()) {
@@ -1878,17 +1919,46 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
 
     //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
-    int nWitnessCoinbaseIndex = 0;
+    int nEmbeddedWitnessCoinbaseIndex = 0;
     if (nPoW2PhaseGrandParent == 3)
     {
-        nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
-        if (nWitnessCoinbaseIndex == -1)
+        nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
+        if (nEmbeddedWitnessCoinbaseIndex == -1)
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
 
         if (fVerifyWitness)
         {
-            if (!WitnessCoinbaseInfoIsValid(chain, nWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
+            if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
                 return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
+        }
+    }
+    int nWitnessCoinbaseIndex = 0;
+    if (nPoW2PhaseParent >= 3)
+    {
+        if (block.nVersionPoW2Witness == 0)
+        {
+            // PoW block
+            // Phase 4 + 5 - miner mines 80 reward instead of 100, so nothing to do here (GetBlockSubsidy returns correct amount)
+        }
+        else
+        {
+            // PoW2 block
+            // Ensure witness coinbase is present and that it pays out the right amount.
+            {
+                for (unsigned int i = 1; i < block.vtx.size(); i++)
+                {
+                    if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
+                    {
+                        nWitnessCoinbaseIndex = i;
+                        break;
+                    }
+                }
+                //testme: (GULDEN) (2.1) I think this is a duplicate check so can probably be removed.
+                if (nWitnessCoinbaseIndex == 0)
+                {
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
+                }
+            }
         }
     }
 
@@ -1896,6 +1966,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
     std::vector<int> prevheights;
     CAmount nFees = 0;
+    CAmount nFeesPoW2Witness = 0;
     int nInputs = 0;
     int64_t nSigOpsCost = 0;
     CDiskTxPos pos(pindex->GetBlockPos(), GetSizeOfCompactSize(block.vtx.size()));
@@ -1958,13 +2029,21 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                              REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
+        //fixme: (HIGH) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?)
         if (!tx.IsCoinBase())
         {
-            nFees += view.GetValueIn(tx)-tx.GetValueOut();
+            if (nWitnessCoinbaseIndex != 0 && i > nWitnessCoinbaseIndex)
+            {
+                nFeesPoW2Witness += view.GetValueIn(tx)-tx.GetValueOut();;
+            }
+            else
+            {
+                nFees += view.GetValueIn(tx)-tx.GetValueOut();
+            }
 
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
-            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[i], nScriptCheckThreads ? &vChecks : NULL))
+            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[i], &witnessBundles[i], nScriptCheckThreads ? &vChecks : NULL))
                 return error("ConnectBlock(): CheckInputs on %s failed with %s",
                     tx.GetHash().ToString(), FormatStateMessage(state));
             control.Add(vChecks);
@@ -1995,7 +2074,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
     if (nPoW2PhaseGrandParent == 3)
     {
-        unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
+        unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
 
         if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
@@ -2023,26 +2102,14 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
         // Ensure witness coinbase is present and that it pays out the right amount.
         if (nPoW2PhaseParent >= 3)
         {
-            unsigned int nWitnessCoinbaseIndex = 0;
-            for (unsigned int i = 1; i < block.vtx.size(); i++)
-            {
-                if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
-                {
-                    nWitnessCoinbaseIndex = i;
-                    break;
-                }
-            }
-            //testme: (GULDEN) (2.1) I think this is a duplicate check so can probably be removed.
-            if (nWitnessCoinbaseIndex == 0)
-            {
-                return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
-            }
             CAmount nValIn = 0;
             for (auto output : blockundo.vtxundo[nWitnessCoinbaseIndex-1].vprevout)
             {
                 if (output.out.nValue > 0)
                     nValIn += output.out.nValue;
             }
+            //fixme: HIGH NEXT - maybe do n't increment nSubsidyWitness but only add it for below check - we must not allow fees to be compounded.
+            nSubsidyWitness += nFeesPoW2Witness;
             if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitness)
             {
                 return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitness), REJECT_INVALID, "bad-witness-cb-amount");

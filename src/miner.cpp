@@ -421,7 +421,7 @@ bool BlockAssembler::TestPackageTransactions(const CTxMemPool::setEntries& packa
         if (!fIncludeWitness && it->GetTx().HasWitness())
             return false;
         CValidationState state;
-        if (!CheckTransactionContextual(it->GetTx(),state,nHeight,true))
+        if (!CheckTransactionContextual(it->GetTx(), state, nHeight, nullptr, true))
             return false;
         if (fNeedSizeAccounting) {
             uint64_t nTxSize = ::GetSerializeSize(it->GetTx(), SER_NETWORK, PROTOCOL_VERSION);
@@ -1268,7 +1268,11 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhasePare
     // Sign witness coinbase.
     {
         LOCK(pactiveWallet->cs_wallet);
-        pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness);
+        if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness))
+        {
+            //fixme: error handling
+            assert(0);
+        }
     }
 
     //fixme: (GULDEN) (2.0) - Optionally compound here instead.

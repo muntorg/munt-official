@@ -195,34 +195,17 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     {
         case Spend:
         {
-            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
-                return false;
-            else
-            {
-                CPubKey vch;
-                creator.KeyStore().GetPubKey(pow2Witness.spendingKeyID, vch);
-                ret.push_back(ToByteVector(vch));
-            }
+            //fixme: (GULDEN) (2.0) HIGH - Stick with 2 sig scheme or fall back to just 1?
             if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
-            else
-            {
-                CPubKey vch;
-                creator.KeyStore().GetPubKey(pow2Witness.witnessKeyID, vch);
-                ret.push_back(ToByteVector(vch));
-            }
+            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
+                return false;
             return true;
         }
         case Witness:
         {
             if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
-            else
-            {
-                CPubKey vch;
-                creator.KeyStore().GetPubKey(pow2Witness.witnessKeyID, vch);
-                ret.push_back(ToByteVector(vch));
-            }
             return true;
         }
     }
