@@ -18,6 +18,7 @@
 #include "wallet/coincontrol.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
+#include "consensus/tx_verify.h"
 #include "fs.h"
 #include "key.h"
 #include "keystore.h"
@@ -3475,7 +3476,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitnessAccount, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError)
 {
     LOCK2(cs_main, cs_wallet);
 
@@ -3493,8 +3494,6 @@ bool CWallet::RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitne
         {
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
             {
-                CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
-
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
 
@@ -3535,39 +3534,41 @@ bool CWallet::RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitne
                 tx.vout.push_back(renewedWitnessTxOutput);
 
                 // Add fee input and change output
-                std::string sFailReason;
-                CReserveKey changeReserveKey(this, funderAccount, KEYCHAIN_EXTERNAL);
                 //fixme: coincontrol
-                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, true, sFailReason, nullptr))
+                std::string sFailReason;
+                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFee, true, sFailReason, nullptr))
                 {
                     strError = "Unable to add fee";
                     return false;
                 }
-
-                if (!SignTransaction(nullptr, tx, SignType::Spend))
-                {
-                    strError = "Unable to sign transaction";
-                    return false;
-                }
-
-                // Accept the transaction to wallet and broadcast.
-                CWalletTx wtxNew;
-                wtxNew.fTimeReceivedIsTxTime = true;
-                wtxNew.BindWallet(this);
-                wtxNew.SetTx(MakeTransactionRef(std::move(tx)));
-                CValidationState state;
-                if (!CommitTransaction(wtxNew, changeReserveKey, g_connman.get(), state))
-                {
-                    strError = "Unable to commit transaction";
-                    return false;
-                }
-
                 return true;
             }
         }
     }
     strError = "Unable to add fee";
     return false;
+}
+
+bool CWallet::SignAndSubmitTransaction(CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError)
+{
+    if (!SignTransaction(nullptr, tx, SignType::Spend))
+    {
+        strError = "Unable to sign transaction";
+        return false;
+    }
+
+    // Accept the transaction to wallet and broadcast.
+    CWalletTx wtxNew;
+    wtxNew.fTimeReceivedIsTxTime = true;
+    wtxNew.BindWallet(this);
+    wtxNew.SetTx(MakeTransactionRef(std::move(tx)));
+    CValidationState state;
+    if (!CommitTransaction(wtxNew, changeReserveKey, g_connman.get(), state))
+    {
+        strError = "Unable to commit transaction";
+        return false;
+    }
+    return true;
 }
 
 /**

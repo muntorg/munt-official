@@ -1050,7 +1050,11 @@ public:
     /**
      * Renew a witness account that has expired.
      */
-    bool RenewWitnessAccount(CAccount* funderAccount, CAccount* targetWitnessAccount, std::string& strError);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError);
+    /**
+     * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
+     */
+    bool SignAndSubmitTransaction(CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError);
 
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
 

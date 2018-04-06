@@ -316,7 +316,30 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
     std::string strError;
-    if (!pactiveWallet->RenewWitnessAccount(funderAccount, targetWitnessAccount, strError))
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+    CReserveKey changeReserveKey(pactiveWallet, funderAccount, KEYCHAIN_EXTERNAL);
+    CAmount txFee;
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
+    {
+        //fixme: Improve error message
+        QString message = QString::fromStdString(strError.c_str());
+        QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
+        d->exec();
+    }
+
+    QString questionString = tr("Renewing witness account will incur a transaction fee: ");
+    questionString.append("<span style='color:#aa0000;'>");
+    questionString.append(BitcoinUnits::formatHtmlWithUnit(optionsModel->getDisplayUnit(), txFee));
+    questionString.append("</span> ");
+    QDialog* d = createDialog(m_pImpl, questionString, tr("Send"), tr("Cancel"), 600, 360);
+
+    int result = d->exec();
+    if(result != QDialog::Accepted)
+    {
+        return;
+    }
+
+    if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
     {
         //fixme: Improve error message
         QString message = QString::fromStdString(strError.c_str());
