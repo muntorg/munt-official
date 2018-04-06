@@ -210,7 +210,7 @@ public:
         for (auto accountPair : mapAccounts)
         {
             if (accountPair.second->HaveKey(address))
-            return true;
+                return true;
         }
         return false;
     }

@@ -309,6 +309,7 @@ void GuldenSendCoinsEntry::deleteClicked()
     Q_EMIT removeEntry(this);
 }
 
+//fixme: (HIGH) - enforce minimum weight for pow2.
 bool GuldenSendCoinsEntry::validate()
 {
     if (!model)
@@ -454,8 +455,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     if (isPoW2WitnessCreation())
     {
+        //fixme: HIGH this leaks everytime we type.
         //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
-        CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_EXTERNAL);
+        CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
@@ -465,8 +467,19 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             return recipient;
         }
         keySpending.KeepKey();
-        CKeyID keyID = pubSpendingKey.GetID();
-        recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+        CReserveKey keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
+        CPubKey pubWitnessKey;
+        if (!keySpending.GetReservedKey(pubWitnessKey))
+        {
+            //fixme: (GULDEN) Better error handling
+            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+            recipient.address = QString("error");
+            return recipient;
+        }
+        keyWitness.KeepKey();
+        recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
+        recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+        recipient.address = QString::fromStdString(CBitcoinAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
     }
     else
