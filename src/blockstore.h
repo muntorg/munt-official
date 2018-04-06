@@ -18,12 +18,20 @@
 #include "protocol.h" // For CMessageHeader::MessageStartChars
 #include "undo.h"
 
-/** Translation to a filesystem path */
-fs::path GetBlockPosFilename(const CDiskBlockPos &pos, const char *prefix);
-/** Open a block file (blk?????.dat) */
-FILE* OpenBlockFile(const CDiskBlockPos &pos, bool fNoCreate = false);
-/** Open an undo file (rev?????.dat) */
-FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fNoCreate = false);
+bool BlockFileExists(const CDiskBlockPos &pos);
+
+/** Open a block file (blk?????.dat), creating it if needed.
+    Ownership is NOT transferred, so do not close the file.
+*/
+FILE* GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate = false);
+
+/** Open an undo file (rev?????.dat), creating it if needed.
+    Ownership is NOT transferred, so do not close the file.
+*/
+FILE* GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate = false);
+
+/** Closes all open block and undo files */
+void CloseBlockFiles();
 
 
 bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);
@@ -31,6 +39,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
 
 bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart);
 bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock);
+
 /**
  *  Actually unlink the specified files
  */

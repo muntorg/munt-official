@@ -14,48 +14,87 @@
 #include "streams.h"
 #include "clientversion.h"
 
-fs::path GetBlockPosFilename(const CDiskBlockPos &pos, const char *prefix)
+struct BlockFilePair {
+    FILE* blockfile = nullptr;
+    FILE* undofile = nullptr;
+
+    ~BlockFilePair() {
+        if (blockfile)
+            fclose(blockfile);
+        if (undofile)
+            fclose(undofile);
+    }
+};
+
+enum class BlockFileType { block, undo };
+
+static std::vector<BlockFilePair> vBlockfiles;
+
+fs::path GetBlockPosFilename(const CDiskBlockPos &pos, BlockFileType fileType)
 {
+    const char *prefix = fileType == BlockFileType::block ? "blk" : "rev";
     return GetDataDir() / "blocks" / strprintf("%s%05u.dat", prefix, pos.nFile);
 }
 
-static FILE* OpenDiskFile(const CDiskBlockPos &pos, const char *prefix, bool fNoCreate)
+bool BlockFileExists(const CDiskBlockPos &pos)
+{
+    return fs::exists(GetBlockPosFilename(pos, BlockFileType::block));
+}
+
+static FILE* GetDiskFile(const CDiskBlockPos &pos, BlockFileType fileType, bool fNoCreate)
 {
     if (pos.IsNull())
         return NULL;
-    fs::path path = GetBlockPosFilename(pos, prefix);
-    fs::create_directories(path.parent_path());
-    FILE* file = fsbridge::fopen(path, "rb+");
-    if (!file && !fNoCreate)
-        file = fsbridge::fopen(path, "wb+");
-    if (!file) {
-        LogPrintf("Unable to open file %s\n", path.string());
-        return NULL;
+
+    if (int(vBlockfiles.size()) <= pos.nFile) {
+        vBlockfiles.resize(pos.nFile + 1);
     }
-    if (pos.nPos) {
-        if (fseek(file, pos.nPos, SEEK_SET)) {
-            LogPrintf("Unable to seek to position %u of %s\n", pos.nPos, path.string());
-            fclose(file);
+
+    FILE*& file = fileType == BlockFileType::block ? vBlockfiles[pos.nFile].blockfile
+                                                    : vBlockfiles[pos.nFile].undofile;
+    if (!file) {
+        fs::path path = GetBlockPosFilename(pos, fileType);
+        fs::create_directories(path.parent_path());
+        file = fsbridge::fopen(path, "rb+");
+        if (!file && !fNoCreate)
+            file = fsbridge::fopen(path, "wb+");
+        if (!file) {
+            LogPrintf("Unable to open file %s\n", path.string());
             return NULL;
         }
     }
+
+    // always fseek, when file will stay open we may switch writing and reading
+    // which has to be interleaved with positioning function
+    // also a previous call left the position not where we want it
+    if (fseek(file, pos.nPos, SEEK_SET)) {
+        LogPrintf("Unable to seek to position %u of %s\n", pos.nPos, GetBlockPosFilename(pos, fileType).string());
+        fclose(file);
+        file = nullptr;
+        return NULL;
+    }
+
     return file;
 }
 
-FILE* OpenBlockFile(const CDiskBlockPos &pos, bool fNoCreate) {
-    return OpenDiskFile(pos, "blk", fNoCreate);
+FILE* GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate) {
+    return GetDiskFile(pos, BlockFileType::block, fNoCreate);
 }
 
-/** Open an undo file (rev?????.dat) */
-FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fNoCreate) {
-    return OpenDiskFile(pos, "rev", fNoCreate);
+FILE* GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate) {
+    return GetDiskFile(pos, BlockFileType::undo, fNoCreate);
 }
 
+void CloseBlockFiles()
+{
+    vBlockfiles.clear();
+    LogPrintStr("Block and undo files closed\n");
+}
 
 bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
 {
     // Open history file to append
-    CAutoFile fileout(OpenBlockFile(pos), SER_DISK, CLIENT_VERSION);
+    CFile fileout(GetBlockFile(pos), SER_DISK, CLIENT_VERSION);
     if (fileout.IsNull())
         return error("WriteBlockToDisk: OpenBlockFile failed");
 
@@ -78,7 +117,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     block.SetNull();
 
     // Open history file to read
-    CAutoFile filein(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
+    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
         return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
 
@@ -102,7 +141,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
 bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart)
 {
     // Open history file to append
-    CAutoFile fileout(OpenUndoFile(pos), SER_DISK, CLIENT_VERSION);
+    CFile fileout(GetUndoFile(pos), SER_DISK, CLIENT_VERSION);
     if (fileout.IsNull())
         return error("%s: OpenUndoFile failed", __func__);
 
@@ -129,7 +168,7 @@ bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint
 bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock)
 {
     // Open history file to read
-    CAutoFile filein(OpenUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
+    CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
         return error("%s: OpenUndoFile failed", __func__);
 
@@ -155,9 +194,21 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uin
 void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
 {
     for (std::set<int>::iterator it = setFilesToPrune.begin(); it != setFilesToPrune.end(); ++it) {
-        CDiskBlockPos pos(*it, 0);
-        fs::remove(GetBlockPosFilename(pos, "blk"));
-        fs::remove(GetBlockPosFilename(pos, "rev"));
+        int nFile = *it;
+        if (nFile >= int(vBlockfiles.size()))
+            break;
+        BlockFilePair& p = vBlockfiles[nFile];
+        if (p.blockfile) {
+            fclose(p.blockfile);
+            p.blockfile = nullptr;
+        }
+        if (p.undofile) {
+            fclose(p.undofile);
+            p.undofile = nullptr;
+        }
+        CDiskBlockPos pos(nFile, 0);
+        fs::remove(GetBlockPosFilename(pos, BlockFileType::block));
+        fs::remove(GetBlockPosFilename(pos, BlockFileType::undo));
         LogPrintf("Prune: %s deleted blk/rev (%05u)\n", __func__, *it);
     }
 }

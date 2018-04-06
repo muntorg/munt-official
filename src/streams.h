@@ -470,7 +470,7 @@ public:
         file = filenew;
     }
 
-    ~CAutoFile()
+    virtual ~CAutoFile()
     {
         fclose();
     }
@@ -555,10 +555,25 @@ public:
     }
 };
 
-/** Non-refcounted RAII wrapper around a FILE* that implements a ring buffer to
+
+/** Non-owner version of CAutoFile. Identical to CAutoFIle except that the caller
+    remains owner, ie. is responsible for closing the file.
+*/
+class CFile : public CAutoFile
+{
+public:
+    CFile(FILE* filenew, int nTypeIn, int nVersionIn) :
+        CAutoFile(filenew, nTypeIn, nVersionIn) {}
+
+    ~CFile()
+    {
+        release();
+    }
+};
+
+/** Wrapper around a FILE* that implements a ring buffer to
  *  deserialize from. It guarantees the ability to rewind a given number of bytes.
  *
- *  Will automatically close the file when it goes out of scope if not null.
  *  If you need to close the file early, use file.fclose() instead of fclose(file).
  */
 class CBufferedFile
@@ -606,7 +621,6 @@ public:
 
     ~CBufferedFile()
     {
-        fclose();
     }
 
     int GetVersion() const { return nVersion; }
