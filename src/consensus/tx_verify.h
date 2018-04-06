@@ -61,6 +61,9 @@ struct CWitnessTxBundle
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
 };
 
+CAmount CalculateWitnessPenaltyFee(const CTxOut& output);
+void IncrementWitnessFailCount(uint64_t& failCount);
+
 /** Transaction validation functions */
 
 /** Context-independent validity checks */

@@ -1046,11 +1046,11 @@ public:
      * Add fee (and change if necessary) for a transaction that is otherwise already constructed.
      * Used currently by the witnessing code to add the fee for a witness renewal transaction.
      */
-    bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
+    bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount nFee, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
     /**
      * Renew a witness account that has expired.
      */
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount txFee, std::string& strError);
     /**
      * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
      */

@@ -1144,7 +1144,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 while (range.first != range.second) {
                     if (range.first->second != tx.GetHash()) {
                         LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
-                        //fixme: (2.0) (POW2) (check that PoW and PoW2 block don't conflict here?)
+                        //fixme: (2.0) (POW2) (check that PoW and PoW2 block don't conflict here?) - seeing conflicts in phase 3 but not phase 5 - which is probably fine?
                         MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
@@ -1779,6 +1779,7 @@ void CWallet::ReacceptWalletTransactions()
 
         int nDepth = wtx.GetDepthInMainChain();
 
+        //fixme: POW2
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
             mapSorted.insert(std::make_pair(wtx.nOrderPos, &wtx));
         }
@@ -3234,7 +3235,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 }
 
 
-bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
+bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount nFee, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
 {
     CWalletTx wtxNew;
     if (forAccount->IsReadOnly())
@@ -3254,8 +3255,12 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             AvailableCoins(forAccount, vAvailableCoins, true, nullptr);
 
             //fixme: (NEXT) (HIGH) Add to block validation as well.
-            CAmount nMandatoryWitnessPenaltyFee = CalculateWitnessPenaltyFee(txNew);
-            CAmount nFee = nMandatoryWitnessPenaltyFee;
+            CAmount nMandatoryWitnessPenaltyFee = 0;
+            for(const auto& output : txNew.vout)
+            {
+                nMandatoryWitnessPenaltyFee += CalculateWitnessPenaltyFee(output);
+            }
+            nFee = nMandatoryWitnessPenaltyFee;
 
             // Start with no fee and loop until there is enough fee
             while (true)
@@ -3476,7 +3481,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount nFee, std::string& strError)
 {
     LOCK2(cs_main, cs_wallet);
 
@@ -3506,9 +3511,8 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     return false;
                 }
 
-                // Increment fail count (Multiply by 2 then increase by 1, so will increase in a sequence like: 0, 1, 3, 7, 15, 31)
-                witnessDestination.failCount *= 2;
-                ++witnessDestination.failCount;
+                // Increment fail count appropriately
+                IncrementWitnessFailCount(witnessDestination.failCount);
 
                 if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) >= 4)
                 {

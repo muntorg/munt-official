@@ -332,6 +332,30 @@ inline bool IsLockFromConsistent(const CTxOutPoW2Witness& inputDetails, const CT
     return true;
 }
 
+CAmount CalculateWitnessPenaltyFee(const CTxOut& output)
+{
+    CTxOutPoW2Witness witnessDestination;
+    if (!GetPow2WitnessOutput(output, witnessDestination))
+    {
+        return 0;
+    }
+    CAmount nPenalty = ((2*COIN)/100) * witnessDestination.failCount;
+    //fixme: define this as a constant somewhere (no magic numbers)
+    if (nPenalty > COIN * 20)
+        return COIN * 20;
+    return nPenalty;
+}
+
+void IncrementWitnessFailCount(uint64_t& failCount)
+{
+    // Increment fail count (Increments in a sequence: 1 2 4 7 11 17 26 40 61 92 139 209 314 472 709 1064 1597 2396 3595 5393 8090 ...)
+    failCount += (failCount/3);
+    ++failCount;
+    // Avoid overflow - by the time fail count is this high it no longer matters if we don't increment it further
+    if (failCount > std::numeric_limits<uint64_t>::max() / 3)
+        failCount = std::numeric_limits<uint64_t>::max() / 3;
+}
+
 inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetails)
 {
     // 2 signatures, spending key and witness key.
@@ -416,8 +440,10 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
         return false;
     if (!IsLockFromConsistent(inputDetails, outputDetails, nInputHeight))
         return false;
-    // Fail count must be multiplied by 2 then increased by 1
-    if ((inputDetails.failCount * 2) + 1 == outputDetails.failCount + 1)
+    // Fail count must be incremented appropriately
+    uint64_t compFailCount = inputDetails.failCount;
+    IncrementWitnessFailCount(compFailCount);
+    if (compFailCount == outputDetails.failCount)
         return true;
     return false;
 }
@@ -685,6 +711,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                     return false;
             }
         }
+        CAmount witnessPenaltyFee = 0;
         if (pWitnessBundles)
         {
             for (auto& bundle : *pWitnessBundles)
@@ -704,6 +731,10 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                     if (!bundle.IsValidSpendBundle(nSpendHeight))
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
                 }
+                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
+                {
+                    witnessPenaltyFee += CalculateWitnessPenaltyFee(bundle.outputs[0].first);
+                }
             }
         }
 
@@ -715,6 +746,8 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         CAmount nTxFee = nValueIn - tx.GetValueOut();
         if (nTxFee < 0)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-negative");
+        if (nTxFee < witnessPenaltyFee)
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-missing-witness-renewal-penalty-fee");
         nFees += nTxFee;
         if (!MoneyRange(nFees))
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-outofrange");
