@@ -652,14 +652,21 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
     if (fReindex) {
         int nFile = 0;
         while (true) {
+            FILE* file;
             CDiskBlockPos pos(nFile, 0);
-            if (!BlockFileExists(pos))
-                break; // No block files left to reindex
-            FILE *file = GetBlockFile(pos, true);
-            if (!file)
-                break; // This error is logged in OpenBlockFile
+            {
+                LOCK(cs_main);
+                if (!BlockFileExists(pos))
+                    break; // No block files left to reindex
+                FILE *tmpfile = GetBlockFile(pos, true);
+                if (!tmpfile)
+                    break; // This error is logged in OpenBlockFile
+                // dupping here because otherwise the cs_main might be locked for a long time
+                file = fdopen(dup(fileno(tmpfile)), "rb+");
+            }
             LogPrintf("Reindexing block file blk%05u.dat...\n", (unsigned int)nFile);
             LoadExternalBlockFile(chainparams, file, &pos);
+            fclose(file);
             nFile++;
         }
         pblocktree->WriteReindexing(false);
