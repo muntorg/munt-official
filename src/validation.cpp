@@ -3729,16 +3729,18 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     while (range.first != range.second) {
                         std::multimap<uint256, CDiskBlockPos>::iterator it = range.first;
                         std::shared_ptr<CBlock> pblockrecursive = std::make_shared<CBlock>();
-                        if (ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
                         {
-                            LogPrint(BCLog::REINDEX, "%s: Processing out of order child %s of %s\n", __func__, pblockrecursive->GetHash().ToString(),
-                                    head.ToString());
-                            LOCK(cs_main);
-                            CValidationState dummy;
-                            if (AcceptBlock(pblockrecursive, dummy, chainparams, NULL, true, &it->second, NULL))
+                            LOCK(cs_main); // acquire cs_main here to protect ReadBlockFromDisk
+                            if (ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
                             {
-                                nLoaded++;
-                                queue.push_back(pblockrecursive->GetHash());
+                                LogPrint(BCLog::REINDEX, "%s: Processing out of order child %s of %s\n", __func__, pblockrecursive->GetHash().ToString(),
+                                        head.ToString());
+                                CValidationState dummy;
+                                if (AcceptBlock(pblockrecursive, dummy, chainparams, NULL, true, &it->second, NULL))
+                                {
+                                    nLoaded++;
+                                    queue.push_back(pblockrecursive->GetHash());
+                                }
                             }
                         }
                         range.first++;
