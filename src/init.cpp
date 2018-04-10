@@ -18,6 +18,7 @@
 
 #include "addrman.h"
 #include "amount.h"
+#include "blockstore.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
@@ -242,6 +243,7 @@ void Shutdown()
         if (pcoinsTip != NULL) {
             FlushStateToDisk();
         }
+        CloseBlockFiles();
         delete pcoinsTip;
         pcoinsTip = NULL;
         delete pcoinscatcher;
@@ -650,14 +652,21 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
     if (fReindex) {
         int nFile = 0;
         while (true) {
+            FILE* file;
             CDiskBlockPos pos(nFile, 0);
-            if (!fs::exists(GetBlockPosFilename(pos, "blk")))
-                break; // No block files left to reindex
-            FILE *file = OpenBlockFile(pos, true);
-            if (!file)
-                break; // This error is logged in OpenBlockFile
+            {
+                LOCK(cs_main);
+                if (!BlockFileExists(pos))
+                    break; // No block files left to reindex
+                FILE *tmpfile = GetBlockFile(pos, true);
+                if (!tmpfile)
+                    break; // This error is logged in OpenBlockFile
+                // dupping here because otherwise the cs_main might be locked for a long time
+                file = fdopen(dup(fileno(tmpfile)), "rb+");
+            }
             LogPrintf("Reindexing block file blk%05u.dat...\n", (unsigned int)nFile);
             LoadExternalBlockFile(chainparams, file, &pos);
+            fclose(file);
             nFile++;
         }
         pblocktree->WriteReindexing(false);
@@ -675,6 +684,7 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
             fs::path pathBootstrapOld = GetDataDir() / "bootstrap.dat.old";
             LogPrintf("Importing bootstrap.dat...\n");
             LoadExternalBlockFile(chainparams, file);
+            fclose(file);
             RenameOver(pathBootstrap, pathBootstrapOld);
         } else {
             LogPrintf("Warning: Could not open bootstrap file %s\n", pathBootstrap.string());
@@ -687,6 +697,7 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
         if (file) {
             LogPrintf("Importing blocks file %s...\n", path.string());
             LoadExternalBlockFile(chainparams, file);
+            fclose(file);
         } else {
             LogPrintf("Warning: Could not open blocks file %s\n", path.string());
         }
