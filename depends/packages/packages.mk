@@ -4,11 +4,11 @@ native_packages := native_ccache
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf openssl icu
 
-qt_x86_64_linux_packages:=qwt qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans libXrender renderproto
+qt_x86_64_linux_packages:=qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans libXrender renderproto
 qt_i686_linux_packages:=$(qt_x86_64_linux_packages)
 
-qt_darwin_packages=qwt qt
-qt_mingw32_packages=qwt qt
+qt_darwin_packages=qt
+qt_mingw32_packages=qt
 
 wallet_packages=bdb
 
