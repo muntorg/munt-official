@@ -841,7 +841,6 @@ if test x$use_pkgconfig = xyes; then
   m4_ifdef(
     [PKG_CHECK_MODULES],
     [
-      PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [AC_MSG_ERROR(qwt not found.)])
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       GULDEN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [GULDEN_QT_FAIL(libprotobuf not found)])])
@@ -1051,6 +1050,9 @@ if test x$bitcoin_enable_qt != xno; then
     AC_DEFINE([USE_DBUS],[1],[Define if dbus support should be compiled in])
   fi
   AC_MSG_RESULT($bitcoin_enable_qt_dbus)
+
+  dnl enable graph support
+  PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [AC_MSG_ERROR(qwt not found.)])
 
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
