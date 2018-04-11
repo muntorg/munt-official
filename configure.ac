@@ -1052,7 +1052,7 @@ if test x$bitcoin_enable_qt != xno; then
   AC_MSG_RESULT($bitcoin_enable_qt_dbus)
 
   dnl enable graph support
-  PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [AC_MSG_ERROR(qwt not found.)])
+  PKG_CHECK_MODULES([QWT], [Qt5Qwt6],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt5],, [AC_MSG_ERROR(qwt not found.)])])])
 
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
