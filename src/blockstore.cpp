@@ -17,6 +17,15 @@
 struct BlockFilePair {
     FILE* blockfile = nullptr;
     FILE* undofile = nullptr;
+    BlockFilePair() : blockfile(nullptr), undofile(nullptr) {}
+
+    BlockFilePair(BlockFilePair&& other) :
+        blockfile(other.blockfile),
+        undofile(other.undofile)
+    {
+        other.blockfile = nullptr;
+        other.undofile = nullptr;
+    }
 
     ~BlockFilePair() {
         if (blockfile)
