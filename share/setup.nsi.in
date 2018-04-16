@@ -76,7 +76,8 @@ Section -Main SEC0000
     File @abs_top_srcdir@/release/@GULDEN_GUI_NAME@@EXEEXT@
     File @abs_top_srcdir@/release/*.dll
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
-    File /oname=readme.txt @abs_top_srcdir@/doc/README_windows.txt
+    File /oname=COPYING.txt @abs_top_srcdir@/COPYING_upstream
+    File /oname=COPYING.txt @abs_top_srcdir@/COPYING_gulden
     SetOutPath $INSTDIR\platforms
     File @abs_top_srcdir@/release/platforms/*
     SetOutPath $INSTDIR\imageformats
