@@ -1,8 +1,8 @@
 package=icu
-$(package)_version=58.1
-$(package)_download_path=http://download.icu-project.org/files/icu4c/58.1
-$(package)_file_name=icu4c-58_1-src.tgz
-$(package)_sha256_hash=0eb46ba3746a9c2092c8ad347a29b1a1b4941144772d13a88667a7b11ea30309
+$(package)_version=60.2
+$(package)_download_path=http://download.icu-project.org/files/icu4c/$($(package)_version)
+$(package)_file_name=icu4c-60_2-src.tgz
+$(package)_sha256_hash=f073ea8f35b926d70bb33e6577508aa642a8b316a803f11be20af384811db418
 $(package)_build_subdir=source
 
 
