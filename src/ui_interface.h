@@ -105,6 +105,7 @@ public:
 
     /** The core requires a wallet unlock. */
     boost::signals2::signal<void (CWallet* wallet, std::string reason)> RequestUnlock;
+    boost::signals2::signal<void (CWallet* wallet, std::string reason, std::function<void (void)> successCallback)> RequestUnlockWithCallback;
 
     /** Show progress e.g. for verifychain */
     boost::signals2::signal<void (const std::string &title, int nProgress)> ShowProgress;

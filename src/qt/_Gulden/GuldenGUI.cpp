@@ -172,6 +172,11 @@ static void NotifyRequestUnlockS(GuldenGUI* parent, CWallet* wallet, std::string
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
 }
 
+static void NotifyRequestUnlockWithCallbackS(GuldenGUI* parent, CWallet* wallet, std::string reason, std::function<void (void)> callback)
+{
+    QMetaObject::invokeMethod(parent, "NotifyRequestUnlockWithCallback", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)), Q_ARG(std::function<void (void)>, callback));
+}
+
 GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 : QObject()
 , m_pImpl( pImpl )
@@ -219,20 +224,36 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
     connect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
 
     uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, this, _1, _2));
+    uiInterface.RequestUnlockWithCallback.connect(boost::bind(NotifyRequestUnlockWithCallbackS, this, _1, _2, _3));
 }
 
 
+bool requestUnlockDialogAlreadyShowing=false;
 void GuldenGUI::NotifyRequestUnlock(void* wallet, QString reason)
 {
-    static bool once=false;
-    if (!once)
+    if (!requestUnlockDialogAlreadyShowing)
     {
-        once = true;
+        requestUnlockDialogAlreadyShowing = true;
         LogPrintf("NotifyRequestUnlock\n");
-        AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, m_pImpl);
+        AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, m_pImpl, reason);
         dlg.setModel(new WalletModel(NULL, (CWallet*)wallet, NULL, NULL));
         dlg.exec();
-        once = false;
+        requestUnlockDialogAlreadyShowing = false;
+    }
+}
+
+void GuldenGUI::NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::function<void (void)> successCallback)
+{
+    if (!requestUnlockDialogAlreadyShowing)
+    {
+        requestUnlockDialogAlreadyShowing = true;
+        LogPrintf("NotifyRequestUnlockWithCallback\n");
+        AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, m_pImpl, reason);
+        dlg.setModel(new WalletModel(NULL, (CWallet*)wallet, NULL, NULL));
+        int result = dlg.exec();
+        if(result == QDialog::Accepted)
+            successCallback();
+        requestUnlockDialogAlreadyShowing = false;
     }
 }
 
@@ -1561,13 +1582,22 @@ void GuldenGUI::acceptNewAccount()
 { 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
+        CAccount* newAccount = nullptr;
         if (dialogNewAccount->getAccountType() == NewAccountType::FixedDeposit)
         {
-            pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::PoW2Witness);
+            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::PoW2Witness);
         }
         else
         {
-            pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+        }
+
+        if (!newAccount)
+        {
+            // Temporarily unlock for account generation.
+            std::function<void (void)> successCallback = [&](){this->acceptNewAccount(); pactiveWallet->Lock();};
+            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account creation"), successCallback);
+            return;
         }
         restoreCachedWidgetIfNeeded();
     }

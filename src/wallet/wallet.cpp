@@ -405,9 +405,18 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
                 continue; // try another master key
             for (auto accountPair : mapAccounts)
             {
-                if (!accountPair.second->Unlock(_vMasterKey))
+                bool needsWriteToDisk = false;
+                if (!accountPair.second->Unlock(_vMasterKey, needsWriteToDisk))
                 {
                     return false;
+                }
+                if (needsWriteToDisk)
+                {
+                    CWalletDB db(*dbw);
+                    if (!db.WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second))
+                    {
+                        throw std::runtime_error("Writing account failed");
+                    }
                 }
             }
             for (auto seedPair : mapSeeds)
@@ -3843,48 +3852,55 @@ bool CWallet::NewKeyPool()
 //fixme: (FUT)) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
 int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* forAccount)
 {
-    unsigned int nNew = 0;
+    // Return -1 if we fail to allocate any -and- one of the accounts is not HD -and- it is locked.
+    int nNew = 0;
+    bool bAnyNonHDAccountsLockedAndRequireKeys = false;
+
+    LOCK(cs_wallet);
+
+    CWalletDB walletdb(*dbw);
+
+    // Top up key pool
+    unsigned int nAccountTargetSize;
+    if (nTargetKeypoolSize > 0)
+        nAccountTargetSize = nTargetKeypoolSize;
+    else
+        nAccountTargetSize = GetArg("-keypool", 5);
+
+    //Find current unique highest key index across *all* keypools.
+    int64_t nIndex = 1;
+    for (auto accountPair : mapAccounts)
     {
-        LOCK(cs_wallet);
-
-        if (IsLocked())
-            return -1;
-
-        CWalletDB walletdb(*dbw);
-
-        // Top up key pool
-        unsigned int nTargetSize;
-        if (nTargetKeypoolSize > 0)
-            nTargetSize = nTargetKeypoolSize;
-        else
-            nTargetSize = GetArg("-keypool", 5);
-
-        //Find current unique highest key index across *all* keypools.
-        int64_t nIndex = 1;
-        for (auto accountPair : mapAccounts)
+        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
-            {
-                auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
-                if (!keyPool.empty())
-                    nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
-            }
+            auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
+            if (!keyPool.empty())
+                nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
         }
+    }
 
-        for (auto accountPair : mapAccounts)
+    for (auto accountPair : mapAccounts)
+    {
+        const auto& accountUUID = accountPair.first;
+        auto& account = accountPair.second;
+        if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
         {
-            if (forAccount == nullptr || forAccount->getUUID() == accountPair.first)
+            for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
             {
-                unsigned int accountTargetSize = nTargetSize;
-                for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+                auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
+                while (keyPool.size() < nAccountTargetSize)
                 {
-                    auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
-                    while (keyPool.size() < (accountTargetSize))
+                    // We can't allocate any keys here if we are a non HD account that is locked - so don't and instead just signal to caller that there is an issue.
+                    if (!account->IsHD() && account->IsLocked())
                     {
-                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*accountPair.second, keyChain), getUUIDAsString(accountPair.first), keyChain ) ) )
+                        bAnyNonHDAccountsLockedAndRequireKeys = true;
+                    }
+                    else
+                    {
+                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*account, keyChain), getUUIDAsString(accountUUID), keyChain ) ) )
                             throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
                         keyPool.insert(nIndex);
-                        LogPrintf("keypool [%s:%s] added key %d, size=%u\n", accountPair.second->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
+                        //LogPrintf("keypool [%s:%s] added key %d, size=%u\n", account->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
 
                         // Limit generation for this loop - rest will be generated later
                         ++nNew;
@@ -3895,6 +3911,8 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
             }
         }
     }
+    if (bAnyNonHDAccountsLockedAndRequireKeys && (nNew == 0))
+        return -1;
     return nNew;
 }
 
@@ -4745,7 +4763,16 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                         if (walletWasCrypted && !walletInstance->activeAccount->internalKeyStore.IsCrypted())
                         {
                             walletInstance->activeAccount->internalKeyStore.SetCrypted();
-                            walletInstance->activeAccount->internalKeyStore.Unlock(walletInstance->activeAccount->vMasterKey);
+                            bool needsWriteToDisk = false;
+                            walletInstance->activeAccount->internalKeyStore.Unlock(walletInstance->activeAccount->vMasterKey, needsWriteToDisk);
+                            if (needsWriteToDisk)
+                            {
+                                CWalletDB db(*dbw);
+                                if (!db.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
+                                {
+                                    throw std::runtime_error("Writing account failed");
+                                }
+                            }
                         }
                         walletInstance->ForceRewriteKeys(*walletInstance->activeAccount);
                     }
@@ -4807,7 +4834,16 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     if (walletWasCrypted && !walletInstance->activeAccount->internalKeyStore.IsCrypted())
                     {
                         walletInstance->activeAccount->internalKeyStore.SetCrypted();
-                        walletInstance->activeAccount->internalKeyStore.Unlock(walletInstance->activeAccount->vMasterKey);
+                        bool needsWriteToDisk = false;
+                        walletInstance->activeAccount->internalKeyStore.Unlock(walletInstance->activeAccount->vMasterKey, needsWriteToDisk);
+                        if (needsWriteToDisk)
+                        {
+                            CWalletDB db(*dbw);
+                            if (!db.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
+                            {
+                                throw std::runtime_error("Writing account failed");
+                            }
+                        }
                     }
                     walletInstance->ForceRewriteKeys(*walletInstance->activeAccount);
                 }

@@ -142,9 +142,9 @@ protected:
     virtual bool SetCrypted();
 
     //! will encrypt previously unencrypted keys
-    virtual bool EncryptKeys(CKeyingMaterial& vMasterKeyIn);
+    virtual bool EncryptKeys(const CKeyingMaterial& vMasterKeyIn);
 
-    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn);
+    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk);
 
     CCryptoKeyStore()
     : CBasicKeyStore()

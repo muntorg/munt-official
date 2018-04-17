@@ -73,6 +73,24 @@ static void NotifyRequestUnlockS(CWallet* wallet, std::string reason)
     }
     fprintf(stderr, "Wallet requested unlock but could not unlock - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd in Gulden.conf: reason [%s]\n", reason.c_str());
 }
+
+static void NotifyRequestUnlockWithCallbackS(CWallet* wallet, std::string reason, std::function<void (void)> successCallback)
+{
+    SecureString passwd = GetArg("-unlockpasswd", "").c_str();
+    if (!passwd.empty())
+    {
+        if (!wallet->Unlock(passwd))
+        {
+            fprintf(stderr, "Wallet requested unlock but -unlockpasswd was invalid - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd in Gulden.conf: reason for request [%s]\n", reason.c_str());
+            return;
+        }
+    }
+    else
+    {
+        fprintf(stderr, "Wallet requested unlock but could not unlock - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd in Gulden.conf: reason for request [%s]\n", reason.c_str());
+    }
+    successCallback();
+}
 #endif
 
 void noui_connect()
@@ -84,5 +102,6 @@ void noui_connect()
 
     #ifdef ENABLE_WALLET
     uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, _1, _2));
+    uiInterface.RequestUnlockWithCallback.connect(boost::bind(NotifyRequestUnlockWithCallbackS, _1, _2, _3));
     #endif
 }

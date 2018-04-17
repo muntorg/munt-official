@@ -94,6 +94,7 @@ public:
     void Init();
     void InitReadOnly();
     CAccountHD* GenerateAccount(AccountSubType type, CWalletDB* Db);
+    bool GetPrivKeyForAccount(uint64_t nAccountIndex, CExtKey& accountKeyPriv);
 
 
     ADD_SERIALIZE_METHODS;
@@ -152,7 +153,7 @@ public:
             READWRITE(cointypeKeyPriv);
         }
 
-        // Read will fail on older wallets
+        // Read may fail on older wallets, this is not a problem.
         try
         {
             READWRITE(m_readOnly);
@@ -170,7 +171,7 @@ public:
     virtual bool IsCrypted() const;
     virtual bool Lock();
     virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn);
-    virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn);
+    virtual bool Encrypt(const CKeyingMaterial& vMasterKeyIn);
     virtual bool IsReadOnly() { return m_readOnly; };
 
     // What type of seed this is (BIP32 or BIP44)
@@ -178,6 +179,9 @@ public:
 
 protected:
     CAccountHD* GenerateAccount(int nAccountIndex);
+    // Worker function for GetPrivKeyForAccount that doesn't contain the safety checks which GetPrivKeyForAccount has.
+    // Other classes should call GetPrivKeyForAccount while internally we call this to avoid unnecessary duplicate safety checks.
+    bool GetPrivKeyForAccountInternal(uint64_t nAccountIndex, CExtKey& accountKeyPriv);
 
     // Unique seed identifier
     boost::uuids::uuid m_UUID;
@@ -265,7 +269,7 @@ public:
         }
         READWRITE(earliestPossibleCreationTime);
 
-        // Read will fail on older wallets
+        // Read may fail on older wallets, this is not a problem.
         try
         {
             READWRITE(m_readOnly);
@@ -284,12 +288,12 @@ public:
     virtual bool IsLocked() const override;
     virtual bool IsCrypted() const override;
     virtual bool Lock() override;
-    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) override;
+    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk) override;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const override;
-    virtual bool EncryptKeys(CKeyingMaterial& vMasterKeyIn) override;
-    virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn);
+    virtual bool EncryptKeys(const CKeyingMaterial& vMasterKeyIn) override;
+    virtual bool Encrypt(const CKeyingMaterial& vMasterKeyIn);
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;
     virtual bool AddWatchOnly(const CScript &dest) override;
     virtual bool RemoveWatchOnly(const CScript &dest) override;
@@ -361,8 +365,8 @@ public:
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain) override;
     virtual bool Lock() override;
-    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) override;
-    virtual bool Encrypt(CKeyingMaterial& vMasterKeyIn) override;
+    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk) override;
+    virtual bool Encrypt(const CKeyingMaterial& vMasterKeyIn) override;
     virtual bool IsCrypted() const override;
     virtual bool IsLocked() const override;
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain) override;

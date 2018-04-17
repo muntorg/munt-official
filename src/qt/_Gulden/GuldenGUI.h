@@ -13,6 +13,7 @@
 #include <QObject>
 #include <QProxyStyle>
 #include <map>
+#include <functional>
 #include <string>
 #include "amount.h"
 
@@ -196,6 +197,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void NotifyRequestUnlock(void* wallet, QString reason);
+    void NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::function<void (void)> successCallback);
     void handlePaymentAccepted();
 
 private Q_SLOTS:

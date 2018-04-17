@@ -187,8 +187,9 @@ bool CCryptoKeyStore::Lock()
     return true;
 }
 
-bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
+bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk)
 {
+    needsWriteToDisk = false;
     {
         LOCK(cs_KeyStore);
         if (!SetCrypted())
@@ -331,7 +332,7 @@ bool CCryptoKeyStore::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) co
     return false;
 }
 
-bool CCryptoKeyStore::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
+bool CCryptoKeyStore::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
 {
     {
         LOCK(cs_KeyStore);

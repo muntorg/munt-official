@@ -169,9 +169,6 @@ void CHDSeed::InitReadOnly()
 
 CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
 {
-    if (IsLocked())
-        return NULL;
-
     CAccountHD* account = NULL;
     switch (type)
     {
@@ -187,10 +184,10 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
             assert(m_nAccountIndex < 300000);
             account = GenerateAccount( m_nAccountIndexWitness++ );
             break;
-        default:
-            assert(0);
-            return NULL;
     }
+
+    if (!account)
+        return nullptr;
 
     if (Db)
     {
@@ -208,36 +205,51 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
 
 CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
 {
-    if (IsLocked())
-        return NULL;
-
-    CExtKey accountKey;
     if ( IsReadOnly() )
     {
+        //fixme: (LOW) We should be able to combine this with IsLocked() (BIP44NoHardening) case below to simplify the code here.
         CExtPubKey accountKeyPub;
         cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/87/n (BIP44)
         return new CAccountHD(accountKeyPub, m_UUID);
     }
+    else if (IsLocked())
+    {
+        return nullptr;
+    }
     else
     {
-        switch (m_type)
-        {
-            case BIP32:
-            case BIP32Legacy:
-                masterKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/n' (BIP32) 
-                break;
-            case BIP44:
-            case BIP44External:
-                cointypeKeyPriv.Derive(accountKey, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/87'/n' (BIP44)
-                break;
-            case BIP44NoHardening:
-                cointypeKeyPriv.Derive(accountKey, nAccountIndex);  // m/44'/87'/n (BIP44 without hardening (for read only sync))
-                break;
-            default:
-                assert(0);
-        }
-        return new CAccountHD(accountKey, m_UUID);
+        CExtKey accountKeyPriv;
+        GetPrivKeyForAccountInternal(nAccountIndex, accountKeyPriv);
+        return new CAccountHD(accountKeyPriv, m_UUID);
     }
+}
+
+bool CHDSeed::GetPrivKeyForAccount(uint64_t nAccountIndex, CExtKey& accountKeyPriv)
+{
+    if (IsReadOnly() || IsLocked())
+        return false;
+
+    GetPrivKeyForAccountInternal(nAccountIndex, accountKeyPriv);
+    return true;
+}
+
+bool CHDSeed::GetPrivKeyForAccountInternal(uint64_t nAccountIndex, CExtKey& accountKeyPriv)
+{
+    switch (m_type)
+    {
+        case BIP32:
+        case BIP32Legacy:
+            masterKeyPriv.Derive(accountKeyPriv, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/n' (BIP32) 
+            break;
+        case BIP44:
+        case BIP44External:
+            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/87'/n' (BIP44)
+            break;
+        case BIP44NoHardening:
+            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex);  // m/44'/87'/n (BIP44 without hardening (for read only sync))
+            break;
+    }
+    return true;
 }
 
 boost::uuids::uuid CHDSeed::getUUID() const
@@ -317,7 +329,7 @@ bool CHDSeed::Unlock(const CKeyingMaterial& vMasterKeyIn)
     return true;
 }
 
-bool CHDSeed::Encrypt(CKeyingMaterial& vMasterKeyIn)
+bool CHDSeed::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 {
     // Encrypt mnemonic
     assert(sizeof(m_UUID) == WALLET_CRYPTO_IV_SIZE);
@@ -387,6 +399,7 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
 void CAccountHD::GetKey(CExtKey& childKey, int nChain)
 {
     assert(!m_readOnly);
+    assert(!IsLocked());
     if (nChain == KEYCHAIN_EXTERNAL)
     {
         primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
@@ -399,7 +412,7 @@ void CAccountHD::GetKey(CExtKey& childKey, int nChain)
 
 bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
-    if(IsLocked())
+    if (IsLocked())
         return false;
 
     assert(!m_readOnly);
@@ -485,18 +498,15 @@ bool CAccountHD::Lock()
     return true;
 }
 
-bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
+bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk)
 {
+    needsWriteToDisk = false;
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
 
-    //We don't encrypt the keystores for HD accounts - as they only contain public keys.
-    //if (!CAccount::Unlock(vMasterKeyIn))
-    //    return false;
-
+    // NB! We don't encrypt the keystores for HD accounts - as they only contain public keys.
+    // So we don't need to unlock the underlying keystore.
     if (IsReadOnly())
-    {
         return true;
-    }
 
     // Decrypt account key
     CKeyingMaterial vchAccountKeyPrivEncoded;
@@ -519,7 +529,7 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn)
     return true;
 }
 
-bool CAccountHD::Encrypt(CKeyingMaterial& vMasterKeyIn)
+bool CAccountHD::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 {
     assert(sizeof(accountUUID) == WALLET_CRYPTO_IV_SIZE);
 
@@ -528,9 +538,7 @@ bool CAccountHD::Encrypt(CKeyingMaterial& vMasterKeyIn)
         return true;
     }
 
-    //We don't encrypt the keystores for HD accounts - as they only contain public keys.
-    //if (!CAccount::Encrypt(vMasterKeyIn))
-        //return false;
+    // NB! We don't encrypt the keystores for HD accounts - as they only contain public keys.
 
     // Encrypt account key
     SecureUnsignedCharVector accountKeyPrivEncoded(BIP32_EXTKEY_SIZE);
@@ -591,7 +599,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     }
     while( wallet.HaveKey(childKey.pubkey.GetID()) );//fixme: (GULDEN) (BIP44) No longer need wallet here.
 
-    LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
+    //LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
 
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUIDAsString(getUUID());
@@ -746,11 +754,12 @@ bool CAccount::Lock()
     return externalKeyStore.Lock() && internalKeyStore.Lock();
 }
 
-bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn)
+bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk)
 {
+    needsWriteToDisk = false;
     vMasterKey = vMasterKeyIn;
 
-    return externalKeyStore.Unlock(vMasterKeyIn) && internalKeyStore.Unlock(vMasterKeyIn);
+    return externalKeyStore.Unlock(vMasterKeyIn, needsWriteToDisk) && internalKeyStore.Unlock(vMasterKeyIn, needsWriteToDisk);
 }
 
 bool CAccount::GetKey(const CKeyID& keyID, CKey& key) const
@@ -774,7 +783,7 @@ void CAccount::GetKeys(std::set<CKeyID> &setAddress) const
     setAddress.insert(setInternal.begin(), setInternal.end());
 }
 
-bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
+bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
 {
     if (!externalKeyStore.EncryptKeys(vMasterKeyIn))
         return false;
@@ -792,7 +801,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
             {
                 CPubKey pubKey;
                 if (!GetPubKey(keyID, pubKey))
-                { 
+                {
                     LogPrintf("CAccount::EncryptKeys(): Failed to get pubkey");
                     return false;
                 }
@@ -829,7 +838,7 @@ bool CAccount::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
     return true;
 }
 
-bool CAccount::Encrypt(CKeyingMaterial& vMasterKeyIn)
+bool CAccount::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 {
     return EncryptKeys(vMasterKeyIn) /*&& SetCrypted()*/;
 }

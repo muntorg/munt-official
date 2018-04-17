@@ -12,128 +12,164 @@
 
 bool fShowChildAccountsSeperately = false;
 
+void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+{
+    for (const auto& seedIter : pactiveWallet->mapSeeds)
+    {
+        //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
+        if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
+            continue;
+
+        for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi, AccountSubType::PoW2Witness })
+        {
+            int numShadow = 0;
+            {
+                for (const auto& accountPair : pactiveWallet->mapAccounts)
+                {
+                    if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
+                    {
+                        if (accountPair.second->m_SubType == shadowSubType)
+                        {
+                            if (accountPair.second->m_Type == AccountType::Shadow)
+                            {
+                                ++numShadow;
+                            }
+                        }
+                    }
+                }
+            }
+            if (numShadow < nAccountPoolTargetSize)
+            {
+                CWalletDB db(*pactiveWallet->dbw);
+                while (numShadow < nAccountPoolTargetSize)
+                {
+                    // New shadow account
+                    CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
+
+                    if (newShadow == NULL)
+                    {
+                        tryLockWallet = false;
+                        return;
+                    }
+
+                    ++numShadow;
+                    ++nNumNewAccountsAllocated;
+
+                    newShadow->m_Type = AccountType::Shadow;
+
+                    // Write new account
+                    pactiveWallet->addAccount(newShadow, "Shadow");
+
+                    if (nNumNewAccountsAllocated > 4)
+                        return;
+                }
+            }
+        }
+    }
+}
+
 void ThreadShadowPoolManager()
 {
+    static bool promptOnceForAccountGenerationUnlock = true;
+    static bool promptOnceForAddressGenerationUnlock = true;
     int depth = 1;
+    int nAccountPoolTargetSize = GetArg("-accountpool", 10);
+    int nKeyPoolTargetDepth = GetArg("-keypool", 40);
     while (true)
     {
-        long milliSleep = 100;
+        long milliSleep = 500;
+        bool tryLockWallet = true;
 
         if (pactiveWallet)
         {
             LOCK(pactiveWallet->cs_wallet);
 
-            milliSleep = 500;
-            // Top up 'shadow' pool
-            int numNew = 0;
-            bool dolock=true;
-            for (const auto& seedIter : pactiveWallet->mapSeeds)
+            int nNumNewAccountsAllocated = 0;
+
+            // First we expand the amount of shadow accounts until we have the desired amount.
+            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nNumNewAccountsAllocated, tryLockWallet);
+            if (nNumNewAccountsAllocated > 0)
             {
-                //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
-                if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
-                    continue;
-
-                for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi, AccountSubType::PoW2Witness })
-                {
-                    int numShadow = 0;
-                    {
-                        for (const auto& accountPair : pactiveWallet->mapAccounts)
-                        {
-                            if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
-                            {
-                                if (accountPair.second->m_SubType == shadowSubType)
-                                {
-                                    if (accountPair.second->m_Type == AccountType::Shadow)
-                                    {
-                                        ++numShadow;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (numShadow < GetArg("-accountpool", 10))
-                    {
-                        dolock=false;
-                        if (!pactiveWallet->IsLocked())
-                        {
-                            pactiveWallet->delayLock = true;
-                            CWalletDB db(*pactiveWallet->dbw);
-                            while (numShadow < GetArg("-accountpool", 10))
-                            {
-                                ++numShadow;
-                                ++numNew;
-                                depth=1;
-
-                                // New shadow account
-                                CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
-
-                                if (newShadow == NULL)
-                                    break;
-
-                                newShadow->m_Type = AccountType::Shadow;
-
-                                // Write new account
-                                pactiveWallet->addAccount(newShadow, "Shadow");
-
-                                if (numNew > 2)
-                                {
-                                    milliSleep = 100;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            pactiveWallet->wantDelayLock = true;
-                            if (numShadow < 2)
-                            {
-                                uiInterface.RequestUnlock(pactiveWallet, _("Wallet unlock required for account creation"));
-                            }
-                        }
-                    }
-                }
+                // Reset the depth to 1, so that our new accounts get their first keys as a priority instead of expanding deeper the other accounts.
+                depth = 1;
+                milliSleep = 100;
+                continue;
             }
-
-
-            if (numNew == 0)
+            else
             {
-                int targetPoolDepth = GetArg("-keypool", 40);
-                int numToAllocatePerRound = 5;
-                if (targetPoolDepth > 40)
-                    numToAllocatePerRound = 20;
-                int numAllocated = pactiveWallet->TopUpKeyPool(depth, numToAllocatePerRound);
-                if (numAllocated >= 0)
+                if (!tryLockWallet)
                 {
-                    if (depth <= targetPoolDepth)
+                    // If we reach here we need to unlock to generate more background shadow accounts.
+                    // So signal that we would like an unlock.
+                    pactiveWallet->wantDelayLock = true;
+                    tryLockWallet = false;
+                    if (promptOnceForAccountGenerationUnlock)
                     {
-                        ++depth;
-                    }
-                    if (targetPoolDepth > 40 || numAllocated == 0)
-                    {
+                        promptOnceForAccountGenerationUnlock = false;
+
+                        // If the user cancels then we don't prompt him for this again in this program run.
+                        // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
+                        // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                        // Might also want a "don't ask me this again" checkbox on prompt etc.
+                        // Discuss with UI team and reconsider how to handle this.
+                        std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
+                        uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for address generation"), successCallback);
                         milliSleep = 1;
                     }
-                    else
-                    {
-                        //fixme: Look some more into these times - probably a bit slower than it needs to be
-                        if (depth < 10)
-                        {
-                            milliSleep = 80;
-                            dolock = false;
-                        }
-                        else if (depth < 20)
-                        {
-                            dolock = false;
-                            milliSleep = 100;
-                        }
-                        else
-                        {
-                            milliSleep = 300;
-                        }
-                    }
                 }
             }
-            if (dolock)
+
+            // Once we have allocated all the shadow accounts (or if wallet is locked and unable to allocate shadow accounts) we start to allocate keys for the accounts.
+            // Allocate up to 'depth' keys for all accounts, however only do numToAllocatePerRound allocations at a time before sleeping so that we don't hog the entire CPU.
+            int targetPoolDepth = nKeyPoolTargetDepth;
+            int numToAllocatePerRound = 5;
+            if (targetPoolDepth > 40)
+                numToAllocatePerRound = 20;
+            int numAllocated = pactiveWallet->TopUpKeyPool(depth, numToAllocatePerRound);
+            if (numAllocated >= 0 || depth < targetPoolDepth)
             {
+                // Increase the depth for next round of allocation.
+                if (numAllocated == 0)
+                    ++depth;
+
+                // If we didn't allocate any or the user has set an especially large depth then we want to try again almost immediately and not have a long sleep.
+                if (targetPoolDepth > 40 || numAllocated == 0)
+                    milliSleep = 1;
+                // Otherwise we sleep for increasingly longer depending on how deep into the allocation we are, the deeper we are the less urgent it becomes to allocate more. 
+                //fixme: Look some more into these times, they are a bit arbitrary.
+                else if (depth < 10) 
+                    milliSleep = 80;
+                else if (depth < 20)
+                    milliSleep = 100;
+                else
+                    milliSleep = 300;
+            }
+            else
+            {
+                // If we reach here we have a non HD account that require wallet unlock to allocate keys.
+                // So signal that we would like an unlock.
+                pactiveWallet->wantDelayLock = true;
+                milliSleep = 500;
+                tryLockWallet = false;
+                if (promptOnceForAddressGenerationUnlock)
+                {
+                    promptOnceForAddressGenerationUnlock = false;
+                    // If the user cancels then we don't prompt him for this again in this program run.
+                    // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
+                    // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    // Might also want a "don't ask me this again" checkbox on prompt etc.
+                    // Discuss with UI team and reconsider how to handle this.
+                    std::function<void (void)> successCallback = [&](){promptOnceForAddressGenerationUnlock = true;};
+                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for address generation"), successCallback);
+                }
+            }
+
+            // If we no longer have a need for an unlocked wallet allow it to lock again.
+            if (tryLockWallet)
+            {
+                // However only do so if we are the ones keeping it open.
+                // i.e. If we interfered and prevented another peice of code from locking it (wantDelayLock)
+                // If didDelayLock is false then somewhere else in the code is busy using it still and will take responsibility for closing it.
                 if(pactiveWallet->didDelayLock)
                 {
                     pactiveWallet->delayLock = false;
@@ -270,10 +306,12 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 
 void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
 {
-    // Remove from key pool
-    CWalletDB walletdb(*dbw);
-    //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
-    walletdb.ErasePool(static_cast<CWallet*>(this), keyID);
+    {
+        // Remove from key pool
+        CWalletDB walletdb(*dbw);
+        //NB! Must call ErasePool here even if HasPool is false - as ErasePool has other side effects.
+        walletdb.ErasePool(static_cast<CWallet*>(this), keyID);
+    }
 
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
@@ -649,18 +687,6 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
     // Create a new account in the (unlikely) event there was no shadow type
     if (!newAccount)
     {
-        while (true)
-        {
-            //fixme: GULDEN (FUT) (1.6.1) - No way to cancel here...
-            {
-                LOCK(cs_wallet);
-                if (!IsLocked())
-                    break;
-                wantDelayLock = true;
-                uiInterface.RequestUnlock(static_cast<CWallet*>(this), _("Wallet unlock required for account creation"));
-            }
-            MilliSleep(5000);
-        }
         if (!IsLocked())
         {
             CWalletDB db(*dbw);
@@ -668,7 +694,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
     newAccount->m_Type = type;

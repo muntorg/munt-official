@@ -92,8 +92,17 @@ public:
         bool ret = true;
         for (auto accountPair : mapAccounts)
         {
-            if (!accountPair.second->Unlock(vMasterKeyIn))
+            bool needsWriteToDisk = false;
+            if (!accountPair.second->Unlock(vMasterKeyIn, needsWriteToDisk))
                 ret = false;
+            if (needsWriteToDisk)
+            {
+                CWalletDB db(*dbw);
+                if (!db.WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second))
+                {
+                    throw std::runtime_error("Writing account failed");
+                }
+            }
         }
         for (auto seedPair : mapSeeds)
         {

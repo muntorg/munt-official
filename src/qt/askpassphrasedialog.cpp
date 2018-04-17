@@ -26,7 +26,7 @@
 #include <QPushButton>
 #include "_Gulden/GuldenGUI.h"
 
-AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent) :
+AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent, QString reason) :
     QDialog(parent),
     ui(new Ui::AskPassphraseDialog),
     mode(_mode),
@@ -94,6 +94,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent) :
             ui->warningLabel->setText(tr("Enter the old passphrase and new passphrase to the wallet."));
             break;
     }
+    if (!reason.isEmpty())
+        setWindowTitle(reason);
     textChanged();
     connect(ui->passEdit1, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
     connect(ui->passEdit2, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
