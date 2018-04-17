@@ -155,7 +155,8 @@ BOOST_AUTO_TEST_CASE(bloom_match)
     {
         std::vector<unsigned char> data(32 + sizeof(unsigned int));
         memcpy(&data[0], prevOutPoint.hash.begin(), 32);
-        memcpy(&data[32], &prevOutPoint.n, sizeof(unsigned int));
+        unsigned int n = prevOutPoint.n;
+        memcpy(&data[32], &n, sizeof(unsigned int));
         filter.insert(data);
     }
     BOOST_CHECK_MESSAGE(filter.IsRelevantAndUpdate(tx), "Simple Bloom filter didn't match manually serialized COutPoint");
