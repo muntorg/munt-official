@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         tx.vin[0].scriptSig << OP_1;
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
-        tx.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
+        tx.vout[0].output.scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
 
         AddOrphanTx(MakeTransactionRef(tx), i);
     }

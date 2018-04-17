@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(multisig_verify)
 
     CMutableTransaction txFrom;  // Funding transaction
     txFrom.vout.resize(3);
-    txFrom.vout[0].scriptPubKey = a_and_b;
-    txFrom.vout[1].scriptPubKey = a_or_b;
-    txFrom.vout[2].scriptPubKey = escrow;
+    txFrom.vout[0].output.scriptPubKey = a_and_b;
+    txFrom.vout[1].output.scriptPubKey = a_or_b;
+    txFrom.vout[2].output.scriptPubKey = escrow;
 
     CMutableTransaction txTo[3]; // Spending transaction
     for (int i = 0; i < 3; i++)
@@ -292,9 +292,9 @@ BOOST_AUTO_TEST_CASE(multisig_Sign)
 
     CMutableTransaction txFrom;  // Funding transaction
     txFrom.vout.resize(3);
-    txFrom.vout[0].scriptPubKey = a_and_b;
-    txFrom.vout[1].scriptPubKey = a_or_b;
-    txFrom.vout[2].scriptPubKey = escrow;
+    txFrom.vout[0].output.scriptPubKey = a_and_b;
+    txFrom.vout[1].output.scriptPubKey = a_or_b;
+    txFrom.vout[2].output.scriptPubKey = escrow;
 
     CMutableTransaction txTo[3]; // Spending transaction
     for (int i = 0; i < 3; i++)
