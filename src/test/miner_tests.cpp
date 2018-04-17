@@ -493,7 +493,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     // For now these will still generate a valid template until BIP68 soft fork
     BOOST_CHECK_EQUAL(pblocktemplate->block.vtx.size(), 3);
     // However if we advance height by 1 and time by 512, all of them should be mined
-    for (int i = 0; i < CBlockIndex::nMedianTimeSpan; i++)
+    for (int i = 0; i < 11; i++)
         chainActive.Tip()->GetAncestor(chainActive.Tip()->nHeight - i)->nTime += 512; //Trick the MedianTimePast
     chainActive.Tip()->nHeight++;
     SetMockTime(chainActive.Tip()->GetMedianTimePast() + 1);
