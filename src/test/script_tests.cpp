@@ -136,7 +136,7 @@ CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey, int n
     txCredit.vout.resize(1);
     txCredit.vin[0].prevout.SetNull();
     txCredit.vin[0].scriptSig = CScript() << CScriptNum(0) << CScriptNum(0);
-    txCredit.vin[0].nSequence = CTxIn::SEQUENCE_FINAL;
+    txCredit.vin[0].SetSequence(CTxIn::SEQUENCE_FINAL, txCredit.nVersion, CTxInFlags::None);
     txCredit.vout[0].output.scriptPubKey = scriptPubKey;
     txCredit.vout[0].nValue = nValue;
 
@@ -154,7 +154,7 @@ CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CSc
     txSpend.vin[0].prevout.hash = txCredit.GetHash();
     txSpend.vin[0].prevout.n = 0;
     txSpend.vin[0].scriptSig = scriptSig;
-    txSpend.vin[0].nSequence = CTxIn::SEQUENCE_FINAL;
+    txSpend.vin[0].SetSequence(CTxIn::SEQUENCE_FINAL, txSpend.nVersion, CTxInFlags::None);
     txSpend.vout[0].output.scriptPubKey = CScript();
     txSpend.vout[0].nValue = txCredit.vout[0].nValue;
 

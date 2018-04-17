@@ -51,7 +51,7 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
         // Let the others update at will
         for (unsigned int i = 0; i < txTmp.vin.size(); i++)
             if (i != nIn)
-                txTmp.vin[i].nSequence = 0;
+                txTmp.vin[i].SetSequence(0, txTmp.nVersion, CTxInFlags::None);
     }
     else if ((nHashType & 0x1f) == SIGHASH_SINGLE)
     {
@@ -68,7 +68,7 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
         // Let the others update at will
         for (unsigned int i = 0; i < txTmp.vin.size(); i++)
             if (i != nIn)
-                txTmp.vin[i].nSequence = 0;
+                txTmp.vin[i].SetSequence(0, txTmp.nVersion, CTxInFlags::None);
     }
 
     // Blank out other inputs completely, not recommended for open transactions
@@ -105,7 +105,7 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
         txin.prevout.hash = InsecureRand256();
         txin.prevout.n = InsecureRandBits(2);
         RandomScript(txin.scriptSig);
-        txin.nSequence = (InsecureRandBool()) ? InsecureRand32() : (unsigned int)-1;
+        txin.SetSequence((InsecureRandBool()) ? InsecureRand32() : (unsigned int)-1, tx.nVersion, CTxInFlags::None);
     }
     for (int out = 0; out < outs; out++) {
         tx.vout.push_back(CTxOut());
