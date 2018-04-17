@@ -150,7 +150,7 @@ public:
             READWRITE(msb);
             shorttxids[i] = (uint64_t(msb) << 32) | uint64_t(lsb);
         }
-        READWRITE(prefilledtxn);
+        READWRITECOMPACTSIZEVECTOR(prefilledtxn);
     }
 };
 
