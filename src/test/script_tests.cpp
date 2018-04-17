@@ -155,7 +155,7 @@ CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CSc
     txSpend.vin[0].prevout.n = 0;
     txSpend.vin[0].scriptSig = scriptSig;
     txSpend.vin[0].nSequence = CTxIn::SEQUENCE_FINAL;
-    txSpend.vout[0].scriptPubKey = CScript();
+    txSpend.vout[0].output.scriptPubKey = CScript();
     txSpend.vout[0].nValue = txCredit.vout[0].nValue;
 
     return txSpend;
@@ -425,7 +425,7 @@ public:
     {
         TestBuilder copy = *this; // Make a copy so we can rollback the push.
         DoPush();
-        DoTest(creditTx->vout[0].scriptPubKey, spendTx.vin[0].scriptSig, scriptWitness, flags, comment, scriptError, nValue);
+        DoTest(creditTx->vout[0].output.scriptPubKey, spendTx.vin[0].scriptSig, scriptWitness, flags, comment, scriptError, nValue);
         *this = copy;
         return *this;
     }
@@ -451,7 +451,7 @@ public:
             array.push_back(wit);
         }
         array.push_back(FormatScript(spendTx.vin[0].scriptSig));
-        array.push_back(FormatScript(creditTx->vout[0].scriptPubKey));
+        array.push_back(FormatScript(creditTx->vout[0].output.scriptPubKey));
         array.push_back(FormatScriptFlags(flags));
         array.push_back(FormatScriptError((ScriptError_t)scriptError));
         array.push_back(comment);

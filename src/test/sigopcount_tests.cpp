@@ -89,7 +89,7 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
     creationTx.vin[0].scriptSig = CScript();
     creationTx.vout.resize(1);
     creationTx.vout[0].nValue = 1;
-    creationTx.vout[0].scriptPubKey = scriptPubKey;
+    creationTx.vout[0].output.scriptPubKey = scriptPubKey;
 
     spendingTx.nVersion = 1;
     spendingTx.vin.resize(1);
@@ -99,7 +99,7 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
     spendingTx.vin[0].scriptWitness = witness;
     spendingTx.vout.resize(1);
     spendingTx.vout[0].nValue = 1;
-    spendingTx.vout[0].scriptPubKey = CScript();
+    spendingTx.vout[0].output.scriptPubKey = CScript();
 
     AddCoins(coins, creationTx, 0);
 }
