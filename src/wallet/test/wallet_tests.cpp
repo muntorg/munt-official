@@ -43,7 +43,7 @@ static std::vector<COutput> vCoins;
 static void add_coin(const CAmount& nValue, int nAge = 6*24, bool fIsFromMe = false, int nInput=0)
 {
     static int nextLockTime = 0;
-    CMutableTransaction tx;
+    CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
     tx.nLockTime = nextLockTime++;        // so all transactions get different hashes
     tx.vout.resize(nInput+1);
     tx.vout[nInput].nValue = nValue;
@@ -524,7 +524,7 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
 
 static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64_t blockTime)
 {
-    CMutableTransaction tx;
+    CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
     tx.nLockTime = lockTime;
     SetMockTime(mockTime);
     CBlockIndex* block = nullptr;
