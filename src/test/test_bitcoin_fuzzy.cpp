@@ -241,7 +241,7 @@ int do_fuzz()
         case CTXOUTCOMPRESSOR_DESERIALIZE:
         {
             CTxOut to;
-            CTxOutCompressor toc(to);
+            CTxOutCompressorLegacy toc(to);
             try
             {
                 ds >> toc;
