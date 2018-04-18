@@ -15,6 +15,7 @@
 
 #include <boost/thread.hpp>
 
+#define GULDEN_TEST_REWRITE BOOST_TEST(false, "test needs rewrite for Gulden")
 #define TEST_DEFAULT_TX_VERSION CTransaction::CURRENT_VERSION
 extern uint256 insecure_rand_seed;
 extern FastRandomContext insecure_rand_ctx;
