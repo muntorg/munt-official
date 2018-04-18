@@ -379,7 +379,8 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     {
         CWallet wallet;
         LOCK(wallet.cs_wallet);
-        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        CAccount account;
+        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey(), account, KEYCHAIN_EXTERNAL);
         BOOST_CHECK_EQUAL(nullBlock, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 100 * COIN);
     }
@@ -393,7 +394,8 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     {
         CWallet wallet;
         LOCK(wallet.cs_wallet);
-        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        CAccount account;
+        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey(), account, KEYCHAIN_EXTERNAL);
         BOOST_CHECK_EQUAL(oldTip, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
     }
@@ -464,7 +466,8 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         CWallet wallet;
         LOCK(wallet.cs_wallet);
         wallet.mapKeyMetadata[coinbaseKey.GetPubKey().GetID()].nCreateTime = KEY_TIME;
-        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        CAccount account;
+        wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey(), account, KEYCHAIN_EXTERNAL);
 
         JSONRPCRequest request;
         request.params.setArray();
@@ -518,7 +521,8 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
     // Invalidate the cached value, add the key, and make sure a new immature
     // credit amount is calculated.
     wtx.MarkDirty();
-    wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+    CAccount account;
+    wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey(), account, KEYCHAIN_EXTERNAL);
     BOOST_CHECK_EQUAL(wtx.GetImmatureCredit(), 50*COIN);
 }
 
@@ -596,10 +600,11 @@ public:
         CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
         ::bitdb.MakeMock();
         wallet.reset(new CWallet(std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
-        bool firstRun;
+        WalletLoadState firstRun;
         wallet->LoadWallet(firstRun);
         LOCK(wallet->cs_wallet);
-        wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        CAccount account;
+        wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey(), account, KEYCHAIN_EXTERNAL);
         wallet->ScanForWalletTransactions(chainActive.Genesis());
     }
 
@@ -613,11 +618,12 @@ public:
     CWalletTx& AddTx(CRecipient recipient)
     {
         CWalletTx wtx;
-        CReserveKey reservekey(wallet.get());
+        CAccount account;
+        CReserveKey reservekey(wallet.get(), &account, KEYCHAIN_EXTERNAL);
         CAmount fee;
         int changePos = -1;
         std::string error;
-        BOOST_CHECK(wallet->CreateTransaction({recipient}, wtx, reservekey, fee, changePos, error));
+        BOOST_CHECK(wallet->CreateTransaction(&account, {recipient}, wtx, reservekey, fee, changePos, error));
         CValidationState state;
         BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, nullptr, state));
         auto it = wallet->mapWallet.find(wtx.GetHash());
@@ -637,39 +643,40 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
     // address.
-    auto list = wallet->ListCoins();
+    CAccount account;
+    auto list = wallet->ListCoins(&account);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 1);
 
     // Check initial balance from one mature coinbase transaction.
-    BOOST_CHECK_EQUAL(50 * COIN, wallet->GetAvailableBalance());
+    BOOST_CHECK_EQUAL(50 * COIN, wallet->GetAvailableBalance(&account));
 
     // Add a transaction creating a change address, and confirm ListCoins still
     // returns the coin associated with the change address underneath the
     // coinbaseKey pubkey, even though the change address has a different
     // pubkey.
     AddTx(CRecipient{GetScriptForRawPubKey({}), 1 * COIN, false /* subtract fee */});
-    list = wallet->ListCoins();
+    list = wallet->ListCoins(&account);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
 
     // Lock both coins. Confirm number of available coins drops to 0.
     std::vector<COutput> available;
-    wallet->AvailableCoins(available);
+    wallet->AvailableCoins(&account, available);
     BOOST_CHECK_EQUAL(available.size(), 2);
     for (const auto& group : list) {
         for (const auto& coin : group.second) {
             wallet->LockCoin(COutPoint(coin.tx->GetHash(), coin.i));
         }
     }
-    wallet->AvailableCoins(available);
+    wallet->AvailableCoins(&account, available);
     BOOST_CHECK_EQUAL(available.size(), 0);
 
     // Confirm ListCoins still returns same result as before, despite coins
     // being locked.
-    list = wallet->ListCoins();
+    list = wallet->ListCoins(&account);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
