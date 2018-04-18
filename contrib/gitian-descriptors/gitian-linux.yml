@@ -161,7 +161,7 @@ script: |
     INSTALLPATH=`pwd`/installed/${DISTNAME}
     mkdir -p ${INSTALLPATH}
     tar --strip-components=1 -xf ../$SOURCEDIST
-    
+
     # Gross hack - prevent static qt libs from screwing up build
     find /home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig/ -name Qt5*.pc | xargs -I^ sed -i.old "s|Libs.private:.*|Libs.private:|" ^
 
@@ -187,6 +187,42 @@ script: |
     rm -rf ${DISTNAME}/lib/pkgconfig
     find ${DISTNAME}/bin -type f -executable -exec ../contrib/devtools/split-debug.sh {} {} {}.dbg \;
     find ${DISTNAME}/lib -type f -exec ../contrib/devtools/split-debug.sh {} {} {}.dbg \;
+    mkdir ${DISTNAME}/lib || true
+
+    mkdir ${DISTNAME}/lib || true
+    # Copy the required shared libs (everything not found in default lib paths) to the target folder
+    # First the qt plugins
+    if [ -d "/home/ubuntu/build/Gulden/depends/${i}/plugins/platforms" ] ; then
+        cp -rf "/home/ubuntu/build/Gulden/depends/${i}/plugins/platforms" "${DISTNAME}/lib/"
+        cp -rf "/home/ubuntu/build/Gulden/depends/${i}/plugins/imageformats" "${DISTNAME}/lib/"
+    fi
+    # Deps on the plugins
+    for subdir in "${DISTNAME}/lib/platforms" "${DISTNAME}/lib/imageformats"
+    do
+        for lib in `ls $subdir` ; do
+            for deplib in `ldd "$subdir/$lib" | grep "not found" | cut -d'>' -f1 | awk '{print $1}'` ; do
+            if [ -f "/home/ubuntu/build/Gulden/depends/${i}/lib/$deplib" ] ; then
+                cp -vf "/home/ubuntu/build/Gulden/depends/${i}/lib/$deplib" ${DISTNAME}/lib/
+            fi
+            done
+        done
+    done
+    # Recursive deps of current deps, loop twice to catch any new recursive deps of those
+    for run in {1..2}
+    do
+        for deplib in `ldd "${DISTNAME}/bin/Gulden" | grep "not found" | cut -d'>' -f1 | awk '{print $1}'` ; do
+        if [ -f "/home/ubuntu/build/Gulden/depends/${i}/lib/$deplib" ] ; then
+                cp -v "/home/ubuntu/build/Gulden/depends/${i}/lib/$deplib" ${DISTNAME}/lib/
+        fi
+        done
+    done
+    # Finally trim from a "blacklist" any excess libraries we definitely don't want.
+    rm -rf "${DISTNAME}/lib/libfreetype*" || true
+    rm -rf "${DISTNAME}/lib/libfontconfig*" || true
+    # Setup qt.conf so qt knows where to look for shared qt libs
+    echo -e "[Paths]\nLibraries=lib\nPlugins=lib" >> ${DISTNAME}/qt.conf
+
+
     find ${DISTNAME} -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}.tar.gz
     find ${DISTNAME} -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}-debug.tar.gz
     cd ../../
