@@ -24,7 +24,7 @@ static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 static const int WITNESS_SCALE_FACTOR = 4;
 
 //fixme: (GULDEN) (NEXT) (HIGH)
-inline bool IsOldTransactionVersion(const unsigned int nVersion) { return true; }
+inline bool IsOldTransactionVersion(const unsigned int nVersion) { return nVersion < 4 /*|| nVersion > 500000*/; }
 
 struct CBlockPosition
 {
