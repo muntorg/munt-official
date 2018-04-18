@@ -127,6 +127,7 @@ GULDEN_CORE_H = \
   base58.h \
   bloom.h \
   blockencodings.h \
+  blockstore.h \
   chain.h \
   chainparams.h \
   chainparamsbase.h \
@@ -232,6 +233,7 @@ libgulden_server_a_SOURCES = \
   addrman.cpp \
   bloom.cpp \
   blockencodings.cpp \
+  blockstore.cpp \
   chain.cpp \
   checkpoints.cpp \
   consensus/tx_verify.cpp \

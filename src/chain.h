@@ -613,6 +613,14 @@ public:
             return NULL;
     }
 
+    /** Find the predecessor  of a block in this chain, or NULL if the given index is not found or it is the genisis block. */
+    CBlockIndex *Prev(const CBlockIndex *pindex) const {
+        if (Contains(pindex) && pindex->nHeight>0)
+            return (*this)[pindex->nHeight - 1];
+        else
+            return NULL;
+    }
+
     /** Return the maximal height in the chain. Is equal to chain.Tip() ? chain.Tip()->nHeight : -1. */
     int Height() const {
         return vChain.size() - 1;
