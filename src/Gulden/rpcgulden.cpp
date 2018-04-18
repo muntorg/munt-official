@@ -233,12 +233,29 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
                     else break;
                 }
             }
-            //fixme: HIGH witnessSelectionPoolUnfiltered
             bool fExpired = false;
-            /*if (witnessHasExpired(iter.second.nAge, iter.second.Coin.nWeight, witInfo.nTotalWeight))
             {
-                fExpired = true;
-            }*/
+                const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
+                auto findIter = std::lower_bound(witInfo.witnessSelectionPoolUnfiltered.begin(), witInfo.witnessSelectionPoolUnfiltered.end(), findItem);
+                bool foundWitness = false;
+                while (findIter != witInfo.witnessSelectionPoolUnfiltered.end())
+                {
+                    if (findIter->outpoint == iter.first)
+                    {
+                        if (findIter->coin.out == iter.second.out)
+                        {
+                            foundWitness = true;
+                            if (witnessHasExpired(findIter->nAge, findIter->nWeight, witInfo.nTotalWeight))
+                            {
+                                fExpired = true;
+                            }
+                            break;
+                        }
+                        ++findIter;
+                    }
+                    else break;
+                }
+            }
 
             CTxDestination address;
             if (!ExtractDestination(iter.second.out, address))
@@ -280,8 +297,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     UniValue rec(UniValue::VOBJ);
     rec.push_back(Pair("pow2_phase", nPow2Phase));
     rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
-    //fixme: unfiltered?
-    //rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
+    rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
     rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
     rec.push_back(Pair("total_witness_weight_raw", (uint64_t)nTotalWeightAll));
     rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeight));
@@ -1400,6 +1416,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
+        //fixme:
         rec.push_back(Pair("type", "HD"));
 
         if (((CAccountHD*)accountPair.second)->IsMobi())

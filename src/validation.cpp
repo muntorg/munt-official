@@ -1353,6 +1353,7 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                     return true;
                 }
 
+                //fixme: (HIGH) - also transition to extracted signature.
                 // Verify signature
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 CScriptCheck check(signingKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
@@ -3276,6 +3277,8 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     return GetWitnessHelper(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo, nBlockHeight);
 }
 
+//fixme: (HIGH) - switch to a hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
+// total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
