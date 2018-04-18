@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
     CScript garbage;
     for (unsigned int i = 0; i < 128; i++)
         garbage.push_back('X');
-    CMutableTransaction tx;
+    CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
     tx.vin.resize(1);
     tx.vin[0].scriptSig = garbage;
     tx.vout.resize(1);

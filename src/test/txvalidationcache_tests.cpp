@@ -36,7 +36,7 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup)
 
     // Create a double-spend of mature coinbase txn:
     std::vector<CMutableTransaction> spends;
-    spends.resize(2);
+    spends.resize(2, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
     for (int i = 0; i < 2; i++)
     {
         spends[i].nVersion = 1;

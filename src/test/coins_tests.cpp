@@ -290,7 +290,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
 
         // 19/20 txs add a new transaction
         if (randiter % 20 < 19) {
-            CMutableTransaction tx;
+            CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
             tx.vin.resize(1);
             tx.vout.resize(1);
             tx.vout[0].nValue = i; //Keep txs unique unless intended to duplicate

@@ -129,7 +129,7 @@ BOOST_FIXTURE_TEST_SUITE(script_tests, BasicTestingSetup)
 
 CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey, int nValue = 0)
 {
-    CMutableTransaction txCredit;
+    CMutableTransaction txCredit(TEST_DEFAULT_TX_VERSION);
     txCredit.nVersion = 1;
     txCredit.nLockTime = 0;
     txCredit.vin.resize(1);
@@ -145,7 +145,7 @@ CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey, int n
 
 CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CScriptWitness& scriptWitness, const CMutableTransaction& txCredit)
 {
-    CMutableTransaction txSpend;
+    CMutableTransaction txSpend(TEST_DEFAULT_TX_VERSION);
     txSpend.nVersion = 1;
     txSpend.nLockTime = 0;
     txSpend.vin.resize(1);
@@ -305,7 +305,7 @@ private:
     }
 
 public:
-    TestBuilder(const CScript& script_, const std::string& comment_, int flags_, bool P2SH = false, WitnessMode wm = WITNESS_NONE, int witnessversion = 0, CAmount nValue_ = 0) : script(script_), havePush(false), comment(comment_), flags(flags_), scriptError(SCRIPT_ERR_OK), nValue(nValue_)
+    TestBuilder(const CScript& script_, const std::string& comment_, int flags_, bool P2SH = false, WitnessMode wm = WITNESS_NONE, int witnessversion = 0, CAmount nValue_ = 0) : script(script_), spendTx(TEST_DEFAULT_TX_VERSION), havePush(false), comment(comment_), flags(flags_), scriptError(SCRIPT_ERR_OK), nValue(nValue_)
     {
         CScript scriptPubKey = script;
         if (wm == WITNESS_PKH) {

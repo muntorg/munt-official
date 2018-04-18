@@ -64,13 +64,18 @@ BOOST_AUTO_TEST_CASE(multisig_verify)
     CScript escrow;
     escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
 
-    CMutableTransaction txFrom;  // Funding transaction
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);  // Funding transaction
     txFrom.vout.resize(3);
     txFrom.vout[0].output.scriptPubKey = a_and_b;
     txFrom.vout[1].output.scriptPubKey = a_or_b;
     txFrom.vout[2].output.scriptPubKey = escrow;
 
-    CMutableTransaction txTo[3]; // Spending transaction
+    CMutableTransaction txTo[3] = // Spending transaction
+                                { CMutableTransaction(TEST_DEFAULT_TX_VERSION),
+                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION),
+                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION)
+                                };
+
     for (int i = 0; i < 3; i++)
     {
         txTo[i].vin.resize(1);
@@ -290,13 +295,17 @@ BOOST_AUTO_TEST_CASE(multisig_Sign)
     CScript escrow;
     escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
 
-    CMutableTransaction txFrom;  // Funding transaction
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);  // Funding transaction
     txFrom.vout.resize(3);
     txFrom.vout[0].output.scriptPubKey = a_and_b;
     txFrom.vout[1].output.scriptPubKey = a_or_b;
     txFrom.vout[2].output.scriptPubKey = escrow;
 
-    CMutableTransaction txTo[3]; // Spending transaction
+    CMutableTransaction txTo[3] = // Spending transaction
+                                { CMutableTransaction(TEST_DEFAULT_TX_VERSION),
+                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION),
+                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION)
+                                };
     for (int i = 0; i < 3; i++)
     {
         txTo[i].vin.resize(1);

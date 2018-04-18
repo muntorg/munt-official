@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(sighash_test)
     #endif
     for (int i=0; i<nRandomTests; i++) {
         int nHashType = InsecureRand32();
-        CMutableTransaction txTo;
+        CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
         RandomTransaction(txTo, (nHashType & 0x1f) == SIGHASH_SINGLE);
         CScript scriptCode;
         RandomScript(scriptCode);

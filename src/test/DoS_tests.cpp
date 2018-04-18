@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
     // 50 orphan transactions:
     for (int i = 0; i < 50; i++)
     {
-        CMutableTransaction tx;
+        CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
         tx.vin.resize(1);
         tx.vin[0].prevout.n = 0;
         tx.vin[0].prevout.hash = InsecureRand256();

@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(pmt_test1)
         // build a block with some dummy transactions
         CBlock block;
         for (unsigned int j=0; j<nTx; j++) {
-            CMutableTransaction tx;
+            CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
             tx.nLockTime = j; // actual transaction data doesn't matter; just make the nLockTime's unique
             block.vtx.push_back(MakeTransactionRef(std::move(tx)));
         }

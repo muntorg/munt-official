@@ -21,7 +21,7 @@ BOOST_FIXTURE_TEST_SUITE(blockencodings_tests, RegtestingSetup)
 
 static CBlock BuildBlockTestCase() {
     CBlock block;
-    CMutableTransaction tx;
+    CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
     tx.vin.resize(1);
     tx.vin[0].scriptSig.resize(10);
     tx.vout.resize(1);
@@ -273,7 +273,7 @@ BOOST_AUTO_TEST_CASE(SufficientPreforwardRTTest)
 BOOST_AUTO_TEST_CASE(EmptyBlockRoundTripTest)
 {
     CTxMemPool pool;
-    CMutableTransaction coinbase;
+    CMutableTransaction coinbase(TEST_DEFAULT_TX_VERSION);
     coinbase.vin.resize(1);
     coinbase.vin[0].scriptSig.resize(10);
     coinbase.vout.resize(1);

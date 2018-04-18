@@ -107,10 +107,10 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
 BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
 {
     // Transaction creates outputs
-    CMutableTransaction creationTx;
+    CMutableTransaction creationTx(TEST_DEFAULT_TX_VERSION);
     // Transaction that spends outputs and whose
     // sig op cost is going to be tested
-    CMutableTransaction spendingTx;
+    CMutableTransaction spendingTx(TEST_DEFAULT_TX_VERSION);
 
     // Create utxo set
     CCoinsView coinsDummy;

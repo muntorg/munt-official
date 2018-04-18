@@ -15,6 +15,7 @@
 
 #include <boost/thread.hpp>
 
+#define TEST_DEFAULT_TX_VERSION CTransaction::CURRENT_VERSION
 extern uint256 insecure_rand_seed;
 extern FastRandomContext insecure_rand_ctx;
 

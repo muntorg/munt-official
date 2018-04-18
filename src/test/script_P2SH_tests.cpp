@@ -37,11 +37,11 @@ static bool
 Verify(const CScript& scriptSig, const CScript& scriptPubKey, bool fStrict, ScriptError& err)
 {
     // Create dummy to/from transactions:
-    CMutableTransaction txFrom;
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);
     txFrom.vout.resize(1);
     txFrom.vout[0].output.scriptPubKey = scriptPubKey;
 
-    CMutableTransaction txTo;
+    CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
     txTo.vin.resize(1);
     txTo.vout.resize(1);
     txTo.vin[0].prevout.n = 0;
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(sign)
         evalScripts[i] = GetScriptForDestination(CScriptID(standardScripts[i]));
     }
 
-    CMutableTransaction txFrom;  // Funding transaction:
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);  // Funding transaction:
     std::string reason;
     txFrom.vout.resize(8);
     for (int i = 0; i < 4; i++)
@@ -97,7 +97,8 @@ BOOST_AUTO_TEST_CASE(sign)
     }
     BOOST_CHECK(IsStandardTx(txFrom, reason));
 
-    CMutableTransaction txTo[8]; // Spending transactions
+    std::vector<CMutableTransaction> txTo; // Spending transactions
+    txTo.resize(8, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
     for (int i = 0; i < 8; i++)
     {
         txTo[i].vin.resize(1);
@@ -184,7 +185,7 @@ BOOST_AUTO_TEST_CASE(set)
         keystore.AddCScript(inner[i]);
     }
 
-    CMutableTransaction txFrom;  // Funding transaction:
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);  // Funding transaction:
     std::string reason;
     txFrom.vout.resize(4);
     for (int i = 0; i < 4; i++)
@@ -194,7 +195,8 @@ BOOST_AUTO_TEST_CASE(set)
     }
     BOOST_CHECK(IsStandardTx(txFrom, reason));
 
-    CMutableTransaction txTo[4]; // Spending transactions
+    std::vector<CMutableTransaction> txTo; // Spending transactions
+    txTo.resize(4, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
     for (int i = 0; i < 4; i++)
     {
         txTo[i].vin.resize(1);
@@ -279,7 +281,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     for (int i = 0; i < 3; i++)
         keys.push_back(key[i].GetPubKey());
 
-    CMutableTransaction txFrom;
+    CMutableTransaction txFrom(TEST_DEFAULT_TX_VERSION);
     txFrom.vout.resize(7);
 
     // First three are standard:
@@ -326,7 +328,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
 
     AddCoins(coins, txFrom, 0);
 
-    CMutableTransaction txTo;
+    CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
     txTo.vout.resize(1);
     txTo.vout[0].output.scriptPubKey = GetScriptForDestination(key[1].GetPubKey().GetID());
 
@@ -349,7 +351,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     // 22 P2SH sigops for all inputs (1 for vin[0], 6 for vin[3], 15 for vin[4]
     BOOST_CHECK_EQUAL(GetP2SHSigOpCount(txTo, coins), 22U);
 
-    CMutableTransaction txToNonStd1;
+    CMutableTransaction txToNonStd1(TEST_DEFAULT_TX_VERSION);
     txToNonStd1.vout.resize(1);
     txToNonStd1.vout[0].output.scriptPubKey = GetScriptForDestination(key[1].GetPubKey().GetID());
     txToNonStd1.vout[0].nValue = 1000;
@@ -361,7 +363,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     BOOST_CHECK(!::AreInputsStandard(txToNonStd1, coins));
     BOOST_CHECK_EQUAL(GetP2SHSigOpCount(txToNonStd1, coins), 16U);
 
-    CMutableTransaction txToNonStd2;
+    CMutableTransaction txToNonStd2(TEST_DEFAULT_TX_VERSION);
     txToNonStd2.vout.resize(1);
     txToNonStd2.vout[0].output.scriptPubKey = GetScriptForDestination(key[1].GetPubKey().GetID());
     txToNonStd2.vout[0].nValue = 1000;
