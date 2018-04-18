@@ -511,7 +511,7 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
     CWallet wallet;
     CWalletTx wtx(&wallet, MakeTransactionRef(coinbaseTxns.back()));
     LOCK2(cs_main, wallet.cs_wallet);
-    wtx.hashBlock = chainActive.Tip()->GetBlockHash();
+    wtx.hashBlock = chainActive.Tip()->GetBlockHashLegacy();
     wtx.nIndex = 0;
 
     // Call GetImmatureCredit() once before adding the key to the wallet to
