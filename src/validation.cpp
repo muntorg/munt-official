@@ -4602,7 +4602,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 
 bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion)
 {
-    LOCK(cs_main);
+    /*LOCK(cs_main);
 
     // Gulden 2.0 onwards
     // Refresh all blocks on disk - change in serialisation format.
@@ -4762,7 +4762,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
             }
             ++nFile;
         }
-    }
+    }*/
 
     return true;
 }
