@@ -3618,7 +3618,7 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
 bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
 {
     LOCK(cs_main);
-    if (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride) || IsPow2Phase5Active(pindexPrev, chainParams, chainOverride, viewOverride))
+    if (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride))
         return true;
     return false;
 }
@@ -3860,7 +3860,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     // * There must be at least one output whose scriptPubKey is a single 36-byte push, the first 4 bytes of which are
     //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
     //   multiple, the last one is used.
-    bool fHaveWitness = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride) || IsPow2Phase5Active(pindexPrev, chainParams, chainOverride, viewOverride));
+    bool fHaveWitness = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
     #if 0
     //GULDEN - We hash this data as part of the normal merkle root instead.
     if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {

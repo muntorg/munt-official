@@ -760,7 +760,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), GetPoW2Phase(chainActive.Tip(), chainparams, chainActive), GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive));
 
     // Found a solution
-    /*if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams) || IsPow2Phase5Active(pIndexPrev, chainparams))
+    /*if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams))
     {
         if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
             return error("GuldenWitness: Generated phase4 block is stale");

@@ -243,10 +243,7 @@ int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CCh
         }
     }
 
-    if (IsPow2Phase5Active(pIndex, chainparams, chain, viewOverride))
-    {
-        return 5;
-    }
+    //NB! We don't call IsPow2Phase5Active here as it can lead to infinite recursion in some cases.
     if (IsPow2Phase4Active(pIndex, chainparams, chain, viewOverride))
     {
         return 4;
