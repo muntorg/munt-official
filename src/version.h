@@ -16,7 +16,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70015;
+static const int PROTOCOL_VERSION = 70016;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -53,5 +53,8 @@ static const int INVALID_CB_NO_BAN_VERSION = 70015;
 
 //! PoW2 starts with this version
 static const int POW2_CAPABLE_VERSION = 70015;
+
+//! Reverse headers for fast header synchronisation from last checkpoint
+static const int REVERSEHEADERS_VERSION = 70016;
 
 #endif // BITCOIN_VERSION_H

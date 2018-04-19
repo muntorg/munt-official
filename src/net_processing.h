@@ -21,6 +21,18 @@ static const unsigned int DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN = 100;
  *  Timeout = base + per_header * (expected number of headers) */
 static constexpr int64_t HEADERS_DOWNLOAD_TIMEOUT_BASE = 15 * 60 * 1000000; // 15 minutes
 static constexpr int64_t HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 1000; // 1ms/header
+/** Reverse headers download timeout expressed in microseconds
+ *  Timeout = base + per_header * (expected number of headers)
+ *  Using a model of bits/sec throughput to find a suitable number.
+ *    Tb = througput in bits/sec, assume 2Mbit quite slow for current standards, however roundtrip latency also
+ *         takes a big part in throughput
+ *    Hb = Headersize in bits = 80 * 8 = 640
+ *    Hb / Tb = 305 usec/header
+ *    So for example when reverse downloading 700K headers it is expected to complete in 700K * 30usec + 1min which
+ *    is about 4.5min (this is really very slow, in practice we should see most reverse headers sync complete well under a minute).
+*/
+static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_BASE = 1 * 60 * 1000000; // 1 minute
+static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 305; // 305usec/header
 
 /** Register with a network node to receive its signals */
 void RegisterNodeSignals(CNodeSignals& nodeSignals);

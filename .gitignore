@@ -74,12 +74,14 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-bitcoin-qt
-Bitcoin-Qt.app
+Makefile.am.user
+Gulden-tx
+Gulden-cli
+GuldenD
 
 # Unit-tests
 Makefile.test
-bitcoin-qt_test
+test_Gulden
 
 # Resources cpp
 qrc_*.cpp
@@ -107,5 +109,5 @@ test/cache/*
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libguldenconsensus.pc
 contrib/devtools/split-debug.sh

@@ -135,6 +135,7 @@ public:
 
     // memory only
     mutable bool fChecked;
+    mutable bool fPOWChecked;
 
     CBlock()
     {
@@ -160,6 +161,7 @@ public:
         CBlockHeader::SetNull();
         vtx.clear();
         fChecked = false;
+        fPOWChecked = false;
         //cachedHash = uint256();
         //cachedPOWHash = uint256();
     }
