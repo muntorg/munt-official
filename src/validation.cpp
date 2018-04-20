@@ -3496,7 +3496,7 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
 {
     // Check proof of work matches claimed amount
     if (fCheckPOW) {
-        // split in nested if statement for easier breakpoint managment
+        // Nested if statement for easier breakpoint management
         if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
@@ -3513,10 +3513,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check that the header is valid (particularly PoW).  This is mostly
     // redundant with the call in AcceptBlockHeader.
-    if (!CheckBlockHeader(block, state, consensusParams, !fAssumePOWGood && !block.fPOWChecked))
-        return false;
-    else
-        block.fPOWChecked = true;
+    if (fCheckPOW)
+    {
+        if (!CheckBlockHeader(block, state, consensusParams, !fAssumePOWGood && !block.fPOWChecked))
+            return false;
+        else
+            block.fPOWChecked = true;
+    }
 
     // All potential-corruption validation must be done before we do any
     // transaction validation, as otherwise we may mark the header as invalid
