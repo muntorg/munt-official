@@ -3618,6 +3618,13 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
 bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
 {
     LOCK(cs_main);
+    // Witnessing never kicks in at genesis or block after genesis...
+    if (!pindexPrev)
+        return false;
+    // Optimisation - no need to check below this height.
+    //fixme: (POW2) (RELEASE) - set exact block number here.
+    if (!IsArgSet("-testnet") && pindexPrev->nHeight < 750000)
+        return false;
     if (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride))
         return true;
     return false;
