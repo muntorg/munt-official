@@ -171,9 +171,6 @@ script: |
     make ${MAKEOPTS}
 
     make ${MAKEOPTS} -C src check-security
-
-    make install DESTDIR=${INSTALLPATH}
-
     make strip
 
     find . -name "*.exe" | while read i; do
@@ -181,6 +178,7 @@ script: |
     done
 
     make deploy
+    make install DESTDIR=${INSTALLPATH}
     rename 's/-setup\.exe$/-setup-unsigned.exe/' *-setup.exe
     
     find . -name "*setup*.exe" | while read i; do
