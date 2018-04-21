@@ -209,26 +209,7 @@ protected:
             case Consensus::DEPLOYMENT_POW:
                 return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0);
             case Consensus::DEPLOYMENT_WITNESS:
-            {
-                //fixme: (GULDEN) (2.1) This can be removed/simplified for 2.1
-                int32_t nVersionPoW2Witness = pindex->nVersionPoW2Witness;
-                if (nVersionPoW2Witness == 0)
-                {
-                    CBlock temp;
-                    if (!ReadBlockFromDisk(temp, pindex, params))
-                        assert(0);
-
-                    int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(temp);
-                    if (nWitnessCoinbaseIndex != -1)
-                    {
-                        std::vector<unsigned char> serialisedWitnessHeaderInfo = std::vector<unsigned char>(temp.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.begin() + 6, temp.vtx[0]->vout[nWitnessCoinbaseIndex].output.scriptPubKey.end());
-                        CDataStream serialisedWitnessHeaderInfoStream(serialisedWitnessHeaderInfo, SER_NETWORK, INIT_PROTO_VERSION);
-                        ::Unserialize(serialisedWitnessHeaderInfoStream, nVersionPoW2Witness);
-                    }
-                }
-
-                return (((nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (nVersionPoW2Witness & Mask(params)) != 0);
-            }
+                return (((pindex->nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersionPoW2Witness & Mask(params)) != 0);
             case Consensus::DEPLOYMENT_BOTH:
                 return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0) && (((pindex->nVersionPoW2Witness & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersionPoW2Witness & Mask(params)) != 0);
         }
