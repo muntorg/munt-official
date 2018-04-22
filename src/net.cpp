@@ -2649,11 +2649,13 @@ void CConnman::ResumeSend(CNode *pnode)
     pnode->vSendMsg.pop_front();
     boost::asio::const_buffer buffer = boost::asio::buffer(reinterpret_cast<const char*>(bufferHolder->data()), bufferHolder->size());
 
+    pnode->AddRef();
     boost::asio::async_write(pnode->hSocket, buffer,
                              [this, pnode, bufferHolder](const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (ec) {
             LogPrint(BCLog::NET, "socket send error %s\n", ec.message());
             pnode->CloseSocketDisconnect();
+            pnode->Release();
             return;
         }
 
@@ -2668,6 +2670,7 @@ void CConnman::ResumeSend(CNode *pnode)
         pnode->fPauseSend = pnode->nSendSize > nSendBufferMaxSize;
 
         this->ResumeSend(pnode);
+        pnode->Release();
     });
 }
 
