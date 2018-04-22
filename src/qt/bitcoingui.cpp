@@ -104,6 +104,8 @@ static void UpdateWitnessAccountStates()
 
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {
+            LOCK(cs_main);
+
             CGetWitnessInfo witnessInfo;
             CBlock block;
             //fixme: Error handling.
