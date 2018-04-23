@@ -13,6 +13,9 @@
 #ifndef BLOCKSTORE_H
 #define BLOCKSTORE_H
 
+//fixme: (GULDEN) (2.1) methods to support conversion of 1.6 block storage to 2.0 can be reverted once not needed anymore
+// revert the changes in this commit for blockstore.h + .cpp back to 517362d123ce7c7e83de86a962ad099abbf199b0
+
 #include <stdio.h>
 #include "chain.h"
 #include "protocol.h" // For CMessageHeader::MessageStartChars
@@ -21,6 +24,8 @@
 class CBlockStore
 {
 public:
+    CBlockStore(bool legacy=false) : isLegacy(legacy) {}
+
     bool BlockFileExists(const CDiskBlockPos &pos);
 
     /** Open a block file (blk?????.dat), creating it if needed.
@@ -47,6 +52,14 @@ public:
      *  Actually unlink the specified files
      */
     void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune);
+
+    // block store format conversion support methods:
+
+    /** Close all open files rename with prefix and use those */
+    bool Rename(const std::string& prefix);
+
+    /** Delete all block and undo files */
+    bool Delete();
 
 
 private:
@@ -76,6 +89,11 @@ private:
     };
 
     std::vector<BlockFilePair> vBlockfiles;
+
+    // more block store format conversion support:
+    fs::path GetBlockPosNewFilename(const CDiskBlockPos &pos, BlockFileType fileType, const std::string& newPrefix);
+    bool isLegacy;
+    std::string mainPrefix;
 };
 
 extern CBlockStore blockStore;

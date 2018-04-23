@@ -18,8 +18,8 @@ CBlockStore blockStore;
 
 fs::path CBlockStore::GetBlockPosFilename(const CDiskBlockPos &pos, BlockFileType fileType)
 {
-    const char *prefix = fileType == BlockFileType::block ? "blk" : "rev";
-    return GetDataDir() / "blocks" / strprintf("%s%05u.dat", prefix, pos.nFile);
+    std::string basename = mainPrefix + (fileType == BlockFileType::block ? "blk" : "rev");
+    return GetDataDir() / "blocks" / strprintf("%s%05u.dat", basename, pos.nFile);
 }
 
 bool CBlockStore::BlockFileExists(const CDiskBlockPos &pos)
@@ -104,7 +104,7 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     block.SetNull();
 
     // Open history file to read
-    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
+    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION | (isLegacy ? SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS : 0));
     if (filein.IsNull())
         return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
 
@@ -155,7 +155,7 @@ bool CBlockStore::UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& po
 bool CBlockStore::UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock)
 {
     // Open history file to read
-    CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
+    CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION | (isLegacy ? SERIALIZE_TXUNDO_LEGACY_COMPRESSION : 0) );
     if (filein.IsNull())
         return error("%s: OpenUndoFile failed", __func__);
 
@@ -198,4 +198,61 @@ void CBlockStore::UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
         fs::remove(GetBlockPosFilename(pos, BlockFileType::undo));
         LogPrintf("Prune: %s deleted blk/rev (%05u)\n", __func__, *it);
     }
+}
+
+bool CBlockStore::Rename(const std::string& newPrefix)
+{
+    CloseBlockFiles();
+
+    // Move all the block files into backup files
+    int nFile = 0;
+
+    while (nFile < 1000)
+    {
+        CDiskBlockPos pos(nFile, 0);
+        if (fs::exists(GetBlockPosFilename(pos, BlockFileType::block)))
+        {
+            fs::rename(GetBlockPosFilename(pos, BlockFileType::block), GetBlockPosNewFilename(pos, BlockFileType::block, newPrefix));
+        }
+        if (fs::exists(GetBlockPosFilename(pos, BlockFileType::undo)))
+        {
+            fs::rename(GetBlockPosFilename(pos, BlockFileType::undo), GetBlockPosNewFilename(pos, BlockFileType::undo, newPrefix));
+        }
+        ++nFile;
+    }
+
+    mainPrefix = newPrefix;
+
+    return true;
+}
+
+bool CBlockStore::Delete()
+{
+    CloseBlockFiles();
+
+    // Remove the old backup block files as upgrade is done.
+    int nFile = 0;
+    while (nFile < 1000)
+    {
+        CDiskBlockPos pos(nFile, 0);
+        if (fs::exists(GetBlockPosFilename(pos, BlockFileType::block)))
+        {
+            if (!fs::remove(GetBlockPosFilename(pos, BlockFileType::block)))
+                return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, BlockFileType::block));
+        }
+        if (fs::exists(GetBlockPosFilename(pos, BlockFileType::undo)))
+        {
+            if (!fs::remove(GetBlockPosFilename(pos, BlockFileType::undo)))
+                return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, BlockFileType::undo));
+        }
+        ++nFile;
+    }
+
+    return true;
+}
+
+fs::path CBlockStore::GetBlockPosNewFilename(const CDiskBlockPos &pos, BlockFileType fileType, const std::string& newPrefix)
+{
+    std::string basename = newPrefix + (fileType == BlockFileType::block ? "blk" : "rev");
+    return GetDataDir() / "blocks" / strprintf("%s%05u.dat", basename, pos.nFile);
 }
