@@ -14,43 +14,20 @@
 #include "streams.h"
 #include "clientversion.h"
 
-struct BlockFilePair {
-    FILE* blockfile = nullptr;
-    FILE* undofile = nullptr;
-    BlockFilePair() : blockfile(nullptr), undofile(nullptr) {}
+CBlockStore blockStore;
 
-    BlockFilePair(BlockFilePair&& other) :
-        blockfile(other.blockfile),
-        undofile(other.undofile)
-    {
-        other.blockfile = nullptr;
-        other.undofile = nullptr;
-    }
-
-    ~BlockFilePair() {
-        if (blockfile)
-            fclose(blockfile);
-        if (undofile)
-            fclose(undofile);
-    }
-};
-
-enum class BlockFileType { block, undo };
-
-static std::vector<BlockFilePair> vBlockfiles;
-
-fs::path GetBlockPosFilename(const CDiskBlockPos &pos, BlockFileType fileType)
+fs::path CBlockStore::GetBlockPosFilename(const CDiskBlockPos &pos, BlockFileType fileType)
 {
     const char *prefix = fileType == BlockFileType::block ? "blk" : "rev";
     return GetDataDir() / "blocks" / strprintf("%s%05u.dat", prefix, pos.nFile);
 }
 
-bool BlockFileExists(const CDiskBlockPos &pos)
+bool CBlockStore::BlockFileExists(const CDiskBlockPos &pos)
 {
     return fs::exists(GetBlockPosFilename(pos, BlockFileType::block));
 }
 
-static FILE* GetDiskFile(const CDiskBlockPos &pos, BlockFileType fileType, bool fNoCreate)
+FILE* CBlockStore::GetDiskFile(const CDiskBlockPos &pos, BlockFileType fileType, bool fNoCreate)
 {
     if (pos.IsNull())
         return NULL;
@@ -86,21 +63,21 @@ static FILE* GetDiskFile(const CDiskBlockPos &pos, BlockFileType fileType, bool 
     return file;
 }
 
-FILE* GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate) {
+FILE* CBlockStore::GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate) {
     return GetDiskFile(pos, BlockFileType::block, fNoCreate);
 }
 
-FILE* GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate) {
+FILE* CBlockStore::GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate) {
     return GetDiskFile(pos, BlockFileType::undo, fNoCreate);
 }
 
-void CloseBlockFiles()
+void CBlockStore::CloseBlockFiles()
 {
     vBlockfiles.clear();
     LogPrintStr("Block and undo files closed\n");
 }
 
-bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
+bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
 {
     // Open history file to append
     CFile fileout(GetBlockFile(pos), SER_DISK, CLIENT_VERSION);
@@ -108,7 +85,8 @@ bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHea
         return error("WriteBlockToDisk: OpenBlockFile failed");
 
     // Write index header
-    unsigned int nSize = GetSerializeSize(fileout, block);
+    unsigned int nSize = ::GetSerializeSize(fileout, block);
+
     fileout << FLATDATA(messageStart) << nSize;
 
     // Write block
@@ -121,7 +99,7 @@ bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHea
     return true;
 }
 
-bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
+bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
 {
     block.SetNull();
 
@@ -147,7 +125,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     return true;
 }
 
-bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart)
+bool CBlockStore::UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart)
 {
     // Open history file to append
     CFile fileout(GetUndoFile(pos), SER_DISK, CLIENT_VERSION);
@@ -155,7 +133,7 @@ bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint
         return error("%s: OpenUndoFile failed", __func__);
 
     // Write index header
-    unsigned int nSize = GetSerializeSize(fileout, blockundo);
+    unsigned int nSize = ::GetSerializeSize(fileout, blockundo);
     fileout << FLATDATA(messageStart) << nSize;
 
     // Write undo data
@@ -174,7 +152,7 @@ bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint
     return true;
 }
 
-bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock)
+bool CBlockStore::UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock)
 {
     // Open history file to read
     CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
@@ -200,7 +178,7 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uin
     return true;
 }
 
-void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
+void CBlockStore::UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
 {
     for (std::set<int>::iterator it = setFilesToPrune.begin(); it != setFilesToPrune.end(); ++it) {
         int nFile = *it;

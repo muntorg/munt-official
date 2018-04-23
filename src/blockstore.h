@@ -18,31 +18,66 @@
 #include "protocol.h" // For CMessageHeader::MessageStartChars
 #include "undo.h"
 
-bool BlockFileExists(const CDiskBlockPos &pos);
+class CBlockStore
+{
+public:
+    bool BlockFileExists(const CDiskBlockPos &pos);
 
-/** Open a block file (blk?????.dat), creating it if needed.
-    Ownership is NOT transferred, so do not close the file.
-*/
-FILE* GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate = false);
+    /** Open a block file (blk?????.dat), creating it if needed.
+        Ownership is NOT transferred, so do not close the file.
+    */
+    FILE* GetBlockFile(const CDiskBlockPos &pos, bool fNoCreate = false);
 
-/** Open an undo file (rev?????.dat), creating it if needed.
-    Ownership is NOT transferred, so do not close the file.
-*/
-FILE* GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate = false);
+    /** Open an undo file (rev?????.dat), creating it if needed.
+        Ownership is NOT transferred, so do not close the file.
+    */
+    FILE* GetUndoFile(const CDiskBlockPos &pos, bool fNoCreate = false);
 
-/** Closes all open block and undo files */
-void CloseBlockFiles();
+    /** Closes all open block and undo files */
+    void CloseBlockFiles();
 
 
-bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);
-bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams);
+    bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);
+    bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams);
 
-bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart);
-bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock);
+    bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart);
+    bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock);
 
-/**
- *  Actually unlink the specified files
- */
-void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune);
+    /**
+     *  Actually unlink the specified files
+     */
+    void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune);
+
+
+private:
+    enum class BlockFileType { block, undo };
+    fs::path GetBlockPosFilename(const CDiskBlockPos &pos, BlockFileType fileType);
+    FILE* GetDiskFile(const CDiskBlockPos &pos, BlockFileType fileType, bool fNoCreate);
+
+    struct BlockFilePair {
+        FILE* blockfile = nullptr;
+        FILE* undofile = nullptr;
+        BlockFilePair() : blockfile(nullptr), undofile(nullptr) {}
+
+        BlockFilePair(BlockFilePair&& other) :
+            blockfile(other.blockfile),
+            undofile(other.undofile)
+        {
+            other.blockfile = nullptr;
+            other.undofile = nullptr;
+        }
+
+        ~BlockFilePair() {
+            if (blockfile)
+                fclose(blockfile);
+            if (undofile)
+                fclose(undofile);
+        }
+    };
+
+    std::vector<BlockFilePair> vBlockfiles;
+};
+
+extern CBlockStore blockStore;
 
 #endif // BLOCKSTORE_H
