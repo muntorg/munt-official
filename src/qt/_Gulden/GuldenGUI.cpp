@@ -1583,7 +1583,8 @@ void GuldenGUI::acceptNewAccount()
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
         CAccount* newAccount = nullptr;
-        if (dialogNewAccount->getAccountType() == NewAccountType::FixedDeposit)
+        const auto newAccountType = dialogNewAccount->getAccountType();
+        if (newAccountType == NewAccountType::FixedDeposit)
         {
             newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::PoW2Witness);
         }
@@ -1600,6 +1601,14 @@ void GuldenGUI::acceptNewAccount()
             return;
         }
         restoreCachedWidgetIfNeeded();
+        if (newAccountType == NewAccountType::FixedDeposit)
+        {
+            showWitnessDialog();
+        }
+        else
+        {
+            m_pImpl->gotoReceiveCoinsPage();
+        }
     }
     else
     {
@@ -1608,7 +1617,7 @@ void GuldenGUI::acceptNewAccount()
 }
 
 void GuldenGUI::acceptNewAccountMobile()
-{ 
+{
     restoreCachedWidgetIfNeeded();
 }
 
