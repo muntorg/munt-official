@@ -2149,7 +2149,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned())
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(false, forAccount) : pcoin->GetAvailableCredit(false, forAccount);
                 }
             }
 
