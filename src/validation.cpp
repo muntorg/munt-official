@@ -893,7 +893,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
     if (fTxIndex) {
         CDiskTxPos postx;
         if (pblocktree->ReadTxIndex(hash, postx)) {
-            CFile file(GetBlockFile(postx, true), SER_DISK, CLIENT_VERSION);
+            CFile file(blockStore.GetBlockFile(postx, true), SER_DISK, CLIENT_VERSION);
             if (file.IsNull())
                 return error("%s: OpenBlockFile failed", __func__);
             CBlockHeader header;
@@ -944,7 +944,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
 
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams)
 {
-    if (!ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
+    if (!blockStore.ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
         return false;
     //fixme: (GULDEN) (2.0) (POW2) - I think this will be broken when reading an old PoW block requested by a 1.6.x node?
     if (block.GetHashPoW2() != pindex->GetBlockHashPoW2())
@@ -1418,7 +1418,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
         error("DisconnectBlock(): no undo data available");
         return DISCONNECT_FAILED;
     }
-    if (!UndoReadFromDisk(blockUndo, pos, pindex->pprev->GetBlockHashPoW2())) {
+    if (!blockStore.UndoReadFromDisk(blockUndo, pos, pindex->pprev->GetBlockHashPoW2())) {
         error("DisconnectBlock(): failure reading undo data");
         return DISCONNECT_FAILED;
     }
@@ -1498,14 +1498,14 @@ void static FlushBlockFile(bool fFinalize = false)
 
     CDiskBlockPos posOld(nLastBlockFile, 0);
 
-    FILE *fileOld = GetBlockFile(posOld);
+    FILE *fileOld = blockStore.GetBlockFile(posOld);
     if (fileOld) {
         if (fFinalize)
             TruncateFile(fileOld, vinfoBlockFile[nLastBlockFile].nSize);
         FileCommit(fileOld);
     }
 
-    fileOld = GetUndoFile(posOld);
+    fileOld = blockStore.GetUndoFile(posOld);
     if (fileOld) {
         if (fFinalize)
             TruncateFile(fileOld, vinfoBlockFile[nLastBlockFile].nUndoSize);
@@ -2067,7 +2067,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
             CDiskBlockPos _pos;
             if (!FindUndoPos(state, pindex->nFile, _pos, ::GetSerializeSize(blockundo, SER_DISK, CLIENT_VERSION) + 40))
                 return error("ConnectBlock(): FindUndoPos failed");
-            if (!UndoWriteToDisk(blockundo, _pos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
+            if (!blockStore.UndoWriteToDisk(blockundo, _pos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
                 return AbortNode(state, "Failed to write undo data");
 
             // update nUndoPos in block index
@@ -2232,7 +2232,7 @@ bool static FlushStateToDisk(const CChainParams& chainparams, CValidationState &
         }
         // Finally remove any pruned files
         if (fFlushForPrune)
-            UnlinkPrunedFiles(setFilesToPrune);
+            blockStore.UnlinkPrunedFiles(setFilesToPrune);
         nLastWrite = nNow;
     }
     // Flush best chain related state. This can only be done if the blocks / block index write was also done.
@@ -3447,7 +3447,7 @@ static bool FindBlockPos(CValidationState &state, CDiskBlockPos &pos, unsigned i
             if (fPruneMode)
                 fCheckForPruning = true;
             if (CheckDiskSpace(nNewChunks * BLOCKFILE_CHUNK_SIZE - pos.nPos)) {
-                FILE *file = GetBlockFile(pos);
+                FILE *file = blockStore.GetBlockFile(pos);
                 if (file) {
                     LogPrintf("Pre-allocating up to position 0x%x in blk%05u.dat\n", nNewChunks * BLOCKFILE_CHUNK_SIZE, pos.nFile);
                     AllocateFileRange(file, pos.nPos, nNewChunks * BLOCKFILE_CHUNK_SIZE - pos.nPos);
@@ -3479,7 +3479,7 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
         if (fPruneMode)
             fCheckForPruning = true;
         if (CheckDiskSpace(nNewChunks * UNDOFILE_CHUNK_SIZE - pos.nPos)) {
-            FILE *file = GetUndoFile(pos);
+            FILE *file = blockStore.GetUndoFile(pos);
             if (file) {
                 LogPrintf("Pre-allocating up to position 0x%x in rev%05u.dat\n", nNewChunks * UNDOFILE_CHUNK_SIZE, pos.nFile);
                 AllocateFileRange(file, pos.nPos, nNewChunks * UNDOFILE_CHUNK_SIZE - pos.nPos);
@@ -4210,7 +4210,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
         if (!FindBlockPos(state, blockPos, nBlockSize+8, nHeight, block.GetBlockTime(), dbp != NULL))
             return error("AcceptBlock(): FindBlockPos failed");
         if (dbp == NULL)
-            if (!WriteBlockToDisk(block, blockPos, chainparams.MessageStart()))
+            if (!blockStore.WriteBlockToDisk(block, blockPos, chainparams.MessageStart()))
                 AbortNode(state, "Failed to write block");
         if (!ReceivedBlockTransactions(block, state, pindex, blockPos, chainparams.GetConsensus()))
             return error("AcceptBlock(): ReceivedBlockTransactions failed");
@@ -4555,7 +4555,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     for (std::set<int>::iterator it = setBlkDataFiles.begin(); it != setBlkDataFiles.end(); it++)
     {
         CDiskBlockPos pos(*it, 0);
-        if (CFile(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()) {
+        if (CFile(blockStore.GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()) {
             return false;
         }
     }
@@ -4827,7 +4827,7 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
             CBlockUndo undo;
             CDiskBlockPos pos = pindex->GetUndoPos();
             if (!pos.IsNull()) {
-                if (!UndoReadFromDisk(undo, pos, pindex->pprev->GetBlockHashPoW2()))
+                if (!blockStore.UndoReadFromDisk(undo, pos, pindex->pprev->GetBlockHashPoW2()))
                     return error("VerifyDB(): *** found bad undo data at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
             }
         }
@@ -5016,7 +5016,7 @@ bool InitBlockIndex(const CChainParams& chainparams)
             CValidationState state;
             if (!FindBlockPos(state, blockPos, nBlockSize+8, 0, block.GetBlockTime()))
                 return error("LoadBlockIndex(): FindBlockPos failed");
-            if (!WriteBlockToDisk(block, blockPos, chainparams.MessageStart()))
+            if (!blockStore.WriteBlockToDisk(block, blockPos, chainparams.MessageStart()))
                 return error("LoadBlockIndex(): writing genesis block to disk failed");
             CBlockIndex *pindex = AddToBlockIndex(chainparams, block);
             if (!ReceivedBlockTransactions(block, state, pindex, blockPos, chainparams.GetConsensus()))
@@ -5140,7 +5140,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                         std::shared_ptr<CBlock> pblockrecursive = std::make_shared<CBlock>();
                         {
                             LOCK(cs_main); // acquire cs_main here to protect ReadBlockFromDisk
-                            if (ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
+                            if (blockStore.ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
                             {
                                 LogPrint(BCLog::REINDEX, "%s: Processing out of order child %s of %s\n", __func__, pblockrecursive->GetHashPoW2().ToString(),
                                         head.ToString());

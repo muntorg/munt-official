@@ -245,7 +245,7 @@ void Shutdown()
         if (pcoinsTip != NULL) {
             FlushStateToDisk();
         }
-        CloseBlockFiles();
+        blockStore.CloseBlockFiles();
         delete pcoinsTip;
         pcoinsTip = NULL;
         delete pcoinscatcher;
@@ -672,9 +672,9 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
             CDiskBlockPos pos(nFile, 0);
             {
                 LOCK(cs_main);
-                if (!BlockFileExists(pos))
+                if (!blockStore.BlockFileExists(pos))
                     break; // No block files left to reindex
-                FILE *tmpfile = GetBlockFile(pos, true);
+                FILE *tmpfile = blockStore.GetBlockFile(pos, true);
                 if (!tmpfile)
                     break; // This error is logged in OpenBlockFile
                 // dupping here because otherwise the cs_main might be locked for a long time
