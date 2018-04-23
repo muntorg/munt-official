@@ -16,9 +16,6 @@ std::string StringFromSeedType(CHDSeed* seed);
 CHDSeed::SeedType SeedTypeFromString(std::string type);
 
 class CBlockIndex;
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const Consensus::Params& params, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);

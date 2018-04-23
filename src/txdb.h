@@ -79,6 +79,8 @@ public:
     CCoinsViewCursor *Cursor() const override;
 
     //fixme: (GULDEN) (2.1) We can remove these for 2.1
+    void SetPhase2ActivationHash(const uint256 &hashPhase2ActivationPoint);
+    uint256 GetPhase2ActivationHash();
     void SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint);
     uint256 GetPhase3ActivationHash();
     void SetPhase4ActivationHash(const uint256 &hashPhase4ActivationPoint);

@@ -165,7 +165,7 @@ private:
     CBlock* pblock;
 
     // Configuration parameters for the block size
-    bool fIncludeWitness;
+    bool fIncludeSegSig;
     unsigned int nBlockMaxWeight, nBlockMaxSize;
     bool fNeedSizeAccounting;
     CFeeRate blockMinFeeRate;

@@ -451,7 +451,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates (override with -prematurewitness)
-    bool witnessEnabled = IsWitnessEnabled(chainActive.Tip(), chainparams, chainActive, nullptr);
+    bool witnessEnabled = IsSegSigEnabled(chainActive.Tip()->pprev, chainparams, chainActive, nullptr);
     if (!GetBoolArg("-prematurewitness",false) && tx.HasWitness() && !witnessEnabled) {
         return state.DoS(0, false, REJECT_NONSTANDARD, "no-witness-yet", true);
     }
@@ -881,7 +881,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
 {
     CBlockIndex *pindexSlow = NULL;
 
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     CTransactionRef ptx = mempool.get(hash);
     if (ptx)
@@ -1763,7 +1763,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     }
 
     // Start enforcing WITNESS rules using versionbits logic.
-    if (IsWitnessEnabled(pindex->pprev, chainparams, chain, &view)) {
+    if (IsSegSigEnabled(pindex->pprev, chainparams, chain, &view)) {
         flags |= SCRIPT_VERIFY_WITNESS;
         flags |= SCRIPT_VERIFY_NULLDUMMY;
     }
@@ -1785,26 +1785,23 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
         if (fVerifyWitness)
         {
-            CTxOut witnessOutput;
-            COutPoint witnessOutPoint;
-            unsigned int witnessBlockHeight;
-            //fixme: (HIGH) (NEXT) Witness is actually for -this- block not previous one.
-            /*if (!GetWitness(chain, pindex->pprev, block, chainparams, witnessOutput, witnessOutPoint, witnessBlockHeight, &view))
+            CGetWitnessInfo witInfo;
+            if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
                 return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
-            if (witnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
+            if (witInfo.selectedWitnessTransaction.GetType() <= CTxOutType::ScriptLegacyOutput)
             {
-                if (CKeyID(uint160(witnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
-                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
+                if (CKeyID(uint160(witInfo.selectedWitnessTransaction.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
+                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "script witness signature incorrect for block");
             }
-            else if(witnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
+            else if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
             {
-                if (witnessOutput.output.witnessDetails.witnessKeyID != pubkey.GetID())
+                if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
                     return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
             }
             else
             {
-                return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
-            }*/
+                return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature missing for block");
+            }
         }
     }
 
@@ -2350,6 +2347,8 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
   */
 bool static DisconnectTip(CValidationState& state, const CChainParams& chainparams, DisconnectedBlockTransactions *disconnectpool)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     CBlockIndex *pindexDelete = chainActive.Tip();
     assert(pindexDelete);
     // Read block from disk.
@@ -2471,6 +2470,8 @@ public:
  */
 bool static ConnectTip(CValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexNew, const std::shared_ptr<const CBlock>& pblock, ConnectTrace& connectTrace, DisconnectedBlockTransactions &disconnectpool)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     assert(pindexNew->pprev == chainActive.Tip());
     // Read block from disk.
     int64_t nTime1 = GetTimeMicros();
@@ -2798,7 +2799,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
 
 static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace, CCoinsViewCache& coinView)
 {
-    AssertLockHeld(cs_main);
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
     const CBlockIndex *pindexFork = currentChain.FindFork(pindexMostWork);
 
     if (!pindexFork)
@@ -3364,7 +3365,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
     pindexNew->nDataPos = pos.nPos;
     pindexNew->nUndoPos = 0;
     pindexNew->nStatus |= BLOCK_HAVE_DATA;
-    if (IsWitnessEnabled(pindexNew->pprev, Params(), chainActive, nullptr)) {
+    if (IsSegSigEnabled(pindexNew->pprev, Params(), chainActive, nullptr)) {
         pindexNew->nStatus |= BLOCK_OPT_WITNESS;
     }
     pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
@@ -3496,7 +3497,7 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
 {
     // Check proof of work matches claimed amount
     if (fCheckPOW) {
-        // split in nested if statement for easier breakpoint managment
+        // Nested if statement for easier breakpoint management
         if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
@@ -3513,10 +3514,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check that the header is valid (particularly PoW).  This is mostly
     // redundant with the call in AcceptBlockHeader.
-    if (!CheckBlockHeader(block, state, consensusParams, !fAssumePOWGood && !block.fPOWChecked))
-        return false;
-    else
-        block.fPOWChecked = true;
+    if (fCheckPOW)
+    {
+        if (!CheckBlockHeader(block, state, consensusParams, !fAssumePOWGood && !block.fPOWChecked))
+            return false;
+        else
+            block.fPOWChecked = true;
+    }
 
     // All potential-corruption validation must be done before we do any
     // transaction validation, as otherwise we may mark the header as invalid
@@ -3615,10 +3619,13 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
     return true;
 }
 
-bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
+bool IsSegSigEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
 {
     LOCK(cs_main);
-    if (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride) || IsPow2Phase5Active(pindexPrev, chainParams, chainOverride, viewOverride))
+    // Witnessing never kicks in at genesis or block after genesis...
+    if (!pindexPrev)
+        return false;
+    if (pindexPrev->nVersionPoW2Witness != 0)
         return true;
     return false;
 }
@@ -3644,7 +3651,7 @@ void UpdateUncommittedBlockStructures(CBlock& block, const CBlockIndex* pindexPr
 {
     int commitpos = GetWitnessCommitmentIndex(block);
     static const std::vector<unsigned char> nonce(32, 0x00);
-    if (commitpos != -1 && IsWitnessEnabled(pindexPrev, consensusParams) && !block.vtx[0]->HasWitness()) {
+    if (commitpos != -1 && IsSegSigEnabled(pindexPrev, consensusParams) && !block.vtx[0]->HasWitness()) {
         CMutableTransaction tx(*block.vtx[0]);
         tx.vin[0].scriptWitness.stack.resize(1);
         tx.vin[0].scriptWitness.stack[0] = nonce;
@@ -3860,7 +3867,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     // * There must be at least one output whose scriptPubKey is a single 36-byte push, the first 4 bytes of which are
     //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
     //   multiple, the last one is used.
-    bool fHaveWitness = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride) || IsPow2Phase5Active(pindexPrev, chainParams, chainOverride, viewOverride));
+    bool fHaveWitness = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
     #if 0
     //GULDEN - We hash this data as part of the normal merkle root instead.
     if (VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache) == THRESHOLD_ACTIVE) {
@@ -3990,6 +3997,8 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
 
 bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     if (nWitnessCoinbaseIndex == -1)
         return error("Invalid coinbase index for embedded witness coinbase info.");
     if (block.vtx.size() < 2)
@@ -4077,6 +4086,10 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         if (!pubkey.RecoverCompact(hash, embeddedWitnessBlock.witnessHeaderPoW2Sig))
             ret = error("Could not recover public key from embedded witness coinbase header");
         //LogPrintf(">>>[Embedded] witness pubkey [%s]\n", pubkey.GetID().GetHex());
+
+        // Phase 3 restriction - we force the miners nVersion to reflect the version the witness of the block before had - thus allowing control of voting for phase 4 to be controlled by witnesses.
+        if (ret && block.nVersion != embeddedWitnessBlock.nVersionPoW2Witness)
+            ret = error("Embedded witness version doesn't match version of parent PoW block.");
 
         if (ret)
         {
@@ -4183,7 +4196,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     }
     if (fNewBlock) *fNewBlock = true;
 
-    if (!CheckBlock(block, state, chainparams.GetConsensus(), fAssumePOWGood) ||
+    if (!CheckBlock(block, state, chainparams.GetConsensus(), true, true, fAssumePOWGood) ||
         !ContextualCheckBlock(block, state, chainparams, pindex->pprev, chainActive)) {
         if (state.IsInvalid() && !state.CorruptionPossible()) {
             pindex->nStatus |= BLOCK_FAILED_VALID;
@@ -4722,7 +4735,7 @@ CVerifyDB::~CVerifyDB()
 
 bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth)
 {
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
     if (chainActive.Tip() == NULL || chainActive.Tip()->pprev == NULL)
         return true;
 
@@ -4821,7 +4834,7 @@ bool RewindBlockIndex(const CChainParams& params)
 
     int nHeight = 1;
     while (nHeight <= chainActive.Height()) {
-        if (IsWitnessEnabled(chainActive[nHeight - 1], params, chainActive, nullptr) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS)) {
+        if (IsSegSigEnabled(chainActive[nHeight - 1], params, chainActive, nullptr) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS)) {
             break;
         }
         nHeight++;
@@ -4858,7 +4871,7 @@ bool RewindBlockIndex(const CChainParams& params)
         // this block or some successor doesn't HAVE_DATA, so we were unable to
         // rewind all the way.  Blocks remaining on chainActive at this point
         // must not have their validity reduced.
-        if (IsWitnessEnabled(pindexIter->pprev, params, chainActive, nullptr) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
+        if (IsSegSigEnabled(pindexIter->pprev, params, chainActive, nullptr) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
             // Reduce validity
             pindexIter->nStatus = std::min<unsigned int>(pindexIter->nStatus & BLOCK_VALID_MASK, BLOCK_VALID_TREE) | (pindexIter->nStatus & ~BLOCK_VALID_MASK);
             // Remove have-data flags.

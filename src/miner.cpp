@@ -140,7 +140,7 @@ void BlockAssembler::resetBlock()
     nBlockSize = 1000;
     nBlockWeight = 4000;
     nBlockSigOpsCost = 400;
-    fIncludeWitness = false;
+    fIncludeSegSig = false;
 
     // These counters do not include coinbase tx
     nBlockTx = 0;
@@ -153,13 +153,19 @@ bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
 
+    // Phase 3 restriction - we force the miners nVersion to reflect the version the witness of the block before had - thus allowing control of voting for phase 4 to be controlled by witnesses.
+    block.nVersion = pWitnessBlockToEmbed->nVersionPoW2Witness;
+
     std::vector<unsigned char> commitment;
     int commitpos = GetPoW2WitnessCoinbaseIndex(block);
 
     assert(pWitnessBlockToEmbed);
     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
-    if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
-        return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+    {
+        LOCK(cs_main); // For ReadBlockFromDisk
+        if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
+            return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+    }
 
     if (commitpos == -1)
     {
@@ -219,9 +225,9 @@ bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
     return true;
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, const CScript& scriptPubKeyIn, bool fMineWitnessTx, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, const CScript& scriptPubKeyIn, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
 {
-    fMineWitnessTx = true;
+    fMineSegSig = true;
 
     int64_t nTimeStart = GetTimeMicros();
 
@@ -276,13 +282,13 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
                        ? nMedianTimePast
                        : pblock->GetBlockTime();
 
-    // Decide whether to include witness transactions
-    // This is only needed in case the witness softfork activation is reverted
+    // Decide whether to include segsig signature information
+    // This is only needed in case the segsig signature activation is reverted
     // (which would require a very deep reorganization) or when
     // -promiscuousmempoolflags is used.
     // TODO: replace this with a call to main to assess validity of a mempool
     // transaction (which in most cases can be a no-op).
-    fIncludeWitness = IsWitnessEnabled(pParent, chainparams, chainActive, nullptr) && fMineWitnessTx;
+    fIncludeSegSig = IsSegSigEnabled(pParent, chainparams, chainActive, nullptr) && fMineSegSig;
 
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
@@ -328,6 +334,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     {
         if (pWitnessBlockToEmbed)
         {
+            //NB! Modifies block version so must be called *after* ComputeBlockVersion and not before.
             if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed, nParentPoW2Phase))
                 return nullptr;
         }
@@ -418,7 +425,7 @@ bool BlockAssembler::TestPackageTransactions(const CTxMemPool::setEntries& packa
     BOOST_FOREACH (const CTxMemPool::txiter it, package) {
         if (!IsFinalTx(it->GetTx(), nHeight, nLockTimeCutoff))
             return false;
-        if (!fIncludeWitness && it->GetTx().HasWitness())
+        if (!fIncludeSegSig && it->GetTx().HasWitness())
             return false;
         CValidationState state;
         if (!CheckTransactionContextual(it->GetTx(), state, nHeight, nullptr, true))
@@ -760,7 +767,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), GetPoW2Phase(chainActive.Tip(), chainparams, chainActive), GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive));
 
     // Found a solution
-    /*if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams) || IsPow2Phase5Active(pIndexPrev, chainparams))
+    /*if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams))
     {
         if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
             return error("GuldenWitness: Generated phase4 block is stale");
@@ -883,6 +890,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 {
                     if (nPoW2PhaseGrandParent == 3)
                     {
+                        LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
                         pWitnessBlockToEmbed = pindexParent;
                         pindexParent = GetPoWBlockForPoSBlock(pindexParent);
                         assert(pindexParent);
@@ -908,6 +916,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                             }
                             else
                             {
+                                LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
                                 CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
                                 if (pParentPoW)
                                 {
@@ -937,6 +946,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                 if (!pWitnessBlockToEmbed)
                                 {
                                     std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
+                                    LOCK(cs_main); // For ReadBlockFromDisk
                                     if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params().GetConsensus()))
                                     {
                                         int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
@@ -1370,6 +1380,7 @@ void static GuldenWitness()
                     continue;
                 }
 
+                LOCK(cs_main); // For ReadBlockFromDisk
                 for (const auto candidateIter : candidateOrphans)
                 {
                     boost::this_thread::interruption_point();

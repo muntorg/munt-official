@@ -13,6 +13,7 @@
 #include "blockstore.h"
 #include "streams.h"
 #include "clientversion.h"
+#include "validation.h" //For cs_main
 
 CBlockStore blockStore;
 
@@ -79,6 +80,8 @@ void CBlockStore::CloseBlockFiles()
 
 bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
 {
+    AssertLockHeld(cs_main);
+
     // Open history file to append
     CFile fileout(GetBlockFile(pos), SER_DISK, CLIENT_VERSION);
     if (fileout.IsNull())
@@ -101,6 +104,8 @@ bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, cons
 
 bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
 {
+    AssertLockHeld(cs_main);
+
     block.SetNull();
 
     // Open history file to read

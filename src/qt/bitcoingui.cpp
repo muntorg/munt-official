@@ -104,6 +104,8 @@ static void UpdateWitnessAccountStates()
 
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {
+            LOCK(cs_main); // Required for ReadBlockFromDisk.
+
             CGetWitnessInfo witnessInfo;
             CBlock block;
             //fixme: Error handling.

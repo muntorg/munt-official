@@ -219,7 +219,7 @@ namespace Checkpoints
 
     bool AcceptPendingSyncCheckpoint(const CChainParams& chainparams)
     {
-        LOCK2(cs_main, cs_hashSyncCheckpoint);
+        LOCK2(cs_main, cs_hashSyncCheckpoint); // cs_main lock required for ReadBlockFromDisk
 
         if (hashPendingCheckpoint != uint256() && mapBlockIndex.count(hashPendingCheckpoint))
         {
@@ -354,7 +354,7 @@ namespace Checkpoints
     // Reset synchronized checkpoint to last hardened checkpoint (to be used if checkpoint key is changed for whatever reason - e.g. a stalled chain)
     bool ResetSyncCheckpoint(const CChainParams& chainparams)
     {
-        LOCK(cs_hashSyncCheckpoint);
+        LOCK2(cs_main, cs_hashSyncCheckpoint);// cs_main lock required for ReadBlockFromDisk
 
         const uint256& hash = GetLastCheckpoint(chainparams.Checkpoints())->GetBlockHashLegacy();
         if (mapBlockIndex.count(hash) && !chainActive.Contains(mapBlockIndex[hash]))
@@ -542,7 +542,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
         return false;
     }
 
-    LOCK(Checkpoints::cs_hashSyncCheckpoint);
+    LOCK2(cs_main, Checkpoints::cs_hashSyncCheckpoint);// cs_main lock required for ReadBlockFromDisk
 
     if (!mapBlockIndex.count(hashCheckpoint))
     {

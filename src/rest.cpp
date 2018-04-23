@@ -223,16 +223,17 @@ static bool rest_block(HTTPRequest* req,
     CBlock block;
     CBlockIndex* pblockindex = NULL;
     {
-        LOCK(cs_main);
         if (mapBlockIndex.count(hash) == 0)
             return RESTERR(req, HTTP_NOT_FOUND, hashStr + " not found");
 
         pblockindex = mapBlockIndex[hash];
         if (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0)
             return RESTERR(req, HTTP_NOT_FOUND, hashStr + " not available (pruned data)");
-
-        if (!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
-            return RESTERR(req, HTTP_NOT_FOUND, hashStr + " not found");
+        {
+            LOCK(cs_main); // Required for ReadBlockFromDisk.
+            if (!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+                return RESTERR(req, HTTP_NOT_FOUND, hashStr + " not found");
+        }
     }
 
     CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());

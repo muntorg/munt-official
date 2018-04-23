@@ -562,7 +562,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 // We consider the chain that this peer is on invalid.
                 return;
             }
-            if (!State(nodeid)->fHaveWitness && IsWitnessEnabled(pindex->pprev, Params(), chainActive, nullptr)) {
+            if (!State(nodeid)->fHaveWitness && IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr)) {
                 // We wouldn't download this block or its descendants from this peer.
                 return;
             }
@@ -834,7 +834,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         return;
     nHighestFastAnnounce = pindex->nHeight;
 
-    bool fWitnessEnabled = IsWitnessEnabled(pindex->pprev, Params(), chainActive, nullptr);
+    bool fWitnessEnabled = IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr);
 
     uint256 hashBlock;
 
@@ -1033,7 +1033,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
     std::vector<CInv> vNotFound;
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     while (it != pfrom->vRecvGetData.end()) {
         // Don't bother if send buffer is too full to respond anyway
@@ -1915,7 +1915,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return true;
         }
 
-        LOCK(cs_main);
+        LOCK(cs_main); // Required for ReadBlockFromDisk.
 
         BlockMap::iterator it = mapBlockIndex.find(req.blockhash);
         if (it == mapBlockIndex.end() || !(it->second->nStatus & BLOCK_HAVE_DATA)) {
@@ -2326,7 +2326,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         CNodeState *nodestate = State(pfrom->GetId());
 
-        if (IsWitnessEnabled(pindex->pprev, chainparams, chainActive, nullptr) && !nodestate->fSupportsDesiredCmpctVersion) {
+        if (IsSegSigEnabled(pindex->pprev, chainparams, chainActive, nullptr) && !nodestate->fSupportsDesiredCmpctVersion) {
             // Don't bother trying to process compact blocks from v1 peers
             // after segwit activates.
             return true;
@@ -2635,7 +2635,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             while (pindexWalk && !chainActive.Contains(pindexWalk) && vToFetch.size() <= MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
                 if (!(pindexWalk->nStatus & BLOCK_HAVE_DATA) &&
                         !mapBlocksInFlight.count(pindexWalk->GetBlockHashPoW2()) &&
-                        (!IsWitnessEnabled(pindexWalk->pprev, chainparams, chainActive, nullptr) || State(pfrom->GetId())->fHaveWitness)) {
+                        (!IsSegSigEnabled(pindexWalk->pprev, chainparams, chainActive, nullptr) || State(pfrom->GetId())->fHaveWitness)) {
                     // We don't have this block, and it's not yet in flight.
                     vToFetch.push_back(pindexWalk);
                 }

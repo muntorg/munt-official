@@ -218,7 +218,7 @@ UniValue gettxoutproof(const JSONRPCRequest& request)
        oneTxid = hash;
     }
 
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     CBlockIndex* pblockindex = NULL;
 

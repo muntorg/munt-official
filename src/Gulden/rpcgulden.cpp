@@ -189,8 +189,11 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
     if (nPow2Phase >= 2)
     {
         CBlock block;
-        if (!ReadBlockFromDisk(block, pTipIndex_, Params().GetConsensus()))
-            throw std::runtime_error("Could not load block to obtain PoW² information.");
+        {
+            LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
+            if (!ReadBlockFromDisk(block, pTipIndex_, Params().GetConsensus()))
+                throw std::runtime_error("Could not load block to obtain PoW² information.");
+        }
 
         if (!GetWitnessInfo(tempChain, Params(), &viewNew, pTipIndex_->pprev, block, witInfo, pTipIndex_->nHeight))
             throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
@@ -508,6 +511,7 @@ UniValue dumptransactionstats(const JSONRPCRequest& request)
     while(pBlock && pBlock->pprev && --nNumToOutput>0)
     {
         CBlock block;
+        LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
         if (ReadBlockFromDisk(block, pBlock, Params().GetConsensus()))
         {
             for (auto transaction : block.vtx)
