@@ -4608,23 +4608,17 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
     // Refresh all blocks on disk - change in serialisation format.
     if (nPreviousVersion == 0 && nCurrentVersion >= 1)
     {
-        // Move all the block files into backup files
-        int nFile = 0;
+        blockStore.CloseBlockFiles();
 
-        while (nFile < 1000)
+        CBlockStore oldStore(true);
+
+        oldStore.Rename("16_");
+
         {
-            CDiskBlockPos pos(nFile, 0);
-            if (fs::exists(GetBlockPosFilename(pos, "blk")))
-            {
-                fs::rename(GetBlockPosFilename(pos, "blk"), GetBlockPosFilename(pos, "16_blk"));
-            }
-            if (fs::exists(GetBlockPosFilename(pos, "rev")))
-            {
-                fs::rename(GetBlockPosFilename(pos, "rev"), GetBlockPosFilename(pos, "16_rev"));
-            }
-            ++nFile;
+            LOCK(cs_LastBlockFile);
+            vinfoBlockFile.clear();
+            nLastBlockFile = 0;
         }
-        vinfoBlockFile.clear();
 
         // (Optimisation) Sort by height so that the files end up "in order" in the new block files.
         std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
@@ -4653,39 +4647,17 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
                 vDirtyFiles.push_back(std::make_pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
                 // Read block in, using old transaction format.
                 {
-                    CAutoFile filein(OpenDiskFile(blockpos, "16_blk", true), SER_DISK, CLIENT_VERSION|SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
-                    if (filein.IsNull())
-                        return error("UpgradeBlockIndex: ReadBlockFromDisk: OpenBlockFile failed for %s", blockpos.ToString());
-                    try
-                    {
-                        filein >> *pblock;
-                    }
-                    catch (const std::exception& e)
-                    {
-                        return error("UpgradeBlockIndex: %s: Deserialize or I/O error - %s at %s", __func__, e.what(), blockpos.ToString());
-                    }
-
-                    if ((pindex->nStatus & BLOCK_VALID_MASK) == BLOCK_VALID_MASK)
-                    {
-                        if (!CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, chainparams.GetConsensus()))
-                            return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block header at %s", blockpos.ToString());
-                    }
+                    if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams.GetConsensus()))
+                        return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block at %s", blockpos.ToString());
                 }
 
                 // Write block out using new transaction format.
                 {
                     unsigned int nSize = ::GetSerializeSize(*pblock, SER_DISK, CLIENT_VERSION);
                     CValidationState state;
-                    FindBlockPos(state, blockpos, nSize+8, 0, pblock->GetBlockTime());
-                    CAutoFile fileout(OpenBlockFile(blockpos), SER_DISK, CLIENT_VERSION);
-                    if (fileout.IsNull())
-                        return error("UpgradeBlockIndex: WriteBlockToDisk: OpenBlockFile failed");
-                    fileout << FLATDATA(chainparams.MessageStart()) << nSize;
-                    long fileOutPos = ftell(fileout.Get());
-                    if (fileOutPos < 0)
-                        return error("UpgradeBlockIndex: WriteBlockToDisk: ftell failed");
-                    blockpos.nPos = (unsigned int)fileOutPos;
-                    fileout << *pblock;
+                    FindBlockPos(state, blockpos, nSize+8, pindex->nHeight, pblock->GetBlockTime());
+                    if (!blockStore.WriteBlockToDisk(*pblock, blockpos, chainparams.MessageStart()))
+                        return error("UpgradeBlockIndex: WriteBlockToDisk: failed");
                     pindex->nFile = blockpos.nFile;
                     pindex->nDataPos = blockpos.nPos;
                 }
@@ -4695,21 +4667,8 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
                     // Read undo information
                     CBlockUndo blockundo;
                     {
-                        CAutoFile filein(OpenDiskFile(undoPos, "16_rev", true), SER_DISK, CLIENT_VERSION|SERIALIZE_TXUNDO_LEGACY_COMPRESSION);
-                        if (filein.IsNull())
-                            return error("UpgradeBlockIndex: OpenUndoFile failed");
-                        uint256 hashChecksum;
-                        CHashVerifier<CAutoFile> verifier(&filein); // We need a CHashVerifier as reserializing may lose data
-                        try {
-                            verifier << pindex->pprev->GetBlockHashPoW2();
-                            verifier >> blockundo;
-                            filein >> hashChecksum;
-                        }
-                        catch (const std::exception& e) {
-                            return error("%s: Deserialize or I/O error - %s", __func__, e.what());
-                        }
-                        if (hashChecksum != verifier.GetHash())
-                            return error("%s: Checksum mismatch", __func__);
+                        if (!oldStore.UndoReadFromDisk(blockundo, undoPos, pindex->pprev->GetBlockHashPoW2()))
+                            return error("UpgradeBlockIndex: UndoReadFromDisk failed");
                     }
 
                     // Write undo information back to disk with modified hash
@@ -4718,7 +4677,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
                         CDiskBlockPos undoDiskPos;
                         if (!FindUndoPos(state, pindex->nFile, undoDiskPos, ::GetSerializeSize(blockundo, SER_DISK, CLIENT_VERSION) + 40))
                             return error("UpgradeBlockIndex: FindUndoPos failed");
-                        if (!UndoWriteToDisk(blockundo, undoDiskPos, pindex->pprev->GetBlockHashLegacy(), chainparams.MessageStart()))
+                        if (!blockStore.UndoWriteToDisk(blockundo, undoDiskPos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
                             return AbortNode(state, "UpgradeBlockIndex: Failed to write undo data");
 
                         // update nUndoPos in block index
@@ -4745,23 +4704,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
             return error("UpgradeBlockIndex: Failed to write to block index database");
         }
 
-        // Remove the old backup block files as upgrade is done.
-        nFile = 0;
-        while (nFile < 1000)
-        {
-            CDiskBlockPos pos(nFile, 0);
-            if (fs::exists(GetBlockPosFilename(pos, "16_blk")))
-            {
-                if (!fs::remove(GetBlockPosFilename(pos, "16_blk")))
-                    return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, "16_blk"));
-            }
-            if (fs::exists(GetBlockPosFilename(pos, "16_rev")))
-            {
-                if (!fs::remove(GetBlockPosFilename(pos, "16_rev")))
-                    return error("UpgradeBlockIndex: Could not remove old block file after upgrade [%s]", GetBlockPosFilename(pos, "16_rev"));
-            }
-            ++nFile;
-        }
+        oldStore.Delete();
     }
 
     return true;
