@@ -26,8 +26,8 @@ static const int WITNESS_SCALE_FACTOR = 4;
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
     //fixme: (POW2) (RELEASE) - Make sure this still works before release.
-    // Consider putting a phase 2/3 restriction to lock this in.
-    return (nVersion < 4) || (nVersion == 536870912);
+    //fixme: (POW2) (HIGH) - Consider putting a phase 2/3 validation restriction to lock this in (prevent anyone mining a nVersion >= 5 transaction before we are ready) - normally this would be cause for concern of forking the network (before phase 2 kicks in) but checkpoint server should help us out here.
+    return (nVersion < 5) || (nVersion == 536870912);
 }
 
 struct CBlockPosition
@@ -1124,8 +1124,8 @@ public:
     // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
     // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
     // MAX_STANDARD_VERSION will be equal.
-    static const int32_t MAX_STANDARD_VERSION=4;
-    static const int32_t SEGSIG_ACTIVATION_VERSION=4;
+    static const int32_t MAX_STANDARD_VERSION=5;
+    static const int32_t SEGSIG_ACTIVATION_VERSION=5;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
