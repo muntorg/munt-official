@@ -24,16 +24,7 @@ static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 static const int WITNESS_SCALE_FACTOR = 4;
 
 //fixme: (GULDEN) (NEXT) (HIGH)
-/*return nVersion < 4 || nVersion > 500000;*/
-#include <util.h>
-inline bool IsOldTransactionVersion(const unsigned int nVersion) {
-    /*if (nVersion >= 4)
-    {
-        LogPrintf("Invalid transaction version [%d]\n", nVersion);
-    }
-    return true;*/
-    return nVersion < 4;
-}
+inline bool IsOldTransactionVersion(const unsigned int nVersion) { return true; }
 
 struct CBlockPosition
 {
