@@ -32,7 +32,8 @@ static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
-static const char DB_VERSION = '1';
+static const char DB_VERSION     = '1';
+static const char DB_POW2_PHASE2 = '2';
 static const char DB_POW2_PHASE3 = '3';
 static const char DB_POW2_PHASE4 = '4';
 static const char DB_POW2_PHASE5 = '5';
@@ -80,6 +81,19 @@ bool CCoinsViewDB::GetCoin(const COutPoint &outpoint, Coin &coin) const {
 
 bool CCoinsViewDB::HaveCoin(const COutPoint &outpoint) const {
     return db.Exists(CoinEntry(&outpoint));
+}
+
+void CCoinsViewDB::SetPhase2ActivationHash(const uint256 &hashPhase2ActivationPoint)
+{
+    db.Write(DB_POW2_PHASE2, hashPhase2ActivationPoint);
+}
+
+uint256 CCoinsViewDB::GetPhase2ActivationHash()
+{
+    uint256 hashPhase2ActivationPoint;
+    if (!db.Read(DB_POW2_PHASE2, hashPhase2ActivationPoint))
+        return uint256();
+    return hashPhase2ActivationPoint;
 }
 
 void CCoinsViewDB::SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint)

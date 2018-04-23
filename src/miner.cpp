@@ -161,8 +161,11 @@ bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev,
 
     assert(pWitnessBlockToEmbed);
     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
-    if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
-        return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+    {
+        LOCK(cs_main); // For ReadBlockFromDisk
+        if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
+            return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+    }
 
     if (commitpos == -1)
     {
@@ -887,6 +890,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 {
                     if (nPoW2PhaseGrandParent == 3)
                     {
+                        LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
                         pWitnessBlockToEmbed = pindexParent;
                         pindexParent = GetPoWBlockForPoSBlock(pindexParent);
                         assert(pindexParent);
@@ -912,6 +916,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                             }
                             else
                             {
+                                LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
                                 CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
                                 if (pParentPoW)
                                 {
@@ -941,6 +946,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                                 if (!pWitnessBlockToEmbed)
                                 {
                                     std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
+                                    LOCK(cs_main); // For ReadBlockFromDisk
                                     if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params().GetConsensus()))
                                     {
                                         int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
@@ -1374,6 +1380,7 @@ void static GuldenWitness()
                     continue;
                 }
 
+                LOCK(cs_main); // For ReadBlockFromDisk
                 for (const auto candidateIter : candidateOrphans)
                 {
                     boost::this_thread::interruption_point();

@@ -881,7 +881,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
 {
     CBlockIndex *pindexSlow = NULL;
 
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     CTransactionRef ptx = mempool.get(hash);
     if (ptx)
@@ -2347,6 +2347,8 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
   */
 bool static DisconnectTip(CValidationState& state, const CChainParams& chainparams, DisconnectedBlockTransactions *disconnectpool)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     CBlockIndex *pindexDelete = chainActive.Tip();
     assert(pindexDelete);
     // Read block from disk.
@@ -2468,6 +2470,8 @@ public:
  */
 bool static ConnectTip(CValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexNew, const std::shared_ptr<const CBlock>& pblock, ConnectTrace& connectTrace, DisconnectedBlockTransactions &disconnectpool)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     assert(pindexNew->pprev == chainActive.Tip());
     // Read block from disk.
     int64_t nTime1 = GetTimeMicros();
@@ -2795,7 +2799,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
 
 static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace, CCoinsViewCache& coinView)
 {
-    AssertLockHeld(cs_main);
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
     const CBlockIndex *pindexFork = currentChain.FindFork(pindexMostWork);
 
     if (!pindexFork)
@@ -3993,6 +3997,8 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
 
 bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock)
 {
+    AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
+
     if (nWitnessCoinbaseIndex == -1)
         return error("Invalid coinbase index for embedded witness coinbase info.");
     if (block.vtx.size() < 2)
@@ -4786,7 +4792,7 @@ CVerifyDB::~CVerifyDB()
 
 bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth)
 {
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
     if (chainActive.Tip() == NULL || chainActive.Tip()->pprev == NULL)
         return true;
 

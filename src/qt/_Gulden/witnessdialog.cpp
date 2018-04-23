@@ -629,8 +629,11 @@ void WitnessDialog::update()
             {
                 CGetWitnessInfo witnessInfo;
                 CBlock block;
-                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
-                    return;
+                {
+                    LOCK(cs_main); // Required for ReadBlockFromDisk.
+                    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+                        return;
+                }
                 GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
                 for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {

@@ -742,7 +742,7 @@ UniValue getblock(const JSONRPCRequest& request)
             + HelpExampleRpc("getblock", "\"00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09\"")
         );
 
-    LOCK(cs_main);
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     std::string strHash = request.params[0].get_str();
     uint256 hash(uint256S(strHash));

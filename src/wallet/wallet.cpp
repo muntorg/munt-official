@@ -1720,7 +1720,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
     CBlockIndex* pindex = pindexStart;
     CBlockIndex* ret = nullptr;
     {
-        LOCK2(cs_main, cs_wallet);
+        LOCK2(cs_main, cs_wallet); // Required for ReadBlockFromDisk.
         fAbortRescan = false;
         fScanningWallet = true;
 
@@ -3492,7 +3492,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 
 bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount nFee, std::string& strError)
 {
-    LOCK2(cs_main, cs_wallet);
+    LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
