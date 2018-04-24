@@ -2546,11 +2546,7 @@ static CBlockIndex* FindMostWorkChain() {
         CBlockIndex *pindexTest = pindexNew;
         bool fInvalidAncestor = false;
         while (pindexTest && !chainActive.Contains(pindexTest)) {
-            //fixme: (GULDEN) (2.1) See if we can change back to an assert here.
-            //had to remove assert for compatibility with 1.6.x nodes.
-            //assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
-            if(!pindexTest->nChainTx && pindexTest->nHeight != 0)
-                return NULL;
+            assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
 
             // Pruned nodes may have entries in setBlockIndexCandidates for
             // which block files have been deleted.  Remove those as candidates
@@ -3277,24 +3273,29 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
 {
     LOCK(cs_main);
 
-    setBlockIndexCandidates.erase(pIndex);
-
-    // fixme: (GULDEN) (2.0) HIGH - I guess we should also count the weight of the witness toward the chain height? Or would that just introduce bias?
-    // fixme: (GULDEN) (2.0) (HIGH) (NEXT)
-    // Figure out how to renable something similar to the below:
-    // All PoW blocks are zero weight, regardless of work involved (this puts all blocks into consideration for next tip when DELTA does a diff drop)
+    // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
+    // This would have the benefit of making it harder to mine a side chain using lots of small witnesses.
+    // However it would also bias the earnings and chain control even more to large witnesses and act as a 'centralisation' incentive.
+    // So at this point we don't do this - and prefer instead to be agnostic, so we increase witnessed blocks always by a fixed weight.
 
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
     pIndex->nChainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
     if (pIndex->nVersionPoW2Witness != 0)
     {
-        // Witnessed blocks sit ahead of non-witnessed blocks in the chain.
+        //fixme: (GULDEN) (POW2) (HIGH)
         //checkme: (Gulden) (2.0) Is there a better way to handle this? We increase the weight of the witnessed block a chunk vs the non-witnessed one.
         //In order to prevent a PoW block of larger weight than the one we witnessed from overtaking us.
         //pIndex->nChainWork += (20 * nBlockProof);
+
+        // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work.
         pIndex->nChainWork += 1;
     }
-    setBlockIndexCandidates.insert(pIndex);
+    const auto& findIter = setBlockIndexCandidates.find(pIndex);
+    if (findIter !=setBlockIndexCandidates.end())
+    {
+        setBlockIndexCandidates.erase(findIter);
+        setBlockIndexCandidates.insert(pIndex);
+    }
 }
 
 static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBlockHeader& block)
