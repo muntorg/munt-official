@@ -3278,6 +3278,8 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
     // However it would also bias the earnings and chain control even more to large witnesses and act as a 'centralisation' incentive.
     // So at this point we don't do this - and prefer instead to be agnostic, so we increase witnessed blocks always by a fixed weight.
 
+    const auto& findIter = setBlockIndexCandidates.find(pIndex);
+
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
     pIndex->nChainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
     if (pIndex->nVersionPoW2Witness != 0)
@@ -3290,8 +3292,9 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
         // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work.
         pIndex->nChainWork += 1;
     }
-    const auto& findIter = setBlockIndexCandidates.find(pIndex);
-    if (findIter !=setBlockIndexCandidates.end())
+
+    // update setBlockIndexCandidates, its ordering depends on nChainWork
+    if (findIter != setBlockIndexCandidates.end())
     {
         setBlockIndexCandidates.erase(findIter);
         setBlockIndexCandidates.insert(pIndex);
