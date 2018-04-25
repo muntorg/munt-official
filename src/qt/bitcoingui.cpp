@@ -104,7 +104,7 @@ static void UpdateWitnessAccountStates()
 
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {
-            LOCK(cs_main); // Required for ReadBlockFromDisk.
+            LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
 
             CGetWitnessInfo witnessInfo;
             CBlock block;
@@ -645,6 +645,10 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
+    //fixme: (GULDEN) (2.1) This can be removed
+    // Force this to run once to ensure correct PoW2 phase displays
+    clientModel->updatePoW2Display();
+    rpcConsole->setClientModel(clientModel);
     // Force this to run once to pre-prime the 'validaty' state of witness accounts.
     UpdateWitnessAccountStates();
 

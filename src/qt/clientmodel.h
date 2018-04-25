@@ -95,6 +95,7 @@ public:
     mutable std::atomic<int64_t> cachedBestHeaderTime;
     mutable std::atomic<int> cachedPoW2Phase;
 
+    void updatePoW2Display();
 private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;

@@ -327,8 +327,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
     }
     // if we are in-sync, update the UI regardless of last update time
     if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
-        //fixme: (GULDEN) (2.1) We can remove this for 2.1
-        clientmodel->cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+        clientmodel->updatePoW2Display();
         //pass a async signal to the UI thread
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
@@ -337,6 +336,12 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
                                   Q_ARG(bool, fHeader));
         nLastUpdateNotification = now;
     }
+}
+
+void ClientModel::updatePoW2Display()
+{
+    //fixme: (GULDEN) (2.1) We can remove this for 2.1
+    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 }
 
 void ClientModel::subscribeToCoreSignals()
