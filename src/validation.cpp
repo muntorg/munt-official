@@ -2971,7 +2971,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
     // Force the tip of the chain to the block that comes before the block we are examining.
     // For phase 3 this must be a PoW block - from phase 4 it should be a witness block 
-    if (pPreviousIndexChain->nVersionPoW2Witness==0 || GetPoW2Phase(pPreviousIndexChain->pprev, chainParams, tempChain, &viewNew) > 3)
+    if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev, chainParams, tempChain, &viewNew))
     {
         ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
     }
@@ -2981,6 +2981,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         assert(pPreviousIndexChainPoW);
         pPreviousIndexChainPoW->pprev = pPreviousIndexChain->pprev;
         ForceActivateChainWithBlockAsTip(pPreviousIndexChain->pprev, nullptr, state, chainParams, tempChain, viewNew, pPreviousIndexChainPoW);
+        pPreviousIndexChain = tempChain.Tip();
     }
 
     // If we have been passed a new tip block (not yet part of the chain) then add it to the chain now.
