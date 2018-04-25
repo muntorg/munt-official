@@ -886,16 +886,18 @@ void BitcoinGUI::updateHeadersSyncProgressLabel(int current, int total)
 
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
+    if (!clientModel)
+        return;
+
+    double nSyncProgress = std::min(1.0, (double)count / clientModel->getProbableHeight());
+
     if (modalOverlay)
     {
         if (header)
             modalOverlay->setKnownBestHeight(count, blockDate);
         else
-            modalOverlay->tipUpdate(count, blockDate, nVerificationProgress);
+            modalOverlay->tipUpdate(count, blockDate, nSyncProgress);
     }
-
-    if (!clientModel)
-        return;
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
     statusBar()->clearMessage();
@@ -963,8 +965,6 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     else
     {
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
-
-        float nSyncProgress = (float)count / (Checkpoints::GetLastCheckpoint(Params().Checkpoints()) ? Checkpoints::GetLastCheckpoint(Params().Checkpoints())->nHeight : 600000);
 
         m_pGuldenImpl->showProgressBarLabel();
         progressBarLabel->setVisible(true);
