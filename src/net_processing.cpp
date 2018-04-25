@@ -139,6 +139,9 @@ namespace {
 
     /** Headers received through RHEADERS and checkpoint verified. */
     std::vector<CBlockHeader> vReverseHeaders;
+
+    /** Maximum starting height seen on any peer. */
+    int nMaxStartingHeight = 0;
 } // anon namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -589,6 +592,28 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
             }
         }
     }
+}
+
+void NotifyHeaderProgress(CConnman& connman)
+{
+    int probableHeight = nMaxStartingHeight;
+    int lastCheckPointHeight = Params().Checkpoints().mapCheckpoints.rbegin()->first;
+    probableHeight = std::max(probableHeight, lastCheckPointHeight);
+    probableHeight = std::max(probableHeight, connman.GetBestHeight());
+
+    int currentCount = vReverseHeaders.size();
+    int headerTipHeight = 0;
+    int64_t headerTipTime = 0;
+    {
+        LOCK(cs_main);
+        if (pindexBestHeader != NULL) {
+            currentCount += pindexBestHeader->nHeight;
+            headerTipHeight = pindexBestHeader->nHeight;
+            headerTipTime = pindexBestHeader->GetBlockTime();
+        }
+    }
+
+    uiInterface.NotifyHeaderProgress(currentCount, probableHeight, headerTipHeight, headerTipTime);
 }
 
 } // anon namespace
@@ -1427,6 +1452,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             pfrom->cleanSubVer = cleanSubVer;
         }
         pfrom->nStartingHeight = nStartingHeight;
+        if (nStartingHeight > nMaxStartingHeight)
+            nMaxStartingHeight = nStartingHeight;
         pfrom->fClient = !(nServices & NODE_NETWORK);
         {
             LOCK(pfrom->cs_filter);
@@ -2594,6 +2621,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
         }
 
+        NotifyHeaderProgress(connman);
+
         {
         LOCK(cs_main);
         CNodeState *nodestate = State(pfrom->GetId());
@@ -2792,8 +2821,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHashPoW2());
 
             vReverseHeaders.clear();
-            return true;
         }
+
+        if (nRHeadersConnected > 0)
+            NotifyHeaderProgress(connman);
 
         // request more reverse headers if there is still a gap between the chain tip and the reverse headers
         if (headerGap > 0) {
