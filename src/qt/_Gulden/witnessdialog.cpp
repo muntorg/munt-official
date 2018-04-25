@@ -630,11 +630,13 @@ void WitnessDialog::update()
                 CGetWitnessInfo witnessInfo;
                 CBlock block;
                 {
-                    LOCK(cs_main); // Required for ReadBlockFromDisk.
+                    LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+                    //fixme: Error handling
                     if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
                         return;
+                    if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                        return;
                 }
-                GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
                 for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {
                     if (IsMine(*forAccount, witCoin.coin.out))
@@ -692,7 +694,7 @@ void WitnessDialog::setModel(WalletModel *_model)
         filter->setSortRole(Qt::EditRole);
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
-        
+
         {
             QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
             proxyModel->setSourceModel(model->getAccountTableModel());
