@@ -94,9 +94,14 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             + HelpExampleCli("getwitnessinfo 400000 true", "")
             + HelpExampleCli("getwitnessinfo \"8383d8e9999ade8ad0c9f84e7816afec3b9e4855341f678bb0fdc3af46ee6f31\" true", ""));
 
-    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
+    #else
+    LOCK(cs_main);
+    #endif
 
     int64_t nTotalWeightAll = 0;
     int64_t nNumWitnessAddressesAll = 0;
@@ -284,7 +289,11 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("lock_from_block", nLockFromBlock));
             rec.push_back(Pair("lock_until_block", nLockUntilBlock));
             rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+            #ifdef ENABLE_WALLET
             rec.push_back(Pair("ismine_accountname", accountNameForAddress(*pwallet, address)));
+            #else
+            rec.push_back(Pair("ismine_accountname", ""));
+            #endif
             rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
 
             witnessWeightStats(nRawWeight);
