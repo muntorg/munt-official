@@ -648,7 +648,7 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     //fixme: (GULDEN) (2.1) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
     clientModel->updatePoW2Display();
-    rpcConsole->setClientModel(clientModel);
+    rpcConsole->updatePoW2PhaseState();
     // Force this to run once to pre-prime the 'validaty' state of witness accounts.
     UpdateWitnessAccountStates();
 
