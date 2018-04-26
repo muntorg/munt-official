@@ -2917,7 +2917,7 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    if (networkTotalWeight == 0)
+    if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
     if (nWeight > networkTotalWeight/100)
@@ -2933,7 +2933,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
 
 uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    if (networkTotalWeight == 0)
+    if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
     if (nWeight > networkTotalWeight/100)
