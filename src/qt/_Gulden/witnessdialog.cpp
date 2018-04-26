@@ -111,6 +111,7 @@ QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, co
     return info.arg(legendColour).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
 }
 
+enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING};
 
 WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
@@ -144,12 +145,14 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
 
     // Clear all labels by default
     ui->labelWeightValue->setText(tr("n/a"));
+    ui->labelNetworkWeightValue->setText(tr("n/a"));
     ui->labelLockedFromValue->setText(tr("n/a"));
     ui->labelLockedUntilValue->setText(tr("n/a"));
     ui->labelLastEarningsDateValue->setText(tr("n/a"));
     ui->labelWitnessEarningsValue->setText(tr("n/a"));
     ui->labelLockDurationValue->setText(tr("n/a"));
     ui->labelExpectedEarningsDurationValue->setText(tr("n/a"));
+    ui->labelEstimatedEarningsDurationValue->setText(tr("n/a"));
     ui->labelLockTimeRemainingValue->setText(tr("n/a"));
 
     // White background for plot
@@ -291,7 +294,7 @@ void WitnessDialog::viewWitnessInfoClicked()
 {
     ui->unitButton->setVisible(true);
     ui->viewWitnessGraphButton->setVisible(false);
-    ui->receiveCoinsStackedWidget->setCurrentIndex(1);
+    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
 }
 
 void WitnessDialog::emptyWitnessClicked()
@@ -556,7 +559,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
     {
         QDateTime lockedUntilDate;
         lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
-        lockedUntilDate.addSecs(nLockBlocksRemaining*150);
+        lockedUntilDate = lockedUntilDate.addSecs(nLockBlocksRemaining*150);
         ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
     }
     ui->labelLastEarningsDateValue->setText(lastEarningsDate.isNull() ? tr("n/a") : lastEarningsDate.toString("dd/MM/yy hh:mm"));
@@ -567,6 +570,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
         case GraphScale::Blocks:
             ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nWitnessLength)));
             ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nExpectedWitnessBlockPeriod)));
+            ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nEstimatedWitnessBlockPeriod)));
             ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nLockBlocksRemaining)));
             break;
         case GraphScale::Days:
@@ -574,6 +578,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
             {
                 ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nWitnessLength/576.0, 'f', 2)));
                 ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nExpectedWitnessBlockPeriod/576.0, 'f', 2)));
+                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0, 'f', 2)));
                 ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nLockBlocksRemaining/576.0, 'f', 2)));
             }
             else
@@ -586,6 +591,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
             {
                 ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nWitnessLength/576.0/7.0, 'f', 2)));
                 ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nExpectedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
+                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
                 ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nLockBlocksRemaining/576.0/7.0, 'f', 2)));
             }
             else
@@ -598,6 +604,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
             {
                 ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nWitnessLength/576.0/30.0, 'f', 2)));
                 ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nExpectedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
+                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
                 ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nLockBlocksRemaining/576.0/30.0, 'f', 2)));
             }
             else
@@ -610,7 +617,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
 
 void WitnessDialog::update()
 {
-    ui->receiveCoinsStackedWidget->setCurrentIndex(0);
+    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::EMPTY);
     ui->emptyWitnessButton->setVisible(false);
     ui->emptyWitnessButton2->setVisible(false);
     ui->fundWitnessButton->setVisible(true);
@@ -636,6 +643,7 @@ void WitnessDialog::update()
                         return;
                     if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
                         return;
+                    ui->labelNetworkWeightValue->setText(witnessInfo.nTotalWeight<=0 ? tr("n/a") : QString::number(witnessInfo.nTotalWeight));
                 }
                 for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {
@@ -654,17 +662,34 @@ void WitnessDialog::update()
                 ui->fundWitnessButton->setVisible(false);
                 if (bAnyExpired || !bAnyAreMine)
                 {
-                    ui->emptyWitnessButton2->setVisible(true);
-                    ui->renewWitnessButton->setVisible(true);
-                    ui->viewWitnessGraphButton->setVisible(true);
-                    ui->receiveCoinsStackedWidget->setCurrentIndex(2);
-                    plotGraphForAccount(forAccount);
+                    filter->setAccountFilter(model->getActiveAccount());
+                    int rows = filter->rowCount();
+                    for (int row = 0; row < rows; ++row)
+                    {
+                        QModelIndex index = filter->index(row, 0);
+
+                        int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                        if (nStatus == TransactionStatus::Status::Unconfirmed)
+                        {
+                            ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::PENDING);
+                            bAnyAreMine = true;
+                            break;
+                        }
+                    }
+                    if (!bAnyAreMine)
+                    {
+                        ui->emptyWitnessButton2->setVisible(true);
+                        ui->renewWitnessButton->setVisible(true);
+                        ui->viewWitnessGraphButton->setVisible(true);
+                        ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::EXPIRED);
+                        plotGraphForAccount(forAccount);
+                    }
                 }
                 else
                 {
                     ui->emptyWitnessButton->setVisible(true);
                     ui->unitButton->setVisible(true);
-                    ui->receiveCoinsStackedWidget->setCurrentIndex(1);
+                    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
                     plotGraphForAccount(forAccount);
                 }
             }

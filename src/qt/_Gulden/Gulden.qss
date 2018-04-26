@@ -938,7 +938,7 @@ OptionsDialog QSpinBox
     color: black;
 }
 
-#labelWeight, #labelLockedFrom, #labelLockedUntil, #labelLastEarningsDate, #labelLockTimeRemaining, #labelExpectedEarningsDuration, #labelLockDuration, #labelWitnessEarnings
+#labelNetworkWeight, #labelWeight, #labelLockedFrom, #labelLockedUntil, #labelLastEarningsDate, #labelLockTimeRemaining, #labelExpectedEarningsDuration, #labelEstimatedEarningsDuration , #labelLockDuration, #labelWitnessEarnings
 {
     color: #000;
 }
@@ -1061,7 +1061,7 @@ QToolTip
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount
 {
     margin: 0px;
     padding: 0px;
@@ -1072,13 +1072,9 @@ QToolTip
     text-transform: uppercase;
 }
 
-#labelInactiveWitnessAccountInfo
+#labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo
 {
     margin-top: 6px;
-}
-
-#labelInactiveWitnessAccountInfo
-{
     margin: 0px;
     padding: 0px;
     height:20px;
@@ -1086,7 +1082,7 @@ QToolTip
     color: TEXT_COLOR_1;
 }
 
-#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount
 {
     margin-top: 35px;
     margin-bottom: 10px;
