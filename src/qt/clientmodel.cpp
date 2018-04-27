@@ -50,6 +50,7 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
 {
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
+    cachedProbableHeight = Params().Checkpoints().mapCheckpoints.rbegin()->first;
     cachedPoW2Phase = 1;
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
@@ -111,6 +112,11 @@ int64_t ClientModel::getHeaderTipTime() const
         }
     }
     return cachedBestHeaderTime;
+}
+
+int ClientModel::getProbableHeight() const
+{
+    return cachedProbableHeight;
 }
 
 quint64 ClientModel::getTotalBytesRecv() const
@@ -344,6 +350,21 @@ void ClientModel::updatePoW2Display()
     cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 }
 
+static void HeaderProgressChanged(ClientModel *clientmodel, int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
+{
+    clientmodel->cachedBestHeaderHeight = headerTipHeight;
+    clientmodel->cachedBestHeaderTime = headerTipTime;
+    clientmodel->cachedProbableHeight = probableHeight;
+
+    int64_t now = GetTimeMillis();
+    if (now - nLastHeaderTipUpdateNotification > MODEL_UPDATE_DELAY) {
+        QMetaObject::invokeMethod(clientmodel, "headerProgressChanged", Qt::QueuedConnection,
+                                  Q_ARG(int, currentCount),
+                                  Q_ARG(int, probableHeight));
+        nLastHeaderTipUpdateNotification = now;
+    }
+}
+
 void ClientModel::subscribeToCoreSignals()
 {
     // Connect signals to client
@@ -354,6 +375,7 @@ void ClientModel::subscribeToCoreSignals()
     uiInterface.BannedListChanged.connect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.connect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyHeaderProgress.connect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
 }
 
 void ClientModel::unsubscribeFromCoreSignals()
@@ -366,4 +388,5 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.BannedListChanged.disconnect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyHeaderProgress.disconnect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
 }

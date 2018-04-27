@@ -30,7 +30,6 @@ userClosed(false)
         raise();
     }
 
-    blockProcessTime.clear();
     setVisible(false);
 
     ui->verticalLayoutIcon->setEnabled(false);
@@ -151,52 +150,16 @@ void ModalOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
     }
 }
 
-void ModalOverlay::tipUpdate(int count, const QDateTime& blockDate, double nVerificationProgress)
+void ModalOverlay::tipUpdate(int count, const QDateTime& blockDate, double nSyncProgress)
 {
     QDateTime currentDate = QDateTime::currentDateTime();
-
-    // keep a vector of samples of verification progress at height
-    blockProcessTime.push_front(qMakePair(currentDate.toMSecsSinceEpoch(), nVerificationProgress));
-
-    // show progress speed if we have more then one sample
-    if (blockProcessTime.size() >= 2)
-    {
-        double progressStart = blockProcessTime[0].second;
-        double progressDelta = 0;
-        double progressPerHour = 0;
-        qint64 timeDelta = 0;
-        qint64 remainingMSecs = 0;
-        double remainingProgress = 1.0 - nVerificationProgress;
-        for (int i = 1; i < blockProcessTime.size(); i++)
-        {
-            QPair<qint64, double> sample = blockProcessTime[i];
-
-            // take first sample after 500 seconds or last available one
-            if (sample.first < (currentDate.toMSecsSinceEpoch() - 500 * 1000) || i == blockProcessTime.size() - 1) {
-                progressDelta = progressStart-sample.second;
-                timeDelta = blockProcessTime[0].first - sample.first;
-                progressPerHour = progressDelta/(double)timeDelta*1000*3600;
-                remainingMSecs = remainingProgress / progressDelta * timeDelta;
-                break;
-            }
-        }
-        // show progress increase per hour
-        ui->progressIncreasePerH->setText(QString::number(progressPerHour*100, 'f', 2)+"%");
-
-        // show expected remaining time
-        ui->expectedTimeLeft->setText(GUIUtil::formatNiceTimeOffset(remainingMSecs/1000.0));
-
-        static const int MAX_SAMPLES = 5000;
-        if (blockProcessTime.count() > MAX_SAMPLES)
-            blockProcessTime.remove(MAX_SAMPLES, blockProcessTime.count()-MAX_SAMPLES);
-    }
 
     // show the last block date
     ui->newestBlockDate->setText(blockDate.toString());
 
-    // show the percentage done according to nVerificationProgress
-    ui->percentageProgress->setText(QString::number(nVerificationProgress*100, 'f', 2)+"%");
-    ui->progressBar->setValue(nVerificationProgress*100);
+    // show the percentage of blocks done
+    ui->percentageProgress->setText(QString::number(nSyncProgress*100, 'f', 2)+"%");
+    ui->progressBar->setValue(nSyncProgress*100);
 
     if (!bestHeaderDate.isValid())
         // not syncing
