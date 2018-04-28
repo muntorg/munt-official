@@ -34,6 +34,7 @@
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
 #include "walletmodel.h"
+#include "qt/_Gulden/witnessdialog.h"
 #endif // ENABLE_WALLET
 
 #ifdef Q_OS_MAC
@@ -143,8 +144,9 @@ static void UpdateWitnessAccountStates()
     }
 }
 
-static void BlockTipChangedHandler(bool ibd, const CBlockIndex *)
+static void BlockTipChangedHandler(BitcoinGUI* pUI, bool ibd, const CBlockIndex *)
 {
+    pUI->updateWitnessDialog();
     UpdateWitnessAccountStates();
 }
 #endif
@@ -637,6 +639,14 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
 }
 
 #ifdef ENABLE_WALLET
+void BitcoinGUI::updateWitnessDialog()
+{
+    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->witnessDialogPage)
+    {
+        walletFrame->currentWalletView()->witnessDialogPage->update();
+    }
+}
+
 bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
 {
     if(!walletFrame)
@@ -1371,7 +1381,7 @@ void BitcoinGUI::subscribeToCoreSignals()
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
     #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.connect(BlockTipChangedHandler);
+    uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChangedHandler, this, _1, _2));
     #endif
 }
 
@@ -1381,7 +1391,7 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
     #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.disconnect(BlockTipChangedHandler);
+    uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChangedHandler, this, _1, _2));
     #endif
 }
 

@@ -46,17 +46,17 @@
 class PlotMouseTracker: public QwtPlotPicker
 {
 public:
-    PlotMouseTracker( QWidget * );
+    PlotMouseTracker( QWidget* );
 
 protected:
     virtual QwtText trackerText( const QPoint & ) const;
     virtual QRect trackerRect( const QFont & ) const;
 
 private:
-    QString curveInfoAt(QString legendColor,  QString sHeading, const QwtPlotCurve *, const QPoint & ) const;
+    QString curveInfoAt(QString legendColor,  QString sHeading, const QwtPlotCurve*, const QPoint & ) const;
 };
 
-PlotMouseTracker::PlotMouseTracker( QWidget *canvas ):
+PlotMouseTracker::PlotMouseTracker( QWidget* canvas ):
     QwtPlotPicker( canvas )
 {
     setTrackerMode( QwtPlotPicker::ActiveOnly );
@@ -84,27 +84,27 @@ QwtText PlotMouseTracker::trackerText( const QPoint &pos ) const
 
     // Figure out whether we are closer to the "earnings to date" curve or the "future earnings forecast" curve.
     double distanceA, distanceB;
-    static_cast<const QwtPlotCurve *>(curves[0])->closestPoint(pos, &distanceA);
-    static_cast<const QwtPlotCurve *>(curves[2])->closestPoint(pos, &distanceB);
+    static_cast<const QwtPlotCurve*>(curves[0])->closestPoint(pos, &distanceA);
+    static_cast<const QwtPlotCurve*>(curves[2])->closestPoint(pos, &distanceB);
 
     // Populate popup text based on closest points on the two curves we are interested in.
     QString info;
-    info += curveInfoAt(TEXT_COLOR_1, tr("Initial expected earnings:"), static_cast<const QwtPlotCurve *>(curves[2]), pos );
+    info += curveInfoAt(TEXT_COLOR_1, tr("Initial expected earnings:"), static_cast<const QwtPlotCurve*>(curves[2]), pos );
     info += "<br>";
     if (distanceA < distanceB)
     {
-        info += curveInfoAt(ACCENT_COLOR_1, tr("Earnings to date:"), static_cast<const QwtPlotCurve *>(curves[0]), pos );
+        info += curveInfoAt(ACCENT_COLOR_1, tr("Earnings to date:"), static_cast<const QwtPlotCurve*>(curves[0]), pos );
     }
     else
     {
-        info += curveInfoAt(ACCENT_COLOR_1, tr("Future earnings forecast:"), static_cast<const QwtPlotCurve *>(curves[4]), pos );
+        info += curveInfoAt(ACCENT_COLOR_1, tr("Future earnings forecast:"), static_cast<const QwtPlotCurve*>(curves[4]), pos );
     }
 
     trackerText.setText( info );
     return trackerText;
 }
 
-QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, const QwtPlotCurve *curve, const QPoint &pos ) const
+QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, const QwtPlotCurve* curve, const QPoint &pos ) const
 {
     const int y = curve->sample(curve->closestPoint(pos)).y();
     QString info( "<font color=""%1"">■ </font><font color=""%2"">%3 \u0120%4</font>" );
@@ -395,7 +395,7 @@ void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, u
     pointMap[nX] += nY;
 }
 
-void WitnessDialog::plotGraphForAccount(CAccount* account)
+void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip)
 {
     GraphScale scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
@@ -487,10 +487,9 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
     uint64_t nWitnessLength = nOriginLength;
     if (nOriginNetworkWeight == 0)
         nOriginNetworkWeight = nStartingWitnessNetworkWeightEstimate;
-    uint64_t nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(nOriginWeight, nOriginNetworkWeight);
-    uint64_t nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(nOriginWeight, nOriginNetworkWeight);
+    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(nOriginWeight, nOriginNetworkWeight);
     pointMapForecast[0] = 0;
-    for (unsigned int i = nEstimatedWitnessBlockPeriod; i < nWitnessLength; i += nEstimatedWitnessBlockPeriod)
+    for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
         //fixme: high
@@ -565,6 +564,9 @@ void WitnessDialog::plotGraphForAccount(CAccount* account)
     ui->labelLastEarningsDateValue->setText(lastEarningsDate.isNull() ? tr("n/a") : lastEarningsDate.toString("dd/MM/yy hh:mm"));
     ui->labelWitnessEarningsValue->setText(generatedPoints.size() == 0 ? tr("n/a") : QString::number(generatedPoints.back().y(), 'f', 2));
 
+    uint64_t nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(nOriginWeight, nTotalNetworkWeightTip);
+    uint64_t nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(nOriginWeight, nTotalNetworkWeightTip);
+    ui->labelNetworkWeightValue->setText(nTotalNetworkWeightTip<=0 ? tr("n/a") : QString::number(nTotalNetworkWeightTip));
     switch (scale)
     {
         case GraphScale::Blocks:
@@ -625,11 +627,17 @@ void WitnessDialog::update()
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
 
+    // Perform a default selection, so that for simple cases (e.g. wallet with only 1 account) user does not need to manually select.
+    ui->fundWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->fundWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->fundWitnessAccountTableView->selectRow(0);
+
     CAccount* forAccount = model->getActiveAccount();
     if (model && forAccount)
     {
         if ( forAccount->IsPoW2Witness() )
         {
+            uint64_t nTotalNetworkWeight = 0;
             bool bAnyExpired = false;
             bool bAnyAreMine = false;
             if (chainActive.Tip() && chainActive.Tip()->pprev)
@@ -643,7 +651,7 @@ void WitnessDialog::update()
                         return;
                     if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
                         return;
-                    ui->labelNetworkWeightValue->setText(witnessInfo.nTotalWeight<=0 ? tr("n/a") : QString::number(witnessInfo.nTotalWeight));
+                    nTotalNetworkWeight = witnessInfo.nTotalWeight;
                 }
                 for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {
@@ -682,7 +690,7 @@ void WitnessDialog::update()
                         ui->renewWitnessButton->setVisible(true);
                         ui->viewWitnessGraphButton->setVisible(true);
                         ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::EXPIRED);
-                        plotGraphForAccount(forAccount);
+                        plotGraphForAccount(forAccount, nTotalNetworkWeight);
                     }
                 }
                 else
@@ -690,14 +698,14 @@ void WitnessDialog::update()
                     ui->emptyWitnessButton->setVisible(true);
                     ui->unitButton->setVisible(true);
                     ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
-                    plotGraphForAccount(forAccount);
+                    plotGraphForAccount(forAccount, nTotalNetworkWeight);
                 }
             }
         }
     }
 }
 
-void WitnessDialog::setClientModel(ClientModel *_clientModel)
+void WitnessDialog::setClientModel(ClientModel* _clientModel)
 {
     this->clientModel = _clientModel;
 
@@ -707,7 +715,25 @@ void WitnessDialog::setClientModel(ClientModel *_clientModel)
     }
 }
 
-void WitnessDialog::setModel(WalletModel *_model)
+
+
+GreaterThanOrEqualSortFilterProxyModel::GreaterThanOrEqualSortFilterProxyModel(QObject *parent)
+: QSortFilterProxyModel(parent)
+{
+}
+
+GreaterThanOrEqualSortFilterProxyModel::~GreaterThanOrEqualSortFilterProxyModel()
+{
+}
+
+bool GreaterThanOrEqualSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+{
+    uint64_t nCompare = source_parent.data(AccountTableModel::AvailableBalanceRole).toLongLong();
+    return nCompare >= nAmount;
+}
+
+
+void WitnessDialog::setModel(WalletModel* _model)
 {
     this->model = _model;
 
@@ -721,37 +747,55 @@ void WitnessDialog::setModel(WalletModel *_model)
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
         {
-            QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+            QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
             proxyModel->setSourceModel(model->getAccountTableModel());
-            proxyModel->setDynamicSortFilter(true);
+            //fixme: For some reason "setDynamicSortFilter(true)" does not update our filters in accordance to the source model changing like one would expect.
+            //So instead we disable it and manually connect to dataChanged/modelReset events - in future possibly look at this again and see if we can get it to work via the proper method.
+            proxyModel->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyModel, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyModel, SLOT(invalidate()));
             proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModel->setFilterRole(AccountTableModel::TypeRole);
             proxyModel->setFilterFixedString(GetAccountTypeString(AccountType::Normal).c_str());
 
-            QSortFilterProxyModel *proxyInactive = new QSortFilterProxyModel(this);
+            QSortFilterProxyModel* proxyInactive = new QSortFilterProxyModel(this);
             proxyInactive->setSourceModel(proxyModel);
-            proxyInactive->setDynamicSortFilter(true);
+            proxyInactive->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyInactive, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyInactive, SLOT(invalidate()));
             proxyInactive->setFilterRole(AccountTableModel::ActiveAccountRole);
             proxyInactive->setFilterFixedString(AccountTableModel::Inactive);
 
-            QSortFilterProxyModel *proxyFilterBySubType = new QSortFilterProxyModel(this);
+            QSortFilterProxyModel* proxyFilterBySubType = new QSortFilterProxyModel(this);
             proxyFilterBySubType->setSourceModel(proxyInactive);
-            proxyFilterBySubType->setDynamicSortFilter(true);
+            proxyFilterBySubType->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterBySubType, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterBySubType, SLOT(invalidate()));
             proxyFilterBySubType->setFilterRole(AccountTableModel::SubTypeRole);
             proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountSubTypeString(AccountSubType::PoW2Witness)+").*$").c_str());
 
-            QSortFilterProxyModel* proxyModelAccounts = new QSortFilterProxyModel(this);
-            proxyModelAccounts->setSourceModel(proxyFilterBySubType);
-            proxyModelAccounts->setDynamicSortFilter(true);
-            proxyModelAccounts->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyModelAccounts->setFilterFixedString("");
-            proxyModelAccounts->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyModelAccounts->setFilterKeyColumn(0);
-            proxyModelAccounts->setSortRole(Qt::DisplayRole);
-            proxyModelAccounts->sort(0);
+            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalance = new GreaterThanOrEqualSortFilterProxyModel(this);
+            proxyFilterByBalance->setSourceModel(proxyFilterBySubType);
+            proxyFilterByBalance->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalance, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalance, SLOT(invalidate()));
+            //proxyFilterByBalance->setFilterRole(AccountTableModel::AvailableBalanceRole);
+            proxyFilterByBalance->setAmount(nMinimumWitnessAmount * COIN);
 
-            ui->fundWitnessAccountTableView->setModel(proxyModelAccounts);
-            ui->renewWitnessAccountTableView->setModel(proxyModelAccounts);
+            QSortFilterProxyModel* proxyModelAccountsSorted = new QSortFilterProxyModel(this);
+            proxyModelAccountsSorted->setSourceModel(proxyFilterByBalance);
+            proxyModelAccountsSorted->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyModelAccountsSorted, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyModelAccountsSorted, SLOT(invalidate()));
+            proxyModelAccountsSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
+            proxyModelAccountsSorted->setFilterFixedString("");
+            proxyModelAccountsSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            proxyModelAccountsSorted->setFilterKeyColumn(0);
+            proxyModelAccountsSorted->setSortRole(Qt::DisplayRole);
+            proxyModelAccountsSorted->sort(0);
+
+            ui->fundWitnessAccountTableView->setModel(proxyModelAccountsSorted);
+            ui->renewWitnessAccountTableView->setModel(proxyModelAccountsSorted);
         }
     }
 }
