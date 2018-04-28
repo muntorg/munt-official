@@ -24,7 +24,6 @@
 #include "networkstyle.h"
 #include "optionsmodel.h"
 #include "platformstyle.h"
-#include "splashscreen.h"
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
 
@@ -234,8 +233,6 @@ public:
     void createOptionsModel(bool resetSettings);
     /// Create main window
     void createWindow(const NetworkStyle *networkStyle);
-    /// Create splash screen
-    void createSplashScreen(const NetworkStyle *networkStyle);
 
     /*GULDEN - move to public section
     /// Request core initialization
@@ -262,7 +259,6 @@ Q_SIGNALS:
     void requestedInitialize();
     void requestedShutdown();
     void stopThread();
-    void splashFinished(QWidget *window);
 
 private:
     QThread *coreThread;
@@ -416,17 +412,6 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
     window->show();
 }
 
-/*GULDEN - we don't use this as we have no splash screen
-void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
-{
-    SplashScreen *splash = new SplashScreen(0, networkStyle);
-    // We don't hold a direct pointer to the splash screen after creation, but the splash
-    // screen will take care of deleting itself when slotFinish happens.
-    splash->show();
-    connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
-    connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
-}
-*/
 void BitcoinApplication::startThread()
 {
     if(coreThread)
@@ -530,7 +515,6 @@ void BitcoinApplication::initializeResult(bool success)
         {
             window->show();
         }
-        Q_EMIT splashFinished(window);
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
@@ -636,7 +620,6 @@ int main(int argc, char *argv[])
     translationInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
-    // but before showing splash screen.
     if (IsArgSet("-?") || IsArgSet("-h") || IsArgSet("-help") || IsArgSet("-version"))
     {
         HelpMessageDialog help(NULL, IsArgSet("-version"));
@@ -726,11 +709,6 @@ int main(int argc, char *argv[])
 
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
-
-/*GULDEN - no splash screen
-    if (GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !GetBoolArg("-min", false))
-        app.createSplashScreen(networkStyle.data());
-*/
 
     //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
     // Make sure only a single Gulden process is using the data directory.

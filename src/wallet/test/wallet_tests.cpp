@@ -20,6 +20,7 @@
 #include "rpc/server.h"
 #include "test/test_bitcoin.h"
 #include "validation.h"
+#include "blockstore.h"
 #include "wallet/test/wallet_test_fixture.h"
 
 #include <boost/test/unit_test.hpp>
@@ -394,7 +395,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 
     // Prune the older block file.
     PruneOneBlockFile(oldTip->GetBlockPos().nFile);
-    UnlinkPrunedFiles({oldTip->GetBlockPos().nFile});
+    blockStore.UnlinkPrunedFiles({oldTip->GetBlockPos().nFile});
 
     // Verify ScanForWalletTransactions only picks transactions in the new block
     // file.

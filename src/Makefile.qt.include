@@ -118,11 +118,7 @@ GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
   qt/res/icons/connect1@2x.png \
   qt/res/icons/connect2@2x.png \
   qt/res/icons/connect3@2x.png \
-  qt/res/icons/connect4@2x.png \
-  qt/res/icons/splash.png \
-  qt/res/icons/splash_testnet.png \
-  qt/res/icons/splash@2x.png \
-  qt/res/icons/splash_testnet@2x.png
+  qt/res/icons/connect4@2x.png
 
 # bitcoin qt core #
 QT_TS = \
@@ -271,7 +267,6 @@ QT_MOC_CPP = \
   qt/moc_sendcoinsdialog.cpp \
   qt/moc_sendcoinsentry.cpp \
   qt/moc_signverifymessagedialog.cpp \
-  qt/moc_splashscreen.cpp \
   qt/moc_trafficgraphwidget.cpp \
   qt/moc_transactiondesc.cpp \
   qt/moc_transactiondescdialog.cpp \
@@ -345,7 +340,6 @@ GULDEN_QT_H = \
   qt/sendcoinsdialog.h \
   qt/sendcoinsentry.h \
   qt/signverifymessagedialog.h \
-  qt/splashscreen.h \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
   qt/transactiondescdialog.h \
@@ -439,7 +433,6 @@ GULDEN_QT_BASE_CPP = \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
-  qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp
 
