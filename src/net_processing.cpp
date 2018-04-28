@@ -434,7 +434,7 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
 void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
     AssertLockHeld(cs_main);
     CNodeState* nodestate = State(nodeid);
-    
+
     //fixme: GULDEN 2.0
     return;
     #if 0
@@ -1516,29 +1516,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         pfrom->nTimeOffset = nTimeOffset;
         AddTimeData(pfrom->addr, nTimeOffset);
 
-/*GULDEN - We still use the alert system, no 'final alert'
-        // If the peer is old enough to have the old alert system, send it the final alert.
-        if (pfrom->nVersion <= 70012) {
-            CDataStream finalAlert(ParseHex("60010000000000000000000000ffffff7f00000000ffffff7ffeffff7f01ffffff7f00000000ffffff7f00ffffff7f002f555247454e543a20416c657274206b657920636f6d70726f6d697365642c2075706772616465207265717569726564004630440220653febd6410f470f6bae11cad19c48413becb1ac2c17f908fd0fd53bdc3abd5202206d0e9c96fe88d4a0f01ed9dedae2b6f9e00da94cad0fecaae66ecf689bf71b50"), SER_NETWORK, PROTOCOL_VERSION);
-            connman.PushMessage(pfrom, CNetMsgMaker(nSendVersion).Make("alert", finalAlert));
-        }
-*/
-
         // Feeler connections exist only to verify if address is online.
         if (pfrom->fFeeler) {
             assert(pfrom->fInbound == false);
             pfrom->fDisconnect = true;
         }
-
-        //fixme: (GULDEN) do we need this anymore
-        /*if (pfrom->cleanSubVer=="/Guldencoin:1.3.1/" || pfrom->cleanSubVer=="/Guldencoin:1.4.0/")
-        {
-            // disconnect from peers older than this proto version
-            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
-            g_connman->PushMessage(pfrom, "reject", strCommand, REJECT_OBSOLETE,strprintf("Client version must be 1.5.1 or greater [%s]", pfrom->cleanSubVer));
-            pfrom->fDisconnect = true;
-            return false;
-        }*/
 
         // Relay alerts
         {
