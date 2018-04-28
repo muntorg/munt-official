@@ -726,9 +726,10 @@ GreaterThanOrEqualSortFilterProxyModel::~GreaterThanOrEqualSortFilterProxyModel(
 {
 }
 
-bool GreaterThanOrEqualSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+bool GreaterThanOrEqualSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
-    uint64_t nCompare = source_parent.data(AccountTableModel::AvailableBalanceRole).toLongLong();
+    QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
+    uint64_t nCompare = sourceModel()->data(index0, filterRole()).toLongLong();
     return nCompare >= nAmount;
 }
 
@@ -774,16 +775,8 @@ void WitnessDialog::setModel(WalletModel* _model)
             proxyFilterBySubType->setFilterRole(AccountTableModel::SubTypeRole);
             proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountSubTypeString(AccountSubType::PoW2Witness)+").*$").c_str());
 
-            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalance = new GreaterThanOrEqualSortFilterProxyModel(this);
-            proxyFilterByBalance->setSourceModel(proxyFilterBySubType);
-            proxyFilterByBalance->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalance, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalance, SLOT(invalidate()));
-            //proxyFilterByBalance->setFilterRole(AccountTableModel::AvailableBalanceRole);
-            proxyFilterByBalance->setAmount(nMinimumWitnessAmount * COIN);
-
             QSortFilterProxyModel* proxyModelAccountsSorted = new QSortFilterProxyModel(this);
-            proxyModelAccountsSorted->setSourceModel(proxyFilterByBalance);
+            proxyModelAccountsSorted->setSourceModel(proxyFilterBySubType);
             proxyModelAccountsSorted->setDynamicSortFilter(false);
             connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyModelAccountsSorted, SLOT(invalidate()));
             connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyModelAccountsSorted, SLOT(invalidate()));
@@ -794,8 +787,24 @@ void WitnessDialog::setModel(WalletModel* _model)
             proxyModelAccountsSorted->setSortRole(Qt::DisplayRole);
             proxyModelAccountsSorted->sort(0);
 
-            ui->fundWitnessAccountTableView->setModel(proxyModelAccountsSorted);
-            ui->renewWitnessAccountTableView->setModel(proxyModelAccountsSorted);
+            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalanceFund = new GreaterThanOrEqualSortFilterProxyModel(this);
+            proxyFilterByBalanceFund->setSourceModel(proxyModelAccountsSorted);
+            proxyFilterByBalanceFund->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalanceFund, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalanceFund, SLOT(invalidate()));
+            proxyFilterByBalanceFund->setFilterRole(AccountTableModel::AvailableBalanceRole);
+            proxyFilterByBalanceFund->setAmount(nMinimumWitnessAmount * COIN);
+
+            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalanceRenew = new GreaterThanOrEqualSortFilterProxyModel(this);
+            proxyFilterByBalanceRenew->setSourceModel(proxyModelAccountsSorted);
+            proxyFilterByBalanceRenew->setDynamicSortFilter(false);
+            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalanceRenew, SLOT(invalidate()));
+            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalanceRenew, SLOT(invalidate()));
+            proxyFilterByBalanceRenew->setFilterRole(AccountTableModel::AvailableBalanceRole);
+            proxyFilterByBalanceRenew->setAmount(nMinimumWitnessAmount * COIN);
+
+            ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFund);
+            ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenew);
         }
     }
 }

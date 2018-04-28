@@ -25,6 +25,19 @@ namespace Ui {
 }
 
 
+//fixme: Move this to a header file of its own somewhere where it can be reused elsewhere in codebase if needed.
+class GreaterThanOrEqualSortFilterProxyModel : public QSortFilterProxyModel
+{
+Q_OBJECT
+public:
+    explicit GreaterThanOrEqualSortFilterProxyModel(QObject *parent = 0);
+    virtual ~GreaterThanOrEqualSortFilterProxyModel();
+    void setAmount(uint64_t nAmount_) {nAmount = nAmount_;}
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+private:
+    uint64_t nAmount;
+};
 
 class WitnessDialog : public QFrame
 {
@@ -44,7 +57,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateUnit(int nNewUnit_);
-    void plotGraphForAccount(CAccount* account);
+    void plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip);
     void update();
     void unitButtonClicked();
     void viewWitnessInfoClicked();
