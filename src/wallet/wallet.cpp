@@ -1128,6 +1128,24 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     return true;
 }
 
+void CWallet::ClearCacheForTransaction(const uint256& hash)
+{
+    auto& wtx = mapWallet[hash];
+    // Invalidate all caches for transaction as they will need to be recalculated.
+    // Otherwise we get incorrect wallet balance displays.
+    wtx.fChangeCached = false;
+    wtx.nChangeCached = 0;
+    wtx.debitCached.clear();
+    wtx.creditCached.clear();
+    wtx.immatureCreditCached.clear();
+    wtx.availableCreditCached.clear();
+    wtx.availableCreditCachedIncludingLockedWitnesses.clear();
+    wtx.watchDebitCached.clear();
+    wtx.watchCreditCached.clear();
+    wtx.immatureWatchCreditCached.clear();
+    wtx.availableWatchCreditCached.clear();
+}
+
 /**
  * Add a transaction to the wallet, or update it.  pIndex and posInBlock should
  * be set when the transaction was known to be included in a block.  When
@@ -1162,6 +1180,16 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
         }
 
         bool fExisted = mapWallet.count(tx.GetHash()) != 0;
+        // Wipe cache from all transactions that possibly involve this one.
+        if (fExisted)
+            ClearCacheForTransaction(tx.GetHash());
+        for(const auto& txin : tx.vin)
+        {
+            if (mapWallet.count(txin.prevout.hash) != 0)
+            {
+                ClearCacheForTransaction(txin.prevout.hash);
+            }
+        }
         if (fExisted && !fUpdate) return false;
         if (fExisted || IsMine(tx) || IsFromMe(tx))
         {
@@ -1178,18 +1206,19 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 RemoveAddressFromKeypoolIfIsMine(txin, pIndex ? pIndex->nTime : 0);
             }
 
-            /* GULDEN (MERGE) - IS THIS STILL NEEDED?
-            // Add all incoming transactions to the wallet as well - so that we can always get 'incoming' address details.
+            // Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
+            bool ret = AddToWallet(wtx, false);
             for(const auto& txin : tx.vin)
             {
+                //checkme: It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
+                //Is there maybe a better way to do this?
                 uint256 hashBlock = uint256();
                 if (GetTransaction(txin.prevout.hash, wtx.tx, Params().GetConsensus(), hashBlock, true))
                 {
                     AddToWallet(wtx, false);
                 }
-            }*/
-
-            return AddToWallet(wtx, false);
+            }
+            return ret;
         }
     }
     return false;

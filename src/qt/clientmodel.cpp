@@ -50,6 +50,7 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
 {
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
+    cachedProbableHeight = Params().Checkpoints().mapCheckpoints.rbegin()->first;
     cachedPoW2Phase = 1;
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
@@ -111,6 +112,11 @@ int64_t ClientModel::getHeaderTipTime() const
         }
     }
     return cachedBestHeaderTime;
+}
+
+int ClientModel::getProbableHeight() const
+{
+    return cachedProbableHeight;
 }
 
 quint64 ClientModel::getTotalBytesRecv() const
@@ -327,8 +333,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
     }
     // if we are in-sync, update the UI regardless of last update time
     if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
-        //fixme: (GULDEN) (2.1) We can remove this for 2.1
-        clientmodel->cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+        clientmodel->updatePoW2Display();
         //pass a async signal to the UI thread
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
@@ -336,6 +341,27 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
                                   Q_ARG(double, clientmodel->getVerificationProgress(pIndex)),
                                   Q_ARG(bool, fHeader));
         nLastUpdateNotification = now;
+    }
+}
+
+void ClientModel::updatePoW2Display()
+{
+    //fixme: (GULDEN) (2.1) We can remove this for 2.1
+    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+}
+
+static void HeaderProgressChanged(ClientModel *clientmodel, int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
+{
+    clientmodel->cachedBestHeaderHeight = headerTipHeight;
+    clientmodel->cachedBestHeaderTime = headerTipTime;
+    clientmodel->cachedProbableHeight = probableHeight;
+
+    int64_t now = GetTimeMillis();
+    if (now - nLastHeaderTipUpdateNotification > MODEL_UPDATE_DELAY) {
+        QMetaObject::invokeMethod(clientmodel, "headerProgressChanged", Qt::QueuedConnection,
+                                  Q_ARG(int, currentCount),
+                                  Q_ARG(int, probableHeight));
+        nLastHeaderTipUpdateNotification = now;
     }
 }
 
@@ -349,6 +375,7 @@ void ClientModel::subscribeToCoreSignals()
     uiInterface.BannedListChanged.connect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.connect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyHeaderProgress.connect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
 }
 
 void ClientModel::unsubscribeFromCoreSignals()
@@ -361,4 +388,5 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.BannedListChanged.disconnect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyHeaderProgress.disconnect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
 }

@@ -2546,11 +2546,7 @@ static CBlockIndex* FindMostWorkChain() {
         CBlockIndex *pindexTest = pindexNew;
         bool fInvalidAncestor = false;
         while (pindexTest && !chainActive.Contains(pindexTest)) {
-            //fixme: (GULDEN) (2.1) See if we can change back to an assert here.
-            //had to remove assert for compatibility with 1.6.x nodes.
-            //assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
-            if(!pindexTest->nChainTx && pindexTest->nHeight != 0)
-                return NULL;
+            assert(pindexTest->nChainTx || pindexTest->nHeight == 0);
 
             // Pruned nodes may have entries in setBlockIndexCandidates for
             // which block files have been deleted.  Remove those as candidates
@@ -2688,27 +2684,6 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
         CheckForkWarningConditions();
 
     return true;
-}
-
-static void NotifyHeaderTip() {
-    bool fNotify = false;
-    bool fInitialBlockDownload = false;
-    static CBlockIndex* pindexHeaderOld = NULL;
-    CBlockIndex* pindexHeader = NULL;
-    {
-        LOCK(cs_main);
-        pindexHeader = pindexBestHeader;
-
-        if (pindexHeader != pindexHeaderOld) {
-            fNotify = true;
-            fInitialBlockDownload = IsInitialBlockDownload();
-            pindexHeaderOld = pindexHeader;
-        }
-    }
-    // Send block tip changed notifications without cs_main
-    if (fNotify) {
-        uiInterface.NotifyHeaderTip(fInitialBlockDownload, pindexHeader);
-    }
 }
 
 /**
@@ -2921,7 +2896,7 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    if (networkTotalWeight == 0)
+    if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
     if (nWeight > networkTotalWeight/100)
@@ -2937,7 +2912,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
 
 uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    if (networkTotalWeight == 0)
+    if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
     if (nWeight > networkTotalWeight/100)
@@ -2975,7 +2950,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
     // Force the tip of the chain to the block that comes before the block we are examining.
     // For phase 3 this must be a PoW block - from phase 4 it should be a witness block 
-    if (pPreviousIndexChain->nVersionPoW2Witness==0 || GetPoW2Phase(pPreviousIndexChain->pprev, chainParams, tempChain, &viewNew) > 3)
+    if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev, chainParams, tempChain, &viewNew))
     {
         ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
     }
@@ -2985,6 +2960,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         assert(pPreviousIndexChainPoW);
         pPreviousIndexChainPoW->pprev = pPreviousIndexChain->pprev;
         ForceActivateChainWithBlockAsTip(pPreviousIndexChain->pprev, nullptr, state, chainParams, tempChain, viewNew, pPreviousIndexChainPoW);
+        pPreviousIndexChain = tempChain.Tip();
     }
 
     // If we have been passed a new tip block (not yet part of the chain) then add it to the chain now.
@@ -3298,24 +3274,34 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
 {
     LOCK(cs_main);
 
-    setBlockIndexCandidates.erase(pIndex);
-
-    // fixme: (GULDEN) (2.0) HIGH - I guess we should also count the weight of the witness toward the chain height? Or would that just introduce bias?
-    // fixme: (GULDEN) (2.0) (HIGH) (NEXT)
-    // Figure out how to renable something similar to the below:
-    // All PoW blocks are zero weight, regardless of work involved (this puts all blocks into consideration for next tip when DELTA does a diff drop)
+    // Check if we are an existing item in the set or not - NB! we must do this before we modify the index as with a custom comparator find might otherwise fail.
+    const auto& findIter = setBlockIndexCandidates.find(pIndex);
 
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
     pIndex->nChainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
     if (pIndex->nVersionPoW2Witness != 0)
     {
-        // Witnessed blocks sit ahead of non-witnessed blocks in the chain.
-        //checkme: (Gulden) (2.0) Is there a better way to handle this? We increase the weight of the witnessed block a chunk vs the non-witnessed one.
-        //In order to prevent a PoW block of larger weight than the one we witnessed from overtaking us.
+        // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
+        // This would have the benefit of making it harder to mine a side chain using lots of small witnesses.
+        // However it would also bias the earnings and chain control even more to large witnesses and act as a 'centralisation' incentive.
+        // So at this point we don't do this - and prefer instead to be agnostic, so we increase witnessed blocks always by a fixed weight.
+
+        //fixme: (GULDEN) (POW2) (HIGH)
+        // We should increment by a larger (constant) amount than 1 otherwise there is a small attack vector here.
+        // Whereby attacker can "overtake" a witnessed block with a PoW block that has a larger difficulty.
+        // NB! We can't use a multiple of nBlockProof though as in the case of an absent witness with chain stalling and delta dropping difficulty it could take an immense amount of time for the new chain to overtake the old one.
         //pIndex->nChainWork += (20 * nBlockProof);
+
+        // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work than our non-witnessed counterpart.
         pIndex->nChainWork += 1;
     }
-    setBlockIndexCandidates.insert(pIndex);
+
+    // Update setBlockIndexCandidates with the new ordering, ordering depends on nChainWork so might have changed.
+    if (findIter != setBlockIndexCandidates.end())
+    {
+        setBlockIndexCandidates.erase(findIter);
+        setBlockIndexCandidates.insert(pIndex);
+    }
 }
 
 static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBlockHeader& block)
@@ -3345,7 +3331,11 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
 
     // Gulden: PoW2
-    SetChainWorkForIndex(pindexNew, chainParams, true);
+    {
+        SetChainWorkForIndex(pindexNew, chainParams, true);
+        if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
+            setBlockIndexCandidates.insert(pindexNew);
+    }
 
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
@@ -3387,7 +3377,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
                 setBlockIndexCandidates.erase(pindex);
                 pindex->nSequenceId = nBlockSequenceId++;
             }
-            if (chainActive.Tip() == NULL || pindex->nChainWork >= chainActive.Tip()->nChainWork || pindex->nHeight >= chainActive.Tip()->nHeight) {
+            if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)) {
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);
@@ -3991,7 +3981,6 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
             }
         }
     }
-    NotifyHeaderTip();
     return true;
 }
 
@@ -4259,8 +4248,6 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             return error("%s: AcceptBlock FAILED", __func__);
         }
     }
-
-    NotifyHeaderTip();
 
     CValidationState state; // Only used to report errors, not invalidity - ignore it
     if (!ActivateBestChain(state, chainparams, pblock))
@@ -5082,8 +5069,6 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     }
                 }
 
-                NotifyHeaderTip();
-
                 // Recursively process earlier encountered successors of this block
                 std::deque<uint256> queue;
                 queue.push_back(hash);
@@ -5110,7 +5095,6 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                         }
                         range.first++;
                         mapBlocksUnknownParent.erase(it);
-                        NotifyHeaderTip();
                     }
                 }
             } catch (const std::exception& e) {

@@ -48,7 +48,7 @@
        <item>
         <widget class="QStackedWidget" name="receiveCoinsStackedWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="emptyAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -138,7 +138,10 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0" columnstretch="2,0,1,2,0">
+            <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="2,0,0,0,0">
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
              <property name="spacing">
               <number>14</number>
              </property>
@@ -161,22 +164,6 @@
                 <widget class="QwtPlot" name="witnessEarningsPlot" native="true"/>
                </item>
               </layout>
-             </item>
-             <item row="6" column="1">
-              <spacer name="verticalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="witnessInformationHeader">
@@ -223,29 +210,6 @@
                 </size>
                </property>
               </spacer>
-             </item>
-             <item row="5" column="3">
-              <widget class="QLabel" name="labelWeight">
-               <property name="text">
-                <string>Weight</string>
-               </property>
-               <property name="indent">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="4">
-              <widget class="QLabel" name="labelWeightValue">
-               <property name="text">
-                <string>n/a</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-               <property name="indent">
-                <number>0</number>
-               </property>
-              </widget>
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="labelLockedFrom">
@@ -378,7 +342,92 @@
              <item row="4" column="3">
               <widget class="QLabel" name="labelExpectedEarningsDuration">
                <property name="text">
-                <string>Expected earnings frequency</string>
+                <string>Required earnings frequency</string>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="labelWeight">
+               <property name="text">
+                <string>Weight</string>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLabel" name="labelWeightValue">
+               <property name="text">
+                <string>n/a</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QLabel" name="labelEstimatedEarningsDuration">
+               <property name="text">
+                <string>Estimated earnings frequency</string>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="4">
+              <widget class="QLabel" name="labelEstimatedEarningsDurationValue">
+               <property name="text">
+                <string>n/a</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QLabel" name="labelNetworkWeight">
+               <property name="text">
+                <string>Network weight</string>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="4">
+              <widget class="QLabel" name="labelNetworkWeightValue">
+               <property name="text">
+                <string>n/a</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
                <property name="indent">
                 <number>0</number>
@@ -402,7 +451,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="labelInactiveWitnessAccountInfo1">
+            <widget class="QLabel" name="labelInactiveWitnessAccountInfo">
              <property name="text">
               <string>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</string>
              </property>
@@ -463,6 +512,49 @@
               <size>
                <width>20</width>
                <height>179</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pendingAccountPage">
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QLabel" name="labelPendingWitnessAccount">
+             <property name="text">
+              <string>Waiting for confirmation</string>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelPendingWitnessAccountInfo">
+             <property name="text">
+              <string>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>451</height>
               </size>
              </property>
             </spacer>

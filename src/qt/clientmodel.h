@@ -62,6 +62,7 @@ public:
     int getNumBlocks() const;
     int getHeaderTipHeight() const;
     int64_t getHeaderTipTime() const;
+    int getProbableHeight() const;
     //! Return number of transactions in the mempool
     long getMempoolSize() const;
     //! Return the dynamic memory usage of the mempool
@@ -94,7 +95,9 @@ public:
     mutable std::atomic<int> cachedBestHeaderHeight;
     mutable std::atomic<int64_t> cachedBestHeaderTime;
     mutable std::atomic<int> cachedPoW2Phase;
+    mutable std::atomic<int> cachedProbableHeight;
 
+    void updatePoW2Display();
 private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
@@ -112,6 +115,7 @@ Q_SIGNALS:
     void networkActiveChanged(bool networkActive);
     void alertsChanged(const QString &warnings);
     void bytesChanged(quint64 totalBytesIn, quint64 totalBytesOut);
+    void headerProgressChanged(int current, int total);
 
     //! Fired when a message should be reported to the user
     void message(const QString &title, const QString &message, unsigned int style);

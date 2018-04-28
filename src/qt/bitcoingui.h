@@ -68,8 +68,9 @@ public:
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
     void setClientModel(ClientModel *clientModel);
-
 #ifdef ENABLE_WALLET
+    void updateWitnessDialog();
+
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
@@ -165,7 +166,7 @@ private:
     /** Update UI with latest network info from model. */
     void updateNetworkState();
 
-    void updateHeadersSyncProgressLabel();
+    void updateHeadersSyncProgressLabel(int current, int total);
 
 Q_SIGNALS:
     /** Signal raised when a URI was entered or dragged to the GUI */
@@ -178,6 +179,8 @@ public Q_SLOTS:
     void setNetworkActive(bool networkActive);
     /** Set number of blocks and last block date shown in the UI */
     void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
+    /** Set number of headers and headers sync progress in the UI */
+    void setNumHeaders(int current, int total);
 
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title

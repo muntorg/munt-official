@@ -740,6 +740,7 @@ void BitcoinAmountField::update()
 
             secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
             nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", BitcoinUnits::format(BitcoinUnits::Unit::BTC, amount, false, BitcoinUnits::separatorNever, 2));
+            //fixme: (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "BitcoinAmountField" can occur after it is deleted if changing between accounts...
             connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
             secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, secondaryAmount, false, BitcoinUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(amount, "BTC");

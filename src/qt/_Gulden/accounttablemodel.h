@@ -22,7 +22,8 @@ public:
         TypeRole = Qt::UserRole + 1,
         SubTypeRole,
         ActiveAccountRole,
-        SelectedAccountRole
+        SelectedAccountRole,
+        AvailableBalanceRole
     };
 
     static const QString Normal;

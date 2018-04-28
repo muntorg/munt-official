@@ -8,6 +8,7 @@
 #include "bitcoinunits.h"
 
 #include <wallet/wallet.h>
+#include "validation.h" // For cs_main
 
 const QString AccountTableModel::Active = "A";
 const QString AccountTableModel::Inactive = "I";
@@ -87,6 +88,10 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
     {
         return GetAccountSubTypeString(account->m_SubType).c_str();
     }
+    else if (role == AvailableBalanceRole)
+    {
+        return (qlonglong)m_wallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
+    }
     else if (role == ActiveAccountRole)
     {
         if (account == activeAccount)
@@ -120,7 +125,9 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 {
     LogPrintf("AccountTableModel::activeAccountChanged\n");
 
-    LOCK(m_wallet->cs_wallet);
+    // Unfortunately because of "GetLegacyBalance" some of our child models might cause cs_main to lock
+    // Because of lock order always being cs_main before cs_wallet (to prevent deadlock) we are forced to lock cs_main here.
+    LOCK2(cs_main, m_wallet->cs_wallet);
 
     activeAccount = account;
     //fixme: Technically we can emit for just the two rows here.
@@ -130,7 +137,9 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 
 void AccountTableModel::accountAdded(CAccount* account)
 {
-    LOCK(m_wallet->cs_wallet);
+    // Unfortunately because of "GetLegacyBalance" some of our child models might cause cs_main to lock
+    // Because of lock order always being cs_main before cs_wallet (to prevent deadlock) we are forced to lock cs_main here.
+    LOCK2(cs_main, m_wallet->cs_wallet);
 
     beginResetModel();
     endResetModel();

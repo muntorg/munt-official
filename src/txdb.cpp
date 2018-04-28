@@ -130,7 +130,7 @@ void CCoinsViewDB::SetPhase5ActivationHash(const uint256 &hashPhase5ActivationPo
 uint256 CCoinsViewDB::GetPhase5ActivationHash()
 {
     uint256 hashPhase5ActivationPoint;
-    if (!db.Read(DB_POW2_PHASE4, hashPhase5ActivationPoint))
+    if (!db.Read(DB_POW2_PHASE5, hashPhase5ActivationPoint))
         return uint256();
     return hashPhase5ActivationPoint;
 }

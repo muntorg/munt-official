@@ -34,6 +34,7 @@
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
 #include "walletmodel.h"
+#include "qt/_Gulden/witnessdialog.h"
 #endif // ENABLE_WALLET
 
 #ifdef Q_OS_MAC
@@ -104,7 +105,7 @@ static void UpdateWitnessAccountStates()
 
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {
-            LOCK(cs_main); // Required for ReadBlockFromDisk.
+            LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
 
             CGetWitnessInfo witnessInfo;
             CBlock block;
@@ -143,8 +144,9 @@ static void UpdateWitnessAccountStates()
     }
 }
 
-static void BlockTipChangedHandler(bool ibd, const CBlockIndex *)
+static void BlockTipChangedHandler(BitcoinGUI* pUI, bool ibd, const CBlockIndex *)
 {
+    pUI->updateWitnessDialog();
     UpdateWitnessAccountStates();
 }
 #endif
@@ -588,6 +590,7 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
         modalOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
         setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL), false);
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(_clientModel, SIGNAL(headerProgressChanged(int, int)), this, SLOT(setNumHeaders(int,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
         // Receive and report messages from client model
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
@@ -636,6 +639,14 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
 }
 
 #ifdef ENABLE_WALLET
+void BitcoinGUI::updateWitnessDialog()
+{
+    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->witnessDialogPage)
+    {
+        walletFrame->currentWalletView()->witnessDialogPage->update();
+    }
+}
+
 bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
 {
     if(!walletFrame)
@@ -645,6 +656,10 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
+    //fixme: (GULDEN) (2.1) This can be removed
+    // Force this to run once to ensure correct PoW2 phase displays
+    clientModel->updatePoW2Display();
+    rpcConsole->updatePoW2PhaseState();
     // Force this to run once to pre-prime the 'validaty' state of witness accounts.
     UpdateWitnessAccountStates();
 
@@ -877,26 +892,26 @@ void BitcoinGUI::setNetworkActive(bool networkActive)
     updateNetworkState();
 }
 
-void BitcoinGUI::updateHeadersSyncProgressLabel()
+void BitcoinGUI::updateHeadersSyncProgressLabel(int current, int total)
 {
-    int64_t headersTipTime = clientModel->getHeaderTipTime();
-    int headersTipHeight = clientModel->getHeaderTipHeight();
-    int estHeadersLeft = (GetTime() - headersTipTime) / Params().GetConsensus().nPowTargetSpacing;
-    if (estHeadersLeft > HEADER_HEIGHT_DELTA_SYNC)
-        progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 / (headersTipHeight+estHeadersLeft)*headersTipHeight, 'f', 1)));
+    if (total - current > HEADER_HEIGHT_DELTA_SYNC)
+        progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 * current / total, 'f', 1)));
 }
 
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
+    if (!clientModel)
+        return;
+
+    double nSyncProgress = std::min(1.0, (double)count / clientModel->getProbableHeight());
+
     if (modalOverlay)
     {
         if (header)
             modalOverlay->setKnownBestHeight(count, blockDate);
         else
-            modalOverlay->tipUpdate(count, blockDate, nVerificationProgress);
+            modalOverlay->tipUpdate(count, blockDate, nSyncProgress);
     }
-    if (!clientModel)
-        return;
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
     statusBar()->clearMessage();
@@ -905,12 +920,9 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     enum BlockSource blockSource = clientModel->getBlockSource();
     switch (blockSource) {
         case BLOCK_SOURCE_NETWORK:
-            if (header) {
-                updateHeadersSyncProgressLabel();
-                return;
-            }
-            progressBarLabel->setText(tr("Synchronizing with network..."));
-            updateHeadersSyncProgressLabel();
+            // set label only if header download is (almost) done
+            if (clientModel->getProbableHeight() - clientModel->getHeaderTipHeight() < HEADER_HEIGHT_DELTA_SYNC)
+                progressBarLabel->setText(tr("Synchronizing with network..."));
             break;
         case BLOCK_SOURCE_DISK:
             if (header) {
@@ -968,8 +980,6 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     {
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
-        float nSyncProgress = (float)count / (Checkpoints::GetLastCheckpoint(Params().Checkpoints()) ? Checkpoints::GetLastCheckpoint(Params().Checkpoints())->nHeight : 600000);
-
         m_pGuldenImpl->showProgressBarLabel();
         progressBarLabel->setVisible(true);
         progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
@@ -1010,6 +1020,20 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     labelBlocksIcon->setToolTip(tooltip);
     progressBarLabel->setToolTip(tooltip);
     progressBar->setToolTip(tooltip);
+}
+
+void BitcoinGUI::setNumHeaders(int current, int total)
+{
+    if (!clientModel)
+        return;
+
+    if (modalOverlay)
+        modalOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
+
+    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
+    statusBar()->clearMessage();
+
+    updateHeadersSyncProgressLabel(current, total);
 }
 
 void BitcoinGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
@@ -1357,7 +1381,7 @@ void BitcoinGUI::subscribeToCoreSignals()
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
     #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.connect(BlockTipChangedHandler);
+    uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChangedHandler, this, _1, _2));
     #endif
 }
 
@@ -1367,7 +1391,7 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
     #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.disconnect(BlockTipChangedHandler);
+    uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChangedHandler, this, _1, _2));
     #endif
 }
 
