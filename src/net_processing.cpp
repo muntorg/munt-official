@@ -7,6 +7,7 @@
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
