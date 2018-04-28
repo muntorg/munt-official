@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(siphash)
     }
 
     CHashWriter ss(SER_DISK, CLIENT_VERSION);
-    CMutableTransaction tx;
+    CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
     // Note these tests were originally written with tx.nVersion=1
     // and the test would be affected by default tx version bumps if not fixed.
     tx.nVersion = 1;

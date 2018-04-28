@@ -87,6 +87,11 @@ public:
     {
         return (exp_addrType == "script");
     }
+    bool operator()(const CPoW2WitnessDestination &id) const
+    {
+        // fixme: (GULDEN) (tests)
+        return false;
+    }
     bool operator()(const CNoDestination &no) const
     {
         return (exp_addrType == "none");

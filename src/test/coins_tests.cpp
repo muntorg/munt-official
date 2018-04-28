@@ -155,11 +155,11 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
                 newcoin.out.nValue = InsecureRand32();
                 newcoin.nHeight = 1;
                 if (InsecureRandRange(16) == 0 && coin.IsSpent()) {
-                    newcoin.out.scriptPubKey.assign(1 + InsecureRandBits(6), OP_RETURN);
-                    BOOST_CHECK(newcoin.out.scriptPubKey.IsUnspendable());
+                    newcoin.out.output.scriptPubKey.assign(1 + InsecureRandBits(6), OP_RETURN);
+                    BOOST_CHECK(newcoin.out.output.scriptPubKey.IsUnspendable());
                     added_an_unspendable_entry = true;
                 } else {
-                    newcoin.out.scriptPubKey.assign(InsecureRandBits(6), 0); // Random sizes so we can test memory usage accounting
+                    newcoin.out.output.scriptPubKey.assign(InsecureRandBits(6), 0); // Random sizes so we can test memory usage accounting
                     (coin.IsSpent() ? added_an_entry : updated_an_entry) = true;
                     coin = newcoin;
                 }
@@ -290,11 +290,11 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
 
         // 19/20 txs add a new transaction
         if (randiter % 20 < 19) {
-            CMutableTransaction tx;
+            CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
             tx.vin.resize(1);
             tx.vout.resize(1);
             tx.vout[0].nValue = i; //Keep txs unique unless intended to duplicate
-            tx.vout[0].scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting
+            tx.vout[0].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting
             unsigned int height = InsecureRand32();
             Coin old_coin;
 
@@ -364,7 +364,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // Update the expected result to know about the new output coins
             assert(tx.vout.size() == 1);
             const COutPoint outpoint(tx.GetHash(), 0);
-            result[outpoint] = Coin(tx.vout[0], height, CTransaction(tx).IsCoinBase());
+            result[outpoint] = Coin(tx.vout[0], height, CTransaction(tx).IsCoinBase(), (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION));
 
             // Call UpdateCoins on the top cache
             CTxUndo undo;
@@ -474,7 +474,7 @@ BOOST_AUTO_TEST_CASE(ccoins_serialization)
     BOOST_CHECK_EQUAL(cc1.fCoinBase, false);
     BOOST_CHECK_EQUAL(cc1.nHeight, 203998);
     BOOST_CHECK_EQUAL(cc1.out.nValue, 60000000000ULL);
-    BOOST_CHECK_EQUAL(HexStr(cc1.out.scriptPubKey), HexStr(GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))))));
+    BOOST_CHECK_EQUAL(HexStr(cc1.out.output.scriptPubKey), HexStr(GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))))));
 
     // Good example
     CDataStream ss2(ParseHex("8ddf77bbd123008c988f1a4a4de2161e0f50aac7f17e7f9555caa4"), SER_DISK, CLIENT_VERSION);
@@ -483,7 +483,7 @@ BOOST_AUTO_TEST_CASE(ccoins_serialization)
     BOOST_CHECK_EQUAL(cc2.fCoinBase, true);
     BOOST_CHECK_EQUAL(cc2.nHeight, 120891);
     BOOST_CHECK_EQUAL(cc2.out.nValue, 110397);
-    BOOST_CHECK_EQUAL(HexStr(cc2.out.scriptPubKey), HexStr(GetScriptForDestination(CKeyID(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))))));
+    BOOST_CHECK_EQUAL(HexStr(cc2.out.output.scriptPubKey), HexStr(GetScriptForDestination(CKeyID(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))))));
 
     // Smallest possible example
     CDataStream ss3(ParseHex("000006"), SER_DISK, CLIENT_VERSION);
@@ -492,7 +492,7 @@ BOOST_AUTO_TEST_CASE(ccoins_serialization)
     BOOST_CHECK_EQUAL(cc3.fCoinBase, false);
     BOOST_CHECK_EQUAL(cc3.nHeight, 0);
     BOOST_CHECK_EQUAL(cc3.out.nValue, 0);
-    BOOST_CHECK_EQUAL(cc3.out.scriptPubKey.size(), 0);
+    BOOST_CHECK_EQUAL(cc3.out.output.scriptPubKey.size(), 0);
 
     // scriptPubKey that ends beyond the end of the stream
     CDataStream ss4(ParseHex("000007"), SER_DISK, CLIENT_VERSION);
@@ -708,7 +708,7 @@ void CheckAddCoinBase(CAmount base_value, CAmount cache_value, CAmount modify_va
     try {
         CTxOut output;
         output.nValue = modify_value;
-        test.cache.AddCoin(OUTPOINT, Coin(std::move(output), 1, coinbase), coinbase);
+        test.cache.AddCoin(OUTPOINT, Coin(std::move(output), 1, coinbase, false), coinbase);
         test.cache.SelfTest();
         GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
     } catch (std::logic_error& e) {

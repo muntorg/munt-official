@@ -345,7 +345,7 @@ BOOST_AUTO_TEST_CASE(class_methods)
     bool boolval(true);
     std::string stringval("testing");
     const char* charstrval("testing charstr");
-    CMutableTransaction txval;
+    CMutableTransaction txval(TEST_DEFAULT_TX_VERSION);
     CSerializeMethodsTestSingle methodtest1(intval, boolval, stringval, charstrval, txval);
     CSerializeMethodsTestMany methodtest2(intval, boolval, stringval, charstrval, txval);
     CSerializeMethodsTestSingle methodtest3;

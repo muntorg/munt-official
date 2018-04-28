@@ -67,7 +67,7 @@ class prevector_tester {
         }
         CDataStream ss1(SER_DISK, 0);
         CDataStream ss2(SER_DISK, 0);
-        ss1 << real_vector;
+        ss1 << COMPACTSIZEVECTOR(real_vector);
         ss2 << pre_vector;
         local_check_equal(ss1.size(), ss2.size());
         for (Size s = 0; s < ss1.size(); s++) {

@@ -59,6 +59,11 @@ public:
         stream->read(pch, nSize);
     }
 
+    void peek(char* pch, size_t nSize)
+    {
+        stream->peek(pch, nSize);
+    }
+
     int GetVersion() const { return nVersion; }
     int GetType() const { return nType; }
 };

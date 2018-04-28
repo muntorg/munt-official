@@ -70,7 +70,7 @@ ScriptError VerifyWithFlag(const CTransaction& output, const CMutableTransaction
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].scriptPubKey, &inputi.vin[0].scriptWitness, flags, TransactionSignatureChecker(&inputi, 0, output.vout[0].nValue), &error);
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].output.scriptPubKey, &inputi.vin[0].scriptWitness, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output.vout[0].nValue), &error);
     BOOST_CHECK((ret == true) == (error == SCRIPT_ERR_OK));
 
     return error;
@@ -89,7 +89,7 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
     creationTx.vin[0].scriptSig = CScript();
     creationTx.vout.resize(1);
     creationTx.vout[0].nValue = 1;
-    creationTx.vout[0].scriptPubKey = scriptPubKey;
+    creationTx.vout[0].output.scriptPubKey = scriptPubKey;
 
     spendingTx.nVersion = 1;
     spendingTx.vin.resize(1);
@@ -99,7 +99,7 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
     spendingTx.vin[0].scriptWitness = witness;
     spendingTx.vout.resize(1);
     spendingTx.vout[0].nValue = 1;
-    spendingTx.vout[0].scriptPubKey = CScript();
+    spendingTx.vout[0].output.scriptPubKey = CScript();
 
     AddCoins(coins, creationTx, 0);
 }
@@ -107,10 +107,10 @@ void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableT
 BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
 {
     // Transaction creates outputs
-    CMutableTransaction creationTx;
+    CMutableTransaction creationTx(TEST_DEFAULT_TX_VERSION);
     // Transaction that spends outputs and whose
     // sig op cost is going to be tested
-    CMutableTransaction spendingTx;
+    CMutableTransaction spendingTx(TEST_DEFAULT_TX_VERSION);
 
     // Create utxo set
     CCoinsView coinsDummy;

@@ -579,7 +579,7 @@ include Makefile.leveldb.include
 endif
 
 #if ENABLE_TESTS
-#include Makefile.test.include
+include Makefile.test.include
 #endif
 
 #if ENABLE_BENCH

@@ -71,6 +71,10 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
         pblocktree = new CBlockTreeDB(1 << 20, true);
         pcoinsdbview = new CCoinsViewDB(1 << 23, true);
         pcoinsTip = new CCoinsViewCache(pcoinsdbview);
+
+        ppow2witdbview = new CWitViewDB(1 << 20);
+        ppow2witTip = std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(ppow2witdbview));
+
         if (!InitBlockIndex(chainparams)) {
             throw std::runtime_error("InitBlockIndex failed.");
         }
@@ -94,6 +98,10 @@ TestingSetup::~TestingSetup()
         threadGroup.interrupt_all();
         threadGroup.join_all();
         UnloadBlockIndex();
+
+        ppow2witTip = nullptr;
+        delete ppow2witdbview;
+
         delete pcoinsTip;
         delete pcoinsdbview;
         delete pblocktree;

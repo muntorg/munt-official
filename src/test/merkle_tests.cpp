@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(merkle_test)
             CBlock block;
             block.vtx.resize(ntx);
             for (int j = 0; j < ntx; j++) {
-                CMutableTransaction mtx;
+                CMutableTransaction mtx(TEST_DEFAULT_TX_VERSION);
                 mtx.nLockTime = j;
                 block.vtx[j] = MakeTransactionRef(std::move(mtx));
             }
