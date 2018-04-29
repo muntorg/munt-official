@@ -337,8 +337,8 @@ libgulden_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/bitcoinconsensus.cpp \
-  script/bitcoinconsensus.h \
+  script/guldenconsensus.cpp \
+  script/guldenconsensus.h \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -492,9 +492,9 @@ Gulden_tx_LDADD = \
 Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# bitcoinconsensus library #
+# guldenconsensus library #
 if BUILD_GULDEN_LIBS
-include_HEADERS = script/bitcoinconsensus.h
+include_HEADERS = script/guldenconsensus.h
 libguldenconsensus_la_SOURCES = $(crypto_libgulden_crypto_a_SOURCES) $(libgulden_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
@@ -535,12 +535,12 @@ DISTCLEANFILES = obj/build.h
 EXTRA_DIST = $(CTAES_DIST)
 
 
-config/bitcoin-config.h: config/stamp-h1
+config/gulden-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-config/stamp-h1: $(top_srcdir)/$(subdir)/config/bitcoin-config.h.in $(top_builddir)/config.status
+config/stamp-h1: $(top_srcdir)/$(subdir)/config/gulden-config.h.in $(top_builddir)/config.status
 	$(AM_V_at)$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-$(top_srcdir)/$(subdir)/config/bitcoin-config.h.in:  $(am__configure_deps)
-	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/bitcoin-config.h.in
+$(top_srcdir)/$(subdir)/config/gulden-config.h.in:  $(am__configure_deps)
+	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/gulden-config.h.in
 
 clean-local:
 	-$(MAKE) -C secp256k1 clean

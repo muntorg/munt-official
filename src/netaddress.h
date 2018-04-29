@@ -13,7 +13,7 @@
 #define BITCOIN_NETADDRESS_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/gulden-config.h"
 #endif
 
 #include "compat.h"

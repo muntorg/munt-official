@@ -339,7 +339,7 @@
                      <string/>
                     </property>
                     <property name="pixmap">
-                     <pixmap resource="../../bitcoin.qrc">:/Gulden/logo_blue</pixmap>
+                     <pixmap resource="../../gulden.qrc">:/Gulden/logo_blue</pixmap>
                     </property>
                     <property name="scaledContents">
                      <bool>true</bool>
@@ -519,7 +519,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../../gulden.qrc"/>
  </resources>
  <connections/>
 </ui>

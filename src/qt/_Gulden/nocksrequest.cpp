@@ -6,7 +6,7 @@
 #include "nocksrequest.h"
 #include "utilmoneystr.h"
 #include "arith_uint256.h"
-#include "bitcoinunits.h"
+#include "units.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>

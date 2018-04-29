@@ -15,7 +15,7 @@
 
 #include "ticker.h"
 #include "validation.h"
-#include <bitcoinunits.h>
+#include <units.h>
 #include "wallet/wallet.h"
 #include "utilmoneystr.h"
 #include "GuldenGUI.h"

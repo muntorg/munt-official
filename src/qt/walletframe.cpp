@@ -11,7 +11,7 @@
 
 #include "walletframe.h"
 
-#include "bitcoingui.h"
+#include "gui.h"
 #include "walletview.h"
 #include "_Gulden/welcomedialog.h"
 

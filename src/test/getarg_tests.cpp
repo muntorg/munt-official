@@ -10,7 +10,7 @@
 // file COPYING
 
 #include "util.h"
-#include "test/test_bitcoin.h"
+#include "test/test_gulden.h"
 
 #include <string>
 #include <vector>

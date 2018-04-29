@@ -10,12 +10,12 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/gulden-config.h"
 #endif
 
 #include "optionsmodel.h"
 
-#include "bitcoinunits.h"
+#include "units.h"
 #include "guiutil.h"
 
 #include "amount.h"

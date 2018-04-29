@@ -10,7 +10,7 @@
 // file COPYING
 
 #include "consensus/merkle.h"
-#include "test/test_bitcoin.h"
+#include "test/test_gulden.h"
 
 #include <boost/test/unit_test.hpp>
 

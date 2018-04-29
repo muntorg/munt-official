@@ -4,13 +4,13 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/gulden-config.h"
 #endif
 
 #include "GuldenGUI.h"
-#include "bitcoingui.h"
+#include "gui.h"
 #include "platformstyle.h"
-#include "bitcoinunits.h"
+#include "units.h"
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
 #include "validation.h"
@@ -63,7 +63,7 @@
 #include "welcomedialog.h"
 #include "ticker.h"
 #include "nockssettings.h"
-#include "bitcoinunits.h"
+#include "units.h"
 #include "optionsmodel.h"
 #include "askpassphrasedialog.h"
 

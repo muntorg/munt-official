@@ -10,7 +10,7 @@
 
 #include "addressbookpage.h"
 #include "addresstablemodel.h"
-#include "bitcoinunits.h"
+#include "units.h"
 #include "guiutil.h"
 #include "guiconstants.h"
 #include "optionsmodel.h"

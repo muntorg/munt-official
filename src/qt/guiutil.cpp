@@ -11,8 +11,8 @@
 
 #include "guiutil.h"
 
-#include "bitcoinaddressvalidator.h"
-#include "bitcoinunits.h"
+#include "guldenaddressvalidator.h"
+#include "units.h"
 #include "qvalidatedlineedit.h"
 #include "walletmodel.h"
 

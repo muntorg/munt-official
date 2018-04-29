@@ -11,7 +11,7 @@
 
 #include "data/tx_invalid.json.h"
 #include "data/tx_valid.json.h"
-#include "test/test_bitcoin.h"
+#include "test/test_gulden.h"
 
 #include "clientversion.h"
 #include "checkqueue.h"

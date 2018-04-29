@@ -10,14 +10,14 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/gulden-config.h"
 #endif
 
 #include "utilitydialog.h"
 
 #include "ui_helpmessagedialog.h"
 
-#include "bitcoingui.h"
+#include "gui.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "intro.h"

@@ -595,12 +595,12 @@
   <customwidget>
    <class>BitcoinAmountField</class>
    <extends>QLineEdit</extends>
-   <header>bitcoinamountfield.h</header>
+   <header>amountfield.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../../gulden.qrc"/>
  </resources>
  <connections/>
 </ui>

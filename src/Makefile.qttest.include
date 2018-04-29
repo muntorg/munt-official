@@ -32,11 +32,11 @@ TEST_QT_H = \
   qt/test/wallettests.h
 
 TEST_GULDEN_CPP = \
-  test/test_bitcoin.cpp \
+  test/test_gulden.cpp \
   test/testutil.cpp
 
 TEST_GULDEN_H = \
-  test/test_bitcoin.h \
+  test/test_gulden.h \
   test/testutil.h
 
 qt_test_test_Gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \

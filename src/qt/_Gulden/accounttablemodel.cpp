@@ -5,7 +5,7 @@
 
 #include "accounttablemodel.h"
 #include "walletmodel.h"
-#include "bitcoinunits.h"
+#include "units.h"
 
 #include <wallet/wallet.h>
 #include "validation.h" // For cs_main

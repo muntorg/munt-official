@@ -111,3 +111,6 @@ test/cache/*
 
 libguldenconsensus.pc
 contrib/devtools/split-debug.sh
+
+#Private local config file for tools
+private.conf

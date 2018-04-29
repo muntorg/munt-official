@@ -123,7 +123,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../../gulden.qrc"/>
  </resources>
  <connections/>
 </ui>
