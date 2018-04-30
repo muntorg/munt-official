@@ -91,7 +91,6 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/Common/hash/city.h \
   Gulden/Common/hash/cityconfig.h \
   Gulden/Common/scrypt.h \
-  Gulden/translate.h \
   Gulden/mnemonic.h \
   Gulden/util.h \
   Gulden/auto_checkpoints.h \

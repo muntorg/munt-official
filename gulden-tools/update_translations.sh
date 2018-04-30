@@ -26,3 +26,5 @@ done
 python ../../../../gulden-tools/translations/push_translations.py ${ONESKY_API_KEY}
 
 
+#Cleanup
+rm *.po || true

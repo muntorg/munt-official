@@ -31,10 +31,9 @@
 #include <boost/interprocess/sync/file_lock.hpp>
 
 
-#include <Gulden/translate.h>
 #include <stdio.h>
 
-#define _(x) gulden_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
+#define _(x) std::string(x)/* Keep the _() around in case gettext or such will be used later to translate non-UI */
 
 
 /* Introduction text for doxygen: */

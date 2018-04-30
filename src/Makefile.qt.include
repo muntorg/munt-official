@@ -41,8 +41,7 @@ qt/_Gulden/res/SliderHandle.png \
 qt/_Gulden/res/SliderHandle@2x.png
 
 
-GDN_MOCS = qt/_Gulden/moc_GuldenTranslator.cpp \
-qt/_Gulden/moc_guldensendcoinsentry.cpp \
+GDN_MOCS = qt/_Gulden/moc_guldensendcoinsentry.cpp \
 qt/_Gulden/moc_accountsummarywidget.cpp \
 qt/_Gulden/moc_receivecoinsdialog.cpp \
 qt/_Gulden/moc_GuldenGUI.cpp \
@@ -73,8 +72,7 @@ qt/_Gulden/forms/witnessdialog.ui \
 qt/_Gulden/forms/exchangeratedialog.ui \
 qt/_Gulden/forms/importprivkeydialog.ui
 
-GDN_QT_H = qt/_Gulden/GuldenTranslator.h \
-qt/_Gulden/guldensendcoinsentry.h \
+GDN_QT_H = qt/_Gulden/guldensendcoinsentry.h \
 qt/_Gulden/accountsummarywidget.h \
 qt/_Gulden/receivecoinsdialog.h \
 qt/_Gulden/GuldenGUI.h \
@@ -93,8 +91,7 @@ qt/_Gulden/exchangeratedialog.h \
 qt/_Gulden/importprivkeydialog.h \
 qt/_Gulden/accounttablemodel.h
 
-GDN_QT_SRCS = qt/_Gulden/GuldenTranslator.cpp \
-qt/_Gulden/guldensendcoinsentry.cpp \
+GDN_QT_SRCS = qt/_Gulden/guldensendcoinsentry.cpp \
 qt/_Gulden/accountsummarywidget.cpp \
 qt/_Gulden/receivecoinsdialog.cpp \
 qt/_Gulden/GuldenGUI.cpp \
@@ -122,7 +119,84 @@ GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
 # bitcoin qt core #
 QT_TS = \
   qt/locale/Gulden/gulden_nl.ts \
-  qt/locale/Gulden/gulden_en.ts
+  qt/locale/Gulden/gulden_en.ts \
+  qt/locale/Gulden/gulden_af.ts \
+  qt/locale/Gulden/gulden_da.ts \
+  qt/locale/Gulden/gulden_es-DO.ts \
+  qt/locale/Gulden/gulden_fa-IR.ts \
+  qt/locale/Gulden/gulden_hr.ts \
+  qt/locale/Gulden/gulden_ku-TR.ts \
+  qt/locale/Gulden/gulden_ne.ts \
+  qt/locale/Gulden/gulden_sk.ts \
+  qt/locale/Gulden/gulden_uk.ts \
+  qt/locale/Gulden/gulden_af-ZA.ts \
+  qt/locale/Gulden/gulden_de.ts \
+  qt/locale/Gulden/gulden_es-ES.ts \
+  qt/locale/Gulden/gulden_fa.ts \
+  qt/locale/Gulden/gulden_hu.ts \
+  qt/locale/Gulden/gulden_ky.ts \
+  qt/locale/Gulden/gulden_sl-SI.ts \
+  qt/locale/Gulden/gulden_ur-PK.ts \
+  qt/locale/Gulden/gulden_ar.ts \
+  qt/locale/Gulden/gulden_el-GR.ts \
+  qt/locale/Gulden/gulden_es-MX.ts \
+  qt/locale/Gulden/gulden_fi.ts \
+  qt/locale/Gulden/gulden_id.ts \
+  qt/locale/Gulden/gulden_la-VA.ts \
+  qt/locale/Gulden/gulden_pl.ts \
+  qt/locale/Gulden/gulden_sq.ts \
+  qt/locale/Gulden/gulden_vi.ts \
+  qt/locale/Gulden/gulden_be-BY.ts \
+  qt/locale/Gulden/gulden_el.ts \
+  qt/locale/Gulden/gulden_es.ts \
+  qt/locale/Gulden/gulden_fr-CA.ts \
+  qt/locale/Gulden/gulden_it-IT.ts \
+  qt/locale/Gulden/gulden_lt.ts \
+  qt/locale/Gulden/gulden_pt-BR.ts \
+  qt/locale/Gulden/gulden_sr-Latn.ts \
+  qt/locale/Gulden/gulden_zh-CN.ts \
+  qt/locale/Gulden/gulden_bg-BG.ts \
+  qt/locale/Gulden/gulden_es-UY.ts \
+  qt/locale/Gulden/gulden_fr-FR.ts \
+  qt/locale/Gulden/gulden_it.ts \
+  qt/locale/Gulden/gulden_lv-LV.ts \
+  qt/locale/Gulden/gulden_pt-PT.ts \
+  qt/locale/Gulden/gulden_sr.ts \
+  qt/locale/Gulden/gulden_zh-Hant-TW.ts \
+  qt/locale/Gulden/gulden_bg.ts \
+  qt/locale/Gulden/gulden_eo.ts \
+  qt/locale/Gulden/gulden_es-VE.ts \
+  qt/locale/Gulden/gulden_fr.ts \
+  qt/locale/Gulden/gulden_ja.ts \
+  qt/locale/Gulden/gulden_mk-MK.ts \
+  qt/locale/Gulden/gulden_ro-RO.ts \
+  qt/locale/Gulden/gulden_sv.ts \
+  qt/locale/Gulden/gulden_zh-HK.ts \
+  qt/locale/Gulden/gulden_ca.ts \
+  qt/locale/Gulden/gulden_es-AR.ts \
+  qt/locale/Gulden/gulden_et-EE.ts \
+  qt/locale/Gulden/gulden_gl-ES.ts \
+  qt/locale/Gulden/gulden_ka.ts \
+  qt/locale/Gulden/gulden_mn.ts \
+  qt/locale/Gulden/gulden_ro.ts \
+  qt/locale/Gulden/gulden_ta.ts \
+  qt/locale/Gulden/gulden_zh-TW.ts \
+  qt/locale/Gulden/gulden_cs.ts \
+  qt/locale/Gulden/gulden_es-CL.ts \
+  qt/locale/Gulden/gulden_et.ts \
+  qt/locale/Gulden/gulden_he.ts \
+  qt/locale/Gulden/gulden_kk.ts \
+  qt/locale/Gulden/gulden_ms-MY.ts \
+  qt/locale/Gulden/gulden_ru-RU.ts \
+  qt/locale/Gulden/gulden_th.ts \
+  qt/locale/Gulden/gulden_cy-GB.ts \
+  qt/locale/Gulden/gulden_es-CO.ts \
+  qt/locale/Gulden/gulden_eu-ES.ts \
+  qt/locale/Gulden/gulden_hi-IN.ts \
+  qt/locale/Gulden/gulden_kr.ts \
+  qt/locale/Gulden/gulden_nb.ts \
+  qt/locale/Gulden/gulden_ru.ts \
+  qt/locale/Gulden/gulden_tr.ts
 
 QT_FORMS_UI = \
   $(GDN_FORMS) \

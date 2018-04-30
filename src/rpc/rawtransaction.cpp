@@ -38,7 +38,6 @@
 
 #include <stdint.h>
 
-#include <Gulden/translate.h>
 #include <univalue.h>
 
 //fixme: (GULDEN) (2.1)

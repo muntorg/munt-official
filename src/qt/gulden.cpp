@@ -57,7 +57,6 @@
 #include <QThread>
 #include <QTimer>
 #include <QTranslator>
-#include <_Gulden/GuldenTranslator.h>
 #include <QSslConfiguration>
 
 #if defined(QT_STATICPLUGIN)
@@ -121,7 +120,7 @@ static QString GetLangTerritory()
 }
 
 /** Set up translations */
-static void initTranslations(GuldenTranslator &qtTranslatorBase, GuldenTranslator &qtTranslator, GuldenTranslator &translatorBase, GuldenTranslator &translator, GuldenTranslator &translatorBaseGulden, GuldenTranslator &translatorGulden)
+static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator)
 {
     // Remove old translators
     QApplication::removeTranslator(&qtTranslatorBase);
@@ -149,22 +148,13 @@ static void initTranslations(GuldenTranslator &qtTranslatorBase, GuldenTranslato
     if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTranslator);
 
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in Gulden.qrc)
+    // Load e.g. gulden_de.qm (shortcut "de" needs to be defined in Gulden.qrc)
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
-    // Load e.g. gulden_de.qm (shortcut "gulden_de" needs to be defined in Gulden.qrc)
-    if (translatorBaseGulden.load(lang, ":/gulden_translations/"))
-        QApplication::installTranslator(&translatorBaseGulden);
-
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in Gulden.qrc)
+    // Load e.g. gulden_de_DE.qm (shortcut "de_DE" needs to be defined in Gulden.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
-
-    // Load e.g. gulden_de_DE.qm (shortcut "gulden_de_DE" needs to be defined in Gulden.qrc)
-    if (translatorGulden.load(lang_territory, ":/gulden_translations/"))
-        QApplication::installTranslator(&translatorGulden);
-
 }
 
 /* qDebug() message handler --> debug.log */
@@ -280,7 +270,7 @@ private:
     bool shutDownRequested;
 };
 
-#include "bitcoin.moc"
+#include "gulden.moc"
 
 BitcoinCore::BitcoinCore():
     QObject()
@@ -611,12 +601,9 @@ int main(int argc, char *argv[])
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
-    GuldenTranslator qtEmptyTranslator(true), qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden;
+    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
 
-    // This one exists purely for the Gulden 'translation magic'
-    QApplication::installTranslator(&qtEmptyTranslator);
-
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
     translationInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
@@ -671,7 +658,7 @@ int main(int argc, char *argv[])
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(IsArgSet("-windowtitle") ? QString::fromStdString(GetArg("-windowtitle", "")) : networkStyle->getAppName());
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator, translatorBaseGulden, translatorGulden);
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
 #ifdef ENABLE_WALLET
     /// 8. URI IPC sending
