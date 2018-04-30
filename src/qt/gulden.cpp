@@ -280,7 +280,7 @@ private:
     bool shutDownRequested;
 };
 
-#include "bitcoin.moc"
+#include "gulden.moc"
 
 BitcoinCore::BitcoinCore():
     QObject()
