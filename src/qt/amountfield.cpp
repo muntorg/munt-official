@@ -699,7 +699,7 @@ void BitcoinAmountField::update()
     secondaryAmountDisplay->setVisible(true);
     tertiaryAmountDisplay->setVisible(true);
 
-    if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" ) 
+    if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" )
     {
         quadAmountDisplay->setVisible(false);
     }
