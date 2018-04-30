@@ -27,7 +27,7 @@ NetworkStyle::NetworkStyle(const QString &_appName, const int iconColorHueShift,
     titleAddText(_titleAddText)
 {
     // load pixmap
-    QPixmap pixmap(":/icons/bitcoin");
+    QPixmap pixmap(":/icons/gulden");
 
     if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
     {
