@@ -665,7 +665,8 @@ void WitnessDialog::update()
                     }
                 }
             }
-            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
+            // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
+            if (pactiveWallet->GetBalance(forAccount, true, true) > 0 || pactiveWallet->GetImmatureBalance(forAccount) > 0)
             {
                 ui->fundWitnessButton->setVisible(false);
                 if (bAnyExpired || !bAnyAreMine)
