@@ -24,6 +24,11 @@ public static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
 public static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
 public static
 #endif
+
+#if !defined(__JAVA__) && !defined(BUILD_IOS)
+#include "../../chainparams.h"
+#endif
+
 unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE block, unsigned int nPowTargetSpacing, unsigned int nPowLimit
 #ifdef __JAVA__
 ,final BlockStore blockStore
@@ -35,6 +40,11 @@ unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE bl
     static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
     #endif
 
+    #if !defined(__JAVA__) && !defined(BUILD_IOS)
+    if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        return 545259519;
+    }
+    #endif
 
     if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)
     {
