@@ -25,13 +25,12 @@ namespace Ui {
 }
 
 
-//fixme: Move this to a header file of its own somewhere where it can be reused elsewhere in codebase if needed.
-class GreaterThanOrEqualSortFilterProxyModel : public QSortFilterProxyModel
+class WitnessSortFilterProxyModel : public QSortFilterProxyModel
 {
 Q_OBJECT
 public:
-    explicit GreaterThanOrEqualSortFilterProxyModel(QObject *parent = 0);
-    virtual ~GreaterThanOrEqualSortFilterProxyModel();
+    explicit WitnessSortFilterProxyModel(QObject *parent = 0);
+    virtual ~WitnessSortFilterProxyModel();
     void setAmount(uint64_t nAmount_) {nAmount = nAmount_;}
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;

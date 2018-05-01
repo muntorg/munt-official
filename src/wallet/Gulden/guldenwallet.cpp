@@ -444,10 +444,10 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bo
         mapAccounts[account->getUUID()] = account;
         changeAccountName(account, newName, false);
     }
+    NotifyAccountAdded(static_cast<CWallet*>(this), account);
 
     if (account->m_Type == AccountType::Normal)
     {
-        NotifyAccountAdded(static_cast<CWallet*>(this), account);
         if (bMakeActive)
         {
             setActiveAccount(account);

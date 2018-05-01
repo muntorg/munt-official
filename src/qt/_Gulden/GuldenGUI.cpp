@@ -1257,7 +1257,7 @@ void GuldenGUI::updateAccount(CAccount* account)
     {
         m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
     }
-    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account) ;
+    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
 }
 
 void GuldenGUI::balanceChanged()
