@@ -37,8 +37,6 @@
 
 #include <boost/foreach.hpp>
 
-#include <Gulden/translate.h>
-
 std::string static EncodeDumpTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
 }

@@ -42,7 +42,6 @@
 #endif
 #include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
-#include <Gulden/translate.h>
 
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
@@ -379,7 +378,7 @@ UniValue getmininginfo(const JSONRPCRequest& request)
 }
 
 
-// NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
+// NOTE: Unlike wallet RPC (which use NLG values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
 UniValue prioritisetransaction(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
@@ -1002,7 +1001,7 @@ UniValue estimatesmartfee(const JSONRPCRequest& request)
             "                 responsive to short term drops in the prevailing fee market\n"
             "\nResult:\n"
             "{\n"
-            "  \"feerate\" : x.x,     (numeric) estimate fee-per-kilobyte (in BTC)\n"
+            "  \"feerate\" : x.x,     (numeric) estimate fee-per-kilobyte (in NLG)\n"
             "  \"blocks\" : n         (numeric) block number where estimate was found\n"
             "}\n"
             "\n"
@@ -1051,7 +1050,7 @@ UniValue estimaterawfee(const JSONRPCRequest& request)
             "               Default: 1\n"
             "\nResult:\n"
             "{\n"
-            "  \"feerate\" : x.x,        (numeric) estimate fee-per-kilobyte (in BTC)\n"
+            "  \"feerate\" : x.x,        (numeric) estimate fee-per-kilobyte (in NLG)\n"
             "  \"decay\" : x.x,          (numeric) exponential decay (per block) for historical moving average of confirmation data\n"
             "  \"scale\" : x,            (numeric) The resolution of confirmation targets at this time horizon\n"
             "  \"pass\" : {              (json object) information about the lowest range of feerates to succeed in meeting the threshold\n"

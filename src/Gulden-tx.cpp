@@ -37,9 +37,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <Gulden/translate.h>
-
-#define _(x) gulden_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
+#define _(x) std::string(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
 
 
 static bool fCreateBlank;

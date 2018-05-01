@@ -24,9 +24,7 @@
 
 #include <stdio.h>
 
-#include <Gulden/translate.h>
-
-#define _(x) gulden_translate(x) /* Keep the _() around in case gettext or such will be used later to translate non-UI */
+#define _(x) std::string(x)/* Keep the _() around in case gettext or such will be used later to translate non-UI */
 #include <event2/buffer.h>
 #include <event2/keyvalq_struct.h>
 #include "support/events.h"

@@ -38,7 +38,6 @@
 #include <univalue.h>
 
 #include <Gulden/auto_checkpoints.h>
-#include <Gulden/translate.h>
 
 CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
 {

@@ -15,7 +15,6 @@
 
 #include <univalue.h>
 
-#include <Gulden/translate.h>
 #include <Gulden/util.h>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>

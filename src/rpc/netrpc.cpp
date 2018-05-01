@@ -31,8 +31,6 @@
 
 #include <univalue.h>
 
-#include <Gulden/translate.h>
-
 
 UniValue getconnectioncount(const JSONRPCRequest& request)
 {

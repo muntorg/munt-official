@@ -36,7 +36,6 @@
 #include <malloc.h>
 #endif
 
-#include <Gulden/translate.h>
 #include <univalue.h>
 
 /**
