@@ -33,7 +33,7 @@ class CWallet;
 extern double dBestHashesPerSec;
 extern double dHashesPerSec;
 extern int64_t nHPSTimerStart;
-extern int64_t nHashThrottle;
+extern std::atomic<int64_t> nHashThrottle;
 
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams);
 /** Do mining precalculation */

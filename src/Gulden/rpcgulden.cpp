@@ -69,7 +69,7 @@ UniValue sethashlimit(const JSONRPCRequest& request)
 
     LogPrintf("<DELTA> hash throttle %ld\n", nHashThrottle);
 
-    return nHashThrottle;
+    return strprintf("Throttling hash: %d", nHashThrottle);
 }
 
 UniValue getwitnessinfo(const JSONRPCRequest& request)

@@ -790,7 +790,7 @@ double dBestHashesPerSec = 0.0;
 double dHashesPerSec = 0.0;
 int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
-int64_t nHashThrottle=-1;
+std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 static CCriticalSection processBlockCS;
 
@@ -807,7 +807,7 @@ struct CBlockIndexCacheComparator
     }
 };
 
-static const unsigned int hashPSTimerInterval = 500;
+static const unsigned int hashPSTimerInterval = 200;
 void static BitcoinMiner(const CChainParams& chainparams)
 {
     LogPrintf("GuldenMiner started\n");
@@ -1069,6 +1069,11 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     // Update nTime every few seconds
                     if (UpdateTime(pblock, chainparams.GetConsensus(), pindexParent) < 0)
                         break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
+                }
+                if (nHashThrottle != -1 && nHashCounter > nHashThrottle)
+                {
+                    MilliSleep(50);
+                    continue;
                 }
 
                 hashMined = UintToArith256(pblock->GetPoWHash());
