@@ -1183,18 +1183,18 @@ CScript&& GetScriptForNonScriptOutput(const CTxOut& out)
     if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+        return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
     else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+        return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
     else
     {
         assert(0);
     }
-    return std::move(CScript());
+    return CScript();
 }
 
 
@@ -1812,7 +1812,6 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
     int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev, chainparams, chain, &view);
     int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev, chainparams, chain, &view);
-    int nPoW2PhaseGreatGrandParent = ( (pindex->pprev && pindex->pprev->pprev && pindex->pprev->pprev->pprev) ? GetPoW2Phase(pindex->pprev->pprev->pprev, chainparams, chain, &view) : 1 );
     //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
     //Do and store all such tests above this point in the code.
 
@@ -1831,7 +1830,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                 return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
         }
     }
-    int nWitnessCoinbaseIndex = 0;
+    unsigned int nWitnessCoinbaseIndex = 0;
     if (nPoW2PhaseParent >= 3)
     {
         if (block.nVersionPoW2Witness == 0)
@@ -2589,12 +2588,10 @@ static void PruneBlockIndexCandidates() {
     // Note that we can't delete the current block itself, as we may need to return to it later in case a
     // reorganization to a better block fails.
     std::set<CBlockIndex*, CBlockIndexWorkComparator>::iterator it = setBlockIndexCandidates.begin();
-    //fixme: NEXT HIGH
-    //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW (as we must consider all such blocks as witness candidates even if they are of lower weight).
-    //if (nPoW2Version != 0 || (*it)->nHeight < chainActive.Tip()->nHeight-1)
-    //while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork && ((*it)->nVersionPoW2Witness == 0 || (*it)->nHeight < chainActive.Tip()->nHeight-10) ) {
-    int nPoW2Version = chainActive.Tip()->nVersionPoW2Witness;
-    while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork) {
+
+    //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW.
+    //The reason for this is that we must consider all such blocks as witness candidates even if they are of lower weight - in case the higher weight block has an "absent" witness.
+    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight || (*it)->nVersionPoW2Witness == 0 ) ) {
             setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
@@ -2847,7 +2844,6 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
 bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView) {
     CBlockIndex* pindexNewTip = nullptr;
     do {
-        bool fInitialDownload;
         {
             LOCK(cs_main);
             ConnectTrace connectTrace(mempool);
@@ -2865,7 +2861,6 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
                 return false;
             }
             pindexNewTip = currentChain.Tip();
-            fInitialDownload = IsInitialBlockDownload();
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
 
@@ -3286,14 +3281,35 @@ void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, 
         // However it would also bias the earnings and chain control even more to large witnesses and act as a 'centralisation' incentive.
         // So at this point we don't do this - and prefer instead to be agnostic, so we increase witnessed blocks always by a fixed weight.
 
-        //fixme: (GULDEN) (POW2) (HIGH)
-        // We should increment by a larger (constant) amount than 1 otherwise there is a small attack vector here.
-        // Whereby attacker can "overtake" a witnessed block with a PoW block that has a larger difficulty.
-        // NB! We can't use a multiple of nBlockProof though as in the case of an absent witness with chain stalling and delta dropping difficulty it could take an immense amount of time for the new chain to overtake the old one.
-        //pIndex->nChainWork += (20 * nBlockProof);
-
-        // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work than our non-witnessed counterpart.
-        pIndex->nChainWork += 1;
+        if (pIndex->pprev->nVersionPoW2Witness != 0)
+        {
+            // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work than our non-witnessed counterpart.
+            // However this is more complicated than it would seem at first.
+            // If we increase the work by some arbitrary amount e.g. 1 or 10000 then we sit with the following problem:
+            // 1) Miner mines a block at high difficulty. 2) Witness is 'absent'. 3) Chain temporarily stalls.
+            // 4) Miners start mining competing blocks at lower difficulty (delta difficulty halving). 5) Witnesses witness the block
+            // 6) However because they are substantially lower difficulty - nBlockProof + 1 is not enough to put the new block at tip of chain
+            // 7) It takes multiple lower difficulty blocks to form a new chain tip and for chain to progress (chain stalls unacceptably long)
+            // If we base it on the current block weight (e.g. 2x current weight) then we face the opposite - i.e. an attacker can hold back a high difficulty witnessed block and then orphan a bunch of lower difficulty blocks using it.
+            // If we base it on the weight of a previous block (some arbitrary distance backwards) then we fix the above some of the time, however with careful timing the possibility to manipulate is still there.
+            // So instead we base it on the average of the last 10 blocks inclusive of the current, this provides sufficient protection from fluctuations.
+            int nCount = 1;
+            CBlockIndex* pprev = pIndex->pprev;
+            while (pprev && nCount < 10)
+            {
+                ++nCount;
+                nBlockProof += GetBlockProof(*pprev);
+                pprev = pprev->pprev;
+            }
+            assert (nCount == 10);
+            nBlockProof /= nCount;
+            pIndex->nChainWork += nBlockProof;
+        }
+        else
+        {
+            // However for phase 3 we need subsequent PoW blocks to outweigh PoS blocks so we are stuck with the temporary limitation of using nChainWork + 1
+            pIndex->nChainWork += 1;
+        }
     }
 
     // Update setBlockIndexCandidates with the new ordering, ordering depends on nChainWork so might have changed.

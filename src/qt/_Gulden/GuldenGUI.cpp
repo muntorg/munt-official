@@ -385,7 +385,6 @@ void GuldenGUI::requestEmptyWitness()
     if (availableAmount > 0)
     {
         m_pImpl->walletFrame->gotoSendCoinsPage();
-        boost::uuids::uuid forAccountUUID = fromWitnessAccount->getUUID();
         m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->setAmount(availableAmount);
     }
     else
@@ -1258,7 +1257,7 @@ void GuldenGUI::updateAccount(CAccount* account)
     {
         m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
     }
-    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account) ;
+    m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
 }
 
 void GuldenGUI::balanceChanged()
@@ -1320,7 +1319,6 @@ void GuldenGUI::accountAdded(CAccount* account)
         coll.setNumericMode(true);
         auto cmp = [&](const QString& s1, const QString& s2){ return coll.compare(s1, s2) < 0; };
         std::map<QString, ClickableLabel*, decltype(cmp)> sortedAccounts(cmp);
-        ClickableLabel* makeActive = NULL;
         {
             //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
             LOCK(pactiveWallet->cs_wallet);
@@ -1491,8 +1489,11 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
         dialogAccountSettings->deleteLater();
         dialogAccountSettings = NULL;
     }
-    m_pImpl->walletFrame->currentWalletView()->setCurrentWidget( cacheCurrentWidget );
-    cacheCurrentWidget = NULL;
+    if (cacheCurrentWidget)
+    {
+        m_pImpl->walletFrame->currentWalletView()->setCurrentWidget( cacheCurrentWidget );
+        cacheCurrentWidget = NULL;
+    }
 }
 
 void GuldenGUI::gotoNewAccountDialog()

@@ -68,7 +68,7 @@ std::map<uint256, bool> phase2ActivationCache;
 static uint256 phase2ActivationHash;
 static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;
-bool PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
+void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
     CBlockIndex* phaseActivationPoint = nullptr;
     bool phase2Active = false;

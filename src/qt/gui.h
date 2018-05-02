@@ -69,8 +69,6 @@ public:
     */
     void setClientModel(ClientModel *clientModel);
 #ifdef ENABLE_WALLET
-    void updateWitnessDialog();
-
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
@@ -173,6 +171,7 @@ Q_SIGNALS:
     void receivedURI(const QString &uri);
 
 public Q_SLOTS:
+    void updateWitnessDialog();
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
     /** Set network state shown in the UI */

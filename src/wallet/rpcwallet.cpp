@@ -878,25 +878,26 @@ UniValue getbalance(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    if (request.params.size() == 0)
-        return ValueFromAmount(pwallet->GetBalance());
-
-    /*
-    const std::string& account_param = request.params[0].get_str();
-    const std::string* account = account_param != "*" ? &account_param : nullptr;
-    */
-
+    boost::uuids::uuid accountUUID = boost::uuids::nil_generator()();
     int nMinDepth = 1;
-    if (request.params.size() > 1)
-        nMinDepth = request.params[1].get_int();
-
     bool includeWatchOnly = false;
-    if (request.params.size() > 2)
-        includeWatchOnly = request.params[2].get_bool();
 
-    CAccount* forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
-    //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
-    boost::uuids::uuid accountUUID = forAccount ? forAccount->getUUID() : boost::uuids::nil_generator()();
+    if (request.params.size() > 0)
+    {
+        if (request.params.size() > 1)
+            nMinDepth = request.params[1].get_int();
+
+        if (request.params.size() > 2)
+            includeWatchOnly = request.params[2].get_bool();
+
+        if (request.params[0].get_str() != "" && request.params[0].get_str() != "*")
+        {
+            //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
+            CAccount* forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
+            if (forAccount)
+                accountUUID = forAccount->getUUID();
+        }
+    }
     return ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountUUID));
 }
 

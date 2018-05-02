@@ -46,7 +46,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QStackedWidget" name="receiveCoinsStackedWidget">
+        <widget class="QStackedWidget" name="witnessDialogStackedWidget">
          <property name="currentIndex">
           <number>1</number>
          </property>

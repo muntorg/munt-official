@@ -69,7 +69,7 @@ UniValue sethashlimit(const JSONRPCRequest& request)
 
     LogPrintf("<DELTA> hash throttle %ld\n", nHashThrottle);
 
-    return nHashThrottle;
+    return strprintf("Throttling hash: %d", nHashThrottle);
 }
 
 UniValue getwitnessinfo(const JSONRPCRequest& request)
@@ -244,14 +244,12 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             {
                 const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
                 auto findIter = std::lower_bound(witInfo.witnessSelectionPoolUnfiltered.begin(), witInfo.witnessSelectionPoolUnfiltered.end(), findItem);
-                bool foundWitness = false;
                 while (findIter != witInfo.witnessSelectionPoolUnfiltered.end())
                 {
                     if (findIter->outpoint == iter.first)
                     {
                         if (findIter->coin.out == iter.second.out)
                         {
-                            foundWitness = true;
                             if (witnessHasExpired(findIter->nAge, findIter->nWeight, witInfo.nTotalWeight))
                             {
                                 fExpired = true;

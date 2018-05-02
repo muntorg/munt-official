@@ -294,7 +294,7 @@ void WitnessDialog::viewWitnessInfoClicked()
 {
     ui->unitButton->setVisible(true);
     ui->viewWitnessGraphButton->setVisible(false);
-    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
+    ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
 }
 
 void WitnessDialog::emptyWitnessClicked()
@@ -619,7 +619,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
-    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::EMPTY);
+    ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::EMPTY);
     ui->emptyWitnessButton->setVisible(false);
     ui->emptyWitnessButton2->setVisible(false);
     ui->fundWitnessButton->setVisible(true);
@@ -627,78 +627,84 @@ void WitnessDialog::update()
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
 
+    ui->fundWitnessAccountTableView->update();
+
     // Perform a default selection, so that for simple cases (e.g. wallet with only 1 account) user does not need to manually select.
     ui->fundWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->fundWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->fundWitnessAccountTableView->selectRow(0);
 
-    CAccount* forAccount = model->getActiveAccount();
-    if (model && forAccount)
+    if (model)
     {
-        if ( forAccount->IsPoW2Witness() )
+        CAccount* forAccount = model->getActiveAccount();
+        if (forAccount)
         {
-            uint64_t nTotalNetworkWeight = 0;
-            bool bAnyExpired = false;
-            bool bAnyAreMine = false;
-            if (chainActive.Tip() && chainActive.Tip()->pprev)
+            if ( forAccount->IsPoW2Witness() )
             {
-                CGetWitnessInfo witnessInfo;
-                CBlock block;
+                uint64_t nTotalNetworkWeight = 0;
+                bool bAnyExpired = false;
+                bool bAnyAreMine = false;
+                if (chainActive.Tip() && chainActive.Tip()->pprev)
                 {
-                    LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
-                    //fixme: Error handling
-                    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
-                        return;
-                    if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                        return;
-                    nTotalNetworkWeight = witnessInfo.nTotalWeight;
-                }
-                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
-                {
-                    if (IsMine(*forAccount, witCoin.coin.out))
+                    CGetWitnessInfo witnessInfo;
+                    CBlock block;
                     {
-                        bAnyAreMine = true;
-                        if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
-                        {
-                            bAnyExpired = true;
-                        }
+                        LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+                        //fixme: Error handling
+                        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+                            return;
+                        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                            return;
+                        nTotalNetworkWeight = witnessInfo.nTotalWeight;
                     }
-                }
-            }
-            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
-            {
-                ui->fundWitnessButton->setVisible(false);
-                if (bAnyExpired || !bAnyAreMine)
-                {
-                    filter->setAccountFilter(model->getActiveAccount());
-                    int rows = filter->rowCount();
-                    for (int row = 0; row < rows; ++row)
+                    for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                     {
-                        QModelIndex index = filter->index(row, 0);
-
-                        int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
-                        if (nStatus == TransactionStatus::Status::Unconfirmed)
+                        if (IsMine(*forAccount, witCoin.coin.out))
                         {
-                            ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::PENDING);
                             bAnyAreMine = true;
-                            break;
+                            if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                            {
+                                bAnyExpired = true;
+                            }
                         }
                     }
-                    if (!bAnyAreMine)
+                }
+                // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
+                if (pactiveWallet->GetBalance(forAccount, true, true) > 0 || pactiveWallet->GetImmatureBalance(forAccount) > 0)
+                {
+                    ui->fundWitnessButton->setVisible(false);
+                    if (bAnyExpired || !bAnyAreMine)
                     {
-                        ui->emptyWitnessButton2->setVisible(true);
-                        ui->renewWitnessButton->setVisible(true);
-                        ui->viewWitnessGraphButton->setVisible(true);
-                        ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::EXPIRED);
+                        filter->setAccountFilter(model->getActiveAccount());
+                        int rows = filter->rowCount();
+                        for (int row = 0; row < rows; ++row)
+                        {
+                            QModelIndex index = filter->index(row, 0);
+
+                            int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                            if (nStatus == TransactionStatus::Status::Unconfirmed)
+                            {
+                                ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::PENDING);
+                                bAnyAreMine = true;
+                                break;
+                            }
+                        }
+                        if (!bAnyAreMine)
+                        {
+                            ui->emptyWitnessButton2->setVisible(true);
+                            ui->renewWitnessButton->setVisible(true);
+                            ui->viewWitnessGraphButton->setVisible(true);
+                            ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::EXPIRED);
+                            plotGraphForAccount(forAccount, nTotalNetworkWeight);
+                        }
+                    }
+                    else
+                    {
+                        ui->emptyWitnessButton->setVisible(true);
+                        ui->unitButton->setVisible(true);
+                        ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
                         plotGraphForAccount(forAccount, nTotalNetworkWeight);
                     }
-                }
-                else
-                {
-                    ui->emptyWitnessButton->setVisible(true);
-                    ui->unitButton->setVisible(true);
-                    ui->receiveCoinsStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
-                    plotGraphForAccount(forAccount, nTotalNetworkWeight);
                 }
             }
         }
@@ -717,20 +723,39 @@ void WitnessDialog::setClientModel(ClientModel* _clientModel)
 
 
 
-GreaterThanOrEqualSortFilterProxyModel::GreaterThanOrEqualSortFilterProxyModel(QObject *parent)
+WitnessSortFilterProxyModel::WitnessSortFilterProxyModel(QObject *parent)
 : QSortFilterProxyModel(parent)
 {
 }
 
-GreaterThanOrEqualSortFilterProxyModel::~GreaterThanOrEqualSortFilterProxyModel()
+WitnessSortFilterProxyModel::~WitnessSortFilterProxyModel()
 {
 }
 
-bool GreaterThanOrEqualSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
+bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
     QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-    uint64_t nCompare = sourceModel()->data(index0, filterRole()).toLongLong();
-    return nCompare >= nAmount;
+
+    // Must be a 'normal' type account.
+    std::string sType = sourceModel()->data(index0, AccountTableModel::TypeRole).toString().toStdString();
+    if (sType != GetAccountTypeString(AccountType::Normal))
+        return false;
+
+    // Must not be the current account.
+    QString sActive = sourceModel()->data(index0, AccountTableModel::ActiveAccountRole).toString();
+    if (sActive != AccountTableModel::Inactive)
+        return false;
+
+    // Must not be a witness account itself.
+    std::string sSubType = sourceModel()->data(index0, AccountTableModel::SubTypeRole).toString().toStdString();
+    if (sSubType == GetAccountSubTypeString(AccountSubType::PoW2Witness))
+        return false;
+
+    // Must have sufficient balance to fund the operation.
+    uint64_t nCompare = sourceModel()->data(index0, AccountTableModel::AvailableBalanceRole).toLongLong();
+    if (nCompare < nAmount)
+        return false;
+    return true;
 }
 
 
@@ -748,63 +773,20 @@ void WitnessDialog::setModel(WalletModel* _model)
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
         {
-            QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
-            proxyModel->setSourceModel(model->getAccountTableModel());
-            //fixme: For some reason "setDynamicSortFilter(true)" does not update our filters in accordance to the source model changing like one would expect.
-            //So instead we disable it and manually connect to dataChanged/modelReset events - in future possibly look at this again and see if we can get it to work via the proper method.
-            proxyModel->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyModel, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyModel, SLOT(invalidate()));
-            proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyModel->setFilterRole(AccountTableModel::TypeRole);
-            proxyModel->setFilterFixedString(GetAccountTypeString(AccountType::Normal).c_str());
-
-            QSortFilterProxyModel* proxyInactive = new QSortFilterProxyModel(this);
-            proxyInactive->setSourceModel(proxyModel);
-            proxyInactive->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyInactive, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyInactive, SLOT(invalidate()));
-            proxyInactive->setFilterRole(AccountTableModel::ActiveAccountRole);
-            proxyInactive->setFilterFixedString(AccountTableModel::Inactive);
-
-            QSortFilterProxyModel* proxyFilterBySubType = new QSortFilterProxyModel(this);
-            proxyFilterBySubType->setSourceModel(proxyInactive);
-            proxyFilterBySubType->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterBySubType, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterBySubType, SLOT(invalidate()));
-            proxyFilterBySubType->setFilterRole(AccountTableModel::SubTypeRole);
-            proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountSubTypeString(AccountSubType::PoW2Witness)+").*$").c_str());
-
-            QSortFilterProxyModel* proxyModelAccountsSorted = new QSortFilterProxyModel(this);
-            proxyModelAccountsSorted->setSourceModel(proxyFilterBySubType);
-            proxyModelAccountsSorted->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyModelAccountsSorted, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyModelAccountsSorted, SLOT(invalidate()));
-            proxyModelAccountsSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyModelAccountsSorted->setFilterFixedString("");
-            proxyModelAccountsSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyModelAccountsSorted->setFilterKeyColumn(0);
-            proxyModelAccountsSorted->setSortRole(Qt::DisplayRole);
-            proxyModelAccountsSorted->sort(0);
-
-            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalanceFund = new GreaterThanOrEqualSortFilterProxyModel(this);
-            proxyFilterByBalanceFund->setSourceModel(proxyModelAccountsSorted);
-            proxyFilterByBalanceFund->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalanceFund, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalanceFund, SLOT(invalidate()));
-            proxyFilterByBalanceFund->setFilterRole(AccountTableModel::AvailableBalanceRole);
+            WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
+            proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
+            proxyFilterByBalanceFund->setDynamicSortFilter(true);
             proxyFilterByBalanceFund->setAmount(nMinimumWitnessAmount * COIN);
 
-            GreaterThanOrEqualSortFilterProxyModel* proxyFilterByBalanceRenew = new GreaterThanOrEqualSortFilterProxyModel(this);
-            proxyFilterByBalanceRenew->setSourceModel(proxyModelAccountsSorted);
-            proxyFilterByBalanceRenew->setDynamicSortFilter(false);
-            connect(proxyModel->sourceModel(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), proxyFilterByBalanceRenew, SLOT(invalidate()));
-            connect(proxyModel->sourceModel(), SIGNAL(modelReset()), proxyFilterByBalanceRenew, SLOT(invalidate()));
-            proxyFilterByBalanceRenew->setFilterRole(AccountTableModel::AvailableBalanceRole);
-            proxyFilterByBalanceRenew->setAmount(nMinimumWitnessAmount * COIN);
+            WitnessSortFilterProxyModel* proxyFilterByBalanceRenew = new WitnessSortFilterProxyModel(this);
+            proxyFilterByBalanceRenew->setSourceModel(model->getAccountTableModel());
+            proxyFilterByBalanceRenew->setDynamicSortFilter(true);
+            proxyFilterByBalanceRenew->setAmount(1 * COIN);
 
             ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFund);
             ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenew);
+
+            connect( _model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
     }
 }

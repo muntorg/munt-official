@@ -146,7 +146,7 @@ static void UpdateWitnessAccountStates()
 
 static void BlockTipChangedHandler(BitcoinGUI* pUI, bool ibd, const CBlockIndex *)
 {
-    pUI->updateWitnessDialog();
+    QMetaObject::invokeMethod( pUI, "updateWitnessDialog", Qt::QueuedConnection );
     UpdateWitnessAccountStates();
 }
 #endif
@@ -638,15 +638,17 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
     }
 }
 
-#ifdef ENABLE_WALLET
 void BitcoinGUI::updateWitnessDialog()
 {
+    #ifdef ENABLE_WALLET
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->witnessDialogPage)
     {
         walletFrame->currentWalletView()->witnessDialogPage->update();
     }
+    #endif
 }
 
+#ifdef ENABLE_WALLET
 bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
 {
     if(!walletFrame)
