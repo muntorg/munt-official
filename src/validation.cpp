@@ -2588,12 +2588,10 @@ static void PruneBlockIndexCandidates() {
     // Note that we can't delete the current block itself, as we may need to return to it later in case a
     // reorganization to a better block fails.
     std::set<CBlockIndex*, CBlockIndexWorkComparator>::iterator it = setBlockIndexCandidates.begin();
-    //fixme: NEXT HIGH
-    //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW (as we must consider all such blocks as witness candidates even if they are of lower weight).
-    //if (nPoW2Version != 0 || (*it)->nHeight < chainActive.Tip()->nHeight-1)
-    //while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork && ((*it)->nVersionPoW2Witness == 0 || (*it)->nHeight < chainActive.Tip()->nHeight-10) ) {
-    int nPoW2Version = chainActive.Tip()->nVersionPoW2Witness;
-    while (it != setBlockIndexCandidates.end() && (*it)->nChainWork < chainActive.Tip()->nChainWork) {
+
+    //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW.
+    //The reason for this is that we must consider all such blocks as witness candidates even if they are of lower weight - in case the higher weight block has an "absent" witness.
+    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight || (*it)->nVersionPoW2Witness == 0 ) ) {
             setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
