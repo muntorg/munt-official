@@ -95,27 +95,24 @@ void ThreadShadowPoolManager()
                 milliSleep = 100;
                 continue;
             }
-            else
+            else if (!tryLockWallet)
             {
-                if (!tryLockWallet)
+                // If we reach here we need to unlock to generate more background shadow accounts.
+                // So signal that we would like an unlock.
+                pactiveWallet->wantDelayLock = true;
+                tryLockWallet = false;
+                if (promptOnceForAccountGenerationUnlock)
                 {
-                    // If we reach here we need to unlock to generate more background shadow accounts.
-                    // So signal that we would like an unlock.
-                    pactiveWallet->wantDelayLock = true;
-                    tryLockWallet = false;
-                    if (promptOnceForAccountGenerationUnlock)
-                    {
-                        promptOnceForAccountGenerationUnlock = false;
+                    promptOnceForAccountGenerationUnlock = false;
 
-                        // If the user cancels then we don't prompt him for this again in this program run.
-                        // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
-                        // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
-                        // Might also want a "don't ask me this again" checkbox on prompt etc.
-                        // Discuss with UI team and reconsider how to handle this.
-                        std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
-                        uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for address generation"), successCallback);
-                        milliSleep = 1;
-                    }
+                    // If the user cancels then we don't prompt him for this again in this program run.
+                    // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
+                    // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    // Might also want a "don't ask me this again" checkbox on prompt etc.
+                    // Discuss with UI team and reconsider how to handle this.
+                    std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
+                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account generation"), successCallback);
+                    milliSleep = 1;
                 }
             }
 
@@ -126,17 +123,20 @@ void ThreadShadowPoolManager()
             if (targetPoolDepth > 40)
                 numToAllocatePerRound = 20;
             int numAllocated = pactiveWallet->TopUpKeyPool(depth, numToAllocatePerRound);
-            if (numAllocated >= 0 || depth < targetPoolDepth)
+            // Increase the depth for next round of allocation.
+            if (numAllocated == 0 && depth < targetPoolDepth)
             {
-                // Increase the depth for next round of allocation.
-                if (numAllocated == 0)
-                    ++depth;
-
-                // If we didn't allocate any or the user has set an especially large depth then we want to try again almost immediately and not have a long sleep.
-                if (targetPoolDepth > 40 || numAllocated == 0)
-                    milliSleep = 1;
+                ++depth;
+                // If we didn't allocate any then we want to try again almost immediately and not have a long sleep.
+                milliSleep = 1;
+            }
+            else if (numAllocated >= 0 || depth < targetPoolDepth)
+            {
                 // Otherwise we sleep for increasingly longer depending on how deep into the allocation we are, the deeper we are the less urgent it becomes to allocate more. 
                 //fixme: Look some more into these times, they are a bit arbitrary.
+                // If the user has set an especially large depth then we want to try again almost immediately and not have a long sleep.
+                if (targetPoolDepth > 40)
+                    milliSleep = 1;
                 else if (depth < 10) 
                     milliSleep = 80;
                 else if (depth < 20)
