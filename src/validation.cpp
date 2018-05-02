@@ -1183,18 +1183,18 @@ CScript&& GetScriptForNonScriptOutput(const CTxOut& out)
     if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+        return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
     else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-        return std::move(CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end()));
+        return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
     else
     {
         assert(0);
     }
-    return std::move(CScript());
+    return CScript();
 }
 
 
@@ -1812,7 +1812,6 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
     int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev, chainparams, chain, &view);
     int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev, chainparams, chain, &view);
-    int nPoW2PhaseGreatGrandParent = ( (pindex->pprev && pindex->pprev->pprev && pindex->pprev->pprev->pprev) ? GetPoW2Phase(pindex->pprev->pprev->pprev, chainparams, chain, &view) : 1 );
     //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
     //Do and store all such tests above this point in the code.
 
@@ -1831,7 +1830,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                 return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
         }
     }
-    int nWitnessCoinbaseIndex = 0;
+    unsigned int nWitnessCoinbaseIndex = 0;
     if (nPoW2PhaseParent >= 3)
     {
         if (block.nVersionPoW2Witness == 0)
