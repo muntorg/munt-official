@@ -372,8 +372,11 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
 , encrypted(false)
 , accountKeyPriv(accountKey_)
 {
-    accountKeyPriv.Derive(primaryChainKeyPriv, 0);  //a/0
-    accountKeyPriv.Derive(changeChainKeyPriv, 1);  //a/1
+    accountKeyPriv.Derive(primaryChainKeyPriv, 0);  //a'/0
+    if (m_SubType != AccountSubType::PoW2Witness) 
+        accountKeyPriv.Derive(changeChainKeyPriv, 1);  //a'/1
+    else
+        accountKeyPriv.Derive(changeChainKeyPriv, 1 | BIP32_HARDENED_KEY_LIMIT);  //a'/1' - Witness account requires hardening at the change level for extra security (it will be quite common to share witness account change keys)
     primaryChainKeyPub = primaryChainKeyPriv.Neuter();
     changeChainKeyPub = changeChainKeyPriv.Neuter();
 }
@@ -391,6 +394,7 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
     primaryChainKeyPriv.GetMutableKey().MakeNewKey(true);
     changeChainKeyPriv.GetMutableKey().MakeNewKey(true);
 
+    //NB! The change keys will be wrong here for read only witness accounts, but it doesn't matter because we only need to match one of the two keys to be able to tell it is ours.
     accountKey_.Derive(primaryChainKeyPub, 0);  //a/0
     accountKey_.Derive(changeChainKeyPub, 1);  //a/1
     m_readOnly = true;

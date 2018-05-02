@@ -437,7 +437,7 @@ private:
     bool encrypted;
 
     //These members are only valid when the account is unlocked/unencrypted.
-    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/0' (bip44)
+    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/n' (bip44)
     CExtKey primaryChainKeyPriv;    //key at m/0'/0 (bip32) or m/44'/87'/0'/0 (bip44)
     CExtKey changeChainKeyPriv;     //key at m/0'/1 (bip32) or m/44'/87'/0'/1 (bip44)
 
