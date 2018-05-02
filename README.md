@@ -3,10 +3,12 @@
 ### About
 Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
 
-### Technical documentation
+### License
+All code is subject to The Gulden license - https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden
 
+
+### Technical documentation
 * PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
-* Intro for PHP developers - https://www.paulwillen.nl/1102/get-started-with-php-developing-on-the-gulden-network
 
 ### Community
 
