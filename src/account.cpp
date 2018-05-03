@@ -174,15 +174,15 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
     {
         case Desktop:
             assert(m_nAccountIndex < 100000);
-            account = GenerateAccount( m_nAccountIndex++ );
+            account = GenerateAccount( m_nAccountIndex++, type);
             break;
         case Mobi:
             assert(m_nAccountIndexMobi < 200000);
-            account = GenerateAccount( m_nAccountIndexMobi++ );
+            account = GenerateAccount( m_nAccountIndexMobi++, type);
             break;
         case PoW2Witness:
             assert(m_nAccountIndex < 300000);
-            account = GenerateAccount( m_nAccountIndexWitness++ );
+            account = GenerateAccount( m_nAccountIndexWitness++, type);
             break;
     }
 
@@ -195,7 +195,6 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
         Db->WriteHDSeed(*this);
     }
 
-    account->m_SubType = type;
     if (IsCrypted())
     {
         account->Encrypt(vMasterKey);
@@ -203,14 +202,14 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
     return account;
 }
 
-CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
+CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex, AccountSubType type)
 {
     if ( IsReadOnly() )
     {
         //fixme: (LOW) We should be able to combine this with IsLocked() (BIP44NoHardening) case below to simplify the code here.
         CExtPubKey accountKeyPub;
         cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/87/n (BIP44)
-        return new CAccountHD(accountKeyPub, m_UUID);
+        return new CAccountHD(accountKeyPub, m_UUID, type);
     }
     else if (IsLocked())
     {
@@ -220,7 +219,7 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex)
     {
         CExtKey accountKeyPriv;
         GetPrivKeyForAccountInternal(nAccountIndex, accountKeyPriv);
-        return new CAccountHD(accountKeyPriv, m_UUID);
+        return new CAccountHD(accountKeyPriv, m_UUID, type);
     }
 }
 
@@ -363,7 +362,7 @@ bool CHDSeed::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 
 
 
-CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
+CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountSubType subType)
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
@@ -372,6 +371,8 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
 , encrypted(false)
 , accountKeyPriv(accountKey_)
 {
+    m_SubType = subType;
+
     accountKeyPriv.Derive(primaryChainKeyPriv, 0);  //a'/0
     if (m_SubType != AccountSubType::PoW2Witness) 
         accountKeyPriv.Derive(changeChainKeyPriv, 1);  //a'/1
@@ -381,7 +382,7 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID)
     changeChainKeyPub = changeChainKeyPriv.Neuter();
 }
 
-CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
+CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, AccountSubType subType)
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
@@ -389,6 +390,8 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID)
 , m_nNextChangeIndex(0)
 , encrypted(false)
 {
+    m_SubType = subType;
+
     //Random key - not actually used, but written to disk to avoid unnecessary complexity in serialisation code
     accountKeyPriv.GetMutableKey().MakeNewKey(true);
     primaryChainKeyPriv.GetMutableKey().MakeNewKey(true);
