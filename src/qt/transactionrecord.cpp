@@ -55,7 +55,6 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
-            bool firsttime=true;
             for(const CTxOut& txout: wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);

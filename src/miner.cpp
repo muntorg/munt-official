@@ -761,13 +761,14 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
 
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
-    CBlockIndex* pIndexPrev = chainActive.Tip();
-
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), GetPoW2Phase(chainActive.Tip(), chainparams, chainActive), GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive));
 
+    //fixme: (2.1) re-implement this.
     // Found a solution
-    /*if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams))
+    /*
+    CBlockIndex* pIndexPrev = chainActive.Tip();
+    if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams))
     {
         if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
             return error("GuldenWitness: Generated phase4 block is stale");
@@ -879,7 +880,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
             //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
             int nPoW2PhaseGreatGrandParent = pindexParent->pprev && pindexParent->pprev->pprev ? GetPoW2Phase(pindexParent->pprev->pprev, Params(), chainActive) : 1;
             int nPoW2PhaseGrandParent = pindexParent->pprev ? GetPoW2Phase(pindexParent->pprev, Params(), chainActive) : 1;
-            int nPoW2PhaseParent = GetPoW2Phase(pindexParent, Params(), chainActive);
             boost::this_thread::interruption_point();
 
             CBlockIndex* pWitnessBlockToEmbed = nullptr;
@@ -1418,7 +1418,7 @@ void static GuldenWitness()
                                 /** First we add the new witness coinbase to the block, this acts as a seperator between transactions from the initial mined block and the witness block **/
                                 /** We add a placeholder for now as we don't know the fees we will generate **/
                                 pWitnessBlock->vtx.emplace_back();
-                                int nWitnessCoinbaseIndex = pWitnessBlock->vtx.size()-1;
+                                unsigned int nWitnessCoinbaseIndex = pWitnessBlock->vtx.size()-1;
                                 nStartingBlockWeight += 200;
 
                                 std::shared_ptr<CReserveScript> coinbaseScript;
