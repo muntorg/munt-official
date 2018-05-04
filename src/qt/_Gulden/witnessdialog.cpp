@@ -689,7 +689,7 @@ void WitnessDialog::update()
                                 break;
                             }
                         }
-                        if (!bAnyAreMine)
+                        if (bAnyExpired)
                         {
                             ui->emptyWitnessButton2->setVisible(true);
                             ui->renewWitnessButton->setVisible(true);
