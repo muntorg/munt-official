@@ -28,8 +28,35 @@
  */
 bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 {
-    // There are currently no cases where we hide transactions, but
-    // we may want to use this in the future for things like RBF.
+    //fixme: delete
+    AssertLockHeld(pactiveWallet->cs_wallet);
+
+    // Hide orphaned phase 3 witness earnings when they are orphaned by subsequent PoW block.
+    if (!wtx.IsInMainChain() && wtx.IsPoW2WitnessCoinBase())
+    {
+        const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+        if (findIter != mapBlockIndex.end())
+        {
+            int nHeight = findIter->second->nHeight;
+            if (nHeight <= chainActive.Height())
+            {
+                const auto& searchHash = chainActive[nHeight]->GetBlockHashPoW2();
+                for (const auto& iter : pactiveWallet->mapWallet)
+                {
+                    if (iter.second.hashBlock == searchHash)
+                    {
+                        for (const auto& txOut : iter.second.tx->vout)
+                        {
+                            if (txOut.output == wtx.tx->vout[0].output)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     return true;
 }
 
@@ -433,6 +460,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
                 status.matures_in = wtx.GetBlocksToMaturity();
 
                 // Check if the block was requested by anyone
+                //fixme: Adjust time here.
                 if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
                     status.status = TransactionStatus::MaturesWarning;
             }
