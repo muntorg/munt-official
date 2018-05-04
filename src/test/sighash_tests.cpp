@@ -30,67 +30,6 @@
 
 extern UniValue read_json(const std::string& jsondata);
 
-// Old script.cpp SignatureHash function
-uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType)
-{
-    static const uint256 one(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));
-    if (nIn >= txTo.vin.size())
-    {
-        return one;
-    }
-    CMutableTransaction txTmp(txTo);
-
-    // In case concatenating two scripts ends up with two codeseparators,
-    // or an extra one at the end, this prevents all those possible incompatibilities.
-    scriptCode.FindAndDelete(CScript(OP_CODESEPARATOR));
-
-    // Blank out other inputs' signatures
-    for (unsigned int i = 0; i < txTmp.vin.size(); i++)
-        txTmp.vin[i].scriptSig = CScript();
-    txTmp.vin[nIn].scriptSig = scriptCode;
-
-    // Blank out some of the outputs
-    if ((nHashType & 0x1f) == SIGHASH_NONE)
-    {
-        // Wildcard payee
-        txTmp.vout.clear();
-
-        // Let the others update at will
-        for (unsigned int i = 0; i < txTmp.vin.size(); i++)
-            if (i != nIn)
-                txTmp.vin[i].SetSequence(0, txTmp.nVersion, CTxInFlags::None);
-    }
-    else if ((nHashType & 0x1f) == SIGHASH_SINGLE)
-    {
-        // Only lock-in the txout payee at same index as txin
-        unsigned int nOut = nIn;
-        if (nOut >= txTmp.vout.size())
-        {
-            return one;
-        }
-        txTmp.vout.resize(nOut+1);
-        for (unsigned int i = 0; i < nOut; i++)
-            txTmp.vout[i].SetNull();
-
-        // Let the others update at will
-        for (unsigned int i = 0; i < txTmp.vin.size(); i++)
-            if (i != nIn)
-                txTmp.vin[i].SetSequence(0, txTmp.nVersion, CTxInFlags::None);
-    }
-
-    // Blank out other inputs completely, not recommended for open transactions
-    if (nHashType & SIGHASH_ANYONECANPAY)
-    {
-        txTmp.vin[0] = txTmp.vin[nIn];
-        txTmp.vin.resize(1);
-    }
-
-    // Serialize and hash
-    CHashWriter ss(SER_GETHASH, SERIALIZE_TRANSACTION_NO_WITNESS);
-    ss << txTmp << nHashType;
-    return ss.GetHash();
-}
-
 void static RandomScript(CScript &script) {
     static const opcodetype oplist[] = {OP_FALSE, OP_1, OP_2, OP_3, OP_CHECKSIG, OP_IF, OP_VERIF, OP_RETURN, OP_CODESEPARATOR};
     script = CScript();
@@ -124,19 +63,19 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
 
 BOOST_FIXTURE_TEST_SUITE(sighash_tests, BasicTestingSetup)
 
+// use this test to generate the test data
+// with PRINT_SIGHASH_JSON defined capture the output into sighash.json
+// #define PRINT_SIGHASH_JSON 1
 BOOST_AUTO_TEST_CASE(sighash_test)
 {
+#if defined(PRINT_SIGHASH_JSON)
     SeedInsecureRand(false);
 
-    #if defined(PRINT_SIGHASH_JSON)
     std::cout << "[\n";
     std::cout << "\t[\"raw_transaction, script, input_index, hashType, signature_hash (result)\"],\n";
-    #endif
-    int nRandomTests = 50000;
 
-    #if defined(PRINT_SIGHASH_JSON)
-    nRandomTests = 500;
-    #endif
+    int nRandomTests = 500;
+
     for (int i=0; i<nRandomTests; i++) {
         int nHashType = InsecureRand32();
         CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
@@ -145,10 +84,7 @@ BOOST_AUTO_TEST_CASE(sighash_test)
         RandomScript(scriptCode);
         int nIn = InsecureRandRange(txTo.vin.size());
 
-        uint256 sh, sho;
-        sho = SignatureHashOld(scriptCode, txTo, nIn, nHashType);
-        sh = SignatureHash(scriptCode, txTo, nIn, nHashType, 0, SIGVERSION_BASE);
-        #if defined(PRINT_SIGHASH_JSON)
+        uint256 sh = SignatureHash(scriptCode, txTo, nIn, nHashType, 0, SIGVERSION_BASE);
         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
         ss << txTo;
 
@@ -157,22 +93,21 @@ BOOST_AUTO_TEST_CASE(sighash_test)
         std::cout << HexStr(scriptCode) << "\", ";
         std::cout << nIn << ", ";
         std::cout << nHashType << ", \"";
-        std::cout << sho.GetHex() << "\"]";
+        std::cout << sh.GetHex() << "\"]";
         if (i+1 != nRandomTests) {
           std::cout << ",";
         }
         std::cout << "\n";
-        #endif
-        BOOST_CHECK(sh == sho);
     }
-    #if defined(PRINT_SIGHASH_JSON)
     std::cout << "]\n";
-    #endif
+#endif
 }
 
 // Goal: check that SignatureHash generates correct hash
 BOOST_AUTO_TEST_CASE(sighash_from_data)
 {
+    BOOST_FAIL("still need further work to pass");
+
     UniValue tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
