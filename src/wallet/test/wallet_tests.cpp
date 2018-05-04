@@ -394,8 +394,9 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     }
 
     // Prune the older block file.
-    PruneOneBlockFile(oldTip->GetBlockPos().nFile);
-    blockStore.UnlinkPrunedFiles({oldTip->GetBlockPos().nFile});
+    int nFile = oldTip->GetBlockPos().nFile;
+    PruneOneBlockFile(nFile);
+    blockStore.UnlinkPrunedFiles({nFile});
 
     // Verify ScanForWalletTransactions only picks transactions in the new block
     // file.
