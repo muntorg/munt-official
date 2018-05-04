@@ -1165,13 +1165,24 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
     {
         AssertLockHeld(cs_wallet);
 
-        if (pIndex != NULL) {
-            BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+        if (pIndex != NULL)
+        {
+            BOOST_FOREACH(const CTxIn& txin, tx.vin)
+            {
                 std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.prevout);
-                while (range.first != range.second) {
-                    if (range.first->second != tx.GetHash()) {
-                        LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
-                        //fixme: (2.0) (POW2) (check that PoW and PoW2 block don't conflict here?) - seeing conflicts in phase 3 but not phase 5 - which is probably fine?
+                while (range.first != range.second)
+                {
+                    if (range.first->second != tx.GetHash())
+                    {
+                        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+                        if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
+                        {
+                            LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
+                        }
+                        else
+                        {
+                            LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
+                        }
                         MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
@@ -1212,10 +1223,14 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             {
                 //checkme: It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
                 //Is there maybe a better way to do this?
-                uint256 hashBlock = uint256();
-                if (GetTransaction(txin.prevout.hash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                bool fExistedIncoming = mapWallet.count(txin.prevout.hash) != 0;
+                if (!fExistedIncoming)
                 {
-                    AddToWallet(wtx, false);
+                    uint256 hashBlock = uint256();
+                    if (GetTransaction(txin.prevout.hash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                    {
+                        AddToWallet(wtx, false);
+                    }
                 }
             }
             return ret;
@@ -3882,7 +3897,7 @@ bool CWallet::NewKeyPool()
 int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* forAccount)
 {
     // Return -1 if we fail to allocate any -and- one of the accounts is not HD -and- it is locked.
-    int nNew = 0;
+    unsigned int nNew = 0;
     bool bAnyNonHDAccountsLockedAndRequireKeys = false;
 
     LOCK(cs_wallet);
