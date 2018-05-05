@@ -419,56 +419,60 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     {
         QModelIndex index = filter->index(row, 0);
 
-        int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
-        if (nType >= TransactionRecord::RecvWithAddress)
+        int nDepth = filter->data(index, TransactionTableModel::DepthRole).toInt();
+        if ( nDepth > 0 )
         {
-            if (nOriginBlock == 0)
+            int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
+            if ( (nType >= TransactionRecord::RecvWithAddress) )
             {
-                originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
-                nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
-
-                // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
-                CBlockIndex* sampleWeightIndex = chainActive[nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? nOriginBlock : nOriginBlock+100];
-                int64_t nUnused1;
-                if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, nOriginNetworkWeight, chainActive))
+                if (nOriginBlock == 0)
                 {
-                    //fixme: Error handling
-                    return;
-                }
-                pointMapGenerated[0] = 0;
+                    originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
+                    nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
 
-                uint256 originHash;
-                originHash.SetHex( filter->data(index, TransactionTableModel::TxHashRole).toString().toStdString());
-
-                LOCK2(cs_main, pactiveWallet->cs_wallet);
-                auto walletTxIter = pactiveWallet->mapWallet.find(originHash);
-                if(walletTxIter == pactiveWallet->mapWallet.end())
-                {
-                    return;
-                }
-
-                for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
-                {
-                    //fixme: Handle multiple in one tx. Check ismine. Handle none (regular transaction)
-                    if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
+                    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
+                    CBlockIndex* sampleWeightIndex = chainActive[nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? nOriginBlock : nOriginBlock+100];
+                    int64_t nUnused1;
+                    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, nOriginNetworkWeight, chainActive))
                     {
-                        break;
+                        //fixme: Error handling
+                        return;
                     }
+                    pointMapGenerated[0] = 0;
+
+                    uint256 originHash;
+                    originHash.SetHex( filter->data(index, TransactionTableModel::TxHashRole).toString().toStdString());
+
+                    LOCK2(cs_main, pactiveWallet->cs_wallet);
+                    auto walletTxIter = pactiveWallet->mapWallet.find(originHash);
+                    if(walletTxIter == pactiveWallet->mapWallet.end())
+                    {
+                        return;
+                    }
+
+                    for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
+                    {
+                        //fixme: Handle multiple in one tx. Check ismine. Handle none (regular transaction)
+                        if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
+                        {
+                            break;
+                        }
+                    }
+                    nOriginLength = witnessDetails.lockUntilBlock - (witnessDetails.lockFromBlock > 0 ? witnessDetails.lockFromBlock : nOriginBlock);
+                    nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
                 }
-                nOriginLength = witnessDetails.lockUntilBlock - (witnessDetails.lockFromBlock > 0 ? witnessDetails.lockFromBlock : nOriginBlock);
-                nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
+                //fixme (HIGH): changes in witness weight... (multiple witnesses in single account etc.)
             }
-            //fixme (HIGH): changes in witness weight... (multiple witnesses in single account etc.)
-        }
-        else if (nType == TransactionRecord::GeneratedWitness)
-        {
-            int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
-            if (nX > 0)
+            else if (nType == TransactionRecord::GeneratedWitness)
             {
-                lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
-                uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
-                uint64_t nDays = originDate.daysTo(lastEarningsDate);
-                AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
+                int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
+                if (nX > 0)
+                {
+                    lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
+                    uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
+                    uint64_t nDays = originDate.daysTo(lastEarningsDate);
+                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
+                }
             }
         }
     }
@@ -527,6 +531,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     QPolygonF generatedPointsForecast;
     if (generatedPoints.size() > 0)
     {
+        generatedPoints.back().setY(generatedPoints[generatedPoints.size()-2].y());
         generatedPointsForecast << generatedPoints.back();
         for (const auto& pointIter : pointMapForecast)
         {
