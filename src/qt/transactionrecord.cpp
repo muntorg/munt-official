@@ -31,26 +31,26 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
     //fixme: delete
     AssertLockHeld(pactiveWallet->cs_wallet);
 
-    // Hide orphaned phase 3 witness earnings when they are orphaned by subsequent PoW block.
-    if (!wtx.IsInMainChain() && wtx.IsPoW2WitnessCoinBase())
+    // Hide orphaned phase 3 witness earnings when they are orphaned by a subsequent PoW block.
+    // We don't want slow/complex "IsPhase3" lookups here etc.
+    // So we do this in a rather round about way.
+    if (!wtx.IsInMainChain() && wtx.IsPoW2WitnessCoinBase() && wtx.tx->vout.size() >= 2 && wtx.nIndex == -1)
     {
+        // Find the height of our block.
         const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
         if (findIter != mapBlockIndex.end())
         {
-            int nHeight = findIter->second->nHeight;
-            if (nHeight <= chainActive.Height())
+            for (const auto& iter : pactiveWallet->mapWallet)
             {
-                const auto& searchHash = chainActive[nHeight]->GetBlockHashPoW2();
-                for (const auto& iter : pactiveWallet->mapWallet)
+                // Find any transactions from the block that potentially replaces us.
+                if (iter.second.hashBlock == wtx.hashBlock)
                 {
-                    if (iter.second.hashBlock == searchHash)
+                    // Scan the outputs of the transaction and if it matches our output then we know we have been orphaned by it and can safely hide.
+                    for (const auto& txOut : iter.second.tx->vout)
                     {
-                        for (const auto& txOut : iter.second.tx->vout)
+                        if (txOut.output == wtx.tx->vout[1].output)
                         {
-                            if (txOut.output == wtx.tx->vout[0].output)
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }
