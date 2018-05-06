@@ -470,7 +470,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -507,7 +507,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
 }
 
 /* The special 'focus' buttons*/
-#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #fundWitnessButton, #renewWitnessButton
+#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -520,7 +520,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
     padding-right: 20px;
     margin-bottom: 18px;
 }
-#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed
+#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed
 {
     background-color: ACCENT_COLOR_2;
 }

@@ -366,6 +366,9 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
         QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
     }
+
+    // Clear the failed flag in UI for immediate user feedback.
+    targetWitnessAccount->SetWarningState(AccountStatus::Default);
 }
 
 void GuldenGUI::requestFundWitness(CAccount* funderAccount)

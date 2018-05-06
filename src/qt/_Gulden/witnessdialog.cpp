@@ -128,6 +128,8 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
     ui->renewWitnessButton->setCursor( Qt::PointingHandCursor );
     ui->emptyWitnessButton->setCursor( Qt::PointingHandCursor );
     ui->emptyWitnessButton2->setCursor( Qt::PointingHandCursor );
+    ui->withdrawEarningsButton->setCursor( Qt::PointingHandCursor );
+    ui->withdrawEarningsButton2->setCursor( Qt::PointingHandCursor );
     ui->fundWitnessButton->setCursor( Qt::PointingHandCursor );
 
     // Force qwt graph back to normal cursor instead of cross hair.
@@ -277,6 +279,8 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
     connect(ui->viewWitnessGraphButton, SIGNAL( clicked() ), this, SLOT( viewWitnessInfoClicked() ) );
     connect(ui->emptyWitnessButton,  SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
     connect(ui->emptyWitnessButton2, SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
+    connect(ui->withdrawEarningsButton,  SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
+    connect(ui->withdrawEarningsButton2, SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
     connect(ui->fundWitnessButton,   SIGNAL( clicked() ), this, SLOT( fundWitnessClicked() ) );
     connect(ui->renewWitnessButton,  SIGNAL( clicked() ), this, SLOT( renewWitnessClicked() ) );
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
@@ -627,13 +631,15 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
-    ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::EMPTY);
-    ui->emptyWitnessButton->setVisible(false);
-    ui->emptyWitnessButton2->setVisible(false);
-    ui->fundWitnessButton->setVisible(true);
-    ui->renewWitnessButton->setVisible(false);
-    ui->unitButton->setVisible(false);
-    ui->viewWitnessGraphButton->setVisible(false);
+    WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
+    bool stateEmptyWitnessButton = false;
+    bool stateEmptyWitnessButton2 = false;
+    bool stateWithdrawEarningsButton = false;
+    bool stateWithdrawEarningsButton2 = false;
+    bool stateFundWitnessButton = true;
+    bool stateRenewWitnessButton = false;
+    bool stateUnitButton = false;
+    bool stateViewWitnessGraphButton = false;
 
     ui->fundWitnessAccountTableView->update();
     ui->renewWitnessAccountTableView->update();
@@ -689,7 +695,7 @@ void WitnessDialog::update()
                 // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
                 if (pactiveWallet->GetBalance(forAccount, true, true) > 0 || pactiveWallet->GetImmatureBalance(forAccount) > 0)
                 {
-                    ui->fundWitnessButton->setVisible(false);
+                    stateFundWitnessButton = false;
                     if (bAnyExpired || !bAnyAreMine)
                     {
                         filter->setAccountFilter(model->getActiveAccount());
@@ -701,31 +707,54 @@ void WitnessDialog::update()
                             int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
                             if (nStatus == TransactionStatus::Status::Unconfirmed)
                             {
-                                ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::PENDING);
+                                setIndex = WitnessDialogStates::PENDING;
                                 bAnyAreMine = true;
                                 break;
                             }
                         }
                         if (bAnyExpired)
                         {
-                            ui->emptyWitnessButton2->setVisible(true);
-                            ui->renewWitnessButton->setVisible(true);
-                            ui->viewWitnessGraphButton->setVisible(true);
-                            ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::EXPIRED);
+                            if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true))
+                                stateEmptyWitnessButton2 = true;
+                            else
+                                stateWithdrawEarningsButton2 = true;
+
+                            // If the account is not flagged as expired then we might have already renewed, or we might have ended our lock period.
+                            // We could also just be waiting for the next block to come in for the flag to update.
+                            // Keep the button visible, so the user is at least aware that it exists, but disable it so that it can't be used until we are sure.
+                            if (forAccount->GetWarningState() == AccountStatus::WitnessExpired)
+                                stateRenewWitnessButton = true;
+                            else
+                                stateRenewWitnessButton = false;
+                            stateViewWitnessGraphButton = true;
+                            setIndex = WitnessDialogStates::EXPIRED;
                             plotGraphForAccount(forAccount, nTotalNetworkWeight);
                         }
                     }
                     else
                     {
-                        ui->emptyWitnessButton->setVisible(true);
-                        ui->unitButton->setVisible(true);
-                        ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
+                        if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true))
+                            stateEmptyWitnessButton = true;
+                        else
+                            stateWithdrawEarningsButton = true;
+                        stateUnitButton = true;
+                        setIndex = WitnessDialogStates::STATISTICS;
                         plotGraphForAccount(forAccount, nTotalNetworkWeight);
                     }
                 }
             }
         }
     }
+
+    ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
+    ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
+    ui->emptyWitnessButton2->setVisible(stateEmptyWitnessButton2);
+    ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
+    ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
+    ui->fundWitnessButton->setVisible(stateFundWitnessButton);
+    ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
+    ui->unitButton->setVisible(stateUnitButton);
+    ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
 }
 
 void WitnessDialog::setClientModel(ClientModel* _clientModel)
