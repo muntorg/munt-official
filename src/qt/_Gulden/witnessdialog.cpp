@@ -636,11 +636,20 @@ void WitnessDialog::update()
     ui->viewWitnessGraphButton->setVisible(false);
 
     ui->fundWitnessAccountTableView->update();
-
+    ui->renewWitnessAccountTableView->update();
     // Perform a default selection, so that for simple cases (e.g. wallet with only 1 account) user does not need to manually select.
-    ui->fundWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->fundWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->fundWitnessAccountTableView->selectRow(0);
+    if (ui->fundWitnessAccountTableView->selectionModel()->selectedRows().count() == 0)
+    {
+        ui->fundWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->fundWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        ui->fundWitnessAccountTableView->selectRow(0);
+    }
+    if (ui->renewWitnessAccountTableView->selectionModel()->selectedRows().count() == 0)
+    {
+        ui->renewWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->renewWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        ui->renewWitnessAccountTableView->selectRow(0);
+    }
 
     if (model)
     {
@@ -786,13 +795,33 @@ void WitnessDialog::setModel(WalletModel* _model)
             proxyFilterByBalanceFund->setDynamicSortFilter(true);
             proxyFilterByBalanceFund->setAmount(nMinimumWitnessAmount * COIN);
 
+            QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
+            proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);
+            proxyFilterByBalanceFundSorted->setDynamicSortFilter(true);
+            proxyFilterByBalanceFundSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
+            proxyFilterByBalanceFundSorted->setFilterFixedString("");
+            proxyFilterByBalanceFundSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            proxyFilterByBalanceFundSorted->setFilterKeyColumn(AccountTableModel::ColumnIndex::Label);
+            proxyFilterByBalanceFundSorted->setSortRole(Qt::DisplayRole);
+            proxyFilterByBalanceFundSorted->sort(0);
+
             WitnessSortFilterProxyModel* proxyFilterByBalanceRenew = new WitnessSortFilterProxyModel(this);
             proxyFilterByBalanceRenew->setSourceModel(model->getAccountTableModel());
             proxyFilterByBalanceRenew->setDynamicSortFilter(true);
             proxyFilterByBalanceRenew->setAmount(1 * COIN);
 
-            ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFund);
-            ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenew);
+            QSortFilterProxyModel* proxyFilterByBalanceRenewSorted = new QSortFilterProxyModel(this);
+            proxyFilterByBalanceRenewSorted->setSourceModel(proxyFilterByBalanceRenew);
+            proxyFilterByBalanceRenewSorted->setDynamicSortFilter(true);
+            proxyFilterByBalanceRenewSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
+            proxyFilterByBalanceRenewSorted->setFilterFixedString("");
+            proxyFilterByBalanceRenewSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            proxyFilterByBalanceRenewSorted->setFilterKeyColumn(AccountTableModel::ColumnIndex::Label);
+            proxyFilterByBalanceRenewSorted->setSortRole(Qt::DisplayRole);
+            proxyFilterByBalanceRenewSorted->sort(0);
+
+            ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFundSorted);
+            ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenewSorted);
 
             connect( _model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }

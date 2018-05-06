@@ -70,11 +70,11 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
 
     if  (role == Qt::DisplayRole)
     {
-        if (index.column() == 0)
+        if (index.column() == ColumnIndex::Label)
         {
             return QString::fromStdString(accountLabel.c_str());
         }
-        if (index.column() == 1)
+        if (index.column() == ColumnIndex::Balance)
         {
             CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
             return BitcoinUnits::format(BitcoinUnits::Unit::BTC, balance, false, BitcoinUnits::separatorAlways, 2);
@@ -109,11 +109,11 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
     }
     else if(role == Qt::TextAlignmentRole)
     {
-        switch(index.column())
+        switch((ColumnIndex)index.column())
         {
-            case 0:
+            case ColumnIndex::Label:
                 return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
-            case 1:
+            case ColumnIndex::Balance:
                 return QVariant(Qt::AlignRight | Qt::AlignVCenter);
         }
         return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
