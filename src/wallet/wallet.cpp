@@ -558,8 +558,37 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
         std::map<uint256, CWalletTx>::const_iterator mit = mapWallet.find(wtxid);
         if (mit != mapWallet.end()) {
             int depth = mit->second.GetDepthInMainChain();
-            if (depth > 0  || (depth == 0 && !mit->second.isAbandoned()))
+            if ( depth > 0 )
+            {
                 return true; // Spent
+            }
+            else if ( (depth == 0 && !mit->second.isAbandoned()) )
+            {
+                if (mit->second.tx->vin.size() > 0)
+                {
+                    // Unconfirmed witness transactions never spend, otherwise we get strange display/balance issues with orphaned witness transactions.
+                    auto prevtx = mapWallet.find(mit->second.tx->vin[0].prevout.hash);
+                    if (prevtx != mapWallet.end())
+                    {
+                        const auto& prevOut = prevtx->second.tx->vout[mit->second.tx->vin[0].prevout.n].output;
+                        if ( prevOut.nType == ScriptLegacyOutput )
+                        {
+                            if ( !prevOut.scriptPubKey.IsPoW2Witness() )
+                            {
+                                return true; // Spent
+                            }
+                        }
+                        else if ( prevOut.nType != PoW2WitnessOutput )
+                        {
+                            return true; // Spent
+                        }
+                    }
+                }
+                else
+                {
+                    return true; // Spent
+                }
+            }
         }
     }
     return false;

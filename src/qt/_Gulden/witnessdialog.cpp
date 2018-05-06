@@ -524,6 +524,10 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
         nXGenerated = pointIter.first;
         generatedPoints << QPointF(pointIter.first, nTotal2);
     }
+    if (generatedPoints.size() > 1)
+    {
+        generatedPoints.back().setY(generatedPoints[generatedPoints.size()-2].y());
+    }
     currentEarningsCurveShadow->setSamples( generatedPoints );
     currentEarningsCurve->setSamples( generatedPoints );
 
@@ -531,7 +535,6 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     QPolygonF generatedPointsForecast;
     if (generatedPoints.size() > 0)
     {
-        generatedPoints.back().setY(generatedPoints[generatedPoints.size()-2].y());
         generatedPointsForecast << generatedPoints.back();
         for (const auto& pointIter : pointMapForecast)
         {
