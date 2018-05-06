@@ -148,35 +148,35 @@ void TestSendCoins()
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
     bitdb.MakeMock();
-    std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    CWallet wallet(std::move(dbw));
+    fNoUI = true; // triggers recovery phrase generation
+    CWallet* wallet = CWallet::CreateWalletFromFile("wallet_test.dat");
     WalletLoadState loadState;
-    wallet.LoadWallet(loadState);
+    wallet->LoadWallet(loadState);
     {
-        LOCK(wallet.cs_wallet);
+        LOCK(wallet->cs_wallet);
         //fixme: (GULDEN) (MERGE)
         /*
         wallet.SetAddressBook(CBitcoinAddress(test.coinbaseKey.GetPubKey()).ToString(), "", "receive");
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
         */
     }
-    wallet.ScanForWalletTransactions(chainActive.Genesis(), true);
-    wallet.SetBroadcastTransactions(true);
+    wallet->ScanForWalletTransactions(chainActive.Genesis(), true);
+    wallet->SetBroadcastTransactions(true);
 
     // Create widgets for sending coins and listing transactions.
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
     OptionsModel optionsModel;
-    WalletModel walletModel(platformStyle.get(), &wallet, &optionsModel);
+    WalletModel walletModel(platformStyle.get(), wallet, &optionsModel);
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
 
     // Send two transactions, and verify they are added to transaction list.
     TransactionTableModel* transactionTableModel = walletModel.getTransactionTableModel();
     QCOMPARE(transactionTableModel->rowCount({}), 105);
-    uint256 txid1 = SendCoins(wallet, sendCoinsDialog, CBitcoinAddress(CKeyID()), 5 * COIN, false /* rbf */);
-    uint256 txid2 = SendCoins(wallet, sendCoinsDialog, CBitcoinAddress(CKeyID()), 10 * COIN, true /* rbf */);
+    uint256 txid1 = SendCoins(*wallet, sendCoinsDialog, CBitcoinAddress(CKeyID()), 5 * COIN, false /* rbf */);
+    uint256 txid2 = SendCoins(*wallet, sendCoinsDialog, CBitcoinAddress(CKeyID()), 10 * COIN, true /* rbf */);
     QCOMPARE(transactionTableModel->rowCount({}), 107);
     QVERIFY(FindTx(*transactionTableModel, txid1).isValid());
     QVERIFY(FindTx(*transactionTableModel, txid2).isValid());
@@ -186,6 +186,9 @@ void TestSendCoins()
     BumpFee(transactionView, txid2, false /* expect disabled */, {} /* expected error */, true /* cancel */);
     BumpFee(transactionView, txid2, false /* expect disabled */, {} /* expected error */, false /* cancel */);
     BumpFee(transactionView, txid2, true /* expect disabled */, "already bumped" /* expected error */, false /* cancel */);
+
+    wallet->Flush(true);
+    delete wallet;
 
     bitdb.Flush(true);
     bitdb.Reset();
