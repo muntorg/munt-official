@@ -102,6 +102,7 @@ private:
     QProgressDialog *progressDialog;
 
     QMenuBar *appMenuBar;
+    QAction* witnessDialogAction;
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
@@ -214,6 +215,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 #ifdef ENABLE_WALLET
+    /** Switch to witness overview page */
+    void showWitnessDialog();
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */

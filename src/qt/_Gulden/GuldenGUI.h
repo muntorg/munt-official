@@ -152,7 +152,6 @@ private:
     QAction* importPrivateKeyAction;
     QAction* rescanAction;
     QAction* currencyAction;
-    QAction* witnessDialogAction;
 
     AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
@@ -221,7 +220,6 @@ private Q_SLOTS:
     void showAccountSettings();
     void dismissAccountSettings();
     void showExchangeRateDialog();
-    void showWitnessDialog();
     void updateExchangeRates();
     void requestRenewWitness(CAccount* funderAccount);
     void requestFundWitness(CAccount* funderAccount);
