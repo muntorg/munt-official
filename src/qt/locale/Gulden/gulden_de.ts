@@ -5,52 +5,52 @@
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kontonamen ändern</translation>
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kontonamen eingeben</translation>
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Scanne den QR Code um dich mit deiner Gulden App zu verbinden</translation>
     </message>
     <message>
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konto löschen</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erledigt</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hier drücken um QR Code sichtbar zu machen. WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswegen stelle bitte sicher, dass du die einzige Person bist, die diesen sehen kann.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Das Konto kann erst gelöscht werden wenn es leer ist.</translation>
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Okay</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bist du sicher, dass du %1 von deiner Kontoliste löschen willst? Das Konto wird weiterhin kontrolliert und wird wiederhergestellt, sollte es in Zukunft neue Einlagen empfangen.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>AccountSummaryWidget</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -117,11 +117,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dies sind deine Gulden Adressen um Zahlungen zu senden. Überprüfe immer die Menge und die Empfängeradresse vor dem Senden der Coins.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dies sind deine Gulden Adressen um Zahlungen zu empfangen. Es wird empfohlen für jede Transaktion eine neue Adresse zu verwenden.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -187,11 +187,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -231,7 +231,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Warnung: Wenn du dein Wallet entschlüsselst und deine Passphrase verlierst, wirst du &lt;b&gt;DEINE GESAMTEN GULDEN VERLIEREN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -243,7 +243,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 wird nun geschlossen um den Verschlüsselungsporzess zu beenden. Denke daran, dass die Verschlüsselung des Wallets deine Gulden nicht vollständig vor Diebstahl von Infektion des Computers durch Malware schützt.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -286,35 +286,35 @@ The account will continue to be monitored and will be restored should it receive
     <name>BackupDialog</name>
     <message>
         <source>Backup phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sicherungsphrase</translation>
     </message>
     <message>
         <source>Show backup phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zeige Sicherungsphrase</translation>
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zusätzlich zur Wiederherstellungsphrase wird empfohlen eine verschlüsselte Datenträger Sicherung von dem Wallet zu erstellen.</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erledigt</translation>
     </message>
     <message>
         <source>Save to file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">In Datei sichern</translation>
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unten angezeigt steht deine geheime Wiederherstellungsphrase; schreibe sie dir auf und verwahre sie sicher. Wiederherstellungsphrase verlieren = Gulden verlieren. Jemand anders Zugang zu deiner Phrase = auch Gulden weg.</translation>
     </message>
     <message>
         <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unterhalb sind deine geheimen Wiederherstellungsphrasen, schreib sie auf und verwahre sie sicher. Verliere Phrase = Verliere Guldens. Jemand anderes mit Zugang zur Phrase = Verliere Guldens.</translation>
     </message>
     <message>
         <source>No recovery phrases present for this wallet.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Keine Wiederherstellungsphrasen für dieses Wallet vorhanden.</translation>
     </message>
     <message>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
@@ -336,15 +336,15 @@ The account will continue to be monitored and will be restored should it receive
     <name>BitcoinAmountField</name>
     <message>
         <source>Gulden</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gulden</translation>
     </message>
     <message>
         <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Maximal erlaubte %1 Zahlung ist %2.</translation>
     </message>
     <message>
         <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Minimal erlaubte %1 Zahlung ist %2.</translation>
     </message>
 </context>
 <context>
@@ -362,6 +362,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">&amp;Übersicht</translation>
     </message>
     <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Show general overview of wallet</source>
         <translation type="unfinished">Allgemeine Wallet-Übersicht anzeigen</translation>
     </message>
@@ -371,7 +375,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Send coins to a Gulden address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gulden an eine Gulden-Adresse überweisen</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
@@ -379,7 +383,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zahlungen anfordern (erzeugt QR-Codes und &quot;gulden:&quot;-URIs)</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -459,7 +463,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nachrichten signieren, um den Besitz Ihrer Gulden Adressen zu beweisen</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -867,11 +871,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>New receiving address</source>
@@ -948,7 +952,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Okay</translation>
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
@@ -960,7 +964,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -972,15 +976,15 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Importiere Schlüssel</translation>
     </message>
     <message>
         <source>Import a private key address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importiere eine private Schlüsseladresse.</translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Erneutes scannen von Transaktionen</translation>
     </message>
     <message>
         <source>Rescan the blockchain looking for any missing transactions</source>
@@ -996,14 +1000,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Add account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Übersicht</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1059,11 +1055,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Add to address book</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zum Adressbuch hinzufügen</translation>
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Adressbuch</translation>
     </message>
     <message>
         <source></source>
@@ -1087,7 +1083,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Okay</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
@@ -1099,7 +1095,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>Save</source>
@@ -1205,11 +1201,11 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -1248,7 +1244,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Gulden</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gulden</translation>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
@@ -1352,11 +1348,11 @@ Witness weight: %5</source>
     <name>NewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kontonamen eingeben</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -1364,7 +1360,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erledigt</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
@@ -1381,7 +1377,7 @@ Witness weight: %5</source>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hier drücken um QR Code sichtbar zu machen. WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswegen stelle bitte sicher, dass du die einzige Person bist, die diesen sehen kann.</translation>
     </message>
 </context>
 <context>
@@ -1749,7 +1745,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>Save</source>
@@ -2324,7 +2320,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>Close</source>
@@ -2821,7 +2817,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
@@ -3783,7 +3779,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unten angezeigt steht deine geheime Wiederherstellungsphrase; schreibe sie dir auf und verwahre sie sicher. Wiederherstellungsphrase verlieren = Gulden verlieren. Jemand anders Zugang zu deiner Phrase = auch Gulden weg.</translation>
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
@@ -3815,7 +3811,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>

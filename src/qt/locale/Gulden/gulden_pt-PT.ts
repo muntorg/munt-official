@@ -5,45 +5,49 @@
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mudar nome de uma conta</translation>
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Introduzir nome de conta.</translation>
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Digitalizar QR para conectar a sua aplicação Gulden móvel</translation>
     </message>
     <message>
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Apagar conta</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Feito</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Carregue aqui para visualizar código QR
+
+AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois caso contrário pode ser usado para aceder aos seus fundos.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Conta não está vazia, por favor esvazie a conta antes de a tentar apagar.</translation>
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tem a certeza que pretende apagar a conta %1 da sua lista de contas?
+
+A conta irá continuar a ser monitorizada e será restaurada caso receba fundos no futuro.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -117,11 +121,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Estes são os seus endereços Gulden para enviar pagamentos. Verifique sempre o montante e o endereço de destino antes de enviar moedas.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Estes são os seus endereços Gulden para receber pagamentos. É recomendado utilizar um endereço novo para cada transacção.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -187,11 +191,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -231,7 +235,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aviso: Se encriptar a sua carteira e perder a sua frase de segurança, irá &lt;b&gt;PERDER TODAS AS SUAS GULDEN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -243,7 +247,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 irá fechar para terminar o processo de encriptação. Note que encriptar a sua carteira não impede completamente que as suas Gulden sejam roubadas caso o seu computador possua malware instalado.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -255,7 +259,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Encriptação da carteira falhou devido a um erro interno. A sua carteira não foi encriptada.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
@@ -267,7 +271,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A frase introduzida para desencriptar a carteira é incorrecta.</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
@@ -286,11 +290,11 @@ The account will continue to be monitored and will be restored should it receive
     <name>BackupDialog</name>
     <message>
         <source>Backup phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Frase de segurança</translation>
     </message>
     <message>
         <source>Show backup phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostrar frase de segurança</translation>
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
@@ -298,7 +302,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Feito</translation>
     </message>
     <message>
         <source>Save to file</source>
@@ -360,6 +364,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Resumo</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished">Ver estatísticas e informação acerca da conta de witness</translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -670,7 +678,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Copy Image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Copiar imagem</translation>
     </message>
     <message>
         <source>Error encoding URI into QR Code.</source>
@@ -678,18 +686,18 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Save QR Code</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Guardar código QR</translation>
     </message>
     <message>
         <source>PNG Image (*.png)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Imagem PNG (*.png)</translation>
     </message>
 </context>
 <context>
     <name>ClientModel</name>
     <message>
         <source>Network Alert</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alerta de Rede</translation>
     </message>
 </context>
 <context>
@@ -804,7 +812,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Copy dust</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Copiar pó</translation>
     </message>
     <message>
         <source>Copy change</source>
@@ -828,7 +836,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pode variar +/- %1 satoshi(s) por entrada.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -867,19 +875,19 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>New receiving address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Novo endereço para receber</translation>
     </message>
     <message>
         <source>New sending address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Novo endereço para enviar</translation>
     </message>
     <message>
         <source>Edit receiving address</source>
@@ -948,7 +956,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
@@ -960,7 +968,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -999,24 +1007,16 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Resumo</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Palavra-passe</translation>
     </message>
     <message>
         <source>Change wallet password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mudar palavra-passe da carteira</translation>
     </message>
     <message>
         <source>&amp;Backup</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Backup</translation>
     </message>
     <message>
         <source>Backup wallet</source>
@@ -1024,15 +1024,15 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Error importing private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erro ao importar chave privada</translation>
     </message>
     <message>
         <source>Invalid private key.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chave privada inválida.</translation>
     </message>
     <message>
         <source>Wallet already contains key.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A carteira já contém a chave.</translation>
     </message>
     <message>
         <source>Imported legacy</source>
@@ -1087,7 +1087,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
@@ -1095,31 +1095,31 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Apagar</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Guardar</translation>
     </message>
     <message>
         <source>A minimum amount of 5000 is required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">É necessário uma quantidade mínima de 5000.</translation>
     </message>
     <message>
         <source>A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">É necessário um peso mínimo de 10000 mas o peso seleccionado é apenas %1, por favor aumente a quantidade ou o tempo de bloqueio para aumentar o peso.</translation>
     </message>
     <message>
         <source>1 year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 ano</translation>
     </message>
     <message>
         <source>%1 years</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 anos</translation>
     </message>
     <message>
         <source>1 month</source>
@@ -1127,7 +1127,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 meses</translation>
     </message>
     <message>
         <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
@@ -1197,19 +1197,19 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chave privada</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Introduza a chave privada a ser importada</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -1352,11 +1352,11 @@ Witness weight: %5</source>
     <name>NewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Introduzir nome de conta.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -1364,7 +1364,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Feito</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
@@ -1381,7 +1381,9 @@ Witness weight: %5</source>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Carregue aqui para visualizar código QR
+
+AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois caso contrário pode ser usado para aceder aos seus fundos.</translation>
     </message>
 </context>
 <context>
@@ -1750,11 +1752,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Guardar</translation>
     </message>
 </context>
 <context>
@@ -2325,7 +2327,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>Close</source>
@@ -2786,7 +2788,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Copy dust</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Copiar pó</translation>
     </message>
     <message>
         <source>Copy change</source>
@@ -2822,7 +2824,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
@@ -3816,34 +3818,34 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Proceda com a frase errada</translation>
     </message>
     <message>
         <source>Generating wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Criando carteira</translation>
     </message>
     <message>
         <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sem a frase de recuperação, caso algo de errado se passe com o computador irá perder as suas Gulden.</translation>
     </message>
     <message>
         <source>I understand</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Compreendo</translation>
     </message>
 </context>
 <context>
     <name>WitnessDialog</name>
     <message>
         <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Para começar a fazer witnessing, selecione uma conta para bloquear os fundos.</translation>
     </message>
     <message>
         <source>Projected earnings graph</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gráfico de ganhos projetados</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3851,51 +3853,51 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>n/a</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">n/a</translation>
     </message>
     <message>
         <source>Lock time remaining</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tempo de bloqueio restante.</translation>
     </message>
     <message>
         <source>Locked from</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bloqueado desde</translation>
     </message>
     <message>
         <source>Locked until</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bloqueado até</translation>
     </message>
     <message>
         <source>Last earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Últimos ganhos</translation>
     </message>
     <message>
         <source>Earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ganhos</translation>
     </message>
     <message>
         <source>Lock duration</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Duração do bloqueio</translation>
     </message>
     <message>
         <source>Required earnings frequency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Frequência de ganhos exigida</translation>
     </message>
     <message>
         <source>Weight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Peso</translation>
     </message>
     <message>
         <source>Estimated earnings frequency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Frequência estimada de ganhos</translation>
     </message>
     <message>
         <source>Network weight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Peso da rede</translation>
     </message>
     <message>
         <source>Inactive witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Conta de witness inativa</translation>
     </message>
     <message>
         <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
@@ -3911,23 +3913,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Change units</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alterar unidades</translation>
     </message>
     <message>
         <source>View graph</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ver gráfico</translation>
     </message>
     <message>
         <source>Empty account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Levantar fundos</translation>
     </message>
     <message>
         <source>Fund account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Depositar fundos</translation>
     </message>
     <message>
         <source>Renew account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Renovar conta</translation>
     </message>
     <message>
         <source>Earnings to date</source>
@@ -3935,11 +3937,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Projected earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ganhos projetados</translation>
     </message>
     <message>
         <source>Initial projected earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ganhos projetados iniciais</translation>
     </message>
     <message>
         <source>&amp;Blocks</source>
@@ -3947,54 +3949,54 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>&amp;Days</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Dias</translation>
     </message>
     <message>
         <source>&amp;Weeks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Semanas</translation>
     </message>
     <message>
         <source>&amp;Months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Meses</translation>
     </message>
     <message>
         <source>%1 blocks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 blocos</translation>
     </message>
     <message>
         <source>%1 days</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 dias</translation>
     </message>
     <message>
         <source>%1 weeks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 semanas</translation>
     </message>
     <message>
         <source>%1 months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 meses</translation>
     </message>
 </context>
 <context>
     <name>toolbar</name>
     <message>
         <source>Account toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Barra de ferramentas</translation>
     </message>
     <message>
         <source>Overview toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Visão Geral</translation>
     </message>
     <message>
         <source>Spacer  toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Espaçador</translation>
     </message>
     <message>
         <source>Navigation toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Navegação</translation>
     </message>
     <message>
         <source>Account info toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Informação</translation>
     </message>
     <message>
         <source>Status toolbar</source>
