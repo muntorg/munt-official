@@ -2006,12 +2006,12 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             vHeaders.push_back(pindex->GetBlockHeader());
             if (pfrom->IsPoW2Capable())
             {
-                if (--nLimit <= 0 || pindex->GetBlockHashLegacy() == hashStop)
+                if (--nLimit <= 0 || pindex->GetBlockHashPoW2() == hashStop)
                     break;
             }
             else
             {
-                if (--nLimit <= 0 || pindex->GetBlockHashPoW2() == hashStop)
+                if (--nLimit <= 0 || pindex->GetBlockHashLegacy() == hashStop)
                     break;
             }
         }
@@ -3703,7 +3703,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (state.vBlocksInFlight.size() > 0) {
             QueuedBlock &queuedBlock = state.vBlocksInFlight.front();
             int nOtherPeersWithValidatedDownloads = nPeersWithValidatedDownloads - (state.nBlocksInFlightValidHeaders > 0);
-            if (nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
+            if (nNow > state.nDownloadingSince + (consensusParams.nPowTargetSpacing > 20 ? consensusParams.nPowTargetSpacing : 20) * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
                 LogPrintf("Timeout downloading block %s from peer=%d, disconnecting\n", queuedBlock.hash.ToString(), pto->GetId());
                 pto->fDisconnect = true;
                 return true;
