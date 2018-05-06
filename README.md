@@ -6,9 +6,14 @@ Gulden is a simple and very powerful payment system. Gulden uses blockchain tech
 ### License
 All code is subject to The Gulden license - https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden
 
-
 ### Technical documentation
 * PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
+
+### Mining pool software and other third party software
+
+Please note that Gulden has substantial differences from other crypto currencies and as such you cannot expect mining pool software or other similar software to work without custom configuration.
+For questions regarding this please visit our slack and for mining pools specifically particularly #mining. Please do not use our github issue tracker for these sorts of issues in third party software this is not what it is for.
+For a working version of p2pool you can visit - https://github.com/0x0aNL/p2pool-0x0a 
 
 ### Community
 
