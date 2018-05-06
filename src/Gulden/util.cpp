@@ -70,7 +70,6 @@ static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;
 void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    CBlockIndex* phaseActivationPoint = nullptr;
     bool phase2Active = false;
     bool phase3Active = false;
     int nStartHeight = 0;

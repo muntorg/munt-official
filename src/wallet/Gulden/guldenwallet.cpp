@@ -736,7 +736,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
         throw std::runtime_error("Not a valid Gulden extended public key");
     }
 
-    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()());
+    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()(), AccountSubType::Desktop);
 
     // Write new account
     addAccount(newAccount, strAccount);

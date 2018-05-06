@@ -169,6 +169,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     progressBar(0),
     progressDialog(0),
     appMenuBar(0),
+    witnessDialogAction ( nullptr ),
     overviewAction(0),
     historyAction(0),
     quitAction(0),
@@ -379,6 +380,11 @@ void BitcoinGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
+    witnessDialogAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Overview"), this);
+    witnessDialogAction->setStatusTip(tr("View statistics and information for witness account."));
+    witnessDialogAction->setCheckable(true);
+    tabGroup->addAction(witnessDialogAction);
+
     overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview"), tr("&Overview"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
@@ -418,6 +424,8 @@ void BitcoinGUI::createActions()
 #ifdef ENABLE_WALLET
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
+    connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showWitnessDialog()));
+    connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -561,6 +569,7 @@ void BitcoinGUI::createToolBars()
         QToolBar* toolbar = addToolBar(tr("Tabs toolbar"));
         toolbar->setMovable(false);
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        toolbar->addAction(witnessDialogAction);
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(receiveCoinsAction);
@@ -688,6 +697,7 @@ void BitcoinGUI::removeAllWallets()
 
 void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 {
+    witnessDialogAction->setEnabled(enabled);
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     sendCoinsMenuAction->setEnabled(enabled);
@@ -810,6 +820,13 @@ void BitcoinGUI::openClicked()
     {
         Q_EMIT receivedURI(dlg.getURI());
     }
+}
+
+void BitcoinGUI::showWitnessDialog()
+{
+    witnessDialogAction->setChecked(true);
+    walletFrame->currentWalletView()->witnessDialogPage->update();
+    walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
 }
 
 void BitcoinGUI::gotoOverviewPage()

@@ -31,17 +31,15 @@ static const CRPCCommand vRPCCommands[] =
     { "test", "rpcNestedTest", &rpcNestedTest_rpc, true, {} },
 };
 
-void RPCNestedTests::rpcNestedTests()
+void RPCNestedTests::initTestCase()
 {
-    UniValue jsonRPCError;
-
     // do some test setup
     // could be moved to a more generic place when we add more tests on QT level
     const CChainParams& chainparams = Params();
     RegisterAllCoreRPCCommands(tableRPC);
     tableRPC.appendCommand("rpcNestedTest", &vRPCCommands[0]);
     ClearDatadirCache();
-    std::string path = QDir::tempPath().toStdString() + "/" + strprintf("test_gulden_qt_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+    path = QDir::tempPath().toStdString() + "/" + strprintf("test_gulden_qt_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
     QDir dir(QString::fromStdString(path));
     dir.mkpath(".");
     ForceSetArg("-datadir", path);
@@ -49,10 +47,36 @@ void RPCNestedTests::rpcNestedTests()
     pblocktree = new CBlockTreeDB(1 << 20, true);
     pcoinsdbview = new CCoinsViewDB(1 << 23, true);
     pcoinsTip = new CCoinsViewCache(pcoinsdbview);
+    ppow2witdbview = new CWitViewDB(1 << 20);
+    ppow2witTip = std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(ppow2witdbview));
     InitBlockIndex(chainparams);
+}
+
+void RPCNestedTests::cleanupTestCase()
+{
+    UnloadBlockIndex();
+
+    ppow2witTip = nullptr;
+    delete ppow2witdbview;
+    ppow2witdbview = nullptr;
+
+    delete pcoinsTip;
+    pcoinsTip = nullptr;
+    delete pcoinsdbview;
+    pcoinsdbview = nullptr;
+    delete pblocktree;
+    pblocktree = nullptr;
+
+    fs::remove_all(fs::path(path));
+}
+
+void RPCNestedTests::rpcNestedTests()
+{
+    UniValue jsonRPCError;
+
     {
         CValidationState state;
-        bool ok = ActivateBestChain(state, chainparams);
+        bool ok = ActivateBestChain(state, Params());
         QVERIFY(ok);
     }
 
@@ -146,14 +170,4 @@ void RPCNestedTests::rpcNestedTests()
     QVERIFY_EXCEPTION_THROWN(RPCConsole::RPCExecuteCommandLine(result, "rpcNestedTest(abc,,abc)"), std::runtime_error); //don't tollerate empty arguments when using ,
     QVERIFY_EXCEPTION_THROWN(RPCConsole::RPCExecuteCommandLine(result, "rpcNestedTest(abc,,)"), std::runtime_error); //don't tollerate empty arguments when using ,
 #endif
-
-    UnloadBlockIndex();
-    delete pcoinsTip;
-    pcoinsTip = nullptr;
-    delete pcoinsdbview;
-    pcoinsdbview = nullptr;
-    delete pblocktree;
-    pblocktree = nullptr;
-
-    fs::remove_all(fs::path(path));
 }

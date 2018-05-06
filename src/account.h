@@ -178,7 +178,7 @@ public:
     SeedType m_type;
 
 protected:
-    CAccountHD* GenerateAccount(int nAccountIndex);
+    CAccountHD* GenerateAccount(int nAccountIndex, AccountSubType type);
     // Worker function for GetPrivKeyForAccount that doesn't contain the safety checks which GetPrivKeyForAccount has.
     // Other classes should call GetPrivKeyForAccount while internally we call this to avoid unnecessary duplicate safety checks.
     bool GetPrivKeyForAccountInternal(uint64_t nAccountIndex, CExtKey& accountKeyPriv);
@@ -353,9 +353,9 @@ class CAccountHD: public CAccount
 {
 public:
     //Normal construction.
-    CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID);
+    CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID, AccountSubType subType);
     //Read only construction.
-    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID);
+    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID, AccountSubType subType);
     //For serialization only.
     CAccountHD(){};
 
@@ -437,7 +437,7 @@ private:
     bool encrypted;
 
     //These members are only valid when the account is unlocked/unencrypted.
-    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/0' (bip44)
+    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/n' (bip44)
     CExtKey primaryChainKeyPriv;    //key at m/0'/0 (bip32) or m/44'/87'/0'/0 (bip44)
     CExtKey changeChainKeyPriv;     //key at m/0'/1 (bip32) or m/44'/87'/0'/1 (bip44)
 

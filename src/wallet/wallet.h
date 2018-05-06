@@ -103,9 +103,6 @@ enum WalletFeature
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
 
     FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
-/* GULDEN - we don't use this.
-    FEATURE_HD_SPLIT = 139900, // Wallet with HD chain split (change outputs will use m/0'/1'/k)
-*/
     FEATURE_LATEST = FEATURE_COMPRPUBKEY // HD is optional, use FEATURE_COMPRPUBKEY as latest version
 };
 
@@ -116,9 +113,6 @@ class CKeyPool
 public:
     int64_t nTime;
     CPubKey vchPubKey;
-    /* GULDEN - we don't use this
-    bool fInternal; // for change outputs
-   */
     std::string accountName;
     int64_t nChain;//internal or external keypool (HD wallets)
 
@@ -135,22 +129,6 @@ public:
             READWRITE(nVersion);
         READWRITE(nTime);
         READWRITE(vchPubKey);
-        #if 0
-        GULDEN - no fInternal
-        if (ser_action.ForRead()) {
-            try {
-                READWRITE(fInternal);
-            }
-            catch (std::ios_base::failure&) {
-                /* flag as external address if we can't read the internal boolean
-                   (this will be the case for any wallet before the HD chain split version) */
-                fInternal = false;
-            }
-        }
-        else {
-            READWRITE(fInternal);
-        }
-        #endif
 
         //Allow to fail for legacy accounts.
         try
@@ -764,14 +742,6 @@ private:
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected.
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
     void SyncTransaction(const CTransactionRef& tx, const CBlockIndex *pindex = NULL, int posInBlock = 0);
-    #if 0
-    //GULDEN - we don't use these as we have our own system.
-    /* the HD chain data model (external chain counters) */
-    CHDChain hdChain;
-
-    /* HD derive new child key (on internal or external chain) */
-    void DeriveNewChildKey(CKeyMetadata& metadata, CKey& secret, bool internal = false);
-    #endif
 
     std::set<int64_t> setKeyPool;
 
@@ -896,9 +866,6 @@ public:
     std::map<uint256, int> mapRequestCount;
 
     std::map<std::string, CAddressBookData> mapAddressBook;
-/* GULDEN - no default key (accounts)
-    CPubKey vchDefaultKey;
-*/
 
     std::set<COutPoint> setLockedCoins;
 
@@ -1148,9 +1115,7 @@ public:
         }
         return nPoolSize;
     }
-/*GULDEN - we don't use this (accounts)
-    bool SetDefaultKey(const CPubKey &vchPubKey);
-*/
+
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
     bool SetMinVersion(enum WalletFeature, CWalletDB* pwalletdbIn = NULL, bool fExplicit = false);
 
@@ -1226,25 +1191,6 @@ public:
 
     bool BackupWallet(const std::string& strDest);
 
-#if 0
-GULDEN UNUSED
-    /* Set the HD chain model (chain child index counters) */
-    bool SetHDChain(const CHDChain& chain, bool memonly);
-    const CHDChain& GetHDChain() const { return hdChain; }
-
-    /* Returns true if HD is enabled */
-    bool IsHDEnabled() const;
-
-    /* Generates a new HD master key (will not be activated) */
-    CPubKey GenerateNewHDMasterKey();
-
-    /* Set the current HD master key (will reset the chain child index counters)
-       Sets the master key's version based on the current wallet version (so the
-       caller must ensure the current wallet version is correct before calling
-       this function). */
-    bool SetHDMasterKey(const CPubKey& key);
-#endif
-
     friend class CAccount;
 };
 
@@ -1284,37 +1230,6 @@ public:
 };
 
 
-/** 
- * Account information.
- * Stored in wallet with key "acc"+string account name.
- */
-/* Gulden - we don't use this as we have our own real account system.
-class CAccount
-{
-public:
-    CPubKey vchPubKey;
-
-    CAccount()
-    {
-        SetNull();
-    }
-
-    void SetNull()
-    {
-        vchPubKey = CPubKey();
-    }
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        int nVersion = s.GetVersion();
-        if (!(s.GetType() & SER_GETHASH))
-            READWRITE(nVersion);
-        READWRITE(vchPubKey);
-    }
-};
-*/
 // Helper for producing a bunch of max-sized low-S signatures (eg 72 bytes)
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.

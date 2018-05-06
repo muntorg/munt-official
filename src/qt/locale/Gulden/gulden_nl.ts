@@ -117,11 +117,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dit zijn uw Gulden adressen om betalingen te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dit zijn uw Gulden adressen om betalingen te ontvangen. Het wordt aanbevolen om voor iedere ontvangst een nieuw ontvangstadres te gebruiken.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -231,7 +231,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Waarschuwing: Als u uw wallet versleutelt en u uw herstelzin kwijt raakt, kunt u &lt;b&gt;NOOIT MEER BIJ UW GULDENS!&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -243,7 +243,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 zal nu sluiten om het versleutelingsproces af te ronden. Bedenk dat versleuteling van uw wallet uw Gulden niet volledig kan beschermen tegen malware besmetting van uw computer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -362,6 +362,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">&amp;Overzicht</translation>
     </message>
     <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished">Statistieken en informatie bekijken voor een witness rekening.</translation>
+    </message>
+    <message>
         <source>Show general overview of wallet</source>
         <translation type="unfinished">Algemeen overzicht van de portemonnee weergeven</translation>
     </message>
@@ -371,7 +375,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Send coins to a Gulden address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verzend Guldens naar een Guldenadres</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
@@ -379,7 +383,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Betaalverzoek (genereert QR codes en Gulden URI&apos;s)</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -459,7 +463,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onderteken berichten met uw Guldenadressen om te bewijzen dat ze u toebehoren</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -467,7 +471,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verifieer berichten om er zeker van te zijn dat ze werden ondertekend met de opgegeven Gulden-adressen</translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -499,7 +503,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Open een Gulden: URI of betaalverzoek</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -507,7 +511,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Toon het %1 help bericht om een lijst te krijgen met mogelijke commando-regel opties</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -527,30 +531,30 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 client</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 client</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
+            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
         </translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Klik om de netwerk activiteit stop te zetten.</translation>
     </message>
     <message>
         <source>Network activity disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Netwerk activiteit stop gezet.</translation>
     </message>
     <message>
         <source>Click to enable network activity again.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Klik om netwerk activiteit weer aan te zetten.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Synchroniseer Headers (%1%)...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -570,13 +574,13 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Connecting to peers...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verbinden met peers...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation type="unfinished">
-            <numerusform>Processed %n block(s) of transaction history.</numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
         </translation>
     </message>
     <message>
@@ -635,7 +639,8 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address: %1
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Adres: %1
+</translation>
     </message>
     <message>
         <source>Sent funds%1</source>
@@ -655,7 +660,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
     </message>
 </context>
 <context>
@@ -887,7 +892,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het ingevoerde adres &quot;%1&quot; is een niet geldig Guldenadres.</translation>
     </message>
     <message>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
@@ -948,7 +953,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voor het vernieuwen van het witness account worden transactiekosten in rekening gebracht: </translation>
     </message>
     <message>
         <source>Send</source>
@@ -960,7 +965,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het geld op deze rekening is momenteel geblokkeerd voor &quot;witnessing&quot; en kan niet worden overgemaakt, wacht alstublieft tot de geblokkeerde rekening verloopt of tot er inkomsten zijn verzameld voordat u het opnieuw probeert.</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
@@ -984,7 +989,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Select currency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Selecteer valuta</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -993,14 +998,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Add account</source>
         <translation type="unfinished">Account toevoegen</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Overzicht</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Password</source>
@@ -1071,15 +1068,15 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Lock funds for:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Blokkeer het bedrag voor:</translation>
     </message>
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het bedrag dat u wilt versturen is hoger dan uw saldo, dit bedrag wordt automatisch naar beneden bijgesteld om het overeen te laten komen met uw saldo. Zorg ervoor dat dit is wat u wilt voordat u verder gaat om zo te voorkomen dat u te weinig betaalt aan de ontvanger.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1103,27 +1100,27 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>A minimum amount of 5000 is required.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Een minimum bedrag van 5000 Gulden is benodigd.</translation>
     </message>
     <message>
         <source>A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Een minimum gewicht van 10000 is vereist, maar het geselecteerde gewicht is slechts %1 verhoog alstublieft het aantal Gulden of verhoog de tijdsduur voor een groter gewicht.</translation>
     </message>
     <message>
         <source>1 year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 jaar</translation>
     </message>
     <message>
         <source>%1 years</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 jaren</translation>
     </message>
     <message>
         <source>1 month</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 maand</translation>
     </message>
     <message>
         <source>%1 months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 maanden</translation>
     </message>
     <message>
         <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
@@ -1131,7 +1128,11 @@ The account will continue to be monitored and will be restored should it receive
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de blokkeringsperiode.
+
+Verwachtte verdiensten: %3 (%4 per maand)
+
+Witness gewicht: %5</translation>
     </message>
 </context>
 <context>
@@ -1232,15 +1233,15 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wanneer u op OK klikt, zal %1 beginnen met het downloaden en verwerken van de volledige %4 blockchain (%2GB) beginnend met de vroegste transacties in %3 toen %4 voor het eerst werd gelanceerd.</translation>
     </message>
     <message>
         <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deze eerste synchronisatie is zeer veeleisend en kan hardwareproblemen met uw computer aan het licht brengen die voorheen onopgemerkt waren gebleven. Elke keer dat u %1 draait, gaat het door met downloaden waar het gebleven was.</translation>
     </message>
     <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Als u ervoor gekozen hebt om de blockchain opslag te beperken (snoeien), moeten de historische gegevens nog steeds gedownload en verwerkt worden, maar worden daarna verwijderd om uw schijfgebruik laag te houden.</translation>
     </message>
     <message>
         <source>Gulden</source>
@@ -1248,19 +1249,19 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Minstens %1 GB gegevens zal worden opgeslagen in deze directory, en het zal na verloop van tijd groeien.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ongeveer %1 GB aan gegevens wordt in deze directory opgeslagen.</translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Gulden block chain.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 zal een kopie van de Gulden blockchain downloaden en opslaan.</translation>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De portemonnee wordt ook in deze directory opgeslagen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
@@ -1293,19 +1294,19 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recente transacties zijn mogelijk nog niet zichtbaar, waardoor uw portemonnee mogelijk niet in balans is. Deze informatie zal correct zijn wanneer uw portemonnee klaar is met de synchronisatie met het Gulden netwerk, zoals hieronder beschreven.</translation>
     </message>
     <message>
         <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pogingen om Gulden uit te geven die beïnvloed worden door nog niet weergegeven transacties worden niet geaccepteerd door het netwerk.</translation>
     </message>
     <message>
         <source>Number of blocks left</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aantal resterende blokken</translation>
     </message>
     <message>
         <source>Unknown...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onbekend...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -1313,19 +1314,19 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Progress</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voortgang</translation>
     </message>
     <message>
         <source>Progress increase per hour</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voortgangstoename per uur</translation>
     </message>
     <message>
         <source>calculating...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">bezig met berekenen...</translation>
     </message>
     <message>
         <source>Estimated time left until synced</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Geschatte resterende tijd tot volledige synchronisatie</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -1333,15 +1334,15 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu voor het eerst met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee is klaar met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
     </message>
     <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee is klaar met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onbekend. Synchroniseer Headers (%1)...</translation>
     </message>
 </context>
 <context>
@@ -1368,11 +1369,11 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Transactional account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Transactie rekening</translation>
     </message>
     <message>
         <source>Witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Witness rekening</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
@@ -1415,11 +1416,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Automatically start %1 after logging in to the system.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Automatisch starten %1 na het inloggen op het systeem.</translation>
     </message>
     <message>
         <source>&amp;Start %1 on system login</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp; Start %1 bij inloggen op het systeem</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1467,7 +1468,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Open automatisch de Gulden-clientpoort op de router. Dit werkt alleen als uw router UPnP ondersteunt en dat is ingeschakeld.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1483,7 +1484,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Connect to the Gulden network through a SOCKS5 proxy.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aansluiting op het Gulden-netwerk via een SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1507,31 +1508,31 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Used for reaching peers via:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wordt gebruikt om peers te bereiken via:</translation>
     </message>
     <message>
         <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wordt weergegeven als de bijgeleverde standaard SOCKS5 proxy wordt gebruikt om peers te bereiken via dit netwerktype.</translation>
     </message>
     <message>
         <source>IPv4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">IPv4</translation>
     </message>
     <message>
         <source>IPv6</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">IPv6</translation>
     </message>
     <message>
         <source>Tor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tor</translation>
     </message>
     <message>
         <source>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Maak verbinding met het Gulden netwerk via een aparte SOCKS5 proxy voor Tor verborgen diensten.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gebruik een aparte SOCKS5 proxy om peers te bereiken via verborgen diensten van Tor:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1539,11 +1540,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;Hide the icon from the system tray.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Verberg het pictogram in het systeemvak.</translation>
     </message>
     <message>
         <source>Hide tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verberg tray pictogram</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1571,7 +1572,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hier kan de taal van de gebruikersinterface worden ingesteld. Deze instelling wordt van kracht na het opnieuw starten van %1.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -1623,15 +1624,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cliënt zal worden afgesloten. Wilt u verder?</translation>
     </message>
     <message>
         <source>Configuration options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Configuratie opties</translation>
     </message>
     <message>
         <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het configuratiebestand wordt gebruikt om geavanceerde gebruikersopties op te geven die de standaard GUI-instellingen opheffen. En commandoregel-opties gaan voor de regels in dit configuratiebestand </translation>
     </message>
     <message>
         <source>Error</source>
@@ -1639,7 +1640,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>The configuration file could not be opened.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het configuratiebestand kon niet worden geopend.</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1662,7 +1663,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De weergegeven informatie kan verouderd zijn. Uw portemonnee synchroniseert automatisch met het Gulden-netwerk nadat een verbinding tot stand is gebracht, maar dit proces is nog niet voltooid.</translation>
     </message>
     <message>
         <source>Unconfirmed transactions to watch-only addresses</source>
@@ -1729,19 +1730,19 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <name>PasswordModifyDialog</name>
     <message>
         <source>Change password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verander het wachtwoord</translation>
     </message>
     <message>
         <source>Enter old password.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voer het oude wachtwoord in</translation>
     </message>
     <message>
         <source>Enter new password.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voer het nieuwe wachtwoord in</translation>
     </message>
     <message>
         <source>Repeat new password.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Herhaal het nieuwe wachtwoord</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1760,7 +1761,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cannot start gulden: click-to-pay handler</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kan Gulden niet starten: click-to-pay handler</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -1776,7 +1777,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Gulden address or malformed URI parameters.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">URI kan niet worden verwerkt! Dit kan veroorzaakt worden door een ongeldig Gulden-adres of misvormde URI-parameters.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1847,11 +1848,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <name>PeerTableModel</name>
     <message>
         <source>NodeId</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Node Id</translation>
     </message>
     <message>
         <source>Node/Service</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Node/Service</translation>
     </message>
     <message>
         <source>User Agent</source>
@@ -1859,33 +1860,33 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Ping</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ping</translation>
     </message>
 </context>
 <context>
     <name>PlotMouseTracker</name>
     <message>
         <source>Initial expected earnings:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verwachte aanvangswinsten:</translation>
     </message>
     <message>
         <source>Earnings to date:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inkomsten tot nu toe:</translation>
     </message>
     <message>
         <source>Future earnings forecast:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Toekomstverwachting voor de inkomsten:</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Enter an address (e.g. %1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voer een adres in (bijv. %1)</translation>
     </message>
     <message>
         <source>Enter a private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">voer een private sleutel in</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1918,15 +1919,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message numerus="yes">
         <source>%n second(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n seconde(n)</numerusform>
+            <numerusform>%n seconde(n)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n minuut</numerusform>
+            <numerusform>%n minuten</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1963,7 +1964,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>%1 didn&apos;t yet exit safely...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 nog niet veilig verlaten...</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1974,15 +1975,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <name>QObject::QObject</name>
     <message>
         <source>Error: Specified data directory &quot;%1&quot; does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fout: opgegeven gegevensmap &quot;%1&quot; bestaat niet.</translation>
     </message>
     <message>
         <source>Error: Cannot parse configuration file: %1. Only use key=value syntax.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fout: Kan configuratiebestand niet verwerken: %1. Gebruik alleen key=value syntaxis.</translation>
     </message>
     <message>
         <source>Error: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fout: %1</translation>
     </message>
 </context>
 <context>
@@ -2017,7 +2018,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Datadir</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Datamap</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -2049,15 +2050,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Memory Pool</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Geheugen Poel</translation>
     </message>
     <message>
         <source>Current number of transactions</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Huidig aantal transacties</translation>
     </message>
     <message>
         <source>Memory usage</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Geheugengebruik</translation>
     </message>
     <message>
         <source>Debug log file</source>
@@ -2065,7 +2066,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -2073,7 +2074,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Current PoW² phase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Huidige PoW²-fase</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -2081,11 +2082,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Decrease font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verklein lettergrootte</translation>
     </message>
     <message>
         <source>Increase font size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vergroot lettergrootte</translation>
     </message>
     <message>
         <source>Clear console</source>
@@ -2097,7 +2098,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;Reset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Reset</translation>
     </message>
     <message>
         <source>Totals</source>
@@ -2117,7 +2118,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Banned peers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verbannen peers</translation>
     </message>
     <message>
         <source>Select a peer to view detailed information.</source>
@@ -2125,7 +2126,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Whitelisted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Whitelisted</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -2141,15 +2142,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Starting Block</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Start Blok</translation>
     </message>
     <message>
         <source>Synced Headers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gesynchroniseerde Headers</translation>
     </message>
     <message>
         <source>Synced Blocks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gesynchroniseerde Blokken</translation>
     </message>
     <message>
         <source>Ban Score</source>
@@ -2173,15 +2174,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>The duration of a currently outstanding ping.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De duur van een momenteel openstaande ping.</translation>
     </message>
     <message>
         <source>Ping Wait</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ping Wacht</translation>
     </message>
     <message>
         <source>Min Ping</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Minimale Ping</translation>
     </message>
     <message>
         <source>Time Offset</source>
@@ -2189,39 +2190,39 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;Disconnect</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Loskoppelen</translation>
     </message>
     <message>
         <source>Ban for</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verban voor</translation>
     </message>
     <message>
         <source>1 &amp;hour</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 &amp;uur</translation>
     </message>
     <message>
         <source>1 &amp;day</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 &amp;dag</translation>
     </message>
     <message>
         <source>1 &amp;week</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 &amp;week</translation>
     </message>
     <message>
         <source>1 &amp;year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 &amp;jaar</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Ontban</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Welkom bij de %1 RPC-console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gebruik de omhoog en omlaag pijltoetsen om door de geschiedenis te bladeren en %1 om het scherm te legen.</translation>
     </message>
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
@@ -2229,7 +2230,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">WAARSCHUWING: Er zijn oplichters actief geweest, die gebruikers hebben verteld om hier opdrachten in te voeren en zo hun portemonnee te stelen. Gebruik deze console niet zonder de implicaties van een commando volledig te begrijpen.</translation>
     </message>
     <message>
         <source>In:</source>
@@ -2241,7 +2242,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Network activity disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Netwerkactiviteit uitgeschakeld</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -2261,7 +2262,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>(node id: %1)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(node id: %1)</translation>
     </message>
     <message>
         <source>via %1</source>
@@ -2324,7 +2325,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sluiten</translation>
     </message>
     <message>
         <source>Copy address to clipboard</source>
@@ -2428,7 +2429,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Een optioneel bericht om bij het betalingsverzoek te voegen, dat wordt weergegeven wanneer het verzoek wordt geopend. Opmerking: Het bericht wordt niet verzonden over het Gulden-netwerk tijdens de betaling</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -2508,7 +2509,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Copy URI</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kopieer URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -2669,11 +2670,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het gebruik van de &quot;fallbackfee&quot; kan resulteren in het verzenden van een transactie die enkele uren of dagen (of nooit) zal duren om te bevestigen. Overweeg uw vergoeding handmatig te kiezen of wacht tot u de volledige keten heeft gevalideerd.</translation>
     </message>
     <message>
         <source>Warning: Fee estimation is currently not possible.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Waarschuwing: Een schatting van de transactiekosten is momenteel niet mogelijk.</translation>
     </message>
     <message>
         <source>collapse fee-settings</source>
@@ -2693,7 +2694,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alleen het minimumtarief betalen is prima zolang er minder transactievolume is dan ruimte in de blokken. Maar houd er rekening mee dat dit kan eindigen in een nooit bevestigende transactie als er meer vraag is naar Gulden transacties dan het netwerk kan verwerken.</translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
@@ -2713,7 +2714,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Confirmation time target:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bevestiging tijdsdoel:</translation>
     </message>
     <message>
         <source>normal</source>
@@ -2725,11 +2726,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Request Replace-By-Fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aanvraag &quot;Replace-by-fee&quot;</translation>
     </message>
     <message>
         <source>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Geeft aan dat de verzender deze transactie mogelijk wenst te vervangen door een nieuwe transactie waarbij hogere vergoedingen worden betaald (voordat de transactie wordt bevestigd).</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2809,7 +2810,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deze transactie wijst op vervangbaarheid (opt-in-&quot;Replace-By-Fee&quot;).</translation>
     </message>
     <message>
         <source>Send</source>
@@ -2821,7 +2822,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PoW2 is nog niet actief, wacht op activering en probeer het opnieuw.</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2850,7 +2851,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The transaction was rejected with the following reason: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De transactie werd om de volgende reden afgewezen: %1</translation>
     </message>
     <message>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
@@ -2862,13 +2863,13 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Nocks request failed [%1]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nocks poging mislukt [%1]</translation>
     </message>
     <message numerus="yes">
         <source>%n block(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n blok</numerusform>
+            <numerusform>%n blokken</numerusform>
         </translation>
     </message>
     <message>
@@ -2884,7 +2885,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Warning: Invalid Gulden address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Waarschuwing: Ongeldig Guldenadres</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2892,11 +2893,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Confirm custom change address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bevestig wisselgeld adres</translation>
     </message>
     <message>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het adres dat u hebt geselecteerd voor wisselgeld, maakt geen deel uit van deze portemonnee. Het geld in uw portemonnee kan geheel of gedeeltelijk naar dit adres worden gestuurd. Weet u het zeker?</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2915,7 +2916,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het Guldenadres om de betaling naar toe te sturen</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2951,7 +2952,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De transactiekosten zullen worden afgetrokken van het bedrag dat wordt verzonden. De ontvanger zal minder Gulden ontvangen dan u in het veld Bedrag invult. Als meerdere ontvangers worden geselecteerd, wordt de vergoeding gelijkelijk verdeeld.</translation>
     </message>
     <message>
         <source>S&amp;ubtract fee from amount</source>
@@ -2963,7 +2964,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Een bericht dat aan de Gulden: URI was gehecht wordt opgeslagen bij de transactie ter referentie. Opmerking: Dit bericht wordt niet verzonden via het Gulden-netwerk.</translation>
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
@@ -3016,11 +3017,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U kunt berichten/overeenkomsten ondertekenen met uw adressen om te bewijzen dat u Gulden kunt ontvangen. Wees voorzichtig om niets vaags of willekeurig te ondertekenen, want phishing-aanvallen kunnen je proberen te verleiden om je identiteit aan hen uit te leveren. Teken alleen volledig gedetailleerde verklaringen waarmee u akkoord gaat.</translation>
     </message>
     <message>
         <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het Gulden-adres om het bericht mee te ondertekenen</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3052,7 +3053,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onderteken het bericht om te bewijzen dat u dit Gulden-adres bezit</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3076,11 +3077,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Het Gulden-adres waarmee het bericht ondertekend is</translation>
     </message>
     <message>
         <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Controleer het bericht om te verzekeren of het ondertekend is met het opgegeven Gulden-adres</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3299,7 +3300,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Transaction total size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Totale grootte van de transactie</translation>
     </message>
     <message>
         <source>Output index</source>
@@ -3346,7 +3347,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Details for %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Details voor %1</translation>
     </message>
 </context>
 <context>
@@ -3448,11 +3449,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mining beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Witness beloning</translation>
     </message>
     <message>
         <source>watch-only</source>
@@ -3563,11 +3564,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mining beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Witness beloning</translation>
     </message>
     <message>
         <source>Other</source>
@@ -3587,7 +3588,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Increase transaction fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verhoog transactie fee</translation>
     </message>
     <message>
         <source>Copy address</source>
@@ -3697,39 +3698,39 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Fee bump error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fee verhoging fout</translation>
     </message>
     <message>
         <source>Increasing transaction fee failed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verhoging van de transactie fee is mislukt</translation>
     </message>
     <message>
         <source>Do you want to increase the fee?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wilt u de fee verhogen?</translation>
     </message>
     <message>
         <source>Current fee:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Huidige fee:</translation>
     </message>
     <message>
         <source>Increase:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verhogen:</translation>
     </message>
     <message>
         <source>New fee:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nieuwe fee:</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bevestig fee stoot</translation>
     </message>
     <message>
         <source>Can&apos;t sign transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kan de transactie niet ondertekenen</translation>
     </message>
     <message>
         <source>Could not commit transaction</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kon geen transactie aangaan</translation>
     </message>
 </context>
 <context>
@@ -3834,11 +3835,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     <name>WitnessDialog</name>
     <message>
         <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Om te beginnen met witnessing, selecteert u een account van waaruit Gulden te vergrendelen:</translation>
     </message>
     <message>
         <source>Projected earnings graph</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verwachtte inkomsten grafiek</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3846,134 +3847,134 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>n/a</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">n.v.t.</translation>
     </message>
     <message>
         <source>Lock time remaining</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Resterende vergrendeltijd</translation>
     </message>
     <message>
         <source>Locked from</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Opgesloten vanaf</translation>
     </message>
     <message>
         <source>Locked until</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Opgesloten tot en met</translation>
     </message>
     <message>
         <source>Last earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Laatste verdiensten</translation>
     </message>
     <message>
         <source>Earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verdiensten</translation>
     </message>
     <message>
         <source>Lock duration</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Opgesloten looptijd</translation>
     </message>
     <message>
         <source>Required earnings frequency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Benodigde inkomsten frequentie</translation>
     </message>
     <message>
         <source>Weight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gewicht</translation>
     </message>
     <message>
         <source>Estimated earnings frequency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Geschatte inkomsten frequentie</translation>
     </message>
     <message>
         <source>Network weight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Network gewicht</translation>
     </message>
     <message>
         <source>Inactive witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inactief witness account</translation>
     </message>
     <message>
         <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Uw witness account is gedeactiveerd omdat uw account niet binnen de verwachte tijd heeft kunnen &quot;witnessen&quot;. Als dit vaak gebeurt, zorg er dan voor dat u een stabiele witnessing instelling hebt of neem contact op met support. Om witnessing te hervatten, selecteert u het account hieronder en drukt u op de knop &apos;Rekening vernieuwen&apos;. Een kleine heractiverings-fee zal u worden berekend.</translation>
     </message>
     <message>
         <source>Waiting for confirmation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wachten op bevestiging</translation>
     </message>
     <message>
         <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Uw witness account wacht op de transactiebevestiging van het netwerk voordat het actief wordt, gemiddeld duurt dit slechts een paar minuten. Mocht deze pagina langer dan deze periode blijven verschijnen, raadpleeg dan het transactie tabblad en/of vraag om assistentie.</translation>
     </message>
     <message>
         <source>Change units</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verander eenheden</translation>
     </message>
     <message>
         <source>View graph</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bekijk de grafiek</translation>
     </message>
     <message>
         <source>Empty account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Leeg account</translation>
     </message>
     <message>
         <source>Fund account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vul de account</translation>
     </message>
     <message>
         <source>Renew account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vernieuw account</translation>
     </message>
     <message>
         <source>Earnings to date</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inkomsten tot datum</translation>
     </message>
     <message>
         <source>Projected earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voorziene inkomsten</translation>
     </message>
     <message>
         <source>Initial projected earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Voorziene aanvanginkomsten</translation>
     </message>
     <message>
         <source>&amp;Blocks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Blokken</translation>
     </message>
     <message>
         <source>&amp;Days</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Dagen</translation>
     </message>
     <message>
         <source>&amp;Weeks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Weken</translation>
     </message>
     <message>
         <source>&amp;Months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Maanden</translation>
     </message>
     <message>
         <source>%1 blocks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 blokken</translation>
     </message>
     <message>
         <source>%1 days</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 dagen</translation>
     </message>
     <message>
         <source>%1 weeks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 weken</translation>
     </message>
     <message>
         <source>%1 months</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 maanden</translation>
     </message>
 </context>
 <context>
     <name>toolbar</name>
     <message>
         <source>Account toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Account werkbalk</translation>
     </message>
     <message>
         <source>Overview toolbar</source>
@@ -3981,7 +3982,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Spacer  toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afstand werkbalk</translation>
     </message>
     <message>
         <source>Navigation toolbar</source>
@@ -3989,11 +3990,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Account info toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Account info werkbalk</translation>
     </message>
     <message>
         <source>Status toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Status werkbalk</translation>
     </message>
     <message>
         <source>Backup</source>

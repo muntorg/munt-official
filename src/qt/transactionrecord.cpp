@@ -28,8 +28,35 @@
  */
 bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 {
-    // There are currently no cases where we hide transactions, but
-    // we may want to use this in the future for things like RBF.
+    //fixme: delete
+    AssertLockHeld(pactiveWallet->cs_wallet);
+
+    // Hide orphaned phase 3 witness earnings when they are orphaned by a subsequent PoW block.
+    // We don't want slow/complex "IsPhase3" lookups here etc.
+    // So we do this in a rather round about way.
+    if (!wtx.IsInMainChain() && wtx.IsPoW2WitnessCoinBase() && wtx.tx->vout.size() >= 2 && wtx.nIndex == -1)
+    {
+        // Find the height of our block.
+        const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+        if (findIter != mapBlockIndex.end())
+        {
+            for (const auto& iter : pactiveWallet->mapWallet)
+            {
+                // Find any transactions from the block that potentially replaces us.
+                if (iter.second.hashBlock == wtx.hashBlock)
+                {
+                    // Scan the outputs of the transaction and if it matches our output then we know we have been orphaned by it and can safely hide.
+                    for (const auto& txOut : iter.second.tx->vout)
+                    {
+                        if (txOut.output == wtx.tx->vout[1].output)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
     return true;
 }
 
@@ -55,7 +82,6 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
-            bool firsttime=true;
             for(const CTxOut& txout: wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);
@@ -434,6 +460,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
                 status.matures_in = wtx.GetBlocksToMaturity();
 
                 // Check if the block was requested by anyone
+                //fixme: Adjust time here.
                 if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
                     status.status = TransactionStatus::MaturesWarning;
             }

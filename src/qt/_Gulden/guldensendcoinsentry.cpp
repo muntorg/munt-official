@@ -179,7 +179,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModelAddresses->setSortCaseSensitivity(Qt::CaseInsensitive);
             proxyModelAddresses->setFilterFixedString("");
             proxyModelAddresses->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyModelAddresses->setFilterKeyColumn(AddressTableModel::ColumnIndex::Label);
+            proxyModelAddresses->setFilterKeyColumn(AccountTableModel::ColumnIndex::Label);
             proxyModelAddresses->setSortRole(Qt::DisplayRole);
             proxyModelAddresses->sort(0);
 

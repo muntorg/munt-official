@@ -83,6 +83,8 @@ public:
         FormattedAmountRole,
         /** Transaction status (TransactionRecord::Status) */
         StatusRole,
+        /** Transactiond depth in chain */
+        DepthRole,
         /** Unprocessed icon */
         RawDecorationRole,
         /** For sorting */

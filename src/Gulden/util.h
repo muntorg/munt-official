@@ -72,6 +72,7 @@ inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
         return false;
     if (witnessDetails.lockUntilBlock >= nTipHeight)
         return true;
+    return false;
 }
 
 #endif

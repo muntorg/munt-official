@@ -5,52 +5,54 @@
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Changer le nom du compte</translation>
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entrez le nom du compte.</translation>
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Scannez QR pour vous connecter à votre application mobile Gulden.</translation>
     </message>
     <message>
         <source>Delete account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Supprimer un compte</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fait</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cliquez ici pour rendre le code QR visible.
+AVERTISSEMENT : veuillez vous assurer que vous êtes la seule personne qui peut voir ce code QR, sinon il pourrait être utilisé pour accéder à vos fonds.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Compte non vide, veuillez d&apos;abord vider votre compte avant d&apos;essayer de le supprimer.</translation>
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">D&apos;accord</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Êtes-vous sûr de vouloir supprimer %1 de votre liste de comptes ?
+Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit de nouveaux fonds à l&apos;avenir.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
 </context>
 <context>
     <name>AccountSummaryWidget</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -191,7 +193,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -298,7 +300,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fait</translation>
     </message>
     <message>
         <source>Save to file</source>
@@ -360,6 +362,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Vue d&apos;ensemble</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -869,7 +875,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>New receiving address</source>
@@ -946,7 +952,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">D&apos;accord</translation>
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
@@ -958,7 +964,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -994,14 +1000,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Add account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Vue d&apos;ensemble</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1085,7 +1083,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">D&apos;accord</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
@@ -1097,7 +1095,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>Save</source>
@@ -1207,7 +1205,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
 </context>
 <context>
@@ -1350,11 +1348,11 @@ Witness weight: %5</source>
     <name>NewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entrez le nom du compte.</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -1362,7 +1360,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fait</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
@@ -1379,7 +1377,8 @@ Witness weight: %5</source>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cliquez ici pour rendre le code QR visible.
+AVERTISSEMENT : veuillez vous assurer que vous êtes la seule personne qui peut voir ce code QR, sinon il pourrait être utilisé pour accéder à vos fonds.</translation>
     </message>
 </context>
 <context>
@@ -1747,7 +1746,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>Save</source>
@@ -2322,7 +2321,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>Close</source>
@@ -2819,7 +2818,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
@@ -3813,7 +3812,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>

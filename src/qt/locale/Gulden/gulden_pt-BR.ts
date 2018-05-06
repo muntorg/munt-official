@@ -5,11 +5,11 @@
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mudar nome da conta</translation>
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Insira o nome da conta</translation>
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
@@ -360,6 +360,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Visão geral</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -999,14 +1003,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Visão geral</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Password</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1352,7 +1348,7 @@ Witness weight: %5</source>
     <name>NewAccountDialog</name>
     <message>
         <source>Enter name of account.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Insira o nome da conta</translation>
     </message>
     <message>
         <source>Cancel</source>

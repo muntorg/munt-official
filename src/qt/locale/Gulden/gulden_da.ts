@@ -362,6 +362,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">&amp;Oversigt</translation>
     </message>
     <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Show general overview of wallet</source>
         <translation type="unfinished">Vis generel oversigt over tegnebog</translation>
     </message>
@@ -996,14 +1000,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Add account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Oversigt</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
