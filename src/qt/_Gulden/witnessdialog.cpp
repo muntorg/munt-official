@@ -725,7 +725,12 @@ void WitnessDialog::update()
                             if (forAccount->GetWarningState() == AccountStatus::WitnessExpired)
                                 stateRenewWitnessButton = true;
                             else
+                            {
                                 stateRenewWitnessButton = false;
+                                stateEmptyWitnessButton = stateEmptyWitnessButton2;
+                                stateWithdrawEarningsButton = stateWithdrawEarningsButton2;
+                                stateEmptyWitnessButton2 = stateWithdrawEarningsButton2 = false;
+                            }
                             stateViewWitnessGraphButton = true;
                             setIndex = WitnessDialogStates::EXPIRED;
                             plotGraphForAccount(forAccount, nTotalNetworkWeight);
@@ -760,11 +765,6 @@ void WitnessDialog::update()
 void WitnessDialog::setClientModel(ClientModel* _clientModel)
 {
     this->clientModel = _clientModel;
-
-    if (_clientModel)
-    {
-        //connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(updateSmartFeeLabel()));
-    }
 }
 
 

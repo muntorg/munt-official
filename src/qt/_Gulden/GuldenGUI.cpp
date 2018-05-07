@@ -359,16 +359,21 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
         return;
     }
 
-    if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
     {
-        //fixme: Improve error message
-        QString message = QString::fromStdString(strError.c_str());
-        QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
-        d->exec();
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
+        {
+            //fixme: Improve error message
+            QString message = QString::fromStdString(strError.c_str());
+            QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
+            d->exec();
+        }
     }
 
-    // Clear the failed flag in UI for immediate user feedback.
+    // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
     targetWitnessAccount->SetWarningState(AccountStatus::Default);
+    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
+    m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 }
 
 void GuldenGUI::requestFundWitness(CAccount* funderAccount)
