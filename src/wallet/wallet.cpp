@@ -3094,7 +3094,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 }
 
 
-bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount nFee, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
+bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
 {
     CWalletTx wtxNew;
     if (forAccount->IsReadOnly())
@@ -3119,7 +3119,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             {
                 nMandatoryWitnessPenaltyFee += CalculateWitnessPenaltyFee(output);
             }
-            nFee = nMandatoryWitnessPenaltyFee;
+            nFeeOut = nMandatoryWitnessPenaltyFee;
 
             // Start with no fee and loop until there is enough fee
             while (true)
@@ -3128,13 +3128,13 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 CAmount nValueSelected = 0;
                 setCoins.clear();
                 //fixme: GULDEN HIGH ACCOUNTS - ensure this only selects from forAccount - in theory it should because AvailableCoins is doing a forAccount check?
-                if (!SelectCoins(vAvailableCoins, nFee, setCoins, nValueSelected, coinControl))
+                if (!SelectCoins(vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
                     return false;
                 }
 
-                const CAmount nChange = nValueSelected - nFee;
+                const CAmount nChange = nValueSelected - nFeeOut;
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
@@ -3193,8 +3193,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     // add the dust to the fee.
                     if (IsDust(*newTxOut, ::dustRelayFee))
                     {
-                        //fixme:
-                        nFee += nChange;
+                        nFeeOut += nChange;
                         reservekey.ReturnKey();
                     }
                     else
@@ -3237,9 +3236,10 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 if (coinControl && coinControl->nConfirmTarget > 0)
                     currentConfirmationTarget = coinControl->nConfirmTarget;
 
-                CAmount nFeeNeeded = GetMinimumFee(nBytes, currentConfirmationTarget, ::mempool, ::feeEstimator) + nMandatoryWitnessPenaltyFee;
+                CAmount nMinimumFee = GetMinimumFee(nBytes, currentConfirmationTarget, ::mempool, ::feeEstimator);
+                CAmount nFeeNeeded = (nMinimumFee > nMandatoryWitnessPenaltyFee) ? nMinimumFee : nMandatoryWitnessPenaltyFee;
                 if (coinControl && coinControl->fOverrideFeeRate)
-                    nFeeNeeded = coinControl->nFeeRate.GetFee(nBytes);
+                    nFeeNeeded = (coinControl->nFeeRate.GetFee(nBytes) > nMandatoryWitnessPenaltyFee) ? (coinControl->nFeeRate.GetFee(nBytes)) : nMandatoryWitnessPenaltyFee;
 
                 // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
                 // because we must be at the maximum allowed fee.
@@ -3249,7 +3249,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     return false;
                 }
 
-                if (nFee >= nFeeNeeded) {
+                if (nFeeOut >= nFeeNeeded) {
                     // Reduce fee to only the needed amount if we have change
                     // output to increase.  This prevents potential overpayment
                     // in fees if the coins selected to meet nFeeNeeded result
@@ -3257,12 +3257,12 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     // iteration.
                     // TODO: The case where there is no change output remains
                     // to be addressed so we avoid creating too small an output.
-                    if (nFee > nFeeNeeded && nChangePos != -1)
+                    if (nFeeOut > nFeeNeeded && nChangePos != -1)
                     {
-                        CAmount extraFeePaid = nFee - nFeeNeeded;
+                        CAmount extraFeePaid = nFeeOut - nFeeNeeded;
                         std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePos;
                         change_position->nValue += extraFeePaid;
-                        nFee -= extraFeePaid;
+                        nFeeOut -= extraFeePaid;
                     }
                     break; // Done, enough fee included.
                 }
@@ -3270,18 +3270,18 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Try to reduce change to include necessary fee
                 if (nChangePos != -1)
                 {
-                    CAmount additionalFeeNeeded = nFeeNeeded - nFee;
+                    CAmount additionalFeeNeeded = nFeeNeeded - nFeeOut;
                     std::vector<CTxOut>::iterator change_position = txNew.vout.begin()+nChangePos;
                     // Only reduce change if remaining amount is still a large enough output.
                     if (change_position->nValue >= MIN_FINAL_CHANGE + additionalFeeNeeded) {
                         change_position->nValue -= additionalFeeNeeded;
-                        nFee += additionalFeeNeeded;
+                        nFeeOut += additionalFeeNeeded;
                         break; // Done, able to increase fee from change
                     }
                 }
 
                 // Include more fee and try again.
-                nFee = nFeeNeeded;
+                nFeeOut = nFeeNeeded;
                 continue;
             }
         }
@@ -3340,7 +3340,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount nFee, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
@@ -3399,7 +3399,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 // Add fee input and change output
                 //fixme: coincontrol
                 std::string sFailReason;
-                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFee, true, sFailReason, nullptr))
+                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, nullptr))
                 {
                     strError = "Unable to add fee";
                     return false;
