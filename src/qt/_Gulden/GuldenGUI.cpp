@@ -195,7 +195,6 @@ GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
 , importPrivateKeyAction( NULL )
 , rescanAction( NULL )
 , currencyAction ( NULL )
-, accountSummaryWidget( NULL )
 , dialogNewAccount( NULL )
 , dialogAccountSettings( NULL )
 , dialogBackup( NULL )
@@ -408,7 +407,7 @@ void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
     ticker->setOptionsModel(optionsModel);
     optionsModel->setTicker(ticker);
     optionsModel->setNocksSettings(nocksSettings);
-    accountSummaryWidget->setOptionsModel(optionsModel);
+    m_pImpl->accountSummaryWidget->setOptionsModel(optionsModel);
     connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     updateExchangeRates();
 }
@@ -698,15 +697,15 @@ void GuldenGUI::createToolBarsGulden()
     accountInfoBar->setObjectName( "account_info_bar" );
     accountInfoBar->setMovable( false );
     accountInfoBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
-    accountSummaryWidget = new AccountSummaryWidget( ticker, m_pImpl );
-    accountSummaryWidget->setObjectName( "settings_button" );
-    accountSummaryWidget->setContentsMargins( 0, 0, 0, 0 );
+    m_pImpl->accountSummaryWidget = new AccountSummaryWidget( ticker, m_pImpl );
+    m_pImpl->accountSummaryWidget->setObjectName( "settings_button" );
+    m_pImpl->accountSummaryWidget->setContentsMargins( 0, 0, 0, 0 );
     accountInfoBar->setContentsMargins( 0, 0, 0, 0 );
-    accountSummaryWidget->setObjectName( "accountSummaryWidget" );
-    accountInfoBar->addWidget( accountSummaryWidget );
+    m_pImpl->accountSummaryWidget->setObjectName( "accountSummaryWidget" );
+    accountInfoBar->addWidget( m_pImpl->accountSummaryWidget );
     m_pImpl->addToolBar( accountInfoBar );
-    connect(accountSummaryWidget, SIGNAL( requestAccountSettings() ), this, SLOT( showAccountSettings() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
-    connect(accountSummaryWidget, SIGNAL( requestExchangeRateDialog() ), this, SLOT( showExchangeRateDialog() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect(m_pImpl->accountSummaryWidget, SIGNAL( requestAccountSettings() ), this, SLOT( showAccountSettings() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect(m_pImpl->accountSummaryWidget, SIGNAL( requestExchangeRateDialog() ), this, SLOT( showExchangeRateDialog() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
 
 
     //Add spacer bar
@@ -973,7 +972,7 @@ void GuldenGUI::hideBalances()
 {
     labelBalance->setVisible(false);
     labelBalanceForex->setVisible(false);
-    accountSummaryWidget->hideBalances();
+    m_pImpl->accountSummaryWidget->hideBalances();
 }
 
 void GuldenGUI::showBalances()
@@ -983,7 +982,7 @@ void GuldenGUI::showBalances()
         labelBalance->setVisible(true);
         // Give forex label a chance to update if appropriate.
         updateExchangeRates();
-        accountSummaryWidget->showBalances();
+        m_pImpl->accountSummaryWidget->showBalances();
     }
 }
 
@@ -1191,7 +1190,7 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
     showToolBars();
     refreshAccountControls();
 
-    connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), accountSummaryWidget , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), m_pImpl->accountSummaryWidget , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), this , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountListChanged() ), this , SLOT( accountListChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1233,7 +1232,7 @@ void GuldenGUI::setActiveAccountButton( ClickableLabel* activeButton )
     {
         if ( m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage )
         {
-            accountSummaryWidget->setActiveAccount( m_accountMap[activeButton] );
+            m_pImpl->accountSummaryWidget->setActiveAccount( m_accountMap[activeButton] );
             m_pImpl->walletFrame->currentWalletView()->walletModel->setActiveAccount( m_accountMap[activeButton] );
 
             updateAccount(m_accountMap[activeButton]);
@@ -1277,8 +1276,8 @@ void GuldenGUI::accountListChanged()
 
 void GuldenGUI::activeAccountChanged(CAccount* account)
 {
-    if (accountSummaryWidget)
-        accountSummaryWidget->setActiveAccount(account);
+    if (m_pImpl->accountSummaryWidget)
+        m_pImpl->accountSummaryWidget->setActiveAccount(account);
 
     refreshTabVisibilities();
 

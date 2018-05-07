@@ -76,6 +76,7 @@
 #include "sendcoinsdialog.h"
 
 #include <Gulden/util.h>
+#include <_Gulden/accountsummarywidget.h>
 
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
@@ -197,6 +198,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     rpcConsole(0),
     helpMessageDialog(0),
     modalOverlay(0),
+    accountSummaryWidget( nullptr ),
     prevBlocks(0),
     spinnerFrame(0),
     platformStyle(_platformStyle),
@@ -1117,6 +1119,15 @@ void BitcoinGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBa
     m_pGuldenImpl->setBalance(balance, unconfirmedBalance, immatureBalance, watchOnlyBalance, watchUnconfBalance, watchImmatureBalance);
 }
 
+void BitcoinGUI::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+
+    if (event->size().width() < 940)
+        accountSummaryWidget->showForexBalance(false);
+    else
+        accountSummaryWidget->showForexBalance(true);
+}
 
 void BitcoinGUI::changeEvent(QEvent *e)
 {

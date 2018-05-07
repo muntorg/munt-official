@@ -40,6 +40,7 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
+class AccountSummaryWidget;
 
 class CWallet;
 
@@ -80,6 +81,7 @@ public:
     bool enableWallet;
 
 protected:
+    void resizeEvent(QResizeEvent* event);
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
     void showEvent(QShowEvent *event);
@@ -132,6 +134,7 @@ private:
     RPCConsole *rpcConsole;
     HelpMessageDialog *helpMessageDialog;
     ModalOverlay *modalOverlay;
+    AccountSummaryWidget* accountSummaryWidget;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;

@@ -24,7 +24,6 @@ class ClickableLabel;
 class QToolBar;
 class QLabel;
 class QAction;
-class AccountSummaryWidget;
 class CAccount;
 class OptionsModel;
 class CReserveKey;
@@ -132,7 +131,6 @@ public:
     static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight);
 
 protected:
-
 private:
     BitcoinGUI* m_pImpl;
     QToolBar* accountBar;
@@ -153,7 +151,6 @@ private:
     QAction* rescanAction;
     QAction* currencyAction;
 
-    AccountSummaryWidget* accountSummaryWidget;
     NewAccountDialog* dialogNewAccount;
     AccountSettingsDialog* dialogAccountSettings;
     BackupDialog* dialogBackup;

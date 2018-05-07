@@ -34,6 +34,7 @@ public:
     void hideBalances();
     void showBalances();
 
+    void showForexBalance(bool showForexBalance_);
 public Q_SLOTS:
 
 
@@ -53,7 +54,10 @@ private:
     Ui::AccountSummaryWidget* ui;
     const CAccount* m_account;
     std::string m_accountName;
-    CAmount m_accountBalance;
+    CAmount m_accountBalance = 0;
+    CAmount m_accountBalanceLocked = 0;
+    CAmount m_accountBalanceImmatureOrUnconfirmed = 0;
+    bool m_showForexBalance = true;
 };
 
 #endif // BITCOIN_QT_ACCOUNT_SUMMARY_WIDGET_H

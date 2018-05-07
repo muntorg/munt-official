@@ -22,13 +22,12 @@
 
 class CAccount;
 
-AccountSummaryWidget::AccountSummaryWidget( CurrencyTicker* ticker, QWidget* parent ) :
-    QFrame( parent ),
-    optionsModel ( NULL ),
-    m_ticker( ticker ),
-    ui( new Ui::AccountSummaryWidget ),
-    m_account ( NULL ),
-    m_accountBalance ( 0 )
+AccountSummaryWidget::AccountSummaryWidget( CurrencyTicker* ticker, QWidget* parent )
+: QFrame( parent )
+, optionsModel ( NULL )
+, m_ticker( ticker )
+, ui( new Ui::AccountSummaryWidget )
+, m_account ( NULL )
 {
     ui->setupUi( this );
 
@@ -65,9 +64,7 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
 
     ui->accountName->setText( limitString(QString::fromStdString(m_account->getLabel()), 35) );
 
-    //fixme: GULDEN - Use AccountTableModel.
-    boost::uuids::uuid accountUUID = m_account->getUUID();
-    m_accountBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+    balanceChanged();
 
     updateExchangeRates();
 }
@@ -90,12 +87,25 @@ void AccountSummaryWidget::showBalances()
     updateExchangeRates();
 }
 
+void AccountSummaryWidget::showForexBalance(bool showForexBalance_)
+{
+    m_showForexBalance = showForexBalance_;
+    if (!m_showForexBalance)
+        ui->accountBalanceForex->setVisible( false );
+    updateExchangeRates();
+}
+
 
 void AccountSummaryWidget::balanceChanged()
 {
     if (pactiveWallet && m_account)
     {
         m_accountBalance = pactiveWallet->GetBalance(m_account, true, true);
+        if (m_account->IsPoW2Witness())
+            m_accountBalanceLocked = m_accountBalance - pactiveWallet->GetBalance(m_account, false, true); 
+        else
+            m_accountBalanceLocked = 0;
+        m_accountBalanceImmatureOrUnconfirmed = pactiveWallet->GetUnconfirmedBalance(m_account, true) + pactiveWallet->GetImmatureBalance(m_account);
         updateExchangeRates();
     }
 }
@@ -110,30 +120,26 @@ void AccountSummaryWidget::updateExchangeRates()
 
         ui->accountBalance->setText( BitcoinUnits::format(BitcoinUnits::Unit::BTC, m_accountBalance, false, BitcoinUnits::separatorAlways, 2) );
 
-        //fixme: (GULDEN) (FUT) (1.6.1) - Show an immature/unconfirmed tooltip.
-        /*
-        labelBalance->setToolTip("");
-        if (immatureBalance>0 || unconfirmedBalance>0)
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalance, false, BitcoinUnits::separatorStandard, 2));
+        if (m_account->IsPoW2Witness())
         {
-            QString toolTip;
-            if (unconfirmedBalance > 0)
-            {
-                toolTip += tr("Pending confirmation: %1").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, unconfirmedBalance, false, BitcoinUnits::separatorStandard, 2));
-            }
-            if (immatureBalance > 0)
-            {
-                if (!toolTip.isEmpty())
-                    toolTip += "\n";
-                toolTip += tr("Pending maturity: %1").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, immatureBalance, false, BitcoinUnits::separatorStandard, 2));
-            }
-            labelBalance->setToolTip(toolTip);
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalanceLocked, false, BitcoinUnits::separatorStandard, 2));
         }
-        */
+        else
+        {
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalanceImmatureOrUnconfirmed, false, BitcoinUnits::separatorStandard, 2));
+        }
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, BitcoinUnits::separatorStandard, 2));
+
+        ui->accountBalance->setToolTip(toolTip);
+
         if (forexAmount > 0)
         {
             ui->accountBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(currencyCode) + "\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, forexAmount, false, BitcoinUnits::separatorAlways, 2) + QString(")") );
-            if (ui->accountBalance->isVisible())
+            if (m_showForexBalance && ui->accountBalance->isVisible())
+            {
                 ui->accountBalanceForex->setVisible( true );
+            }
         }
         else
         {
