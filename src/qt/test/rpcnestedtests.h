@@ -14,12 +14,14 @@
 class RPCNestedTests : public QObject
 {
     Q_OBJECT
-
     private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
     void rpcNestedTests();
 
 private:
     CCoinsViewDB *pcoinsdbview;
+    std::string path;
 };
 
 #endif // BITCOIN_QT_TEST_RPC_NESTED_TESTS_H

@@ -61,6 +61,7 @@ std::string GetWarnings(const std::string& strFor)
     std::string strGUI;
     const std::string uiAlertSeperator = "<hr />";
 
+    LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
     LOCK(cs_warnings);
 
     if (!CLIENT_VERSION_IS_RELEASE) {

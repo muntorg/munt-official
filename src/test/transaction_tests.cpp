@@ -102,6 +102,8 @@ BOOST_FIXTURE_TEST_SUITE(transaction_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(tx_valid)
 {
+    BOOST_FAIL("This does not work yet for Gulden");
+
     // Read tests from test/data/tx_valid.json
     // Format is an array of arrays
     // Inner arrays are either [ "comment" ]
@@ -425,6 +427,8 @@ void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 }
 
 BOOST_AUTO_TEST_CASE(test_big_witness_transaction) {
+    BOOST_FAIL("This does not work yet for Gulden");
+
     CMutableTransaction mtx(TEST_DEFAULT_TX_VERSION);
     mtx.nVersion = 1;
 
@@ -459,7 +463,6 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction) {
         mtx.vout[i].output.scriptPubKey = CScript() << OP_1;
     }
 
-    GULDEN_TEST_REWRITE;
     /* SignSignature requires CTxOut instead of pubkey
     // sign all inputs
     for(uint32_t i = 0; i < mtx.vin.size(); i++) {
@@ -502,7 +505,7 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction) {
     }
 
     bool controlCheck = control.Wait();
-    assert(controlCheck);
+    BOOST_CHECK(controlCheck);
 
     threadGroup.interrupt_all();
     threadGroup.join_all();
@@ -510,6 +513,8 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction) {
 
 BOOST_AUTO_TEST_CASE(test_witness)
 {
+    BOOST_FAIL("This does not work yet for Gulden");
+
     CBasicKeyStore keystore, keystore2;
     CKey key1, key2, key3, key1L, key2L;
     CPubKey pubkey1, pubkey2, pubkey3, pubkey1L, pubkey2L;

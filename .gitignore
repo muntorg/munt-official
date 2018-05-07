@@ -1,13 +1,6 @@
 *.tar.gz
 
 *.exe
-src/bitcoin
-src/bitcoind
-src/bitcoin-cli
-src/bitcoin-tx
-src/test/test_bitcoin
-src/test/test_bitcoin_fuzzy
-src/qt/test/test_bitcoin-qt
 
 # autoreconf
 Makefile.in
@@ -30,8 +23,8 @@ config.log
 config.status
 configure
 libtool
-src/config/bitcoin-config.h
-src/config/bitcoin-config.h.in
+src/config/gulden-config.h
+src/config/gulden-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -39,8 +32,11 @@ share/qt/Info.plist
 src/univalue/gen
 
 src/qt/*.moc
+src/qt/_Gulden/*.moc
 src/qt/moc_*.cpp
+src/qt/_Gulden/moc_*.cpp
 src/qt/forms/ui_*.h
+src/qt/_Gulden/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
@@ -78,10 +74,12 @@ Makefile.am.user
 Gulden-tx
 Gulden-cli
 GuldenD
+Gulden
 
 # Unit-tests
 Makefile.test
 test_Gulden
+test_gulden
 
 # Resources cpp
 qrc_*.cpp

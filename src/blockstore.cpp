@@ -187,7 +187,7 @@ void CBlockStore::UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
 {
     for (std::set<int>::iterator it = setFilesToPrune.begin(); it != setFilesToPrune.end(); ++it) {
         int nFile = *it;
-        if (nFile >= int(vBlockfiles.size()))
+        if (nFile < 0 || nFile >= int(vBlockfiles.size()))
             break;
         BlockFilePair& p = vBlockfiles[nFile];
         if (p.blockfile) {

@@ -22,6 +22,7 @@
 #include "consensus/tx_verify.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
+#include "Gulden/auto_checkpoints.h"
 #include "hash.h"
 #include "validation.h"
 #include "net.h"
@@ -245,6 +246,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     pblocktemplate->vTxSigOpsCost.push_back(-1); // updated at end
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+    LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
     LOCK(mempool.cs);
 
     nHeight = pParent->nHeight + 1;
