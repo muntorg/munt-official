@@ -87,7 +87,7 @@ int BitcoinUnits::decimals(int unit)
     }
 }
 
-QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators, int numDecimals)
+QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators, int numDecimals, bool trimTrailingZerosInRemainder)
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
@@ -100,8 +100,9 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
     qint64 quotient = n_abs / coin;
     qint64 remainder = n_abs % coin;
     QString quotient_str = QString::number(quotient);
-    QString remainder_str = QString::number(remainder).rightJustified(decimals(unit), '0');
-	if (numDecimals!=-1)
+    QString remainder_str = QString::number(remainder).rightJustified(trimTrailingZerosInRemainder? 2 : decimals(unit), '0');
+
+    if (numDecimals!=-1)
         remainder_str.truncate(2);
 
 
@@ -129,14 +130,14 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
 // Please take care to use formatHtmlWithUnit instead, when
 // appropriate.
 
-QString BitcoinUnits::formatWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators, int numDecimals)
+QString BitcoinUnits::formatWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators, int numDecimals, bool trimTrailingZerosInRemainder)
 {
-    return format(unit, amount, plussign, separators, numDecimals) + QString(" ") + name(unit);
+    return format(unit, amount, plussign, separators, numDecimals, trimTrailingZerosInRemainder) + QString(" ") + name(unit);
 }
 
 QString BitcoinUnits::formatHtmlWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators)
 {
-    QString str(formatWithUnit(unit, amount, plussign, separators));
+    QString str(formatWithUnit(unit, amount, plussign, separators, true));
     str.replace(QChar(THIN_SP_CP), QString(THIN_SP_HTML));
     return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
 }
