@@ -1424,15 +1424,15 @@ void GuldenGUI::gotoWebsite()
 
 void GuldenGUI::restoreCachedWidgetIfNeeded()
 {
-    m_pImpl->receiveCoinsAction->setVisible( true );
-    m_pImpl->sendCoinsAction->setVisible( true );
+    bool stateReceiveCoinsAction = true;
+    bool stateSendCoinsAction = true;
 
     m_pImpl->walletFrame->currentWalletView()->sendCoinsPage->update();
     m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
-        m_pImpl->sendCoinsAction->setVisible( false );
+        stateSendCoinsAction = false;
         if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
         {
             m_pImpl->gotoReceiveCoinsPage();
@@ -1441,8 +1441,8 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
         m_pImpl->witnessDialogAction->setVisible( true );
-        m_pImpl->receiveCoinsAction->setVisible( false );
-        m_pImpl->sendCoinsAction->setVisible( false );
+        stateReceiveCoinsAction = false;
+        stateSendCoinsAction = false;
         if ( m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage || m_pImpl->walletFrame->currentWalletView()->currentWidget() == (QWidget*)m_pImpl->walletFrame->currentWalletView()->sendCoinsPage )
         {
             m_pImpl->showWitnessDialog();
@@ -1491,6 +1491,9 @@ void GuldenGUI::restoreCachedWidgetIfNeeded()
         m_pImpl->walletFrame->currentWalletView()->setCurrentWidget( cacheCurrentWidget );
         cacheCurrentWidget = NULL;
     }
+
+    m_pImpl->receiveCoinsAction->setVisible( stateReceiveCoinsAction );
+    m_pImpl->sendCoinsAction->setVisible( stateSendCoinsAction );
 }
 
 void GuldenGUI::gotoNewAccountDialog()
