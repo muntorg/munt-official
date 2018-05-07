@@ -3113,7 +3113,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             std::vector<COutput> vAvailableCoins;
             AvailableCoins(forAccount, vAvailableCoins, true, nullptr);
 
-            //fixme: (NEXT) (HIGH) Add to block validation as well.
             CAmount nMandatoryWitnessPenaltyFee = 0;
             for(const auto& output : txNew.vout)
             {
@@ -3127,7 +3126,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Choose coins to use
                 CAmount nValueSelected = 0;
                 setCoins.clear();
-                //fixme: GULDEN HIGH ACCOUNTS - ensure this only selects from forAccount - in theory it should because AvailableCoins is doing a forAccount check?
                 if (!SelectCoins(vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
