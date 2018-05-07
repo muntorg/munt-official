@@ -345,10 +345,9 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
         return false;
     }
 
-    // fixme: (GULDEN) (2.0) Error handling
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chain, params, pIndex, allWitnessCoins, nullptr, viewOverride))
-        return false;
+        return error("IsPow2Phase5Active: Failed to enumerate all witness coins");
 
     // If any PoW2WitnessOutput remain then we aren't active yet.
     for (auto iter : allWitnessCoins)
@@ -464,10 +463,9 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
 {
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-    //fixme: (GULDEN) (2.0) error handling.
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chain, chainparams, pIndex, allWitnessCoins, nullptr, viewOverride))
-        return false;
+        return error("GetPow2NetworkWeight: Failed to enumerate all unspent witness coins");
 
     nNumWitnessAddresses = 0;
     nTotalWeight = 0;
