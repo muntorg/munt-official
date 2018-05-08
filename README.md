@@ -59,15 +59,6 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 
 Troubleshooting:
 
-Errors when running autogen.sh - autotool/libtool errors
-For older distributions with outdated autotools the above process may fail, either update to newer autotools/libtools or use the old_autotools branch, which is identical but contains a configure script that will work for old autotools.
-Steps:
-* git checkout old_autotools
-* ./configure
-* make
-If the above fails it may also be necessary to run ./autogen.sh but try without it first.
-
-
 If your distro  does not have boost 1.61 you can do the following to build it
 > wget https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2 && tar -xvf boost_1_61_0.tar.bz2 && cd boost_1_61_0/ && ./bootstrap.sh && ./b2 --prefix=/boost166 cxxflags=-fPIC cflags=-fPIC install
 
