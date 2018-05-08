@@ -1000,17 +1000,7 @@ void CWallet::ClearCacheForTransaction(const uint256& hash)
     auto& wtx = mapWallet[hash];
     // Invalidate all caches for transaction as they will need to be recalculated.
     // Otherwise we get incorrect wallet balance displays.
-    wtx.fChangeCached = false;
-    wtx.nChangeCached = 0;
-    wtx.debitCached.clear();
-    wtx.creditCached.clear();
-    wtx.immatureCreditCached.clear();
-    wtx.availableCreditCached.clear();
-    wtx.availableCreditCachedIncludingLockedWitnesses.clear();
-    wtx.watchDebitCached.clear();
-    wtx.watchCreditCached.clear();
-    wtx.immatureWatchCreditCached.clear();
-    wtx.availableWatchCreditCached.clear();
+    wtx.clearAllCaches();
 }
 
 /**

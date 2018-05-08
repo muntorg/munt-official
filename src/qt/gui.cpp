@@ -135,6 +135,16 @@ static void UpdateWitnessAccountStates()
                         else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
                         {
                             accountPair.second->SetWarningState(AccountStatus::WitnessExpired);
+
+                            // Due to lock changing cached balance for certain transactions will now be invalidated.
+                            // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
+                            if (prevState != AccountStatus::WitnessExpired)
+                            {
+                                for(auto& wtxIter : pactiveWallet->mapWallet)
+                                {
+                                    wtxIter.second.clearAllCaches();
+                                }
+                            }
                         }
                     }
                 }
