@@ -88,7 +88,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
 
     if (!ui->lineEditChangeAccountName->text().isEmpty())
     {
-        //fixme: GULDEN - prompt user to save changes?
+        //fixme: (2.1) - prompt user to save changes?
     }
 
     ui->lineEditChangeAccountName->setText("");
@@ -124,7 +124,6 @@ void AccountSettingsDialog::applyChanges()
     {
         if (!ui->lineEditChangeAccountName->text().isEmpty())
         {
-            //fixme: GULDEN - multiwallet.
             pactiveWallet->changeAccountName(activeAccount, ui->lineEditChangeAccountName->text().toStdString());
             ui->lineEditChangeAccountName->setText(QString(""));
         }
@@ -132,7 +131,7 @@ void AccountSettingsDialog::applyChanges()
     Q_EMIT dismissAccountSettings();
 }
 
-//fixme: GULDEN - Make this configurable or more intelligent in some way?
+//fixme: (Post-2.1) - Make this configurable or more intelligent in some way?
 #define MINIMUM_VALUABLE_AMOUNT 1000000000 
 void AccountSettingsDialog::deleteAccount()
 {

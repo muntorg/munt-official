@@ -168,7 +168,7 @@ void InitRPCMining()
         return;
 
     // getblocktemplate mining rewards paid here:
-    //fixme: GULDEN HD 
+    //fixme: (Post-2.1)
     pMiningKey = new CReserveKey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_EXTERNAL);
     #else
 	return;
@@ -828,7 +828,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHashPoW2().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePastWitness()+1, GetTime())));
-    //fixme: (GULDEN) (MED) - Implement 'maxtime' here?
+    //fixme: (Post-2.1) - Implement 'maxtime' here?
     result.push_back(Pair("mutable", aMutable));
     result.push_back(Pair("noncerange", "00000000ffffffff"));
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;

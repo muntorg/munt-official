@@ -340,7 +340,7 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
     CAmount txFee;
     if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
     {
-        //fixme: Improve error message
+        //fixme: (2.0) Improve error message
         QString message = QString::fromStdString(strError.c_str());
         QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
@@ -362,7 +362,7 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
         {
-            //fixme: Improve error message
+            //fixme: (2.0) Improve error message
             QString message = QString::fromStdString(strError.c_str());
             QDialog* d = createDialog(m_pImpl, message, tr("Okay"), QString(""), 400, 180);
             d->exec();
@@ -1306,7 +1306,7 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
     }
 }
 
-// fixme: Gulden - introduce better code sharing here between this function and refreshaccountcontrols...
+// fixme: (2.1) - introduce better code sharing here between this function and refreshaccountcontrols...
 // For performance reasons we update only the specific control that is added instead of regenerating all controls.
 void GuldenGUI::accountAdded(CAccount* account)
 {
@@ -1352,7 +1352,7 @@ void GuldenGUI::accountAdded(CAccount* account)
     }
 }
 
-//fixme: Gulden - lazy accountAdded/accountDeleted should instead update only the specific controls affected...
+//fixme: (Post-2.1) - This is a bit lazy; accountAdded/accountDeleted should instead update only the specific controls affected instead of all the controls.
 void GuldenGUI::accountDeleted(CAccount* account)
 {
     refreshAccountControls();
@@ -1617,7 +1617,7 @@ void GuldenGUI::acceptNewAccount()
     }
     else
     {
-        //fixme: Mark invalid.
+        //fixme: (2.1) Mark invalid.
     }
 }
 

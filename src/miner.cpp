@@ -255,7 +255,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
-    //fixme: (GULDEN) (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
+    //fixme: (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
     Consensus::Params consensusParams = chainparams.GetConsensus();
     CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
     if (nParentPoW2Phase >= 3)
@@ -307,7 +307,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
-    //fixme: (GULDEN) (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
+    //fixme: (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
     coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
 
@@ -327,7 +327,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
-    //fixme: (GULDEN) (2.0) (SEGSIG)
+    //fixme: (2.0) (SEGSIG)
     //pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
 
@@ -870,7 +870,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
 
             boost::this_thread::interruption_point();
 
-            //fixme: (GULDEN) (POW2) (2.0) - Implement this also for RPC mining.
+            //fixme: (2.0) (POW2) - Implement this also for RPC mining.
             // If PoW2 witnessing is active.
             // Phase 3 - We always mine on the last PoW block for which we have a witness.
             // This is always tip~1
@@ -1158,7 +1158,7 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
     {
         witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
     }
-    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (GULDEN) (2.1) We can remove this.
+    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (2.1) We can remove this.
     {
         std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
         witnessKeyID = CKeyID(uint160(hashWitnessBytes));
@@ -1176,14 +1176,14 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
     if (!key.IsCompressed())
         assert(0);
 
-    //fixme: (GULDEN) (PoW2) (2.0) - Anything else to serialise here? Add the block height maybe? probably overkill.
+    //fixme: (2.0) - Anything else to serialise here? Add the block height maybe? probably overkill.
     uint256 hash = pBlock->GetHashPoW2();
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
     //LogPrintf(">>>[WitFound] witness pubkey [%s]\n", key.GetPubKey().GetID().GetHex());
 
-    //fixme: (GULDEN) (2.0) (FINALRELEASE) - Remove this, it is here for testing purposes only.
+    //fixme: (2.0) (RELEASE) - Remove this, it is here for testing purposes only.
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
@@ -1251,7 +1251,7 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     }
     else
     {
-        //fixme: standard key hash?
+        //fixme: (2.0) standard key hash?
         coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
         coinbaseTx.vout[1].nValue = witnessSubsidy;
@@ -1287,12 +1287,12 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhasePare
         LOCK(pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness))
         {
-            //fixme: error handling
+            //fixme: (2.0) error handling
             assert(0);
         }
     }
 
-    //fixme: (GULDEN) (2.0) - Optionally compound here instead.
+    //fixme: (2.0) - Optionally compound here instead.
     bool compoundWitnessEarnings = false;
 
     // Output for subsidy and refresh witness address.
@@ -1301,8 +1301,8 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhasePare
     return coinbaseTx;
 }
 
-//fixme: (GULDEN) (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
-//fixme: (GULDEN) (2.0) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
+//fixme: (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
+//fixme: (2.1) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
 void static GuldenWitness()
@@ -1341,7 +1341,7 @@ void static GuldenWitness()
             }
             int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev, chainparams, chainActive);
 
-            //fixme: (GULDEN) (PoW2) (HIGH) Shorter sleep here?
+            //fixme: (2.0) Shorter sleep here?
             //Or ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
             MilliSleep(100);
 
@@ -1401,14 +1401,14 @@ void static GuldenWitness()
                         boost::this_thread::interruption_point();
                         CGetWitnessInfo witnessInfo;
 
-                        //fixme: (GULDEN) (2.0) Error handling
+                        //fixme: (2.0) Error handling
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                             continue;
 
                         boost::this_thread::interruption_point();
                         CAmount witnessSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
 
-                        //fixme: (GULDEN) (2.0) (POW2) (ISMINE_WITNESS)
+                        //fixme: (2.0) (POW2) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
                         {
                             CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
@@ -1447,11 +1447,11 @@ void static GuldenWitness()
 
                                     // Skip the coinbase as we obviously don't want this included again, it is already in the PoW part of the block.
                                     size_t nSkipCoinbase = 1;
-                                    //fixme: (GULDEN) (CBSU)? pre-allocate for vtx.size().
+                                    //fixme: (2.1) (CBSU)? pre-allocate for vtx.size().
                                     for (size_t i=nSkipCoinbase; i < pblocktemplate->block.vtx.size(); i++)
                                     {
                                         bool bSkip = false;
-                                        // fixme: Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
+                                        // fixme: (2.1) Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
                                         // Exclude any duplicates that somehow creep in.
                                         for(size_t j=0; j < nWitnessCoinbaseIndex; j++)
                                         {
@@ -1463,18 +1463,18 @@ void static GuldenWitness()
                                         }
                                         if (!bSkip)
                                         {
-                                            //fixme: (GULDEN) (CBSU)? emplace_back?
+                                            //fixme: (2.1) emplace_back for better performace?
                                             pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
-                                            //testme: (GULDEN) (2.0) (HIGH) test this is right.
+                                            //fixme: (2.0) (HIGH) do not include fees as part of witness subsidy if compounding.
                                             witnessSubsidy += (pblocktemplate->vTxFees[i]);
                                         }
                                     }
                                 }
 
 
-                                //fixme: (GULDEN) (2.0) (SEGSIG) - Implement new transaction types here?
+                                //fixme: (2.0) (SEGSIG) - Implement new transaction types here?
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                //fixme: (HIGH) (NEXT) PASS FEES SEPEREATELY CANT COMPOUND FEES
+                                //fixme: (2.0) (HIGH) do not include fees as part of witness subsidy if compounding.
                                 CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 

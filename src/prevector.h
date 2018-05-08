@@ -172,7 +172,7 @@ private:
             }
         } else {
             if (!is_direct()) {
-                /* FIXME: Because malloc/realloc here won't call new_handler if allocation fails, assert
+                /* FIXME: (BITCOIN) Because malloc/realloc here won't call new_handler if allocation fails, assert
                     success. These should instead use an allocator or new/delete so that handlers
                     are called as necessary, but performance would be slightly degraded by doing so. */
                 _union.indirect = static_cast<char*>(realloc(_union.indirect, ((size_t)sizeof(T)) * new_capacity));

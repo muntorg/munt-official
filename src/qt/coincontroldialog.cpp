@@ -426,7 +426,7 @@ void CoinControlDialog::updateLabelLocked()
     else ui->labelLocked->setVisible(false);
 }
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 

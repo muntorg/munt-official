@@ -306,7 +306,7 @@ CTxDestination CBitcoinAddress::Get() const
         return CNoDestination();
 }
 
-//fixme: (GULDEN) (2.0) Any instances where we might want to call this for POW2_WITNESS_ADDRESS? I think not but make sure.
+//fixme: (2.0) Any instances where we might want to call this for POW2_WITNESS_ADDRESS? I think not but make sure.
 bool CBitcoinAddress::GetKeyID(CKeyID& keyID) const
 {
     if (!IsValid() || vchVersion != Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))

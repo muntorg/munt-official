@@ -22,7 +22,7 @@
 
 #include <boost/foreach.hpp>
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 
@@ -65,7 +65,7 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 
 bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {
-    //fixme: (LOW) - reconsider dust policy.
+    //fixme: (Post-2.1) (LOW) - reconsider dust policy.
     //return (txout.nValue < GetDustThreshold(txout, dustRelayFeeIn));
     return false;
 }
@@ -119,7 +119,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         return false;
     }
 
-    // fixme: (GULDEN) (2.1) we can combine this with the rule above once we are locked into phase 5.
+    // fixme: (2.1) we can combine this with the rule above once we are locked into phase 5.
     // Refuse to relay new style transactions, or transactions pretending to be new style transactions before phase 4 starts.
     // Refuse to relay old style transactions once phase 4 is active.
     int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
@@ -262,7 +262,7 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
                 prevScript = CScript(stack.back().begin(), stack.back().end());
             }
 
-            //fixme: (GULDEN) (NEXT)
+            //fixme: (2.0)
             #if 0
             int witnessversion = 0;
             std::vector<unsigned char> witnessprogram;

@@ -154,7 +154,7 @@ void TestSendCoins()
     wallet->LoadWallet(loadState);
     {
         LOCK(wallet->cs_wallet);
-        //fixme: (GULDEN) (MERGE)
+        //fixme: (2.1) (MERGE)
         /*
         wallet.SetAddressBook(CBitcoinAddress(test.coinbaseKey.GetPubKey()).ToString(), "", "receive");
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());

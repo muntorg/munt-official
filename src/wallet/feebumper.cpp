@@ -72,7 +72,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
     return true;
 }
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 

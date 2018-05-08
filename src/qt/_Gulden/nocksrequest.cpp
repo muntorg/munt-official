@@ -54,7 +54,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
             originalAddress = m_recipient->address.toStdString();
         }
 
-        //fixme: (SEPA)
+        //fixme: (Post-2.1) (SEPA)
         QString httpExtraParams = "";
         /*
         if (forexExtraName != null && !forexExtraName.isEmpty())
@@ -124,7 +124,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
 {
     if ( reply->error() != QNetworkReply::NetworkError::NoError )
     {
-        //fixme: Better error code
+        //fixme: (Post-2.1) Better error code
         if (m_recipient)
             m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
         Q_EMIT requestProcessed();
@@ -136,7 +136,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
 
         if ( statusCode < 200 && statusCode > 202 )
         {
-            //fixme: Better error code
+            //fixme: (Post-2.1)  Better error code
             if (m_recipient)
             {
                 m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
@@ -165,7 +165,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             }
             else if (successValue == QJsonValue::Undefined)
             {
-                //fixme: Better error code
+                //fixme: (Post-2.1)  Better error code
                 if (m_recipient)
                 {
                     m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
@@ -187,7 +187,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
                     QString withdrawalAmount = successValue.toObject().value("withdrawalAmount").toString();
                     QString withdrawalAddress = successValue.toObject().value("withdrawalOriginal").toString();
 
-                    //fixme: Should check amount adds up as well, but can't because of fee... - Manually subtract fee and verify it all adds up?
+                    //fixme: (Post-2.1)  Should check amount adds up as well, but can't because of fee... - Manually subtract fee and verify it all adds up?
                     if (withdrawalAddress.toStdString() != originalAddress )
                     {
                         m_recipient->forexFailCode = "Withdrawal address modified, please contact a developer for assistance.";

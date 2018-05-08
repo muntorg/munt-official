@@ -453,7 +453,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
 
     LOCK(wallet->cs_wallet);
 
-    //fixme: GULDEN HIGH fShowChildAccountsSeperately
+    //fixme: (2.1) fShowChildAccountsSeperately
     if (wtx->credit > wtx->debit)
     {
         if ( wtx->fromAccountUUID != boost::uuids::nil_generator()())
@@ -536,7 +536,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
 QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
 {
     QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit , false, separators, 2);
-    //fixme: GULDEN (FUT) (1.6.0) We could maybe strip the trailing .00 here to clean display up a bit?
+    //fixme: (2.1) We could maybe strip the trailing .00 here to clean display up a bit?
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)
@@ -770,7 +770,6 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
                 details.append(QString::fromStdString(rec->address));
                 details.append(" ");
             }
-            //fixme: GULDEN (FUT)
             details.append(formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever));
             return details;
         }
@@ -778,7 +777,6 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return rec->status.countsForBalance;
     case FormattedAmountRole:
         // Used for copy/export, so don't include separators
-        //fixme: GULDEN (FUT)
         return formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever);
     case StatusRole:
         return rec->status.status;

@@ -377,7 +377,7 @@ void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, u
             }
             else
             {
-                //fixme:
+                //fixme: (2.0)
                 nX = nDays/7;
             }
             break;
@@ -391,7 +391,7 @@ void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, u
             }
             else
             {
-                //fixme:
+                //fixme: (2.0)
                 nX = nDays/30;
             }
             break;
@@ -414,7 +414,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     uint64_t nOriginWeight = 0;
     uint64_t nOriginLength = 0;
 
-    // fixme: Make this work for multiple 'origin' blocks.
+    // fixme: (2.1) Make this work for multiple 'origin' blocks.
     // Iterate the transaction history and extract all 'origin' block details.
     // Also extract details for every witness reward we have received.
     filter->setAccountFilter(model->getActiveAccount());
@@ -439,7 +439,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
                     int64_t nUnused1;
                     if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, nOriginNetworkWeight, chainActive))
                     {
-                        //fixme: Error handling
+                        //fixme: (2.0) Error handling
                         return;
                     }
                     pointMapGenerated[0] = 0;
@@ -456,7 +456,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
                     for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
                     {
-                        //fixme: Handle multiple in one tx. Check ismine. Handle none (regular transaction)
+                        //fixme: (2.0) Handle multiple in one tx. Check ismine. Handle none (regular transaction)
                         if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
                         {
                             break;
@@ -465,7 +465,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
                     nOriginLength = witnessDetails.lockUntilBlock - (witnessDetails.lockFromBlock > 0 ? witnessDetails.lockFromBlock : nOriginBlock);
                     nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
                 }
-                //fixme (HIGH): changes in witness weight... (multiple witnesses in single account etc.)
+                //fixme (2.0) (HIGH): changes in witness weight... (multiple witnesses in single account etc.)
             }
             else if (nType == TransactionRecord::GeneratedWitness)
             {
@@ -500,7 +500,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
-        //fixme: high
+        //fixme: (2.0) (HIGH)
         uint64_t nDays = 0;
         AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, scale);
     }
@@ -597,7 +597,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
             }
             else
             {
-                //fixme:
+                //fixme: (2.0) - Implement
             }
             break;
         case GraphScale::Weeks:
@@ -610,7 +610,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
             }
             else
             {
-                //fixme:
+                //fixme: (2.0) - Implement
             }
             break;
         case GraphScale::Months:
@@ -623,7 +623,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
             }
             else
             {
-                //fixme:
+                //fixme: (2.0) - Implement
             }
             break;
     }
@@ -673,7 +673,7 @@ void WitnessDialog::update()
                     CBlock block;
                     {
                         LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
-                        //fixme: Error handling
+                        //fixme: (2.0) Error handling
                         if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
                             return;
                         if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))

@@ -204,7 +204,7 @@ void ImportScript(CWallet* const pwallet, const CScript& script, const std::stri
 
     pwallet->MarkDirty();
 
-    //fixme: (GULDEN) (MERGE)
+    //fixme: (Post-2.1) (MERGE) (Watchonly)
     if (!pwallet->HaveWatchOnly(script) && !pwallet->AddWatchOnly(script, -1)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
     }
@@ -262,7 +262,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
 
     std::string strLabel = "";
-    //fixme: (FUT) (1.6.1)
+    //fixme: (Post-2.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     if (request.params.size() > 1)
@@ -304,7 +304,7 @@ UniValue importaddress(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 
@@ -432,7 +432,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
             + HelpExampleRpc("importpubkey", "\"mypubkey\", \"testing\", false")
         );
 
-    //fixme: (FUT) (1.6.1)
+    //fixme: (Post-2.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     std::string strLabel = "";
@@ -631,7 +631,6 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
             }
         }
     }
-    //fixme: (GULDEN) (MERGE)
     return CBitcoinSecret(vchSecret).ToString();
 }
 
@@ -889,7 +888,7 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
 
                     pwallet->mapKeyMetadata[vchAddress].nCreateTime = timestamp;
 
-                    //fixme: (GULDEN) (MERGE)
+                    //fixme: (2.0) (MERGE)
                     /*
                     if (!pwallet->AddKeyPubKey(key, pubkey, *forAccount, KEYCHAIN_EXTERNAL)) {
                             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
@@ -1018,7 +1017,7 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
 
                 pwallet->mapKeyMetadata[vchAddress].nCreateTime = timestamp;
 
-                //fixme: (GULDEN) (MERGE)
+                //fixme: (2.0) (MERGE)
                 /*if (!pwallet->AddKeyPubKey(key, pubKey, *forAccount, KEYCHAIN_EXTERNAL)) {
                     throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
                 }*/
@@ -1144,7 +1143,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     UniValue response(UniValue::VARR);
 
     BOOST_FOREACH (const UniValue& data, requests.getValues()) {
-        //fixme: (GULDEN) (MERGE)
+        //fixme: (2.0) (MERGE)
         const UniValue result;/* = processImport(pwallet, data, timestamp);
         response.push_back(result);*/
 
@@ -1183,7 +1182,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                 // range, or if the import result already has an error set, let
                 // the result stand unmodified. Otherwise replace the result
                 // with an error message.
-		//fixme:(MERGE)
+		//fixme: (2.0) (MERGE)
 		/*
                 if (GetImportTimestamp(request, now) - TIMESTAMP_WINDOW > scanFailed->GetBlockTimeMax() || results.at(i).exists("error")) {
                     response.push_back(results.at(i));

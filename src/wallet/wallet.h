@@ -242,7 +242,7 @@ public:
 
     CMerkleTx()
     {
-        //fixme: (GULDEN) (2.0) Check this is okay.
+        //fixme: (2.0) Check this is okay.
         SetTx(MakeTransactionRef(CTransaction::MAX_STANDARD_VERSION));
         Init();
     }

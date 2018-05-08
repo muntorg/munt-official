@@ -104,7 +104,7 @@ public:
             paymentRequest.SerializeToString(&sPaymentRequest);
         std::string sAuthenticatedMerchant = authenticatedMerchant.toStdString();
 
-        //fixme: (GULDEN) (POW2) (NEXT) - Is it necessary to serialise the pow2 stuff here?
+        //fixme: (2.0) (HIGH) - Is it necessary to serialise the pow2 stuff here?
         READWRITE(this->nVersion);
         READWRITE(sAddress);
         READWRITE(sLabel);
@@ -262,7 +262,6 @@ public:
 
     bool getDefaultWalletRbf() const;
 
-    //fixme: GULDEN (FUT) - Move this into a gulden specific subclass to keep diffs to a minimum
     void setActiveAccount( CAccount* account );
     CAccount* getActiveAccount();
     QString getAccountLabel(const boost::uuids::uuid& uuid);

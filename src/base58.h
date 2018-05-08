@@ -153,7 +153,7 @@ public:
     void SetKey(const KeyType& vchSecret) { key = vchSecret; }
     KeyType GetKey()
     {
-        //fixme: Strip creationTime and payAccount
+        //fixme: (Bitcoin) Strip creationTime and payAccount
         KeyType retExt;
 
         SecureString secretKey = SecureString(secret.begin(), secret.begin() + secret.find('-'));

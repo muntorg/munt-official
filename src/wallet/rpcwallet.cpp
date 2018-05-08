@@ -362,7 +362,7 @@ UniValue getaccount(const JSONRPCRequest& request)
 
     UniValue jsonGroupings(UniValue::VARR);
 
-    //fixme: (GULDEN) (WATCHONLY)
+    //fixme: (Post-2.1) (WATCHONLY)
     for(const auto& accountIter : pwallet->mapAccounts)
     {
         if (::IsMine(*accountIter.second, address.Get()))
@@ -642,7 +642,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             UniValue addressInfo(UniValue::VARR);
             addressInfo.push_back(CBitcoinAddress(address).ToString());
             addressInfo.push_back(ValueFromAmount(balances[address]));
-            //fixme: CBSU - Rather do this inside GetAddressGroupings
+            //fixme: (Post-2.1) CBSU - Rather do this inside GetAddressGroupings
             for(const auto& accountIter : pwallet->mapAccounts)
             {
                 if (IsMine(*accountIter.second, address))
@@ -766,7 +766,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
         if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
             continue;
 
-         //fixme: (GULDEN) (2.0)
+         //fixme: (2.0)
         /*
         BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
             if (txout.output.scriptPubKey == scriptPubKey)
@@ -1284,7 +1284,7 @@ public:
 
     bool operator()(const CNoDestination &dest) const { return false; }
 
-    //fixme: (GULDEN) (PoW2) (2.0) - Is this needed
+    //fixme: (2.0) (PoW) - Is this needed
     bool operator()(const CPoW2WitnessDestination &dest) const { return false; }
 
     bool operator()(const CKeyID &keyID) {
@@ -1292,7 +1292,7 @@ public:
         if (pwallet) {
             CScript basescript = GetScriptForDestination(keyID);
             isminetype typ;
-            //fixme: (GULDEN) (2.0) (HIGH)
+            //fixme: (2.0) (HIGH)
             //typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
                 return false;
@@ -1314,7 +1314,7 @@ public:
                 return true;
             }
             isminetype typ;
-            //fixme: (GULDEN) (2.0) (HIGH)
+            //fixme: (2.0) (HIGH)
             //typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
             if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
                 return false;
@@ -1625,7 +1625,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
 
     // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
     bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
-    //fixme: Get checkpoints working for testnet.
+    //fixme:(2.1) Remove
     if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !IsArgSet("-testnet") ))
         return;
 
@@ -1638,7 +1638,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
             {
                 doForAccounts.push_back(accountIter.second);
             }
-            //fixme: (FUT) - Handle shadow children
+            //fixme: (Post-2.1) - Handle shadow children
         }
     }
     else
@@ -2243,7 +2243,7 @@ UniValue keypoolrefill(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
     pwallet->TopUpKeyPool(kpSize);
 
-    //fixme: (GULDEN) (FUT) (1.6.1)
+    //fixme: (Post-2.1)
     /*
     if (pwallet->GetKeyPoolSize() < kpSize) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error refreshing keypool.");
@@ -2258,7 +2258,7 @@ static void LockWallet(CWallet* pWallet)
 {
     //NB!! It is highly important that this runs in a thread
     //RPCRunLater calls this in the -main- http thread which blocks all RPC and can cause to RPC freezing for long periods of ti me in certain instances.
-    //fixme (FUTURE) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
+    //fixme (Post-2.1) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
     std::thread(
         [=] 
         {
@@ -2697,7 +2697,7 @@ UniValue getwalletinfo(const JSONRPCRequest& request)
     obj.push_back(Pair("immature_balance",    ValueFromAmount(pwallet->GetImmatureBalance())));
     obj.push_back(Pair("txcount",       (int)pwallet->mapWallet.size()));
     obj.push_back(Pair("keypoololdest", pwallet->GetOldestKeyPoolTime()));
-    //fixme: (FUT) (1.6.1)
+    //fixme: (Post-2.1)
     /*
     obj.push_back(Pair("keypoolsize", (int64_t)kpExternalSize));
     CKeyID masterKeyID = pwallet->GetHDChain().masterKeyID;
@@ -2942,7 +2942,7 @@ UniValue listunspent(const JSONRPCRequest& request)
         {
             doForAccounts.push_back(accountIter.second);
         }
-        //fixme: (FUT) - Handle shadow children
+        //fixme: (Post-2.1) - Handle shadow children
     }
 
     return listunspentforaccounts(pWallet, doForAccounts, pMinDepth, pMaxDepth, pFilterAddresses, pIncludeUnsafe, pOptions);

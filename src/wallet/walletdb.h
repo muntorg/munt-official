@@ -62,56 +62,6 @@ enum WalletLoadState
     EXISTING_WALLET
 };
 
-/** Error statuses for the wallet database */
-//fixme: (GULDEN) check if this is still necesary or if we can fix this
-/* Gulden - we rather have these in dberrors.h due to a linking issue
-enum DBErrors
-{
-    DB_LOAD_OK,
-    DB_CORRUPT,
-    DB_NONCRITICAL_ERROR,
-    DB_TOO_NEW,
-    DB_LOAD_FAIL,
-    DB_NEED_REWRITE
-};
-*/
-
-/* simple HD chain data model */
-/* GULDEN doesn't use HD chain, as we have our own account system
-class CHDChain
-{
-public:
-    uint32_t nExternalChainCounter;
-    uint32_t nInternalChainCounter;
-    CKeyID masterKeyID; //!< master key hash160
-
-    static const int VERSION_HD_BASE        = 1;
-    static const int VERSION_HD_CHAIN_SPLIT = 2;
-    static const int CURRENT_VERSION        = VERSION_HD_CHAIN_SPLIT;
-    int nVersion;
-
-    CHDChain() { SetNull(); }
-    ADD_SERIALIZE_METHODS;
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
-    {
-        READWRITE(this->nVersion);
-        READWRITE(nExternalChainCounter);
-        READWRITE(masterKeyID);
-        if (this->nVersion >= VERSION_HD_CHAIN_SPLIT)
-            READWRITE(nInternalChainCounter);
-    }
-
-    void SetNull()
-    {
-        nVersion = CHDChain::CURRENT_VERSION;
-        nExternalChainCounter = 0;
-        nInternalChainCounter = 0;
-        masterKeyID.SetNull();
-    }
-};
-*/
-
 class CKeyMetadata
 {
 public:
@@ -122,9 +72,6 @@ public:
     int64_t nCreateTime; // 0 means unknown
     std::string hdKeypath; //optional HD/bip32 keypath
     std::string hdAccountUUID; //uuid of the account used to derive this key
-/* GULDEN - unused
-    CKeyID hdMasterKeyID; //id of the HD masterkey used to derive this key
-*/
 
     CKeyMetadata()
     {
@@ -147,9 +94,6 @@ public:
         {
             READWRITE(hdKeypath);
             READWRITE(hdAccountUUID);
-/* GULDEN - unused
-            READWRITE(hdMasterKeyID);
-*/
         }
 
     }
@@ -160,9 +104,6 @@ public:
         nCreateTime = 0;
         hdKeypath.clear();
         hdAccountUUID = "";
-/* GULDEN - unused
-        hdMasterKeyID.SetNull();
-*/
     }
 };
 
@@ -227,9 +168,6 @@ public:
     bool ReadBestBlock(CBlockLocator& locator);
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
-/* GULDEN - no default key (accounts)
-    bool WriteDefaultKey(const CPubKey& vchPubKey);
-*/
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
     bool ErasePool(CWallet* pwallet, int64_t nPool);
@@ -241,10 +179,6 @@ public:
     /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
-/*
-    bool ReadAccount(const std::string& strAccount, CAccount& account);
-    bool WriteAccount(const std::string& strAccount, const CAccount& account);
-*/
 
     //! write the account and account label - account label stored seperately to allow for easy changing.
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);

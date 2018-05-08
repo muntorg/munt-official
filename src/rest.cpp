@@ -490,7 +490,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                 CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
                 oss << strRequestMutable;
                 oss >> fCheckMemPool;
-                //fixme: (GULDEN) (2.0) HIGH
+                //fixme: (2.0) HIGH
                 /*
                 oss >> COMPACTSIZEVECTOR(vOutPoints);
                 */
@@ -586,7 +586,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
             utxo.push_back(Pair("height", (int32_t)coin.nHeight));
             utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
 
-            //fixme: (GULDEN) (2.0) - Implement something here for other output types.
+            //fixme: (2.0) - Implement something here for other output types.
             if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 // include the script in a json output

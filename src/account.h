@@ -88,7 +88,7 @@ public:
     CHDSeed(CExtPubKey& pubkey, SeedType type);
     virtual ~CHDSeed()
     {
-        //fixme: Check if any cleanup needed here?
+        //fixme: (2.1) Check if any cleanup needed here?
     }
 
     void Init();
@@ -104,7 +104,7 @@ public:
     {
         int nVersion = 2;
         READWRITE(nVersion);
-        //fixme: (GULDEN) (FUTURE) - Remove the below if need be in future.
+        //fixme: (2.1) - Remove the below in future if we need to upgrade versions; but delay as long as possible to purge all ald wallets that may have had a corrupted version.
         if (nVersion > 3)
             nVersion = 1;
 
@@ -228,7 +228,7 @@ public:
     CAccount();
     void SetNull();
 
-    //fixme: (GULDEN) (CLEANUP)
+    //fixme: (2.1) (CLEANUP)
     virtual void GetKey(CExtKey& childKey, int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};

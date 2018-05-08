@@ -125,7 +125,7 @@ struct PrecomputedTransactionData
     PrecomputedTransactionData(const CTransaction& tx);
 };
 
-//fixme: GULDEN (2.0) SEGSIG
+//fixme: (2.0) SEGSIG
 enum SigVersion
 {
     SIGVERSION_BASE = 0,

@@ -283,7 +283,7 @@ void GuldenSendCoinsEntry::clear()
     ui->receivingAddress->setText("");
     ui->payAmount->clear();
 
-    //fixme: Gulden - implement the rest of this.
+    //fixme: (2.1) - implement the rest of this.
     // clear UI elements for normal payment
     /*ui->payTo->clear();
     ui->addAsLabel->clear();
@@ -309,7 +309,7 @@ void GuldenSendCoinsEntry::deleteClicked()
     Q_EMIT removeEntry(this);
 }
 
-//fixme: (HIGH) - enforce minimum weight for pow2.
+//fixme: (2.0) - enforce minimum weight for pow2.
 bool GuldenSendCoinsEntry::validate()
 {
     if (!model)
@@ -434,8 +434,8 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     }
 
-    //fixme: GULDEN - give user a choice here.
-    //fixme: Check if 'spend unconfirmed' is checked or not.
+    //fixme: (Post-2.1) - give user a choice here.
+    //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
     if (recipient.amount >= ( pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
     {
         if (showWarningDialogs)
@@ -450,18 +450,18 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     }
 
 
-    //fixme: GULDEN - Handle 'messages'
+    //fixme: (Post-2.1) - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();
 
     if (isPoW2WitnessCreation())
     {
-        //fixme: HIGH this leaks everytime we type.
-        //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
+        //fixme: (2.0) HIGHHIGHHIGH this leaks everytime we type.
+        //fixme: (2.0) HIGHHIGHHIGH this leaks keys if the tx fails - so a bit gross, but will do for now
         CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
-            //fixme: (GULDEN) Better error handling
+            //fixme: (2.0) Better error handling
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -471,7 +471,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
         {
-            //fixme: (GULDEN) Better error handling
+            //fixme: (2.0) Better error handling
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -519,12 +519,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
                         LOCK(pactiveWallet->cs_wallet);
 
-                        //fixme: this leaks keys if the tx fails - so a bit gross, but will do for now
+                        //fixme: (2.0) this leaks keys if the tx fails - so a bit gross, but will do for now
                         CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {
-                            //fixme: (GULDEN) Better error handling
+                            //fixme: (2.0) Better error handling
                             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
                             recipient.address = QString("error");
                             return recipient;
@@ -553,7 +553,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
 QWidget *GuldenSendCoinsEntry::setupTabChain(QWidget *prev)
 {
-    //fixme: Implement.
+    //fixme: (2.1) Implement.
 
     return ui->payAmount;
 }
@@ -771,7 +771,7 @@ void GuldenSendCoinsEntry::updateDisplayUnit()
 void GuldenSendCoinsEntry::searchChangedAddressBook(const QString& searchString)
 {
     proxyModelRecipients->setFilterFixedString(searchString);
-    //fixme: (GULDEN) - Only if currently selected item not still visible
+    //fixme: (2.1) - Only if currently selected item not still visible
     ui->addressBookTabTable->selectionModel()->clear();
     ui->addressBookTabTable->selectionModel()->setCurrentIndex ( proxyModelRecipients->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
@@ -779,7 +779,7 @@ void GuldenSendCoinsEntry::searchChangedAddressBook(const QString& searchString)
 void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 {
     proxyModelAddresses->setFilterFixedString(searchString);
-    //fixme: (GULDEN) - Only if currently selected item not still visible
+    //fixme: (2.1) - Only if currently selected item not still visible
     ui->myAccountsTabTable->selectionModel()->clear();
     ui->myAccountsTabTable->selectionModel()->setCurrentIndex ( proxyModelAddresses->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
@@ -787,7 +787,7 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 #define WITNESS_SUBSIDY 20
 void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
-    //fixme: (GULDEN) (2.0) (POW2) (CLEANUP)
+    //fixme: (2.0) (POW2) (CLEANUP)
     CAmount nAmount = ui->payAmount->valueForCurrency();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
@@ -797,7 +797,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
         return;
     }
 
-    //fixme: (GULDEN) (2.0) (HIGH) - warn if weight exceeds 1%.
+    //fixme: (2.0) (HIGH) - warn if weight exceeds 1%.
     int nDays = newValue;
     float fMonths = newValue/30.0;
     float fYears = newValue/365.0;
@@ -806,7 +806,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
-    //fixme:
+    //fixme: (2.0) (HIGH)
     int64_t nNetworkWeight = 239990000;
 
 

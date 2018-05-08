@@ -356,7 +356,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
 
-    //fixme: (GULDEN) (MERGE) (LOOKATTHIS)
+    //fixme: (2.0) (MERGE) (LOOKATTHIS)
     // Always use a CCoinControl instance, use the CoinControlDialog instance if CoinControl has been enabled
     //CCoinControl ctrl;
     //if (model->getOptionsModel()->getCoinControlFeatures())
@@ -384,7 +384,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     bool didShowError=false;
     for (auto& account : accountsToTry)
     {
-        //fixme: Check if 'spend unconfirmed' is checked or not.
+        //fixme: (2.1) Check if 'spend unconfirmed' is checked or not.
         if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) >= currentTransaction.getTotalTransactionAmount())
         {
             if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
@@ -418,7 +418,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         prepareStatus.status =  WalletModel::AmountExceedsBalance;
     }
 
-    //fixme: (GULDEN) (MERGE)
+    //fixme: (2.0) (MERGE)
     //ctrl.signalRbf = ui->optInRBF->isChecked();
 
 
@@ -576,7 +576,7 @@ void SendCoinsDialog::accept()
 
 void SendCoinsDialog::deleteAddressBookEntry()
 {
-    //fixme: (GULDEN) Multiple entries.
+    //fixme: (Post-2.1) Multiple entries.
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());
@@ -590,7 +590,7 @@ void SendCoinsDialog::deleteAddressBookEntry()
 
 void SendCoinsDialog::editAddressBookEntry()
 {
-    //fixme: (GULDEN) Multiple entries.
+    //fixme: (Post-2.1) Multiple entries.
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         GuldenSendCoinsEntry *entry = qobject_cast<GuldenSendCoinsEntry*>(ui->entries->itemAt(i)->widget());

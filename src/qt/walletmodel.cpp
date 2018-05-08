@@ -80,7 +80,7 @@ WalletModel::~WalletModel()
 
 CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinControl) const
 {
-    //fixme: GULDEN 1.6.1 - coin control
+    //fixme: (Post-2.1) - coin control
     /*if (coinControl)
     {
         return wallet->GetAvailableBalance(coinControl);
@@ -252,7 +252,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 const payments::Output& out = details.outputs(i);
                 if (out.amount() <= 0) continue;
                 subtotal += out.amount();
-                //fixme: (GULDEN) (2.1) (Handle other transaction types here?) (SEGSIG)
+                //fixme: (2.0) (Handle other transaction types here?) (SEGSIG)
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr+out.script().size());
                 CAmount nAmount = out.amount();
@@ -630,7 +630,7 @@ static void NotifyWatchonlyChanged(WalletModel *walletmodel, bool fHaveWatchonly
 void WalletModel::subscribeToCoreSignals()
 {
     // Connect signals to wallet
-    //fixme: (GULDEN) (FUT) - FInd a better way to do this instead of connecting to a specific account
+    //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
     if (wallet->mapAccounts.size() > 0)
     {
         wallet->activeAccount->externalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
@@ -650,7 +650,7 @@ void WalletModel::subscribeToCoreSignals()
 void WalletModel::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from wallet
-    //fixme: (GULDEN) (FUT) - FInd a better way to do this instead of connecting to a specific account
+    //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
     if (wallet->activeAccount)
     {
         wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
@@ -759,11 +759,11 @@ CAccount* WalletModel::getActiveAccount()
     return wallet->getActiveAccount();
 }
 
-//fixme: (MERGE)
+
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(CAccount* forAccount, std::map<QString, std::vector<COutput> >& mapCoins) const
 {
-    //fixme: (MERGE) (ACCOUNTS)
+    //fixme: (2.0) (ACCOUNTS)
     for (auto& group : wallet->ListCoins(forAccount)) {
         auto& resultGroup = mapCoins[QString::fromStdString(CBitcoinAddress(group.first).ToString())];
         for (auto& coin : group.second) {

@@ -154,7 +154,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
     buyView->settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, true);
     buyView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
-    //fixme: (FUT) (1.6.1)- figure out why this is necessary on osx.
+    //fixme: (2.1)- figure out why this is necessary on osx.
     #ifdef MAC_OSX
     QSslConfiguration sslCfg = QSslConfiguration::defaultConfiguration();
     QList<QSslCertificate> ca_list = sslCfg.caCertificates();
@@ -370,12 +370,12 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
 
 void ReceiveCoinsDialog::generateRequest()
 {
-    //fixme: (HD) kep gaps
+    //fixme: (2.1) (HD) kep gaps
     CReserveKey reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
     {
-        //fixme: (GULDEN) Better error handling.
+        //fixme: (2.1) Better error handling.
         return;
     }
     reservekey.KeepKey();
@@ -500,7 +500,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
 
         if (!buyReceiveAddress->GetReservedKey(pubKey))
         {
-            //fixme: better error handling
+            //fixme: (2.1) better error handling
             guldenAddress = "error";
         }
         else
@@ -509,7 +509,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
             guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
         }
 
-        //fixme: (FUT) (1.6.1) fill proper email address etc. here
+        //fixme: (2.1) fill proper email address etc. here
         QString emailAddress = QString("");
         QString paymentMethod = QString("");
         QString paymentDetails = QString("");

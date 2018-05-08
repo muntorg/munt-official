@@ -872,7 +872,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
     destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     destinationPoW2Witness.failCount = 0;
     {
-        //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+        //fixme: (2.0) this leaks keys if the tx later fails - so a bit gross, but will do for now.
         //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
         CReserveKey keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
@@ -883,7 +883,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
         destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
     }
     {
-        //fixme: this leaks keys if the tx later fails - so a bit gross, but will do for now.
+        //fixme: (2.0) this leaks keys if the tx later fails - so a bit gross, but will do for now.
         //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
         CReserveKey keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
@@ -1030,7 +1030,7 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
     if (!account)
         throw std::runtime_error("Unable to create account.");
 
-    //fixme: Use a timestamp here
+    //fixme: (2.1) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
@@ -1102,7 +1102,7 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
-//fixme: Improve help for this.
+//fixme: (2.1) Improve help for this.
 UniValue getaccountbalances(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1361,7 +1361,7 @@ UniValue importseed(const JSONRPCRequest& request)
         newSeed = pwallet->ImportHDSeed(mnemonic, seedType);
     }
 
-    //fixme: Use a timestamp here
+    //fixme: (2.1) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
@@ -1426,7 +1426,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
-        //fixme:
+        //fixme: (2.0)
         rec.push_back(Pair("type", "HD"));
 
         if (((CAccountHD*)accountPair.second)->IsMobi())

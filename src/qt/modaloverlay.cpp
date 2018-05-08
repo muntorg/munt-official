@@ -148,8 +148,8 @@ void ModalOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
     if (count > bestHeaderHeight) {
         bestHeaderHeight = count;
         bestHeaderDate = blockDate;
-        //We use a bit of hackery to not have the progress sit on 0% whens yncing headers.
-        //fixme: (GULDEN) (FUT) (MED) Improve this behaviour
+        //We use a bit of hackery to not have the progress sit on 0% whens syncing headers.
+        //fixme: (2.1)
         if (ui->percentageProgress->text() == "0.00%")
         {
             ui->percentageProgress->setText(QString::number((count/50000)/100, 'f', 2)+"%");

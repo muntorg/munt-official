@@ -103,7 +103,7 @@ public Q_SLOTS:
     void setNetworkActive(bool networkActive);
     /** Set number of blocks and last block date shown in the UI */
     void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
-    //fixme: (POW2) (2.1) erase
+    //fixme: (2.1) erase this, no longer needed post 2.1.
     void updatePoW2PhaseState();
     /** Set size (number of transactions and memory usage) of the mempool in the UI */
     void setMempoolSize(long numberOfTxs, size_t dynUsage);

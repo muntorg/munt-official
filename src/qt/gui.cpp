@@ -111,7 +111,7 @@ static void UpdateWitnessAccountStates()
 
             CGetWitnessInfo witnessInfo;
             CBlock block;
-            //fixme: Error handling.
+            //fixme: (2.0) Error handling.
             if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
                 return;
             if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
@@ -680,7 +680,7 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    //fixme: (GULDEN) (2.1) This can be removed
+    //fixme: (2.0) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
     clientModel->updatePoW2Display();
     rpcConsole->updatePoW2PhaseState();
@@ -1214,7 +1214,7 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
     if (!account.isEmpty())
         accountStr = " [" + account + "]";
 
-    //fixme: (GULDEN) - prevent spurious blank messages from showing - track down why these happen though.
+    //fixme: (Post-2.1) - prevent spurious blank messages from showing - track down why these happen though.
     if (amountSent == CAmount(0) && amountReceived == CAmount(0) && type.isEmpty())
     {
         return;

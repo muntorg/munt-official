@@ -55,7 +55,7 @@ WelcomeDialog::WelcomeDialog(const PlatformStyle* _platformStyle, QWidget* paren
     uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
     uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
 
-    //fixme: (Gulden) Remove from future build
+    //fixme: (2.1) Remove from future build - place in unit tests instead; we have had no reports of this assert so it seems to be pretty solid.
     if (!testMnemonics())
     {
         assert(0);

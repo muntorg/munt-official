@@ -9,7 +9,7 @@
 
 #include <vector>
 
-// FIXME: Dedup with SetupDummyInputs in test/transaction_tests.cpp.
+// FIXME: (Bitcoin) Dedup with SetupDummyInputs in test/transaction_tests.cpp.
 //
 // Helper: create two dummy transactions, each with
 // two outputs.  The first has 11 and 50 CENT outputs

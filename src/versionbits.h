@@ -82,7 +82,7 @@ struct VersionBitsCache
     VersionBitsCache& caches;
     ThresholdConditionCache& operator [](int idx)
     {
-        //fixme: (GULDEN) (params should be passed in)
+        //fixme: (2.0) (params should be passed in)
         switch (Params().GetConsensus().vDeployments[idx].type)
         {
             case Consensus::DEPLOYMENT_POW:

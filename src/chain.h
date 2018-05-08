@@ -317,7 +317,7 @@ public:
     }
 
     //Gulden - phashBlock contains 'legacy' hash for PoW blocks and PoW2 hash for witness blocks.
-    //fixme: (GULDEN) (2.1) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
+    //fixme: (2.1) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
     uint256 GetBlockHashLegacy() const
     {
         if (nVersionPoW2Witness == 0)
@@ -354,7 +354,7 @@ public:
         if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
 
-        //fixme: (GULDEN) (2.0) - Check this works right.
+        //fixme: (2.0) - Check this works right.
         if (this->nTimePoW2Witness != 0)
         {
             nMedianTimeSpan *= 2;

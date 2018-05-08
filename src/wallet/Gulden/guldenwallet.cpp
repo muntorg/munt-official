@@ -16,7 +16,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {
-        //fixme: (GULDEN) (FUT) (1.6.1) (Support other seed types here)
+        //fixme: (Post-2.1) (Support other seed types here)
         if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
             continue;
 
@@ -107,7 +107,7 @@ void ThreadShadowPoolManager()
 
                     // If the user cancels then we don't prompt him for this again in this program run.
                     // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
-                    // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    // fixme: (Post-2.1) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
                     std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
@@ -133,7 +133,7 @@ void ThreadShadowPoolManager()
             else if (numAllocated >= 0 || depth < targetPoolDepth)
             {
                 // Otherwise we sleep for increasingly longer depending on how deep into the allocation we are, the deeper we are the less urgent it becomes to allocate more. 
-                //fixme: Look some more into these times, they are a bit arbitrary.
+                //fixme: (2.1) Look some more into these times, they are a bit arbitrary.
                 // If the user has set an especially large depth then we want to try again almost immediately and not have a long sleep.
                 if (targetPoolDepth > 40)
                     milliSleep = 1;
@@ -156,7 +156,7 @@ void ThreadShadowPoolManager()
                     promptOnceForAddressGenerationUnlock = false;
                     // If the user cancels then we don't prompt him for this again in this program run.
                     // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
-                    // fixme: (FUTURE) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    // fixme: (Post-2.1) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
                     std::function<void (void)> successCallback = [&](){promptOnceForAddressGenerationUnlock = true;};
@@ -198,7 +198,7 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
-        //fixme: Use new isminecache caching
+        //fixme: (2.0) Use new isminecache caching
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
             isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
@@ -219,7 +219,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     LOCK(wallet.cs_wallet);
 
     isminetype ret = isminetype::ISMINE_NO;
-    //fixme: Use new isminecache caching
+    //fixme: (2.0) Use new isminecache caching
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -232,7 +232,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     return ret;
 }
 
-//fixme: (HIGH) invalidate ismine cache when doing actions like importkey (anything that rescans?)
+//fixme: (2.0) (High) invalidate ismine cache when doing actions like importkey (anything that rescans?)
 isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
@@ -253,7 +253,7 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
             isminetype temp = IsMine(*accountItem.second, out);
             if (temp > ret)
                 ret = temp;
-            //fixme: keep trimmed by MRU
+            //fixme: (2.0) keep trimmed by MRU
             accountItem.second->isminecache[outHash] = ret;
         }
         // No need to keep going through the remaining accounts at this point.
@@ -280,7 +280,7 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
             isminetype temp = IsMine(*forAccount, txout);
             if (temp > ret)
                 ret = temp;
-            //fixme: keep trimmed by MRU
+            //fixme: (2.0) keep trimmed by MRU
             forAccount->isminecache[outHash] = ret;
         }
         // No need to keep going through the remaining outputs at this point.
@@ -329,13 +329,13 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
                 // 1) User empties account. 2) User deletes account 3) At a later point MarkKeyUsed is called subsequent times (new blocks) 4) The account user just deleted is now recovered.
 
-                //fixme: (GULDEN) (FUT) (1.6.1) This is still not 100% right, if the user does the following there can still be issues:
+                //fixme: (Post-2.1) This is still not 100% right, if the user does the following there can still be issues:
                 //1) Send funds from account
                 //2) Immediately close wallet
                 //3) Reopen wallet, as the new blocks are processed this code will be called and the just deleted account will be restored.
                 //We will need a better way to detect this...
 
-                //fixme: (GULDEN) (FUT) (1.6.1) 
+                //fixme: (Post-2.1) 
                 //Another edge bug here
                 //1) User sends/receives from address
                 //2) User deleted account
@@ -359,7 +359,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         }
                         addAccount(accountItem.second, name);
 
-                        //fixme: Shadow accounts during rescan...
+                        //fixme: (Post-2.1) Shadow accounts during rescan...
                     }
                 }
             }
@@ -480,7 +480,7 @@ void CGuldenWallet::setActiveSeed(CHDSeed* newActiveSeed)
         CWalletDB walletdb(*dbw);
         walletdb.WritePrimarySeed(*activeSeed);
 
-        //fixme: (FUT) (1.6.1)
+        //fixme: (Post-2.1)
         //NotifyActiveSeedChanged(this, newActiveAccount);
     }
 }
@@ -519,12 +519,12 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool purge)
         throw std::runtime_error("Deleting seed failed");
     }
 
-    //fixme: purge accounts completely if empty?
+    //fixme: (Post-2.1) purge accounts completely if empty?
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {
-            //fixme: check balance
+            //fixme: (Post-2.1) check balance
             deleteAccount(accountPair.second);
         }
     }
@@ -706,7 +706,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
     addAccount(newAccount, strAccount, bMakeActive);
 
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
-    if( activeAccount ) //fixme: (GULDEN) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
+    if( activeAccount ) //fixme: (2.1) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
         static_cast<CWallet*>(this)->TopUpKeyPool(1, 0, activeAccount);//We only assign the bare minimum addresses here - and let the background thread do the rest
 
     return newAccount;

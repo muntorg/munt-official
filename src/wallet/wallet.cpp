@@ -50,7 +50,7 @@
 #include <Gulden/mnemonic.h>
 #include <script/ismine.h>
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 
@@ -187,7 +187,7 @@ bool CWallet::AddCScript(const CScript& redeemScript)
 {
     LOCK(cs_wallet);
 
-    //fixme: (GULDEN) (FUT) (WATCHONLY)
+    //fixme: (Post-2.1) (WATCHONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -218,7 +218,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
         return true;
     }
 
-    //fixme: (GULDEN) (FUT) (WATCHONLY)
+    //fixme: (Post-2.1) (WATCHONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -236,7 +236,7 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
-        //fixme: (GULDEN) (FUT) (WATCHONLY) - nCreateTime should go here as well?
+        //fixme: (Post-2.1) (WATCHONLY) - nCreateTime should go here as well?
         if (accountPair.second->AddWatchOnly(dest))
             ret = true;
     }
@@ -253,7 +253,7 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
 bool CWallet::RemoveWatchOnly(const CScript &dest)
 {
     AssertLockHeld(cs_wallet);
-    //fixme: (GULDEN) (FUT) (WATCHONLY)
+    //fixme: (Post-2.1) (WATCHONLY)
     bool ret = true;
     for (auto accountPair : mapAccounts)
     {
@@ -277,7 +277,7 @@ bool CWallet::LoadWatchOnly(const CScript &dest)
 {
     AssertLockHeld(cs_wallet);
 
-    //fixme: (GULDEN) (FUT) (WATCHONLY)
+    //fixme: (Post-2.1) (WATCHONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -494,7 +494,7 @@ bool CWallet::Verify()
         }
     }
 
-    //fixme: (GULDEN) (MERGE)
+    //fixme: (2.0) (MERGE)
     // Check file permissions.
     /*{
         std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
@@ -716,8 +716,8 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         }
         Unlock(strWalletPassphrase);
 
-        //fixme: (GULDEN) (FUT) (HD) (ACCOUNTS)
-        //fixme: Gulden HD - What to do here? We can't really throw the entire seed away...
+        //fixme: (Post-2.1) (HD) (ACCOUNTS)
+        //fixme: (Post-2.1) Gulden HD - What to do here? We can't really throw the entire seed away...
         /*
         // if we are using HD, replace the HD master key (seed) with a new one
         if (IsHDEnabled()) {
@@ -835,7 +835,7 @@ int64_t CWallet::IncOrderPosNext(CWalletDB *pwalletdb)
 
 bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment)
 {
-    //fixme: refactor.
+    //fixme: (Post-2.1) refactor.
     //This should never be called.
     assert(0);
     return true;
@@ -843,7 +843,7 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
 
 bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew)
 {
-    //fixme: refactor.
+    //fixme: (Post-2.1) refactor.
     //This should never be called.
     assert(0);
     return true;
@@ -1068,7 +1068,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 wtx.SetMerkleBranch(pIndex, posInBlock);
 
             RemoveAddressFromKeypoolIfIsMine(tx, pIndex ? pIndex->nTime : 0);
-            //fixme: Is this even needed? Surely only checking the outputs is fine
+            //fixme: (2.1) Is this even needed? Surely only checking the outputs is fine
             for(const auto& txin : wtx.tx->vin)
             {
                 RemoveAddressFromKeypoolIfIsMine(txin, pIndex ? pIndex->nTime : 0);
@@ -1078,7 +1078,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             bool ret = AddToWallet(wtx, false);
             for(const auto& txin : tx.vin)
             {
-                //checkme: It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
+                //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
                 //Is there maybe a better way to do this?
                 bool fExistedIncoming = mapWallet.count(txin.prevout.hash) != 0;
                 if (!fExistedIncoming)
@@ -1507,7 +1507,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
                         address = CNoDestination();
                     }
 
-                    //fixme: (GULDEN) (FUT) - There should be a seperate CInputEntry class/array here or something.
+                    //fixme: (Post-2.1) - There should be a seperate CInputEntry class/array here or something.
                     COutputEntry output = {address, prevOut.nValue, (int)i};
 
                     // We are debited by the transaction, add the output as a "sent" entry
@@ -1628,7 +1628,7 @@ void CWallet::ReacceptWalletTransactions()
 
         int nDepth = wtx.GetDepthInMainChain();
 
-        //fixme: POW2
+        //fixme: (2.0) (PoW2)
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
             mapSorted.insert(std::make_pair(wtx.nOrderPos, &wtx));
         }
@@ -1984,7 +1984,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            //fixme: GULDEN (FUT) - is this okay? Should it be cached or something? (CBSU?)
+            //fixme: (Post-2.1) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned())
@@ -2018,7 +2018,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeC
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            //fixme: GULDEN (FUT) (1.6.1) - is this okay? Should it be cached or something? (CBSU?)
+            //fixme: (Post-2.1)- is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
@@ -2137,7 +2137,6 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     return balance;
 }
 
-//fixme: (MERGE)
 CAmount CWallet::GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl) const
 {
     LOCK2(cs_main, cs_wallet);
@@ -2692,7 +2691,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (GULDEN) (2.0) - Do we have to set relative lock time on the inputs?
+            //fixme: (2.0) - Do we have to set relative lock time on the inputs?
             //Whats the relationship between relative and absolute locktime?
             //nFlags |= CTxInFlags::OptInRBF;
         }
@@ -2760,7 +2759,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (GULDEN) (FUT) (only set this for high fee [per byte] transactions?)
+    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (2.1) (only set this for high fee [per byte] transactions?)
     txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
@@ -2828,7 +2827,6 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // Choose coins to use
                 CAmount nValueIn = 0;
                 setCoins.clear();
-                //fixme: GULDEN HIGH ACCOUNTS - ensure this only selects from forAccount - in theory it should because AvailableCoins is doing a forAccount check?
                 if (!SelectCoins(vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
@@ -2841,7 +2839,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
                     if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
                     {
-                        //fixme: (GULDEN) (COINCONTROL) - coin control could still produce script in this instance.
+                        //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
                         CPubKey vchPubKey;
                         bool ret;
@@ -2957,7 +2955,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
+                    //fixme: (2.0) HIGHNEXT ensure this still works.
                     if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
@@ -3039,7 +3037,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                //fixme: (GULDEN) (HIGH) (sign type)
+                //fixme: (2.0) (HIGH) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
@@ -3128,7 +3126,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
                     if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
                     {
-                        //fixme: (GULDEN) (COINCONTROL) - coin control could still produce script in this instance.
+                        //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
                         CPubKey vchPubKey;
                         bool ret;
@@ -3201,7 +3199,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    //fixme: (GULDEN) (2.0) HIGHNEXT ensure this still works.
+                    //fixme: (2.0) HIGHNEXT ensure this still works.
                     if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
@@ -3283,7 +3281,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                //fixme: (GULDEN) (HIGH) (sign type)
+                //fixme: (2.0) (HIGH) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
@@ -3385,7 +3383,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 tx.vout.push_back(renewedWitnessTxOutput);
 
                 // Add fee input and change output
-                //fixme: coincontrol
+                //fixme: (2.0) coincontrol
                 std::string sFailReason;
                 if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, nullptr))
                 {
@@ -3526,7 +3524,7 @@ DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
         if (dbw->Rewrite("\x04pool"))
         {
             LOCK(cs_wallet);
-            //fixme: (GULDEN) (FUT) (1.6.1)
+            //fixme: (Post-2.1)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -3558,7 +3556,7 @@ DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256
     {
         if (dbw->Rewrite("\x04pool"))
         {
-            //fixme: (GULDEN) (FUT) (1.6.1)
+            //fixme: (Post-2.1)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -3588,7 +3586,7 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
         if (dbw->Rewrite("\x04pool"))
         {
             LOCK(cs_wallet);
-            //fixme: (GULDEN) (FUT) (1.6.1)
+            //fixme: (Post-2.1)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -3783,7 +3781,7 @@ void CWallet::KeepKey(int64_t nIndex)
     LogPrintf("keypool keep %d\n", nIndex);
 }
 
-//fixme: GULDEN - We should handle this MarkKeyUsed case better, have it broadcast an event to all reserve keys or something.
+//fixme: (2.1) - We should handle this MarkKeyUsed case better, have it broadcast an event to all reserve keys or something.
 //And then remove the disk check below
 void CWallet::ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain)
 {
@@ -4064,7 +4062,7 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 
 void CWallet::GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount)
 {
-    //fixme: (GULDEN) (FUT) - Allow defaultmining account to be seperately selected?
+    //fixme: (2.0) - Allow defaultmining account to be seperately selected?
     std::shared_ptr<CReserveKey> rKey;
     if (forAccount)
     {
@@ -4144,7 +4142,7 @@ public:
     }
 
     void operator()(const CScriptID &scriptId) {
-        //fixme: (GULDEN) (2.0)
+        //fixme: (2.0)
         /*
         CScript script;
         if (keystore.GetCScript(scriptId, script))
@@ -4203,7 +4201,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
             int nHeight = blit->second->nHeight;
             BOOST_FOREACH(const CTxOut &txout, wtx.tx->vout) {
                 // iterate over all their outputs
-                //fixme: (GULDEN) (FUT) (1.6.1)
+                //fixme: (2.1)
                 CAffectedKeysVisitor(activeAccount->externalKeyStore, vAffected).Process(txout);
                 BOOST_FOREACH(const CKeyID &keyid, vAffected) {
                     // ... and all their affected keys
@@ -4542,9 +4540,6 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
         pactiveWallet = walletInstance;
         walletInstance->SetBestChain(chainActive.GetLocatorPoW2());
-
-        //fixme: (GULDEN) (MERGE)
-        CWalletDB walletdb(*walletInstance->dbw);
     }
     else if (loadState == EXISTING_WALLET_OLDACCOUNTSYSTEM)
     {
@@ -4771,7 +4766,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     {
         LOCK(walletInstance->cs_wallet);
-        //fixme: (GULDEN) - 'key pool size' concept for wallet doesn't really make sense anymore.
+        //fixme: (2.1) - 'key pool size' concept for wallet doesn't really make sense anymore.
         LogPrintf("setKeyPool.size() = %u\n",      walletInstance->GetKeyPoolSize());
         LogPrintf("mapWallet.size() = %u\n",       walletInstance->mapWallet.size());
         LogPrintf("mapAddressBook.size() = %u\n",  walletInstance->mapAddressBook.size());

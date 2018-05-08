@@ -189,7 +189,7 @@ private:
 protected:
     int64_t BeginTime(const Consensus::Params& params) const
     {
-        //fixme: (GULDEN) (POW2) (2.1) We can remove this for 2.1
+        //fixme: (2.1) We can remove this for 2.1
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);

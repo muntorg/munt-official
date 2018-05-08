@@ -436,7 +436,7 @@ void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
     AssertLockHeld(cs_main);
     CNodeState* nodestate = State(nodeid);
 
-    //fixme: GULDEN 2.0
+    //fixme: (2.1)
     return;
     #if 0
     if (!nodestate || !nodestate->fSupportsDesiredCmpctVersion) {
@@ -1612,7 +1612,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // nodes)
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDHEADERS));
         }
-        //fixme: GULDEN 2.0
+        //fixme: (2.1)
         #if 0
         if (pfrom->nVersion >= SHORT_IDS_BLOCKS_VERSION) {
             // Tell our peer we are willing to provide version 1 or 2 cmpctblocks
@@ -1694,7 +1694,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::SENDCMPCT)
     {
-        //fixme: GULDEN 2.0
+        //fixme: (2.1)
         #if 0
         bool fAnnounceUsingCMPCTBLOCK = false;
         uint64_t nCMPCTBLOCKVersion = 0;
@@ -1953,7 +1953,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CBlock block;
         bool ret = ReadBlockFromDisk(block, it->second, chainparams.GetConsensus());
 
-        //fixme: (GULDEN) (HIGH) NEXT - work around assert we are getting here, ideally we should fix this.
+        //fixme: (2.0) (HIGH) Work around assert we are getting here, ideally we should fix this.
         //assert(ret);
         if (ret)
         {

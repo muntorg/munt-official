@@ -236,7 +236,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
 
-    //fixme: GULDEN - look at adding these back
+    //fixme: (Post-2.1) - look at adding these back
     ui->coinControlFeatures->setVisible(false);
     ui->unit->setVisible(false);
     ui->thirdPartyTxUrls->setVisible(false);

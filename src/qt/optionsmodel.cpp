@@ -84,7 +84,7 @@ int GuldenOptionsModel::getWitnessGraphScale()
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
-    //fixme: (LOW) small leak here.
+    //fixme: (2.1) small leak here.
     guldenSettings = new GuldenOptionsModel(this);
     Init(resetSettings);
 }
@@ -293,13 +293,13 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("bSpendZeroConfChange");
 #endif
         case DisplayUnit:
-            return BitcoinUnits::BTC; // fixme: GULDEN - look at adding display units back possibly - nDisplayUnit;
+            return BitcoinUnits::BTC; // fixme: (Post-2.1) - look at adding display units back possibly - nDisplayUnit;
         case ThirdPartyTxUrls:
-            return "";// fixme: GULDEN - Consider adding this back strThirdPartyTxUrls;
+            return "";// fixme: (Post-2.1) - Consider adding this back strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
         case CoinControlFeatures:
-            return false; // fixme: GULDEN - look at adding coin control back - fCoinControlFeatures;
+            return false; // fixme: (Post-2.1) - look at adding coin control back - fCoinControlFeatures;
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:

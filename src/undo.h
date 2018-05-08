@@ -72,7 +72,7 @@ public:
             txout->fCoinBase = (  (nCode & 0b00000000000000000000000000000001)  > 0 );
         }
 
-        //fixme: (GULDEN) (2.1) CBSU - possibly remove this if statement by just duplicating code for the legacy case
+        //fixme: (2.1) CBSU - possibly remove this if statement by just duplicating code for the legacy case
         // (Or eventually just drop the legacy case)
         if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
         {
@@ -87,7 +87,7 @@ public:
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}
 };
 
-//fixme: (Gulden) (2.0)
+//fixme: (2.0)
 static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 41;
 //static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
 

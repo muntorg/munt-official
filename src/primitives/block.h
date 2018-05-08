@@ -39,7 +39,7 @@ public:
     int32_t nVersionPoW2Witness;
     uint32_t nTimePoW2Witness;
     uint256 hashMerkleRootPoW2Witness;
-    //fixme: (GULDEN) (2.0) (POW2) - Fixed size 65 bit.
+    //fixme: (2.0) (POW2) - Fixed size 65 bit.
     std::vector<unsigned char> witnessHeaderPoW2Sig;
 
 
@@ -60,7 +60,7 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        //fixme: (GULDEN) (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
+        //fixme: (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
         if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
         {
             READWRITE(nVersionPoW2Witness);
@@ -75,7 +75,7 @@ public:
         READWRITE(nBits);
         READWRITE(nNonce);
 
-        //fixme: (GULDEN) (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
+        //fixme: (2.1) Remove support for legacy nodes - no longer need this from 2.1 onwards.
         if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
         {
             if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG))
@@ -110,7 +110,7 @@ public:
         return (nBits == 0);
     }
 
-    //fixme: SBSU - this gives speed boost
+    //fixme: (Post-2.1) SBSU - this gives speed boost
     //but causes issues for mining
     //Disabled out of concern it may cause issues for others as well
     //re-enable once carefully looking into the below assertion.

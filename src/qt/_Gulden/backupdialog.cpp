@@ -92,6 +92,6 @@ void BackupDialog::showBackupPhrase()
 
 BackupDialog::~BackupDialog()
 {
-    //fixme: (HIGH) - Burn visible phrase.
+    //fixme: (2.1) - Burn visible phrase.
     delete ui;
 }

@@ -94,7 +94,7 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
     return pindex;
 }
 
-//fixme: (GULDEN) (FUT) Ideally this should use move semantics, but for some reason doing so results in segfault. Look into this closer.
+//fixme: (2.1) Ideally this should use move semantics, but for some reason doing so results in segfault. Look into this closer.
 CCloneChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut)
 {
     CCloneChain clone;

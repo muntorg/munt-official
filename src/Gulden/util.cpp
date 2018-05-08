@@ -59,8 +59,8 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
     return CHDSeed::CHDSeed::BIP44;
 }
 
-//fixme: (POW2) (LAUNCH) - set this.
-const int earliestPossibleMainnetWitnessACtivationHeight = 740000;
+//fixme: (2.0) (POW2) (LAUNCH) - set this.
+const int earliestPossibleMainnetWitnessACtivationHeight = 850000;
 
 // Phase 2 becomes active after 75% of miners signal upgrade.
 // After activation creation of 'backwards compatible' PoW2 addresses becomes possible.
@@ -241,7 +241,7 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
         int64_t nNumWitnessAddresses;
         int64_t nTotalWeight;
         GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
-        //fixme: (POW2) (LAUNCH) - Finalise paramaters here.
+        //fixme: (2.0) (POW2) (LAUNCH) - Finalise paramaters here.
         const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
         const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
         // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
@@ -415,7 +415,7 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 
 int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {
-    //fixme: (GULDEN) (2.0) - Check for off by 1 error (lockUntil - lockFrom)
+    //fixme: (2.0) - Check for off by 1 error (lockUntil - lockFrom)
     if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;

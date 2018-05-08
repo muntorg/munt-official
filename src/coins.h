@@ -44,7 +44,7 @@ public:
     unsigned int fSegSig : 1;
 
     //! at which height this containing transaction was included in the active block chain
-    //NB! fixme: (FUTURE) This limits us to ~5000 years before we need to update serialisation format :)
+    //NB! This limits us to ~5000 years before we need to update serialisation format - so may eventually have to change but not an issue for now.
     uint32_t nHeight : 30;
 
     //! construct a Coin from a CTxOut and height/coinbase information.

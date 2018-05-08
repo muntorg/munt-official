@@ -372,7 +372,7 @@ void WalletView::showProgress(const QString &title, int nProgress)
         progressDialog->setAutoClose(false);
         progressDialog->setValue(0);
 
-        //fixme: Minimum size
+        //fixme: (2.1) Minimum size
         progressDialog->setMinimumSize(300,100);
     }
     else if (nProgress == 100)

@@ -500,7 +500,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 {
                     BOOST_FOREACH(const CTxIn &_txin, ptxConflicting->vin)
                     {
-                        //fixme: (GULDEN) (2.0)
+                        //fixme: (2.0)
                         if (_txin.GetSequence(ptxConflicting->nVersion) < std::numeric_limits<unsigned int>::max()-1)
                         {
                             fReplacementOptOut = false;
@@ -946,7 +946,6 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 {
     if (!blockStore.ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
         return false;
-    //fixme: (GULDEN) (2.0) (POW2) - I think this will be broken when reading an old PoW block requested by a 1.6.x node?
     if (block.GetHashPoW2() != pindex->GetBlockHashPoW2())
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
                 pindex->ToString(), pindex->GetBlockPos().ToString());
@@ -1131,7 +1130,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
 {
     // mark inputs spent
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase()) {
-        //fixme: (GULDEN) (2.1) See if we can bring back the reserve efficiency here.
+        //fixme: (2.1) See if we can bring back the reserve efficiency here.
         //txundo.vprevout.reserve(tx.vin.size());
         BOOST_FOREACH(const CTxIn &txin, tx.vin) {
             if (!txin.prevout.IsNull())
@@ -1289,13 +1288,13 @@ static bool CheckInputs(const CTransaction& tx, CValidationState &state, const C
                     }
                     else
                     {
-                        //fixme: ERROR HANDLING
+                        //fixme: (2.0) ERROR HANDLING
                         return false;
                     }
                     return true;
                 }
 
-                //fixme: (HIGH) - also transition to extracted signature.
+                //fixme: (2.0) (HIGH) - also transition to extracted signature.
                 // Verify signature
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 CScriptCheck check(signingKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
@@ -1435,7 +1434,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
         // restore inputs
         if (i > 0) { // not coinbases
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
-            //fixme: (GULDEN) (HIGH) (NEXT) (force only 1 valid input in checkblock as well.)
+            //fixme: (2.0) (HIGH) (NEXT) (force only 1 valid input in checkblock as well.)
             if (tx.IsPoW2WitnessCoinBase())
             {
                 if (txundo.vprevout.size() != 1 || tx.vin.size() < 2)
@@ -1537,7 +1536,7 @@ bool HaveRequiredPeerUpgradePercent(int nRequiredProtoVersion, unsigned int nReq
     return (100 * nUpgradeCount) / vstats.size() > nRequiredPercent;
 }
 
-//fixme: next high - does this need to take a chain paramater?
+//fixme: (2.0) next high - does this need to take a chain paramater?
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)
 {
     LOCK(cs_main);
@@ -1546,7 +1545,7 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
     for (int i = 0; i < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; i++) {
         ThresholdState state = VersionBitsState(pindexPrev, params, (Consensus::DeploymentPos)i, versionbitscache);
         if (state == THRESHOLD_LOCKED_IN || state == THRESHOLD_STARTED) {
-            //fixme: (GULDEN) (POW2) Make same change in RPC mining code.
+            //fixme: (2.0) (POW2) Make same change in RPC mining code.
             if (params.vDeployments[i].protoVersion == 0 || HaveRequiredPeerUpgradePercent(params.vDeployments[i].protoVersion, params.vDeployments[i].requiredProtoUpgradePercent))
             {
                 nVersion |= VersionBitsMask(params, (Consensus::DeploymentPos)i);
@@ -1581,7 +1580,7 @@ public:
     }
 };
 
-//fixme: (GULDEN) (2.1) Can remove this.
+//fixme: (2.1) Can remove this.
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
 {
     int commitpos = -1;
@@ -1609,7 +1608,7 @@ static int64_t nTimeIndex = 0;
 static int64_t nTimeCallbacks = 0;
 static int64_t nTimeTotal = 0;
 
-//fixme: (GULDEN) (2.1) Remove this double ContextualCheckBlock nonsense, see comment above actual function.
+//fixme: (2.1) Remove this double ContextualCheckBlock nonsense, see comment above actual function.
 static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CChainParams& chainParams, const CBlockIndex* pindexPrev, CChain& chainOverride, CCoinsViewCache* viewOverride=nullptr, bool doUTXOChecks=false);
 
 /** Apply the effects of this block (with given index) on the UTXO set represented by coins.
@@ -1759,7 +1758,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
 
     CBlockUndo blockundo;
 
-    //fixme: Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
+    //fixme: (2.1) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
     if (block.nVersionPoW2Witness != 0)
@@ -1791,7 +1790,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
         }
     }
 
-    //fixme: (GULDEN) (2.1) After 2.1 the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
+    //fixme: (2.1) After 2.1 the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
     //So we can move this down and combine it with the scope where we check:
     //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
     //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
@@ -1876,7 +1875,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
 
-                    //fixme: (GULDEN) (HIGH) (2.0) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
+                    //fixme: (2.0) (HIGH) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
                 }
             }
         }
@@ -1913,7 +1912,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                              REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
-        //fixme: (HIGH) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?)
+        //fixme: (2.0) (HIGH) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?)
         if (!tx.IsCoinBase())
         {
             if (nWitnessCoinbaseIndex != 0 && i > nWitnessCoinbaseIndex)
@@ -1945,7 +1944,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
-    //fixme: (GULDEN) (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
+    //fixme: (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
 
     //Until PoW2 activates mining subsidy remains full.
     //Phase 3 - miner mines 80 reward for himself and 20 reward for previous blocks witness...
@@ -1992,7 +1991,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
                 if (output.out.nValue > 0)
                     nValIn += output.out.nValue;
             }
-            //fixme: HIGH NEXT - maybe do n't increment nSubsidyWitness but only add it for below check - we must not allow fees to be compounded.
+            //fixme: (2.0) (HIGH) don't increment nSubsidyWitness but only add it for below check - we must not allow fees to be compounded.
             nSubsidyWitness += nFeesPoW2Witness;
             if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitness)
             {
@@ -2015,7 +2014,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
             }
             else if (nPoW2PhaseParent >= 4)
             {
-                //fixme: NEXT - Implement witness coinbase restrictions here.
+                //fixme: (2.0) NEXT - Implement witness coinbase restrictions here.
             }
         }
         else
@@ -2025,7 +2024,7 @@ static bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& s
     }
 
 
-    //fixme: (GULDEN) (PoW2) (2.0) - Any other coinbase rules to enforce here?
+    //fixme: (2.0) - Any other coinbase rules to enforce here?
 
     CAmount blockReward = nFees + nSubsidy;
     if (block.vtx[0]->GetValueOut() > blockReward)
@@ -2260,7 +2259,7 @@ static void DoWarning(const std::string& strWarning)
     static bool fWarned = false;
     SetMiscWarning(strWarning);
     if (!fWarned) {
-        //fixme: (MERGE)
+        //fixme: (2.0) (MERGE)
         //AlertNotify(strWarning);
         fWarned = true;
     }
@@ -2731,7 +2730,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         // Disallow the following as they should never happen:
         // 1) Activating a PoW block as tip that in turn points to a previous unwitnessed PoW block (phase 3)
         // 2) Activating a PoW block as tip that points to a previous PoW block (phase 4+)
-        //fixme: NEXT HIGH IMPLEMENT
+        //fixme: (2.0) IMPLEMENT - this already isn't happening - but just add as extra fail safe.
 
         // Notifications/callbacks that can run without cs_main
 
@@ -2914,7 +2913,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     assert(pPreviousIndexChain_);
 
     allWitnessCoins.clear();
-    //fixme: (GULDEN) (PoW2) Error handling
+    //fixme: (2.0) (PoW2) Error handling
     // Sort out pre-conditions.
     // We have to make sure that we are using a view and chain that includes the PoW block we are witnessing and all of its transactions as the tip.
     // It won't necessarily be part of the chain yet; if we are in the process of witnessing; or if the block is an older one on a fork; because only blocks that have already been witnessed can be part of the chain.
@@ -2922,7 +2921,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
     CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
 
-    // fixme: (GULDEN) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
+    // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
     CCloneChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
@@ -2973,7 +2972,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
         if (!ConnectBlock(tempChain, *newBlock, state, &indexDummy, viewNew, chainParams, true, false))
         {
-            //fixme: (GULDEN) (2.0) If we are inside a GetWitness call ban the peer that sent us this?
+            //fixme: (2.0) If we are inside a GetWitness call ban the peer that sent us this?
             return false;
         }
     }
@@ -2991,7 +2990,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
 
 
-//fixme: HIGH NEXT.
+//fixme: (2.0) NEXT.
 //Proper error handling.
 //Handle pruning.
 // Check whether we have ever pruned block & undo files
@@ -3018,7 +3017,7 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size2a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
-        //fixme: (GULDEN) (2.0) check for off by 1 error.
+        //fixme: (2.0) check for off by 1 error.
         /** Eliminate addresses that are within 100 blocks from lock period expiring, or whose lock period has expired. **/
         //LogPrint(BCLog::WITNESS, "Witness pool size3b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return !(details.lockUntilBlock - nMinAge >= nBlockHeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
@@ -3027,7 +3026,7 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            // fixme: Add warning/logging for this.
+            // fixme: (2.0) Add warning/logging for this.
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
             // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
             if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
@@ -3136,7 +3135,7 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     return GetWitnessHelper(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo, nBlockHeight);
 }
 
-//fixme: (HIGH) - switch to a hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
+//fixme: (2.0) (HIGH) - switch to a hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
 // total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
@@ -3532,7 +3531,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness != 0)
     {
-        //fixme: (GULDEN) (POW2) (2.0) - Check that coinbase is a valid witness transaction. (Phase 3 only)
+        //fixme: (2.0) - Check that coinbase is a valid witness transaction. (Phase 3 only)
         for (unsigned int i = 1; i < block.vtx.size(); i++)
             if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
                 nWitnessCoinbaseIndex = i;
@@ -3710,7 +3709,7 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
 
-    //fixme: (GULDEN) (2.0) (HIGH) (SEGSIG) Enforce segsig upgrade rules here..
+    //fixme: (2.0) (HIGH) (SEGSIG) Enforce segsig upgrade rules here..
 
     // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
     // check for version 2, 3 and 4 upgrades
@@ -3725,7 +3724,7 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     return true;
 }
 
-//fixme: (GULDEN) (2.1) Do away with this doUTXOChecks junk
+//fixme: (2.1) Do away with this doUTXOChecks junk
 //Long story short; we need to call this twice, the second time from within ConnectTip as we can't do the 'phase' checks without the utxo
 //After 2.1 we won't need the phase checks so we can code this properly.
 static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CChainParams& chainParams, const CBlockIndex* pindexPrev, CChain& chainOverride, CCoinsViewCache* viewOverride, bool doUTXOChecks)
@@ -3920,7 +3919,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 {
     AssertLockHeld(cs_main);
 
-    //fixme: (GULDEN) (2.0) (POW2) - handle different header types here...
+    //fixme: (2.0) (POW2) - handle different header types here...
 
     // Check for duplicate
     uint256 hash = block.GetHashPoW2();
@@ -4111,7 +4110,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     }
 
     // Now test that the reconstructed witness block is valid, if it is then the 'witness coinbase info' of this PoW block is valid.
-    // fixme: (GULDEN) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
+    // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
@@ -4198,7 +4197,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
 
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
-    // fixme: (GULDEN) (2.0) (HIGH) This will probably increase forks - but we need to keep pushing tip contenders out in case of stalled witness
+    // fixme: (2.0) (HIGH) This will probably increase forks - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
     if (!IsInitialBlockDownload() && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);

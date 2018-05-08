@@ -186,7 +186,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
 {
-    //fixme: GULDEN (FUT) (OPT) (CBSU)
+    //fixme: (Post-2.1) (CBSU)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
@@ -667,7 +667,6 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 newAccount->setUUID(strAccountUUID);
                 ssValue >> *newAccount;
                 pwallet->mapAccounts[getUUIDFromString(strAccountUUID)] = newAccount;
-                //fixme: (GULDEN) Reconsider if this is a good idea or not.
                 //If no active account saved (for whatever reason) - make the first one we run into the active one.
                 if (!pwallet->activeAccount)
                     pwallet->activeAccount = newAccount;
@@ -683,7 +682,6 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 newAccount->setUUID(strAccountUUID);
                 ssValue >> *newAccount;
                 pwallet->mapAccounts[getUUIDFromString(strAccountUUID)] = newAccount;
-                //fixme: (FUT) (1.6.1) - Re-evaluate whether this is necessary.
                 if (!pwallet->activeAccount)
                     pwallet->activeAccount = newAccount;
             }
@@ -912,7 +910,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     {
         if (pwallet->mapSeeds.count(getUUIDFromString(primarySeedString)) == 0)
         {
-            //fixme: Treat this more severely?
+            //fixme: (2.1) Treat this more severely?
             LogPrintf("Error - missing primary seed for UUID [%s]\n", primarySeedString);
             fNoncriticalErrors = true;
         }

@@ -697,20 +697,23 @@ int main(int argc, char *argv[])
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
 
-    //fixme: GULDEN - This is now duplicated, factor this out into a common helper.
+    //fixme: (2.1) - This is now duplicated, factor this out into a common helper.
     // Make sure only a single Gulden process is using the data directory.
     fs::path pathLockFile = GetDataDir() / ".lock";
     FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
     if (file) fclose(file);
 
-    try {
+    try
+    {
         static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
         if (!lock.try_lock())
         {
             QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(strprintf(_("Cannot obtain a lock on data directory %s. %s is probably already running."), GetDataDir().string(), _(PACKAGE_NAME))));
             return 1;
         }
-    } catch(const boost::interprocess::interprocess_exception& e) {
+    }
+    catch(const boost::interprocess::interprocess_exception& e)
+    {
         QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(strprintf(_("Cannot obtain a lock on data directory %s. %s is probably already running."), GetDataDir().string(), _(PACKAGE_NAME))));
         return 1;
     }

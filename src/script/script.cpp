@@ -254,7 +254,6 @@ bool CScript::IsPoW2Witness() const
     if ((*this)[0] != OP_0 || (*this)[1] != 64)
         return false;
 
-    //fixme: (GULDEN) (2.0) (POW2) Just consume the entire script to be sure?
     return true;
 }
 
@@ -269,7 +268,7 @@ std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 
 
 //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
-//fixme: (Gulden) (2.0) Better error handling.
+//fixme: (2.0) Better error handling.
 void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
     if (this->size() != 66)

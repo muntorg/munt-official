@@ -11,7 +11,7 @@
 
 #include "policy/rbf.h"
 
-//fixme: (GULDEN) (2.1) we can make this the only behaviour and remove the previous behaviour.
+//fixme: (2.1) we can make this the only behaviour and remove the previous behaviour.
 bool SignalsOptInRBFSegSig(const CTransaction &tx)
 {
     BOOST_FOREACH(const CTxIn &txin, tx.vin) {

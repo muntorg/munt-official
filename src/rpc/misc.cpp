@@ -111,7 +111,7 @@ UniValue getinfo(const JSONRPCRequest& request)
 #ifdef ENABLE_WALLET
     if (pwallet) {
         obj.push_back(Pair("keypoololdest", pwallet->GetOldestKeyPoolTime()));
-        //fixme: (GULDEN) (BIP44)
+        //fixme: (Post-2.1) (BIP44)
         {
             LOCK(pwallet->activeAccount->cs_keypool);
             obj.push_back(Pair("keypoolsize",   (int)pwallet->activeAccount->GetKeyPoolSize()));
@@ -356,7 +356,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
         throw std::runtime_error(msg);
     }
 
-    //fixme: (FUT) (1.6.1)
+    //fixme: (Post-2.1)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     // Construct using pay-to-script-hash:

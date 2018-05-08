@@ -208,7 +208,7 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
     QIcon tmpicon;
     if(icon.isNull())
     {
-        //fixme: GULDEN - different icons for different types
+        //fixme: (Post-2.1) - different icons for different types
         /*QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
         switch(cls)
         {
@@ -266,7 +266,7 @@ void Notificator::notifyGrowl(Class cls, const QString &title, const QString &te
 
     QPixmap notificationIconPixmap;
     if (icon.isNull()) { // If no icon specified, set icon based on class
-        //fixme: GULDEN - different icons for different types
+        //fixme: (Post-2.1) - different icons for different types
         /*QStyle::StandardPixmap sicon = QStyle::SP_MessageBoxQuestion;
         switch (cls)
         {

@@ -110,7 +110,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
 
-        //fixme: (GULDEN) (POW2) (2.0) (HIGH) Enable this when ready for final launch.
+        //fixme: (2.0) (Release) (HIGH) Enable this when ready for final launch.
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 999999999999ULL; // July 1st 2017

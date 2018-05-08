@@ -32,8 +32,8 @@ static const int WITNESS_SCALE_FACTOR = 4;
 
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
-    //fixme: (POW2) (RELEASE) - Make sure this still works before release.
-    //fixme: (POW2) (HIGH) - Consider putting a phase 2/3 validation restriction to lock this in (prevent anyone mining a nVersion >= 5 transaction before we are ready) - normally this would be cause for concern of forking the network (before phase 2 kicks in) but checkpoint server should help us out here.
+    //fixme: (2.0) (RELEASE) - Make sure this still works before release.
+    //fixme: (2.0) (HIGH) - Consider putting a phase 2/3 validation restriction to lock this in (prevent anyone mining a nVersion >= 5 transaction before we are ready) - normally this would be cause for concern of forking the network (before phase 2 kicks in) but checkpoint server should help us out here.
     return (nVersion < 5) || (nVersion == 536870912);
 }
 
@@ -65,13 +65,13 @@ struct CBlockPosition
 // Represented in class as 3 bits - so maximum of 8 values
 enum CTxInType : uint8_t
 {
-    //fixme: (GULDEN) (2.0) What types do we even need here?
+    //fixme: (2.0) What types do we even need here?
 };
 
 // Only 5 bits available for TxInFlags (used as bit flags so only 5 values)
 enum CTxInFlags : uint8_t
 {
-    //fixme: NEXTNEXTNEXT HIGHHIGHHIGH - Implement these three.
+    //fixme: (2.0) NEXTNEXTNEXT HIGHHIGHHIGH - Implement these three.
     None = 0,
     IndexBasedOutpoint = 1,  // Outpoint is an index instead of a hash
     OptInRBF = 2,
@@ -88,7 +88,7 @@ enum CTxInFlags : uint8_t
 class COutPoint
 {
 public:
-    // fixme: (GULDEN) (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
+    // fixme: (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
     // Outpoint either uses hash or 'block position' never both.
     union
     {
@@ -213,7 +213,7 @@ public:
     static const uint8_t CURRENT_TYPE=0;
     // First 3 bits are type, last 5 bits are flags.
     mutable uint8_t nTypeAndFlags;
-    //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    //fixme: (Post-2.1) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxInType GetType() const
     {
         return (CTxInType) ( (nTypeAndFlags & 0b11100000) >> 5 );
@@ -456,7 +456,7 @@ public:
 class CTxOut
 {
 public:
-    //fixme: gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    //fixme: (Post-2.1) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxOutType GetType() const
     {
         return (CTxOutType)output.nType;
@@ -605,13 +605,13 @@ public:
         if (GetType() <= CTxOutType::ScriptLegacyOutput)
             return output.scriptPubKey.IsUnspendable();
 
-        //fixme: (GULDEN) (2.0) - Can our 'standard' outputs still be unspendable?
+        //fixme: (2.0) - Can our 'standard' outputs still be unspendable?
         return false;
     }
 
     virtual ~CTxOut()
     {
-        //fixme: (GULDEN) (2.0) (IMPLEMENT)
+        //fixme: (2.0) (IMPLEMENT)
         output.DeleteOutput();
     }
 
@@ -705,7 +705,7 @@ public:
             CAmount nValueWrite = nValue;
 
             output.nValueBase = 0; // 8 decimal precision.
-            //fixme: (Gulden) - Is there some 'trick' to calculate this faster without so much branching?
+            //fixme: (2.1) Is there some 'trick' to calculate this faster without so much branching?
             if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; } // 4 significant digit precision
             else if (nValue % 10000000000 == 0) { output.nValueBase = 6; } // 2 significant digit precision
             else if (nValue % 100000000 == 0)   { output.nValueBase = 5; } // 1 significant digit precision
@@ -1115,7 +1115,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 }
 
 
-//fixme: (GULDEN) (2.1) Remove
+//fixme: (2.1) Remove
 #define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive) >= 4 ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
@@ -1198,7 +1198,7 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
     }
 
-    //fixme: (GULDEN) (2.0) - check second vin is a witness transaction.
+    //fixme: (2.0) - check second vin is a witness transaction.
     bool IsPoW2WitnessCoinBase() const
     {
         return (vin.size() == 2 && vin[0].prevout.IsNull());

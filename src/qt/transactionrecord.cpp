@@ -28,9 +28,9 @@
  */
 bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 {
-    //fixme: delete
     AssertLockHeld(pactiveWallet->cs_wallet);
 
+    //fixme: (2.1) - We can potentially remove this for 2.1; depending on how 2.1 handles wallet upgrades.
     // Hide orphaned phase 3 witness earnings when they are orphaned by a subsequent PoW block.
     // We don't want slow/complex "IsPhase3" lookups here etc.
     // So we do this in a rather round about way.
@@ -97,12 +97,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     std::string addressIn;
                     for (const CTxIn& txin : wtx.tx->vin)
                     {
-                        //fixme: rather just have a CAccount::GetDebit function?
+                        //fixme: (2.1) rather just have a CAccount::GetDebit function?
                         isminetype txinMine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                         if (txinMine == ISMINE_SPENDABLE)
                         {
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
-                            //fixme: Add a 'payment to self' sub here as well.
+                            //fixme: (2.1) Add a 'payment to self' sub here as well.
                         }
 
                         const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.hash);
@@ -256,7 +256,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Ignore parts sent to self, as this is usually the change
                         // from a transaction sent back to our own address.
-                        //fixme: GULDEN HIGH - Are there cases when this isn't true?!?!?!?
+                        //fixme: (2.1) (HIGH) (REFACTOR) - Are there cases when this isn't true?!?!?!? - if not we can clean the code after this up.
                         continue;
                     }
 
@@ -293,7 +293,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
             else
             {
-                //fixme: GULDEN HIGH - This can be displayed better...
+                //fixme: (2.1) (HIGH) - This can be displayed better...
                 CAmount nNetMixed = 0;
                 for (const CTxOut& txout : wtx.tx->vout)
                 {
@@ -305,12 +305,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
                 for (const CTxIn& txin : wtx.tx->vin)
                 {
-                    //fixme: rather just have a CAccount::GetDebit function?
+                    //fixme: (2.1) rather just have a CAccount::GetDebit function?
                     isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                     if (mine == ISMINE_SPENDABLE)
                     {
                         nNetMixed -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
-                        //fixme: Add a 'payment to self' sub here as well.
+                        //fixme: (2.1) Add a 'payment to self' sub here as well.
                     }
                 }
                 if (nNetMixed != 0)
@@ -360,7 +360,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     }
 
     // A bit hairy/gross, but try to tie up sender/receiver for internal transfer between accounts.
-    //fixme: Can this try harder?
+    //fixme: (2.1) It might be possible to make this try even harder to make a match...
     for (TransactionRecord& record : parts)
     {
         if (record.fromAccountUUID == boost::uuids::nil_generator()())
@@ -460,7 +460,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
                 status.matures_in = wtx.GetBlocksToMaturity();
 
                 // Check if the block was requested by anyone
-                //fixme: Adjust time here.
+                //fixme: (2.0) Adjust time here, our block time is much shorter.
                 if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
                     status.status = TransactionStatus::MaturesWarning;
             }

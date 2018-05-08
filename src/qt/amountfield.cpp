@@ -57,7 +57,7 @@ public:
         return valid ? QValidator::Intermediate : QValidator::Invalid;
     }
 
-    //fixme: GULDEN - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
+    //fixme: (Post-2.1) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     int getCurrentDecimalPlaces(const QString& val) const
     {
         int pos = val.indexOf(".");;
@@ -75,7 +75,7 @@ public:
         return currentDecimalPlaces;
     }
 
-    //fixme: GULDEN - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
+    //fixme: (Post-2.1) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     void trimTailingZerosToCurrentDecimalPlace(QString& val, int currentDecimalPlaces) const
     {
         if (currentDecimalPlaces != -1)
@@ -740,7 +740,7 @@ void BitcoinAmountField::update()
 
             secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
             nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", BitcoinUnits::format(BitcoinUnits::Unit::BTC, amount, false, BitcoinUnits::separatorNever, 2));
-            //fixme: (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "BitcoinAmountField" can occur after it is deleted if changing between accounts...
+            //fixme: (2.0) (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "BitcoinAmountField" can occur after it is deleted if changing between accounts...
             connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
             secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, secondaryAmount, false, BitcoinUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(amount, "BTC");

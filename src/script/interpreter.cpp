@@ -422,7 +422,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // To provide for future soft-fork extensibility, if the
                     // operand has the disabled lock-time flag set,
                     // CHECKSEQUENCEVERIFY behaves as a NOP.
-                    //fixme: GULDEN HIGH
+                    //fixme: (2.0) HIGH
                     //if ((tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasSequenceNumberMask)))) {
                         //break;
 
@@ -1116,7 +1116,7 @@ public:
         {
             if (nInput != nIn && (fHashSingle || fHashNone))
             {
-                //fixme: (GULDEN) (2.0) HIGH - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
+                //fixme: (2.0) HIGH - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
                 // let the others update at will
                 ::Serialize(s, (int)0);
             }
@@ -1304,7 +1304,7 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
         //LogPrintf(">>>>VerifySignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pubkey.begin(), pubkey.end()), HexStr(sighash.begin(), sighash.end()));
         if (!pubkey.IsValid())
             return false;
-        // fixme: (GULDEN) (HIGH) (2.0) (MULTISIG?!?!?)
+        // fixme: (2.0) (HIGH) (MULTISIG?!?!?)
         // Ensure that the recovered pubkey is the correct one for the address in question
         if (signatureKeyID == CKeyID() || signatureKeyID != pubkey.GetID())
             return false;
@@ -1352,7 +1352,7 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // prevent this condition. Alternatively we could test all
     // inputs, but testing just this input minimizes the data
     // required to prove correct CHECKLOCKTIMEVERIFY execution.
-    //fixme: (GULDEN) (HIGH) - CHECK FOR SEQUENCE FLAGS
+    //fixme: (2.0) (HIGH) - CHECK FOR SEQUENCE FLAGS
     if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].GetSequence(txTo->nVersion))
         return false;
 
@@ -1402,7 +1402,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     }
     else
     {
-        //fixme: (GULDEN) (2.0) HIGH
+        //fixme: (2.0) HIGH - Implement
     }
 
     // Now that we know we're comparing apples-to-apples, the

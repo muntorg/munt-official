@@ -171,13 +171,13 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
         }
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
-        //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+        //fixme: (2.0) Need new ismine type here.?
         if (keystore.HaveKey(witnessKeyID))
             return ISMINE_SPENDABLE;
         break;
     }
 
-    //fixme: (GULDEN) (2.0)
+    //fixme: (Post-2.1) (WATCHONLY)
     /*if (keystore.HaveWatchOnly(scriptPubKey)) {
         // TODO: This could be optimized some by doing some work after the above solver
         SignatureData sigs;
@@ -196,7 +196,7 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
         {
             if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
                 return ISMINE_SPENDABLE;
-            //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+            //fixme: (2.0) Need new ismine type here.?
             if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
                 return ISMINE_SPENDABLE;
             break;
@@ -224,7 +224,7 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
                 keystore.MarkKeyUsed(txout.output.witnessDetails.spendingKeyID, time);
                 return ISMINE_SPENDABLE;
             }
-            //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+            //fixme: (2.0) Need new ismine type here.?
             if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
             {
                 keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
@@ -396,14 +396,14 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
 
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
-        //fixme: (GULDEN) (POW2) (2.0) Need new ismine type here.?
+        //fixme: (2.0) Need new ismine type here.?
         if (keystore.HaveKey(witnessKeyID))
             return ISMINE_SPENDABLE;
         break;
     }
 
     /*
-     //fixme: (GULDEN) (WATCHONLY)
+     //fixme: (Post-2.1) (WATCHONLY)
       if (keystore.HaveWatchOnly(scriptPubKey)) {
         // TODO: This could be optimized some by doing some work after the above solver
         SignatureData sigs;

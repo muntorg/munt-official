@@ -11,7 +11,7 @@
 #include "script/sign.h"
 #include "streams.h"
 
-// FIXME: Dedup with BuildCreditingTransaction in test/script_tests.cpp.
+// FIXME: (Bitcoin) Dedup with BuildCreditingTransaction in test/script_tests.cpp.
 static CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey)
 {
     CMutableTransaction txCredit;
@@ -21,7 +21,7 @@ static CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey
     txCredit.vout.resize(1);
     txCredit.vin[0].prevout.SetNull();
     txCredit.vin[0].scriptSig = CScript() << CScriptNum(0) << CScriptNum(0);
-    //fixme: Gulden (2.0)
+    //fixme: (2.0)
     txCredit.vin[0].nSequence = CTxIn::SEQUENCE_FINAL;
     txCredit.vout[0].scriptPubKey = scriptPubKey;
     txCredit.vout[0].nValue = 1;
@@ -40,7 +40,7 @@ static CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, co
     txSpend.vin[0].prevout.hash = txCredit.GetHash();
     txSpend.vin[0].prevout.n = 0;
     txSpend.vin[0].scriptSig = scriptSig;
-    //fixme: Gulden (2.0)
+    //fixme: (2.0)
     txSpend.vin[0].nSequence = CTxIn::SEQUENCE_FINAL;
     txSpend.vout[0].scriptPubKey = CScript();
     txSpend.vout[0].nValue = txCredit.vout[0].nValue;

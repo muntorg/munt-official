@@ -40,7 +40,7 @@
 
 #include <univalue.h>
 
-//fixme: (GULDEN) (2.1)
+//fixme: (2.1)
 #include "Gulden/util.h"
 #include "validation.h"
 
@@ -383,7 +383,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             if (rbfOptIn)
                 nFlags |= CTxInFlags::OptInRBF;
-            //fixme: (GULDEN) (2.0) (HIGH) Also handle block based sequence number?
+            //fixme: (2.0) (HIGH) Also handle block based sequence number?
             if (rawTx.nLockTime)
                 nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
@@ -734,7 +734,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (GULDEN) (2.0) implement
+            //fixme: (2.0) implement
             /*{
                 const Coin& coin = view.AccessCoin(out);
                 if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
@@ -774,7 +774,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     }
 
 #ifdef ENABLE_WALLET
-    //fixme: (GULDEN) (BIP44)
+    //fixme: (Post-2.1) (BIP44)
     const CKeyStore& keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? tempKeystore : *pwallet->activeAccount);
 #else
     const CKeyStore& keystore = tempKeystore;
@@ -825,11 +825,11 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
-        //fixme: (GULDEN) (2.0) (SEGSIG) Other transaction types
+        //fixme: (2.0) (SEGSIG) Other transaction types
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (GULDEN) (HIGH) (sign type)
+        //fixme: (2.0) (HIGH) (sign type)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
         SignatureData sigdata;

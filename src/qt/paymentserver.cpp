@@ -659,7 +659,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
     }
     else {
         CPubKey newKey;
-        //fixme: GULDEN (1.6.1) (FUT)
+        //fixme: (Post-2.1) (FUT)
         if (wallet->GetKeyFromPool(newKey, wallet->activeAccount, KEYCHAIN_EXTERNAL)) {
             CKeyID keyID = newKey.GetID();
             wallet->SetAddressBook(CBitcoinAddress(keyID).ToString(), strAccount, "refund");

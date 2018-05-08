@@ -346,7 +346,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
 
 void ClientModel::updatePoW2Display()
 {
-    //fixme: (GULDEN) (2.1) We can remove this for 2.1
+    //fixme: (2.1) We can remove this for 2.1
     cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 }
 
