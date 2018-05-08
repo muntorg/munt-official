@@ -14,7 +14,7 @@
     #define BLOCK_TIME(block) block.getTimeSeconds()
     #define INDEX_TYPE StoredBlock
     #define INDEX_HEIGHT(block) block.getHeight()
-    //fixme: (GULDEN) (2.0)
+    //fixme: (2.0) (Mobile)
     #define INDEX_TIME(block) block.getHeader().getTimeSeconds()
     #define INDEX_PREV(block) blockStore.get(block.getHeader().getPrevBlockHash())
     #define INDEX_TARGET(block) block.getHeader().getDifficultyTarget()
@@ -35,7 +35,7 @@
     #define BLOCK_TIME(block) (int64_t)block.timestamp
     #define INDEX_TYPE BRMerkleBlock*
     #define INDEX_HEIGHT(block) block.height
-    //fixme: (GULDEN) (2.0)
+    //fixme: (2.0) (Mobile)
     #define INDEX_TIME(block) (int64_t)block.timestamp
     #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
     #define INDEX_TARGET(block) block.target
