@@ -95,6 +95,7 @@ public:
 };
 #endif
 
+bool ReceiveCoinsDialog::showCopyQRAsImagebutton = true;
 
 ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWidget *parent)
 : QDialog( parent )
@@ -193,6 +194,12 @@ void ReceiveCoinsDialog::setActiveAccount(CAccount* account)
     currentAccount = account;
 }
 
+void ReceiveCoinsDialog::setShowCopyQRAsImageButton(bool showCopyQRAsImagebutton_)
+{
+    showCopyQRAsImagebutton = showCopyQRAsImagebutton_;
+    ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton_);
+}
+
 void ReceiveCoinsDialog::activeAccountChanged()
 {
     LogPrintf("ReceiveCoinsDialog::activeAccountChanged\n");
@@ -277,6 +284,8 @@ void ReceiveCoinsDialog::gotoReceievePage()
     ui->generateRequestButton->setVisible(false);
     ui->generateAnotherRequestButton->setVisible(false);
     ui->accountBuyButton->setVisible(false);
+
+    ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 
     ui->accountCopyToClipboardButton->setText(tr("Copy address to clipboard"));
 }

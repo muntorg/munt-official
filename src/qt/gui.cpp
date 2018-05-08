@@ -77,6 +77,7 @@
 
 #include <Gulden/util.h>
 #include <_Gulden/accountsummarywidget.h>
+#include "_Gulden/receivecoinsdialog.h"
 
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
@@ -1133,10 +1134,13 @@ void BitcoinGUI::resizeEvent(QResizeEvent* event)
 {
     QMainWindow::resizeEvent(event);
 
-    if (event->size().width() < 940)
-        accountSummaryWidget->showForexBalance(false);
+    // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
+    bool restrictedHorizontalSpace = (event->size().width() < 940) ? true : false;
+    accountSummaryWidget->showForexBalance(!restrictedHorizontalSpace);
+    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->receiveCoinsPage)
+        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!restrictedHorizontalSpace);
     else
-        accountSummaryWidget->showForexBalance(true);
+        ReceiveCoinsDialog::showCopyQRAsImagebutton = !restrictedHorizontalSpace;
 }
 
 void BitcoinGUI::changeEvent(QEvent *e)

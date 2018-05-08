@@ -52,6 +52,8 @@ public:
     void setModel(WalletModel *model);
     void updateQRCode(const QString& uri);
     void setActiveAccount(CAccount* account);
+    void setShowCopyQRAsImageButton(bool showCopyQRAsImagebutton_);
+    static bool showCopyQRAsImagebutton;
 
 public Q_SLOTS:
     void updateAddress(const QString& address);
