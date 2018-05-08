@@ -495,28 +495,19 @@ void SendCoinsDialog::on_sendButton_clicked()
     if(txFee > 0)
     {
         // append fee string if a fee is required
-        questionString.append("<hr /><span style='color:#aa0000;'>");
+        questionString.append("<hr />");
         questionString.append(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
-        questionString.append("</span> ");
         questionString.append(tr("added as transaction fee"));
 
         // append transaction size
         questionString.append(" (" + QString::number((double)currentTransaction.getTransactionSize() / 1000) + " kB)");
     }
 
-    // add total amount in all subdivision units
+    // add total amount
     questionString.append("<hr />");
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
-    QStringList alternativeUnits;
-    Q_FOREACH(BitcoinUnits::Unit u, BitcoinUnits::availableUnits())
-    {
-        if(u != model->getOptionsModel()->getDisplayUnit())
-            alternativeUnits.append(BitcoinUnits::formatHtmlWithUnit(u, totalAmount));
-    }
-    questionString.append(tr("Total Amount %1")
-        .arg(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount)));
-    questionString.append(QString("<span style='font-size:10pt;font-weight:normal;'><br />(=%2)</span>")
-        .arg(alternativeUnits.join(" " + tr("or") + "<br />")));
+    questionString.append(tr("Total Amount"));
+    questionString.append(QString(" <span style='color:#aa0000;'>%1</span>").arg(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount)));
 
     if (ui->optInRBF->isChecked())
     {
