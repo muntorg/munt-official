@@ -794,7 +794,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
 
 
     CWalletDB walletDB(*dbw);
-    BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolInternal)
+    for(int64_t nIndex : forAccount.setKeyPoolInternal)
     {
         CKeyPool keypoolentry;
         if (!walletDB.ReadPool(nIndex, keypoolentry))
@@ -812,7 +812,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
             throw std::runtime_error("Fatal error upgrading legacy wallet - could not upgrade entire keypool");
         }
     }
-    BOOST_FOREACH(int64_t nIndex, forAccount.setKeyPoolExternal)
+    for(int64_t nIndex : forAccount.setKeyPoolExternal)
     {
         CKeyPool keypoolentry;
         if (!walletDB.ReadPool(nIndex, keypoolentry))

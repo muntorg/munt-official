@@ -44,7 +44,7 @@ extern CWalletRef pactiveWallet;
 #include "wallet/walletdberrors.h"
 #include "wallet/Gulden/guldenwallet.h"
 #include "account.h"
-#include <boost/foreach.hpp>
+
 #include <boost/thread.hpp>
 
 /**

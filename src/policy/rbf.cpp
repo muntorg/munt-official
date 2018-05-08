@@ -14,7 +14,7 @@
 //fixme: (2.1) we can make this the only behaviour and remove the previous behaviour.
 bool SignalsOptInRBFSegSig(const CTransaction &tx)
 {
-    BOOST_FOREACH(const CTxIn &txin, tx.vin) {
+    for(const CTxIn &txin : tx.vin) {
         if (txin.FlagIsSet(CTxInFlags::OptInRBF)) {
             return true;
         }
@@ -27,7 +27,7 @@ bool SignalsOptInRBF(const CTransaction &tx)
     if (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
         return SignalsOptInRBFSegSig(tx);
 
-    BOOST_FOREACH(const CTxIn &txin, tx.vin) {
+    for(const CTxIn &txin : tx.vin) {
         if (txin.GetSequence(tx.nVersion) < std::numeric_limits<unsigned int>::max()-1) {
             return true;
         }
@@ -59,7 +59,7 @@ RBFTransactionState IsRBFOptIn(const CTransaction &tx, CTxMemPool &pool)
     CTxMemPoolEntry entry = *pool.mapTx.find(tx.GetHash());
     pool.CalculateMemPoolAncestors(entry, setAncestors, noLimit, noLimit, noLimit, noLimit, dummy, false);
 
-    BOOST_FOREACH(CTxMemPool::txiter it, setAncestors) {
+    for(CTxMemPool::txiter it : setAncestors) {
         if (SignalsOptInRBF(it->GetTx())) {
             return RBF_TRANSACTIONSTATE_REPLACEABLE_BIP125;
         }

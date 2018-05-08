@@ -31,7 +31,7 @@
 //Gulden specific includes
 #include "wallet/walletdberrors.h"
 #include "account.h"
-#include <boost/foreach.hpp>
+
 #include <boost/thread.hpp>
 
 

@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-#include <boost/foreach.hpp>
+
 
 /* Return positive answer if transaction should be shown in list.
  */
@@ -167,7 +167,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             CAccount* account = accountPair.second;
             bool involvesWatchAddress = false;
             isminetype fAllFromMe = ISMINE_SPENDABLE;
-            BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin)
+            for(const CTxIn& txin : wtx.tx->vin)
             {
                 isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                 if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
@@ -176,7 +176,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
             isminetype fAllToMe = ISMINE_SPENDABLE;
             std::vector<CTxOut> vNotToMe;
-            BOOST_FOREACH(const CTxOut& txout, wtx.tx->vout)
+            for(const CTxOut& txout : wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);
                 if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;

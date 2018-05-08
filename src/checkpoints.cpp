@@ -9,9 +9,8 @@
 #include "validation.h"
 #include "uint256.h"
 
-#include <stdint.h>
-
 #include <boost/foreach.hpp>
+#include <stdint.h>
 
 namespace Checkpoints {
 

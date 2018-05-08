@@ -435,7 +435,7 @@ void SendCoinsDialog::on_sendButton_clicked()
 
     // Format confirmation message
     QStringList formatted;
-    Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
+    for(const SendCoinsRecipient &rcp : currentTransaction.getRecipients())
     {
         // generate bold amount string
         QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
@@ -526,7 +526,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         return;
     }
 
-    Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
+    for(const SendCoinsRecipient &rcp : currentTransaction.getRecipients())
     {
         if(!rcp.forexAddress.isEmpty() && GetTime() > rcp.expiry)
         {

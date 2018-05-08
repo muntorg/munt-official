@@ -22,7 +22,6 @@
 
 #include <stdint.h>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include "net_processing.h"
 

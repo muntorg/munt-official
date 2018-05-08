@@ -88,7 +88,7 @@ public:
         cachedAddressTable.clear();
         {
             LOCK(wallet->cs_wallet);
-            BOOST_FOREACH(const PAIRTYPE(std::string, CAddressBookData)& item, wallet->mapAddressBook)
+            for(const PAIRTYPE(std::string, CAddressBookData)& item : wallet->mapAddressBook)
             {
                 const std::string& address = item.first;
                 bool fMine = IsMine(*wallet, CBitcoinAddress(address).Get());

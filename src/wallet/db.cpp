@@ -18,7 +18,7 @@
 #include <sys/stat.h>
 #endif
 
-#include <boost/foreach.hpp>
+
 #include <boost/thread.hpp>
 
 //
@@ -204,7 +204,7 @@ bool CDB::Recover(const std::string& filename, void *callbackDataIn, bool (*reco
     }
 
     DbTxn* ptxn = bitdb.TxnBegin();
-    BOOST_FOREACH(CDBEnv::KeyValPair& row, salvagedData)
+    for(CDBEnv::KeyValPair& row : salvagedData)
     {
         if (recoverKVcallback)
         {
