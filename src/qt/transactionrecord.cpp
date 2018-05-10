@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 
+#include <consensus/tx_verify.h>
 
 
 /* Return positive answer if transaction should be shown in list.
@@ -73,6 +74,206 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     uint256 hash = wtx.GetHash();
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
+    //fixme: (2.1) - This isn't very efficient, we do the same calculations already when verifying the inputs; Ideally we should just cache this information as part of the wtx to avoid recalc.
+    // Deal with special "complex" witness transaction types first.
+    std::vector<CWitnessTxBundle> witnessBundles;
+    CValidationState state;
+    int nWalletTxBlockHeight = 0;
+    const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+    if (findIter != mapBlockIndex.end())
+        nWalletTxBlockHeight = findIter->second->nHeight;
+    if (CheckTransactionContextual(*wtx.tx, state, nWalletTxBlockHeight, &witnessBundles))
+    {
+        for (const auto& txInRef : wtx.tx->vin)
+        {
+            const COutPoint &prevout = txInRef.prevout;
+            if (prevout.IsNull() && wtx.tx->IsPoW2WitnessCoinBase())
+                continue;
+
+            const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.hash);
+            if (!txPrev)
+                break;
+
+            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight))
+                break;
+        }
+    }
+    std::vector<CTxOut> outputs = wtx.tx->vout;
+    std::vector<CTxIn> inputs = wtx.tx->vin;
+    if (witnessBundles.size() > 0)
+    {
+        for (const CWitnessTxBundle& witnessBundle : witnessBundles)
+        {
+            switch (witnessBundle.bundleType)
+            {
+                case CWitnessTxBundle::WitnessTxType::CreationType:
+                {
+                    TransactionRecord subSend(hash, nTime);
+                    TransactionRecord subReceive(hash, nTime);
+                    for (const auto& output : witnessBundle.outputs)
+                    {
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, output.first);
+                            if (mine)
+                            {
+                                subReceive.type = TransactionRecord::WitnessFundRecv;
+                                subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
+                                subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
+                                subReceive.credit = output.first.nValue;
+                                subReceive.debit = 0;
+                                subReceive.idx = parts.size(); // sequence number
+                                parts.append(subReceive);
+
+                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == output.first;}));
+
+                                break;
+                            }
+                        }
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
+                            if (mine)
+                            {
+                                subSend.type = TransactionRecord::WitnessFundSend;
+                                subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
+                                subSend.actionAccountParentUUID = subSend.fromAccountParentUUID = account->getParentUUID();
+                                subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
+                                parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
+                                subSend.credit = 0;
+                                subSend.debit = nDebit;
+                                subSend.idx = parts.size(); // sequence number
+                                parts.append(subSend);
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::WitnessType:
+                {
+                    //fixme: (2.1) - this can change into a break once we apply other fixes described in other fixmes in this function.
+                    goto continuedecompose;
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::SpendType:
+                {
+                    TransactionRecord subSend(hash, nTime);
+                    TransactionRecord subReceive(hash, nTime);
+                    for (const auto& output : outputs)
+                    {
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, output);
+                            if (mine)
+                            {
+                                subReceive.type = TransactionRecord::WitnessEmptyRecv;
+                                subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
+                                subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
+                                subReceive.credit = output.nValue;
+                                subReceive.debit = 0;
+                                subReceive.idx = parts.size(); // sequence number
+                                parts.append(subReceive);
+
+                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == output;}));
+
+                                break;
+                            }
+                        }
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
+                            if (mine)
+                            {
+                                subSend.type = TransactionRecord::WitnessEmptySend;
+                                subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
+                                subSend.actionAccountParentUUID = subSend.fromAccountParentUUID = account->getParentUUID();
+                                subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
+                                parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
+                                subSend.credit = 0;
+                                subSend.debit = nDebit;
+                                subSend.idx = parts.size(); // sequence number
+                                parts.append(subSend);
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::RenewType:
+                {
+                    TransactionRecord sub(hash, nTime);
+                    for (const auto& output : witnessBundle.outputs)
+                    {
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, output.first);
+                            if (mine)
+                            {
+                                sub.type = TransactionRecord::WitnessRenew;
+                                sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
+                                sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
+                                sub.idx = parts.size(); // sequence number
+                                sub.credit = 0;
+                                sub.debit = nNet;
+                                parts.append(sub);
+
+                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == output.first;}));
+                                //fixme: (2.1) - Remove the inputs as well.
+
+                                break;
+                            }
+                        }
+                    }
+                    //fixme: match inputs with outputs
+                    /*for (const auto& input : witnessBundle.inputs)
+                    {
+                        // Remove the witness related inputs so that the remaining decomposition code can ignore it.
+                        //inputs.erase(std::remove_if(inputs.begin(), inputs.end(),[&](CTxIn x){return x == input.first;}));
+                    }*/
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::IncreaseType:
+                {
+                    //fixme: (2.0) -  implement
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::SplitType:
+                {
+                    //fixme: (2.0) -  implement
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::MergeType:
+                {
+                    //fixme: (2.0) -  implement
+                }
+                break;
+                case CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType:
+                {
+                    //fixme: (2.0) -  implement
+                }
+                break;
+            }
+        }
+        //fixme: (2.1) - we should try deal with "complex" (mixed) transactions by removing the below return and still trying to match remaining inputs/outputs.
+        return parts;
+    }
+    continuedecompose:
+
+
     LOCK(wallet->cs_wallet);
     if (nNet > 0 && !wtx.IsCoinBase())
     {
@@ -82,7 +283,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
-            for(const CTxOut& txout: wtx.tx->vout)
+            for(const CTxOut& txout: outputs)
             {
                 isminetype mine = IsMine(*account, txout);
                 if(mine)
@@ -95,7 +296,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     sub.credit = txout.nValue;
                     // Payment could partially be coming from us - deduct that from amount.
                     std::string addressIn;
-                    for (const CTxIn& txin : wtx.tx->vin)
+                    for (const CTxIn& txin : inputs)
                     {
                         //fixme: (2.1) rather just have a CAccount::GetDebit function?
                         isminetype txinMine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
@@ -167,22 +368,41 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             CAccount* account = accountPair.second;
             bool involvesWatchAddress = false;
             isminetype fAllFromMe = ISMINE_SPENDABLE;
-            for(const CTxIn& txin : wtx.tx->vin)
+            std::vector<CTxIn> vNotFromMe;
+            for(const CTxIn& txin : inputs)
             {
                 isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
-                if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
-                if(fAllFromMe > mine) fAllFromMe = mine;
+                if(mine & ISMINE_WATCH_ONLY)
+                {
+                    involvesWatchAddress = true;
+                }
+                if (mine != ISMINE_SPENDABLE)
+                {
+                    vNotFromMe.push_back(txin);
+                }
+                if(fAllFromMe > mine)
+                {
+                    fAllFromMe = mine;
+                }
             }
 
             isminetype fAllToMe = ISMINE_SPENDABLE;
             std::vector<CTxOut> vNotToMe;
-            for(const CTxOut& txout : wtx.tx->vout)
+            for(const CTxOut& txout : outputs)
             {
                 isminetype mine = IsMine(*account, txout);
-                if(mine & ISMINE_WATCH_ONLY) involvesWatchAddress = true;
+                if(mine & ISMINE_WATCH_ONLY)
+                {
+                    involvesWatchAddress = true;
+                }
                 if (mine != ISMINE_SPENDABLE)
+                {
                     vNotToMe.push_back(txout);
-                if(fAllToMe > mine) fAllToMe = mine;
+                }
+                if(fAllToMe > mine)
+                {
+                    fAllToMe = mine;
+                }
             }
 
             if (fAllFromMe && fAllToMe)
@@ -212,7 +432,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 TransactionRecord sub(hash, nTime);
 
                 //We don't bother filling in the sender details here for now
-                //The sender will get it's own transaction record and then we try 'automatically' match the two up and 'swap details' in a loop at the bottom of this function.
+                //The sender will get its own transaction record and then we try 'automatically' match the two up and 'swap details' in a loop at the bottom of this function.
 
                 //Fill in all the details for the receive part of the transaction.
                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
@@ -221,9 +441,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 sub.involvesWatchAddress = involvesWatchAddress;
                 sub.credit = sub.debit = 0;
                 bool anyAreMine = false;
-                for (unsigned int nOut = 0; nOut < wtx.tx->vout.size(); nOut++)
+                for (unsigned int nOut = 0; nOut < outputs.size(); nOut++)
                 {
-                    const CTxOut& txout = wtx.tx->vout[nOut];
+                    const CTxOut& txout = outputs[nOut];
                     if(!IsMine(*account, txout))
                     {
                         continue;
@@ -243,9 +463,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 //
                 CAmount nTxFee = nDebit - wtx.tx->GetValueOut();
 
-                for (unsigned int nOut = 0; nOut < wtx.tx->vout.size(); nOut++)
+                for (unsigned int nOut = 0; nOut < outputs.size(); nOut++)
                 {
-                    const CTxOut& txout = wtx.tx->vout[nOut];
+                    const CTxOut& txout = outputs[nOut];
                     TransactionRecord sub(hash, nTime);
                     sub.actionAccountUUID = sub.fromAccountUUID = account->getUUID();
                     sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
@@ -295,7 +515,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 //fixme: (2.1) (HIGH) - This can be displayed better...
                 CAmount nNetMixed = 0;
-                for (const CTxOut& txout : wtx.tx->vout)
+                for (const CTxOut& txout : outputs)
                 {
                     isminetype mine = IsMine(*account, txout);
                     if (mine == ISMINE_SPENDABLE)
@@ -303,7 +523,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         nNetMixed += txout.nValue;
                     }
                 }
-                for (const CTxIn& txin : wtx.tx->vin)
+                for (const CTxIn& txin : inputs)
                 {
                     //fixme: (2.1) rather just have a CAccount::GetDebit function?
                     isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);

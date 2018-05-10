@@ -118,9 +118,9 @@ private:
     QString formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
     QString formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
     QString formatTooltip(const TransactionRecord *rec) const;
-    QVariant txStatusDecoration(const TransactionRecord *wtx) const;
+    QString txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;
-    QVariant txAddressDecoration(const TransactionRecord *wtx) const;
+    QString txAddressDecoration(const TransactionRecord *wtx) const;
 
 public Q_SLOTS:
     /* New transaction, or transaction changed status */

@@ -419,27 +419,45 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Mining reward");
     case TransactionRecord::GeneratedWitness:
         return tr("Witness reward");
+    case TransactionRecord::WitnessRenew:
+        return tr("Renew witness account");
+    case TransactionRecord::WitnessFundSend:
+        return tr("Fund witness account");
+    case TransactionRecord::WitnessFundRecv:
+        return tr("Lock funds");
+    case TransactionRecord::WitnessEmptySend:
+        return tr("Empty witness account");
+    case TransactionRecord::WitnessEmptyRecv:
+        return tr("Received from witness account");
     default:
         return QString();
     }
 }
 
-QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx) const
+QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx) const
 {
     switch(wtx->type)
     {
-    case TransactionRecord::Generated:
-        return QIcon(":/icons/tx_mined");
-    case TransactionRecord::GeneratedWitness:
-        return QIcon(":/icons/tx_mined");
-    case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::RecvFromOther:
-        return QIcon(":/icons/tx_input");
-    case TransactionRecord::SendToAddress:
-    case TransactionRecord::SendToOther:
-        return QIcon(":/icons/tx_output");
-    default:
-        return QIcon(":/icons/tx_inout");
+        case TransactionRecord::Generated:
+            return "\uf0c1";
+        case TransactionRecord::GeneratedWitness:
+            return "\uf0c1";
+        case TransactionRecord::RecvWithAddress:
+        case TransactionRecord::RecvFromOther:
+            return "\uf2f5";
+        case TransactionRecord::SendToAddress:
+        case TransactionRecord::SendToOther:
+            return "\uf2f6";
+        case TransactionRecord::WitnessFundSend:
+        case TransactionRecord::WitnessFundRecv:
+            return "\uf023";
+        case TransactionRecord::WitnessEmptySend:
+        case TransactionRecord::WitnessEmptyRecv:
+            return "\uf09c";
+        case TransactionRecord::WitnessRenew:
+            return "\uf2f9";
+        default:
+            return "\uf362";
     }
 }
 
@@ -466,7 +484,15 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
             //return tr("Self payment.");
             if (wallet->mapAccountLabels.count(fromUUID) != 0)
             {
-                return tr("Internal transfer from: ") + QString::fromStdString(wallet->mapAccountLabels[fromUUID]);
+                switch(wtx->type)
+                {
+                    case TransactionRecord::WitnessFundRecv:
+                        return tr("Lock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    case TransactionRecord::WitnessEmptyRecv:
+                        return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    default:
+                        return tr("Internal transfer from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                }
             }
         }
     }
@@ -482,7 +508,15 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
             //return tr("Self payment.");
             if (wallet->mapAccountLabels.count(receiveUUID) != 0)
             {
-                return tr("Internal transfer to: ") + QString::fromStdString(wallet->mapAccountLabels[receiveUUID]);
+                switch(wtx->type)
+                {
+                    case TransactionRecord::WitnessFundSend:
+                        return tr("Fund witness account: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
+                    case TransactionRecord::WitnessEmptySend:
+                        return tr("Unlock funds to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
+                    default:
+                        return tr("Internal transfer to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
+                }
             }
         }
     }
@@ -492,20 +526,26 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     case TransactionRecord::RecvFromOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-        return tr("Payment from: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
+        return tr("Payment from: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
     case TransactionRecord::Generated:
         return tr("Mining reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
     case TransactionRecord::GeneratedWitness:
         return tr("Witness reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
+    case TransactionRecord::WitnessRenew:
+        return tr("Renew witness account");
     case TransactionRecord::SendToAddress:
-        return tr("Paid to: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
+        return tr("Paid to: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
     case TransactionRecord::SendToOther:
-        return tr("Paid to: "); QString::fromStdString(wtx->address) + watchAddress;
+        return tr("Paid to: %1").arg(QString::fromStdString(wtx->address) + watchAddress);
     case TransactionRecord::SendToSelf:
         return tr("Internal account movement");
+    case TransactionRecord::WitnessEmptySend:
+    case TransactionRecord::WitnessEmptyRecv:
+    case TransactionRecord::WitnessFundRecv:
+    case TransactionRecord::WitnessFundSend:
     case TransactionRecord::InternalTransfer:
         return "";//Already  handled above this switch
-    default:
+    case TransactionRecord::Other:
         return tr("Complex transaction, view transaction details.") + watchAddress;
     }
 }
@@ -515,20 +555,20 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     // Show addresses without label in a less visible color
     switch(wtx->type)
     {
-    case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::SendToAddress:
-    case TransactionRecord::Generated:
-    case TransactionRecord::GeneratedWitness:
-        {
-        QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
-        if(label.isEmpty())
+        case TransactionRecord::RecvWithAddress:
+        case TransactionRecord::SendToAddress:
+        case TransactionRecord::Generated:
+        case TransactionRecord::GeneratedWitness:
+        case TransactionRecord::WitnessRenew:
+        case TransactionRecord::WitnessFundSend:
+        case TransactionRecord::WitnessFundRecv:
+        case TransactionRecord::WitnessEmptySend:
+        case TransactionRecord::WitnessEmptyRecv:
+        case TransactionRecord::SendToSelf:
+        case TransactionRecord::InternalTransfer:
             return COLOR_BAREADDRESS;
-        } break;
-    case TransactionRecord::SendToSelf:
-    case TransactionRecord::InternalTransfer:
-        return COLOR_BAREADDRESS;
-    default:
-        break;
+        default:
+            break;
     }
     return QVariant();
 }
@@ -560,43 +600,36 @@ QString TransactionTableModel::formatTxAmountSent(const TransactionRecord *wtx, 
     return QString(str);
 }
 
-QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) const
+QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) const
 {
     switch(wtx->status.status)
     {
-    case TransactionStatus::OpenUntilBlock:
-    case TransactionStatus::OpenUntilDate:
-        return COLOR_TX_STATUS_OPENUNTILDATE;
-    case TransactionStatus::Offline:
-        return COLOR_TX_STATUS_OFFLINE;
-    case TransactionStatus::Unconfirmed:
-        return QIcon(":/icons/transaction_0");
-    case TransactionStatus::Abandoned:
-        return QIcon(":/icons/transaction_abandoned");
-    case TransactionStatus::Confirming:
-        switch(wtx->status.depth)
-        {
-        case 1: return QIcon(":/icons/transaction_1");
-        case 2: 
-        case 3: return QIcon(":/icons/transaction_2");
-        case 4: return QIcon(":/icons/transaction_3");
-        case 5: return QIcon(":/icons/transaction_4");
-        default: return QIcon(":/icons/transaction_5");
-        };
-    case TransactionStatus::Confirmed:
-        return QIcon(":/icons/transaction_confirmed");
-    case TransactionStatus::Conflicted:
-        return QIcon(":/icons/transaction_conflicted");
-    case TransactionStatus::Immature: {
-        int total = wtx->status.depth + wtx->status.matures_in;
-        int part = (wtx->status.depth * 4 / total) + 1;
-        return QIcon(QString(":/icons/transaction_%1").arg(part));
-        }
-    case TransactionStatus::MaturesWarning:
-    case TransactionStatus::NotAccepted:
-        return QIcon(":/icons/transaction_0");
-    default:
-        return COLOR_BLACK;
+        case TransactionStatus::Offline:
+            return "\uf1e6";
+        case TransactionStatus::Unconfirmed:
+            return "\uf132";
+        case TransactionStatus::Confirmed:
+        case TransactionStatus::Confirming:
+            switch(wtx->status.depth)
+            {
+            case 1: return "<span style='font-family: \"Font Awesome 5 Pro Light\"'>\uf132</span>";
+            case 2: return "<span style='font-family: \"Font Awesome 5 Pro Light\"'>\uf2f7</span>";
+            case 3: return "<span style='font-family: \"Font Awesome 5 Pro Regular\"'>\uf2f7</span>";
+            case 4:
+            default:
+                return "<span style='font-family: \"Font Awesome 5 Pro Solid\"'>\uf2f7</span>";
+            };
+        case TransactionStatus::OpenUntilBlock:
+        case TransactionStatus::OpenUntilDate:
+        case TransactionStatus::Immature:
+            return "\uf017";
+        case TransactionStatus::Abandoned:
+        case TransactionStatus::Conflicted:
+        case TransactionStatus::MaturesWarning:
+        case TransactionStatus::NotAccepted:
+            return "\uf05e";
+        default:
+            return "";
     }
 }
 
@@ -648,12 +681,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case RawDecorationRole:
         switch(index.column())
         {
-        case Status:
-            return txStatusDecoration(rec);
         case Watchonly:
             return txWatchonlyDecoration(rec);
-        case ToAddress:
-            return txAddressDecoration(rec);
         }
         break;
     case Qt::DecorationRole:
@@ -664,12 +693,14 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
         switch(index.column())
         {
+        case Status:
+            return txStatusDecoration(rec);
         case Date:
             return formatTxDate(rec);
         case Type:
             return formatTxType(rec);
         case ToAddress:
-            return formatTxToAddress(rec, false);
+            return "<tr><td width=20 align=center>" + txAddressDecoration(rec) + "</td><td>" + formatTxToAddress(rec, false) + "</td>";
         case AmountReceived:
             return formatTxAmountReceived(rec, true, BitcoinUnits::separatorAlways);
         case AmountSent:

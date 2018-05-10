@@ -112,8 +112,6 @@ private:
     QAction *sendCoinsMenuAction;
     QAction *usedSendingAddressesAction;
     QAction *usedReceivingAddressesAction;
-    QAction *signMessageAction;
-    QAction *verifyMessageAction;
     QAction *aboutAction;
     QAction *receiveCoinsAction;
     QAction *receiveCoinsMenuAction;
@@ -204,12 +202,6 @@ public Q_SLOTS:
     */
     void setEncryptionStatus(int status);
 
-    /** Set the hd-enabled status as shown in the UI.
-     @param[in] status            current hd enabled status
-     @see WalletModel::EncryptionStatus
-     */
-    void setHDStatus(int hdEnabled);
-
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     /** Show incoming transaction notification for new transactions. */
@@ -228,11 +220,6 @@ private Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-
-    /** Show Sign/Verify Message dialog and switch to sign message tab */
-    void gotoSignMessageTab(QString addr = "");
-    /** Show Sign/Verify Message dialog and switch to verify message tab */
-    void gotoVerifyMessageTab(QString addr = "");
 
     /** Show open dialog */
     void openClicked();

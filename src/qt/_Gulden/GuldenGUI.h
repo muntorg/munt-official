@@ -12,6 +12,7 @@
 
 #include <QObject>
 #include <QProxyStyle>
+#include <QStyledItemDelegate>
 #include <map>
 #include <functional>
 #include <string>
@@ -64,6 +65,13 @@ void setValid(QWidget* control, bool validity);
 void burnLineEditMemory(QLineEdit* edit);
 void burnTextEditMemory(QTextEdit* edit);
 QString limitString(const QString& string, int maxLength);
+
+class HtmlDelegate : public QStyledItemDelegate
+{
+protected:
+    void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+};
 
 class GuldenProxyStyle : public QProxyStyle
 {

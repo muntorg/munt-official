@@ -535,7 +535,8 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
 
         //Force the WebView to have the fonts we want - it doesn't pick up our registered fonts otherwise.
         {
-            QFile fontFile(":/Gulden/fontawesome");
+            //fixme: 2.1 - all app fonts here not just solid typeface.
+            QFile fontFile(":/Gulden/fontawesome_pro_solid");
             fontFile.open(QIODevice::ReadOnly);
             QString rawCSS = "@font-face{ font-family: FontAwesome;src: url(data:font/ttf;base64," + fontFile.readAll().toBase64() + ") format('truetype');";
             std::string encodedCSS = EncodeBase64(rawCSS.toStdString());

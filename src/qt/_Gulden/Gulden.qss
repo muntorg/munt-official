@@ -16,14 +16,14 @@ file COPYING
 /*Default font*/
 QMainWindow *
 {
-    font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif, "FontAwesome", "'FontAwesome'";
+    font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 400;
 }
 
 /*Buttons get FontAwesome for icons*/
 QToolButton, QPushButton, #searchLabel1, #searchLabel2, #accountSettings, #labelWalletSettings, #account_bar QLabel
 {
-    font-family: "FontAwesome", "'FontAwesome'", "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 
@@ -292,7 +292,7 @@ BitcoinGUI > QToolBar > QToolButton:checked
 
 #secondaryAmountDisplay
 {
-    font-family:  "guldensign", "'guldensign'", "FontAwesome", "'FontAwesome'", "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family:  "guldensign", "'guldensign'", "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #account_bar QLabel[checked=true]

@@ -22,7 +22,6 @@
 #include "qt/_Gulden/receivecoinsdialog.h"
 #include "qt/_Gulden/witnessdialog.h"
 #include "sendcoinsdialog.h"
-#include "signverifymessagedialog.h"
 #include "transactiontablemodel.h"
 #include "transactionview.h"
 #include "walletmodel.h"
@@ -132,9 +131,6 @@ void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 
         // Pass through transaction notifications
         connect(this, SIGNAL(incomingTransaction(QString,int,CAmount,CAmount,QString,QString,QString,QString)), gui, SLOT(incomingTransaction(QString,int,CAmount,CAmount,QString,QString,QString,QString)));
-
-        // Connect HD enabled state signal 
-        /*connect(this, SIGNAL(hdEnabledStatusChanged(int)), gui, SLOT(setHDStatus(int)));*/
     }
 }
 
@@ -250,30 +246,6 @@ void WalletView::gotoSendCoinsPage(QString addr)
 
     if (!addr.isEmpty())
         sendCoinsPage->setAddress(addr);
-}
-
-void WalletView::gotoSignMessageTab(QString addr)
-{
-    // calls show() in showTab_SM()
-    SignVerifyMessageDialog *signVerifyMessageDialog = new SignVerifyMessageDialog(platformStyle, this);
-    signVerifyMessageDialog->setAttribute(Qt::WA_DeleteOnClose);
-    signVerifyMessageDialog->setModel(walletModel);
-    signVerifyMessageDialog->showTab_SM(true);
-
-    if (!addr.isEmpty())
-        signVerifyMessageDialog->setAddress_SM(addr);
-}
-
-void WalletView::gotoVerifyMessageTab(QString addr)
-{
-    // calls show() in showTab_VM()
-    SignVerifyMessageDialog *signVerifyMessageDialog = new SignVerifyMessageDialog(platformStyle, this);
-    signVerifyMessageDialog->setAttribute(Qt::WA_DeleteOnClose);
-    signVerifyMessageDialog->setModel(walletModel);
-    signVerifyMessageDialog->showTab_VM(true);
-
-    if (!addr.isEmpty())
-        signVerifyMessageDialog->setAddress_VM(addr);
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)

@@ -6,62 +6,10 @@
 #include "exchangeratedialog.h"
 #include <qt/_Gulden/forms/ui_exchangeratedialog.h>
 #include "optionsmodel.h"
+#include "GuldenGUI.h" // for delegate
 
-#include <QPainter>
-#include <QStyledItemDelegate>
 #include <QModelIndex>
-#include <QStyleOptionViewItem>
-#include <QTextDocument>
-#include <QAbstractTextDocumentLayout>
 
-
-class HtmlDelegate : public QStyledItemDelegate
-{
-protected:
-    void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-};
-
-void HtmlDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    QStyleOptionViewItem styleOption = option;
-    initStyleOption(&styleOption, index);
-
-    QStyle *style = styleOption.widget? styleOption.widget->style() : QApplication::style();
-
-    QTextDocument doc;
-    doc.setHtml(styleOption.text);
-
-    /// Painting item without text
-    styleOption.text = QString();
-    style->drawControl(QStyle::CE_ItemViewItem, &styleOption, painter);
-
-    QAbstractTextDocumentLayout::PaintContext ctx;
-
-    ctx.palette.setColor(QPalette::Text, styleOption.palette.color(QPalette::Normal, QPalette::Text));
-
-    // Highlighting text if item is selected
-    if (styleOption.state & QStyle::State_Selected)
-        ctx.palette.setColor(QPalette::Text, styleOption.palette.color(QPalette::Active, QPalette::HighlightedText));
-
-    QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &styleOption);
-    painter->save();
-    painter->translate(textRect.topLeft());
-    painter->setClipRect(textRect.translated(-textRect.topLeft()));
-    doc.documentLayout()->draw(painter, ctx);
-    painter->restore();
-}
-
-QSize HtmlDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    QStyleOptionViewItem styleOption = option;
-    initStyleOption(&styleOption, index);
-
-    QTextDocument doc;
-    doc.setHtml(styleOption.text);
-    doc.setTextWidth(styleOption.rect.width());
-    return QSize(doc.idealWidth(), doc.size().height());
-}
 
 ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel)
 : QDialog( parent, Qt::Dialog )

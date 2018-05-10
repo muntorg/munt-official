@@ -67,6 +67,7 @@ const int HDMobileStartIndex = 100000;
 enum AccountStatus
 {
     Default,
+    WitnessEmpty,
     WitnessExpired,
     WitnessEnded
 };

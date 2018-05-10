@@ -45,6 +45,11 @@
 #include <QTextEdit>
 #include <QCollator>
 
+#include <QStyleOptionViewItem>
+#include <QTextDocument>
+#include <QAbstractTextDocumentLayout>
+#include <QPainter>
+
 #include <_Gulden/accountsummarywidget.h>
 #include <_Gulden/newaccountdialog.h>
 #include <_Gulden/importprivkeydialog.h>
@@ -97,7 +102,74 @@ const char* SIDE_BAR_WIDTH = "300px";
 unsigned int sideBarWidthExtended = 340;
 const char* SIDE_BAR_WIDTH_EXTENDED = "340px";
 
+void HtmlDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyleOptionViewItem styleOption = option;
+    initStyleOption(&styleOption, index);
 
+    QStyle *style = styleOption.widget? styleOption.widget->style() : QApplication::style();
+
+    QTextDocument doc;
+    doc.setHtml(styleOption.text);
+
+    /// Painting item without text
+    styleOption.text = QString();
+    style->drawControl(QStyle::CE_ItemViewItem, &styleOption, painter);
+
+    QAbstractTextDocumentLayout::PaintContext ctx;
+
+    ctx.palette.setColor(QPalette::Text, styleOption.palette.color(QPalette::Normal, QPalette::Text));
+
+    // Highlighting text if item is selected
+    if (styleOption.state & QStyle::State_Selected)
+        ctx.palette.setColor(QPalette::Text, styleOption.palette.color(QPalette::Active, QPalette::HighlightedText));
+
+    QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &styleOption);
+
+    // Apply vertical/horizontal alignment if necessary.
+    {
+        int nMarginLeft = 0;
+        int nTotalWidth = styleOption.rect.width();
+        int nTextRectWidth = doc.idealWidth();
+        if (nTotalWidth > nTextRectWidth)
+        {
+            if ((styleOption.displayAlignment & Qt::AlignCenter) == Qt::AlignCenter)
+                nMarginLeft = (nTotalWidth - nTextRectWidth) / 2;
+            else if ((styleOption.displayAlignment & Qt::AlignRight) == Qt::AlignRight)
+                nMarginLeft = (nTotalWidth - nTextRectWidth);
+        }
+        textRect.setLeft(textRect.left() + nMarginLeft);
+
+        int nMarginTop = 0;
+        int nTotalHeight = styleOption.rect.height();
+        int nTextRectHeight = doc.size().height();
+        if (nTotalHeight > nTextRectHeight)
+        {
+            if ((styleOption.displayAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
+                nMarginTop = (nTotalHeight - nTextRectHeight) / 2;
+            else if ((styleOption.displayAlignment & Qt::AlignBottom) == Qt::AlignBottom)
+                nMarginTop = (nTotalHeight - nTextRectHeight);
+        }
+        textRect.setTop(textRect.top() + nMarginTop);
+    }
+
+    painter->save();
+    painter->translate(textRect.topLeft());
+    painter->setClipRect(textRect.translated(-textRect.topLeft()));
+    doc.documentLayout()->draw(painter, ctx);
+    painter->restore();
+}
+
+QSize HtmlDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyleOptionViewItem styleOption = option;
+    initStyleOption(&styleOption, index);
+
+    QTextDocument doc;
+    doc.setHtml(styleOption.text);
+    doc.setTextWidth(styleOption.rect.width());
+    return QSize(doc.idealWidth(), doc.size().height());
+}
 
 GuldenProxyStyle::GuldenProxyStyle()
 : QProxyStyle("windows") //Use the same style on all platforms to simplify skinning
@@ -933,8 +1005,6 @@ void GuldenGUI::doPostInit()
     QApplication::setFont( f );
 
     m_pImpl->openAction->setVisible(false);
-    m_pImpl->signMessageAction->setVisible(false);
-    m_pImpl->verifyMessageAction->setVisible(false);
 
     m_pImpl->setContextMenuPolicy(Qt::NoContextMenu);
 
@@ -1072,33 +1142,37 @@ QString getAccountLabel(CAccount* account)
 {
     QString accountName = QString::fromStdString( account->getLabel() );
     accountName = limitString(accountName, 26);
+
+    QString accountNamePrefix;
     if ( account->IsMobi() )
     {
-        accountName.append(QString::fromUtf8(" \uf10b"));
+        accountNamePrefix = "\uf10b";
     }
     else if ( account->IsPoW2Witness() )
     {
-        if (account->GetWarningState() == AccountStatus::WitnessExpired)
-        {
-            accountName.append(QString::fromUtf8(" <span style='color: #c97676;'>\uf06a</span>"));
-        }
+        if (account->GetWarningState() == AccountStatus::WitnessEmpty)
+            accountNamePrefix = "\uf4d3";
+        else if (account->GetWarningState() == AccountStatus::WitnessExpired)
+            accountNamePrefix = "<span style='color: #c97676;'>\uf06a</span>";
         else if (account->GetWarningState() == AccountStatus::WitnessEnded)
-        {
-            accountName.append(QString::fromUtf8(" <span style='color: #40c294;'>\uf00c</span>"));
-        }
+            accountNamePrefix = "\uf4d3";
         else
-        {
-            accountName.append(QString::fromUtf8(" \uf19c"));
-        }
+            accountNamePrefix = "\uf4d3";
     }
     else if ( !account->IsHD() )
     {
-        accountName.append(QString::fromUtf8(" \uf187"));
+        accountNamePrefix = "\uf187";
+    }
+    else
+    {
+        accountNamePrefix = "\uf09d";
     }
     if ( account->IsReadOnly() )
     {
-         accountName.append(QString::fromUtf8(" \uf06e"));
+        //fixme: make small if existing prefix
+        accountNamePrefix += "\uf06e";
     }
+    accountName = QString("<tr><td width=20 align=left>%1</td><td>%2</td></tr>").arg(accountNamePrefix).arg(accountName);
 
     return accountName;
 }
@@ -1335,12 +1409,12 @@ void GuldenGUI::accountAdded(CAccount* account)
                     {
                         accLabel = createAccountButton( label );
                         m_accountMap[accLabel] = accountPair.second;
-                        thisAccountLabel = label;
-                        sortedAccounts[label] = accLabel;
+                        thisAccountLabel = QString::fromStdString(accountPair.second->getLabel());
+                        sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = accLabel;
                     }
                     else
                     {
-                        sortedAccounts[label] = nullptr;
+                        sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = nullptr;
                     }
                 }
             }

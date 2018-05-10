@@ -20,7 +20,10 @@ qt/_Gulden/res/AngleUpBlue.png \
 qt/_Gulden/res/AngleDownGrey.png \
 qt/_Gulden/res/AngleUpGrey.png \
 qt/_Gulden/res/DialogBackground.png \
-qt/_Gulden/fonts/FontAwesome.otf \
+qt/_Gulden/fonts/FontAwesome5ProLight.ttf \
+qt/_Gulden/fonts/FontAwesome5ProRegular.ttf \
+qt/_Gulden/fonts/FontAwesome5ProSolid.ttf \
+qt/_Gulden/fonts/FontAwesome5BrandsRegular.ttf \
 qt/_Gulden/fonts/guldensign.ttf \
 qt/_Gulden/res/Import.png \
 qt/_Gulden/res/Rescan.png \
@@ -214,7 +217,6 @@ QT_FORMS_UI = \
   qt/forms/debugwindow.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
-  qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
@@ -252,7 +254,6 @@ QT_MOC_CPP = \
   qt/moc_rpcconsole.cpp \
   qt/moc_sendcoinsdialog.cpp \
   qt/moc_sendcoinsentry.cpp \
-  qt/moc_signverifymessagedialog.cpp \
   qt/moc_trafficgraphwidget.cpp \
   qt/moc_transactiondesc.cpp \
   qt/moc_transactiondescdialog.cpp \
@@ -324,7 +325,6 @@ GULDEN_QT_H = \
   qt/rpcconsole.h \
   qt/sendcoinsdialog.h \
   qt/sendcoinsentry.h \
-  qt/signverifymessagedialog.h \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
   qt/transactiondescdialog.h \
@@ -349,11 +349,6 @@ RES_ICONS = \
   qt/res/icons/Gulden_testnet.ico \
   qt/res/icons/gulden.png \
   qt/res/icons/chevron.png \
-  qt/res/icons/clock1.png \
-  qt/res/icons/clock2.png \
-  qt/res/icons/clock3.png \
-  qt/res/icons/clock4.png \
-  qt/res/icons/clock5.png \
   qt/res/icons/configure.png \
   qt/res/icons/connect0.png \
   qt/res/icons/connect1.png \
@@ -371,8 +366,6 @@ RES_ICONS = \
   qt/res/icons/filesave.png \
   qt/res/icons/fontbigger.png \
   qt/res/icons/fontsmaller.png \
-  qt/res/icons/hd_disabled.png \
-  qt/res/icons/hd_enabled.png \
   qt/res/icons/history.png \
   qt/res/icons/info.png \
   qt/res/icons/key.png \
@@ -386,16 +379,7 @@ RES_ICONS = \
   qt/res/icons/remove.png \
   qt/res/icons/send.png \
   qt/res/icons/synced.png \
-  qt/res/icons/transaction0.png \
-  qt/res/icons/transaction2.png \
-  qt/res/icons/transaction_abandoned.png \
-  qt/res/icons/transaction_conflicted.png \
-  qt/res/icons/tx_inout.png \
-  qt/res/icons/tx_input.png \
-  qt/res/icons/tx_output.png \
-  qt/res/icons/tx_mined.png \
-  qt/res/icons/warning.png \
-  qt/res/icons/verify.png
+  qt/res/icons/warning.png
 
 GULDEN_QT_BASE_CPP = \
   $(GDN_QT_SRCS) \
@@ -438,7 +422,6 @@ GULDEN_QT_WALLET_CPP = \
   qt/recentrequeststablemodel.cpp \
   qt/sendcoinsdialog.cpp \
   qt/sendcoinsentry.cpp \
-  qt/signverifymessagedialog.cpp \
   qt/transactiondesc.cpp \
   qt/transactiondescdialog.cpp \
   qt/transactionfilterproxy.cpp \

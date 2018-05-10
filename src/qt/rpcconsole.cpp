@@ -58,17 +58,6 @@ const int INITIAL_TRAFFIC_GRAPH_MINS = 30;
 const QSize FONT_RANGE(4, 40);
 const char fontSizeSettingsKey[] = "consoleFontSize";
 
-const struct {
-    const char *url;
-    const char *source;
-} ICON_MAPPING[] = {
-    {"cmd-request", ":/icons/tx_input"},
-    {"cmd-reply", ":/icons/tx_output"},
-    {"cmd-error", ":/icons/tx_output"},
-    {"misc", ":/icons/tx_inout"},
-    {NULL, NULL}
-};
-
 namespace {
 
 // don't add private key handling cmd's to the history
@@ -660,10 +649,22 @@ static QString categoryClass(int category)
 {
     switch(category)
     {
-    case RPCConsole::CMD_REQUEST:  return "cmd-request"; break;
-    case RPCConsole::CMD_REPLY:    return "cmd-reply"; break;
-    case RPCConsole::CMD_ERROR:    return "cmd-error"; break;
-    default:                       return "misc";
+        case RPCConsole::CMD_REQUEST:  return "cmd-request";
+        case RPCConsole::CMD_REPLY:    return "cmd-reply";
+        case RPCConsole::CMD_ERROR:    return "cmd-error";
+        default:                       return "misc";
+    }
+}
+
+static QString categoryIcon(int category)
+{
+    switch(category)
+    {
+        case RPCConsole::CMD_REQUEST:  return "\uf323";
+        case RPCConsole::CMD_REPLY:    return "\uf324";
+        case RPCConsole::CMD_ERROR:    return "\uf06a";
+        case RPCConsole::CMD_INFO:     return "\uf05a";
+        default:                       return "\uf059";
     }
 }
 
@@ -713,16 +714,6 @@ void RPCConsole::clear(bool clearHistory)
     ui->lineEdit->clear();
     ui->lineEdit->setFocus();
 
-    // Add smoothly scaled icon images.
-    // (when using width/height on an img, Qt uses nearest instead of linear interpolation)
-    for(int i=0; ICON_MAPPING[i].url; ++i)
-    {
-        ui->messagesWidget->document()->addResource(
-                    QTextDocument::ImageResource,
-                    QUrl(ICON_MAPPING[i].url),
-                    platformStyle->SingleColorImage(ICON_MAPPING[i].source).scaled(QSize(consoleFontSize*2, consoleFontSize*2), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    }
-
     // Set default style sheet
     QFontInfo fixedFontInfo(GUIUtil::fixedPitchFont());
     ui->messagesWidget->document()->setDefaultStyleSheet(
@@ -743,7 +734,7 @@ void RPCConsole::clear(bool clearHistory)
     QString clsKey = "Ctrl-L";
 #endif
 	 
-    message(CMD_REPLY, (tr("Welcome to the %1 RPC console.").arg(tr(PACKAGE_NAME)) + "<br>" +
+    message(CMD_INFO, (tr("Welcome to the %1 RPC console.").arg(tr(PACKAGE_NAME)) + "<br>" +
                         tr("Use up and down arrows to navigate history, and %1 to clear screen.").arg("<b>"+clsKey+"</b>") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.")) +
                         "<br><span class=\"secwarning\">" +
@@ -766,7 +757,7 @@ void RPCConsole::message(int category, const QString &message, bool html)
     QString timeString = time.toString();
     QString out;
     out += "<table><tr><td class=\"time\" width=\"65\">" + timeString + "</td>";
-    out += "<td class=\"icon\" width=\"32\"><img src=\"" + categoryClass(category) + "\"></td>";
+    out += "<td class=\"icon\" width=\"32\">" + categoryIcon(category) + "</td>";
     out += "<td class=\"message " + categoryClass(category) + "\" valign=\"middle\">";
     if(html)
         out += message;

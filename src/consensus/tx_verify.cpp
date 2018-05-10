@@ -585,7 +585,7 @@ inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness
 }
 
 //fixme: (2.0) (HIGH) Implement test code for this function.
-inline bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight)
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight)
 {
     if (pWitnessBundles)
     {

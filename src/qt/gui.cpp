@@ -122,20 +122,22 @@ static void UpdateWitnessAccountStates()
             for ( const auto& accountPair : pactiveWallet->mapAccounts )
             {
                 AccountStatus prevState = accountPair.second->GetWarningState();
-                accountPair.second->SetWarningState(AccountStatus::Default);
+                AccountStatus newState = AccountStatus::Default;
+                bool bAnyAreMine = false;
                 for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {
                     if (IsMine(*accountPair.second, witCoin.coin.out))
                     {
+                        bAnyAreMine = true;
                         CTxOutPoW2Witness details;
                         GetPow2WitnessOutput(witCoin.coin.out, details);
                         if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
                         {
-                            accountPair.second->SetWarningState(AccountStatus::WitnessEnded);
+                            newState = AccountStatus::WitnessEnded;
                         }
                         else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
                         {
-                            accountPair.second->SetWarningState(AccountStatus::WitnessExpired);
+                            newState = AccountStatus::WitnessExpired;
 
                             // Due to lock changing cached balance for certain transactions will now be invalidated.
                             // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
@@ -149,8 +151,13 @@ static void UpdateWitnessAccountStates()
                         }
                     }
                 }
-                if (prevState != accountPair.second->GetWarningState())
+                if (!bAnyAreMine)
+                    newState = AccountStatus::WitnessEmpty;
+                if (newState != prevState)
+                {
+                    accountPair.second->SetWarningState(newState);
                     static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, accountPair.second);
+                }
             }
         }
     }
@@ -189,8 +196,6 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     sendCoinsMenuAction(0),
     usedSendingAddressesAction(0),
     usedReceivingAddressesAction(0),
-    signMessageAction(0),
-    verifyMessageAction(0),
     aboutAction(0),
     receiveCoinsAction(0),
     receiveCoinsMenuAction(0),
@@ -226,7 +231,10 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
-    QFontDatabase::addApplicationFont(":/Gulden/fontawesome");
+    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_regular");
+    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_light");
+    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_brands");
+    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_solid");
     QFontDatabase::addApplicationFont(":/Gulden/guldensign");
     QFontDatabase::addApplicationFont(":/Gulden/lato_black");
     QFontDatabase::addApplicationFont(":/Gulden/lato_blackitalic");
@@ -478,10 +486,6 @@ void BitcoinGUI::createActions()
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
     changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
-    signMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/edit"), tr("Sign &message..."), this);
-    signMessageAction->setStatusTip(tr("Sign messages with your Gulden addresses to prove you own them"));
-    verifyMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/verify"), tr("&Verify message..."), this);
-    verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified Gulden addresses"));
 
     openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
@@ -516,8 +520,6 @@ void BitcoinGUI::createActions()
         connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
         connect(backupWalletAction, SIGNAL(triggered()), walletFrame, SLOT(backupWallet()));
         connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
-        connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
-        connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
         connect(usedSendingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedSendingAddresses()));
         connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
@@ -544,8 +546,6 @@ void BitcoinGUI::createMenuBar()
     {
         file->addAction(openAction);
         file->addAction(backupWalletAction);
-        file->addAction(signMessageAction);
-        file->addAction(verifyMessageAction);
         file->addSeparator();
         file->addAction(usedSendingAddressesAction);
         file->addAction(usedReceivingAddressesAction);
@@ -720,8 +720,6 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
-    signMessageAction->setEnabled(enabled);
-    verifyMessageAction->setEnabled(enabled);
     usedSendingAddressesAction->setEnabled(enabled);
     usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
@@ -765,8 +763,6 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(sendCoinsMenuAction);
     trayIconMenu->addAction(receiveCoinsMenuAction);
     trayIconMenu->addSeparator();
-    //trayIconMenu->addAction(signMessageAction);
-    //trayIconMenu->addAction(verifyMessageAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(optionsAction);
     trayIconMenu->addAction(openRPCConsoleAction);
@@ -867,16 +863,6 @@ void BitcoinGUI::gotoSendCoinsPage(QString addr)
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
-}
-
-void BitcoinGUI::gotoSignMessageTab(QString addr)
-{
-    if (walletFrame) walletFrame->gotoSignMessageTab(addr);
-}
-
-void BitcoinGUI::gotoVerifyMessageTab(QString addr)
-{
-    if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
 }
 #endif // ENABLE_WALLET
 
@@ -1273,15 +1259,6 @@ bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
         return true;
     }
     return false;
-}
-
-void BitcoinGUI::setHDStatus(int hdEnabled)
-{
-    /*labelWalletHDStatusIcon->setPixmap(platformStyle->SingleColorIcon(hdEnabled ? ":/icons/hd_enabled" : ":/icons/hd_disabled").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-    labelWalletHDStatusIcon->setToolTip(hdEnabled ? tr("HD key generation is <b>enabled</b>") : tr("HD key generation is <b>disabled</b>"));*/
-
-    // eventually disable the QLabel to set its opacity to 50% 
-    labelWalletHDStatusIcon->setEnabled(false);
 }
 
 void BitcoinGUI::setEncryptionStatus(int status)

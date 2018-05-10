@@ -55,7 +55,8 @@ public:
         MC_DEBUG,
         CMD_REQUEST,
         CMD_REPLY,
-        CMD_ERROR
+        CMD_ERROR,
+        CMD_INFO
     };
 
     enum TabTypes {

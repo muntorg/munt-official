@@ -68,6 +68,8 @@ struct CWitnessTxBundle
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
 };
 
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight);
+
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output);
 void IncrementWitnessFailCount(uint64_t& failCount);
 

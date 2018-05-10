@@ -142,20 +142,6 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
         i.value()->gotoSendCoinsPage(addr);
 }
 
-void WalletFrame::gotoSignMessageTab(QString addr)
-{
-    WalletView *walletView = currentWalletView();
-    if (walletView)
-        walletView->gotoSignMessageTab(addr);
-}
-
-void WalletFrame::gotoVerifyMessageTab(QString addr)
-{
-    WalletView *walletView = currentWalletView();
-    if (walletView)
-        walletView->gotoVerifyMessageTab(addr);
-}
-
 void WalletFrame::encryptWallet(bool status)
 {
     WalletView *walletView = currentWalletView();
