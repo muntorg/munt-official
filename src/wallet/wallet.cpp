@@ -321,12 +321,14 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
     }
 
     //fixme: (GULDEN) (FUT) (WATCHONLY)
+    bool ret = false;
     for (auto accountPair : mapAccounts)
     {
-        if (accountPair.second->AddCScript(redeemScript))
+        ret = accountPair.second->AddCScript(redeemScript);
+        if (ret == true)
             break;
     }
-    return false;
+    return ret;
 }
 
 bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
