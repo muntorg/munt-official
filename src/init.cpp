@@ -604,12 +604,12 @@ static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex)
 struct CImportingNow
 {
     CImportingNow() {
-        assert(fImporting == false);
+        assert(!fImporting);
         fImporting = true;
     }
 
     ~CImportingNow() {
-        assert(fImporting == true);
+        assert(fImporting);
         fImporting = false;
     }
 };
