@@ -1519,7 +1519,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Feeler connections exist only to verify if address is online.
         if (pfrom->fFeeler) {
-            assert(pfrom->fInbound == false);
+            assert(!pfrom->fInbound);
             pfrom->fDisconnect = true;
         }
 
