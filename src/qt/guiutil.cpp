@@ -206,7 +206,7 @@ bool parseGuldenURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!GuldenUnits::parse(GuldenUnits::BTC, i->second, &rv.amount))
+                if(!GuldenUnits::parse(GuldenUnits::NLG, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -250,7 +250,7 @@ QString formatGuldenURI(const SendCoinsRecipient &info)
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(GuldenUnits::format(GuldenUnits::BTC, info.amount, false, GuldenUnits::separatorNever));
+        ret += QString("?amount=%1").arg(GuldenUnits::format(GuldenUnits::NLG, info.amount, false, GuldenUnits::separatorNever));
         paramCount++;
     }
 

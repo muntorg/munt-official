@@ -398,7 +398,7 @@ void ReceiveCoinsDialog::generateRequest()
     CAmount amount = ui->requestAmount->value();
     if (amount > 0)
     {
-        ui->labelPaymentRequestHeading->setText(tr("Request %1 Gulden").arg(GuldenUnits::format( GuldenUnits::BTC, amount, false, GuldenUnits::separatorStandard, 2 )));
+        ui->labelPaymentRequestHeading->setText(tr("Request %1 Gulden").arg(GuldenUnits::format( GuldenUnits::NLG, amount, false, GuldenUnits::separatorStandard, 2 )));
     }
     else
     {
@@ -414,7 +414,7 @@ void ReceiveCoinsDialog::generateRequest()
     }
     if (amount > 0)
     {
-        strAmount = "amount=" +  QUrl::toPercentEncoding(GuldenUnits::format( GuldenUnits::BTC, amount, false, GuldenUnits::separatorNever, -1 ));
+        strAmount = "amount=" +  QUrl::toPercentEncoding(GuldenUnits::format( GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, -1 ));
         //Trim trailing decimal zeros
         while(strAmount.endsWith("0"))
         {

@@ -125,8 +125,8 @@ void OptionsModel::Init(bool resetSettings)
 
     // Display
     if (!settings.contains("nDisplayUnit"))
-        settings.setValue("nDisplayUnit", GuldenUnits::BTC);
-    nDisplayUnit = GuldenUnits::BTC;//settings.value("nDisplayUnit").toInt();
+        settings.setValue("nDisplayUnit", GuldenUnits::NLG);
+    nDisplayUnit = GuldenUnits::NLG;//settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");
@@ -293,7 +293,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("bSpendZeroConfChange");
 #endif
         case DisplayUnit:
-            return GuldenUnits::BTC; // fixme: (Post-2.1) - look at adding display units back possibly - nDisplayUnit;
+            return GuldenUnits::NLG; // fixme: (Post-2.1) - look at adding display units back possibly - nDisplayUnit;
         case ThirdPartyTxUrls:
             return "";// fixme: (Post-2.1) - Consider adding this back strThirdPartyTxUrls;
         case Language:

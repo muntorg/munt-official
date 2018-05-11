@@ -39,7 +39,7 @@ class AmountSpinBox: public QAbstractSpinBox
 public:
     explicit AmountSpinBox(QWidget *parent):
         QAbstractSpinBox(parent),
-        currentUnit(GuldenUnits::BTC),
+        currentUnit(GuldenUnits::NLG),
         singleStep(100000000) // satoshis
     {
         setAlignment(Qt::AlignRight);
@@ -174,7 +174,7 @@ public:
 
             const QFontMetrics fm(fontMetrics());
             int h = lineEdit()->minimumSizeHint().height();
-            int w = fm.width(GuldenUnits::format(GuldenUnits::BTC, GuldenUnits::maxMoney(), false, GuldenUnits::separatorAlways));
+            int w = fm.width(GuldenUnits::format(GuldenUnits::NLG, GuldenUnits::maxMoney(), false, GuldenUnits::separatorAlways));
             w += 2; // cursor blinking space
 
             QStyleOptionSpinBox opt;
@@ -493,7 +493,7 @@ void GuldenAmountField::setValue(const CAmount& value)
 void GuldenAmountField::setValue(const CAmount& value, int nLimit)
 {
     CAmount finalValue;
-    GuldenUnits::parse(GuldenUnits::BTC, GuldenUnits::format(GuldenUnits::BTC, value, false, GuldenUnits::separatorAlways, nLimit), &finalValue);
+    GuldenUnits::parse(GuldenUnits::NLG, GuldenUnits::format(GuldenUnits::NLG, value, false, GuldenUnits::separatorAlways, nLimit), &finalValue);
     if (finalValue > MAX_MONEY)
     {
         finalValue = MAX_MONEY;
@@ -739,16 +739,16 @@ void GuldenAmountField::update()
             }
 
             secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
-            nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
+            nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
             //fixme: (2.0) (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "GuldenAmountField" can occur after it is deleted if changing between accounts...
             //connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
+            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(amount, "BTC");
-            nocksRequestNLGtoBTC = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "BTC", "NLG", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
+            nocksRequestNLGtoBTC = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "BTC", "NLG", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
             //connect(nocksRequestNLGtoBTC, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoBTC, 3); });
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
             quadAmount = ticker->convertGuldenToForex(amount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
         }
         else
         {
@@ -787,13 +787,13 @@ void GuldenAmountField::update()
             }
 
             secondaryAmount = guldenAmount;
-            nocksRequestBTCtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "BTC", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
+            nocksRequestBTCtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "BTC", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
             connect(nocksRequestBTCtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestBTCtoNLG, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
+            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
             quadAmount = ticker->convertGuldenToForex(guldenAmount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
         }
         else
         {
@@ -832,13 +832,13 @@ void GuldenAmountField::update()
             }
 
             secondaryAmount = guldenAmount;
-            nocksRequestEURtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
+            nocksRequestEURtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
             connect(nocksRequestEURtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestEURtoNLG, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG"))  + GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
+            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG"))  + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
             quadAmount = ticker->convertGuldenToForex(guldenAmount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
         }
         else
         {
@@ -879,11 +879,11 @@ void GuldenAmountField::update()
             }
 
             secondaryAmount = guldenAmount;
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
+            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
             quadAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
+            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
         }
         else
         {
@@ -901,20 +901,20 @@ void GuldenAmountField::nocksRequestProcessed(NocksRequest*& request, int positi
 {
     if (position == 2)
     {
-        GuldenUnits::parse(GuldenUnits::BTC, request->nativeAmount, &secondaryAmount);
+        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &secondaryAmount);
         QString oldText = secondaryAmountDisplay->text();
-        oldText = oldText.replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
+        oldText = oldText.replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
         secondaryAmountDisplay->setText(oldText);
     }
     else if (position == 3)
     {
-        GuldenUnits::parse(GuldenUnits::BTC, request->nativeAmount, &tertiaryAmount);
-        tertiaryAmountDisplay->setText(tertiaryAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
+        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &tertiaryAmount);
+        tertiaryAmountDisplay->setText(tertiaryAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
     }
     else if (position == 4)
     {
-        GuldenUnits::parse(GuldenUnits::BTC, request->nativeAmount, &quadAmount);
-        quadAmountDisplay->setText(quadAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
+        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &quadAmount);
+        quadAmountDisplay->setText(quadAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
     }
     request->deleteLater();
     request = NULL;

@@ -24,9 +24,9 @@ GuldenUnits::GuldenUnits(QObject *parent):
 QList<GuldenUnits::Unit> GuldenUnits::availableUnits()
 {
     QList<GuldenUnits::Unit> unitlist;
-    unitlist.append(BTC);
-    unitlist.append(mBTC);
-    unitlist.append(uBTC);
+    unitlist.append(NLG);
+    unitlist.append(mNLG);
+    unitlist.append(uNLG);
     return unitlist;
 }
 
@@ -34,9 +34,9 @@ bool GuldenUnits::valid(int unit)
 {
     switch(unit)
     {
-    case BTC:
-    case mBTC:
-    case uBTC:
+    case NLG:
+    case mNLG:
+    case uNLG:
         return true;
     default:
         return false;
@@ -47,9 +47,9 @@ QString GuldenUnits::name(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("NLG");
-    case mBTC: return QString("mNLG");
-    case uBTC: return QString::fromUtf8("μNLG");
+    case NLG: return QString("NLG");
+    case mNLG: return QString("mNLG");
+    case uNLG: return QString::fromUtf8("μNLG");
     default: return QString("???");
     }
 }
@@ -58,9 +58,9 @@ QString GuldenUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("Gulden");
-    case mBTC: return QString("Milli-Gulden (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("Micro-Gulden (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case NLG: return QString("Gulden");
+    case mNLG: return QString("Milli-Gulden (1 / 1" THIN_SP_UTF8 "000)");
+    case uNLG: return QString("Micro-Gulden (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
 }
@@ -69,9 +69,9 @@ qint64 GuldenUnits::factor(int unit)
 {
     switch(unit)
     {
-    case BTC:  return 100000000;
-    case mBTC: return 100000;
-    case uBTC: return 100;
+    case NLG:  return 100000000;
+    case mNLG: return 100000;
+    case uNLG: return 100;
     default:   return 100000000;
     }
 }
@@ -80,9 +80,9 @@ int GuldenUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case BTC: return 8;
-    case mBTC: return 5;
-    case uBTC: return 2;
+    case NLG: return 8;
+    case mNLG: return 5;
+    case uNLG: return 2;
     default: return 0;
     }
 }

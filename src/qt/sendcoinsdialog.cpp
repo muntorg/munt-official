@@ -446,7 +446,7 @@ void SendCoinsDialog::on_sendButton_clicked()
 
         if (!rcp.forexAddress.isEmpty())
         {
-            amount = "<b>" + GuldenUnits::format(GuldenUnits::BTC, rcp.forexAmount);
+            amount = "<b>" + GuldenUnits::format(GuldenUnits::NLG, rcp.forexAmount);
             if (rcp.forexPaymentType == SendCoinsRecipient::PaymentType::IBANPayment)
             {
                 amount.append(" Euro");

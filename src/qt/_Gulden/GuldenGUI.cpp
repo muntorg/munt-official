@@ -281,10 +281,10 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         return;
 
     CAmount displayBalance = balance + unconfirmedBalance + immatureBalance;
-    labelBalance->setText(GuldenUnits::format(GuldenUnits::BTC, displayBalance, false, GuldenUnits::separatorStandard, 2));
+    labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
     if (displayBalance > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
+        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -312,13 +312,13 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         QString toolTip;
         if (unconfirmedBalance > 0)
         {
-            toolTip += tr("Pending confirmation: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, unconfirmedBalance, false, GuldenUnits::separatorStandard, 2));
+            toolTip += tr("Pending confirmation: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, unconfirmedBalance, false, GuldenUnits::separatorStandard, 2));
         }
         if (immatureBalance > 0)
         {
             if (!toolTip.isEmpty())
                 toolTip += "\n";
-            toolTip += tr("Pending maturity: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, immatureBalance, false, GuldenUnits::separatorStandard, 2));
+            toolTip += tr("Pending maturity: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, immatureBalance, false, GuldenUnits::separatorStandard, 2));
         }
         labelBalance->setToolTip(toolTip);
     }
