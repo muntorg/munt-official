@@ -741,11 +741,11 @@ void GuldenAmountField::update()
             secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
             nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
             //fixme: (2.0) (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "GuldenAmountField" can occur after it is deleted if changing between accounts...
-            connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
+            //connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
             secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
             tertiaryAmount = ticker->convertGuldenToForex(amount, "BTC");
             nocksRequestNLGtoBTC = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "BTC", "NLG", GuldenUnits::format(GuldenUnits::Unit::BTC, amount, false, GuldenUnits::separatorNever, 2));
-            connect(nocksRequestNLGtoBTC, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoBTC, 3); });
+            //connect(nocksRequestNLGtoBTC, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoBTC, 3); });
             tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
             quadAmount = ticker->convertGuldenToForex(amount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
             quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));

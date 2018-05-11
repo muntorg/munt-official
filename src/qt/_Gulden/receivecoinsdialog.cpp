@@ -370,7 +370,7 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
 
 void ReceiveCoinsDialog::generateRequest()
 {
-    //fixme: (2.1) (HD) kep gaps
+    //fixme: (2.1) (HD) key gaps
     CReserveKey reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))

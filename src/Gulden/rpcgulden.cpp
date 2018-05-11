@@ -872,25 +872,26 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
     destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     destinationPoW2Witness.failCount = 0;
     {
-        //fixme: (2.0) this leaks keys if the tx later fails - so a bit gross, but will do for now.
-        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
         CReserveKey keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keyWitness.GetReservedKey(pubWitnessKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
 
-        keyWitness.KeepKey();
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keyWitness.ReturnKey();
         destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
     }
     {
-        //fixme: (2.0) this leaks keys if the tx later fails - so a bit gross, but will do for now.
         //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
         CReserveKey keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
 
-        keySpending.KeepKey();
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keySpending.ReturnKey();
         destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
     }
 

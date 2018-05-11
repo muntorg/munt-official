@@ -455,8 +455,6 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     if (isPoW2WitnessCreation())
     {
-        //fixme: (2.0) HIGHHIGHHIGH this leaks everytime we type.
-        //fixme: (2.0) HIGHHIGHHIGH this leaks keys if the tx fails - so a bit gross, but will do for now
         CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
@@ -466,7 +464,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             recipient.address = QString("error");
             return recipient;
         }
-        keySpending.KeepKey();
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keySpending.ReturnKey();
         CReserveKey keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
@@ -476,7 +476,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
             recipient.address = QString("error");
             return recipient;
         }
-        keyWitness.KeepKey();
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keyWitness.ReturnKey();
         recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
         recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
         recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
@@ -519,7 +521,6 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
                         LOCK(pactiveWallet->cs_wallet);
 
-                        //fixme: (2.0) this leaks keys if the tx fails - so a bit gross, but will do for now
                         CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
@@ -529,7 +530,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                             recipient.address = QString("error");
                             return recipient;
                         }
-                        keySpending.KeepKey();
+                        //We delibritely return the key here, so that if we fail we won't leak the key.
+                        //The key will be marked as used when the transaction is accepted anyway.
+                        keySpending.ReturnKey();
                         CKeyID keyID = pubSpendingKey.GetID();
                         recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
                         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
