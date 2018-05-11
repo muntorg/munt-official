@@ -102,13 +102,13 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Bitcoin addresses.
+/** base58-encoded Gulden addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
-class CBitcoinAddress : public CBase58Data {
+class CGuldenAddress : public CBase58Data {
 public:
     bool Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID);
     bool Set(const CKeyID &id);
@@ -118,10 +118,10 @@ public:
     bool IsValid(const CChainParams &params) const;
     bool IsValidBitcoin() const;
 
-    CBitcoinAddress() {}
-    CBitcoinAddress(const CTxDestination &dest) { Set(dest); }
-    CBitcoinAddress(const std::string& strAddress) { SetString(strAddress); }
-    CBitcoinAddress(const char* pszAddress) { SetString(pszAddress); }
+    CGuldenAddress() {}
+    CGuldenAddress(const CTxDestination &dest) { Set(dest); }
+    CGuldenAddress(const std::string& strAddress) { SetString(strAddress); }
+    CGuldenAddress(const char* pszAddress) { SetString(pszAddress); }
 
     CTxDestination Get() const;
     bool GetKeyID(CKeyID &keyID) const;
@@ -131,7 +131,7 @@ public:
 /**
  * A base58-encoded secret key
  */
-class CBitcoinSecret : public CBase58Data
+class CGuldenSecret : public CBase58Data
 {
 public:
     void SetKey(const CKey& vchSecret);
@@ -140,14 +140,14 @@ public:
     bool SetString(const char* pszSecret);
     bool SetString(const std::string& strSecret);
 
-    CBitcoinSecret(const CKey& vchSecret) { SetKey(vchSecret); }
-    CBitcoinSecret() {}
+    CGuldenSecret(const CKey& vchSecret) { SetKey(vchSecret); }
+    CGuldenSecret() {}
 };
 
 /**
  * A combination base58 and hex encoded secret extended key
  */
-template <typename KeyType> class CBitcoinSecretExt 
+template <typename KeyType> class CGuldenSecretExt 
 {
 public:
     void SetKey(const KeyType& vchSecret) { key = vchSecret; }
@@ -206,16 +206,16 @@ public:
         return ret;
     }
 
-    CBitcoinSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
-    CBitcoinSecretExt(const std::string& strSecret) { SetString(strSecret); }
-    CBitcoinSecretExt() {}
+    CGuldenSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
+    CGuldenSecretExt(const std::string& strSecret) { SetString(strSecret); }
+    CGuldenSecretExt() {}
 
 private:
     KeyType key;
     std::string secret;
 };
 
-template<typename K, int Size, CChainParams::Base58Type Type> class CBitcoinExtKeyBase : public CBase58Data
+template<typename K, int Size, CChainParams::Base58Type Type> class CGuldenExtKeyBase : public CBase58Data
 {
 public:
     void SetKey(const K &key) {
@@ -233,18 +233,18 @@ public:
         return ret;
     }
 
-    CBitcoinExtKeyBase(const K &key) {
+    CGuldenExtKeyBase(const K &key) {
         SetKey(key);
     }
 
-    CBitcoinExtKeyBase(const std::string& strBase58c) {
+    CGuldenExtKeyBase(const std::string& strBase58c) {
         SetString(strBase58c.c_str(), Params().Base58Prefix(Type).size());
     }
 
-    CBitcoinExtKeyBase() {}
+    CGuldenExtKeyBase() {}
 };
 
-typedef CBitcoinExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CBitcoinExtKey;
-typedef CBitcoinExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CBitcoinExtPubKey;
+typedef CGuldenExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CGuldenExtKey;
+typedef CGuldenExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CGuldenExtPubKey;
 
 #endif // GULDEN_BASE58_H

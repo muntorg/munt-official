@@ -118,24 +118,24 @@ void AccountSummaryWidget::updateExchangeRates()
         std::string currencyCode = optionsModel->guldenSettings->getLocalCurrency().toStdString();
         CAmount forexAmount = m_ticker->convertGuldenToForex(m_accountBalance, currencyCode);
 
-        ui->accountBalance->setText( BitcoinUnits::format(BitcoinUnits::Unit::BTC, m_accountBalance, false, BitcoinUnits::separatorAlways, 2) );
+        ui->accountBalance->setText( GuldenUnits::format(GuldenUnits::Unit::BTC, m_accountBalance, false, GuldenUnits::separatorAlways, 2) );
 
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalance, false, BitcoinUnits::separatorStandard, 2));
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, m_accountBalance, false, GuldenUnits::separatorStandard, 2));
         if (m_account->IsPoW2Witness())
         {
-            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalanceLocked, false, BitcoinUnits::separatorStandard, 2));
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, m_accountBalanceLocked, false, GuldenUnits::separatorStandard, 2));
         }
         else
         {
-            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalanceImmatureOrUnconfirmed, false, BitcoinUnits::separatorStandard, 2));
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
         }
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, BitcoinUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
 
         ui->accountBalance->setToolTip(toolTip);
 
         if (forexAmount > 0)
         {
-            ui->accountBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(currencyCode) + "\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, forexAmount, false, BitcoinUnits::separatorAlways, 2) + QString(")") );
+            ui->accountBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(currencyCode) + "\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, forexAmount, false, GuldenUnits::separatorAlways, 2) + QString(")") );
             if (m_showForexBalance && ui->accountBalance->isVisible())
             {
                 ui->accountBalanceForex->setVisible( true );

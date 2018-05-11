@@ -157,7 +157,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BitcoinAmountField" name="requestAmount"/>
+            <widget class="GuldenAmountField" name="requestAmount"/>
            </item>
            <item>
             <widget class="QLineEdit" name="requestLabel">
@@ -593,7 +593,7 @@
    <header location="global">qt/_Gulden/clickableqrimage.h</header>
   </customwidget>
   <customwidget>
-   <class>BitcoinAmountField</class>
+   <class>GuldenAmountField</class>
    <extends>QLineEdit</extends>
    <header>amountfield.h</header>
    <container>1</container>

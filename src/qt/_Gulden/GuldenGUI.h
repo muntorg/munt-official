@@ -19,7 +19,7 @@
 #include "amount.h"
 
 
-class BitcoinGUI;
+class GUI;
 class QPushButton;
 class ClickableLabel;
 class QToolBar;
@@ -108,7 +108,7 @@ class GuldenGUI: public QObject
     Q_OBJECT
 
 public:
-    explicit GuldenGUI(BitcoinGUI* pImpl);
+    explicit GuldenGUI(GUI* pImpl);
     virtual ~GuldenGUI();
 
 
@@ -140,7 +140,7 @@ public:
 
 protected:
 private:
-    BitcoinGUI* m_pImpl;
+    GUI* m_pImpl;
     QToolBar* accountBar;
     QToolBar* guldenBar;
     QToolBar* spacerBarL;

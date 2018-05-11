@@ -249,7 +249,7 @@ static void NotifyRequestUnlockWithCallbackS(GuldenGUI* parent, CWallet* wallet,
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlockWithCallback", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)), Q_ARG(std::function<void (void)>, callback));
 }
 
-GuldenGUI::GuldenGUI( BitcoinGUI* pImpl )
+GuldenGUI::GuldenGUI( GUI* pImpl )
 : QObject()
 , m_pImpl( pImpl )
 , accountBar( NULL )
@@ -354,10 +354,10 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         return;
 
     CAmount displayBalance = balance + unconfirmedBalance + immatureBalance;
-    labelBalance->setText(BitcoinUnits::format(BitcoinUnits::BTC, displayBalance, false, BitcoinUnits::separatorStandard, 2));
+    labelBalance->setText(GuldenUnits::format(GuldenUnits::BTC, displayBalance, false, GuldenUnits::separatorStandard, 2));
     if (displayBalance > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + BitcoinUnits::format(BitcoinUnits::Unit::BTC, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, BitcoinUnits::separatorAlways, 2) + QString(")"));
+        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::Unit::BTC, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -385,13 +385,13 @@ void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBal
         QString toolTip;
         if (unconfirmedBalance > 0)
         {
-            toolTip += tr("Pending confirmation: %1").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, unconfirmedBalance, false, BitcoinUnits::separatorStandard, 2));
+            toolTip += tr("Pending confirmation: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, unconfirmedBalance, false, GuldenUnits::separatorStandard, 2));
         }
         if (immatureBalance > 0)
         {
             if (!toolTip.isEmpty())
                 toolTip += "\n";
-            toolTip += tr("Pending maturity: %1").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, immatureBalance, false, BitcoinUnits::separatorStandard, 2));
+            toolTip += tr("Pending maturity: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::BTC, immatureBalance, false, GuldenUnits::separatorStandard, 2));
         }
         labelBalance->setToolTip(toolTip);
     }
@@ -420,7 +420,7 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
 
     QString questionString = tr("Renewing witness account will incur a transaction fee: ");
     questionString.append("<span style='color:#aa0000;'>");
-    questionString.append(BitcoinUnits::formatHtmlWithUnit(optionsModel->getDisplayUnit(), txFee));
+    questionString.append(GuldenUnits::formatHtmlWithUnit(optionsModel->getDisplayUnit(), txFee));
     questionString.append("</span> ");
     QDialog* d = createDialog(m_pImpl, questionString, tr("Send"), tr("Cancel"), 600, 360);
 
@@ -1326,7 +1326,7 @@ void GuldenGUI::updateAccount(CAccount* account)
     if (receiveAddress->GetReservedKey(pubKey))
     {
         CKeyID keyID = pubKey.GetID();
-        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CBitcoinAddress(keyID).ToString()) );
+        m_pImpl->walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
     }
     else
     {
@@ -1447,7 +1447,7 @@ void GuldenGUI::promptImportPrivKey()
     ImportPrivKeyDialog dlg(this->m_pImpl);
     dlg.exec();
 
-    CBitcoinSecret vchSecret;
+    CGuldenSecret vchSecret;
     bool fGood = vchSecret.SetString(dlg.getPrivKey().c_str());
 
     if (fGood)

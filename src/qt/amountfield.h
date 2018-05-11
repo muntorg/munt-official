@@ -27,9 +27,9 @@ class QValueComboBox;
 class QLabel;
 QT_END_NAMESPACE
 
-/** Widget for entering bitcoin amounts.
+/** Widget for entering currency amounts.
   */
-class BitcoinAmountField: public QWidget
+class GuldenAmountField: public QWidget
 {
     Q_OBJECT
 
@@ -38,7 +38,7 @@ class BitcoinAmountField: public QWidget
     Q_PROPERTY(qint64 value READ value WRITE setValue NOTIFY valueChanged USER true)
 
 public:
-    explicit BitcoinAmountField(QWidget *parent = 0);
+    explicit GuldenAmountField(QWidget *parent = 0);
 
     CAmount value(bool *value=0) const;
     CAmount valueForCurrency(bool *value=0) const;

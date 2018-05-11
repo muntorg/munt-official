@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="BitcoinAmountField" name="payAmount"/>
+    <widget class="GuldenAmountField" name="payAmount"/>
    </item>
    <item>
     <widget class="QStackedWidget" name="sendCoinsRecipientStack">
@@ -453,7 +453,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BitcoinAmountField</class>
+   <class>GuldenAmountField</class>
    <extends>QLineEdit</extends>
    <header>amountfield.h</header>
    <container>1</container>

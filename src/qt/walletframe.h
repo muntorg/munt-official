@@ -15,7 +15,7 @@
 #include <QFrame>
 #include <QMap>
 
-class BitcoinGUI;
+class GUI;
 class ClientModel;
 class PlatformStyle;
 class SendCoinsRecipient;
@@ -28,9 +28,9 @@ QT_END_NAMESPACE
 
 /**
  * A container for embedding all wallet-related
- * controls into BitcoinGUI. The purpose of this class is to allow future
+ * controls into GUI. The purpose of this class is to allow future
  * refinements of the wallet controls with minimal need for further
- * modifications to BitcoinGUI, thus greatly simplifying merges while
+ * modifications to GUI, thus greatly simplifying merges while
  * reducing the risk of breaking top-level stuff.
  */
 class WalletFrame : public QFrame
@@ -38,7 +38,7 @@ class WalletFrame : public QFrame
     Q_OBJECT
 
 public:
-    explicit WalletFrame(const PlatformStyle *platformStyle, BitcoinGUI *_gui = 0);
+    explicit WalletFrame(const PlatformStyle *platformStyle, GUI *_gui = 0);
     ~WalletFrame();
 
     void setClientModel(ClientModel *clientModel);
@@ -58,7 +58,7 @@ Q_SIGNALS:
 
 private:
     QStackedWidget *walletStack;
-    BitcoinGUI *gui;
+    GUI *gui;
     ClientModel *clientModel;
     QMap<QString, WalletView*> mapWalletViews;
 
@@ -99,7 +99,7 @@ public Q_SLOTS:
     void outOfSyncWarningClicked();
 
     friend class GuldenGUI;
-    friend class BitcoinGUI;
+    friend class GUI;
 };
 
 #endif // GULDEN_QT_WALLETFRAME_H

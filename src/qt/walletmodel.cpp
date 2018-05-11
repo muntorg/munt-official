@@ -202,13 +202,13 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
-    CBitcoinAddress addressParsed(address.toStdString());
+    CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
 bool WalletModel::validateAddressBitcoin(const QString &address)
 {
-    CBitcoinAddress addressParsed(address.toStdString());
+    CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValidBitcoin();
 }
 
@@ -302,7 +302,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 if (nTipPrevPoW2Phase >= 4)
                 {
                     CKeyID key;
-                    if (!CBitcoinAddress(rcp.address.toStdString()).GetKeyID(key))
+                    if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
                         return InvalidAddress;
 
                     CRecipient recipient = CRecipient(CTxOutStandardKeyHash(key), rcp.amount, rcp.fSubtractFeeFromAmount);
@@ -310,7 +310,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 }
                 else
                 {
-                    CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+                    CScript scriptPubKey = GetScriptForDestination(CGuldenAddress(rcp.address.toStdString()).Get());
                     CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
                 }
@@ -765,7 +765,7 @@ void WalletModel::listCoins(CAccount* forAccount, std::map<QString, std::vector<
 {
     //fixme: (2.0) (ACCOUNTS)
     for (auto& group : wallet->ListCoins(forAccount)) {
-        auto& resultGroup = mapCoins[QString::fromStdString(CBitcoinAddress(group.first).ToString())];
+        auto& resultGroup = mapCoins[QString::fromStdString(CGuldenAddress(group.first).ToString())];
         for (auto& coin : group.second) {
             resultGroup.emplace_back(std::move(coin));
         }
@@ -803,7 +803,7 @@ void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests
 
 bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t nId, const std::string &sRequest)
 {
-    CTxDestination dest = CBitcoinAddress(sAddress).Get();
+    CTxDestination dest = CGuldenAddress(sAddress).Get();
 
     std::stringstream ss;
     ss << nId;
@@ -857,15 +857,15 @@ bool WalletModel::bumpFee(uint256 hash)
     questionString.append("<tr><td>");
     questionString.append(tr("Current fee:"));
     questionString.append("</td><td>");
-    questionString.append(BitcoinUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), oldFee));
+    questionString.append(GuldenUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), oldFee));
     questionString.append("</td></tr><tr><td>");
     questionString.append(tr("Increase:"));
     questionString.append("</td><td>");
-    questionString.append(BitcoinUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), newFee - oldFee));
+    questionString.append(GuldenUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), newFee - oldFee));
     questionString.append("</td></tr><tr><td>");
     questionString.append(tr("New fee:"));
     questionString.append("</td><td>");
-    questionString.append(BitcoinUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), newFee));
+    questionString.append(GuldenUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), newFee));
     questionString.append("</td></tr></table>");
     SendConfirmationDialog confirmationDialog(tr("Confirm fee bump"), questionString);
     confirmationDialog.exec();

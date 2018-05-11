@@ -159,25 +159,25 @@ QMainWindow #home_button
 }
 
 /*Popup dialogs*/
-BitcoinGUI QDialog:window, QDialog:window
+GUI QDialog:window, QDialog:window
 {
     border-image: url(':/Gulden/dialog_background') 0 0 0 0 stretch stretch;
     color: black;
 }
 
-BitcoinGUI QDialog:window *
+GUI QDialog:window *
 {
     color: black;
 }
 
-BitcoinGUI QDialog, BitcoinGUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAccountDialog, #scanToConnectPage, #newAccountPage
+GUI QDialog, GUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAccountDialog, #scanToConnectPage, #newAccountPage
 {
     background-color: transparent;
     border-image: url(none.jpg);
 }
 
 
-BitcoinGUI #NewAccountDialog, BitcoinGUI #AccountSettingsDialog, BitcoinGUI #walletFrame, BitcoinGUI > QToolBar, BitcoinGUI > QDialog, BitcoinGUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, BitcoinGUI #progress_bar
+GUI #NewAccountDialog, GUI #AccountSettingsDialog, GUI #walletFrame, GUI > QToolBar, GUI > QDialog, GUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, GUI #progress_bar
 {
     background-color: rgba(255, 255, 255, 50%);
     border-image: url(none.jpg);
@@ -195,12 +195,12 @@ BitcoinGUI #NewAccountDialog, BitcoinGUI #AccountSettingsDialog, BitcoinGUI #wal
     border-image: url(none.jpg);
 }
 
-BitcoinGUI QMenuBar
+GUI QMenuBar
 {
     background-color: rgba(0, 0, 0, 5%);
 }
 
-BitcoinGUI QMenuBar,#menuBarSpaceFiller
+GUI QMenuBar,#menuBarSpaceFiller
 {
     border: 0px;
 }
@@ -217,7 +217,7 @@ BitcoinGUI QMenuBar,#menuBarSpaceFiller
     color: black;
 }
 
-BitcoinGUI QMenuBar
+GUI QMenuBar
 {
     max-width: SIDE_BAR_WIDTH;
     max-height: 21px;
@@ -229,19 +229,19 @@ QMenuBar
     color : black;
 }
 
-BitcoinGUI *
+GUI *
 {
     background-color: transparent;
 }
 
 
 
-BitcoinGUI > QToolBar
+GUI > QToolBar
 {
 	spacing: 0px;
 }
 
-BitcoinGUI > QToolBar > QToolButton
+GUI > QToolBar > QToolButton
 {
     color: #aaa;
     height: 41px;
@@ -252,13 +252,13 @@ BitcoinGUI > QToolBar > QToolButton
     padding-right:20px;
 }
 
-BitcoinGUI > QToolBar > QToolButton:hover
+GUI > QToolBar > QToolButton:hover
 {
     color: #555;
     height: 44px;
 }
 
-BitcoinGUI > QToolBar > QToolButton:checked
+GUI > QToolBar > QToolButton:checked
 {
     color: #000;
 }
@@ -432,7 +432,7 @@ QTabWidget *
 
 
 
-BitcoinGUI QDialog:window QPushButton
+GUI QDialog:window QPushButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -445,7 +445,7 @@ BitcoinGUI QDialog:window QPushButton
     margin-bottom: 20px;
 }
 
-BitcoinGUI QDialog:window QPushButton:pressed
+GUI QDialog:window QPushButton:pressed
 {
     color: ACCENT_COLOR_2;
 }
@@ -454,7 +454,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
 
 
 /*Cancel buttons*/
-#clearButton, #deleteButton, #cancelButton, #cancelButton2, #deleteButton, BitcoinGUI #closeButton, #buttonDone, #buttonCancel
+#clearButton, #deleteButton, #cancelButton, #cancelButton2, #deleteButton, GUI #closeButton, #buttonDone, #buttonCancel
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -463,7 +463,7 @@ BitcoinGUI QDialog:window QPushButton:pressed
     padding: 0px;   
     margin-bottom: 18px;
 }
-#clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, BitcoinGUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
+#clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, GUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
 {
     color: #bf1b3a;
 }
@@ -551,7 +551,7 @@ GuldenSendCoinsEntry
     margin-top: 30px;
 }
 
-BitcoinGUI #topMargin
+GUI #topMargin
 {
     height: 30px;
     max-height: 30px;
@@ -1144,7 +1144,7 @@ QAbstractSpinBox
     height:28px;
 }
 
-BitcoinAmountField QLabel
+GuldenAmountField QLabel
 {
     color: TEXT_COLOR_1;
     font-size: BUTTON_FONT_SIZE;
@@ -1152,7 +1152,7 @@ BitcoinAmountField QLabel
 }
 
 
-BitcoinGUI QScrollBar:vertical
+GUI QScrollBar:vertical
 {
     margin: 0px;
     border: 0;
@@ -1164,7 +1164,7 @@ BitcoinGUI QScrollBar:vertical
     border-right: 8px solid rgba(0, 0, 0, 0%);
 }
 
-BitcoinGUI QScrollBar::handle:vertical
+GUI QScrollBar::handle:vertical
 {
     background-color: #ccc;
     min-height: 10px;
@@ -1173,38 +1173,38 @@ BitcoinGUI QScrollBar::handle:vertical
     border-radius: 4px;
 }
 
-BitcoinGUI QScrollBar::handle:vertical:hover
+GUI QScrollBar::handle:vertical:hover
 {
     background-color: TEXT_COLOR_1;
 }
 
-BitcoinGUI QScrollBar::handle:vertical:pressed
+GUI QScrollBar::handle:vertical:pressed
 {
     background-color: #888;
 }
 
-BitcoinGUI QScrollBar::add-line
+GUI QScrollBar::add-line
 {
     background-color: transparent;
 }
 
-BitcoinGUI QScrollBar::sub-line
+GUI QScrollBar::sub-line
 {
     background-color: transparent;
 }
 
-BitcoinGUI QScrollBar::add-page
+GUI QScrollBar::add-page
 {
     background-color: transparent;
 }
 
-BitcoinGUI QScrollBar::sub-page
+GUI QScrollBar::sub-page
 {
     background-color: transparent;
 }
 
 
-BitcoinGUI QScrollBar:down-arrow:vertical
+GUI QScrollBar:down-arrow:vertical
 {
     width: 8px;
     height: 8px;
@@ -1213,18 +1213,18 @@ BitcoinGUI QScrollBar:down-arrow:vertical
     image: url(':/Gulden/angle_down_grey');
 }
 
-BitcoinGUI QScrollBar:down-arrow:vertical:hover
+GUI QScrollBar:down-arrow:vertical:hover
 {
     image: url(':/Gulden/angle_down_blue');
     border-right: 8px solid rgba(0, 0, 0, 0%);
 }
 
-BitcoinGUI QScrollBar::down-arrow:vertical:pressed
+GUI QScrollBar::down-arrow:vertical:pressed
 {
     
 }
 
-BitcoinGUI QScrollBar::up-arrow:vertical
+GUI QScrollBar::up-arrow:vertical
 {
     width: 8px;
     height: 8px;
@@ -1233,18 +1233,18 @@ BitcoinGUI QScrollBar::up-arrow:vertical
     image: url(':/Gulden/angle_up_grey'); 
 }
 
-BitcoinGUI QScrollBar::up-arrow:vertical:hover
+GUI QScrollBar::up-arrow:vertical:hover
 {
     image: url(':/Gulden/angle_up_blue');
     border-right: 8px solid rgba(0, 0, 0, 0%);
 }
 
-BitcoinGUI QScrollBar::up-arrow:vertical:pressed
+GUI QScrollBar::up-arrow:vertical:pressed
 {
     
 }
 
-BitcoinGUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 {
     background: none;
 }

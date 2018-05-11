@@ -214,7 +214,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
                 throw std::runtime_error("Could not extract PoW² witness for block.");
 
-            sWitnessAddress = CBitcoinAddress(selectedWitnessAddress).ToString();
+            sWitnessAddress = CGuldenAddress(selectedWitnessAddress).ToString();
         }
     }
 
@@ -275,7 +275,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
             CAmount nValue = iter.second.out.nValue;
 
             UniValue rec(UniValue::VOBJ);
-            rec.push_back(Pair("address", CBitcoinAddress(address).ToString()));
+            rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
             rec.push_back(Pair("weight", nRawWeight));
             rec.push_back(Pair("eligible_to_witness", fEligible));

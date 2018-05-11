@@ -227,9 +227,9 @@ void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
             savedPaymentRequests.append(arg);
 
             SendCoinsRecipient r;
-            if (GUIUtil::parseBitcoinURI(arg, &r) && !r.address.isEmpty())
+            if (GUIUtil::parseGuldenURI(arg, &r) && !r.address.isEmpty())
             {
-                CBitcoinAddress address(r.address.toStdString());
+                CGuldenAddress address(r.address.toStdString());
                 auto tempChainParams = CreateChainParams(CBaseChainParams::MAIN);
 
                 if (address.IsValid(*tempChainParams))
@@ -450,9 +450,9 @@ void PaymentServer::handleURIOrFile(const QString& s)
         else // normal URI
         {
             SendCoinsRecipient recipient;
-            if (GUIUtil::parseBitcoinURI(s, &recipient))
+            if (GUIUtil::parseGuldenURI(s, &recipient))
             {
-                CBitcoinAddress address(recipient.address.toStdString());
+                CGuldenAddress address(recipient.address.toStdString());
                 if (!address.IsValid()) {
                     Q_EMIT message(tr("URI handling"), tr("Invalid payment address %1").arg(recipient.address),
                         CClientUIInterface::MSG_ERROR);
@@ -571,7 +571,7 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
         CTxDestination dest;
         if (ExtractDestination(sendingTo.first, dest)) {
             // Append destination address
-            addresses.append(QString::fromStdString(CBitcoinAddress(dest).ToString()));
+            addresses.append(QString::fromStdString(CGuldenAddress(dest).ToString()));
         }
         else if (!recipient.authenticatedMerchant.isEmpty()) {
             // Unauthenticated payment requests to custom Gulden addresses are not supported
@@ -595,7 +595,7 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
         //CTxOut txOut(sendingTo.second, sendingTo.first);
         if (IsDust(sendingTo.first, ::dustRelayFee)) {
             Q_EMIT message(tr("Payment request error"), tr("Requested payment amount of %1 is too small (considered dust).")
-                .arg(BitcoinUnits::formatWithUnit(optionsModel->getDisplayUnit(), sendingTo.second)),
+                .arg(GuldenUnits::formatWithUnit(optionsModel->getDisplayUnit(), sendingTo.second)),
                 CClientUIInterface::MSG_ERROR);
 
             return false;
@@ -662,7 +662,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
         //fixme: (Post-2.1) (FUT)
         if (wallet->GetKeyFromPool(newKey, wallet->activeAccount, KEYCHAIN_EXTERNAL)) {
             CKeyID keyID = newKey.GetID();
-            wallet->SetAddressBook(CBitcoinAddress(keyID).ToString(), strAccount, "refund");
+            wallet->SetAddressBook(CGuldenAddress(keyID).ToString(), strAccount, "refund");
 
             CScript s = GetScriptForDestination(keyID);
             payments::Output* refund_to = payment.add_refund_to();

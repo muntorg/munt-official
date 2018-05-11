@@ -91,7 +91,7 @@ public:
             for(const PAIRTYPE(std::string, CAddressBookData)& item : wallet->mapAddressBook)
             {
                 const std::string& address = item.first;
-                bool fMine = IsMine(*wallet, CBitcoinAddress(address).Get());
+                bool fMine = IsMine(*wallet, CGuldenAddress(address).Get());
                 AddressTableEntry::Type addressType = translateTransactionType(
                         QString::fromStdString(item.second.purpose), fMine);
                 const std::string& strName = item.second.name;
@@ -412,7 +412,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
                 return QString();
             }
         }
-        strAddress = CBitcoinAddress(newKey.GetID()).ToString();
+        strAddress = CGuldenAddress(newKey.GetID()).ToString();
     }
     else
     {

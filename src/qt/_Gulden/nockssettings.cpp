@@ -71,7 +71,7 @@ CAmount NocksSettings::getMinimumForCurrency(std::string symbol)
         return 0;
 
     CAmount amountMinimum;
-    BitcoinUnits::parse(BitcoinUnits::BTC, QString::fromStdString(exchangeLimits[symbol].first), &amountMinimum);
+    GuldenUnits::parse(GuldenUnits::BTC, QString::fromStdString(exchangeLimits[symbol].first), &amountMinimum);
     return amountMinimum;
 }
 
@@ -81,7 +81,7 @@ CAmount NocksSettings::getMaximumForCurrency(std::string symbol)
         return 0;
 
     CAmount amountMaximum;
-    BitcoinUnits::parse(BitcoinUnits::BTC, QString::fromStdString(exchangeLimits[symbol].second), &amountMaximum);
+    GuldenUnits::parse(GuldenUnits::BTC, QString::fromStdString(exchangeLimits[symbol].second), &amountMaximum);
     return amountMaximum;
 }
 

@@ -212,7 +212,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
      * these. Do not add them to the wallet and warn. */
     if (redeemScript.size() > MAX_SCRIPT_ELEMENT_SIZE)
     {
-        std::string strAddr = CBitcoinAddress(CScriptID(redeemScript)).ToString();
+        std::string strAddr = CGuldenAddress(CScriptID(redeemScript)).ToString();
         LogPrintf("%s: Warning: This wallet contains a redeemScript of size %i which exceeds maximum size %i thus can never be redeemed. Do not use address %s.\n",
             __func__, redeemScript.size(), MAX_SCRIPT_ELEMENT_SIZE, strAddr);
         return true;
@@ -1336,7 +1336,7 @@ bool CWallet::IsChange(const CTxOut& txout) const
             return true;
 
         LOCK(cs_wallet);
-        if (!mapAddressBook.count(CBitcoinAddress(address).ToString()))
+        if (!mapAddressBook.count(CGuldenAddress(address).ToString()))
             return true;
     }
     return false;
@@ -3616,7 +3616,7 @@ bool CWallet::SetAddressBook(const std::string& address, const std::string& strN
         if (!strPurpose.empty()) /* update purpose only if requested */
             mapAddressBook[address].purpose = strPurpose;
     }
-    NotifyAddressBookChanged(this, address, strName, ::IsMine(*this, CBitcoinAddress(address).Get()) != ISMINE_NO,
+    NotifyAddressBookChanged(this, address, strName, ::IsMine(*this, CGuldenAddress(address).Get()) != ISMINE_NO,
                              strPurpose, (fUpdated ? CT_UPDATED : CT_NEW) );
     if (!strPurpose.empty() && !CWalletDB(*dbw).WritePurpose(address, strPurpose))
         return false;
@@ -3636,10 +3636,10 @@ bool CWallet::DelAddressBook(const std::string& address)
         mapAddressBook.erase(address);
     }
 
-    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, CBitcoinAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
+    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, CGuldenAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
 
-    CWalletDB(*dbw).ErasePurpose(CBitcoinAddress(address).ToString());
-    return CWalletDB(*dbw).EraseName(CBitcoinAddress(address).ToString());
+    CWalletDB(*dbw).ErasePurpose(CGuldenAddress(address).ToString());
+    return CWalletDB(*dbw).EraseName(CGuldenAddress(address).ToString());
 }
 
 
@@ -3995,7 +3995,7 @@ std::set<CTxDestination> CWallet::GetAccountAddresses(const std::string& strAcco
         const std::string& address = item.first;
         const std::string& strName = item.second.name;
         if (strName == strAccount)
-            result.insert(CBitcoinAddress(address).Get());
+            result.insert(CGuldenAddress(address).Get());
     }
     return result;
 }
@@ -4289,26 +4289,26 @@ bool CWallet::AddDestData(const CTxDestination &dest, const std::string &key, co
     if (boost::get<CNoDestination>(&dest))
         return false;
 
-    mapAddressBook[CBitcoinAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
-    return CWalletDB(*dbw).WriteDestData(CBitcoinAddress(dest).ToString(), key, value);
+    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
+    return CWalletDB(*dbw).WriteDestData(CGuldenAddress(dest).ToString(), key, value);
 }
 
 bool CWallet::EraseDestData(const CTxDestination &dest, const std::string &key)
 {
-    if (!mapAddressBook[CBitcoinAddress(dest).ToString()].destdata.erase(key))
+    if (!mapAddressBook[CGuldenAddress(dest).ToString()].destdata.erase(key))
         return false;
-    return CWalletDB(*dbw).EraseDestData(CBitcoinAddress(dest).ToString(), key);
+    return CWalletDB(*dbw).EraseDestData(CGuldenAddress(dest).ToString(), key);
 }
 
 bool CWallet::LoadDestData(const CTxDestination &dest, const std::string &key, const std::string &value)
 {
-    mapAddressBook[CBitcoinAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
+    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
     return true;
 }
 
 bool CWallet::GetDestData(const CTxDestination &dest, const std::string &key, std::string *value) const
 {
-    std::map<std::string, CAddressBookData>::const_iterator i = mapAddressBook.find(CBitcoinAddress(dest).ToString());
+    std::map<std::string, CAddressBookData>::const_iterator i = mapAddressBook.find(CGuldenAddress(dest).ToString());
     if(i != mapAddressBook.end())
     {
         CAddressBookData::StringMap::const_iterator j = i->second.destdata.find(key);

@@ -56,7 +56,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// BitcoinMiner
+// GuldenMiner
 //
 
 //
@@ -811,7 +811,7 @@ struct CBlockIndexCacheComparator
 };
 
 static const unsigned int hashPSTimerInterval = 200;
-void static BitcoinMiner(const CChainParams& chainparams)
+void static GuldenMiner(const CChainParams& chainparams)
 {
     LogPrintf("GuldenMiner started\n");
     RenameThread("gulden-miner");
@@ -1143,7 +1143,7 @@ void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&BitcoinMiner, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&GuldenMiner, boost::cref(chainparams)));
 }
 
 

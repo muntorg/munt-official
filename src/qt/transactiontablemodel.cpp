@@ -287,7 +287,7 @@ TransactionTableModel::~TransactionTableModel()
 /** Updates the column title to "Amount (DisplayUnit)" and emits headerDataChanged() signal for table headers to react. */
 void TransactionTableModel::updateAmountColumnTitle()
 {
-    /*columns[Amount] = BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    /*columns[Amount] = GuldenUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
     Q_EMIT headerDataChanged(Qt::Horizontal,Amount,Amount);*/
 }
 
@@ -573,9 +573,9 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     return QVariant();
 }
 
-QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
+QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed, GuldenUnits::SeparatorStyle separators) const
 {
-    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit , false, separators, 2);
+    QString str = GuldenUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit , false, separators, 2);
     //fixme: (2.1) We could maybe strip the trailing .00 here to clean display up a bit?
     if(showUnconfirmed)
     {
@@ -587,9 +587,9 @@ QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *w
     return QString(str);
 }
 
-QString TransactionTableModel::formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
+QString TransactionTableModel::formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed, GuldenUnits::SeparatorStyle separators) const
 {
-    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->debit, false, separators, 2);
+    QString str = GuldenUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->debit, false, separators, 2);
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)
@@ -673,9 +673,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         case ToAddress:
             return formatTxToAddress(rec, false);
         case AmountReceived:
-            return formatTxAmountReceived(rec, true, BitcoinUnits::separatorAlways);
+            return formatTxAmountReceived(rec, true, GuldenUnits::separatorAlways);
         case AmountSent:
-            return formatTxAmountSent(rec, true, BitcoinUnits::separatorAlways);
+            return formatTxAmountSent(rec, true, GuldenUnits::separatorAlways);
         }
         break;
     case RawDecorationRole:
@@ -702,9 +702,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         case ToAddress:
             return "<tr><td width=20 align=center>" + txAddressDecoration(rec) + "</td><td>" + formatTxToAddress(rec, false) + "</td>";
         case AmountReceived:
-            return formatTxAmountReceived(rec, true, BitcoinUnits::separatorAlways);
+            return formatTxAmountReceived(rec, true, GuldenUnits::separatorAlways);
         case AmountSent:
-            return formatTxAmountSent(rec, true, BitcoinUnits::separatorAlways);
+            return formatTxAmountSent(rec, true, GuldenUnits::separatorAlways);
         }
         break;
     case Qt::EditRole:
@@ -804,14 +804,14 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
                 details.append(QString::fromStdString(rec->address));
                 details.append(" ");
             }
-            details.append(formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever));
+            details.append(formatTxAmountReceived(rec, false, GuldenUnits::separatorNever));
             return details;
         }
     case ConfirmedRole:
         return rec->status.countsForBalance;
     case FormattedAmountRole:
         // Used for copy/export, so don't include separators
-        return formatTxAmountReceived(rec, false, BitcoinUnits::separatorNever);
+        return formatTxAmountReceived(rec, false, GuldenUnits::separatorNever);
     case StatusRole:
         return rec->status.status;
     case DepthRole:

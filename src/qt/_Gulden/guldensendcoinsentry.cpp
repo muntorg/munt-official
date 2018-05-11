@@ -130,7 +130,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
     if (model && model->getOptionsModel())
     {
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-        ui->payAmount->setCurrency(model->getOptionsModel(), model->getOptionsModel()->getTicker(), BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
+        ui->payAmount->setCurrency(model->getOptionsModel(), model->getOptionsModel()->getTicker(), GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
     }
 
     if (model)
@@ -215,15 +215,15 @@ void GuldenSendCoinsEntry::addressChanged()
 
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBitcoin);
+            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyBitcoin);
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyEuro);
+            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyEuro);
         }
         else
         {
-            ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
+            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
         }
     }
 }
@@ -244,7 +244,7 @@ void GuldenSendCoinsEntry::tabChanged()
             break;
         case 2:
             {
-                ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
+                ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
             }
             break;
     }
@@ -334,7 +334,7 @@ bool GuldenSendCoinsEntry::validate()
 
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBitcoin);
+            //ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyBitcoin);
 
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
@@ -346,7 +346,7 @@ bool GuldenSendCoinsEntry::validate()
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyEuro);
+            //ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyEuro);
 
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
@@ -358,7 +358,7 @@ bool GuldenSendCoinsEntry::validate()
         }
         else
         {
-            //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyGulden);
+            //ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
         }
     }
 
@@ -479,7 +479,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         keyWitness.KeepKey();
         recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
         recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
-        recipient.address = QString::fromStdString(CBitcoinAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
+        recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
     }
     else
@@ -531,7 +531,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         }
                         keySpending.KeepKey();
                         CKeyID keyID = pubSpendingKey.GetID();
-                        recipient.address = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+                        recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
                         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                     }
                 }

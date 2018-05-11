@@ -264,7 +264,7 @@ SecureString CHDSeed::getMnemonic()
 
 SecureString CHDSeed::getPubkey()
 {
-    return CBitcoinSecretExt<CExtPubKey>(masterKeyPub).ToString().c_str();
+    return CGuldenSecretExt<CExtPubKey>(masterKeyPub).ToString().c_str();
 }
 
 bool CHDSeed::IsLocked() const
@@ -606,7 +606,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     }
     while( wallet.HaveKey(childKey.pubkey.GetID()) );//fixme: (Post-2.1) (BIP44) No longer need wallet here.
 
-    //LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CBitcoinAddress(childKey.pubkey.GetID()).ToString());
+    //LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CGuldenAddress(childKey.pubkey.GetID()).ToString());
 
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUIDAsString(getUUID());
@@ -631,7 +631,7 @@ SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
     if (IsLocked())
         return NULL;
 
-    return CBitcoinSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
+    return CGuldenSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
 }
 
 boost::uuids::uuid CAccountHD::getSeedUUID() const

@@ -398,7 +398,7 @@ void ReceiveCoinsDialog::generateRequest()
     CAmount amount = ui->requestAmount->value();
     if (amount > 0)
     {
-        ui->labelPaymentRequestHeading->setText(tr("Request %1 Gulden").arg(BitcoinUnits::format( BitcoinUnits::BTC, amount, false, BitcoinUnits::separatorStandard, 2 )));
+        ui->labelPaymentRequestHeading->setText(tr("Request %1 Gulden").arg(GuldenUnits::format( GuldenUnits::BTC, amount, false, GuldenUnits::separatorStandard, 2 )));
     }
     else
     {
@@ -414,7 +414,7 @@ void ReceiveCoinsDialog::generateRequest()
     }
     if (amount > 0)
     {
-        strAmount = "amount=" +  QUrl::toPercentEncoding(BitcoinUnits::format( BitcoinUnits::BTC, amount, false, BitcoinUnits::separatorNever, -1 ));
+        strAmount = "amount=" +  QUrl::toPercentEncoding(GuldenUnits::format( GuldenUnits::BTC, amount, false, GuldenUnits::separatorNever, -1 ));
         //Trim trailing decimal zeros
         while(strAmount.endsWith("0"))
         {
@@ -438,7 +438,7 @@ void ReceiveCoinsDialog::generateRequest()
         args = "?" + label;
     }
 
-    QString uri = QString("Gulden:") + QString::fromStdString(CBitcoinAddress(vchPubKey.GetID()).ToString()) + args;
+    QString uri = QString("Gulden:") + QString::fromStdString(CGuldenAddress(vchPubKey.GetID()).ToString()) + args;
     ui->labelPaymentRequest->setText( uri );
     if(!uri.isEmpty())
     {
@@ -457,7 +457,7 @@ void ReceiveCoinsDialog::generateRequest()
         }
     }
 
-    pactiveWallet->SetAddressBook(CBitcoinAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "receive");
+    pactiveWallet->SetAddressBook(CGuldenAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "receive");
 }
 
 
@@ -506,7 +506,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
         else
         {
             CKeyID keyID = pubKey.GetID();
-            guldenAddress = QString::fromStdString(CBitcoinAddress(keyID).ToString());
+            guldenAddress = QString::fromStdString(CGuldenAddress(keyID).ToString());
         }
 
         //fixme: (2.1) fill proper email address etc. here

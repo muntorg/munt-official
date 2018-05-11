@@ -49,7 +49,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="bitcoinAtStartup">
+        <widget class="QCheckBox" name="guldenAtStartup">
          <property name="toolTip">
           <string>Automatically start %1 after logging in to the system.</string>
          </property>

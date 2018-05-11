@@ -314,7 +314,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             {
                                 if (!addressIn.empty())
                                     addressIn += ", ";
-                                addressIn += CBitcoinAddress(senderAddress).ToString();
+                                addressIn += CGuldenAddress(senderAddress).ToString();
                             }
                         }
                     }
@@ -327,7 +327,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Received by Gulden Address
                         sub.type = TransactionRecord::RecvWithAddress;
-                        //sub.address = CBitcoinAddress(address).ToString();
+                        //sub.address = CGuldenAddress(address).ToString();
                     }
                     else
                     {
@@ -485,7 +485,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Sent to Gulden Address
                         sub.type = TransactionRecord::SendToAddress;
-                        sub.address = CBitcoinAddress(address).ToString();
+                        sub.address = CGuldenAddress(address).ToString();
                     }
                     else
                     {

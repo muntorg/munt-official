@@ -152,7 +152,7 @@ bool ShutdownRequested()
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
  * chainstate, while keeping user interface out of the common library, which is shared
- * between GuldenD, and bitcoin-qt and non-server tools.
+ * between GuldenD, and Gulden (qt) and non-server tools.
 */
 class CCoinsViewErrorCatcher : public CCoinsViewBacked
 {
@@ -738,7 +738,7 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
 }
 
 /** Sanity checks
- *  Ensure that Bitcoin is running in a usable environment with all
+ *  Ensure that Gulden is running in a usable environment with all
  *  necessary library support.
  */
 bool InitSanityCheck(void)

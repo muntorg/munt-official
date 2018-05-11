@@ -72,8 +72,8 @@ QVariant CurrencyTableModel::data(const QModelIndex& index, int role) const
         CAmount temp;
         ParseMoney(iter->second,temp);
         //fixme: (2.1) Truncates - we should instead round here...
-        QString rate = BitcoinUnits::format(BitcoinUnits::Unit::BTC, temp, false, BitcoinUnits::separatorAlways, 4);
-        QString balance = BitcoinUnits::format(BitcoinUnits::Unit::BTC, m_ticker->convertGuldenToForex(m_balanceNLG, iter->first), false, BitcoinUnits::separatorAlways, 2);
+        QString rate = GuldenUnits::format(GuldenUnits::Unit::BTC, temp, false, GuldenUnits::separatorAlways, 4);
+        QString balance = GuldenUnits::format(GuldenUnits::Unit::BTC, m_ticker->convertGuldenToForex(m_balanceNLG, iter->first), false, GuldenUnits::separatorAlways, 2);
         return rate + QString("<br/>") + balance;
     }
 

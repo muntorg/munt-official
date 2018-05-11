@@ -23,12 +23,12 @@
   - All lower-case letters except for 'l'
 */
 
-BitcoinAddressEntryValidator::BitcoinAddressEntryValidator(QObject *parent) :
+GuldenAddressEntryValidator::GuldenAddressEntryValidator(QObject *parent) :
     QValidator(parent)
 {
 }
 
-QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &pos) const
+QValidator::State GuldenAddressEntryValidator::validate(QString &input, int &pos) const
 {
     Q_UNUSED(pos);
 
@@ -90,16 +90,16 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
     return state;
 }
 
-BitcoinAddressCheckValidator::BitcoinAddressCheckValidator(QObject *parent) :
+GuldenAddressCheckValidator::GuldenAddressCheckValidator(QObject *parent) :
     QValidator(parent)
 {
 }
 
-QValidator::State BitcoinAddressCheckValidator::validate(QString &input, int &pos) const
+QValidator::State GuldenAddressCheckValidator::validate(QString &input, int &pos) const
 {
     Q_UNUSED(pos);
     // Validate the passed Gulden address
-    CBitcoinAddress addr(input.toStdString());
+    CGuldenAddress addr(input.toStdString());
     //fixme: (Post-2.1) Gulden Duplicate code
     QRegularExpression patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$");
     if (addr.IsValid() || addr.IsValidBitcoin() || patternMatcherIBAN.match(input).hasMatch())

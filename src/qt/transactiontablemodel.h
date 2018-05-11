@@ -115,8 +115,8 @@ private:
     QString formatTxDate(const TransactionRecord *wtx) const;
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
-    QString formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
-    QString formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
+    QString formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed=true, GuldenUnits::SeparatorStyle separators=GuldenUnits::separatorStandard) const;
+    QString formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed=true, GuldenUnits::SeparatorStyle separators=GuldenUnits::separatorStandard) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QString txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;

@@ -55,7 +55,7 @@ ImportPrivKeyDialog::~ImportPrivKeyDialog()
 
 void ImportPrivKeyDialog::accept()
 {
-    CBitcoinSecret vchSecret;
+    CGuldenSecret vchSecret;
     bool fGood = vchSecret.SetString(getPrivKey().c_str());
 
     if (!fGood)

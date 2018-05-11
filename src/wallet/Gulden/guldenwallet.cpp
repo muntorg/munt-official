@@ -550,7 +550,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     CExtPubKey pubkey;
     try
     {
-        CBitcoinSecretExt<CExtPubKey> secretExt;
+        CGuldenSecretExt<CExtPubKey> secretExt;
         secretExt.SetString(pubKeyString.c_str());
         pubkey = secretExt.GetKey();
     }
@@ -727,7 +727,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     CExtPubKey pubkey;
     try
     {
-        CBitcoinSecretExt<CExtPubKey> secretExt;
+        CGuldenSecretExt<CExtPubKey> secretExt;
         secretExt.SetString(encExtPubKey.c_str());
         pubkey = secretExt.GetKey();
     }

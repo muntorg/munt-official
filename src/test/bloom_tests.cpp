@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
     BOOST_FAIL("Does not work for Gulden yet. When implementing SPV is likely a good oppertunity to fix this test.");
 
     std::string strSecret = std::string("5Kg1gnAjaLfKiwhhPpGS3QfRg2m6awQvaj98JCZBZQ5SuS2F15C");
-    CBitcoinSecret vchSecret;
+    CGuldenSecret vchSecret;
     BOOST_CHECK(vchSecret.SetString(strSecret));
 
     CKey key = vchSecret.GetKey();

@@ -18,7 +18,7 @@ static const int MODEL_UPDATE_DELAY = 250;
 /* AskPassphraseDialog -- Maximum passphrase length */
 static const int MAX_PASSPHRASE_SIZE = 1024;
 
-/* BitcoinGUI -- Size of icons in status bar */
+/* GUI -- Size of icons in status bar */
 static const int STATUSBAR_ICONSIZE = 16;
 
 /* Invalid field background style */

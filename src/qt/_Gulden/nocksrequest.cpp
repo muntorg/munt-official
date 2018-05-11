@@ -78,7 +78,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
             m_recipient->paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
         }
 
-        QString forexAmount = BitcoinUnits::format(BitcoinUnits::BTC, recipient->amount, false, BitcoinUnits::separatorNever);
+        QString forexAmount = GuldenUnits::format(GuldenUnits::BTC, recipient->amount, false, GuldenUnits::separatorNever);
 
         httpPostParamaters = QString("{\"pair\": \"NLG_%1\", \"amount\": \"%2\", \"withdrawal\": \"%3\"%4}").arg(forexCurrencyType, forexAmount, recipient->address, httpExtraParams);
         netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/transaction" ) );
@@ -197,7 +197,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
                     m_recipient->paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
                     m_recipient->forexAddress = QString::fromStdString(originalAddress);
                     m_recipient->address = depositAddress;
-                    BitcoinUnits::parse(BitcoinUnits::BTC, depositAmount, &m_recipient->amount);
+                    GuldenUnits::parse(GuldenUnits::BTC, depositAmount, &m_recipient->amount);
                     m_recipient->expiry = expirationTime.toLong() - 120;
                     m_recipient->forexFailCode = "";
                 }

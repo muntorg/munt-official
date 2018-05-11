@@ -462,7 +462,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             if (strType == "key" && GetBoolArg("-skipplainkeys", false))
             {
-                LogPrintf("Skipping unencrypted key [skipplainkeys] [%s]\n", CBitcoinAddress(vchPubKey.GetID()).ToString());
+                LogPrintf("Skipping unencrypted key [skipplainkeys] [%s]\n", CGuldenAddress(vchPubKey.GetID()).ToString());
             }
             else
             {
@@ -540,7 +540,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             if (GetBoolArg("-skipplainkeys", false))
             {
-                LogPrintf("Load crypted key [skipplainkeys] [%s]\n", CBitcoinAddress(vchPubKey.GetID()).ToString());
+                LogPrintf("Load crypted key [skipplainkeys] [%s]\n", CGuldenAddress(vchPubKey.GetID()).ToString());
             }
 
             if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey, forAccount, nKeyChain))
@@ -631,7 +631,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> strAddress;
             ssKey >> strKey;
             ssValue >> strValue;
-            if (!pwallet->LoadDestData(CBitcoinAddress(strAddress).Get(), strKey, strValue))
+            if (!pwallet->LoadDestData(CGuldenAddress(strAddress).Get(), strKey, strValue))
             {
                 strErr = "Error reading wallet database: LoadDestData failed";
                 return false;
