@@ -6,7 +6,7 @@
 #include "exchangeratedialog.h"
 #include <qt/_Gulden/forms/ui_exchangeratedialog.h>
 #include "optionsmodel.h"
-#include "GuldenGUI.h" // for delegate
+#include "richtextdelegate.h"
 
 #include <QModelIndex>
 
@@ -28,7 +28,7 @@ ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidg
     ui->ExchangeRateTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->ExchangeRateTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    HtmlDelegate* delegate = new HtmlDelegate();
+    RichTextDelegate* delegate = new RichTextDelegate();
     ui->ExchangeRateTable->setItemDelegate(delegate);
 
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);

@@ -24,10 +24,11 @@
 #include "transactionrecord.h"
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
+#include "richtextdelegate.h"
 
 #include "ui_interface.h"
 
-#include "_Gulden/GuldenGUI.h" // for delegate
+
 
 #include <QComboBox>
 #include <QDateTimeEdit>
@@ -213,7 +214,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     connect(editLabelAction, SIGNAL(triggered()), this, SLOT(editLabel()));
     connect(showDetailsAction, SIGNAL(triggered()), this, SLOT(showDetails()));
 
-    transactionView->setItemDelegate(new HtmlDelegate);
+    transactionView->setItemDelegate(new RichTextDelegate);
 }
 
 void TransactionView::setModel(WalletModel *_model)

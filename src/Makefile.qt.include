@@ -295,6 +295,7 @@ GULDEN_QT_H = \
   qt/guldenaddressvalidator.h \
   qt/amountfield.h \
   qt/gui.h \
+  qt/richtextdelegate.h \
   qt/units.h \
   qt/callback.h \
   qt/clientmodel.h \
@@ -385,6 +386,7 @@ GULDEN_QT_BASE_CPP = \
   qt/guldenaddressvalidator.cpp \
   qt/amountfield.cpp \
   qt/gui.cpp \
+  qt/richtextdelegate.cpp \
   qt/units.cpp \
   qt/clientmodel.cpp \
   qt/csvmodelwriter.cpp \
