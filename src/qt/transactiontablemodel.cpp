@@ -607,7 +607,7 @@ QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) 
         case TransactionStatus::Offline:
             return "\uf1e6";
         case TransactionStatus::Unconfirmed:
-            return "\uf132";
+            return "\uf254";
         case TransactionStatus::Confirmed:
         case TransactionStatus::Confirming:
             switch(wtx->status.depth)

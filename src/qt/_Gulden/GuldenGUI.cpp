@@ -1153,11 +1153,11 @@ QString getAccountLabel(CAccount* account)
         if (account->GetWarningState() == AccountStatus::WitnessEmpty)
             accountNamePrefix = "\uf4d3";
         else if (account->GetWarningState() == AccountStatus::WitnessExpired)
-            accountNamePrefix = "<span style='color: #c97676;'>\uf06a</span>";
+            accountNamePrefix = "\uf4d3<span style='color: #c97676;'><sup>\uf12a</sup></span>";
         else if (account->GetWarningState() == AccountStatus::WitnessEnded)
-            accountNamePrefix = "\uf4d3";
+            accountNamePrefix = "\uf4d3<sup>\uf11e</sup>";
         else
-            accountNamePrefix = "\uf4d3";
+            accountNamePrefix = "\uf4d3<sup>\uf023</sup>";
     }
     else if ( !account->IsHD() )
     {
