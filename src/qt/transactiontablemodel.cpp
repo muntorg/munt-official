@@ -612,12 +612,12 @@ QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) 
         case TransactionStatus::Confirming:
             switch(wtx->status.depth)
             {
-            case 1: return "<span style='font-family: \"Font Awesome 5 Pro Light\"'>\uf132</span>";
-            case 2: return "<span style='font-family: \"Font Awesome 5 Pro Light\"'>\uf2f7</span>";
-            case 3: return "<span style='font-family: \"Font Awesome 5 Pro Regular\"'>\uf2f7</span>";
+            case 1: return GUIUtil::fontAwesomeLight("\uf132");
+            case 2: return GUIUtil::fontAwesomeLight("\uf2f7");
+            case 3: return GUIUtil::fontAwesomeRegular("\uf2f7");
             case 4:
             default:
-                return "<span style='font-family: \"Font Awesome 5 Pro Solid\"'>\uf2f7</span>";
+                return GUIUtil::fontAwesomeSolid("\uf2f7");
             };
         case TransactionStatus::OpenUntilBlock:
         case TransactionStatus::OpenUntilDate:

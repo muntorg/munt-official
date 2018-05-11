@@ -212,6 +212,15 @@ namespace GUIUtil
 
     QString formatNiceTimeOffset(qint64 secs);
 
+    /* Force rich text font to the light typeface of Font Awesome. */
+    QString fontAwesomeLight(const QString& text);
+
+    /* Force rich text font to the regular typeface of Font Awesome. */
+    QString fontAwesomeRegular(const QString& text);
+
+    /* Force rich text font to the solid typeface of Font Awesome. */
+    QString fontAwesomeSolid(const QString& text);
+
     class ClickableLabel : public QLabel
     {
         Q_OBJECT

@@ -14,6 +14,7 @@
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
 #include "validation.h"
+#include "guiutil.h"
 
 #include <QAction>
 #include <QApplication>
@@ -509,7 +510,7 @@ void GuldenGUI::createToolBarsGulden()
     }
 
     QPushButton* addAccButton = new QPushButton( m_pImpl );
-    addAccButton->setText( " "+tr("Add account") );
+    addAccButton->setText( "\uf067 "+tr("Add account") );
     addAccButton->setObjectName( "add_account_button" );
     addAccButton->setCursor( Qt::PointingHandCursor );
     accountBar->addWidget( addAccButton );
@@ -1064,6 +1065,16 @@ QString limitString(const QString& string, int maxLength)
     return beforeEllipsis + ELLIPSIS + afterEllipsis;
 }
 
+QString superscriptSpan(const QString& sText)
+{
+    return QString("<span style='font-size: 8px;'>%1</span>").arg(sText);
+}
+
+QString colourSpan(QString sColour, const QString& sText)
+{
+    return QString("<span style='color: %1;'>%2</span>").arg(sColour).arg(sText);
+}
+
 QString getAccountLabel(CAccount* account)
 {
     QString accountName = QString::fromStdString( account->getLabel() );
@@ -1077,13 +1088,13 @@ QString getAccountLabel(CAccount* account)
     else if ( account->IsPoW2Witness() )
     {
         if (account->GetWarningState() == AccountStatus::WitnessEmpty)
-            accountNamePrefix = "\uf4d3";
+            accountNamePrefix = GUIUtil::fontAwesomeSolid("\uf19c");
         else if (account->GetWarningState() == AccountStatus::WitnessExpired)
-            accountNamePrefix = "\uf4d3<span style='color: #c97676;'><sup>\uf12a</sup></span>";
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(colourSpan("#c97676", superscriptSpan(GUIUtil::fontAwesomeSolid("\uf12a"))));
         else if (account->GetWarningState() == AccountStatus::WitnessEnded)
-            accountNamePrefix = "\uf4d3<sup>\uf11e</sup>";
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf11e")));
         else
-            accountNamePrefix = "\uf4d3<sup>\uf023</sup>";
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf023")));
     }
     else if ( !account->IsHD() )
     {
@@ -1098,7 +1109,7 @@ QString getAccountLabel(CAccount* account)
         //fixme: make small if existing prefix
         accountNamePrefix += "\uf06e";
     }
-    accountName = QString("<tr><td width=20 align=left>%1</td><td>%2</td></tr>").arg(accountNamePrefix).arg(accountName);
+    accountName = QString("<table cellspacing=0 padding=0><tr><td width=10></td><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
 
     return accountName;
 }

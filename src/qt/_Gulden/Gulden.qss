@@ -315,6 +315,16 @@ GUI > QToolBar > QToolButton:checked
     color: TEXT_COLOR_1;
 }
 
+#account_bar #labelMyAccounts
+{
+    padding-left: 40px;
+}
+
+#account_bar QLabel
+{
+    padding-left: 0px;
+}
+
 
 
 #account_bar #labelWalletSettings

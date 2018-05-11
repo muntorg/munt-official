@@ -1030,6 +1030,21 @@ QString formatNiceTimeOffset(qint64 secs)
     return timeBehindText;
 }
 
+QString fontAwesomeLight(const QString& text)
+{
+    return QString("<span style='font-family: \"Font Awesome 5 Pro Light\"'>%1</span>").arg(text);
+}
+
+QString fontAwesomeRegular(const QString& text)
+{
+    return QString("<span style='font-family: \"Font Awesome 5 Pro Regular\"'>%1</span>").arg(text);
+}
+
+QString fontAwesomeSolid(const QString& text)
+{
+    return QString("<span style='font-family: \"Font Awesome 5 Pro Solid\"'>%1</span>").arg(text);
+}
+
 void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_EMIT clicked(event->pos());
