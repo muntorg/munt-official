@@ -74,7 +74,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
         ui->lineEditChangeAccountName->setVisible(true);
     }
 
-    if (account->m_SubType == AccountSubType::Mobi)
+    if (account->m_Type == AccountType::Mobi)
     {
         ui->frameSyncWithMobile->setVisible(true);
 

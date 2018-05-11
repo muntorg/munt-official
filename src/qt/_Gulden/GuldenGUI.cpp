@@ -1169,7 +1169,7 @@ void GuldenGUI::refreshAccountControls()
 
             for ( const auto& accountPair : pactiveWallet->mapAccounts )
             {
-                if (accountPair.second->m_Type == AccountType::Normal || (fShowChildAccountsSeperately && accountPair.second->m_Type == AccountType::ShadowChild) )
+                if (accountPair.second->m_State == AccountState::Normal || (fShowChildAccountsSeperately && accountPair.second->m_State == AccountState::ShadowChild) )
                 {
                     QString label = getAccountLabel(accountPair.second);
                     ClickableLabel* accLabel = createAccountButton( label );
@@ -1339,7 +1339,7 @@ void GuldenGUI::accountAdded(CAccount* account)
             ClickableLabel* accLabel = nullptr;
             for ( const auto& accountPair : pactiveWallet->mapAccounts )
             {
-                if (accountPair.second->m_Type == AccountType::Normal || (fShowChildAccountsSeperately && accountPair.second->m_Type == AccountType::ShadowChild) )
+                if (accountPair.second->m_State == AccountState::Normal || (fShowChildAccountsSeperately && accountPair.second->m_State == AccountState::ShadowChild) )
                 {
                     QString label = getAccountLabel(accountPair.second);
                     if (accountPair.first == account->getUUID())
@@ -1602,11 +1602,11 @@ void GuldenGUI::acceptNewAccount()
         const auto newAccountType = dialogNewAccount->getAccountType();
         if (newAccountType == NewAccountType::FixedDeposit)
         {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::PoW2Witness);
+            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
         }
         else
         {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountType::Normal, AccountSubType::Desktop);
+            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
         }
 
         if (!newAccount)

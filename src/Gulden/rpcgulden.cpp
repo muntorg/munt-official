@@ -664,15 +664,15 @@ UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::str
 
     if (accountType == "HD")
     {
-        account = pwallet->GenerateNewAccount(accountName, AccountType::Normal, AccountSubType::Desktop, bMakeActive);
+        account = pwallet->GenerateNewAccount(accountName, AccountState::Normal, AccountType::Desktop, bMakeActive);
     }
     else if (accountType == "Mobile")
     {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::Mobi, bMakeActive);
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::Mobi, bMakeActive);
     }
     else if (accountType == "Witness")
     {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountType::Normal, AccountSubType::PoW2Witness, bMakeActive);
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::PoW2Witness, bMakeActive);
     }
     else if (accountType == "Legacy")
     {
@@ -1372,11 +1372,12 @@ UniValue importseed(const JSONRPCRequest& request)
 
 UniValue listallaccounts(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 1)
+    if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
             "listaccounts ( forseed )\n"
             "\nArguments:\n"
             "1. \"seed\"        (string, optional) The unique UUID for the seed that we want accounts of.\n"
+            "2. \"state\"       (string, optional, default=Normal) The state of account to list, options are: Normal, Deleted, Shadow, ShadowChild. \"*\" or \"\" to list all account states.\n"
             "\nResult:\n"
             "\nReturn the UUID and label for all wallet accounts.\n"
             "\nNote UUID is guaranteed to be unique while label is not.\n"
@@ -1395,9 +1396,15 @@ UniValue listallaccounts(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
+    std::string sStateSearch = "*";
+
     CHDSeed* forSeed = NULL;
-    if (request.params.size() > 0)
-        forSeed = SeedFromValue(pwallet, request.params[0], false);
+    if (request.params.size() > 0 && request.params[0].get_str() != "*")
+        forSeed = SeedFromValue(pwallet, request.params[0], true);
+    if (request.params.size() > 1)
+        sStateSearch = request.params[1].get_str();
+    if (sStateSearch.empty())
+        sStateSearch = "*";
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
@@ -1406,6 +1413,9 @@ UniValue listallaccounts(const JSONRPCRequest& request)
 
     for (const auto& accountPair : pwallet->mapAccounts)
     {
+        if (sStateSearch != "*" && sStateSearch != GetAccountStateString(accountPair.second->m_State))
+            continue;
+
         if (!accountPair.second->IsHD())
         {
             if (!forSeed)
@@ -1413,13 +1423,14 @@ UniValue listallaccounts(const JSONRPCRequest& request)
                 UniValue rec(UniValue::VOBJ);
                 rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
                 rec.push_back(Pair("label", accountPair.second->getLabel()));
-                rec.push_back(Pair("type", "legacy"));
-                rec.push_back(Pair("sub_type", ""));
+                rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
+                rec.push_back(Pair("type", ""));
+                rec.push_back(Pair("HD_type", "legacy"));
                 allAccounts.push_back(rec);
             }
             continue;
         }
-        if (accountPair.second->m_Type == AccountType::Shadow)
+        if (accountPair.second->m_State == AccountState::Shadow && !(sStateSearch == "Shadow"||sStateSearch == "ShadowChild"))
             continue;
         if (forSeed && ((CAccountHD*)accountPair.second)->getSeedUUID() != forSeed->getUUID())
             continue;
@@ -1427,16 +1438,9 @@ UniValue listallaccounts(const JSONRPCRequest& request)
         UniValue rec(UniValue::VOBJ);
         rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
         rec.push_back(Pair("label", accountPair.second->getLabel()));
-        //fixme: (2.0)
-        rec.push_back(Pair("type", "HD"));
-
-        if (((CAccountHD*)accountPair.second)->IsMobi())
-            rec.push_back(Pair("sub_type", "mobile"));
-        else if (((CAccountHD*)accountPair.second)->IsPoW2Witness())
-            rec.push_back(Pair("sub_type", "witness"));
-        else
-            rec.push_back(Pair("sub_type", "regular"));
-
+        rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
+        rec.push_back(Pair("type", GetAccountTypeString(accountPair.second->m_Type)));
+        rec.push_back(Pair("HD_type", "HD"));
         rec.push_back(Pair("HDindex", (uint64_t) dynamic_cast<CAccountHD*>(accountPair.second)->getIndex()));
 
         allAccounts.push_back(rec);
@@ -1578,7 +1582,7 @@ static const CRPCCommand commands[] =
     { "accounts",           "getactiveaccount",       &getactiveaccount,       true,    {} },
     { "accounts",           "getreadonlyaccount",     &getreadonlyaccount,     true,    {"account"} },
     { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true,    {"name", "encodedkey"} },
-    { "accounts",           "listaccounts",           &listallaccounts,        true,    {"seed"} },
+    { "accounts",           "listaccounts",           &listallaccounts,        true,    {"seed", "state"} },
     { "accounts",           "setactiveaccount",       &setactiveaccount,       true,    {"account"} },
     { "accounts",           "getaccountbalances",     &getaccountbalances,     false,   {"minconf","include_watchonly"} },
 

@@ -248,7 +248,7 @@ public:
     virtual void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
     virtual void deleteAccount(CAccount* account);
 
-    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType, bool bMakeActive=true);
+    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
     virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
     virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 

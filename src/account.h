@@ -41,7 +41,7 @@ class CWallet;
 class CWalletDB;
 class CKeyMetadata;
 
-enum AccountType
+enum AccountState
 {
     Normal = 0,        // Standard account (or HD account)
     Shadow = 1,        // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
@@ -49,17 +49,17 @@ enum AccountType
     Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
 
-enum AccountSubType
+enum AccountType
 {
     Desktop = 0,       // Standard desktop account.
     Mobi = 1,          // Mobile phone. (Android, iOS)
     PoW2Witness = 2    // PoW2 witness account.
 };
 
-std::string GetAccountTypeString(AccountType type);
+std::string GetAccountStateString(AccountState state);
 std::string getUUIDAsString(const boost::uuids::uuid& uuid);
 boost::uuids::uuid getUUIDFromString(const std::string& uuid);
-std::string GetAccountSubTypeString(AccountSubType type);
+std::string GetAccountTypeString(AccountType type);
 
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex = 100000;
@@ -94,7 +94,7 @@ public:
 
     void Init();
     void InitReadOnly();
-    CAccountHD* GenerateAccount(AccountSubType type, CWalletDB* Db);
+    CAccountHD* GenerateAccount(AccountType type, CWalletDB* Db);
     bool GetPrivKeyForAccount(uint64_t nAccountIndex, CExtKey& accountKeyPriv);
 
 
@@ -179,7 +179,7 @@ public:
     SeedType m_type;
 
 protected:
-    CAccountHD* GenerateAccount(int nAccountIndex, AccountSubType type);
+    CAccountHD* GenerateAccount(int nAccountIndex, AccountType type);
     // Worker function for GetPrivKeyForAccount that doesn't contain the safety checks which GetPrivKeyForAccount has.
     // Other classes should call GetPrivKeyForAccount while internally we call this to avoid unnecessary duplicate safety checks.
     bool GetPrivKeyForAccountInternal(uint64_t nAccountIndex, CExtKey& accountKeyPriv);
@@ -233,8 +233,8 @@ public:
     virtual void GetKey(CExtKey& childKey, int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
-    virtual bool IsMobi() const {return m_SubType == Mobi;}
-    virtual bool IsPoW2Witness() const {return m_SubType == PoW2Witness;}
+    virtual bool IsMobi() const {return m_Type == Mobi;}
+    virtual bool IsPoW2Witness() const {return m_Type == PoW2Witness;}
 
     ADD_SERIALIZE_METHODS;
 
@@ -243,13 +243,13 @@ public:
     {
         if (ser_action.ForRead())
         {
-            int nType;
-            int nSubType;
+            int32_t nState;
+            int32_t nType;
+            READWRITE(nState);
             READWRITE(nType);
-            READWRITE(nSubType);
+            m_State = (AccountState)nState;
             m_Type = (AccountType)nType;
-            m_SubType = (AccountSubType)nSubType;
-            if (m_Type == AccountType::ShadowChild)
+            if (m_State == AccountState::ShadowChild)
             {
                 std::string sParentUUID;
                 READWRITE(sParentUUID);
@@ -258,11 +258,11 @@ public:
         }
         else
         {
-            int nType = (int)m_Type;
-            int nSubType = (int)m_SubType;
+            int32_t nState = (int)m_State;
+            int32_t nType = (int)m_Type;
+            READWRITE(nState);
             READWRITE(nType);
-            READWRITE(nSubType);
-            if (m_Type == AccountType::ShadowChild)
+            if (m_State == AccountState::ShadowChild)
             {
                 std::string sParentUUID = boost::uuids::to_string(parentUUID);
                 READWRITE(sParentUUID);
@@ -327,8 +327,8 @@ public:
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
     mutable std::map<uint256, isminetype> isminecache;
+    AccountState m_State;
     AccountType m_Type;
-    AccountSubType m_SubType;
 
     void possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db);
     uint64_t getEarliestPossibleCreationTime();
@@ -354,9 +354,9 @@ class CAccountHD: public CAccount
 {
 public:
     //Normal construction.
-    CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID, AccountSubType subType);
+    CAccountHD(CExtKey accountKey, boost::uuids::uuid seedID, AccountType type);
     //Read only construction.
-    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID, AccountSubType subType);
+    CAccountHD(CExtPubKey accountKey, boost::uuids::uuid seedID, AccountType type);
     //For serialization only.
     CAccountHD(){};
 

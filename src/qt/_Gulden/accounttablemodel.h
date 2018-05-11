@@ -18,7 +18,7 @@ class AccountTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
 
-    enum AccountTableRoles { TypeRole = Qt::UserRole + 1, SubTypeRole, ActiveAccountRole, SelectedAccountRole, AvailableBalanceRole };
+    enum AccountTableRoles { StateRole = Qt::UserRole + 1, TypeRole, ActiveAccountRole, SelectedAccountRole, AvailableBalanceRole };
     enum ColumnIndex { Label, Balance };
 
     static const QString Normal;

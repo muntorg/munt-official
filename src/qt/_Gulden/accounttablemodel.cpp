@@ -80,13 +80,13 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
             return GuldenUnits::format(GuldenUnits::Unit::BTC, balance, false, GuldenUnits::separatorAlways, 2);
         }
     }
+    else if (role == StateRole)
+    {
+        return GetAccountStateString(account->m_State).c_str();
+    }
     else if (role == TypeRole)
     {
         return GetAccountTypeString(account->m_Type).c_str();
-    }
-    else if (role == SubTypeRole)
-    {
-        return GetAccountSubTypeString(account->m_SubType).c_str();
     }
     else if (role == AvailableBalanceRole)
     {

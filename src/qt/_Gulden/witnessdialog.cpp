@@ -783,8 +783,8 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
     QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
 
     // Must be a 'normal' type account.
-    std::string sType = sourceModel()->data(index0, AccountTableModel::TypeRole).toString().toStdString();
-    if (sType != GetAccountTypeString(AccountType::Normal))
+    std::string sState = sourceModel()->data(index0, AccountTableModel::StateRole).toString().toStdString();
+    if (sState != GetAccountStateString(AccountState::Normal))
         return false;
 
     // Must not be the current account.
@@ -793,8 +793,8 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
         return false;
 
     // Must not be a witness account itself.
-    std::string sSubType = sourceModel()->data(index0, AccountTableModel::SubTypeRole).toString().toStdString();
-    if (sSubType == GetAccountSubTypeString(AccountSubType::PoW2Witness))
+    std::string sSubType = sourceModel()->data(index0, AccountTableModel::TypeRole).toString().toStdString();
+    if (sSubType == GetAccountTypeString(AccountType::PoW2Witness))
         return false;
 
     // Must have sufficient balance to fund the operation.

@@ -1443,13 +1443,13 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
     std::map<boost::uuids::uuid, tallyitem> mapAccountTally;
     for (const auto &accountIter : pwallet->mapAccounts)
     {
-        if (accountIter.second->m_Type == AccountType::Shadow)
+        if (accountIter.second->m_State == AccountState::Shadow)
             continue;
 
         boost::uuids::uuid accountUUID = accountIter.second->getUUID();
         std::string accountLabel = accountIter.second->getLabel();
 
-        if (accountIter.second->m_Type == AccountType::Shadow)
+        if (accountIter.second->m_State == AccountState::Shadow)
         {
             accountUUID = accountIter.second->getParentUUID();
             accountLabel = pwallet->mapAccounts[accountUUID]->getLabel();
@@ -1634,7 +1634,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     {
         for (const auto& accountIter : pwallet->mapAccounts)
         {
-            if (accountIter.second->m_Type != AccountType::Shadow)
+            if (accountIter.second->m_State != AccountState::Shadow)
             {
                 doForAccounts.push_back(accountIter.second);
             }
@@ -1864,88 +1864,6 @@ UniValue listtransactions(const JSONRPCRequest& request)
 
     return ret;
 }
-
-/*UniValue listaccounts(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() > 2)
-        throw std::runtime_error(
-            "listaccounts ( minconf include_watchonly)\n"
-            "\nDEPRECATED. Returns Object that has account names as keys, account balances as values.\n"
-            "\nArguments:\n"
-            "1. minconf             (numeric, optional, default=1) Only include transactions with at least this many confirmations\n"
-            "2. include_watchonly   (bool, optional, default=false) Include balances in watch-only addresses (see 'importaddress')\n"
-            "\nResult:\n"
-            "{                      (json object where keys are account names, and values are numeric balances\n"
-            "  \"account\": x.xxx,  (numeric) The property name is the account name, and the value is the total balance for the account.\n"
-            "  ...\n"
-            "}\n"
-            "\nExamples:\n"
-            "\nList account balances where there at least 1 confirmation\n"
-            + HelpExampleCli("listaccounts", "") +
-            "\nList account balances including zero confirmation transactions\n"
-            + HelpExampleCli("listaccounts", "0") +
-            "\nList account balances for 6 or more confirmations\n"
-            + HelpExampleCli("listaccounts", "6") +
-            "\nAs json rpc call\n"
-            + HelpExampleRpc("listaccounts", "6")
-        );
-
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-
-    int nMinDepth = 1;
-    if (request.params.size() > 0)
-        nMinDepth = request.params[0].get_int();
-    isminefilter includeWatchonly = ISMINE_SPENDABLE;
-    if(request.params.size() > 1)
-        if(request.params[1].get_bool())
-            includeWatchonly = includeWatchonly | ISMINE_WATCH_ONLY;
-
-    std::map<std::string, CAmount> mapAccountBalances;
-    for(const PAIRTYPE(std::string, CAddressBookData)& entry : pwallet->mapAddressBook) {
-        if (IsMine(*pwallet, CGuldenAddress(entry.first).Get()) & includeWatchonly) // This address belongs to me
-            mapAccountBalances[entry.second.name] = 0;
-        }
-    }
-
-    for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet) {
-        const CWalletTx& wtx = pairWtx.second;
-        CAmount nFee;
-        std::string strSentAccount;
-        std::list<COutputEntry> listReceived;
-        std::list<COutputEntry> listSent;
-        int nDepth = wtx.GetDepthInMainChain();
-        if (wtx.GetBlocksToMaturity() > 0 || nDepth < 0)
-            continue;
-        wtx.GetAmounts(listReceived, listSent, nFee, strSentAccount, includeWatchonly);
-        mapAccountBalances[strSentAccount] -= nFee;
-        for(const COutputEntry& s : listSent)
-            mapAccountBalances[strSentAccount] -= s.amount;
-        if (nDepth >= nMinDepth)
-        {
-            for(const COutputEntry& r : listReceived)
-                if (pwallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString()))
-                    mapAccountBalances[pwallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name] += r.amount;
-                }
-                else
-                    mapAccountBalances[""] += r.amount;
-        }
-    }
-
-    const std::list<CAccountingEntry>& acentries = pwallet->laccentries;
-    for(const CAccountingEntry& entry : acentries)
-        mapAccountBalances[entry.strAccount] += entry.nCreditDebit;
-
-    UniValue ret(UniValue::VOBJ);
-    for(const PAIRTYPE(std::string, CAmount)& accountBalance : mapAccountBalances) {
-        ret.push_back(Pair(accountBalance.first, ValueFromAmount(accountBalance.second)));
-    }
-    return NullUniValue;
-}*/
 
 UniValue listsinceblock(const JSONRPCRequest& request)
 {
@@ -2938,7 +2856,7 @@ UniValue listunspent(const JSONRPCRequest& request)
     std::vector<CAccount*> doForAccounts;
     for (const auto& accountIter : pWallet->mapAccounts)
     {
-        if (accountIter.second->m_Type != AccountType::Shadow)
+        if (accountIter.second->m_State != AccountState::Shadow)
         {
             doForAccounts.push_back(accountIter.second);
         }
@@ -3385,7 +3303,6 @@ static const CRPCCommand commands[] =
     { "wallet",             "importprunedfunds",        &importprunedfunds,        true,   {"rawtransaction","txoutproof"} },
     { "wallet",             "importpubkey",             &importpubkey,             true,   {"pubkey","label","rescan"} },
     { "wallet",             "keypoolrefill",            &keypoolrefill,            true,   {"newsize"} },
-    //{ "wallet",             "listaccounts",             &listaccounts,             false,  {"minconf","include_watchonly"} },
     { "wallet",             "listaddressgroupings",     &listaddressgroupings,     false,  {} },
     { "wallet",             "listlockunspent",          &listlockunspent,          false,  {} },
     { "wallet",             "listreceivedbyaccount",    &listreceivedbyaccount,    false,  {"minconf","include_empty","include_watchonly"} },

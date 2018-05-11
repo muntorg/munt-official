@@ -3091,8 +3091,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
         return false;
     }
 
-    CAmount nValue = 0;
-
     {
         std::set<CInputCoin> setCoins;
         int nChangePos = -1;
@@ -4474,7 +4472,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 throw std::runtime_error("Writing seed failed");
             }
             walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
-            walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountType::Normal, AccountSubType::Desktop);
+            walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountState::Normal, AccountType::Desktop);
 
             // Now generate children shadow accounts to handle legacy transactions
             // Only for recovery wallets though, new ones don't need them
@@ -4494,14 +4492,14 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 walletInstance->mapSeeds[seedBip32Legacy->getUUID()] = seedBip32Legacy;
 
                 // Write new accounts
-                CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountSubType::Desktop, NULL);
-                newAccountBip32->m_Type = AccountType::ShadowChild;
+                CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountType::Desktop, NULL);
+                newAccountBip32->m_State = AccountState::ShadowChild;
                 walletInstance->activeAccount->AddChild(newAccountBip32);
                 walletInstance->addAccount(newAccountBip32, "BIP32 child account");
 
                 // Write new accounts
-                CAccountHD* newAccountBip32Legacy = seedBip32Legacy->GenerateAccount(AccountSubType::Desktop, NULL);
-                newAccountBip32Legacy->m_Type = AccountType::ShadowChild;
+                CAccountHD* newAccountBip32Legacy = seedBip32Legacy->GenerateAccount(AccountType::Desktop, NULL);
+                newAccountBip32Legacy->m_State = AccountState::ShadowChild;
                 walletInstance->activeAccount->AddChild(newAccountBip32Legacy);
                 walletInstance->addAccount(newAccountBip32Legacy, "BIP32 legacy child account");
             }
@@ -4521,8 +4519,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         else
         {
             walletInstance->activeAccount = new CAccount();
-            walletInstance->activeAccount->m_Type = AccountType::Normal;
-            walletInstance->activeAccount->m_SubType = AccountSubType::Desktop;
+            walletInstance->activeAccount->m_State = AccountState::Normal;
+            walletInstance->activeAccount->m_Type = AccountType::Desktop;
 
             // Write the primary account into wallet file
             {
@@ -4622,7 +4620,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                         CWalletDB walletdb(*walletInstance->dbw);
                         walletdb.WritePrimarySeed(*walletInstance->activeSeed);
                     }
-                    walletInstance->activeAccount = walletInstance->GenerateNewAccount(_("My account"), AccountType::Normal, AccountSubType::Desktop);
+                    walletInstance->activeAccount = walletInstance->GenerateNewAccount(_("My account"), AccountState::Normal, AccountType::Desktop);
                     {
                         CWalletDB walletdb(*walletInstance->dbw);
                         walletdb.WritePrimaryAccount(walletInstance->activeAccount);

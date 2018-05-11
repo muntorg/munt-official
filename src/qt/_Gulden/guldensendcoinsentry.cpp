@@ -158,8 +158,8 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             proxyModel->setSourceModel(model->getAccountTableModel());
             proxyModel->setDynamicSortFilter(true);
             proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyModel->setFilterRole(AccountTableModel::TypeRole);
-            proxyModel->setFilterFixedString(GetAccountTypeString(AccountType::Normal).c_str());
+            proxyModel->setFilterRole(AccountTableModel::StateRole);
+            proxyModel->setFilterFixedString(GetAccountStateString(AccountState::Normal).c_str());
 
             QSortFilterProxyModel *proxyInactive = new QSortFilterProxyModel(this);
             proxyInactive->setSourceModel(proxyModel);
@@ -170,8 +170,8 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
             QSortFilterProxyModel *proxyFilterBySubType = new QSortFilterProxyModel(this);
             proxyFilterBySubType->setSourceModel(proxyInactive);
             proxyFilterBySubType->setDynamicSortFilter(true);
-            proxyFilterBySubType->setFilterRole(AccountTableModel::SubTypeRole);
-            proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountSubTypeString(AccountSubType::PoW2Witness)+").*$").c_str());
+            proxyFilterBySubType->setFilterRole(AccountTableModel::TypeRole);
+            proxyFilterBySubType->setFilterRegExp(("^(?!"+GetAccountTypeString(AccountType::PoW2Witness)+").*$").c_str());
 
             proxyModelAddresses = new QSortFilterProxyModel(this);
             proxyModelAddresses->setSourceModel(proxyFilterBySubType);
@@ -233,20 +233,20 @@ void GuldenSendCoinsEntry::tabChanged()
     switch(ui->sendCoinsRecipientBook->currentIndex())
     {
         case 0:
-            {
-                addressChanged();
-            }
-            break;
+        {
+            addressChanged();
+        }
+        break;
         case 1:
-            {
-                addressChanged();
-            }
-            break;
+        {
+            addressChanged();
+        }
+        break;
         case 2:
-            {
-                ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
-            }
-            break;
+        {
+            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
+        }
+        break;
     }
 }
 

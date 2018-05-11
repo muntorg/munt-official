@@ -595,14 +595,14 @@ static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAcc
         QMetaObject::invokeMethod(walletmodel, "accountDeleted", Q_ARG(CAccount*, account));
         if (account == walletmodel->getActiveAccount())
         {
-            if (wallet->activeAccount && wallet->activeAccount->m_Type != AccountType::Deleted && account != wallet->activeAccount)
+            if (wallet->activeAccount && wallet->activeAccount->m_State != AccountState::Deleted && account != wallet->activeAccount)
             {
                 walletmodel->setActiveAccount(wallet->activeAccount);
                 return;
             }
             for ( const auto& iter : wallet->mapAccounts)
             {
-                if (iter.second->m_Type == AccountType::Normal)
+                if (iter.second->m_State == AccountState::Normal)
                 {
                     walletmodel->setActiveAccount(iter.second);
                     return;

@@ -15,9 +15,9 @@
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/nil_generator.hpp>
 
-std::string GetAccountTypeString(AccountType type)
+std::string GetAccountStateString(AccountState state)
 {
-    switch(type)
+    switch(state)
     {
         case Normal:
             return "Normal";
@@ -49,18 +49,18 @@ boost::uuids::uuid getUUIDFromString(const std::string& uuid)
     }
 }
 
-std::string GetAccountSubTypeString(AccountSubType type)
+std::string GetAccountTypeString(AccountType type)
 {
     switch(type)
     {
         case Desktop:
             return "Desktop";
         case Mobi:
-            return "Mobi";
+            return "Mobile";
         case PoW2Witness:
-            return "PoW2Witness";
+            return "Witness";
     }
-    return "";
+    return "Regular";
 }
 
 
@@ -167,7 +167,7 @@ void CHDSeed::InitReadOnly()
 }
 
 
-CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
+CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
 {
     CAccountHD* account = NULL;
     switch (type)
@@ -202,7 +202,7 @@ CAccountHD* CHDSeed::GenerateAccount(AccountSubType type, CWalletDB* Db)
     return account;
 }
 
-CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex, AccountSubType type)
+CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex, AccountType type)
 {
     if ( IsReadOnly() )
     {
@@ -362,7 +362,7 @@ bool CHDSeed::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 
 
 
-CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountSubType subType)
+CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountType type)
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
@@ -371,10 +371,10 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountSu
 , encrypted(false)
 , accountKeyPriv(accountKey_)
 {
-    m_SubType = subType;
+    m_Type = type;
 
     accountKeyPriv.Derive(primaryChainKeyPriv, 0);  //a'/0
-    if (m_SubType != AccountSubType::PoW2Witness) 
+    if (m_Type != AccountType::PoW2Witness) 
         accountKeyPriv.Derive(changeChainKeyPriv, 1);  //a'/1
     else
         accountKeyPriv.Derive(changeChainKeyPriv, 1 | BIP32_HARDENED_KEY_LIMIT);  //a'/1' - Witness account requires hardening at the change level for extra security (it will be quite common to share witness account change keys)
@@ -382,7 +382,7 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountSu
     changeChainKeyPub = changeChainKeyPriv.Neuter();
 }
 
-CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, AccountSubType subType)
+CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, AccountType type)
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
@@ -390,7 +390,7 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
 , m_nNextChangeIndex(0)
 , encrypted(false)
 {
-    m_SubType = subType;
+    m_Type = type;
 
     //Random key - not actually used, but written to disk to avoid unnecessary complexity in serialisation code
     accountKeyPriv.GetMutableKey().MakeNewKey(true);
@@ -652,8 +652,8 @@ CAccount::CAccount()
     earliestPossibleCreationTime = GetTime();
     accountUUID = boost::uuids::random_generator()();
     parentUUID = boost::uuids::nil_generator()();
-    m_Type = AccountType::Normal;
-    m_SubType = AccountSubType::Desktop;
+    m_State = AccountState::Normal;
+    m_Type = AccountType::Desktop;
     m_readOnly = false;
 }
 

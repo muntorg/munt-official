@@ -20,7 +20,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
         if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
             continue;
 
-        for (const auto shadowSubType : { AccountSubType::Desktop, AccountSubType::Mobi, AccountSubType::PoW2Witness })
+        for (const auto shadowSubType : { AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness })
         {
             int numShadow = 0;
             {
@@ -28,9 +28,9 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
                 {
                     if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == seedIter.second->getUUID())
                     {
-                        if (accountPair.second->m_SubType == shadowSubType)
+                        if (accountPair.second->m_Type == shadowSubType)
                         {
-                            if (accountPair.second->m_Type == AccountType::Shadow)
+                            if (accountPair.second->m_State == AccountState::Shadow)
                             {
                                 ++numShadow;
                             }
@@ -55,7 +55,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
                     ++numShadow;
                     ++nNumNewAccountsAllocated;
 
-                    newShadow->m_Type = AccountType::Shadow;
+                    newShadow->m_State = AccountState::Shadow;
 
                     // Write new account
                     pactiveWallet->addAccount(newShadow, "Shadow");
@@ -345,9 +345,9 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 if (keyUsedSet.find(keyID) == keyUsedSet.end())
                 {
                     keyUsedSet.insert(keyID);
-                    if (accountItem.second->m_Type != AccountType::Normal && accountItem.second->m_Type != AccountType::ShadowChild)
+                    if (accountItem.second->m_State != AccountState::Normal && accountItem.second->m_State != AccountState::ShadowChild)
                     {
-                        accountItem.second->m_Type = AccountType::Normal;
+                        accountItem.second->m_State = AccountState::Normal;
                         std::string name = accountItem.second->getLabel();
                         if (name.find(_("[Deleted]")) != std::string::npos)
                         {
@@ -421,7 +421,7 @@ void CGuldenWallet::deleteAccount(CAccount* account)
 
         CWalletDB db(*dbw);
         account->setLabel(newLabel, &db);
-        account->m_Type = AccountType::Deleted;
+        account->m_State = AccountState::Deleted;
         mapAccountLabels[account->getUUID()] = newLabel;
         if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
         {
@@ -446,7 +446,7 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bo
     }
     NotifyAccountAdded(static_cast<CWallet*>(this), account);
 
-    if (account->m_Type == AccountType::Normal)
+    if (account->m_State == AccountState::Normal)
     {
         if (bMakeActive)
         {
@@ -649,30 +649,30 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 // Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect those.
 // So we keep these 'shadow' accounts, and if they ever receive a transaction we automatically 'convert' them into normal accounts in the UI.
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
-CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountType type, AccountSubType subType, bool bMakeActive)
+CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive)
 {
 
-    assert(type != AccountType::ShadowChild);
-    assert(type != AccountType::Deleted);
+    assert(state != AccountState::ShadowChild);
+    assert(state != AccountState::Deleted);
     CAccountHD* newAccount = NULL;
 
     // Grab account with lowest index from existing pool of shadow accounts and convert it into a new account.
-    if (type == AccountType::Normal || type == AccountType::Shadow)
+    if (state == AccountState::Normal || state == AccountState::Shadow)
     {
         LOCK(cs_wallet);
 
         for (const auto& accountPair : mapAccounts)
         {
-            if (accountPair.second->m_SubType == subType)
+            if (accountPair.second->m_Type == subType)
             {
-                if (accountPair.second->m_Type == AccountType::Shadow)
+                if (accountPair.second->m_State == AccountState::Shadow)
                 {
                     if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex())
                     {
                         if (((CAccountHD*)accountPair.second)->getSeedUUID() == getActiveSeed()->getUUID())
                         {
                             //Only consider accounts that are
-                            //1) Of the required type
+                            //1) Of the required state
                             //2) Marked as being shadow
                             //3) From the active seed
                             //4) Always take the lowest account index that we can find
@@ -684,7 +684,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
         }
     }
 
-    // Create a new account in the (unlikely) event there was no shadow type
+    // Create a new account in the (unlikely) event there was no shadow state
     if (!newAccount)
     {
         if (!IsLocked())
@@ -697,7 +697,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountTyp
             return nullptr;
         }
     }
-    newAccount->m_Type = type;
+    newAccount->m_State = state;
 
     // We don't top up the shadow pool here - we have a thread for that.
 
@@ -736,7 +736,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
         throw std::runtime_error("Not a valid Gulden extended public key");
     }
 
-    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()(), AccountSubType::Desktop);
+    newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()(), AccountType::Desktop);
 
     // Write new account
     addAccount(newAccount, strAccount);

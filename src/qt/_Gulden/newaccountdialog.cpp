@@ -105,7 +105,7 @@ void NewAccountDialog::showSyncQr()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        newAccount = pactiveWallet->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountType::Normal, AccountSubType::Mobi);
+        newAccount = pactiveWallet->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountState::Normal, AccountType::Mobi);
         LOCK(pactiveWallet->cs_wallet);
         {
             int64_t currentTime = newAccount->getEarliestPossibleCreationTime();
