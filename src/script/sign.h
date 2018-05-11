@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_SCRIPT_SIGN_H
-#define BITCOIN_SCRIPT_SIGN_H
+#ifndef GULDEN_SCRIPT_SIGN_H
+#define GULDEN_SCRIPT_SIGN_H
 
 #include "script/interpreter.h"
 
@@ -97,4 +97,4 @@ SignatureData CombineSignatures(const CScript& scriptPubKey, const BaseSignature
 SignatureData DataFromTransaction(const CMutableTransaction& tx, unsigned int nIn);
 void UpdateTransaction(CMutableTransaction& tx, unsigned int nIn, const SignatureData& data);
 
-#endif // BITCOIN_SCRIPT_SIGN_H
+#endif // GULDEN_SCRIPT_SIGN_H

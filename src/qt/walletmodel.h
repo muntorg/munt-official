@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_WALLETMODEL_H
-#define BITCOIN_QT_WALLETMODEL_H
+#ifndef GULDEN_QT_WALLETMODEL_H
+#define GULDEN_QT_WALLETMODEL_H
 
 #include "paymentrequestplus.h"
 #include "walletmodeltransaction.h"
@@ -74,7 +74,7 @@ public:
     {
         NormalPayment,
         IBANPayment,
-        BCOINPayment,
+        BitcoinPayment,
         InvalidPayment
     };
     bool fSubtractFeeFromAmount; // memory only
@@ -182,7 +182,7 @@ public:
 
     // Check address for validity
     bool validateAddress(const QString &address);
-    bool validateAddressBCOIN(const QString &address);
+    bool validateAddressBitcoin(const QString &address);
     bool validateAddressIBAN(const QString &address);
 
     // Return status record for SendCoins, contains error id + information
@@ -342,4 +342,4 @@ public Q_SLOTS:
     void pollBalanceChanged();
 };
 
-#endif // BITCOIN_QT_WALLETMODEL_H
+#endif // GULDEN_QT_WALLETMODEL_H

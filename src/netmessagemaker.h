@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_NETMESSAGEMAKER_H
-#define BITCOIN_NETMESSAGEMAKER_H
+#ifndef GULDEN_NETMESSAGEMAKER_H
+#define GULDEN_NETMESSAGEMAKER_H
 
 #include "net.h"
 #include "serialize.h"
@@ -41,4 +41,4 @@ private:
     const int nExtraFlags;
 };
 
-#endif // BITCOIN_NETMESSAGEMAKER_H
+#endif // GULDEN_NETMESSAGEMAKER_H

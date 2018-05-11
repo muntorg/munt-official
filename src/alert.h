@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_ALERT_H
-#define BITCOIN_ALERT_H
+#ifndef GULDEN_ALERT_H
+#define GULDEN_ALERT_H
 
 #include "serialize.h"
 #include "sync.h"
@@ -117,4 +117,4 @@ public:
     static CAlert getAlertByHash(const uint256 &hash);
 };
 
-#endif // BITCOIN_ALERT_H
+#endif // GULDEN_ALERT_H

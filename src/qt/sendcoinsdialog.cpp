@@ -451,7 +451,7 @@ void SendCoinsDialog::on_sendButton_clicked()
             {
                 amount.append(" Euro");
             }
-            else if(rcp.forexPaymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
+            else if(rcp.forexPaymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
             {
                 amount.append(" BTC");
             }

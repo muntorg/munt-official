@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_MERKLE
-#define BITCOIN_MERKLE
+#ifndef GULDEN_MERKLE
+#define GULDEN_MERKLE
 
 #include <stdint.h>
 #include <vector>

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_MINER_H
-#define BITCOIN_MINER_H
+#ifndef GULDEN_MINER_H
+#define GULDEN_MINER_H
 
 #include "primitives/block.h"
 #include "txmempool.h"
@@ -237,4 +237,4 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
 void StartPoW2WitnessThread(boost::thread_group& threadGroup);
 
-#endif // BITCOIN_MINER_H
+#endif // GULDEN_MINER_H

@@ -279,7 +279,7 @@ bool CBitcoinAddress::IsValid(const CChainParams& params) const
     return fCorrectSize && fKnownVersion;
 }
 
-bool CBitcoinAddress::IsValidBCOIN() const
+bool CBitcoinAddress::IsValidBitcoin() const
 {
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = (vchVersion == std::vector<unsigned char>(1, 0) || vchVersion == std::vector<unsigned char>(1, 5));

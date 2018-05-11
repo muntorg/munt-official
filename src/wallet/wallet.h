@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_WALLET_WALLET_H
-#define BITCOIN_WALLET_WALLET_H
+#ifndef GULDEN_WALLET_WALLET_H
+#define GULDEN_WALLET_WALLET_H
 
 #include "amount.h"
 #include "policy/feerate.h"
@@ -1267,4 +1267,4 @@ bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, cons
     }
     return true;
 }
-#endif // BITCOIN_WALLET_WALLET_H
+#endif // GULDEN_WALLET_WALLET_H

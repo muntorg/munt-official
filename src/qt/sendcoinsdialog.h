@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_SENDCOINSDIALOG_H
-#define BITCOIN_QT_SENDCOINSDIALOG_H
+#ifndef GULDEN_QT_SENDCOINSDIALOG_H
+#define GULDEN_QT_SENDCOINSDIALOG_H
 
 #include "walletmodel.h"
 
@@ -143,4 +143,4 @@ private:
     int secDelay;
 };
 
-#endif // BITCOIN_QT_SENDCOINSDIALOG_H
+#endif // GULDEN_QT_SENDCOINSDIALOG_H

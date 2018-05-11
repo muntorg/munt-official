@@ -206,10 +206,10 @@ bool WalletModel::validateAddress(const QString &address)
     return addressParsed.IsValid();
 }
 
-bool WalletModel::validateAddressBCOIN(const QString &address)
+bool WalletModel::validateAddressBitcoin(const QString &address)
 {
     CBitcoinAddress addressParsed(address.toStdString());
-    return addressParsed.IsValidBCOIN();
+    return addressParsed.IsValidBitcoin();
 }
 
 bool WalletModel::validateAddressIBAN(const QString &address)

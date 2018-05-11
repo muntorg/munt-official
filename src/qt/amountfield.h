@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_BITCOINAMOUNTFIELD_H
-#define BITCOIN_QT_BITCOINAMOUNTFIELD_H
+#ifndef GULDEN_QT_GULDENAMOUNTFIELD_H
+#define GULDEN_QT_GULDENAMOUNTFIELD_H
 
 #include "amount.h"
 
@@ -73,7 +73,7 @@ public:
     enum AmountFieldCurrency
     {
         CurrencyGulden,
-        CurrencyBCOIN,
+        CurrencyBitcoin,
         CurrencyEuro,
         CurrencyLocal
     };
@@ -121,4 +121,4 @@ private Q_SLOTS:
     void changeToQuadCurrency();
 };
 
-#endif // BITCOIN_QT_BITCOINAMOUNTFIELD_H
+#endif // GULDEN_QT_GULDENAMOUNTFIELD_H

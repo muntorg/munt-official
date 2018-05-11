@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_COMPAT_H
-#define BITCOIN_COMPAT_H
+#ifndef GULDEN_COMPAT_H
+#define GULDEN_COMPAT_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
@@ -76,4 +76,4 @@ typedef unsigned int SOCKET;
 size_t strnlen( const char *start, size_t max_len);
 #endif // HAVE_DECL_STRNLEN
 
-#endif // BITCOIN_COMPAT_H
+#endif // GULDEN_COMPAT_H

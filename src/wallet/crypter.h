@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_WALLET_CRYPTER_H
-#define BITCOIN_WALLET_CRYPTER_H
+#ifndef GULDEN_WALLET_CRYPTER_H
+#define GULDEN_WALLET_CRYPTER_H
 
 #include "keystore.h"
 #include "serialize.h"
@@ -216,4 +216,4 @@ public:
     friend class CWallet;
 };
 
-#endif // BITCOIN_WALLET_CRYPTER_H
+#endif // GULDEN_WALLET_CRYPTER_H

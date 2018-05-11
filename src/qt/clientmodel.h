@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_CLIENTMODEL_H
-#define BITCOIN_QT_CLIENTMODEL_H
+#ifndef GULDEN_QT_CLIENTMODEL_H
+#define GULDEN_QT_CLIENTMODEL_H
 
 #include <QObject>
 #include <QDateTime>
@@ -131,4 +131,4 @@ public Q_SLOTS:
     void updateBanlist();
 };
 
-#endif // BITCOIN_QT_CLIENTMODEL_H
+#endif // GULDEN_QT_CLIENTMODEL_H

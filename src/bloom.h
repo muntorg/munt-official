@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_BLOOM_H
-#define BITCOIN_BLOOM_H
+#ifndef GULDEN_BLOOM_H
+#define GULDEN_BLOOM_H
 
 #include "serialize.h"
 
@@ -147,4 +147,4 @@ private:
     int nHashFuncs;
 };
 
-#endif // BITCOIN_BLOOM_H
+#endif // GULDEN_BLOOM_H

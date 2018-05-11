@@ -93,8 +93,8 @@
 #include <openssl/conf.h>
 
 
-const char * const BITCOIN_CONF_FILENAME = "Gulden.conf";
-const char * const BITCOIN_PID_FILENAME = "GuldenD.pid";
+const char * const GULDEN_CONF_FILENAME = "Gulden.conf";
+const char * const GULDEN_PID_FILENAME = "GuldenD.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
@@ -674,7 +674,7 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
 #ifndef WIN32
 fs::path GetPidFile()
 {
-    fs::path pathPidFile(GetArg("-pid", BITCOIN_PID_FILENAME));
+    fs::path pathPidFile(GetArg("-pid", GULDEN_PID_FILENAME));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

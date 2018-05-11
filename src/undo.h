@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_UNDO_H
-#define BITCOIN_UNDO_H
+#ifndef GULDEN_UNDO_H
+#define GULDEN_UNDO_H
 
 #include "coins.h"
 #include "compressor.h" 
@@ -137,4 +137,4 @@ public:
     }
 };
 
-#endif // BITCOIN_UNDO_H
+#endif // GULDEN_UNDO_H

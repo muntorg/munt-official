@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_GULDENRECEIVECOINSDIALOG_H
-#define BITCOIN_QT_GULDENRECEIVECOINSDIALOG_H
+#ifndef GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
+#define GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
 
 #include "guiutil.h"
 #include "wallet/wallet.h"
@@ -89,4 +89,4 @@ private Q_SLOTS:
   #endif
 };
 
-#endif // BITCOIN_QT_GULDENRECEIVECOINSDIALOG_H
+#endif // GULDEN_QT_GULDENRECEIVECOINSDIALOG_H

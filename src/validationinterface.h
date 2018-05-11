@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_VALIDATIONINTERFACE_H
-#define BITCOIN_VALIDATIONINTERFACE_H
+#ifndef GULDEN_VALIDATIONINTERFACE_H
+#define GULDEN_VALIDATIONINTERFACE_H
 
 #include <boost/signals2/signal.hpp>
 #include <memory>
@@ -90,4 +90,4 @@ struct CMainSignals {
 
 CMainSignals& GetMainSignals();
 
-#endif // BITCOIN_VALIDATIONINTERFACE_H
+#endif // GULDEN_VALIDATIONINTERFACE_H

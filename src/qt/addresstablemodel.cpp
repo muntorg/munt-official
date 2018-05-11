@@ -279,7 +279,7 @@ bool AddressTableModel::setData(const QModelIndex &index, const QVariant &value,
         } else if(index.column() == Address) {
             QString newAddress = value.toString();
             // Refuse to set invalid address, set error status and return false
-            if( !walletModel->validateAddress(newAddress) && !walletModel->validateAddressBCOIN(newAddress) && !walletModel->validateAddressIBAN(newAddress) )
+            if( !walletModel->validateAddress(newAddress) && !walletModel->validateAddressBitcoin(newAddress) && !walletModel->validateAddressIBAN(newAddress) )
             {
                 editStatus = INVALID_ADDRESS;
                 return false;
@@ -372,7 +372,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
 
     if(type == Send)
     {
-        if( !walletModel->validateAddress(address) && !walletModel->validateAddressBCOIN(address) && !walletModel->validateAddressIBAN(address) )
+        if( !walletModel->validateAddress(address) && !walletModel->validateAddressBitcoin(address) && !walletModel->validateAddressIBAN(address) )
         {
             editStatus = INVALID_ADDRESS;
             return QString();

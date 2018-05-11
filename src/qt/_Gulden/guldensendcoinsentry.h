@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_SENDCOINSENTRY_H
-#define BITCOIN_QT_SENDCOINSENTRY_H
+#ifndef GULDEN_QT_SENDCOINSENTRY_H
+#define GULDEN_QT_SENDCOINSENTRY_H
 
 #include "walletmodel.h"
 
@@ -98,4 +98,4 @@ private:
     bool updateLabel(const QString &address);
 };
 
-#endif // BITCOIN_QT_SENDCOINSENTRY_H
+#endif // GULDEN_QT_SENDCOINSENTRY_H

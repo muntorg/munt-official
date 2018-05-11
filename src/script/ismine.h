@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_SCRIPT_ISMINE_H
-#define BITCOIN_SCRIPT_ISMINE_H
+#ifndef GULDEN_SCRIPT_ISMINE_H
+#define GULDEN_SCRIPT_ISMINE_H
 
 #include "script/standard.h"
 
@@ -51,4 +51,4 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, SigVersion = SIGVERSION_BASE);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txout, uint64_t time);
 
-#endif // BITCOIN_SCRIPT_ISMINE_H
+#endif // GULDEN_SCRIPT_ISMINE_H

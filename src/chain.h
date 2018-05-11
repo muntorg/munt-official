@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_CHAIN_H
-#define BITCOIN_CHAIN_H
+#ifndef GULDEN_CHAIN_H
+#define GULDEN_CHAIN_H
 
 #include "arith_uint256.h"
 #include "primitives/block.h"
@@ -658,4 +658,4 @@ class CCloneChain : public CChain
     std::vector<CBlockIndex*> vFree;
 };
 
-#endif // BITCOIN_CHAIN_H
+#endif // GULDEN_CHAIN_H

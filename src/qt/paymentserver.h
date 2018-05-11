@@ -8,8 +8,8 @@
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
-#ifndef BITCOIN_QT_PAYMENTSERVER_H
-#define BITCOIN_QT_PAYMENTSERVER_H
+#ifndef GULDEN_QT_PAYMENTSERVER_H
+#define GULDEN_QT_PAYMENTSERVER_H
 
 // This class handles payment requests from clicking on
 // Gulden: URIs
@@ -151,4 +151,4 @@ private:
     OptionsModel *optionsModel;
 };
 
-#endif // BITCOIN_QT_PAYMENTSERVER_H
+#endif // GULDEN_QT_PAYMENTSERVER_H

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_POW_H
-#define BITCOIN_POW_H
+#ifndef GULDEN_POW_H
+#define GULDEN_POW_H
 
 #include "consensus/params.h"
 
@@ -28,4 +28,4 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
 
-#endif // BITCOIN_POW_H
+#endif // GULDEN_POW_H

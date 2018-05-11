@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_VALIDATION_H
-#define BITCOIN_VALIDATION_H
+#ifndef GULDEN_VALIDATION_H
+#define GULDEN_VALIDATION_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
@@ -560,4 +560,4 @@ void DumpMempool();
 /** Load the mempool from disk. */
 bool LoadMempool();
 
-#endif // BITCOIN_VALIDATION_H
+#endif // GULDEN_VALIDATION_H

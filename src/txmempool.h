@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_TXMEMPOOL_H
-#define BITCOIN_TXMEMPOOL_H
+#ifndef GULDEN_TXMEMPOOL_H
+#define GULDEN_TXMEMPOOL_H
 
 #include <memory>
 #include <set>
@@ -787,4 +787,4 @@ struct DisconnectedBlockTransactions {
     }
 };
 
-#endif // BITCOIN_TXMEMPOOL_H
+#endif // GULDEN_TXMEMPOOL_H

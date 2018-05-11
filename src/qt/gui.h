@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_BITCOINGUI_H
-#define BITCOIN_QT_BITCOINGUI_H
+#ifndef GULDEN_QT_GUI_H
+#define GULDEN_QT_GUI_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
@@ -288,4 +288,4 @@ private Q_SLOTS:
     void onMenuSelection(QAction* action);
 };
 
-#endif // BITCOIN_QT_BITCOINGUI_H
+#endif // GULDEN_QT_GUI_H

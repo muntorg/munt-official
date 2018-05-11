@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_CONSENSUS_VALIDATION_H
-#define BITCOIN_CONSENSUS_VALIDATION_H
+#ifndef GULDEN_CONSENSUS_VALIDATION_H
+#define GULDEN_CONSENSUS_VALIDATION_H
 
 #include <string>
 
@@ -100,4 +100,4 @@ public:
     std::string GetDebugMessage() const { return strDebugMessage; }
 };
 
-#endif // BITCOIN_CONSENSUS_VALIDATION_H
+#endif // GULDEN_CONSENSUS_VALIDATION_H

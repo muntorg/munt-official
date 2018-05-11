@@ -65,7 +65,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
             httpExtraParams = httpExtraParams + String.format(", \"reference\": \"%s\"", forexExtraRemmitance2);*/
 
         QString forexCurrencyType;
-        if (recipient->paymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
+        if (recipient->paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
             forexCurrencyType = "BTC";
         else if (recipient->paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
             forexCurrencyType = "EUR";

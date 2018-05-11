@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_SERIALIZE_H
-#define BITCOIN_SERIALIZE_H
+#ifndef GULDEN_SERIALIZE_H
+#define GULDEN_SERIALIZE_H
 
 #include "compat/endian.h"
 
@@ -1469,4 +1469,4 @@ size_t GetSerializeSize(const S& s, const T& t)
     return (CSizeComputer(s.GetType(), s.GetVersion()) << t).size();
 }
 
-#endif // BITCOIN_SERIALIZE_H
+#endif // GULDEN_SERIALIZE_H

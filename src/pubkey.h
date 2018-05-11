@@ -9,8 +9,8 @@
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
-#ifndef BITCOIN_PUBKEY_H
-#define BITCOIN_PUBKEY_H
+#ifndef GULDEN_PUBKEY_H
+#define GULDEN_PUBKEY_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -256,4 +256,4 @@ public:
     ~ECCVerifyHandle();
 };
 
-#endif // BITCOIN_PUBKEY_H
+#endif // GULDEN_PUBKEY_H

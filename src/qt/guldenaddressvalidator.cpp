@@ -102,7 +102,7 @@ QValidator::State BitcoinAddressCheckValidator::validate(QString &input, int &po
     CBitcoinAddress addr(input.toStdString());
     //fixme: (Post-2.1) Gulden Duplicate code
     QRegularExpression patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$");
-    if (addr.IsValid() || addr.IsValidBCOIN() || patternMatcherIBAN.match(input).hasMatch())
+    if (addr.IsValid() || addr.IsValidBitcoin() || patternMatcherIBAN.match(input).hasMatch())
         return QValidator::Acceptable;
 
     return QValidator::Invalid;

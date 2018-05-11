@@ -14,8 +14,8 @@
  * Server/client environment: argument handling, config file parsing,
  * logging, thread wrappers
  */
-#ifndef BITCOIN_UTIL_H
-#define BITCOIN_UTIL_H
+#ifndef GULDEN_UTIL_H
+#define GULDEN_UTIL_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
@@ -57,8 +57,8 @@ extern bool fLogIPs;
 extern std::atomic<bool> fReopenDebugLog;
 extern CTranslationInterface translationInterface;
 
-extern const char * const BITCOIN_CONF_FILENAME;
-extern const char * const BITCOIN_PID_FILENAME;
+extern const char * const GULDEN_CONF_FILENAME;
+extern const char * const GULDEN_PID_FILENAME;
 
 extern std::atomic<uint32_t> logCategories;
 
@@ -365,4 +365,4 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
 
 std::string CopyrightHolders(const std::string& strPrefix);
 
-#endif // BITCOIN_UTIL_H
+#endif // GULDEN_UTIL_H

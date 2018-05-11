@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_TRANSACTIONVIEW_H
-#define BITCOIN_QT_TRANSACTIONVIEW_H
+#ifndef GULDEN_QT_TRANSACTIONVIEW_H
+#define GULDEN_QT_TRANSACTIONVIEW_H
 
 #include "guiutil.h"
 
@@ -128,4 +128,4 @@ public Q_SLOTS:
 
 };
 
-#endif // BITCOIN_QT_TRANSACTIONVIEW_H
+#endif // GULDEN_QT_TRANSACTIONVIEW_H

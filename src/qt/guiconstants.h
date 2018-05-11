@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_GUICONSTANTS_H
-#define BITCOIN_QT_GUICONSTANTS_H
+#ifndef GULDEN_QT_GUICONSTANTS_H
+#define GULDEN_QT_GUICONSTANTS_H
 
 /* Milliseconds between model updates */
 static const int MODEL_UPDATE_DELAY = 250;
@@ -58,4 +58,4 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_APP_NAME_DEFAULT "Gulden"
 #define QAPP_APP_NAME_TESTNET "Gulden [testnet]"
 
-#endif // BITCOIN_QT_GUICONSTANTS_H
+#endif // GULDEN_QT_GUICONSTANTS_H

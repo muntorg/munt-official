@@ -425,7 +425,7 @@ CAmount BitcoinAmountField::valueForCurrency(bool *valid_out) const
                 {
                     case AmountFieldCurrency::CurrencyEuro:
                         return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                         return tertiaryAmount;
                     case AmountFieldCurrency::CurrencyLocal:
                         return quadAmount;
@@ -440,7 +440,7 @@ CAmount BitcoinAmountField::valueForCurrency(bool *valid_out) const
                 {
                     case AmountFieldCurrency::CurrencyGulden:
                         return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                         return tertiaryAmount;
                     case AmountFieldCurrency::CurrencyLocal:
                         return quadAmount;
@@ -449,7 +449,7 @@ CAmount BitcoinAmountField::valueForCurrency(bool *valid_out) const
                 }
             }
             break;
-            case AmountFieldCurrency::CurrencyBCOIN:
+            case AmountFieldCurrency::CurrencyBitcoin:
             {
                 switch(primaryCurrency)
                 {
@@ -473,7 +473,7 @@ CAmount BitcoinAmountField::valueForCurrency(bool *valid_out) const
                     case AmountFieldCurrency::CurrencyEuro:
                         return tertiaryAmount;
                     break;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                         return quadAmount;
                     default:
                         assert(0);
@@ -530,7 +530,7 @@ void BitcoinAmountField::changeToSecondaryCurrency()
             displayCurrency = AmountFieldCurrency::CurrencyEuro;
         }
         break;
-        case AmountFieldCurrency::CurrencyBCOIN:
+        case AmountFieldCurrency::CurrencyBitcoin:
         {
             displayCurrency = AmountFieldCurrency::CurrencyGulden;
         }
@@ -561,17 +561,17 @@ void BitcoinAmountField::changeToTertiaryCurrency()
     {
         case AmountFieldCurrency::CurrencyGulden:
         {
-            displayCurrency = AmountFieldCurrency::CurrencyBCOIN;
+            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
         }
         break;
-        case AmountFieldCurrency::CurrencyBCOIN:
+        case AmountFieldCurrency::CurrencyBitcoin:
         {
             displayCurrency = AmountFieldCurrency::CurrencyEuro;
         }
         break;
         case AmountFieldCurrency::CurrencyEuro:
         {
-            displayCurrency = AmountFieldCurrency::CurrencyBCOIN;
+            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
         }
         break;
         case AmountFieldCurrency::CurrencyLocal:
@@ -598,7 +598,7 @@ void BitcoinAmountField::changeToQuadCurrency()
             displayCurrency = AmountFieldCurrency::CurrencyLocal;
         }
         break;
-        case AmountFieldCurrency::CurrencyBCOIN:
+        case AmountFieldCurrency::CurrencyBitcoin:
         {
             displayCurrency = AmountFieldCurrency::CurrencyLocal;
         }
@@ -610,7 +610,7 @@ void BitcoinAmountField::changeToQuadCurrency()
         break;
         case AmountFieldCurrency::CurrencyLocal:
         {
-            displayCurrency = AmountFieldCurrency::CurrencyBCOIN;
+            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
         }
         break;
         default:
@@ -731,7 +731,7 @@ void BitcoinAmountField::update()
                 if (!validateEurLimits(EURAmount))
                     return;
             }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
+            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
             {
                 CAmount BTCAmount = ticker->convertGuldenToForex(amount, "BTC");
                 if (!validateBTCLimits(BTCAmount))
@@ -760,7 +760,7 @@ void BitcoinAmountField::update()
             quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + QString("0.00)"));
         }
     }
-    else if(displayCurrency == AmountFieldCurrency::CurrencyBCOIN)
+    else if(displayCurrency == AmountFieldCurrency::CurrencyBitcoin)
     {
         // [...] Gulden <> G... (E...) (R...)
 
@@ -780,7 +780,7 @@ void BitcoinAmountField::update()
                 if (!validateEurLimits(EURAmount))
                     return;
             }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
+            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
             {
                 if (!validateBTCLimits(amount))
                     return;
@@ -823,7 +823,7 @@ void BitcoinAmountField::update()
                 if (!validateEurLimits(amount))
                     return;
             }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
+            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
             {
                 CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
 
@@ -870,7 +870,7 @@ void BitcoinAmountField::update()
                 if (!validateEurLimits(EURAmount))
                     return;
             }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBCOIN)
+            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
             {
                 CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
 
@@ -961,7 +961,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
                         changeToSecondaryCurrency();
                     }
                     break;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                     {
                         changeToTertiaryCurrency();
                     }
@@ -987,7 +987,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
                     {
                     }
                     break;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                     {
                         changeToTertiaryCurrency();
                     }
@@ -1000,7 +1000,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
                 }
             }
             break;
-            case AmountFieldCurrency::CurrencyBCOIN:
+            case AmountFieldCurrency::CurrencyBitcoin:
             {
                 switch(currency_)
                 {
@@ -1014,7 +1014,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
                         changeToTertiaryCurrency();
                     }
                     break;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                     {
                     }
                     break;
@@ -1040,7 +1040,7 @@ void BitcoinAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker
                         changeToTertiaryCurrency();
                     }
                     break;
-                    case AmountFieldCurrency::CurrencyBCOIN:
+                    case AmountFieldCurrency::CurrencyBitcoin:
                     {
                         changeToQuadCurrency();
                     }

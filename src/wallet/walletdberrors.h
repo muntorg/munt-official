@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_WALLET_WALLETDBERRORS_H
-#define BITCOIN_WALLET_WALLETDBERRORS_H
+#ifndef GULDEN_WALLET_WALLETDBERRORS_H
+#define GULDEN_WALLET_WALLETDBERRORS_H
 
 /** Error statuses for the wallet database */
 enum DBErrors
@@ -18,4 +18,4 @@ enum DBErrors
 };
 
 
-#endif // BITCOIN_WALLET_WALLETDBERRORS_H
+#endif // GULDEN_WALLET_WALLETDBERRORS_H

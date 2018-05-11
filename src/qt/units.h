@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_BITCOINUNITS_H
-#define BITCOIN_QT_BITCOINUNITS_H
+#ifndef GULDEN_QT_GULDENUNITS_H
+#define GULDEN_QT_GULDENUNITS_H
 
 #include "amount.h"
 
@@ -132,4 +132,4 @@ private:
 };
 typedef BitcoinUnits::Unit BitcoinUnit;
 
-#endif // BITCOIN_QT_BITCOINUNITS_H
+#endif // GULDEN_QT_GULDENUNITS_H

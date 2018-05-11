@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_MODALOVERLAY_H
-#define BITCOIN_QT_MODALOVERLAY_H
+#ifndef GULDEN_QT_MODALOVERLAY_H
+#define GULDEN_QT_MODALOVERLAY_H
 
 #include <QDateTime>
 #include <QWidget>
@@ -53,4 +53,4 @@ private:
     bool userClosed;
 };
 
-#endif // BITCOIN_QT_MODALOVERLAY_H
+#endif // GULDEN_QT_MODALOVERLAY_H

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_MERKLEBLOCK_H
-#define BITCOIN_MERKLEBLOCK_H
+#ifndef GULDEN_MERKLEBLOCK_H
+#define GULDEN_MERKLEBLOCK_H
 
 #include "serialize.h"
 #include "uint256.h"
@@ -161,4 +161,4 @@ public:
     }
 };
 
-#endif // BITCOIN_MERKLEBLOCK_H
+#endif // GULDEN_MERKLEBLOCK_H

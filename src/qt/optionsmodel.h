@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_OPTIONSMODEL_H
-#define BITCOIN_QT_OPTIONSMODEL_H
+#ifndef GULDEN_QT_OPTIONSMODEL_H
+#define GULDEN_QT_OPTIONSMODEL_H
 
 #include "amount.h"
 #include "_Gulden/ticker.h"
@@ -162,4 +162,4 @@ Q_SIGNALS:
     void hideTrayIconChanged(bool);
 };
 
-#endif // BITCOIN_QT_OPTIONSMODEL_H
+#endif // GULDEN_QT_OPTIONSMODEL_H

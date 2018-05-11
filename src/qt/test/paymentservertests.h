@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TEST_PAYMENTSERVERTESTS_H
-#define BITCOIN_QT_TEST_PAYMENTSERVERTESTS_H
+#ifndef GULDEN_QT_TEST_PAYMENTSERVERTESTS_H
+#define GULDEN_QT_TEST_PAYMENTSERVERTESTS_H
 
 #include "../paymentserver.h"
 
@@ -32,4 +32,4 @@ public:
     SendCoinsRecipient recipient;
 };
 
-#endif // BITCOIN_QT_TEST_PAYMENTSERVERTESTS_H
+#endif // GULDEN_QT_TEST_PAYMENTSERVERTESTS_H

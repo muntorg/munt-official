@@ -213,9 +213,9 @@ void GuldenSendCoinsEntry::addressChanged()
     {
         ui->receivingAddress->setProperty("valid", true);
 
-        if (val.paymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
+        if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBCOIN);
+            ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBitcoin);
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
@@ -332,9 +332,9 @@ bool GuldenSendCoinsEntry::validate()
     {
         ui->receivingAddress->setProperty("valid", true);
 
-        if (val.paymentType == SendCoinsRecipient::PaymentType::BCOINPayment)
+        if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBCOIN);
+            //ui->payAmount->setCurrency(NULL, NULL, BitcoinAmountField::AmountFieldCurrency::CurrencyBitcoin);
 
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
@@ -395,9 +395,9 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
     {
         QString compareModified = recipient.address;
         #ifdef SUPPORT_BITCOIN_AS_FOREX
-        if (model->validateAddressBCOIN(compareModified))
+        if (model->validateAddressBitcoin(compareModified))
         {
-            ret = SendCoinsRecipient::PaymentType::BCOINPayment;
+            ret = SendCoinsRecipient::PaymentType::BitcoinPayment;
         }
         else
         #endif

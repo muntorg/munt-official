@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_ASKPASSPHRASEDIALOG_H
-#define BITCOIN_QT_ASKPASSPHRASEDIALOG_H
+#ifndef GULDEN_QT_ASKPASSPHRASEDIALOG_H
+#define GULDEN_QT_ASKPASSPHRASEDIALOG_H
 
 #include <QDialog>
 
@@ -56,4 +56,4 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 };
 
-#endif // BITCOIN_QT_ASKPASSPHRASEDIALOG_H
+#endif // GULDEN_QT_ASKPASSPHRASEDIALOG_H

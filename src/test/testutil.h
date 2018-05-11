@@ -5,11 +5,11 @@
 /**
  * Utility functions shared by unit tests
  */
-#ifndef BITCOIN_TEST_TESTUTIL_H
-#define BITCOIN_TEST_TESTUTIL_H
+#ifndef GULDEN_TEST_TESTUTIL_H
+#define GULDEN_TEST_TESTUTIL_H
 
 #include "fs.h"
 
 fs::path GetTempPath();
 
-#endif // BITCOIN_TEST_TESTUTIL_H
+#endif // GULDEN_TEST_TESTUTIL_H

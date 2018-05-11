@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_COINS_H
-#define BITCOIN_COINS_H
+#ifndef GULDEN_COINS_H
+#define GULDEN_COINS_H
 
 #include "primitives/transaction.h"
 #include "compressor.h"
@@ -347,4 +347,4 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight);
 //! Utility function to find any unspent output with a given txid.
 const Coin& AccessByTxid(const CCoinsViewCache& cache, const uint256& txid);
 
-#endif // BITCOIN_COINS_H
+#endif // GULDEN_COINS_H

@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_NETADDRESS_H
-#define BITCOIN_NETADDRESS_H
+#ifndef GULDEN_NETADDRESS_H
+#define GULDEN_NETADDRESS_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
@@ -181,4 +181,4 @@ class CService : public CNetAddr
         }
 };
 
-#endif // BITCOIN_NETADDRESS_H
+#endif // GULDEN_NETADDRESS_H

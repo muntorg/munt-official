@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_CONSENSUS_PARAMS_H
-#define BITCOIN_CONSENSUS_PARAMS_H
+#ifndef GULDEN_CONSENSUS_PARAMS_H
+#define GULDEN_CONSENSUS_PARAMS_H
 
 #include "uint256.h"
 #include <map>
@@ -92,4 +92,4 @@ struct Params {
 };
 } // namespace Consensus
 
-#endif // BITCOIN_CONSENSUS_PARAMS_H
+#endif // GULDEN_CONSENSUS_PARAMS_H

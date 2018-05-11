@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_WALLETFRAME_H
-#define BITCOIN_QT_WALLETFRAME_H
+#ifndef GULDEN_QT_WALLETFRAME_H
+#define GULDEN_QT_WALLETFRAME_H
 
 #include <QFrame>
 #include <QMap>
@@ -102,4 +102,4 @@ public Q_SLOTS:
     friend class BitcoinGUI;
 };
 
-#endif // BITCOIN_QT_WALLETFRAME_H
+#endif // GULDEN_QT_WALLETFRAME_H

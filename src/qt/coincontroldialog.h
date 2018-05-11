@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_COINCONTROLDIALOG_H
-#define BITCOIN_QT_COINCONTROLDIALOG_H
+#ifndef GULDEN_QT_COINCONTROLDIALOG_H
+#define GULDEN_QT_COINCONTROLDIALOG_H
 
 #include "amount.h"
 
@@ -119,4 +119,4 @@ private Q_SLOTS:
     void updateLabelLocked();
 };
 
-#endif // BITCOIN_QT_COINCONTROLDIALOG_H
+#endif // GULDEN_QT_COINCONTROLDIALOG_H

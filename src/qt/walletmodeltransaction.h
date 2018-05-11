@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_QT_WALLETMODELTRANSACTION_H
-#define BITCOIN_QT_WALLETMODELTRANSACTION_H
+#ifndef GULDEN_QT_WALLETMODELTRANSACTION_H
+#define GULDEN_QT_WALLETMODELTRANSACTION_H
 
 #include "walletmodel.h"
 #include "wallet/wallet.h"
@@ -52,4 +52,4 @@ private:
     CAmount fee;
 };
 
-#endif // BITCOIN_QT_WALLETMODELTRANSACTION_H
+#endif // GULDEN_QT_WALLETMODELTRANSACTION_H
