@@ -52,6 +52,22 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -456,22 +472,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">改變錢包加密用的密碼</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">簽署訊息...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">驗證訊息...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2409,74 +2409,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">重複使用先前使用過的收款位址。重複使用位址會有安全和隱私方面的問題。除非是要重新產生先前的付款要求，不然請不要使用。</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">重複使用現有的收款位址(不建議)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">訊息:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">跟新收款位址關聯的標記，可以不填。</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">請用這份表單來要求付款。所有欄位都&lt;b&gt;可以不填&lt;/b&gt;。</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">標記:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">要求付款的金額，可以不填。不確定金額時可以留白或是填零。</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">金額:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">要求付款</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">把表單中的所有欄位清空。</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">清空</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">先前要求付款的記錄</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">顯示選擇的要求內容(效果跟按它兩下一樣)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">顯示</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">從列表中刪掉選擇的項目</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">刪掉</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished">產生的 URI 過長，請試著縮短標記或訊息的文字內容。</translation>
     </message>
@@ -2495,22 +2427,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished">複製 URI</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">複製標記</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished">複製訊息</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">複製金額</translation>
     </message>
 </context>
 <context>
@@ -2790,12 +2706,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">加做交易手續費</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished">總金額 %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation type="unfinished">或</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -2990,145 +2902,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished"> 在這個視窗不見以前，請不要關掉電腦。</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">簽章 - 簽署或驗證訊息</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">簽署訊息</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">選擇先前使用過的位址</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">貼上剪貼簿裡的位址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">請在這裡輸入你想簽署的訊息</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">簽章</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">複製目前的簽章到系統剪貼簿</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">簽署訊息</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">重設所有訊息簽署欄位</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">全部清掉</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">驗證訊息</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">請在下面輸入收款人的位址，訊息(請確定完整複製了所包含的換行，空格，跳位符號等等)，以及簽章，來驗證這個訊息。請小心，除了訊息內容以外，不要對簽章本身過度解讀，以避免被用「中間人攻擊法」詐騙。請注意，通過驗證的簽章只能證明簽章人確實可以從該位址收款，不能證明任何交易中的付款人身份！</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">驗證訊息</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">重設所有訊息驗證欄位</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished">請按一下「簽署訊息」來產生簽章</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished">輸入的位址無效。</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished">請檢查位址是否正確後再試一次。</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished">輸入的位址沒有對應到你的任何密鑰。</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished">錢包解鎖已取消。</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished">沒有對應輸入位址的密鑰。</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished">訊息簽署失敗。</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished">訊息簽署好了。</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished">沒辦法把這個簽章解碼。</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished">請檢查簽章是否正確後再試一次。</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished">這個簽章跟訊息的數位摘要不符。</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished">訊息驗證失敗。</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished">訊息驗證沒錯。</translation>
     </message>
 </context>
 <context>
@@ -3439,23 +3212,59 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation type="unfinished">只能看</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
+        <source>Lock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
+        <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
+        <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3898,6 +3707,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Empty account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

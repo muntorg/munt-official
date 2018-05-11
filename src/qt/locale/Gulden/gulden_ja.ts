@@ -52,6 +52,22 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -456,22 +472,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">ウォレット暗号化用パスフレーズの変更</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">メッセージの署名... (&amp;m)</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">メッセージの検証... (&amp;V)</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2409,74 +2409,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">以前利用した受取用アドレスのどれかを再利用します。アドレスの再利用はセキュリティおよびプライバシーにおいて問題があります。以前作成した支払リクエストを再生成するとき以外は利用しないでください。</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">既存の受取用アドレスを再利用する (非推奨) (&amp;E)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">メッセージ (&amp;M):</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">受取用アドレスに紐づく任意のラベル。</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">このフォームを使用して支払のリクエストを行いましょう。すべての項目は&lt;b&gt;任意入力&lt;/b&gt;です。</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">ラベル(&amp;L):</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">リクエストする任意の金額。特定の金額をリクエストするのでない場合には、この欄は空白のままかゼロにしてください。</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">総額:(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">支払をリクエストする (&amp;R)</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">全ての入力項目をクリア</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">クリア</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">支払リクエスト履歴</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">選択されたリクエストを表示する（項目をダブルクリックすることでも表示できます）</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">表示</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">リストから選択項目を削除</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">削除</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished">URI が長くなり過ぎます。ラベルやメッセージのテキストを短くしてください。</translation>
     </message>
@@ -2495,22 +2427,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished">URI をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">ラベルをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished">メッセージをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">総額のコピー</translation>
     </message>
 </context>
 <context>
@@ -2790,12 +2706,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">取引手数料として追加された</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished">合計：　%1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation type="unfinished">または</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -2990,145 +2902,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">このウィンドウが消えるまでコンピュータをシャットダウンしないで下さい。</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">署名 - メッセージの署名/検証</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">メッセージの署名 (&amp;S)</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">前に使用したアドレスを選ぶ</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">クリップボードからアドレスを貼付ける</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">ここにあなたが署名するメッセージを入力します</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">署名</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">現在の署名をシステムのクリップボードにコピーする</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">メッセージの署名 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">入力項目の内容をすべて消去します</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">すべてクリア (&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">メッセージの検証 (&amp;V)</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">受取人のアドレスとメッセージ（改行やスペース、タブなども完全に一致するよう注意してください）および署名を以下に入力し、メッセージの署名を検証してください。中間者攻撃により騙されるのを防ぐため、署名対象のメッセージに書かれていること以上の意味を署名から読み取ろうとしないよう注意してください。これは署名作成者がこのアドレスで受け取ったことを証明するだけであり、トランザクションの送信権限を証明するものではないことに注意してください！</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">メッセージの検証 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">入力項目の内容をすべて消去します</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished">署名を作成するには&quot;メッセージの署名&quot;をクリック</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished">不正なアドレスが入力されました。</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished">アドレスを確かめてからもう一度試してください。</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished">入力されたアドレスに関連するキーがありません。</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished">ウォレットのアンロックはキャンセルされました。</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished">入力されたアドレスのプライベート キーが無効です。</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished">メッセージの署名に失敗しました。</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished">メッセージに署名しました。</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished">署名がデコードできません。</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished">署名を確認してからもう一度試してください。</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished">署名はメッセージ ダイジェストと一致しませんでした。</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished">メッセージの検証に失敗しました。</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished">メッセージは検証されました。</translation>
     </message>
 </context>
 <context>
@@ -3439,23 +3212,59 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation type="unfinished">監視限定</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
+        <source>Lock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
+        <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
+        <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3898,6 +3707,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Empty account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -52,6 +52,22 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -456,22 +472,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">Ändert die Passphrase, die für die Wallet-Verschlüsselung benutzt wird</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">Nachricht s&amp;ignieren...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished">Nachrichten signieren, um den Besitz Ihrer Gulden Adressen zu beweisen</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">Nachricht &amp;verifizieren...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2419,74 +2419,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">Eine der bereits verwendeten Empfangsadressen wiederverwenden. Addressen wiederzuverwenden birgt Sicherheits- und Datenschutzrisiken. Außer zum Neuerstellen einer bereits erzeugten Zahlungsanforderung sollten Sie dies nicht nutzen.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">Vorhandene Empfangsadresse &amp;wiederverwenden (nicht empfohlen)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">&amp;Nachricht:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">Eine optionale Bezeichnung, die der neuen Empfangsadresse zugeordnet wird.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">Verwenden Sie dieses Formular, um Zahlungen anzufordern. Alle Felder sind &lt;b&gt;optional&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Bezeichnung:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">Ein optional angeforderte Betrag. Lassen Sie dieses Feld leer oder setzen Sie es auf 0, um keinen spezifischen Betrag anzufordern.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">&amp;Betrag:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">&amp;Zahlung anfordern</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">Alle Formularfelder zurücksetzen.</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">Zurücksetzen</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">Verlauf der angeforderten Zahlungen</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">Ausgewählte Zahlungsanforderungen anzeigen (entspricht einem Doppelklick auf einen Eintrag)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">Anzeigen</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">Ausgewählte Einträge aus der Liste entfernen</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">Entfernen</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished">Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
     </message>
@@ -2505,22 +2437,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished">&amp;URI kopieren</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Bezeichnung kopieren</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished">Nachricht kopieren</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Betrag kopieren</translation>
     </message>
 </context>
 <context>
@@ -2800,12 +2716,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">als Transaktionsgebühr hinzugefügt</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished">Gesamtbetrag %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation type="unfinished">oder</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -3002,145 +2914,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">Fahren Sie den Computer nicht herunter, bevor dieses Fenster verschwindet.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">Signaturen - eine Nachricht signieren / verifizieren</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">Nachricht &amp;signieren</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Bereits verwendete Adresse auswählen</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">Adresse aus der Zwischenablage einfügen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">Zu signierende Nachricht hier eingeben</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">Signatur</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">Aktuelle Signatur in die Zwischenablage kopieren</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">&amp;Nachricht signieren</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">Alle &quot;Nachricht signieren&quot;-Felder zurücksetzen</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">&amp;Zurücksetzen</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">Nachricht &amp;verifizieren</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">Geben Sie die Zahlungsadresse des Empfängers, Nachricht (achten Sie darauf Zeilenumbrüche, Leerzeichen, Tabulatoren usw. exakt zu kopieren) und Signatur unten ein, um die Nachricht zu verifizieren. Vorsicht, interpretieren Sie nicht mehr in die Signatur hinein, als in der signierten Nachricht selber enthalten ist, um nicht von einem Man-in-the-middle-Angriff hinters Licht geführt zu werden. Beachten Sie dass dies nur beweißt, dass die signierende Partei über diese Adresse Überweisungen empfangen kann.</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">&amp;Nachricht verifizieren</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">Alle &quot;Nachricht verifizieren&quot;-Felder zurücksetzen</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished">Auf &quot;Nachricht signieren&quot; klicken, um die Signatur zu erzeugen</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished">Die eingegebene Adresse ist ungültig.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished">Bitte überprüfen Sie die Adresse und versuchen Sie es erneut.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished">Die eingegebene Adresse verweist nicht auf einen Schlüssel.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished">Wallet-Entsperrung wurde abgebrochen.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished">Privater Schlüssel zur eingegebenen Adresse ist nicht verfügbar.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished">Signierung der Nachricht fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished">Nachricht signiert.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished">Die Signatur konnte nicht dekodiert werden.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished">Bitte überprüfen Sie die Signatur und versuchen Sie es erneut.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished">Die Signatur entspricht nicht dem &quot;Message Digest&quot;.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished">Verifikation der Nachricht fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished">Nachricht verifiziert.</translation>
     </message>
 </context>
 <context>
@@ -3455,23 +3228,59 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation type="unfinished">beobachtet</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
+        <source>Lock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
+        <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
+        <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3914,6 +3723,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Empty account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

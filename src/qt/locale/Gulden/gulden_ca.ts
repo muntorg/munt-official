@@ -52,6 +52,22 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -456,22 +472,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">Canvia la contrasenya d&apos;encriptació del moneder</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">Signa el &amp;missatge...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">&amp;Verifica el missatge...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2419,74 +2419,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">Reutilitza una de les adreces de recepció utilitzades anteriorment. La reutilització d&apos;adreces pot comportar problemes de seguretat i privadesa. No ho utilitzeu llevat que torneu a generar una sol·licitud de pagament feta abans.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">R&amp;eutilitza una adreça de recepció anterior (no recomanat)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">&amp;Missatge:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">Una etiqueta opcional que s&apos;associarà amb la nova adreça receptora.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">Utilitzeu aquest formulari per sol·licitar pagaments. Tots els camps són &lt;b&gt;opcionals&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Etiqueta:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">Un import opcional per sol·licitar. Deixeu-ho en blanc o zero per no sol·licitar cap import específic.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">Im&amp;port:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">&amp;Sol·licitud de pagament</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">Esborra tots els camps del formuari.</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">Neteja</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">Historial de pagaments sol·licitats</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">Mostra la sol·licitud seleccionada (fa el mateix que el doble clic a una entrada)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">Mostra</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">Esborra les entrades seleccionades de la llista</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">Esborra</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished">URI resultant massa llarga, intenta reduir el text per a la etiqueta / missatge</translation>
     </message>
@@ -2505,22 +2437,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Copia l&apos;etiqueta</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished">Copia el missatge</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Copia l&apos;import</translation>
     </message>
 </context>
 <context>
@@ -2800,12 +2716,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">S&apos;ha afegit una taxa de transacció</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished">Import total %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation type="unfinished">o</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -3002,145 +2914,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">No apagueu l&apos;ordinador fins que no desaparegui aquesta finestra.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">Signatures - Signa / verifica un missatge</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">&amp;Signa el missatge</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Tria les adreces fetes servir amb anterioritat</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alta+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">Enganxar adreça del porta-retalls</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">Introduïu aquí el missatge que voleu signar</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">Signatura</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">Copia la signatura actual al porta-retalls del sistema</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">Signa el &amp;missatge</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">Neteja tots els camps de clau</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">Neteja-ho &amp;tot</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">&amp;Verifica el missatge</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">Introduïu l&apos;adreça del receptor, el missatge (assegureu-vos de copiar els salts de línia, espais, tabuladors, etc. exactament) i signatura de sota per verificar el missatge. Tingueu cura de no llegir més en la signatura del que està al missatge signat, per evitar ser enganyat per un atac d&apos;home-en-el-mig. Tingueu en compte que això només demostra que la part que signa rep amb l&apos;adreça, i no es pot provar l&apos;enviament de qualsevol transacció!</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">Verifica el &amp;missatge</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">Neteja tots els camps de verificació de missatge</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished">Feu clic a «Signa el missatge» per a generar una signatura</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished">L&apos;adreça introduïda no és vàlida.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished">Comproveu l&apos;adreça i torneu-ho a provar.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished">L&apos;adreça introduïda no referencia a cap clau.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished">El desbloqueig del moneder ha estat cancelat.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished">La clau privada per a la adreça introduïda no està disponible.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished">La signatura del missatge ha fallat.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished">Missatge signat.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished">La signatura no s&apos;ha pogut descodificar.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished">Comproveu la signatura i torneu-ho a provar.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished">La signatura no coincideix amb el resum del missatge.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished">Ha fallat la verificació del missatge.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished">Missatge verificat.</translation>
     </message>
 </context>
 <context>
@@ -3455,23 +3228,59 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation type="unfinished">només lectura</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
+        <source>Lock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
+        <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
+        <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3914,6 +3723,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Empty account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

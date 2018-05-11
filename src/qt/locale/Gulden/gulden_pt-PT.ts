@@ -56,6 +56,22 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -310,7 +326,7 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A baixo está a frase secreta de recuperação, escreva e armazene a mesma num sítio seguro. Se perder a frase = perde as Gulden. Outro utilizador com acesso à frase = perde as Gulden.</translation>
     </message>
     <message>
         <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
@@ -460,22 +476,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">Alterar a frase de segurança utilizada na encriptação da carteira</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">Assinar &amp;mensagem...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">&amp;Verificar mensagem...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2426,74 +2426,6 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">Reutilize um dos endereços de entrada usados anteriormente. Reutilizar endereços pode levar a riscos de segurança e de privacidade. Não use esta função a não ser que esteja a gerar novamente uma requisição de pagamento feita anteriormente.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">Reutilizar um endereço de receção existente (não recomendado)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">&amp;Mensagem:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">Um rótulo opcional a associar ao novo endereço de receção.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">Utilize este formulário para solicitar pagamentos. Todos os campos são &lt;b&gt;opcionais&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">Uma quantia opcional a solicitar. Deixe em branco ou zero para não solicitar uma quantidade específica.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">&amp;Quantia:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">&amp;Requisitar Pagamento</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">Limpar todos os campos do formulário.</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">Limpar</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">Histórico de pagamentos solicitados</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">Mostrar o pedido seleccionado (faz o mesmo que clicar 2 vezes numa entrada)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">Mostrar</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">Remover as entradas seleccionadas da lista</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">Remover</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2512,22 +2444,6 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Copiar etiqueta</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Copiar valor</translation>
     </message>
 </context>
 <context>
@@ -2550,15 +2466,15 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     </message>
     <message>
         <source>Request payment to %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Solicitar pagamento a %1</translation>
     </message>
     <message>
         <source>Payment information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Informação de pagamento</translation>
     </message>
     <message>
         <source>URI</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -2574,7 +2490,7 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mensagem</translation>
     </message>
 </context>
 <context>
@@ -2589,7 +2505,7 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mensagem</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2597,15 +2513,15 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     </message>
     <message>
         <source>(no message)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(sem mensagem)</translation>
     </message>
     <message>
         <source>(no amount requested)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(nenhum valor solicitado)</translation>
     </message>
     <message>
         <source>Requested</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Solicitado</translation>
     </message>
 </context>
 <context>
@@ -2676,11 +2592,11 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     </message>
     <message>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Se usar fallbackfee pode resultar no envio de uma transação que levará várias horas ou dias (ou nunca) para confirmar. Considere escolher sua taxa manualmente ou espere até que tenha validado a cadeia completa.</translation>
     </message>
     <message>
         <source>Warning: Fee estimation is currently not possible.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aviso: a estimativa de taxas atualmente não é possível.</translation>
     </message>
     <message>
         <source>collapse fee-settings</source>
@@ -2807,11 +2723,7 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
         <translation type="unfinished">adicionado como taxa de transação</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>or</source>
+        <source>Total Amount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2970,7 +2882,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Uma mensagem que foi anexada ao Gulden: URI, que será armazenada com a transação para sua referência. Nota: Esta mensagem não será enviada pela rede Gulden.</translation>
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
@@ -2990,7 +2902,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Introduza um rótulo para este endereço para adicioná-lo ao seu livro de endereços</translation>
     </message>
 </context>
 <context>
@@ -3012,145 +2924,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">Assinaturas - Assinar / Verificar uma Mensagem</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">&amp;Assinar Mensagem</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Escolha o endereço utilizado anteriormente</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">Escreva aqui a mensagem que deseja assinar</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">Assinatura</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">Copiar a assinatura actual para a área de transferência</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">Assinar &amp;Mensagem</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">Repor todos os campos de assinatura de mensagem</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">Limpar &amp;Tudo</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">&amp;Verificar Mensagem</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">Introduza o endereço de assinatura, mensagem (assegure-se que copia quebras de linha, espaços, tabulações, etc. exactamente) e assinatura abaixo para verificar a mensagem. Tenha atenção para não ler mais na assinatura do que o que estiver na mensagem assinada, para evitar ser enganado por um atacante que se encontre entre si e quem assinou a mensagem.</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">Verificar &amp;Mensagem</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">Repor todos os campos de verificação de mensagem</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TrafficGraphWidget</name>
     <message>
         <source>KB/s</source>
@@ -3162,17 +2935,17 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
         </translation>
     </message>
     <message>
         <source>Open until %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aberto até %1</translation>
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">em conflito com uma transação com confirmações %1</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -3180,7 +2953,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">0/não confirmado, %1</translation>
     </message>
     <message>
         <source>in memory pool</source>
@@ -3196,25 +2969,25 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>%1/unconfirmed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1/não confirmado</translation>
     </message>
     <message>
         <source>%1 confirmations</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 confirmações</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Estado</translation>
     </message>
     <message>
         <source>, has not been successfully broadcast yet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">, ainda não foi transmitido com sucesso</translation>
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>, transmitido através de %n node(s)</numerusform>
+            <numerusform>, transmitido através de %n node(s)</numerusform>
         </translation>
     </message>
     <message>
@@ -3223,66 +2996,66 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fonte</translation>
     </message>
     <message>
         <source>Generated</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Criado</translation>
     </message>
     <message>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De</translation>
     </message>
     <message>
         <source>unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">desconhecido</translation>
     </message>
     <message>
         <source>To</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Para</translation>
     </message>
     <message>
         <source>own address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">endereço próprio</translation>
     </message>
     <message>
         <source>watch-only</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ver-apenas</translation>
     </message>
     <message>
         <source>label</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">etiqueta</translation>
     </message>
     <message>
         <source>Credit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Crédito</translation>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>amadurece em mais %n bloco(s)</numerusform>
+            <numerusform>amadurece em mais %n bloco(s)</numerusform>
         </translation>
     </message>
     <message>
         <source>not accepted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Não foi aceite</translation>
     </message>
     <message>
         <source>Debit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Débito</translation>
     </message>
     <message>
         <source>Total debit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Débito total</translation>
     </message>
     <message>
         <source>Total credit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Crédito total</translation>
     </message>
     <message>
         <source>Total moved</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Total movido</translation>
     </message>
     <message>
         <source>Transaction fee</source>
@@ -3290,23 +3063,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Net amount</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Valor líquido</translation>
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mensagem</translation>
     </message>
     <message>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Comentário</translation>
     </message>
     <message>
         <source>Transaction ID</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ID da transação</translation>
     </message>
     <message>
         <source>Transaction total size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tamanho total da transação</translation>
     </message>
     <message>
         <source>Output index</source>
@@ -3318,15 +3091,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">As moedas criadas precisam de amadurecer %1 blocos antes que possam ser gastas. Quando você criou este bloco, o mesmo foi transmitido para a rede para ser adicionado à cadeia de blocos. Se não conseguir entrar na cadeia, o seu estado mudará para &quot;não aceito&quot; e não poderá ser gasto. Isso pode acontecer ocasionalmente se outro node criar um bloco dentro de alguns segundos do seu.</translation>
     </message>
     <message>
         <source>Debug information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Informação de depuração</translation>
     </message>
     <message>
         <source>Transaction</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Transação</translation>
     </message>
     <message>
         <source>Inputs</source>
@@ -3338,11 +3111,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>true</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">verdade</translation>
     </message>
     <message>
         <source>false</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">falso</translation>
     </message>
 </context>
 <context>
@@ -3353,7 +3126,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Details for %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Detalhes para %1</translation>
     </message>
 </context>
 <context>
@@ -3364,11 +3137,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tipo</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Descrição</translation>
     </message>
     <message>
         <source>Received</source>
@@ -3381,13 +3154,13 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
         </translation>
     </message>
     <message>
         <source>Open until %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aberto até %1</translation>
     </message>
     <message>
         <source>Offline</source>
@@ -3395,7 +3168,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Unconfirmed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Não confirmado</translation>
     </message>
     <message>
         <source>Abandoned</source>
@@ -3403,23 +3176,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Confirmando (%1 de %2 transações recomendadas)</translation>
     </message>
     <message>
         <source>Confirmed (%1 confirmations)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Confirmado (%1 confirmações)</translation>
     </message>
     <message>
         <source>Conflicted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Conflito</translation>
     </message>
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Imaturo (%1 confirmações, estará disponível após %2)</translation>
     </message>
     <message>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Este bloco não foi recebido por outros nodes e provavelmente não será aceite!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3427,58 +3200,94 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>External payee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Beneficiário externo</translation>
     </message>
     <message>
         <source>Multiple addresses</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Endereços múltiplos</translation>
     </message>
     <message>
         <source>Received with</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recebido com</translation>
     </message>
     <message>
         <source>Received from</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recebido de</translation>
     </message>
     <message>
         <source>Sent to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enviado para</translation>
     </message>
     <message>
         <source>Payment to yourself</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pagamento para si mesmo</translation>
     </message>
     <message>
         <source>Internal transfer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Transferência interna</translation>
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recompensa de mineração</translation>
     </message>
     <message>
         <source>Witness reward</source>
+        <translation type="unfinished">Recompensa de Witness</translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>watch-only</source>
+        <translation type="unfinished">ver-apenas</translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
+        <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
+        <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
+        <source>Fund witness account: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3487,7 +3296,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Transação complexa, ver os detalhes da transação.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3495,15 +3304,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Estado da transação. Passe o rato sobre esse campo para mostrar o número de confirmações.</translation>
     </message>
     <message>
         <source>Date and time that the transaction was received.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Data e tempo em que a transação foi recebida.</translation>
     </message>
     <message>
         <source>Type of transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tipo de transação.</translation>
     </message>
     <message>
         <source>Whether or not a watch-only address is involved in this transaction.</source>
@@ -3515,86 +3324,86 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Amount added to balance.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quantidade adicionada ao saldo.</translation>
     </message>
     <message>
         <source>Amount removed from balance.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quantidade removida do saldo.</translation>
     </message>
 </context>
 <context>
     <name>TransactionView</name>
     <message>
         <source>All dates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Todas as datas</translation>
     </message>
     <message>
         <source>Today</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hoje</translation>
     </message>
     <message>
         <source>This week</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Esta semana</translation>
     </message>
     <message>
         <source>This month</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Este mês</translation>
     </message>
     <message>
         <source>Last month</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mês anterior</translation>
     </message>
     <message>
         <source>This year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Este ano</translation>
     </message>
     <message>
         <source>Select range</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Selecione o intervalo</translation>
     </message>
     <message>
         <source>All transaction types</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Todos os tipos de transação</translation>
     </message>
     <message>
         <source>Received with</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recebido com</translation>
     </message>
     <message>
         <source>Sent to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enviado para</translation>
     </message>
     <message>
         <source>Internal transfer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Transferência interna</translation>
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recompensa de mineração</translation>
     </message>
     <message>
         <source>Witness reward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recompensa de Witness</translation>
     </message>
     <message>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Outro</translation>
     </message>
     <message>
         <source>Search label</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Etiqueta de pesquisa</translation>
     </message>
     <message>
         <source>Min amount</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Montante mínimo</translation>
     </message>
     <message>
         <source>Abandon transaction</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abandonar transação</translation>
     </message>
     <message>
         <source>Increase transaction fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aumentar a taxa de transação</translation>
     </message>
     <message>
         <source>Copy address</source>
@@ -3618,19 +3427,19 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Copy full transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Copiar todos os detalhes da transação</translation>
     </message>
     <message>
         <source>Edit label</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Editar rótulo</translation>
     </message>
     <message>
         <source>Show transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostrar os detalhes da transação</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Exportar o histórico da transação</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -3642,7 +3451,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Watch-only</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ver-apenas</translation>
     </message>
     <message>
         <source>Date</source>
@@ -3650,7 +3459,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tipo</translation>
     </message>
     <message>
         <source>Label</source>
@@ -3662,7 +3471,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3670,23 +3479,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>There was an error trying to save the transaction history to %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Existiu um erro ao tentar gravar o histórico da transação para %1.</translation>
     </message>
     <message>
         <source>Exporting Successful</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Exportação com sucesso</translation>
     </message>
     <message>
         <source>The transaction history was successfully saved to %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">O histórico da transação foi gravado com sucesso para %1.</translation>
     </message>
     <message>
         <source>Range:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alcance:</translation>
     </message>
     <message>
         <source>to</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">para</translation>
     </message>
 </context>
 <context>
@@ -3708,35 +3517,35 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Increasing transaction fee failed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aumento da taxa de transação falhou</translation>
     </message>
     <message>
         <source>Do you want to increase the fee?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deseja aumenta a taxa?</translation>
     </message>
     <message>
         <source>Current fee:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Taxa atual:</translation>
     </message>
     <message>
         <source>Increase:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aumentar:</translation>
     </message>
     <message>
         <source>New fee:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nova taxa:</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Confirme a cobrança de taxa</translation>
     </message>
     <message>
         <source>Can&apos;t sign transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Não é possível assinar a transação.</translation>
     </message>
     <message>
         <source>Could not commit transaction</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Não foi possível confirmar a transação</translation>
     </message>
 </context>
 <context>
@@ -3751,66 +3560,66 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Backup Wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Backup carteira</translation>
     </message>
     <message>
         <source>Wallet Data (*.dat)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wallet Data (*.dat)</translation>
     </message>
     <message>
         <source>Backup Failed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cópia de segurança falhou</translation>
     </message>
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ocorreu um erro ao tentar gravar os dados da carteira para %1. </translation>
     </message>
     <message>
         <source>Backup Successful</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cópia de segurança com sucesso</translation>
     </message>
     <message>
         <source>The wallet data was successfully saved to %1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A informação da carteira foi gravada com sucesso para %1.</translation>
     </message>
 </context>
 <context>
     <name>WelcomeDialog</name>
     <message>
         <source>New wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nova carteira</translation>
     </message>
     <message>
         <source>Restore wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Restaurar carteira</translation>
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A baixo está a frase secreta de recuperação, escreva e armazene a mesma num sítio seguro. Se perder a frase = perde as Gulden. Outro utilizador com acesso à frase = perde as Gulden.</translation>
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Introduza a frase de recuperação da prévia instação. Se perder a frase = perde as Gulden. Outro utilizador com acesso à frase = perde as Gulden.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ao usar a aplicação Gulden, você concorda explicita e incondicionalmente em assumir toda a responsabilidade pelo gerenciamento e armazenamento das suas Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>I wrote it down</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eu anotei:</translation>
     </message>
     <message>
         <source>Recover wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Recuperar outra carteira</translation>
     </message>
     <message>
         <source>Create wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Criar carteira</translation>
     </message>
     <message>
         <source>Please enter a recovery phrase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Por favor introduza a frase de recuperação</translation>
     </message>
     <message>
         <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
@@ -3922,6 +3731,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Empty account</source>
         <translation type="unfinished">Levantar fundos</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fund account</source>

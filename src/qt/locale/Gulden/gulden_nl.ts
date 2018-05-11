@@ -52,6 +52,22 @@ The account will continue to be monitored and will be restored should it receive
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -456,22 +472,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation type="unfinished">Wijzig het wachtwoord voor uw portemonneversleuteling</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation type="unfinished">Bericht o&amp;ndertekenen...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation type="unfinished">Onderteken berichten met uw Guldenadressen om te bewijzen dat ze u toebehoren</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation type="unfinished">Bericht v&amp;erifiëren...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation type="unfinished">Verifieer berichten om er zeker van te zijn dat ze werden ondertekend met de opgegeven Gulden-adressen</translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -2420,74 +2420,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation type="unfinished">Gebruik een van de eerder gebruikte ontvangstadressen opnieuw. Het opnieuw gebruiken van adressen heeft gevolgen voor de beveiliging en uw privacy. Gebruik dit niet, behalve als er eerder een betalingsverzoek opnieuw gegenereerd is.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation type="unfinished">H&amp;ergebruik een bestaand ontvangstadres (niet aanbevolen)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation type="unfinished">Een optioneel bericht om bij het betalingsverzoek te voegen, dat wordt weergegeven wanneer het verzoek wordt geopend. Opmerking: Het bericht wordt niet verzonden over het Gulden-netwerk tijdens de betaling</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation type="unfinished">Be&amp;richt:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation type="unfinished">Een optioneel label om te associëren met het nieuwe ontvangende adres.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation type="unfinished">Gebruik dit formulier om te verzoeken tot betaling. Alle velden zijn &lt;b&gt;optioneel&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Label:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation type="unfinished">Een optioneel te verzoeken bedrag. Laat dit leeg, of nul, om geen specifiek bedrag aan te vragen.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation type="unfinished">Bedra&amp;g:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation type="unfinished">Betalings&amp;verzoek</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished">Wissen</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation type="unfinished">Geschiedenis van de betalingsverzoeken</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation type="unfinished">Het geselecteerde verzoek weergeven (doet hetzelfde als dubbelklikken)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished">Weergeven</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation type="unfinished">Verwijder de geselecteerde items van de lijst</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="unfinished">Verwijderen</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation type="unfinished">Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
     </message>
@@ -2506,22 +2438,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation type="unfinished">Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation type="unfinished">Kopieer URI</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Kopieer label</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation type="unfinished">Kopieer bericht</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Kopieer bedrag</translation>
     </message>
 </context>
 <context>
@@ -2801,12 +2717,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">toegevoegd als transactiekosten</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation type="unfinished">Totaal bedrag %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation type="unfinished">of</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -3003,145 +2915,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">Sluit de computer niet af totdat dit venster verdwenen is.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation type="unfinished">Handtekeningen - Onderteken een bericht / Verifieer een handtekening</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation type="unfinished">Bericht o&amp;ndertekenen</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation type="unfinished">U kunt berichten/overeenkomsten ondertekenen met uw adressen om te bewijzen dat u Gulden kunt ontvangen. Wees voorzichtig om niets vaags of willekeurig te ondertekenen, want phishing-aanvallen kunnen je proberen te verleiden om je identiteit aan hen uit te leveren. Teken alleen volledig gedetailleerde verklaringen waarmee u akkoord gaat.</translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation type="unfinished">Het Gulden-adres om het bericht mee te ondertekenen</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation type="unfinished">Typ hier het bericht dat u wilt ondertekenen</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation type="unfinished">Handtekening</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation type="unfinished">Kopieer de huidige handtekening naar het systeemklembord.</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation type="unfinished">Onderteken het bericht om te bewijzen dat u dit Gulden-adres bezit</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation type="unfinished">&amp;Bericht ondertekenen</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation type="unfinished">Verwijder alles in de invulvelden</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation type="unfinished">Bericht &amp;verifiëren</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">Voer het adres van de ontvanger, bericht (let erop dat u nieuwe regels, spaties, tabs, etc. exact kopieert) en de ondertekening beneden in om het bericht te verifiëren. Let op dat u niet verder leest dan wat in het ondertekende bericht zelf staat, om een man-in-the-middle aanval te voorkomen. Dit bewijst alleen dat de ondertekende partij kan ontvangen met het adres, het kan niet het verzenden van enige transactie bewijzen!</translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation type="unfinished">Het Gulden-adres waarmee het bericht ondertekend is</translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation type="unfinished">Controleer het bericht om te verzekeren of het ondertekend is met het opgegeven Gulden-adres</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation type="unfinished">Bericht ve&amp;rifiëren</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation type="unfinished">Verwijder alles in de invulvelden</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation type="unfinished">Klik &quot;Bericht ondertekenen&quot; om de handtekening te genereren</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation type="unfinished">Het opgegeven adres is ongeldig.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation type="unfinished">Controleer s.v.p. het adres en probeer het opnieuw.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation type="unfinished">Het opgegeven adres verwijst niet naar een sleutel.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation type="unfinished">Portemonneeontsleuteling is geannuleerd.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation type="unfinished">Privésleutel voor het ingevoerde adres is niet beschikbaar.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation type="unfinished">Fout tijdens ondertekenen van het bericht.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation type="unfinished">Bericht ondertekend.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation type="unfinished">De handtekening kon niet worden gedecodeerd.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation type="unfinished">Controleer s.v.p. de handtekening en probeer het opnieuw.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation type="unfinished">De handtekening hoort niet bij het bericht.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation type="unfinished">Fout tijdens berichtverificatie.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation type="unfinished">Bericht geverifieerd.</translation>
     </message>
 </context>
 <context>
@@ -3456,24 +3229,60 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Witness beloning</translation>
     </message>
     <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation type="unfinished">alleen-bekijkbaar</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
-        <translation type="unfinished">Interne transactie van:</translation>
+        <source>Lock funds from: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internal transfer to: </source>
-        <translation type="unfinished">Interne transactie naar:</translation>
+        <source>Unlock funds from: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: </source>
-        <translation type="unfinished">Betaling van:</translation>
+        <source>Internal transfer from: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paid to: </source>
-        <translation type="unfinished">Betaald aan:</translation>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Internal account movement</source>
@@ -3915,7 +3724,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Empty account</source>
-        <translation type="unfinished">Leeg account</translation>
+        <translation type="unfinished">Account legen</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fund account</source>
