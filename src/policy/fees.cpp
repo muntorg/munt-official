@@ -261,7 +261,7 @@ double TxConfirmStats::EstimateMedianVal(int confTarget, double sufficientTxVal,
 
             // Check to see if we are no longer getting confirmed at the success rate
             if ((requireGreater && curPct < successBreakPoint) || (!requireGreater && curPct > successBreakPoint)) {
-                if (passing == true) {
+                if (passing) {
                     // First time we hit a failure record the failed bucket
                     unsigned int failMinBucket = std::min(curNearBucket, curFarBucket);
                     unsigned int failMaxBucket = std::max(curNearBucket, curFarBucket);
