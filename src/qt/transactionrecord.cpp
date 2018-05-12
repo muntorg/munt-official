@@ -137,23 +137,33 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (subReceive.idx != -1)
                             break;
                     }
-                    for( const auto& accountPair : wallet->mapAccounts )
+                    if (subReceive.idx != -1)
                     {
-                        CAccount* account = accountPair.second;
-                        isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
-                        if (mine)
+                        for( const auto& accountPair : wallet->mapAccounts )
                         {
-                            subSend.type = TransactionRecord::WitnessFundSend;
-                            subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
-                            subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
-                            subSend.actionAccountParentUUID = subSend.fromAccountParentUUID = account->getParentUUID();
-                            subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
-                            parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
-                            subSend.credit = 0;
-                            subSend.debit = -subReceive.credit;
-                            subSend.idx = parts.size(); // sequence number
-                            parts.append(subSend);
-                            break;
+                            CAccount* account = accountPair.second;
+                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
+                            if (mine)
+                            {
+                                subSend.type = TransactionRecord::WitnessFundSend;
+                                subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
+                                subSend.actionAccountParentUUID = subSend.fromAccountParentUUID = account->getParentUUID();
+                                subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
+                                parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
+                                subSend.credit = 0;
+                                subSend.debit = subReceive.credit;
+                                subSend.idx = parts.size(); // sequence number
+                                if (subSend.fromAccountUUID == subSend.receiveAccountUUID)
+                                {
+                                    parts.pop_back();
+                                }
+                                else
+                                {
+                                    parts.append(subSend);
+                                }
+                                break;
+                            }
                         }
                     }
                 }

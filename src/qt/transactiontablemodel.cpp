@@ -429,9 +429,10 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Empty witness account");
     case TransactionRecord::WitnessEmptyRecv:
         return tr("Received from witness account");
-    default:
-        return QString();
+    case TransactionRecord::Other:
+        return "";
     }
+    return "";
 }
 
 QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx) const
@@ -456,9 +457,12 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
             return "\uf09c";
         case TransactionRecord::WitnessRenew:
             return "\uf2f9";
-        default:
+        case TransactionRecord::SendToSelf:
+            return "\uf074";
+        case TransactionRecord::Other:
             return "\uf362";
     }
+    return "";
 }
 
 QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const
@@ -490,6 +494,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                         return tr("Lock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::WitnessEmptyRecv:
                         return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    case TransactionRecord::SendToSelf:
+                        break; // Fall through to bottom of function where this is handled.
                     default:
                         return tr("Internal transfer from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                 }
@@ -514,6 +520,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                         return tr("Fund witness account: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                     case TransactionRecord::WitnessEmptySend:
                         return tr("Unlock funds to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
+                    case TransactionRecord::SendToSelf:
+                        break; // Fall through to bottom of function where this is handled.
                     default:
                         return tr("Internal transfer to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                 }
@@ -548,6 +556,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     case TransactionRecord::Other:
         return tr("Complex transaction, view transaction details.") + watchAddress;
     }
+    return "";
 }
 
 QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
@@ -628,9 +637,8 @@ QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) 
         case TransactionStatus::MaturesWarning:
         case TransactionStatus::NotAccepted:
             return "\uf05e";
-        default:
-            return "";
     }
+    return "";
 }
 
 QVariant TransactionTableModel::txWatchonlyDecoration(const TransactionRecord *wtx) const
