@@ -25,6 +25,7 @@
 #include <QScrollBar>
 #include <QTextDocument>
 #include <QDesktopWidget>
+#include <QDesktopServices>
 
 #include "GuldenGUI.h"
 
@@ -293,15 +294,21 @@ void ReceiveCoinsDialog::gotoReceievePage()
 
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
-    #ifdef WIN32
+    bool externalBuyPage = false;
+    #if defined(WIN32)
+    // Workaround for bug page crash on 32 bit windows builds
+    // https://github.com/bitcoin/gulden-official/issues/41
     if(_WIN32 && !GetBoolArg("-testbuypage32", false))
+        externalBuyPage = true;
+    #endif
+    #if !(defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT))
+    externalBuyPage = true;
+    #endif
+    if (externalBuyPage)
     {
-        // Workaround for bug page crash on 32 bit windows builds
-        // https://github.com/bitcoin/gulden-official/issues/41
         QDesktopServices::openUrl(QUrl("https://gulden.com/purchase")); 
         return;
     }
-    #endif
 
     #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
     ui->receiveCoinsStackedWidget->setCurrentIndex(1);
@@ -476,7 +483,7 @@ void ReceiveCoinsDialog::buyGulden()
 {
     #if defined(HAVE_WEBENGINE_VIEW)
     buyView->page()->runJavaScript(QString("$('#submit').show().focus().click().hide()"));
-    #else
+    #elif defined(HAVE_WEBKIT)
     ((WebView*)buyView)->dismissOnPopup=true;
     buyView->page()->mainFrame()->evaluateJavaScript(QString("$('#submit').show().focus().click().hide()"));
     #endif
@@ -516,7 +523,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
         #if defined(HAVE_WEBENGINE_VIEW)
         buyView->page()->runJavaScript(QString("NocksBuyFormFillDetails('%1', '%2')").arg(guldenAddress, emailAddress));
         buyView->page()->runJavaScript(QString("$('.extra-row').hide()"));
-        #else
+        #elif defined(HAVE_WEBKIT)
         QVariant ret = buyView->page()->mainFrame()->evaluateJavaScript(QString("NocksBuyFormFillDetails('%1', '%2')").arg(guldenAddress, emailAddress));
         QString temp = ret.toString();
         buyView->page()->mainFrame()->evaluateJavaScript(QString("$('.extra-row').hide()"));
@@ -524,11 +531,11 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
 
         //https://bugreports.qt.io/browse/QTBUG-42216
         #if defined(HAVE_WEBENGINE_VIEW)
-        #if QT_VERSION < QT_VERSION_CHECK(5, 6, 2) || QT_VERSION == QT_VERSION_CHECK(5, 7, 0)
-        buyView->page()->runJavaScript(QString("$('a[href]').attr('target', '_blank');"));
-        buyView->page()->runJavaScript(QString("$('form').attr('target', '_blank');"));
-        #endif
-        #else
+            #if QT_VERSION < QT_VERSION_CHECK(5, 6, 2) || QT_VERSION == QT_VERSION_CHECK(5, 7, 0)
+            buyView->page()->runJavaScript(QString("$('a[href]').attr('target', '_blank');"));
+            buyView->page()->runJavaScript(QString("$('form').attr('target', '_blank');"));
+            #endif
+        #elif defined(HAVE_WEBKIT)
         buyView->page()->mainFrame()->evaluateJavaScript(QString("$('a[href]').attr('target', '_blank');"));
         buyView->page()->mainFrame()->evaluateJavaScript(QString("$('form').attr('target', '_blank');"));
         #endif
@@ -549,7 +556,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
                     "})()";
             #if defined(HAVE_WEBENGINE_VIEW)
             buyView->page()->runJavaScript(insertFontScript);
-            #else
+            #elif defined(HAVE_WEBKIT)
             buyView->page()->mainFrame()->evaluateJavaScript(insertFontScript);
             #endif
         }
@@ -566,7 +573,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
     #endif
 }
 
-#ifndef HAVE_WEBENGINE_VIEW
+#ifdef defined(HAVE_WEBKIT)
 void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist)
 {
     qnr->ignoreSslErrors();
