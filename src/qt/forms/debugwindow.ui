@@ -456,7 +456,7 @@
             <string>Decrease font size</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="iconSize">
             <size>
@@ -489,7 +489,7 @@
             <string>Increase font size</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="iconSize">
             <size>
@@ -525,7 +525,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="shortcut">
             <string notr="true">Ctrl+L</string>

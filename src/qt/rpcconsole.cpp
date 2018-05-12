@@ -422,9 +422,9 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     if (platformStyle->getImagesOnButtons()) {
         ui->openDebugLogfileButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
-    ui->clearButton->setText("\uf057");
-    ui->fontBiggerButton->setText("\uf00e");
-    ui->fontSmallerButton->setText("\uf010");
+    ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf057") );
+    ui->fontBiggerButton->setText( GUIUtil::fontAwesomeRegular("\uf00e") );
+    ui->fontSmallerButton->setText( GUIUtil::fontAwesomeRegular("\uf010") );
 
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);

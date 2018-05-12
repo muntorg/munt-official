@@ -165,6 +165,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 {
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
+                    subReceive.idx = -1;
                     for (const auto& output : outputs)
                     {
                         for( const auto& accountPair : wallet->mapAccounts )
@@ -188,6 +189,11 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 break;
                             }
                         }
+                        if (subReceive.idx != -1)
+                            break;
+                    }
+                    if (subReceive.idx != -1)
+                    {
                         for( const auto& accountPair : wallet->mapAccounts )
                         {
                             CAccount* account = accountPair.second;
@@ -203,7 +209,15 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subSend.credit = 0;
                                 subSend.debit = nDebit;
                                 subSend.idx = parts.size(); // sequence number
-                                parts.append(subSend);
+                                //Phase 3 earnings.
+                                if (subSend.fromAccountUUID == subSend.receiveAccountUUID)
+                                {
+                                    parts.pop_back();
+                                }
+                                else
+                                {
+                                    parts.append(subSend);
+                                }
                                 break;
                             }
                         }

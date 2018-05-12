@@ -478,7 +478,7 @@ void GuldenGUI::createToolBarsGulden()
         }
 
         ClickableLabel* labelWalletSettings = new ClickableLabel( myAccountsFrame );
-        labelWalletSettings->setText( "" );
+        labelWalletSettings->setText( GUIUtil::fontAwesomeRegular("\uf013") );
         labelWalletSettings->setObjectName( "labelWalletSettings" );
         labelWalletSettings->setCursor ( Qt::PointingHandCursor );
         layoutMyAccounts->addWidget( labelWalletSettings );
