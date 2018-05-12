@@ -107,8 +107,7 @@ QwtText PlotMouseTracker::trackerText( const QPoint &pos ) const
 QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, const QwtPlotCurve* curve, const QPoint &pos ) const
 {
     const int y = curve->sample(curve->closestPoint(pos)).y();
-    QString info( "<font color=""%1"">■ </font><font color=""%2"">%3 \u0120%4</font>" );
-    return info.arg(legendColour).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
+    return QString( "<font color=\"%1\">%2 </font><font color=\"%3\">%4 %5 Gulden</font>" ).arg(legendColour).arg(GUIUtil::fontAwesomeRegular("\uf201")).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
 }
 
 enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING};
@@ -158,7 +157,7 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
     ui->labelLockTimeRemainingValue->setText(tr("n/a"));
 
     // White background for plot
-    ui->witnessEarningsPlot->setStyleSheet("QwtPlotCanvas { background: white; } * { font-family:  \"guldensign\", \"'guldensign'\", \"FontAwesome\", \"'FontAwesome'\", \"Lato\", \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;}");
+    ui->witnessEarningsPlot->setStyleSheet("QwtPlotCanvas { background: white; } * { font-size: 10px; font-family: \"Lato\", \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\",  \"guldensign\", \"'guldensign'\", \"FontAwesome\", \"'FontAwesome'\", sans-serif;}");
 
     // Only left and top axes are visible for graph
     ui->witnessEarningsPlot->enableAxis(QwtPlot::Axis::yRight, false);
@@ -260,7 +259,7 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
         expectedEarningsCurve->attach( ui->witnessEarningsPlot );
     }
 
-    //checkme: Leak?
+    //fixme: (2.1) Possible leak, or does canvas free it?
     new PlotMouseTracker( ui->witnessEarningsPlot->canvas() );
 
     QAction* unitBlocksAction = new QAction(tr("&Blocks"), this);
@@ -427,7 +426,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
         if ( nDepth > 0 )
         {
             int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
-            if ( (nType >= TransactionRecord::RecvWithAddress) )
+            if ( (nType >= TransactionRecord::WitnessFundRecv) )
             {
                 if (nOriginBlock == 0)
                 {
