@@ -1174,7 +1174,7 @@ void GuldenGUI::refreshAccountControls()
                     QString label = getAccountLabel(accountPair.second);
                     ClickableLabel* accLabel = createAccountButton( label );
                     m_accountMap[accLabel] = accountPair.second;
-                    sortedAccounts[label] = accLabel;
+                    sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = accLabel;
 
                     if (accountPair.second == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount())
                         makeActive = accLabel;

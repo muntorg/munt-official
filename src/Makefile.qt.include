@@ -119,7 +119,6 @@ GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
   qt/res/icons/connect3@2x.png \
   qt/res/icons/connect4@2x.png
 
-# bitcoin qt core #
 QT_TS = \
   qt/locale/Gulden/gulden_nl.ts \
   qt/locale/Gulden/gulden_en.ts \

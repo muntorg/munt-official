@@ -120,18 +120,22 @@ void AccountSummaryWidget::updateExchangeRates()
 
         ui->accountBalance->setText( GuldenUnits::format(GuldenUnits::NLG, m_accountBalance, false, GuldenUnits::separatorAlways, 2) );
 
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalance, false, GuldenUnits::separatorStandard, 2));
-        if (m_account->IsPoW2Witness())
+        if (m_account)
         {
-            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceLocked, false, GuldenUnits::separatorStandard, 2));
-        }
-        else
-        {
-            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
-        }
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+            QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalance, false, GuldenUnits::separatorStandard, 2));
 
-        ui->accountBalance->setToolTip(toolTip);
+            if (m_account->IsPoW2Witness())
+            {
+                toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+            }
+            else
+            {
+                toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+            }
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+
+            ui->accountBalance->setToolTip(toolTip);
+        }
 
         if (forexAmount > 0)
         {
