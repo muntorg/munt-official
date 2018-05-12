@@ -854,11 +854,13 @@ static bool fWitnessesPresentInMostRecentCompactBlock;
 void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock) {
     std::shared_ptr<const CBlockHeaderAndShortTxIDs> pcmpctblock = std::make_shared<const CBlockHeaderAndShortTxIDs> (*pblock, true);
     const CNetMsgMaker msgMaker(PROTOCOL_VERSION);
+    const CNetMsgMaker msgMakerHeadersCompat(PROTOCOL_VERSION, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
     LOCK(cs_main);
 
     static int nHighestFastAnnounce = 0;
-    if (pindex->nHeight <= nHighestFastAnnounce)
+    // < and not <= as we want to also announce competing PoW orphans in the case of an absent witness.
+    if (pindex->nHeight < nHighestFastAnnounce)
         return;
     nHighestFastAnnounce = pindex->nHeight;
 
@@ -888,7 +890,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
     }
 
 
-    connman->ForEachNode([this, &pcmpctblock, pindex, &msgMaker, fWitnessEnabled, &hashBlock](CNode* pnode) {
+    connman->ForEachNode([this, &pcmpctblock, pindex, &msgMaker, &msgMakerHeadersCompat, fWitnessEnabled, &hashBlock](CNode* pnode) {
         // TODO: Avoid the repeated-serialization here
         if (pnode->nVersion < INVALID_CB_NO_BAN_VERSION || pnode->fDisconnect)
             return;
@@ -896,13 +898,21 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         CNodeState &state = *State(pnode->GetId());
         // If the peer has, or we announced to them the previous block already,
         // but we don't think they have this one, go ahead and announce it
-        if (state.fPreferHeaderAndIDs && (!fWitnessEnabled || state.fWantsCmpctWitness) &&
-                !PeerHasHeader(&state, pindex) && PeerHasHeader(&state, pindex->pprev)) {
-
-            LogPrint(BCLog::NET, "%s sending header-and-ids %s to peer=%d\n", "PeerLogicValidation::NewPoWValidBlock",
-                    hashBlock.ToString(), pnode->GetId());
-            connman->PushMessage(pnode, msgMaker.Make(NetMsgType::CMPCTBLOCK, *pcmpctblock));
-            state.pindexBestHeaderSent = pindex;
+        if ( !PeerHasHeader(&state, pindex) && PeerHasHeader(&state, pindex->pprev) )
+        {
+            if (state.fPreferHeaderAndIDs && (!fWitnessEnabled || state.fWantsCmpctWitness))
+            {
+                LogPrint(BCLog::NET, "%s fast-announce sending header-and-ids %s to peer=%d\n", "PeerLogicValidation::NewPoWValidBlock", hashBlock.ToString(), pnode->GetId());
+                connman->PushMessage(pnode, msgMaker.Make(NetMsgType::CMPCTBLOCK, *pcmpctblock));
+                state.pindexBestHeaderSent = pindex;
+            }
+            else
+            {
+                std::vector<CBlock> vHeaders;
+                vHeaders.push_back(pindex->GetBlockHeader());
+                LogPrint(BCLog::NET, "%s fast-announce sending header %s to peer=%d\n", "PeerLogicValidation::NewPoWValidBlock", hashBlock.ToString(), pnode->GetId());
+                connman->PushMessage(pnode, (pnode->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::HEADERS, COMPACTSIZEVECTOR(vHeaders)));
+            }
         }
     });
 }
@@ -1110,9 +1120,13 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         CValidationState dummy;
                         ActivateBestChain(dummy, Params(), a_recent_block);
                     }
-                    if (chainActive.Contains(mi->second)) {
+                    // If it is part of the chain or a competing PoW tip orphan then we want to send it.
+                    if (chainActive.Contains(mi->second) || mi->second->nHeight == chainActive.Tip()->nHeight)
+                    {
                         send = true;
-                    } else {
+                    }
+                    else
+                    {
                         static const int nOneMonth = 30 * 24 * 60 * 60;
                         // To prevent fingerprinting attacks, only send blocks outside of the active
                         // chain if they are valid, and no more than a month older (both in time, and in
@@ -1120,9 +1134,8 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         send = mi->second->IsValid(BLOCK_VALID_SCRIPTS) && (pindexBestHeader != NULL) &&
                             (pindexBestHeader->GetBlockTime() - mi->second->GetBlockTime() < nOneMonth) &&
                             (GetBlockProofEquivalentTime(*pindexBestHeader, *mi->second, *pindexBestHeader, consensusParams) < nOneMonth);
-                        if (!send) {
+                        if (!send)
                             LogPrintf("%s: ignoring request from peer=%i for old block that isn't in the main chain\n", __func__, pfrom->GetId());
-                        }
                     }
                 }
                 // disconnect node in case we have reached the outbound limit for serving historical blocks
