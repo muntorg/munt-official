@@ -35,7 +35,7 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
     // Hide orphaned phase 3 witness earnings when they are orphaned by a subsequent PoW block.
     // We don't want slow/complex "IsPhase3" lookups here etc.
     // So we do this in a rather round about way.
-    if (!wtx.IsInMainChain() && wtx.IsPoW2WitnessCoinBase() && wtx.tx->vout.size() >= 2 && wtx.nIndex == -1)
+    if (!wtx.IsInMainChain() && wtx.IsCoinBase() && wtx.tx->vout.size() >= 2 && wtx.nIndex == -1)
     {
         // Find the height of our block.
         const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
