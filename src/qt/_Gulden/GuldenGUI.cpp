@@ -1533,16 +1533,16 @@ void GuldenGUI::gotoPasswordDialog()
     {
         restoreCachedWidgetIfNeeded();
 
-        m_pImpl->receiveCoinsAction->setVisible( false );
-        m_pImpl->sendCoinsAction->setVisible( false );
-        m_pImpl->historyAction->setVisible( false );
         passwordAction->setVisible( true );
         backupAction->setVisible( true );
-        m_pImpl->overviewAction->setVisible( false );
-
         passwordAction->setChecked(true);
         backupAction->setChecked(false);
 
+        m_pImpl->receiveCoinsAction->setVisible( false );
+        m_pImpl->sendCoinsAction->setVisible( false );
+        m_pImpl->historyAction->setVisible( false );
+        m_pImpl->overviewAction->setVisible( false );
+        m_pImpl->witnessDialogAction->setVisible( false );
 
         dialogPasswordModify = new PasswordModifyDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView() );
         connect( dialogPasswordModify, SIGNAL( dismiss() ), this, SLOT( dismissPasswordDialog() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1558,15 +1558,16 @@ void GuldenGUI::gotoBackupDialog()
     {
         restoreCachedWidgetIfNeeded();
 
+        passwordAction->setVisible( true );
+        backupAction->setVisible( true );
+        passwordAction->setChecked(false);
+        backupAction->setChecked(true);
+
         m_pImpl->receiveCoinsAction->setVisible( false );
         m_pImpl->sendCoinsAction->setVisible( false );
         m_pImpl->historyAction->setVisible( false );
-        passwordAction->setVisible( true );
-        backupAction->setVisible( true );
         m_pImpl->overviewAction->setVisible( false );
-
-        passwordAction->setChecked(false);
-        backupAction->setChecked(true);
+        m_pImpl->witnessDialogAction->setVisible( false );
 
         dialogBackup = new BackupDialog( m_pImpl->platformStyle, m_pImpl->walletFrame->currentWalletView(), m_pImpl->walletFrame->currentWalletView()->walletModel);
         connect( dialogBackup, SIGNAL( saveBackupFile() ), m_pImpl->walletFrame, SLOT( backupWallet() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
