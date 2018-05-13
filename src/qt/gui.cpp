@@ -695,6 +695,18 @@ void GUI::setClientModel(ClientModel *_clientModel)
 void GUI::updateWitnessDialog()
 {
     #ifdef ENABLE_WALLET
+    static uint64_t nUpdateTimerStart = 0;
+    if (IsArgSet("-testnet"))
+    {
+        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 20000))
+        {
+            nUpdateTimerStart = GetTimeMillis();
+        }
+        else
+        {
+            return;
+        }
+    }
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->witnessDialogPage)
     {
         walletFrame->currentWalletView()->witnessDialogPage->update();
