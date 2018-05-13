@@ -99,6 +99,8 @@ const std::string GUI::DEFAULT_UIPLATFORM =
         ;
 
 #ifdef ENABLE_WALLET
+//fixme: (2.1) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
+//However - we would have to update account serialization to serialist the warning state and/or test some things before removing this.
 static void UpdateWitnessAccountStates(WalletModel* model)
 {
     static uint64_t nUpdateTimerStart = 0;

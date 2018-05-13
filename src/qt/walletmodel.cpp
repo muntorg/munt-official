@@ -565,11 +565,8 @@ static void NotifyAccountNameChanged(WalletModel *walletmodel, CWallet *wallet, 
 static void NotifyAccountWarningChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
     Q_UNUSED(wallet);
-    if (account == walletmodel->getActiveAccount())
-    {
-        LogPrintf("NotifyAccountWarningChanged\n");
-        QMetaObject::invokeMethod(walletmodel, "accountListChanged", Q_ARG(CAccount*, account));
-    }
+    LogPrintf("NotifyAccountWarningChanged\n");
+    QMetaObject::invokeMethod(walletmodel, "accountListChanged");
 }
 
 
