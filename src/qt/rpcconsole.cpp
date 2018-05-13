@@ -426,6 +426,10 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     ui->fontBiggerButton->setText( GUIUtil::fontAwesomeRegular("\uf00e") );
     ui->fontSmallerButton->setText( GUIUtil::fontAwesomeRegular("\uf010") );
 
+    ui->clearButton->setCursor( Qt::PointingHandCursor );
+    ui->fontBiggerButton->setCursor( Qt::PointingHandCursor );
+    ui->fontSmallerButton->setCursor( Qt::PointingHandCursor );
+
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);
     ui->messagesWidget->installEventFilter(this);

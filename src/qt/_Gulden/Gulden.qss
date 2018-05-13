@@ -315,7 +315,7 @@ GUI > QToolBar > QToolButton:checked
     color: TEXT_COLOR_1;
 }
 
-#account_bar #labelMyAccounts
+#account_bar #labelMyAccounts, #account_bar #add_account_button
 {
     padding-left: 40px;
 }

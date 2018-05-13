@@ -509,8 +509,8 @@ void GuldenGUI::createToolBarsGulden()
         accountScrollArea->setLayout( vbox );
     }
 
-    QPushButton* addAccButton = new QPushButton( m_pImpl );
-    addAccButton->setText( "\uf067 "+tr("Add account") );
+    ClickableLabel* addAccButton = new ClickableLabel( m_pImpl );
+    addAccButton->setText( GUIUtil::fontAwesomeRegular("\uf067 ")+tr("Add account") );
     addAccButton->setObjectName( "add_account_button" );
     addAccButton->setCursor( Qt::PointingHandCursor );
     accountBar->addWidget( addAccButton );
