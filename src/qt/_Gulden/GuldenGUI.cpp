@@ -1141,6 +1141,22 @@ void GuldenGUI::refreshTabVisibilities()
     }
 }
 
+QCollator collateAccountsNumerically;
+auto cmpAccounts = [&](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
+std::map<QString, CAccount*, decltype(cmpAccounts)> getSortedAccounts()
+{
+    collateAccountsNumerically.setNumericMode(true);
+    std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts(cmpAccounts);
+    {
+        for ( const auto& accountPair : pactiveWallet->mapAccounts )
+        {
+            if (accountPair.second->m_State == AccountState::Normal || (fShowChildAccountsSeperately && accountPair.second->m_State == AccountState::ShadowChild) )
+                sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = accountPair.second;
+        }
+    }
+    return sortedAccounts;
+}
+
 void GuldenGUI::refreshAccountControls()
 {
     LogPrintf("GuldenGUI::refreshAccountControls\n");
@@ -1151,44 +1167,51 @@ void GuldenGUI::refreshAccountControls()
     {
         //Disable layout to prevent updating to changes immediately
         accountScrollArea->layout()->setEnabled(false);
-
-        for ( const auto& controlPair : m_accountMap )
         {
-            accountScrollArea->layout()->removeWidget(controlPair.first);
-            controlPair.first->deleteLater();
-        }
-        m_accountMap.clear();
-
-        // Sort the accounts.
-        QCollator coll;
-        coll.setNumericMode(true);
-        auto cmp = [&](const QString& s1, const QString& s2){ return coll.compare(s1, s2) < 0; };
-        std::map<QString, ClickableLabel*, decltype(cmp)> sortedAccounts(cmp);
-        ClickableLabel* makeActive = NULL;
-        {
-            //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
-            LOCK(pactiveWallet->cs_wallet);
-
-            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            // Get an ordered list of old account labels.
+            std::vector<ClickableLabel*> allLabels;
+            for (unsigned int i=0; i<accountScrollArea->layout()->count(); ++i)
             {
-                if (accountPair.second->m_State == AccountState::Normal || (fShowChildAccountsSeperately && accountPair.second->m_State == AccountState::ShadowChild) )
-                {
-                    QString label = getAccountLabel(accountPair.second);
-                    ClickableLabel* accLabel = createAccountButton( label );
-                    m_accountMap[accLabel] = accountPair.second;
-                    sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = accLabel;
+                allLabels.push_back(dynamic_cast<ClickableLabel*>((accountScrollArea->layout()->itemAt(i)->widget())));
+            }
+            m_accountMap.clear();
 
-                    if (accountPair.second == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount())
+            // Sort the accounts.
+            ClickableLabel* makeActive = NULL;
+            std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts = getSortedAccounts();
+            {
+                //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
+                LOCK(pactiveWallet->cs_wallet);
+
+                // Update to the sorted list
+                int nCount = 0;
+                for (const auto& sortedIter : sortedAccounts)
+                {
+                    ClickableLabel* accLabel = nullptr;
+                    QString label = getAccountLabel(sortedIter.second);
+                    if (allLabels.size() >= nCount+1)
+                    {
+                        accLabel = allLabels[nCount];
+                        accLabel->setText( label );
+                    }
+                    else
+                    {
+                        accLabel = createAccountButton( label );
+                        accountScrollArea->layout()->addWidget( accLabel );
+                    }
+                    m_accountMap[accLabel] = sortedIter.second;
+                    if (sortedIter.second->getUUID() == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
                         makeActive = accLabel;
+                    ++nCount;
+                }
+
+                // Remove any excess widgets that are still in UI if required.
+                for (;nCount < allLabels.size();++nCount)
+                {
+                    accountScrollArea->layout()->removeWidget(allLabels[nCount]);
                 }
             }
-        }
-        for ( const auto& iter : sortedAccounts)
-        {
-            accountScrollArea->layout()->addWidget( iter.second );
-        }
-        if (makeActive)
-        {
+            if (makeActive)
             setActiveAccountButton( makeActive );
         }
         // Force layout to update now that all the changes are made.
@@ -1319,50 +1342,32 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
     }
 }
 
-// fixme: (2.1) - introduce better code sharing here between this function and refreshaccountcontrols...
 // For performance reasons we update only the specific control that is added instead of regenerating all controls.
-void GuldenGUI::accountAdded(CAccount* account)
+void GuldenGUI::accountAdded(CAccount* addedAccount)
 {
+    //Disable layout to prevent updating to changes immediately
+    accountScrollArea->layout()->setEnabled(false);
     if (pactiveWallet)
     {
-        //Disable layout to prevent updating to changes immediately
-        accountScrollArea->layout()->setEnabled(false);
+        //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
+        LOCK(pactiveWallet->cs_wallet);
 
-        // Sort the accounts.
-        QCollator coll;
-        coll.setNumericMode(true);
-        auto cmp = [&](const QString& s1, const QString& s2){ return coll.compare(s1, s2) < 0; };
-        std::map<QString, ClickableLabel*, decltype(cmp)> sortedAccounts(cmp);
+        std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts = getSortedAccounts();
+        for (const auto& sortedIter : sortedAccounts)
         {
-            //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
-            LOCK(pactiveWallet->cs_wallet);
-
-            QString thisAccountLabel = "";
-            ClickableLabel* accLabel = nullptr;
-            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            if (sortedIter.second->getUUID() == addedAccount->getUUID())
             {
-                if (accountPair.second->m_State == AccountState::Normal || (fShowChildAccountsSeperately && accountPair.second->m_State == AccountState::ShadowChild) )
-                {
-                    QString label = getAccountLabel(accountPair.second);
-                    if (accountPair.first == account->getUUID())
-                    {
-                        accLabel = createAccountButton( label );
-                        m_accountMap[accLabel] = accountPair.second;
-                        thisAccountLabel = QString::fromStdString(accountPair.second->getLabel());
-                        sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = accLabel;
-                    }
-                    else
-                    {
-                        sortedAccounts[QString::fromStdString(accountPair.second->getLabel())] = nullptr;
-                    }
-                }
+                QString label = getAccountLabel(sortedIter.second);
+                ClickableLabel* accLabel = createAccountButton( label );
+                m_accountMap[accLabel] = sortedIter.second;
+                int pos = std::distance(sortedAccounts.begin(), sortedAccounts.find(QString::fromStdString(addedAccount->getLabel())));
+                ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(pos, accLabel);
+                break;
             }
-            int pos = std::distance(sortedAccounts.begin(), sortedAccounts.find(thisAccountLabel));
-            ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(pos, accLabel);
         }
-        // Force layout to update now that all the changes are made.
-        accountScrollArea->layout()->setEnabled(true);
     }
+    // Force layout to update now that all the changes are made.
+    accountScrollArea->layout()->setEnabled(true);
 }
 
 //fixme: (Post-2.1) - This is a bit lazy; accountAdded/accountDeleted should instead update only the specific controls affected instead of all the controls.
