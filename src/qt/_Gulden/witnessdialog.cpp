@@ -630,6 +630,19 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
+    static uint64_t nUpdateTimerStart = 0;
+    if (IsArgSet("-testnet"))
+    {
+        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 20000))
+        {
+            nUpdateTimerStart = GetTimeMillis();
+        }
+        else
+        {
+            return;
+        }
+    }
+
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
     bool stateEmptyWitnessButton2 = false;

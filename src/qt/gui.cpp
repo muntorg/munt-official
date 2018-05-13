@@ -103,7 +103,7 @@ static void UpdateWitnessAccountStates(WalletModel* model)
 {
     static uint64_t nUpdateTimerStart = 0;
     // Only update at most once every 60 seconds (prevent this from being a bottleneck on testnet)
-    if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 60000))
+    if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > IsArgSet("-testnet") ? 60000 : 10000))
     {
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {

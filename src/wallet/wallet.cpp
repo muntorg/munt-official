@@ -1076,6 +1076,28 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
 
             // Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             bool ret = AddToWallet(wtx, false);
+
+            // Update account state
+            //fixme: (2.1) - More efficient way to do this?
+            // If this is the first unconfirmed witness transaction a witness account is receiving then update the state to "pending" in the UI.
+            // If it has a confirm then update to "locked"
+            for (const auto& txOut : wtx.tx->vout)
+            {
+                if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
+                {
+                    CAccount* potentialWitnessAccount = pactiveWallet->FindAccountForTransaction(txOut);
+                    if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)
+                    {
+                        if (potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessEmpty || potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessPending)
+                        {
+                            potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
+                            static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
+                        }
+                    }
+                }
+            }
+
+
             for(const auto& txin : tx.vin)
             {
                 //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
