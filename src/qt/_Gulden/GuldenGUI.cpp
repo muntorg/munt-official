@@ -369,7 +369,7 @@ void GuldenGUI::requestRenewWitness(CAccount* funderAccount)
     }
 
     // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
-    targetWitnessAccount->SetWarningState(AccountStatus::Default);
+    targetWitnessAccount->SetWarningState(AccountStatus::WitnessPending);
     static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
     m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 }
@@ -1089,6 +1089,8 @@ QString getAccountLabel(CAccount* account)
     {
         if (account->GetWarningState() == AccountStatus::WitnessEmpty)
             accountNamePrefix = GUIUtil::fontAwesomeSolid("\uf19c");
+        else if (account->GetWarningState() == AccountStatus::WitnessPending)
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeRegular("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf251")));
         else if (account->GetWarningState() == AccountStatus::WitnessExpired)
             accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(colourSpan("#c97676", superscriptSpan(GUIUtil::fontAwesomeSolid("\uf12a"))));
         else if (account->GetWarningState() == AccountStatus::WitnessEnded)
@@ -1620,6 +1622,8 @@ void GuldenGUI::acceptNewAccount()
         restoreCachedWidgetIfNeeded();
         if (newAccountType == NewAccountType::FixedDeposit)
         {
+            newAccount->SetWarningState(AccountStatus::WitnessEmpty);
+            static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
             m_pImpl->showWitnessDialog();
         }
         else

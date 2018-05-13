@@ -30,6 +30,8 @@
 #include "utilitydialog.h"
 #include "checkpoints.h"
 #include "chainparams.h"
+#include "transactiontablemodel.h"
+#include "transactionrecord.h"
 
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
@@ -97,17 +99,24 @@ const std::string GUI::DEFAULT_UIPLATFORM =
         ;
 
 #ifdef ENABLE_WALLET
-static void UpdateWitnessAccountStates()
+static void UpdateWitnessAccountStates(WalletModel* model)
 {
     static uint64_t nUpdateTimerStart = 0;
     // Only update at most once every 60 seconds (prevent this from being a bottleneck on testnet)
     if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 60000))
     {
-        nUpdateTimerStart = GetTimeMillis();
-
         if (chainActive.Tip() && chainActive.Tip()->pprev)
         {
             LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
+            nUpdateTimerStart = GetTimeMillis();
+
+            std::unique_ptr<TransactionFilterProxy> filter;
+            filter.reset(new TransactionFilterProxy);
+            filter->setSourceModel(model->getTransactionTableModel());
+            filter->setDynamicSortFilter(true);
+            filter->setSortRole(Qt::EditRole);
+            filter->setShowInactive(false);
+            filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
             CGetWitnessInfo witnessInfo;
             CBlock block;
@@ -152,7 +161,22 @@ static void UpdateWitnessAccountStates()
                     }
                 }
                 if (!bAnyAreMine)
+                {
                     newState = AccountStatus::WitnessEmpty;
+                    filter->setAccountFilter(accountPair.second);
+                    int rows = filter->rowCount();
+                    for (int row = 0; row < rows; ++row)
+                    {
+                        QModelIndex index = filter->index(row, 0);
+
+                        int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                        if (nStatus == TransactionStatus::Status::Unconfirmed)
+                        {
+                            newState = AccountStatus::WitnessPending;
+                            break;
+                        }
+                    }
+                }
                 if (newState != prevState)
                 {
                     accountPair.second->SetWarningState(newState);
@@ -163,10 +187,16 @@ static void UpdateWitnessAccountStates()
     }
 }
 
+void GUI::updateUIForBlockTipChange()
+{
+    if (walletFrame && walletFrame->currentWalletView())
+        UpdateWitnessAccountStates( walletFrame->currentWalletView()->walletModel );
+}
 static void BlockTipChangedHandler(GUI* pUI, bool ibd, const CBlockIndex *)
 {
     QMetaObject::invokeMethod( pUI, "updateWitnessDialog", Qt::QueuedConnection );
-    UpdateWitnessAccountStates();
+    if (pUI)
+        pUI->updateUIForBlockTipChange();
 }
 #endif
 
@@ -685,7 +715,7 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     clientModel->updatePoW2Display();
     rpcConsole->updatePoW2PhaseState();
     // Force this to run once to pre-prime the 'validaty' state of witness accounts.
-    UpdateWitnessAccountStates();
+    UpdateWitnessAccountStates(walletModel);
 
     return walletFrame->addWallet(name, walletModel);
 }

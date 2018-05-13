@@ -66,10 +66,11 @@ const int HDMobileStartIndex = 100000;
 
 enum AccountStatus
 {
-    Default,
-    WitnessEmpty,
-    WitnessExpired,
-    WitnessEnded
+    WitnessEmpty,       // New witness account no funds yet.
+    WitnessPending,     // New witness account first funds received but not yet confirmed.
+    Default,            // Funded witness account.
+    WitnessExpired,     // Expired witness account.
+    WitnessEnded        // Witness account with lock ended.
 };
 
 class CHDSeed

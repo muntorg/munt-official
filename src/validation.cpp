@@ -2850,6 +2850,7 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
 
+        //fixme: (2.0) - I think we can remove this now, but make sure?
         // Disallow the following as they should never happen:
         // 1) Activating a witness block as tip during phase 3 is an error.
         // 2) Activating an unwitnessed PoW block as tip for phase 3.
