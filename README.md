@@ -59,14 +59,15 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 
 Troubleshooting:
 
-If your distro  does not have boost 1.61 you can do the following to build it
-> wget https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2 && tar -xvf boost_1_61_0.tar.bz2 && cd boost_1_61_0/ && ./bootstrap.sh && ./b2 --prefix=/boost166 cxxflags=-fPIC cflags=-fPIC install
+If your distro  does not have boost 1.66 you can do the following to build it
+cd depends
+make boost
 
 And then add it to your configure flags
-> ./configure --with-boost=/boost166 LDFLAGS="-L/boost166/lib/" CPPFLAGS="-I/boost166/include" <otherconfigureflagshere>
+> ./configure --with-boost=<path> LDFLAGS="-L<path>/lib/" CPPFLAGS="-I<path>/include" <otherconfigureflagshere>
 
 To run after doing the above
-> LD_LIBRARY_PATH=/boost166/lib src/GuldenD 
+> LD_LIBRARY_PATH=<path>/lib src/GuldenD 
 
 If your distro is missing Berkley DB 4.8 (error: Found Berkeley DB other than 4.8, required for portable wallets)
 Either configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
