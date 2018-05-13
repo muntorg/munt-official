@@ -70,6 +70,8 @@ static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;
 void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+
     bool phase2Active = false;
     bool phase3Active = false;
     int nStartHeight = 0;
@@ -109,8 +111,6 @@ void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& ch
 
 bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
     // If we don't yet have any information on phase activation then do a once off scan on the entire chain so that our caches are correctly primed.
     if (pIndex && pIndex->nHeight > 1 && phase2ActivationCache.empty() && phase2ActivationHash == uint256())
     {
@@ -162,18 +162,22 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
             }
         }
     }
-    // If our ancestor is not active for phase 2 then we have to consult the version bits to know for sure, otherwise we can assume we are as well.
-    bool isActive = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE2, versionbitscache) == THRESHOLD_ACTIVE);
-    // If we are the first ever block to test as active, or if we are active and none of our ancestors are (can happen if a fork starts from before previous activation point)
-    // Then set ourselves as the activation hash.
-    if (isActive)
+
     {
-        phase2ActivationHash = pIndex->GetBlockHashPoW2();
-        ppow2witdbview->SetPhase2ActivationHash(phase2ActivationHash);
+        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+        // If our ancestor is not active for phase 2 then we have to consult the version bits to know for sure, otherwise we can assume we are as well.
+        bool isActive = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE2, versionbitscache) == THRESHOLD_ACTIVE);
+        // If we are the first ever block to test as active, or if we are active and none of our ancestors are (can happen if a fork starts from before previous activation point)
+        // Then set ourselves as the activation hash.
+        if (isActive)
+        {
+            phase2ActivationHash = pIndex->GetBlockHashPoW2();
+            ppow2witdbview->SetPhase2ActivationHash(phase2ActivationHash);
+        }
+        // Cache our value as well to assist future lookups.
+        phase2ActivationCache[pIndex->GetBlockHashPoW2()] = isActive;
+        return isActive;
     }
-    // Cache our value as well to assist future lookups.
-    phase2ActivationCache[pIndex->GetBlockHashPoW2()] = isActive;
-    return isActive;
 }
 
 
@@ -183,8 +187,6 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 // prevhash of witness block is stored in coinbase.
 bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
@@ -211,48 +213,51 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
         }
     }
 
-    // If none of our ancestors were active for phase 3 then we have to calculate whether we qualify for phase 3 activation or not.
     {
-        // First try the optimised route to avoid the expensive route if it is unnecessary.
-        // We check whether this block has created any new witness address, if it has not then the phase can't possibly be any different than before.
-        // NB! Even though this requires disk access it is still faster for -long- phase 2 chains because phase 3 check requires cloning the entire chain and performing several undos to the mempool each time.
-        std::shared_ptr<CBlock> pCheckBlock(new CBlock);
-        if (!ReadBlockFromDisk(*pCheckBlock, pIndex, Params().GetConsensus()))
-            return false;
-        bool containsAnyNewWitnessAddresses = false;
-        for (const auto& transactionRef : pCheckBlock->vtx)
+        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+        // If none of our ancestors were active for phase 3 then we have to calculate whether we qualify for phase 3 activation or not.
         {
-            for (const auto& outRef : transactionRef->vout)
+            // First try the optimised route to avoid the expensive route if it is unnecessary.
+            // We check whether this block has created any new witness address, if it has not then the phase can't possibly be any different than before.
+            // NB! Even though this requires disk access it is still faster for -long- phase 2 chains because phase 3 check requires cloning the entire chain and performing several undos to the mempool each time.
+            std::shared_ptr<CBlock> pCheckBlock(new CBlock);
+            if (!ReadBlockFromDisk(*pCheckBlock, pIndex, Params().GetConsensus()))
+                return false;
+            bool containsAnyNewWitnessAddresses = false;
+            for (const auto& transactionRef : pCheckBlock->vtx)
             {
-                if (IsPow2WitnessOutput(outRef))
+                for (const auto& outRef : transactionRef->vout)
                 {
-                    containsAnyNewWitnessAddresses = true;
-                    break;
+                    if (IsPow2WitnessOutput(outRef))
+                    {
+                        containsAnyNewWitnessAddresses = true;
+                        break;
+                    }
                 }
+                if (containsAnyNewWitnessAddresses)
+                    break;
             }
-            if (containsAnyNewWitnessAddresses)
-                break;
+            if (!containsAnyNewWitnessAddresses)
+                return false;
         }
-        if (!containsAnyNewWitnessAddresses)
-            return false;
-    }
-    {
-        // Perform the expensive phase 3 check, we want to make sure that a certain quantity of witnessing addresses and a certain weight are present before we allow phase 3 to activate.
-        int64_t nNumWitnessAddresses;
-        int64_t nTotalWeight;
-        GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
-        //fixme: (2.0) (POW2) (LAUNCH) - Finalise paramaters here.
-        const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
-        const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
-        // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
-        // Then set ourselves as the activation hash.
-        if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > nTotalWeightRequired)
         {
-            phase3ActivationHash = pIndex->GetBlockHashPoW2();
-            ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
-            return true;
+            // Perform the expensive phase 3 check, we want to make sure that a certain quantity of witnessing addresses and a certain weight are present before we allow phase 3 to activate.
+            int64_t nNumWitnessAddresses;
+            int64_t nTotalWeight;
+            GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
+            //fixme: (2.0) (POW2) (LAUNCH) - Finalise paramaters here.
+            const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
+            const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
+            // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
+            // Then set ourselves as the activation hash.
+            if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > nTotalWeightRequired)
+            {
+                phase3ActivationHash = pIndex->GetBlockHashPoW2();
+                ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }
 
@@ -264,8 +269,6 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
 // prevhash of blocks starts to point to witness header instead of PoW header
 bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
@@ -292,15 +295,18 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainpara
         }
     }
 
-    // Version bits - mined by PoW but controlled by witnesses.
-    bool ret = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE4, versionbitscache) == THRESHOLD_ACTIVE);
-    // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
-    // Then set ourselves as the activation hash.
-    if (ret)
     {
-        phase4ActivationHash = pIndex->GetBlockHashPoW2();
-        ppow2witdbview->SetPhase4ActivationHash(phase4ActivationHash);
-        return true;
+        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+        // Version bits - mined by PoW but controlled by witnesses.
+        bool ret = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE4, versionbitscache) == THRESHOLD_ACTIVE);
+        // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
+        // Then set ourselves as the activation hash.
+        if (ret)
+        {
+            phase4ActivationHash = pIndex->GetBlockHashPoW2();
+            ppow2witdbview->SetPhase4ActivationHash(phase4ActivationHash);
+            return true;
+        }
     }
     return false;
 }
@@ -366,8 +372,6 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
 
 bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
@@ -378,8 +382,6 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chain
 
 int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
     int nRet = 1;
     if (IsPow2Phase2Active(pIndex, chainparams, chain, viewOverride))
     {

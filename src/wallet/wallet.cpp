@@ -1081,17 +1081,20 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             //fixme: (2.1) - More efficient way to do this?
             // If this is the first unconfirmed witness transaction a witness account is receiving then update the state to "pending" in the UI.
             // If it has a confirm then update to "locked"
-            for (const auto& txOut : wtx.tx->vout)
+            if (pactiveWallet)
             {
-                if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
+                for (const auto& txOut : wtx.tx->vout)
                 {
-                    CAccount* potentialWitnessAccount = pactiveWallet->FindAccountForTransaction(txOut);
-                    if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)
+                    if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
                     {
-                        if (potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessEmpty || potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessPending)
+                        CAccount* potentialWitnessAccount = pactiveWallet->FindAccountForTransaction(txOut);
+                        if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)
                         {
-                            potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
-                            static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
+                            if (potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessEmpty || potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessPending)
+                            {
+                                potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
+                                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
+                            }
                         }
                     }
                 }
