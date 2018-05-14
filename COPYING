@@ -1,4 +1,6 @@
-For licensing of all portions of code coming from upstream, please review COPYING_upstream which is an unmodified copy of the upstream license.
-For licensing of all portions of the code coming from the Gulden project, please review COPYING_gulden which is an unmodified copy of the Gulden license.
+For licensing of all original portions of the code coming from the Gulden project, please review COPYING_gulden which is an unmodified copy of the Gulden license.
+For licensing of all original unmodified portions of code coming from upstream, please review COPYING_upstream which is an unmodified copy of the upstream license.
+For licensing of all portions of the code in specific subdirectories, please review the COPYING or LICENSE file for the sub directory in question: src/secp256k1/COPYING; src/LRUCache/COPYING; src/crypto/ctaes/COPYING; src/univalue/COPYING; src/leveldb/LICENSE.
 
-All code in this repository falls under one or both of the above two licenses unless stated otherwise.
+In all cases review also the licensing comments in the files themselves which superceed the above when present. All code in this repository falls under the above licenses unless specifically stated otherwise in the file.
+All modifications to all files, irrespective of the original licensing of the file form part of the work of the Gulden project and are subject to the Gulden license, please review COPYING_gulden which is an unmodified copy of the Gulden license.

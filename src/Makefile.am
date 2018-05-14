@@ -94,10 +94,11 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/mnemonic.h \
   Gulden/util.h \
   Gulden/auto_checkpoints.h \
-  alert.h \
   Gulden/guldenapplication.h \
-  account.h \
-  wallet/Gulden/guldenwallet.h
+  wallet/Gulden/guldenwallet.h \
+  LRUCache/LRUCache11.hpp \
+  alert.h \
+  account.h
 
 GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
 
