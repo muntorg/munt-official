@@ -422,9 +422,12 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     if (platformStyle->getImagesOnButtons()) {
         ui->openDebugLogfileButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
+    ui->clearButton->setTextFormat( Qt::RichText );
     ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf057") );
     ui->fontBiggerButton->setText( GUIUtil::fontAwesomeRegular("\uf00e") );
+    ui->fontBiggerButton->setTextFormat( Qt::RichText );
     ui->fontSmallerButton->setText( GUIUtil::fontAwesomeRegular("\uf010") );
+    ui->fontSmallerButton->setTextFormat( Qt::RichText );
 
     ui->clearButton->setCursor( Qt::PointingHandCursor );
     ui->fontBiggerButton->setCursor( Qt::PointingHandCursor );

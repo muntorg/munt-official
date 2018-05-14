@@ -444,6 +444,9 @@
            <property name="text">
             <string>-</string>
            </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
            <property name="indent">
             <number>0</number>
            </property>
@@ -453,6 +456,9 @@
           <widget class="ClickableLabel" name="fontBiggerButton">
            <property name="text">
             <string>+</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
            </property>
            <property name="indent">
             <number>0</number>
@@ -468,6 +474,9 @@
            </property>
            <property name="text">
             <string>x</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
            </property>
            <property name="indent">
             <number>0</number>

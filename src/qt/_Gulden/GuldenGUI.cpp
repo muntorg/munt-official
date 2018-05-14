@@ -510,6 +510,7 @@ void GuldenGUI::createToolBarsGulden()
     }
 
     ClickableLabel* addAccButton = new ClickableLabel( m_pImpl );
+    addAccButton->setTextFormat( Qt::RichText );
     addAccButton->setText( GUIUtil::fontAwesomeRegular("\uf067 ")+tr("Add account") );
     addAccButton->setObjectName( "add_account_button" );
     addAccButton->setCursor( Qt::PointingHandCursor );
@@ -1088,15 +1089,15 @@ QString getAccountLabel(CAccount* account)
     else if ( account->IsPoW2Witness() )
     {
         if (account->GetWarningState() == AccountStatus::WitnessEmpty)
-            accountNamePrefix = GUIUtil::fontAwesomeSolid("\uf19c");
+            accountNamePrefix = GUIUtil::fontAwesomeLight("\uf19c");
         else if (account->GetWarningState() == AccountStatus::WitnessPending)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeRegular("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf251")));
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf251")));
         else if (account->GetWarningState() == AccountStatus::WitnessExpired)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(colourSpan("#c97676", superscriptSpan(GUIUtil::fontAwesomeSolid("\uf12a"))));
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(colourSpan("#c97676", superscriptSpan(GUIUtil::fontAwesomeSolid("\uf12a"))));
         else if (account->GetWarningState() == AccountStatus::WitnessEnded)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf11e")));
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf11e")));
         else
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeSolid("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf023")));
+            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf023")));
     }
     else if ( !account->IsHD() )
     {

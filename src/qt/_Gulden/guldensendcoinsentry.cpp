@@ -37,6 +37,11 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, 
     QList<QTabBar *> tabBar = this->ui->sendCoinsRecipientBook->findChildren<QTabBar *>();
     tabBar.at(0)->setCursor(Qt::PointingHandCursor);	
 
+    ui->searchLabel1->setText( GUIUtil::fontAwesomeSolid("\uf002") );
+    ui->searchLabel1->setTextFormat( Qt::RichText );
+    ui->searchLabel2->setText( GUIUtil::fontAwesomeSolid("\uf002") );
+    ui->searchLabel2->setTextFormat( Qt::RichText );
+
     update();
 
     ui->addressBookTabTable->horizontalHeader()->setStretchLastSection(true);
