@@ -14,6 +14,7 @@
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
 #include "account.h"
+#include "gui.h" //For uuid QVariant
 #include "wallet/wallet.h"
 
 #include <cstdlib>
@@ -49,8 +50,8 @@ bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &
     QDateTime datetime = index.data(TransactionTableModel::DateRole).toDateTime();
     bool involvesWatchAddress = index.data(TransactionTableModel::WatchonlyRole).toBool();
     QString address = index.data(TransactionTableModel::AddressRole).toString();
-    boost::uuids::uuid accountUUID = getUUIDFromString(index.data(TransactionTableModel::AccountRole).toString().toStdString());
-    boost::uuids::uuid  accountParentUUID = getUUIDFromString(index.data(TransactionTableModel::AccountParentRole).toString().toStdString());
+    boost::uuids::uuid accountUUID = index.data(TransactionTableModel::AccountRole).value<boost::uuids::uuid>();
+    boost::uuids::uuid  accountParentUUID = index.data(TransactionTableModel::AccountParentRole).value<boost::uuids::uuid>();
     QString label = index.data(TransactionTableModel::LabelRole).toString();
     qint64 amount = llabs(index.data(TransactionTableModel::AmountRole).toLongLong());
     int status = index.data(TransactionTableModel::StatusRole).toInt();
