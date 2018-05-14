@@ -102,11 +102,13 @@ void AccountSummaryWidget::balanceChanged()
     if (pactiveWallet && m_account)
     {
         m_accountBalance = pactiveWallet->GetBalance(m_account, true, true);
+        CAmount immatureBalance = pactiveWallet->GetImmatureBalance(m_account);
+        m_accountBalance += immatureBalance;
+        m_accountBalanceImmatureOrUnconfirmed = pactiveWallet->GetUnconfirmedBalance(m_account, true) + immatureBalance;
         if (m_account->IsPoW2Witness())
             m_accountBalanceLocked = m_accountBalance - pactiveWallet->GetBalance(m_account, false, true); 
         else
             m_accountBalanceLocked = 0;
-        m_accountBalanceImmatureOrUnconfirmed = pactiveWallet->GetUnconfirmedBalance(m_account, true) + pactiveWallet->GetImmatureBalance(m_account);
         updateExchangeRates();
     }
 }
@@ -129,10 +131,7 @@ void AccountSummaryWidget::updateExchangeRates()
             {
                 toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceLocked, false, GuldenUnits::separatorStandard, 2));
             }
-            else
-            {
-                toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
-            }
+            toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
             toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, m_accountBalance - m_accountBalanceLocked - m_accountBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
 
             ui->accountBalance->setToolTip(toolTip);
