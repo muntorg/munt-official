@@ -1143,7 +1143,7 @@ void GuldenGUI::refreshTabVisibilities()
 }
 
 QCollator collateAccountsNumerically;
-auto cmpAccounts = [&](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
+auto cmpAccounts = [&collateAccountsNumerically](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
 std::map<QString, CAccount*, decltype(cmpAccounts)> getSortedAccounts()
 {
     collateAccountsNumerically.setNumericMode(true);
