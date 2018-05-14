@@ -1074,7 +1074,6 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 RemoveAddressFromKeypoolIfIsMine(txin, pIndex ? pIndex->nTime : 0);
             }
 
-            // Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             bool ret = AddToWallet(wtx, false);
 
             // Update account state
@@ -1099,12 +1098,15 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     }
                 }
             }
-
-
-            for(const auto& txin : tx.vin)
+            return ret;
+            //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
+            //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
+            //Is there maybe a better way to do this?
+            //
+            //Note the below has large speed implications - if we do need this it would be better to maybe just serialise the "from address" as part of CWalletTx and not keep additional transactions (that aren't ours) around.
+            //GetTransaction() is expensive and locks on mutexes that intefere with other parts of the code.
+            /*for(const auto& txin : tx.vin)
             {
-                //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment at start of this loop for the original motivation.
-                //Is there maybe a better way to do this?
                 bool fExistedIncoming = mapWallet.count(txin.prevout.hash) != 0;
                 if (!fExistedIncoming)
                 {
@@ -1114,8 +1116,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                         AddToWallet(wtx, false);
                     }
                 }
-            }
-            return ret;
+            }*/
         }
     }
     return false;

@@ -460,28 +460,43 @@ int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride
     return std::numeric_limits<int64_t>::max();
 }
 
+#include <LRUCache/LRUCache11.hpp>
+typedef lru11::Cache<uint256, std::pair<int64_t, int64_t>, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, std::pair<int64_t, int64_t>>>::iterator, BlockHasher>> BlockWeightCache;
+BlockWeightCache networkWeightCache(1000,500);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
-    std::map<COutPoint, Coin> allWitnessCoins;
-    if (!getAllUnspentWitnessCoins(chain, chainparams, pIndex, allWitnessCoins, nullptr, viewOverride))
-        return error("GetPow2NetworkWeight: Failed to enumerate all unspent witness coins");
-
-    nNumWitnessAddresses = 0;
-    nTotalWeight = 0;
-
-    for (auto iter : allWitnessCoins)
+    const auto& blockHash = pIndex->GetBlockHashPoW2();
+    if (networkWeightCache.contains(blockHash))
     {
-        if (pIndex == nullptr || iter.second.nHeight <= pIndex->nHeight)
-        {
-            CTxOut output = iter.second.out;
+        const auto& cachePair = networkWeightCache.get(blockHash);
+        nNumWitnessAddresses = cachePair.first;
+        nTotalWeight = cachePair.second;
+        return true;
+    }
 
-            uint64_t nUnused1, nUnused2;
-            nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused1, nUnused2));
-            ++nNumWitnessAddresses;
+    {
+        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+
+        std::map<COutPoint, Coin> allWitnessCoins;
+        if (!getAllUnspentWitnessCoins(chain, chainparams, pIndex, allWitnessCoins, nullptr, viewOverride))
+            return error("GetPow2NetworkWeight: Failed to enumerate all unspent witness coins");
+
+        nNumWitnessAddresses = 0;
+        nTotalWeight = 0;
+
+        for (auto iter : allWitnessCoins)
+        {
+            if (pIndex == nullptr || iter.second.nHeight <= pIndex->nHeight)
+            {
+                CTxOut output = iter.second.out;
+
+                uint64_t nUnused1, nUnused2;
+                nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused1, nUnused2));
+                ++nNumWitnessAddresses;
+            }
         }
     }
+    networkWeightCache.insert(blockHash, std::make_pair(nNumWitnessAddresses, nTotalWeight));
     return true;
 }
 
