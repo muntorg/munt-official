@@ -1142,12 +1142,13 @@ void GuldenGUI::refreshTabVisibilities()
     }
 }
 
-QCollator collateAccountsNumerically;
-auto cmpAccounts = [&collateAccountsNumerically](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
-std::map<QString, CAccount*, decltype(cmpAccounts)> getSortedAccounts()
+
+std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>> getSortedAccounts()
 {
+    QCollator collateAccountsNumerically;
     collateAccountsNumerically.setNumericMode(true);
-    std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts(cmpAccounts);
+    std::function<bool(const QString&, const QString&)> cmpAccounts = [&collateAccountsNumerically](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
+    std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>> sortedAccounts(cmpAccounts);
     {
         for ( const auto& accountPair : pactiveWallet->mapAccounts )
         {
@@ -1179,7 +1180,7 @@ void GuldenGUI::refreshAccountControls()
 
             // Sort the accounts.
             ClickableLabel* makeActive = NULL;
-            std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts = getSortedAccounts();
+            auto sortedAccounts = getSortedAccounts();
             {
                 //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
                 LOCK(pactiveWallet->cs_wallet);
@@ -1353,7 +1354,7 @@ void GuldenGUI::accountAdded(CAccount* addedAccount)
         //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
         LOCK(pactiveWallet->cs_wallet);
 
-        std::map<QString, CAccount*, decltype(cmpAccounts)> sortedAccounts = getSortedAccounts();
+        auto sortedAccounts = getSortedAccounts();
         for (const auto& sortedIter : sortedAccounts)
         {
             if (sortedIter.second->getUUID() == addedAccount->getUUID())

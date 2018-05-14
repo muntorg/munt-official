@@ -13,6 +13,7 @@
 
 #include "addresstablemodel.h"
 #include "guiconstants.h"
+#include "gui.h" //For uuid variant.
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "platformstyle.h"
@@ -458,6 +459,7 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
         case TransactionRecord::WitnessRenew:
             return "\uf2f9";
         case TransactionRecord::SendToSelf:
+        case TransactionRecord::InternalTransfer:
             return "\uf074";
         case TransactionRecord::Other:
             return "\uf362";
