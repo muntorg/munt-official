@@ -28,6 +28,8 @@
 #include "_Gulden/GuldenGUI.h"
 #include "validation.h"
 
+#include <boost/uuid/uuid.hpp>
+
 class ClientModel;
 class NetworkStyle;
 class Notificator;
@@ -49,6 +51,9 @@ class QAction;
 class QProgressBar;
 class QProgressDialog;
 QT_END_NAMESPACE
+
+//Needed for QVariant.
+Q_DECLARE_METATYPE(boost::uuids::uuid);
 
 /**
   Gulden GUI main class. This class represents the main window of the Gulden UI. It communicates with both the client and

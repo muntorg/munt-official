@@ -180,6 +180,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     }
 }
 
+
 void WalletView::processNewTransaction(const QModelIndex& parent, int start, int end)
 {
     // Prevent balloon-spam when initial block download is in progress
@@ -201,21 +202,21 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
         QString label = ttm->data(index, TransactionTableModel::LabelRole).toString();
 
 
-        boost::uuids::uuid accountUUID = getUUIDFromString(ttm->data(index, TransactionTableModel::AccountRole).toString().toStdString());
+        boost::uuids::uuid accountUUID = ttm->data(index, TransactionTableModel::AccountRole).value<boost::uuids::uuid>();
         if (fShowChildAccountsSeperately)
         {
-            QString accountParentUUID = ttm->data(index, TransactionTableModel::AccountParentRole).toString();
-            if (!accountParentUUID.isEmpty())
-                accountUUID = getUUIDFromString(accountParentUUID.toStdString());
+            boost::uuids::uuid accountParentUUID = ttm->data(index, TransactionTableModel::AccountParentRole).value<boost::uuids::uuid>();
+            if (accountParentUUID != boost::uuids::nil_generator()())
+                accountUUID = accountParentUUID;
         }
 
-        QString account;
+        QString accountLabel;
         if(accountUUID != boost::uuids::nil_generator()())
         {
-            account = walletModel->getAccountLabel(accountUUID);
+            accountLabel = walletModel->getAccountLabel(accountUUID);
         }
 
-        Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, account, label);
+        Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, accountLabel, label);
     }
 }
 

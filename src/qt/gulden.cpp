@@ -590,6 +590,8 @@ int main(int argc, char *argv[])
     //   IMPORTANT if it is no longer a typedef use the normal variant above
     qRegisterMetaType< CAmount >("CAmount");
     qRegisterMetaType< std::function<void (void)> >();
+    //Used by QVariant in table models.
+    qRegisterMetaType< boost::uuids::uuid >();
 
     /// 3. Application identification
     // must be set before OptionsModel is initialized or translations are loaded,

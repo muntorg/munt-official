@@ -772,9 +772,9 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case AddressRole:
         return QString::fromStdString(rec->address);
     case AccountRole:
-        return QString::fromStdString(getUUIDAsString(rec->actionAccountUUID));
+        return QVariant::fromValue(rec->actionAccountUUID);
     case AccountParentRole:
-        return QString::fromStdString(getUUIDAsString(rec->actionAccountParentUUID));
+        return QVariant::fromValue(rec->actionAccountParentUUID);
     case LabelRole:
         return walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
     case AmountRole:
