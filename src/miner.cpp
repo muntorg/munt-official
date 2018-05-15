@@ -1301,7 +1301,7 @@ CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhasePare
     return coinbaseTx;
 }
 
-//fixme: (2.0) If running for a very long time this will eventually use up obscene amounts of memory - empty it every now and again
+
 //fixme: (2.1) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
@@ -1312,6 +1312,8 @@ void static GuldenWitness()
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
+
+    uint64_t nTimeTotal = 0;
 
     CChainParams chainparams = Params();
     try
@@ -1329,10 +1331,11 @@ void static GuldenWitness()
                         if(!IsInitialBlockDownload())
                             break;
                     }
-                    MilliSleep(1000);
+                    MilliSleep(5000);
                 } while (true);
             }
-
+            static uint64_t nTotalTime = 0;
+            BenchMarkHelper("WIT: GuldenWitness", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
 
             CBlockIndex* pindexTip = chainActive.Tip();
             Consensus::Params pParams = chainparams.GetConsensus();

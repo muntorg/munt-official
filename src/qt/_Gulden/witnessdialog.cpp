@@ -400,6 +400,9 @@ void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, u
 
 void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: WitnessDialog::plotGraphForAccount", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     GraphScale scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
     std::map<CAmount, CAmount> pointMapForecast; pointMapForecast[0] = 0;
@@ -630,6 +633,9 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: WitnessDialog::plotGraphForAccount", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
     bool stateEmptyWitnessButton2 = false;

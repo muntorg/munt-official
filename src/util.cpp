@@ -940,3 +940,5 @@ std::string CopyrightHolders(const std::string& strPrefix)
     }
     return strCopyrightHolders;
 }
+
+uint32_t BenchMarkHelper::nCount = 0;

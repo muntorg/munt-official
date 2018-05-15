@@ -365,4 +365,36 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
 
 std::string CopyrightHolders(const std::string& strPrefix);
 
+
+// Little helper class to RAII encapusulate benchmarks.
+class BenchMarkHelper
+{
+    public:
+    BenchMarkHelper(std::string sDescription_, uint64_t& nTotal_, uint32_t nCategory_=BCLog::BENCH)
+    : nTotal(nTotal_)
+    , sDescription(sDescription_)
+    , nCategory(nCategory_)
+    {
+        nStart = GetTimeMicros();
+        ++nCount;
+    }
+    ~BenchMarkHelper()
+    {
+        Split();
+        --nCount;
+    }
+    void Split()
+    {
+        uint64_t nTime1 = GetTimeMicros(); 
+        nTotal += nTime1 - nStart;
+        LogPrint(nCategory, "%s%s: %.2fms [%.2fs]\n", sDescription.c_str(), std::string(nCount,' '), 0.001 * (nTime1 - nStart), nTotal * 0.000001);
+    }
+    private:
+    uint64_t nTotal;
+    std::string sDescription;
+    uint32_t nCategory;
+    uint64_t nStart;
+    static uint32_t nCount; //Automatically indent based on number of currently opened helpers.
+};
+
 #endif // GULDEN_UTIL_H

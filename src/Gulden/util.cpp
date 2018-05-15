@@ -70,6 +70,9 @@ static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;
 void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: PerformFullChainPhaseScan", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
     bool phase2Active = false;
@@ -111,6 +114,9 @@ void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& ch
 
 bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: IsPow2Phase2Active", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     // If we don't yet have any information on phase activation then do a once off scan on the entire chain so that our caches are correctly primed.
     if (pIndex && pIndex->nHeight > 1 && phase2ActivationCache.empty() && phase2ActivationHash == uint256())
     {
@@ -187,6 +193,9 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 // prevhash of witness block is stored in coinbase.
 bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: IsPow2Phase3Active", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
@@ -269,6 +278,9 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
 // prevhash of blocks starts to point to witness header instead of PoW header
 bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: IsPow2Phase4Active", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
@@ -317,6 +329,9 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 static uint256 phase5ActivationHash;
 bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: IsPow2Phase5Active", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
@@ -372,6 +387,9 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
 
 bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: IsPow2WitnessingActive", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
@@ -382,6 +400,9 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chain
 
 int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPoW2Phase", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     int nRet = 1;
     if (IsPow2Phase2Active(pIndex, chainparams, chain, viewOverride))
     {
@@ -400,6 +421,9 @@ int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CCh
 //NB! nAmount is already in internal monetary format (8 zeros) form when entering this function - i.e. the nAmount for 22 NLG is '2200000000' and not '22'
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPoW2RawWeightForAmount", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     // We rebase the entire formula to to match internal monetary format (8 zeros), so that we can work with fixed point precision.
     // We rebase to 10 at the end for the final weight.
     arith_uint256 base = arith_uint256(COIN);
@@ -417,6 +441,9 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 
 int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPoW2LockLengthInBlocksFromOutput", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;
@@ -434,6 +461,9 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
 
 int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPoW2Phase3ActivationTime", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     if (phase3ActivationHash == uint256())
         phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
 
@@ -465,6 +495,9 @@ typedef lru11::Cache<uint256, std::pair<int64_t, int64_t>, lru11::NullLock, std:
 BlockWeightCache networkWeightCache(1000,500);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPow2NetworkWeight", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     const auto& blockHash = pIndex->GetBlockHashPoW2();
     if (networkWeightCache.contains(blockHash))
     {
@@ -504,6 +537,9 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
 
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
 {
+    static uint64_t nTotalTime = 0;
+    BenchMarkHelper("WIT: GetPoWBlockForPoSBlock", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+
     AssertLockHeld(cs_main); // Required for ReadBlockFromDisk.
 
     uint256 powHash = pIndex->GetBlockHashLegacy();
