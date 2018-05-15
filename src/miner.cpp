@@ -1318,13 +1318,17 @@ void static GuldenWitness()
     {
         while (true)
         {
-            if (!regTest && !hashCity)
+            if (!regTest)
             {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
-                do {
-                    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0 && !IsInitialBlockDownload())
-                        break;
+                do
+                {
+                    if (hashCity || g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
+                    {
+                        if(!IsInitialBlockDownload())
+                            break;
+                    }
                     MilliSleep(1000);
                 } while (true);
             }
