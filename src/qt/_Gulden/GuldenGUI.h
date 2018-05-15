@@ -176,6 +176,8 @@ private:
     void restoreCachedWidgetIfNeeded();
     void updateAccount(CAccount* account);
 
+    ClickableLabel* accountAddedHelper(CAccount* addedAccount);
+
     CReserveKey* receiveAddress;
 
     GuldenProxyStyle* guldenStyle;
@@ -198,7 +200,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void activeAccountChanged(CAccount* account);
-    void accountListChanged();
+    void accountNameChanged(CAccount* account);
+    void accountWarningChanged(CAccount* account);
     void balanceChanged();
     void accountAdded(CAccount* account);
     void accountDeleted(CAccount* account);

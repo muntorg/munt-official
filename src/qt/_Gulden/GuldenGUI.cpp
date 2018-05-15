@@ -1147,7 +1147,7 @@ std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>
 {
     QCollator collateAccountsNumerically;
     collateAccountsNumerically.setNumericMode(true);
-    std::function<bool(const QString&, const QString&)> cmpAccounts = [&collateAccountsNumerically](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
+    std::function<bool(const QString&, const QString&)> cmpAccounts = [collateAccountsNumerically](const QString& s1, const QString& s2){ return collateAccountsNumerically.compare(s1, s2) < 0; };
     std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>> sortedAccounts(cmpAccounts);
     {
         for ( const auto& accountPair : pactiveWallet->mapAccounts )
@@ -1214,7 +1214,7 @@ void GuldenGUI::refreshAccountControls()
                 }
             }
             if (makeActive)
-            setActiveAccountButton( makeActive );
+                setActiveAccountButton( makeActive );
         }
         // Force layout to update now that all the changes are made.
         accountScrollArea->layout()->setEnabled(true);
@@ -1230,7 +1230,8 @@ bool GuldenGUI::setCurrentWallet( const QString& name )
 
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), m_pImpl->accountSummaryWidget , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), this , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
-    connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountListChanged() ), this , SLOT( accountListChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountNameChanged(CAccount*) ), this , SLOT( accountNameChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountWarningChanged(CAccount*) ), this , SLOT( accountWarningChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountDeleted(CAccount*) ), this , SLOT( accountDeleted(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( m_pImpl->walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1307,9 +1308,34 @@ void GuldenGUI::balanceChanged()
 }
 
 
-void GuldenGUI::accountListChanged()
+void GuldenGUI::accountNameChanged(CAccount* account)
 {
-    refreshAccountControls();
+    //Disable layout to prevent updating to changes immediately
+    accountScrollArea->layout()->setEnabled(false);
+    {
+        accountDeleted(account);
+        ClickableLabel* added = accountAddedHelper(account);
+        if (account->getUUID() == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
+            setActiveAccountButton(added);
+    }
+    // Force layout to update now that all the changes are made.
+    accountScrollArea->layout()->setEnabled(true);
+}
+
+void GuldenGUI::accountWarningChanged(CAccount* account)
+{
+    if (!account)
+        return;
+
+    boost::uuids::uuid searchUUID = account->getUUID();
+    for (auto& iter : m_accountMap)
+    {
+        if (iter.second->getUUID() == searchUUID)
+        {
+            iter.first->setText( getAccountLabel(account) );
+            break;
+        }
+    }
 }
 
 void GuldenGUI::activeAccountChanged(CAccount* account)
@@ -1318,6 +1344,7 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
         m_pImpl->accountSummaryWidget->setActiveAccount(account);
 
     refreshTabVisibilities();
+    m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 
     //Update account name 'in place' in account list
     bool haveAccount=false;
@@ -1344,17 +1371,15 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
     }
 }
 
-// For performance reasons we update only the specific control that is added instead of regenerating all controls.
-void GuldenGUI::accountAdded(CAccount* addedAccount)
+ClickableLabel* GuldenGUI::accountAddedHelper(CAccount* addedAccount)
 {
-    //Disable layout to prevent updating to changes immediately
-    accountScrollArea->layout()->setEnabled(false);
     if (pactiveWallet)
     {
-        //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
+        //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton - we lock inside the function and not outside where setActive potentially takes place.
         LOCK(pactiveWallet->cs_wallet);
 
         auto sortedAccounts = getSortedAccounts();
+        sortedAccounts[QString::fromStdString(addedAccount->getLabel())] = addedAccount;
         for (const auto& sortedIter : sortedAccounts)
         {
             if (sortedIter.second->getUUID() == addedAccount->getUUID())
@@ -1364,18 +1389,45 @@ void GuldenGUI::accountAdded(CAccount* addedAccount)
                 m_accountMap[accLabel] = sortedIter.second;
                 int pos = std::distance(sortedAccounts.begin(), sortedAccounts.find(QString::fromStdString(addedAccount->getLabel())));
                 ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(pos, accLabel);
-                break;
+                return accLabel;
             }
         }
+    }
+    return nullptr;
+}
+
+void GuldenGUI::accountAdded(CAccount* addedAccount)
+{
+    if (!addedAccount || (addedAccount->m_State != AccountState::Normal && !(fShowChildAccountsSeperately && addedAccount->m_State == AccountState::ShadowChild)) )
+        return;
+
+    //Disable layout to prevent updating to changes immediately
+    accountScrollArea->layout()->setEnabled(false);
+    {
+        ClickableLabel* added = accountAddedHelper(addedAccount);
+        if (addedAccount->getUUID() == m_pImpl->walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
+            setActiveAccountButton(added);
     }
     // Force layout to update now that all the changes are made.
     accountScrollArea->layout()->setEnabled(true);
 }
 
-//fixme: (Post-2.1) - This is a bit lazy; accountAdded/accountDeleted should instead update only the specific controls affected instead of all the controls.
 void GuldenGUI::accountDeleted(CAccount* account)
 {
-    refreshAccountControls();
+    if (!account)
+        return;
+
+    boost::uuids::uuid searchUUID = account->getUUID();
+    for (auto iter = m_accountMap.begin(); iter != m_accountMap.end(); ++iter)
+    {
+        if (searchUUID == iter->second->getUUID())
+        {
+            accountScrollArea->layout()->removeWidget(iter->first);
+            iter->first->deleteLater();
+            m_accountMap.erase(iter);
+            break;
+        }
+    }
 }
 
 void GuldenGUI::accountButtonPressed()

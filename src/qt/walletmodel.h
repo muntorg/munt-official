@@ -325,7 +325,8 @@ Q_SIGNALS:
     void notifyWatchonlyChanged(bool fHaveWatchonly);
 
     void activeAccountChanged(CAccount* account);
-    void accountListChanged();
+    void accountNameChanged(CAccount* account);
+    void accountWarningChanged(CAccount* account);
     void accountAdded(CAccount* account);
     void accountDeleted(CAccount* account);
 
