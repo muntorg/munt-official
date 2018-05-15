@@ -1374,6 +1374,8 @@ void GUI::detectShutdown()
 {
     if (ShutdownRequested())
     {
+        // Prevent block tip changes from triggering while program is busy shutting down.
+        unsubscribeFromCoreSignals();
         if(rpcConsole)
             rpcConsole->hide();
         qApp->quit();
