@@ -1127,8 +1127,13 @@ void CConnman::NodeInactivityChecker(CNode* pnode)
             if (!pnode->fDisconnect)
                 NodeInactivityChecker(pnode);
         }
-        else {
-            LogPrintf("inactivity timer for %d stopped\n", pnode->GetId());
+        else if (ec == boost::asio::error::operation_aborted)
+        {
+            LogPrint(BCLog::NET, "inactivity timer for %d aborted\n", pnode->GetId());
+        }
+        else
+        {
+            LogPrint(BCLog::NET, "inactivity timer for %d failed [%s]\n", pnode->GetId(), ec.message().c_str());
         }
         pnode->Release();
     });
@@ -2164,6 +2169,8 @@ instance_of_cnetcleanup;
 
 void CConnman::Interrupt()
 {
+    LogPrint(BCLog::NET, "CConnman::Interrupt\n");
+
     {
         std::lock_guard<std::mutex> lock(mutexMsgProc);
         flagInterruptMsgProc = true;
@@ -2207,6 +2214,8 @@ void CConnman::Interrupt()
 
 void CConnman::Stop()
 {
+    LogPrint(BCLog::NET, "CConnman::Stop\n");
+
     if (threadMessageHandler.joinable())
         threadMessageHandler.join();
     if (threadOpenConnections.joinable())

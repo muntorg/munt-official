@@ -201,11 +201,11 @@ void ReceiveCoinsDialog::setShowCopyQRAsImageButton(bool showCopyQRAsImagebutton
     ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton_);
 }
 
-void ReceiveCoinsDialog::activeAccountChanged()
+void ReceiveCoinsDialog::activeAccountChanged(CAccount* activeAccount)
 {
     LogPrintf("ReceiveCoinsDialog::activeAccountChanged\n");
 
-    setActiveAccount(model->getActiveAccount());
+    setActiveAccount(activeAccount);
 }
 
 void ReceiveCoinsDialog::updateQRCode(const QString& uri)
@@ -231,8 +231,8 @@ void ReceiveCoinsDialog::setModel(WalletModel *_model)
 {
     this->model = _model;
 
-    connect(model, SIGNAL(activeAccountChanged()), this, SLOT(activeAccountChanged()));
-    activeAccountChanged();
+    connect(model, SIGNAL(activeAccountChanged(CAccount*)), this, SLOT(activeAccountChanged(CAccount*)));
+    activeAccountChanged(model->getActiveAccount());
 
     if(model && model->getOptionsModel())
     {

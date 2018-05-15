@@ -63,7 +63,7 @@ public Q_SLOTS:
     void gotoRequestPaymentPage();
     void cancelRequestPayment();
     void gotoReceievePage();
-    void activeAccountChanged();
+    void activeAccountChanged(CAccount* activeAccount);
 
 protected:
 
