@@ -106,8 +106,9 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
 
     hlayout->addWidget(typeWidget);
 
-    QLabel* searchLabel = new QLabel("");
+    QLabel* searchLabel = new QLabel(GUIUtil::fontAwesomeSolid("\uf002"));
     searchLabel->setObjectName("searchLabel1");
+    searchLabel->setTextFormat( Qt::RichText );
     searchLabel->setContentsMargins(0, 0, 0, 0);
     hlayout->addWidget(searchLabel);
 
