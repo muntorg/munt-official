@@ -1344,7 +1344,8 @@ void GuldenGUI::activeAccountChanged(CAccount* account)
         m_pImpl->accountSummaryWidget->setActiveAccount(account);
 
     refreshTabVisibilities();
-    m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
+    if ( m_pImpl->walletFrame)
+        m_pImpl->walletFrame->currentWalletView()->witnessDialogPage->update();
 
     //Update account name 'in place' in account list
     bool haveAccount=false;

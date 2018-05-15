@@ -1093,6 +1093,9 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                             {
                                 potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
                                 static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
+                                // Set active so that witness account gains the focus immediately after funding.
+                                if (!pIndex)
+                                    pactiveWallet->setActiveAccount(potentialWitnessAccount);
                             }
                         }
                     }
