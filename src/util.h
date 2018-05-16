@@ -370,10 +370,11 @@ std::string CopyrightHolders(const std::string& strPrefix);
 class BenchMarkHelper
 {
     public:
-    BenchMarkHelper(std::string sDescription_, uint64_t& nTotal_, uint32_t nCategory_=BCLog::BENCH)
+    BenchMarkHelper(std::string sDescription_, uint64_t& nTotal_, uint32_t nCategory_=BCLog::BENCH, uint32_t nLogThreshold_=1)
     : nTotal(nTotal_)
     , sDescription(sDescription_)
     , nCategory(nCategory_)
+    , nLogThreshold(nLogThreshold_)
     {
         nStart = GetTimeMicros();
         ++nCount;
@@ -387,12 +388,14 @@ class BenchMarkHelper
     {
         uint64_t nTime1 = GetTimeMicros(); 
         nTotal += nTime1 - nStart;
-        LogPrint(nCategory, "%s%s: %.2fms [%.2fs]\n", sDescription.c_str(), std::string(nCount,' '), 0.001 * (nTime1 - nStart), nTotal * 0.000001);
+        if (nTotal * 0.000001 > nLogThreshold)
+            LogPrint(nCategory, "%s%s: %.2fms [%.2fs]\n", sDescription.c_str(), std::string(nCount,' '), 0.001 * (nTime1 - nStart), nTotal * 0.000001);
     }
     private:
-    uint64_t nTotal;
+    uint64_t& nTotal;
     std::string sDescription;
     uint32_t nCategory;
+    uint32_t nLogThreshold;
     uint64_t nStart;
     static uint32_t nCount; //Automatically indent based on number of currently opened helpers.
 };
