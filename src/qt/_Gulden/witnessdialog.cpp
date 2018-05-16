@@ -13,6 +13,7 @@
 #include <vector>
 #include "random.h"
 #include "walletmodel.h"
+#include "clientmodel.h"
 #include "optionsmodel.h"
 #include "wallet/wallet.h"
 
@@ -783,9 +784,116 @@ void WitnessDialog::update()
     ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
 }
 
-void WitnessDialog::setClientModel(ClientModel* _clientModel)
+void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 {
-    this->clientModel = _clientModel;
+    //Don't update for every single block change if we are on testnet and have them streaming in at a super fast speed.
+    static uint64_t nUpdateTimerStart = 0;
+    if (IsArgSet("-testnet"))
+    {
+        // Only update at most once every 20 seconds (prevent this from being a bottleneck on testnet)
+        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > (IsArgSet("-testnet") ? 20000 : 10000)))
+        {
+            nUpdateTimerStart = GetTimeMillis();
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    //Update account states to the latest block
+    //fixme: (2.1) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
+    //However - we would have to update account serialization to serialist the warning state and/or test some things before removing this.
+    {
+        LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
+        nUpdateTimerStart = GetTimeMillis();
+
+        std::unique_ptr<TransactionFilterProxy> filter;
+        filter.reset(new TransactionFilterProxy);
+        filter->setSourceModel(model->getTransactionTableModel());
+        filter->setDynamicSortFilter(true);
+        filter->setSortRole(Qt::EditRole);
+        filter->setShowInactive(false);
+        filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
+
+        CGetWitnessInfo witnessInfo;
+        CBlock block;
+        //fixme: (2.0) Error handling.
+        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+            return;
+        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+            return;
+
+        LOCK(pactiveWallet->cs_wallet);
+
+        for ( const auto& accountPair : pactiveWallet->mapAccounts )
+        {
+            AccountStatus prevState = accountPair.second->GetWarningState();
+            AccountStatus newState = AccountStatus::Default;
+            bool bAnyAreMine = false;
+            for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+            {
+                if (IsMine(*accountPair.second, witCoin.coin.out))
+                {
+                    bAnyAreMine = true;
+                    CTxOutPoW2Witness details;
+                    GetPow2WitnessOutput(witCoin.coin.out, details);
+                    if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
+                    {
+                        newState = AccountStatus::WitnessEnded;
+                    }
+                    else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                    {
+                        newState = AccountStatus::WitnessExpired;
+
+                        // Due to lock changing cached balance for certain transactions will now be invalidated.
+                        // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
+                        if (prevState != AccountStatus::WitnessExpired)
+                        {
+                            for(auto& wtxIter : pactiveWallet->mapWallet)
+                            {
+                                wtxIter.second.clearAllCaches();
+                            }
+                        }
+                    }
+                }
+            }
+            if (!bAnyAreMine)
+            {
+                newState = AccountStatus::WitnessEmpty;
+                filter->setAccountFilter(accountPair.second);
+                int rows = filter->rowCount();
+                for (int row = 0; row < rows; ++row)
+                {
+                    QModelIndex index = filter->index(row, 0);
+
+                    int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                    if (nStatus == TransactionStatus::Status::Unconfirmed)
+                    {
+                        newState = AccountStatus::WitnessPending;
+                        break;
+                    }
+                }
+            }
+            if (newState != prevState)
+            {
+                accountPair.second->SetWarningState(newState);
+                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, accountPair.second);
+            }
+        }
+    }
+
+    // Update graph and witness info for current account to latest block.
+    update();
+}
+
+void WitnessDialog::setClientModel(ClientModel* clientModel_)
+{
+    clientModel = clientModel_;
+    if (clientModel)
+    {
+        connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(numBlocksChanged(int,QDateTime,double,bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+    }
 }
 
 

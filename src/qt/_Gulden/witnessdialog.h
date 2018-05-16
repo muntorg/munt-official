@@ -11,6 +11,7 @@
 
 
 #include <QFrame>
+#include <QDateTime>
 
 class QMenu;
 class PlatformStyle;
@@ -58,6 +59,7 @@ public Q_SLOTS:
     void updateUnit(int nNewUnit_);
     void plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip);
     void update();
+    void numBlocksChanged(int,QDateTime,double,bool);
     void unitButtonClicked();
     void viewWitnessInfoClicked();
     void emptyWitnessClicked();

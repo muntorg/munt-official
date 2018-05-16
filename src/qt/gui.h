@@ -179,7 +179,6 @@ Q_SIGNALS:
     void receivedURI(const QString &uri);
 
 public Q_SLOTS:
-    void updateWitnessDialog();
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
     /** Set network state shown in the UI */

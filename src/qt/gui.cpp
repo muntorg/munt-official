@@ -98,110 +98,6 @@ const std::string GUI::DEFAULT_UIPLATFORM =
 #endif
         ;
 
-#ifdef ENABLE_WALLET
-//fixme: (2.1) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
-//However - we would have to update account serialization to serialist the warning state and/or test some things before removing this.
-static void UpdateWitnessAccountStates(WalletModel* model)
-{
-    static uint64_t nUpdateTimerStart = 0;
-    // Only update at most once every 60 seconds (prevent this from being a bottleneck on testnet)
-    if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > IsArgSet("-testnet") ? 60000 : 10000))
-    {
-        if (chainActive.Tip() && chainActive.Tip()->pprev)
-        {
-            LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
-            nUpdateTimerStart = GetTimeMillis();
-
-            std::unique_ptr<TransactionFilterProxy> filter;
-            filter.reset(new TransactionFilterProxy);
-            filter->setSourceModel(model->getTransactionTableModel());
-            filter->setDynamicSortFilter(true);
-            filter->setSortRole(Qt::EditRole);
-            filter->setShowInactive(false);
-            filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
-
-            CGetWitnessInfo witnessInfo;
-            CBlock block;
-            //fixme: (2.0) Error handling.
-            if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
-                return;
-            if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                return;
-
-            LOCK(pactiveWallet->cs_wallet);
-
-            for ( const auto& accountPair : pactiveWallet->mapAccounts )
-            {
-                AccountStatus prevState = accountPair.second->GetWarningState();
-                AccountStatus newState = AccountStatus::Default;
-                bool bAnyAreMine = false;
-                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
-                {
-                    if (IsMine(*accountPair.second, witCoin.coin.out))
-                    {
-                        bAnyAreMine = true;
-                        CTxOutPoW2Witness details;
-                        GetPow2WitnessOutput(witCoin.coin.out, details);
-                        if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
-                        {
-                            newState = AccountStatus::WitnessEnded;
-                        }
-                        else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
-                        {
-                            newState = AccountStatus::WitnessExpired;
-
-                            // Due to lock changing cached balance for certain transactions will now be invalidated.
-                            // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
-                            if (prevState != AccountStatus::WitnessExpired)
-                            {
-                                for(auto& wtxIter : pactiveWallet->mapWallet)
-                                {
-                                    wtxIter.second.clearAllCaches();
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!bAnyAreMine)
-                {
-                    newState = AccountStatus::WitnessEmpty;
-                    filter->setAccountFilter(accountPair.second);
-                    int rows = filter->rowCount();
-                    for (int row = 0; row < rows; ++row)
-                    {
-                        QModelIndex index = filter->index(row, 0);
-
-                        int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
-                        if (nStatus == TransactionStatus::Status::Unconfirmed)
-                        {
-                            newState = AccountStatus::WitnessPending;
-                            break;
-                        }
-                    }
-                }
-                if (newState != prevState)
-                {
-                    accountPair.second->SetWarningState(newState);
-                    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, accountPair.second);
-                }
-            }
-        }
-    }
-}
-
-void GUI::updateUIForBlockTipChange()
-{
-    if (walletFrame && walletFrame->currentWalletView())
-        UpdateWitnessAccountStates( walletFrame->currentWalletView()->walletModel );
-}
-static void BlockTipChangedHandler(GUI* pUI, bool ibd, const CBlockIndex *)
-{
-    QMetaObject::invokeMethod( pUI, "updateWitnessDialog", Qt::QueuedConnection );
-    if (pUI)
-        pUI->updateUIForBlockTipChange();
-}
-#endif
-
 /** Display name for default wallet name. Uses tilde to avoid name
  * collisions in the future with additional wallets */
 const QString GUI::DEFAULT_WALLET = "~Default";
@@ -692,28 +588,6 @@ void GUI::setClientModel(ClientModel *_clientModel)
     }
 }
 
-void GUI::updateWitnessDialog()
-{
-    #ifdef ENABLE_WALLET
-    static uint64_t nUpdateTimerStart = 0;
-    if (IsArgSet("-testnet"))
-    {
-        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 20000))
-        {
-            nUpdateTimerStart = GetTimeMillis();
-        }
-        else
-        {
-            return;
-        }
-    }
-    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->witnessDialogPage)
-    {
-        walletFrame->currentWalletView()->witnessDialogPage->update();
-    }
-    #endif
-}
-
 #ifdef ENABLE_WALLET
 bool GUI::addWallet(const QString& name, WalletModel *walletModel)
 {
@@ -728,8 +602,6 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     // Force this to run once to ensure correct PoW2 phase displays
     clientModel->updatePoW2Display();
     rpcConsole->updatePoW2PhaseState();
-    // Force this to run once to pre-prime the 'validaty' state of witness accounts.
-    UpdateWitnessAccountStates(walletModel);
 
     return walletFrame->addWallet(name, walletModel);
 }
@@ -1374,8 +1246,6 @@ void GUI::detectShutdown()
 {
     if (ShutdownRequested())
     {
-        // Prevent block tip changes from triggering while program is busy shutting down.
-        unsubscribeFromCoreSignals();
         if(rpcConsole)
             rpcConsole->hide();
         qApp->quit();
@@ -1447,9 +1317,6 @@ void GUI::subscribeToCoreSignals()
     // Connect signals to client
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
-    #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChangedHandler, this, _1, _2));
-    #endif
 }
 
 void GUI::unsubscribeFromCoreSignals()
@@ -1457,9 +1324,6 @@ void GUI::unsubscribeFromCoreSignals()
     // Disconnect signals from client
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
-    #ifdef ENABLE_WALLET
-    uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChangedHandler, this, _1, _2));
-    #endif
 }
 
 void GUI::toggleNetworkActive()
