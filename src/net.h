@@ -594,6 +594,7 @@ public:
     uint64_t nSendBytes;
     std::deque<std::vector<unsigned char>> vSendMsg;
     CCriticalSection cs_vSend;
+    bool fResumeSendActive;
     CCriticalSection cs_vRecv;
 
     CCriticalSection cs_vProcessMsg;

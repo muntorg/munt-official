@@ -2515,6 +2515,7 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     nLastSend = 0;
     nLastRecv = 0;
     nSendBytes = 0;
+    fResumeSendActive = false;
     nRecvBytes = 0;
     nTimeOffset = 0;
     addrName = addrNameIn == "" ? addr.ToStringIPPort() : addrNameIn;
@@ -2638,19 +2639,24 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
         pnode->vSendMsg.push_back(std::move(serializedHeader));
         if (nMessageSize)
             pnode->vSendMsg.push_back(std::move(msg.data));
-    }
 
-    boost::asio::post(get_io_context(), [this, pnode]() {
-        this->ResumeSend(pnode);
-    });
+        if (!pnode->fResumeSendActive) {
+            pnode->fResumeSendActive = true;
+            boost::asio::post(get_io_context(), [this, pnode]() {
+                this->ResumeSend(pnode);
+            });
+        }
+    }
 }
 
 void CConnman::ResumeSend(CNode *pnode)
 {
     LOCK(pnode->cs_vSend);
 
-    if (pnode->vSendMsg.empty())
+    if (pnode->vSendMsg.empty()) {
+        pnode->fResumeSendActive = false;
         return;
+    }
 
     // buffer to hold and own the message data, Asio buffers don't take ownership
     using BufferHolder = std::shared_ptr<std::vector<unsigned char> >;
