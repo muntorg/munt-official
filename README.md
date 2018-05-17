@@ -105,6 +105,7 @@ Alternatively pre-compiled binaries are also available at https://github.com/Gul
 |Premine reserved for development, marketing and funding of community projects:|170M (10%)||
 |Block reward:|100 NLG||
 |Block time:|150 seconds||
+|Transactions per second:|28 (more after segsig release)||
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
 |P2P Network Header|fcfef7e0|fcfef702|
