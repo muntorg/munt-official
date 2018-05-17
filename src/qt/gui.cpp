@@ -1067,25 +1067,24 @@ void GUI::changeEvent(QEvent *e)
 void GUI::closeEvent(QCloseEvent *event)
 {
 #ifndef Q_OS_MAC // Ignored on Mac
+    //NB! This is a bit subtle, but we want to ignore this close event even when we are closing.
+    //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
+    //In the meantime we hide the window for immediate user feedback.
+    QMainWindow::hide();
+    event->ignore();
     if(clientModel && clientModel->getOptionsModel())
     {
         if(!clientModel->getOptionsModel()->getMinimizeOnClose())
         {
             // close rpcConsole in case it was open to make some space for the shutdown window
             rpcConsole->close();
-
             QApplication::quit();
         }
         else
-        {
             QMainWindow::showMinimized();
-            event->ignore();
-        }
     }
     else if(m_pGuldenImpl && m_pGuldenImpl->welcomeScreenIsVisible())
-    {
         QApplication::quit();
-    }
 #else
     QMainWindow::closeEvent(event);
 #endif

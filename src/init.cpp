@@ -207,6 +207,7 @@ void Shutdown()
     RenameThread("Gulden-shutoff");
     mempool.AddTransactionsUpdated(1);
 
+    PoWMineGulden(false, 0, Params());
     StopHTTPRPC();
     StopREST();
     StopRPC();
@@ -216,7 +217,6 @@ void Shutdown()
         pwallet->Flush(false);
     }
 #endif
-    PoWMineGulden(false, 0, Params());
     MapPort(false);
     UnregisterValidationInterface(peerLogic.get());
     peerLogic.reset();
