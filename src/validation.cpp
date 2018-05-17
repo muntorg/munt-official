@@ -468,6 +468,7 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
 }
 
 //fixme: (2.0) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
+//fixme: (2.0) Use this in places that are hardcoded instead.
 CScript GetScriptForNonScriptOutput(const CTxOut& out)
 {
     if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
@@ -477,7 +478,7 @@ CScript GetScriptForNonScriptOutput(const CTxOut& out)
     }
     else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
     {
-        std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
+        std::vector<unsigned char> sWitnessPlaceholder = {'k','e','y','h','a','s','h'};
         return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
     else
