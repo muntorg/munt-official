@@ -268,6 +268,7 @@ libgulden_server_a_SOURCES = \
   txmempool.cpp \
   ui_interface.cpp \
   validation.cpp \
+  validation_mempool.cpp \
   witnessvalidation.cpp \
   validationinterface.cpp \
   versionbits.cpp \
@@ -295,6 +296,11 @@ libgulden_wallet_a_SOURCES = \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \
+  wallet/wallet_ismine.cpp \
+  wallet/wallet_init.cpp \
+  wallet/wallet_transaction.cpp \
+  wallet/wallet_keypool.cpp \
+  wallet/walletbalance.cpp \
   wallet/merkletx.cpp \
   wallet/wallettx.cpp \
   wallet/walletdb.cpp \

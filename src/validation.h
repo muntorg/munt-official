@@ -33,6 +33,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "consensus/tx_verify.h"
+#include "txmempool.h"
 
 #include <atomic>
 
@@ -56,6 +58,13 @@ struct PrecomputedTransactionData;
 struct LockPoints;
 
 class CWitViewDB;
+
+enum FlushStateMode {
+    FLUSH_STATE_NONE,
+    FLUSH_STATE_IF_NEEDED,
+    FLUSH_STATE_PERIODIC,
+    FLUSH_STATE_ALWAYS
+};
 
 /** Default for accepting alerts from the P2P network. */
 static const bool DEFAULT_ALERTS = true;
@@ -494,8 +503,17 @@ struct CBlockIndexWorkComparator
     }
 };
 
-//fixme: (2.1) (Refactoring) Move DisconnectBlock/ConnectBlock/setBlockIndexCandidates/ContextualCheckBlockHeader/ContextualCheckBlock out of header files they should be source file only - this will require moving all the chain connect/disconnect/forceactivate stuff into their own shared source file
+//fixme: (2.1) (Refactoring) Move DisconnectBlock/ConnectBlock/setBlockIndexCandidates/ContextualCheckBlockHeader/ContextualCheckBlock/CheckInputs/FlushStateToDisk/FindFilesToPruneManual/FindFilesToPrune/UpdateMempoolForReorg out of header files they should be source file only - this will require moving all the chain connect/disconnect/forceactivate stuff into their own shared source file
 //validation.cpp is too large and needs to shrink.
+
+void UpdateMempoolForReorg(DisconnectedBlockTransactions &disconnectpool, bool fAddToMempool);
+
+// See definition for documentation
+bool FlushStateToDisk(const CChainParams& chainParams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight=0);
+void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight);
+void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfterHeight);
+
+bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks = NULL);
 
 /**
  * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
