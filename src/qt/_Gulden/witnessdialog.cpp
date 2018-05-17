@@ -35,6 +35,7 @@
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
 #include "validation.h"
+#include "witnessvalidation.h"
 
 #include "Gulden/util.h"
 #include "GuldenGUI.h"

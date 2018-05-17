@@ -201,6 +201,7 @@ GULDEN_CORE_H = \
   utilmoneystr.h \
   utiltime.h \
   validation.h \
+  witnessvalidation.h \
   validationinterface.h \
   versionbits.h \
   wallet/coincontrol.h \
@@ -209,6 +210,8 @@ GULDEN_CORE_H = \
   wallet/feebumper.h \
   wallet/rpcwallet.h \
   wallet/wallet.h \
+  wallet/merkletx.h \
+  wallet/wallettx.h \
   wallet/walletdb.h \
   wallet/walletdberrors.h \
   warnings.h \
@@ -265,6 +268,7 @@ libgulden_server_a_SOURCES = \
   txmempool.cpp \
   ui_interface.cpp \
   validation.cpp \
+  witnessvalidation.cpp \
   validationinterface.cpp \
   versionbits.cpp \
   $(GULDEN_CORE_H)
@@ -291,6 +295,8 @@ libgulden_wallet_a_SOURCES = \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \
+  wallet/merkletx.cpp \
+  wallet/wallettx.cpp \
   wallet/walletdb.cpp \
   $(GULDEN_CORE_H)
 

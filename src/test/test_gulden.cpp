@@ -17,6 +17,7 @@
 #include "fs.h"
 #include "key.h"
 #include "validation.h"
+#include "witnessvalidation.h"
 #include "miner.h"
 #include "net_processing.h"
 #include "pubkey.h"

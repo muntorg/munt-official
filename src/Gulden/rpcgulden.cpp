@@ -8,6 +8,7 @@
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
 #include "validation.h"
+#include "witnessvalidation.h"
 
 #include <boost/assign/list_of.hpp>
 

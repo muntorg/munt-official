@@ -11,6 +11,7 @@
 // file COPYING
 
 #include "wallet/wallet.h"
+#include "wallet/wallettx.h"
 
 #include "base58.h"
 #include "checkpoints.h"
@@ -23,6 +24,7 @@
 #include "key.h"
 #include "keystore.h"
 #include "validation.h"
+#include "witnessvalidation.h"
 #include "net.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
@@ -78,8 +80,6 @@ CFeeRate CWallet::minTxFee = CFeeRate(DEFAULT_TRANSACTION_MINFEE);
  * Override with -fallbackfee
  */
 CFeeRate CWallet::fallbackFee = CFeeRate(DEFAULT_FALLBACK_FEE);
-
-const uint256 CMerkleTx::ABANDON_HASH(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));
 
 /** @defgroup mapWallet
  *
@@ -1447,130 +1447,6 @@ CAmount CWallet::GetChange(const CTransaction& tx) const
     }
     return nChange;
 }
-
-int64_t CWalletTx::GetTxTime() const
-{
-    int64_t n = nTimeSmart;
-    return n ? n : nTimeReceived;
-}
-
-int CWalletTx::GetRequestCount() const
-{
-    // Returns -1 if it wasn't being tracked
-    int nRequests = -1;
-    {
-        LOCK(pwallet->cs_wallet);
-        if (IsCoinBase())
-        {
-            // Generated block
-            if (!hashUnset())
-            {
-                std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(hashBlock);
-                if (mi != pwallet->mapRequestCount.end())
-                    nRequests = (*mi).second;
-            }
-        }
-        else
-        {
-            // Did anyone request this transaction?
-            std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(GetHash());
-            if (mi != pwallet->mapRequestCount.end())
-            {
-                nRequests = (*mi).second;
-
-                // How about the block it's in?
-                if (nRequests == 0 && !hashUnset())
-                {
-                    std::map<uint256, int>::const_iterator _mi = pwallet->mapRequestCount.find(hashBlock);
-                    if (_mi != pwallet->mapRequestCount.end())
-                        nRequests = (*_mi).second;
-                    else
-                        nRequests = 1; // If it's in someone else's block it must have got out
-                }
-            }
-        }
-    }
-    return nRequests;
-}
-
-void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
-                           std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from) const
-{
-    if (!from)
-        from = pwallet->activeAccount;
-
-    nFee = 0;
-    listReceived.clear();
-    listSent.clear();
-
-    // Compute fee:
-    CAmount nDebit = GetDebit(filter);
-    if (nDebit > 0) // debit>0 means we signed/sent this transaction
-    {
-        CAmount nValueOut = tx->GetValueOut();
-        nFee = nDebit - nValueOut;
-    }
-
-    // Sent.
-    for (unsigned int i = 0; i < tx->vin.size(); ++i)
-    {
-        const CTxIn& txin = tx->vin[i];
-
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.hash);
-        if (mi != pwallet->mapWallet.end())
-        {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
-            {
-                const auto& prevOut =  prev.tx->vout[txin.prevout.n];
-
-                isminetype fIsMine = IsMine(*from, prevOut);
-
-                if ((fIsMine & filter))
-                {
-                    CTxDestination address;
-                    if (!ExtractDestination(prevOut, address) && !prevOut.IsUnspendable())
-                    {
-                        LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
-                                this->GetHash().ToString());
-                        address = CNoDestination();
-                    }
-
-                    //fixme: (Post-2.1) - There should be a seperate CInputEntry class/array here or something.
-                    COutputEntry output = {address, prevOut.nValue, (int)i};
-
-                    // We are debited by the transaction, add the output as a "sent" entry
-                    listSent.push_back(output);
-                }
-            }
-        }
-    }
-
-    // received.
-    for (unsigned int i = 0; i < tx->vout.size(); ++i)
-    {
-        const CTxOut& txout = tx->vout[i];
-        isminetype fIsMine = IsMine(*from, txout);
-        if (!(fIsMine & filter))
-            continue;
-
-        // Get the destination address
-        CTxDestination address;
-        if (!ExtractDestination(txout, address) && !txout.IsUnspendable())
-        {
-            LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
-                     this->GetHash().ToString());
-            address = CNoDestination();
-        }
-
-        COutputEntry output = {address, txout.nValue, (int)i};
-
-        // We are receiving the output, add it as a "received" entry
-        listReceived.push_back(output);
-    }
-
-}
-
 
 /**
  * Scan the block chain (starting in pindexStart) for transactions
@@ -5017,45 +4893,4 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
             return CRecipient(out.output.standardKeyHash, nValue, fSubtractFeeFromAmount);
     }
     return CRecipient();
-}
-
-void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)
-{
-    // Update the tx's hashBlock
-    hashBlock = pindex->GetBlockHashPoW2();
-
-    // set the position of the transaction in the block
-    nIndex = posInBlock;
-}
-
-int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
-{
-    if (hashUnset())
-        return 0;
-
-    AssertLockHeld(cs_main);
-
-    // Find the block it claims to be in
-    BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
-    if (mi == mapBlockIndex.end())
-        return 0;
-    CBlockIndex* pindex = (*mi).second;
-    if (!pindex || !chainActive.Contains(pindex))
-        return 0;
-
-    pindexRet = pindex;
-    return ((nIndex == -1) ? (-1) : 1) * (chainActive.Height() - pindex->nHeight + 1);
-}
-
-int CMerkleTx::GetBlocksToMaturity() const
-{
-    if (!IsCoinBase())
-        return 0;
-    return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
-}
-
-
-bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state)
-{
-    return ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, false, nAbsurdFee);
 }

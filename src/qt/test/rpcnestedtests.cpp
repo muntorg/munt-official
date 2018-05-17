@@ -8,6 +8,7 @@
 #include "consensus/validation.h"
 #include "fs.h"
 #include "validation.h"
+#include "witnessvalidation.h"
 #include "rpc/register.h"
 #include "rpc/server.h"
 #include "rpcconsole.h"

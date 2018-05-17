@@ -25,11 +25,12 @@
 #include <Gulden/auto_checkpoints.h>
 #include "compat/sanity.h"
 #include "consensus/validation.h"
+#include "validation.h"
+#include "witnessvalidation.h"
 #include "fs.h"
 #include "httpserver.h"
 #include "httprpc.h"
 #include "key.h"
-#include "validation.h"
 #include "miner.h"
 #include "netbase.h"
 #include "net.h"

@@ -4,9 +4,12 @@
 // file COPYING
 
 #include "util.h"
+#include "wallet/wallettx.h"
 #include "wallet/wallet.h"
-#include "validation.h"
 #include "consensus/validation.h"
+#include "validation.h"
+#include "witnessvalidation.h"
+
 
 #include "txdb.h"
 

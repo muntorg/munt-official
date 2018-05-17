@@ -25,6 +25,7 @@
 #include "Gulden/auto_checkpoints.h"
 #include "hash.h"
 #include "validation.h"
+#include "witnessvalidation.h"
 #include "net.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
