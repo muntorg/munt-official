@@ -269,6 +269,7 @@ libgulden_server_a_SOURCES = \
   ui_interface.cpp \
   validation.cpp \
   validation_mempool.cpp \
+  validation_misc.cpp \
   witnessvalidation.cpp \
   validationinterface.cpp \
   versionbits.cpp \

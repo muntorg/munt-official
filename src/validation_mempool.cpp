@@ -62,10 +62,6 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/thread.hpp>
 
-#if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
-#endif
-
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 
 static void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) {
