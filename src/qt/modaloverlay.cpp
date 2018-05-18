@@ -39,58 +39,36 @@ userClosed(false)
 
     setVisible(false);
 
-    ui->verticalLayoutIcon->setEnabled(false);
-    ui->warningIcon->setVisible(false);
-    ui->infoTextStrong->setVisible(false);
-    ui->labelNumberOfBlocksLeft->setVisible(false);
-    ui->numberOfBlocksLeft->setVisible(false);
-    ui->labelLastBlockTime->setVisible(false);
-    ui->newestBlockDate->setVisible(false);
-    ui->labelProgressIncrease->setVisible(false);
-    ui->progressIncreasePerH->setVisible(false);
-    ui->labelEstimatedTimeLeft->setVisible(false);
-    ui->expectedTimeLeft->setVisible(false);
-    
-    ui->verticalLayoutSub->removeItem(ui->verticalSpacerAfterText);
-    ui->verticalLayoutInfoText->removeItem(ui->verticalSpacerInTextSpace);
-    ui->horizontalLayoutIconText->removeItem(ui->verticalLayoutIcon);
 
     ui->verticalLayoutMain->setSpacing(0);
     ui->verticalLayoutMain->setContentsMargins( 0, 0, 0, 0 );
-    
+
     ui->verticalLayoutSub->setSpacing(0);
     ui->verticalLayoutSub->setContentsMargins( 0, 0, 0, 0 );
-    
+
     ui->verticalLayout->setSpacing(0);
     ui->verticalLayout->setContentsMargins(0,0,0,0);
-    
+
     ui->infoText->setContentsMargins(0,0,0,0);
     ui->infoText->setIndent(0);
-    
+
     ui->closeButton->setContentsMargins(0,0,0,0);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
-    
+
     ui->labelSyncDone->setContentsMargins(0,0,0,0);
     ui->labelSyncDone->setIndent(0);
-    
+
     ui->percentageProgress->setContentsMargins(0,0,0,0);
     ui->percentageProgress->setIndent(0);
-    
+
     ui->progressBar->setVisible(false);
 
     ui->bgWidget->setStyleSheet("");
     ui->contentWidget->setStyleSheet("");
-    
+
     ui->bgWidget->setPalette( QApplication::palette( ui->bgWidget ) );
     ui->contentWidget->setPalette( QApplication::palette( ui->contentWidget ) );
 
-    /*QFrame* horizontalLine = new QFrame(ui->contentWidget);
-    horizontalLine->setFrameStyle(QFrame::HLine);
-    horizontalLine->setFixedHeight(1);
-    horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE);
-    ui->verticalLayout->addWidget(horizontalLine);*/
-    
     ui->verticalLayout->insertStretch(0, 1);
     ui->verticalLayout->setStretch(1, 0);
     ui->verticalLayout->setStretch(2, 0);
@@ -161,29 +139,9 @@ void ModalOverlay::tipUpdate(int count, const QDateTime& blockDate, double nSync
 {
     QDateTime currentDate = QDateTime::currentDateTime();
 
-    // show the last block date
-    ui->newestBlockDate->setText(blockDate.toString());
-
     // show the percentage of blocks done
     ui->percentageProgress->setText(QString::number(nSyncProgress*100, 'f', 2)+"%");
     ui->progressBar->setValue(nSyncProgress*100);
-
-    if (!bestHeaderDate.isValid())
-        // not syncing
-        return;
-
-    // estimate the number of headers left based on nPowTargetSpacing
-    // and check if the gui is not aware of the the best header (happens rarely)
-    int estimateNumHeadersLeft = bestHeaderDate.secsTo(currentDate) / Params().GetConsensus().nPowTargetSpacing;
-    bool hasBestHeader = bestHeaderHeight >= count;
-
-    // show remaining number of blocks
-    if (estimateNumHeadersLeft < HEADER_HEIGHT_DELTA_SYNC && hasBestHeader) {
-        ui->numberOfBlocksLeft->setText(QString::number(bestHeaderHeight - count));
-    } else {
-        ui->numberOfBlocksLeft->setText(tr("Unknown. Syncing Headers (%1)...").arg(bestHeaderHeight));
-        ui->expectedTimeLeft->setText(tr("Unknown..."));
-    }
 }
 
 void ModalOverlay::toggleVisibility()

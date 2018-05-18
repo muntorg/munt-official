@@ -228,15 +228,15 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
     statusBar()->setSizeGripEnabled(false);
 
     // Status bar notification icons
-    frameBlocks = new QFrame();
+    frameBlocks = new QFrame(this);
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
     unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
-    labelWalletEncryptionIcon = new QLabel();
-    labelWalletHDStatusIcon = new QLabel();
+    labelWalletEncryptionIcon = new QLabel(this);
+    labelWalletHDStatusIcon = new QLabel(this);
     connectionsControl = new GUIUtil::ClickableLabel();
     labelBlocksIcon = new GUIUtil::ClickableLabel();
     if(enableWallet && enableFullUI)
