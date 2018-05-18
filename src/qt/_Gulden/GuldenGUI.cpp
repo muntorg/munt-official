@@ -15,6 +15,7 @@
 #include "receivecoinsdialog.h"
 #include "validation.h"
 #include "guiutil.h"
+#include "init.h"
 
 #include <QAction>
 #include <QApplication>
@@ -271,6 +272,9 @@ GuldenGUI::~GuldenGUI()
 
 void GuldenGUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
+    if (ShutdownRequested())
+        return;
+
     balanceCached = balance;
     unconfirmedBalanceCached = unconfirmedBalance;
     immatureBalanceCached = immatureBalance;
@@ -763,6 +767,9 @@ void GuldenGUI::showToolBars()
 
 void GuldenGUI::doApplyStyleSheet()
 {
+    if(!m_pImpl->enableWallet || !m_pImpl->enableFullUI)
+        return;
+
     //Load our own QSS stylesheet template for 'whole app'
     QFile styleFile( ":Gulden/qss" );
     styleFile.open( QFile::ReadOnly );
@@ -785,7 +792,7 @@ void GuldenGUI::doApplyStyleSheet()
     style.replace( "ACCENT_COLOR_2", QString(ACCENT_COLOR_2) );
     style.replace( "TEXT_COLOR_1", QString(TEXT_COLOR_1) );
     style.replace( "COLOR_VALIDATION_FAILED", QString(COLOR_VALIDATION_FAILED) );
-    
+
     if (sideBarWidth == sideBarWidthExtended)
     {
         style.replace( "SIDE_BAR_WIDTH", SIDE_BAR_WIDTH_EXTENDED );
