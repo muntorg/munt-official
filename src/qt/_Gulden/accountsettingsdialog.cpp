@@ -12,7 +12,7 @@
 #include <QDialogButtonBox>
 #include <QDialog>
 #include <QPushButton>
-#include "GuldenGUI.h"
+#include "gui.h"
 #include "walletmodel.h"
 
 AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
@@ -142,13 +142,13 @@ void AccountSettingsDialog::deleteAccount()
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");
-            QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), QString(""), 400, 180);
+            QDialog* d = GUI::createDialog(this, message, tr("Okay"), QString(""), 400, 180);
             d->exec();
         }
         else
         {
             QString message = tr("Are you sure you want to delete %1 from your account list?\nThe account will continue to be monitored and will be restored should it receive new funds in future.").arg( QString::fromStdString(activeAccount->getLabel()) );
-            QDialog* d = GuldenGUI::createDialog(this, message, tr("Delete account"), tr("Cancel"), 400, 180);
+            QDialog* d = GUI::createDialog(this, message, tr("Delete account"), tr("Cancel"), 400, 180);
             int result = d->exec();
             if(result == QDialog::Accepted)
             {

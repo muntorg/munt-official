@@ -21,7 +21,7 @@
 #include "platformstyle.h"
 #include "_Gulden/guldensendcoinsentry.h"
 #include "_Gulden/nocksrequest.h"
-#include "_Gulden/GuldenGUI.h"
+#include "gui.h"
 #include "walletmodel.h"
 
 #include "base58.h"
@@ -517,7 +517,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     }
 
 
-    QDialog* d = GuldenGUI::createDialog(this, questionString.arg(formatted.join("<br />")), tr("Send"), tr("Cancel"), 600, 360);
+    QDialog* d = GUI::createDialog(this, questionString.arg(formatted.join("<br />")), tr("Send"), tr("Cancel"), 600, 360);
 
     int result = d->exec();
     if(result != QDialog::Accepted)

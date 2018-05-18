@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2015-2018 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -98,57 +98,40 @@ const std::string GUI::DEFAULT_UIPLATFORM =
 #endif
         ;
 
+static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
+{
+    QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
+}
+
+static void NotifyRequestUnlockWithCallbackS(GUI* parent, CWallet* wallet, std::string reason, std::function<void (void)> callback)
+{
+    QMetaObject::invokeMethod(parent, "NotifyRequestUnlockWithCallback", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)), Q_ARG(std::function<void (void)>, callback));
+}
+
 /** Display name for default wallet name. Uses tilde to avoid name
  * collisions in the future with additional wallets */
 const QString GUI::DEFAULT_WALLET = "~Default";
 
-GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
-    QMainWindow(parent),
-    enableWallet(false),
-    enableFullUI(true),
-    walletFrame(0),
-    clientModel(0),
-    unitDisplayControl(0),
-    labelWalletEncryptionIcon(0),
-    labelWalletHDStatusIcon(0),
-    connectionsControl(0),
-    labelBlocksIcon(0),
-    progressBarLabel(0),
-    progressBar(0),
-    progressDialog(0),
-    appMenuBar(0),
-    witnessDialogAction ( nullptr ),
-    overviewAction(0),
-    historyAction(0),
-    quitAction(0),
-    sendCoinsAction(0),
-    sendCoinsMenuAction(0),
-    usedSendingAddressesAction(0),
-    usedReceivingAddressesAction(0),
-    aboutAction(0),
-    receiveCoinsAction(0),
-    receiveCoinsMenuAction(0),
-    optionsAction(0),
-    toggleHideAction(0),
-    encryptWalletAction(0),
-    backupWalletAction(0),
-    changePassphraseAction(0),
-    aboutQtAction(0),
-    openRPCConsoleAction(0),
-    openAction(0),
-    showHelpMessageAction(0),
-    trayIcon(0),
-    trayIconMenu(0),
-    notificator(0),
-    rpcConsole(0),
-    helpMessageDialog(0),
-    modalOverlay(0),
-    accountSummaryWidget( nullptr ),
-    prevBlocks(0),
-    spinnerFrame(0),
-    platformStyle(_platformStyle),
-    m_pGuldenImpl(new GuldenGUI(this))
+GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
+: QMainWindow(parent)
+, platformStyle(_platformStyle)
 {
+    //fixme: (2.1) ex GuldenGUI code, integrate this better
+    {
+        ticker = new CurrencyTicker( this );
+        nocksSettings = new NocksSettings( this );
+
+        //Start the ticker polling off - after the initial call the ticker will schedule the subsequent ones internally.
+        ticker->pollTicker();
+        nocksSettings->pollSettings();
+
+        connect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
+
+        uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, this, _1, _2));
+        uiInterface.RequestUnlockWithCallback.connect(boost::bind(NotifyRequestUnlockWithCallbackS, this, _1, _2, _3));
+    }
+
+
     #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -272,7 +255,7 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
-    m_pGuldenImpl->hideProgressBarLabel();
+    hideProgressBarLabel();
     progressBarLabel->setVisible(false);
     progressBar = new GUIUtil::ProgressBar();
     progressBar->setAlignment(Qt::AlignCenter);
@@ -302,7 +285,7 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
 
-    m_pGuldenImpl->doPostInit();
+    doPostInit();
     modalOverlay = new ModalOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
     if(enableWallet && enableFullUI) {
@@ -315,6 +298,16 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 
 GUI::~GUI()
 {
+    //fixme: (2.1) - Ex GuldenGUI code - factor this in with the rest of the code.
+    {
+        disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
+        if (guldenEventFilter)
+        {
+            removeEventFilter(guldenEventFilter);
+            delete guldenEventFilter;
+        }
+    }
+
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
 
@@ -494,7 +487,7 @@ void GUI::createMenuBar()
     }
     settingsMenu->addAction(optionsAction);
 
-    m_pGuldenImpl->createMenusGulden();
+    createMenusGulden();
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
     if(walletFrame)
@@ -505,24 +498,6 @@ void GUI::createMenuBar()
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
-}
-
-void GUI::createToolBars()
-{
-    if(walletFrame)
-    {
-        QToolBar* toolbar = addToolBar(tr("Tabs toolbar"));
-        toolbar->setMovable(false);
-        toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-        toolbar->addAction(witnessDialogAction);
-        toolbar->addAction(overviewAction);
-        toolbar->addAction(sendCoinsAction);
-        toolbar->addAction(receiveCoinsAction);
-        toolbar->addAction(historyAction);
-        overviewAction->setChecked(true);
-
-        m_pGuldenImpl->createToolBarsGulden();
-    }
 }
 
 void GUI::setClientModel(ClientModel *_clientModel)
@@ -570,7 +545,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
             // initialize the disable state of the tray icon with the current value in the model.
             setTrayIconVisible(optionsModel->getHideTrayIcon());
 
-            m_pGuldenImpl->setOptionsModel(optionsModel);
+            setOptionsModel(optionsModel);
         }
     } else {
         // Disable possibility to show main window via action
@@ -615,7 +590,22 @@ bool GUI::setCurrentWallet(const QString& name)
     if(!walletFrame)
         return false;
     bool ret =  walletFrame->setCurrentWallet(name);
-    m_pGuldenImpl->setCurrentWallet(name);
+
+    showToolBars();
+    refreshAccountControls();
+
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), accountSummaryWidget , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), this , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( accountNameChanged(CAccount*) ), this , SLOT( accountNameChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( accountWarningChanged(CAccount*) ), this , SLOT( accountWarningChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( accountDeleted(CAccount*) ), this , SLOT( accountDeleted(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->walletModel, SIGNAL( accountAdded(CAccount*) ), this , SLOT( accountAdded(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestEmptyWitness()), this, SLOT(requestEmptyWitness()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestFundWitness(CAccount*)), this, SLOT(requestFundWitness(CAccount*)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestRenewWitness(CAccount*)), this, SLOT(requestRenewWitness(CAccount*)) );
+    connect( walletFrame->currentWalletView()->sendCoinsPage, SIGNAL(notifyPaymentAccepted()), this, SLOT(handlePaymentAccepted()) );
+
     return ret;
 }
 
@@ -889,11 +879,11 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 
     if (IsInitialBlockDownload())
     {
-        m_pGuldenImpl->hideBalances();
+        hideBalances();
     }
     else
     {
-        m_pGuldenImpl->showBalances();
+        showBalances();
     }
 
     // Set icon state: spinning if catching up, tick otherwise
@@ -910,7 +900,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         }
 #endif // ENABLE_WALLET
 
-        m_pGuldenImpl->hideProgressBarLabel();
+        hideProgressBarLabel();
         progressBarLabel->setVisible(false);
         progressBar->setVisible(false);
     }
@@ -918,7 +908,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
     {
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
-        m_pGuldenImpl->showProgressBarLabel();
+        showProgressBarLabel();
         progressBarLabel->setVisible(true);
         progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
         progressBar->setMaximum(1000000000);
@@ -1030,12 +1020,6 @@ void GUI::message(const QString &title, const QString &message, unsigned int sty
         notificator->notify((Notificator::Class)nNotifyIcon, strTitle, message);
 }
 
-#include <units.h>
-void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
-{
-    m_pGuldenImpl->setBalance(balance, unconfirmedBalance, immatureBalance, watchOnlyBalance, watchUnconfBalance, watchImmatureBalance);
-}
-
 void GUI::resizeEvent(QResizeEvent* event)
 {
     QMainWindow::resizeEvent(event);
@@ -1088,7 +1072,7 @@ void GUI::closeEvent(QCloseEvent *event)
         else
             QMainWindow::showMinimized();
     }
-    else if(m_pGuldenImpl && m_pGuldenImpl->welcomeScreenIsVisible())
+    else if(welcomeScreenIsVisible())
         QApplication::quit();
 #else
     QMainWindow::closeEvent(event);
@@ -1264,7 +1248,7 @@ void GUI::showProgress(const QString &title, int nProgress)
         {
             progressBarLabel->setVisible(false);
             progressBar->setVisible(false);
-            m_pGuldenImpl->hideProgressBarLabel();
+            hideProgressBarLabel();
         }
     }
     else
@@ -1276,7 +1260,7 @@ void GUI::showProgress(const QString &title, int nProgress)
             progressBar->setValue(nProgress * 10000000.0 + 0.5);
             progressBarLabel->setVisible(true);
             progressBar->setVisible(true);
-            m_pGuldenImpl->showProgressBarLabel();
+            showProgressBarLabel();
 
             QString tooltip = title + "<br>" + QString("%1% complete.").arg(nProgress);
             progressBarLabel->setToolTip(tooltip);

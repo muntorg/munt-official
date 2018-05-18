@@ -22,7 +22,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#include "GuldenGUI.h"
+#include "gui.h"
 #include "validation.h"//chainActive
 #include "Gulden/util.h"
 
@@ -446,7 +446,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         if (showWarningDialogs)
         {
             QString message = tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
-            QDialog* d = GuldenGUI::createDialog(this, message, tr("Okay"), "", 400, 180);
+            QDialog* d = GUI::createDialog(this, message, tr("Okay"), "", 400, 180);
             d->exec();
         }
 
@@ -677,7 +677,7 @@ void GuldenSendCoinsEntry::deleteAddressBookEntry()
         if(!indexes.isEmpty())
         {
             QString message = tr("Are you sure you want to delete %1 from the address book?").arg(indexes.at(0).sibling(indexes.at(0).row(), 0).data(Qt::DisplayRole).toString());
-            QDialog* d = GuldenGUI::createDialog(this, message, tr("Delete"), tr("Cancel"), 400, 180);
+            QDialog* d = GUI::createDialog(this, message, tr("Delete"), tr("Cancel"), 400, 180);
 
             int result = d->exec();
             if(result == QDialog::Accepted)

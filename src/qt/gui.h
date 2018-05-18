@@ -43,6 +43,11 @@ class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
 class AccountSummaryWidget;
+class QLabel;
+class QMainWindow;
+class QMenu;
+class QPoint;
+class QSystemTrayIcon;
 
 class CWallet;
 
@@ -84,10 +89,31 @@ public:
     void removeAllWallets();
     void updateUIForBlockTipChange();
 #endif // ENABLE_WALLET
-    bool enableWallet;
+    bool enableWallet = false;
+    // If this is false then we show the RPC console instead of the full UI. (like -disablewallet except with a wallet)
+    bool enableFullUI = true;
 
-    // If this is false then we show the RP console instead of the full UI. (like -disablewallet except with a wallet)
-    bool enableFullUI;
+    //fixme: (2.1) - The below are all ex GuldenGUI members that should be refactored back into the codebase to clean things up.
+    void hideToolBars();
+    void showToolBars();
+    void hideBalances();
+    void showBalances();
+    void hideProgressBarLabel();
+    void showProgressBarLabel();
+    void doPostInit();
+    void doApplyStyleSheet();
+    void resizeToolBarsGulden();
+    void refreshTabVisibilities();
+    void refreshAccountControls();
+    void setOptionsModel(OptionsModel* optionsModel);
+    void createMenusGulden();
+    bool welcomeScreenIsVisible();
+    static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight);
+    ClickableLabel* createAccountButton(const QString& accountName);
+    void setActiveAccountButton(ClickableLabel* button);
+    void restoreCachedWidgetIfNeeded();
+    void updateAccount(CAccount* account);
+    ClickableLabel* accountAddedHelper(CAccount* addedAccount);
 
 protected:
     void resizeEvent(QResizeEvent* event);
@@ -99,55 +125,109 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 public:
-    WalletFrame *walletFrame;
+    WalletFrame* walletFrame = nullptr;
 private:
-    ClientModel *clientModel;
+    ClientModel* clientModel = nullptr;
 
-    UnitDisplayStatusBarControl *unitDisplayControl;
-    QLabel *labelWalletEncryptionIcon;
-    QLabel *labelWalletHDStatusIcon;
-    QLabel *connectionsControl;
-    QLabel *labelBlocksIcon;
-    QLabel *progressBarLabel;
-    QProgressBar *progressBar;
-    QProgressDialog *progressDialog;
+    UnitDisplayStatusBarControl* unitDisplayControl = nullptr;
+    QLabel* labelWalletEncryptionIcon = nullptr;
+    QLabel* labelWalletHDStatusIcon = nullptr;
+    QLabel*connectionsControl = nullptr;
+    QLabel* labelBlocksIcon = nullptr;
+    QLabel* progressBarLabel = nullptr;
+    QProgressBar* progressBar = nullptr;
+    QProgressDialog* progressDialog = nullptr;
 
-    QMenuBar *appMenuBar;
-    QAction* witnessDialogAction;
-    QAction *overviewAction;
-    QAction *historyAction;
-    QAction *quitAction;
-    QAction *sendCoinsAction;
-    QAction *sendCoinsMenuAction;
-    QAction *usedSendingAddressesAction;
-    QAction *usedReceivingAddressesAction;
-    QAction *aboutAction;
-    QAction *receiveCoinsAction;
-    QAction *receiveCoinsMenuAction;
-    QAction *optionsAction;
-    QAction *toggleHideAction;
-    QAction *encryptWalletAction;
-    QAction *backupWalletAction;
-    QAction *changePassphraseAction;
-    QAction *aboutQtAction;
-    QAction *openRPCConsoleAction;
-    QAction *openAction;
-    QAction *showHelpMessageAction;
+    QMenuBar* appMenuBar = nullptr;
+    QAction* witnessDialogAction = nullptr;
+    QAction* overviewAction = nullptr;
+    QAction* historyAction = nullptr;
+    QAction* quitAction = nullptr;
+    QAction* sendCoinsAction = nullptr;
+    QAction* sendCoinsMenuAction = nullptr;
+    QAction* usedSendingAddressesAction = nullptr;
+    QAction* usedReceivingAddressesAction = nullptr;
+    QAction* aboutAction = nullptr;
+    QAction* receiveCoinsAction = nullptr;
+    QAction* receiveCoinsMenuAction = nullptr;
+    QAction* optionsAction = nullptr;
+    QAction* toggleHideAction = nullptr;
+    QAction* encryptWalletAction = nullptr;
+    QAction* backupWalletAction = nullptr;
+    QAction* changePassphraseAction = nullptr;
+    QAction* aboutQtAction = nullptr;
+    QAction* openRPCConsoleAction = nullptr;
+    QAction* openAction = nullptr;
+    QAction* showHelpMessageAction = nullptr;
 
-    QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
-    QMenu *settingsMenu;
-    Notificator *notificator;
-    RPCConsole *rpcConsole;
-    HelpMessageDialog *helpMessageDialog;
-    ModalOverlay *modalOverlay;
-    AccountSummaryWidget* accountSummaryWidget;
+    QSystemTrayIcon* trayIcon = nullptr;
+    QMenu* trayIconMenu = nullptr;
+    QMenu* settingsMenu = nullptr;
+    Notificator* notificator = nullptr;
+    RPCConsole* rpcConsole = nullptr;
+    HelpMessageDialog* helpMessageDialog = nullptr;
+    ModalOverlay* modalOverlay = nullptr;
+    AccountSummaryWidget* accountSummaryWidget = nullptr;
+
+    QToolBar* accountBar = nullptr;
+    QToolBar* guldenBar = nullptr;
+    QToolBar* spacerBarL = nullptr;
+    QToolBar* spacerBarR = nullptr;
+    QToolBar* tabsBar = nullptr;
+    QToolBar* accountInfoBar = nullptr;
+    QToolBar* statusToolBar = nullptr;
+    QFrame* menuBarSpaceFiller = nullptr;
+    QFrame* balanceContainer = nullptr;
+    WelcomeDialog* welcomeScreen = nullptr;
+
+    QFrame* accountScrollArea = nullptr;
+
+    QMenu* toolsMenu = nullptr;
+    QAction* importPrivateKeyAction = nullptr;
+    QAction* rescanAction = nullptr;
+    QAction* currencyAction = nullptr;
+
+    NewAccountDialog* dialogNewAccount = nullptr;
+    AccountSettingsDialog* dialogAccountSettings = nullptr;
+    BackupDialog* dialogBackup = nullptr;
+    PasswordModifyDialog* dialogPasswordModify = nullptr;
+    ExchangeRateDialog* dialogExchangeRate = nullptr;
+    QWidget* cacheCurrentWidget = nullptr;
+
+    CurrencyTicker* ticker = nullptr;
+    NocksSettings* nocksSettings = nullptr;
+
+    QLabel* labelBalance = nullptr;
+    QLabel* labelBalanceForex = nullptr;
+
+    QAction* accountSpacerAction = nullptr;
+    QAction* passwordAction = nullptr;
+    QAction* backupAction = nullptr;
+
+    OptionsModel* optionsModel = nullptr;
+
+    CReserveKey* receiveAddress = nullptr;
+
+    GuldenProxyStyle* guldenStyle = nullptr;
+    GuldenEventFilter* guldenEventFilter = nullptr;
+
+    const PlatformStyle* platformStyle = nullptr;
+
+    QFrame* frameBlocks = nullptr;
+
+    std::map<ClickableLabel*, CAccount*> m_accountMap;
+
+    //Cache the balances so that we can easily re-use them when the currency ticker changes.
+    CAmount balanceCached = 0;
+    CAmount unconfirmedBalanceCached = 0;
+    CAmount immatureBalanceCached = 0;
+    CAmount watchOnlyBalanceCached = 0;
+    CAmount watchUnconfBalanceCached = 0;
+    CAmount watchImmatureBalanceCached = 0;
 
     /** Keep track of previous number of blocks, to detect progress */
-    int prevBlocks;
-    int spinnerFrame;
-
-    const PlatformStyle *platformStyle;
+    int prevBlocks = 0;
+    int spinnerFrame = 0;
 
     /** Create the main UI actions. */
     void createActions();
@@ -167,10 +247,6 @@ private:
     void subscribeToCoreSignals();
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
-
-    QFrame *frameBlocks;
-    GuldenGUI* m_pGuldenImpl;
-    friend class GuldenGUI;
 
     /** Update UI with latest network info from model. */
     void updateNetworkState();
@@ -215,6 +291,11 @@ public Q_SLOTS:
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, const CAmount& amountReceived, const CAmount& amountSent, const QString& type, const QString& address, const QString& account, const QString& label);
 #endif // ENABLE_WALLET
+
+    //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
+    void NotifyRequestUnlock(void* wallet, QString reason);
+    void NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::function<void (void)> successCallback);
+    void handlePaymentAccepted();
 
 private Q_SLOTS:
 #ifdef ENABLE_WALLET
@@ -265,6 +346,33 @@ private Q_SLOTS:
     void toggleNetworkActive();
 
     void showModalOverlay();
+
+    //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
+    void activeAccountChanged(CAccount* account);
+    void accountNameChanged(CAccount* account);
+    void accountWarningChanged(CAccount* account);
+    void balanceChanged();
+    void accountAdded(CAccount* account);
+    void accountDeleted(CAccount* account);
+    void accountButtonPressed();
+    void promptImportPrivKey();
+    void promptRescan();
+    void gotoWebsite();
+    void gotoNewAccountDialog();
+    void gotoPasswordDialog();
+    void gotoBackupDialog();
+    void dismissBackupDialog();
+    void dismissPasswordDialog();
+    void cancelNewAccountDialog();
+    void acceptNewAccount();
+    void acceptNewAccountMobile();
+    void showAccountSettings();
+    void dismissAccountSettings();
+    void showExchangeRateDialog();
+    void updateExchangeRates();
+    void requestRenewWitness(CAccount* funderAccount);
+    void requestFundWitness(CAccount* funderAccount);
+    void requestEmptyWitness();
 };
 
 class UnitDisplayStatusBarControl : public QLabel

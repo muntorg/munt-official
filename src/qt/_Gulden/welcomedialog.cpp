@@ -6,7 +6,7 @@
 #include "welcomedialog.h"
 #include <qt/_Gulden/forms/ui_welcomedialog.h>
 #include <Gulden/guldenapplication.h>
-#include "GuldenGUI.h"
+#include "gui.h"
 #include <wallet/wallet.h>
 #include "ui_interface.h"
 #include <QMovie>
@@ -152,7 +152,7 @@ void WelcomeDialog::processRecoveryPhrase()
         if (recoveryPhrase.isEmpty() || recoveryPhrase.length() < 16)
         {
             QString message = tr("Please enter a recovery phrase");
-            QDialog* d = GuldenGUI::createDialog(this, message, "Okay", "", 400, 180);
+            QDialog* d = GUI::createDialog(this, message, "Okay", "", 400, 180);
             d->exec();
             return;
         }
@@ -162,7 +162,7 @@ void WelcomeDialog::processRecoveryPhrase()
             if (!checkMnemonic(recoveryPhrase.toStdString().c_str()))
             {
                 QString message = tr("The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.");
-                QDialog* d = GuldenGUI::createDialog(this, message, tr("Cancel"), tr("Proceed with invalid phrase"), 400, 180);
+                QDialog* d = GUI::createDialog(this, message, tr("Cancel"), tr("Proceed with invalid phrase"), 400, 180);
 
                 int result = d->exec();
                 if(result == QDialog::Accepted)
@@ -191,7 +191,7 @@ void WelcomeDialog::processRecoveryPhrase()
     else
     {
         QString message = tr("Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.");
-        QDialog* d = GuldenGUI::createDialog(this, message, tr("I understand"), "", 640, 180);
+        QDialog* d = GUI::createDialog(this, message, tr("I understand"), "", 640, 180);
         d->exec();
     }
 }
