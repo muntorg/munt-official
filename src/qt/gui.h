@@ -86,6 +86,9 @@ public:
 #endif // ENABLE_WALLET
     bool enableWallet;
 
+    // If this is false then we show the RP console instead of the full UI. (like -disablewallet except with a wallet)
+    bool enableFullUI;
+
 protected:
     void resizeEvent(QResizeEvent* event);
     void changeEvent(QEvent *e);

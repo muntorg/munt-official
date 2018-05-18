@@ -573,7 +573,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
     #endif
 }
 
-#ifdef defined(HAVE_WEBKIT)
+#ifdef HAVE_WEBKIT
 void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist)
 {
     qnr->ignoreSslErrors();

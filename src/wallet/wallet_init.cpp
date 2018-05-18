@@ -13,48 +13,15 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
-#include "base58.h"
-#include "checkpoints.h"
-#include "chain.h"
-#include "wallet/coincontrol.h"
-#include "consensus/consensus.h"
-#include "consensus/validation.h"
-#include "consensus/tx_verify.h"
-#include "fs.h"
-#include "key.h"
-#include "keystore.h"
 #include "validation.h"
-#include "witnessvalidation.h"
 #include "net.h"
-#include "policy/fees.h"
-#include "policy/policy.h"
-#include "policy/rbf.h"
-#include "primitives/block.h"
-#include "primitives/transaction.h"
-#include "script/script.h"
-#include "script/sign.h"
 #include "scheduler.h"
 #include "timedata.h"
-#include "txmempool.h"
-#include "util.h"
-#include "ui_interface.h"
 #include "utilmoneystr.h"
-
-#include <assert.h>
-
-#include <boost/algorithm/string/replace.hpp>
-#include <boost/thread.hpp>
-#include <fstream>
-
-//Gulden specific includes
 #include "init.h"
 #include <Gulden/guldenapplication.h>
 #include <Gulden/mnemonic.h>
-#include <script/ismine.h>
 
-//fixme: (2.1)
-#include "Gulden/util.h"
-#include "validation.h"
 
 DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
 {
@@ -89,6 +56,7 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
 {
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
     strUsage += HelpMessageOpt("-disablewallet", _("Do not load the wallet and disable wallet RPC calls"));
+    strUsage += HelpMessageOpt("-disableui", _("Load the wallet in a special console only mode"));
     strUsage += HelpMessageOpt("-keypool=<n>", strprintf(_("Set key pool size to <n> (default: %u)"), DEFAULT_KEYPOOL_SIZE));
     strUsage += HelpMessageOpt("-accountpool=<n>", strprintf(_("Set account pool size to <n> (default: %u)"), 10));
     strUsage += HelpMessageOpt("-fallbackfee=<amt>", strprintf(_("A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)"),

@@ -26,6 +26,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#include "net.h"
 
 #include <boost/thread.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>

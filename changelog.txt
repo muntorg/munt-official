@@ -7,6 +7,7 @@ CORE - Major performance improvements for wallets with lots of transactions.
 CORE - Major performance improvements for wallets with lots of accounts.
 CORE - Performance improvements when creating new accounts.
 CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assist with testing so that multiple program instances can be easily distinguished.
+CMDFLAG - Add a new -disableui flag to start with just a RPC console (and wallet); Useful for some types of debugging.
 RPC - New command 'createwitnessaccount' as a convenience call to 'createaccount witness' used to create an account for witnessing.
 RPC - New command 'fundwitnessaccount' used to lock funds into a witness account that has previously been created.
 RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)

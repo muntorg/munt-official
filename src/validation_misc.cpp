@@ -11,56 +11,14 @@
 // file COPYING
 
 #include "validation.h"
-#include "witnessvalidation.h"
-
-#include "alert.h"
-#include "arith_uint256.h"
-#include "blockstore.h"
-#include "chain.h"
-#include "chainparams.h"
-#include "checkpoints.h"
-#include "Gulden/auto_checkpoints.h"
-#include "checkqueue.h"
-#include "consensus/consensus.h"
-#include "consensus/merkle.h"
-#include "consensus/tx_verify.h"
-#include "consensus/validation.h"
-#include "fs.h"
-#include "hash.h"
-#include "init.h"
-#include "policy/fees.h"
-#include "policy/policy.h"
-#include "pow.h"
-#include <Gulden/Common/diff.h>
-#include "primitives/block.h"
-#include "primitives/transaction.h"
-#include "random.h"
-#include "script/script.h"
-#include "script/sigcache.h"
-#include "script/standard.h"
-#include "timedata.h"
-#include "tinyformat.h"
-#include "txdb.h"
-#include "txmempool.h"
-#include "ui_interface.h"
-#include "undo.h"
-#include "util.h"
-#include "utilmoneystr.h"
-#include "utilstrencodings.h"
 #include "validationinterface.h"
-#include "versionbits.h"
-#include "warnings.h"
-#ifdef ENABLE_WALLET
-#include "wallet/wallet.h"
-#endif
+#include "witnessvalidation.h"
+#include <consensus/validation.h>
 
-#include <atomic>
-#include <sstream>
+#include "blockstore.h"
+#include "txdb.h"
+#include "net.h"
 
-#include <boost/foreach.hpp>
-#include <boost/algorithm/string/replace.hpp>
-#include <boost/algorithm/string/join.hpp>
-#include <boost/thread.hpp>
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)

@@ -261,6 +261,7 @@ void GuldenGUI::handlePaymentAccepted()
 
 GuldenGUI::~GuldenGUI()
 {
+    disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
     if (guldenEventFilter)
     {
         m_pImpl->removeEventFilter(guldenEventFilter);
@@ -948,7 +949,8 @@ void GuldenGUI::doPostInit()
     disconnect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), 0, 0);
     connect(m_pImpl->changePassphraseAction, SIGNAL(triggered()), this, SLOT(gotoPasswordDialog()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    labelBalance->setVisible(false);
+    if (labelBalance)
+        labelBalance->setVisible(false);
 }
 
 void GuldenGUI::hideProgressBarLabel()

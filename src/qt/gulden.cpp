@@ -27,6 +27,8 @@
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
 
+#include "net.h"
+
 #ifdef ENABLE_WALLET
 #include "paymentserver.h"
 #include "walletmodel.h"

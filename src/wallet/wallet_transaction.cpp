@@ -13,48 +13,19 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
-#include "base58.h"
-#include "checkpoints.h"
-#include "chain.h"
-#include "wallet/coincontrol.h"
-#include "consensus/consensus.h"
 #include "consensus/validation.h"
-#include "consensus/tx_verify.h"
-#include "fs.h"
-#include "key.h"
-#include "keystore.h"
 #include "validation.h"
 #include "witnessvalidation.h"
 #include "net.h"
-#include "policy/fees.h"
-#include "policy/policy.h"
-#include "policy/rbf.h"
-#include "primitives/block.h"
-#include "primitives/transaction.h"
-#include "script/script.h"
-#include "script/sign.h"
 #include "scheduler.h"
 #include "timedata.h"
-#include "txmempool.h"
-#include "util.h"
-#include "ui_interface.h"
-#include "utilmoneystr.h"
-
-#include <assert.h>
-
-#include <boost/algorithm/string/replace.hpp>
-#include <boost/thread.hpp>
-#include <fstream>
-
-//Gulden specific includes
 #include "init.h"
-#include <Gulden/guldenapplication.h>
-#include <Gulden/mnemonic.h>
-#include <script/ismine.h>
-
-//fixme: (2.1)
+#include "key.h"
+#include "keystore.h"
+#include "wallet/coincontrol.h"
+#include "policy/policy.h"
+#include "policy/rbf.h"
 #include "Gulden/util.h"
-#include "validation.h"
 
 bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
 {
