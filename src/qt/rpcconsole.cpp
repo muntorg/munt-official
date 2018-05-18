@@ -1201,7 +1201,8 @@ void RPCConsole::unbanSelectedNode()
 
 void RPCConsole::clearSelectedNode()
 {
-    ui->peerWidget->selectionModel()->clearSelection();
+    if (ui->peerWidget)
+        ui->peerWidget->selectionModel()->clearSelection();
     cachedNodeids.clear();
     ui->detailWidget->hide();
     ui->peerHeading->setText(tr("Select a peer to view detailed information."));

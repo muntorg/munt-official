@@ -218,6 +218,8 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
          * the central widget is the rpc console.
          */
         setCentralWidget(rpcConsole);
+        // Call back to initialize as otherwise we have no f unctionality.
+        QMetaObject::invokeMethod(QApplication::instance(), "requestInitialize", Qt::QueuedConnection);
     }
 
     // Accept D&D of URIs

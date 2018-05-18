@@ -411,7 +411,8 @@ void GuldenGUI::setOptionsModel(OptionsModel* optionsModel_)
     ticker->setOptionsModel(optionsModel);
     optionsModel->setTicker(ticker);
     optionsModel->setNocksSettings(nocksSettings);
-    m_pImpl->accountSummaryWidget->setOptionsModel(optionsModel);
+    if (m_pImpl->accountSummaryWidget)
+        m_pImpl->accountSummaryWidget->setOptionsModel(optionsModel);
     connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     updateExchangeRates();
 }
@@ -962,21 +963,28 @@ void GuldenGUI::doPostInit()
 
 void GuldenGUI::hideProgressBarLabel()
 {
-    m_pImpl->progressBarLabel->setText("");
-    m_pImpl->progressBarLabel->setVisible(false);
+    if (m_pImpl->progressBarLabel)
+    {
+        m_pImpl->progressBarLabel->setText("");
+        m_pImpl->progressBarLabel->setVisible(false);
+    }
     if(statusBar)
         statusBar->setVisible(false);
 }
 
 void GuldenGUI::showProgressBarLabel()
 {
-    m_pImpl->progressBarLabel->setVisible(true);
+    if (m_pImpl->progressBarLabel)
+        m_pImpl->progressBarLabel->setVisible(true);
     if(statusBar)
         statusBar->setVisible(true);
 }
 
 void GuldenGUI::hideBalances()
 {
+    if (!labelBalance)
+        return;
+
     labelBalance->setVisible(false);
     labelBalanceForex->setVisible(false);
     m_pImpl->accountSummaryWidget->hideBalances();
@@ -984,13 +992,13 @@ void GuldenGUI::hideBalances()
 
 void GuldenGUI::showBalances()
 {
-    if (!labelBalance->isVisible())
-    {
-        labelBalance->setVisible(true);
-        // Give forex label a chance to update if appropriate.
-        updateExchangeRates();
-        m_pImpl->accountSummaryWidget->showBalances();
-    }
+    if (!labelBalance || !labelBalance->isVisible())
+        return;
+
+    labelBalance->setVisible(true);
+    // Give forex label a chance to update if appropriate.
+    updateExchangeRates();
+    m_pImpl->accountSummaryWidget->showBalances();
 }
 
 bool GuldenGUI::welcomeScreenIsVisible()
