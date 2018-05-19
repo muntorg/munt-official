@@ -394,34 +394,6 @@ void GUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
 #endif // ENABLE_WALLET
 
-    quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
-    quitAction->setObjectName("action_quit");
-    quitAction->setStatusTip(tr("Quit application"));
-    quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
-    quitAction->setMenuRole(QAction::QuitRole);
-
-    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
-    aboutAction->setObjectName("action_about");
-    aboutAction->setStatusTip(tr("Show information about %1").arg(tr(PACKAGE_NAME)));
-    aboutAction->setMenuRole(QAction::AboutRole);
-
-    aboutAction->setEnabled(false);
-    aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
-    aboutQtAction->setObjectName("action_about_qt");
-    aboutQtAction->setStatusTip(tr("Show information about Qt"));
-    aboutQtAction->setMenuRole(QAction::AboutQtRole);
-
-    optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setObjectName("action_options");
-    optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr(PACKAGE_NAME)));
-    optionsAction->setMenuRole(QAction::PreferencesRole);
-    optionsAction->setEnabled(false);
-
-    currencyAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
-    currencyAction->setObjectName("action_currency");
-    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
-    currencyAction->setCheckable(false);
-
     toggleHideAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&Show / Hide"), this);
     toggleHideAction->setObjectName("action_toggle_hide");
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
@@ -436,23 +408,13 @@ void GUI::createActions()
     rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
     rescanAction->setCheckable(false);
 
-    encryptWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
-    encryptWalletAction->setObjectName("action_encrypt_wallet");
-    encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
-    encryptWalletAction->setCheckable(true);
+    openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
+    openAction->setObjectName("action_open_uri");
+    openAction->setStatusTip(tr("Open a gulden: URI or payment request"));
 
     backupWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
     backupWalletAction->setObjectName("action_backup_wallet");
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
-
-    changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
-    changePassphraseAction->setObjectName("action_change_passphrase");
-    changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
-
-    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
-    openRPCConsoleAction->setObjectName("action_open_rpc_console");
-    openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
-    openRPCConsoleAction->setEnabled(false); // initially disable the debug window menu item
 
     usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
     usedSendingAddressesAction->setObjectName("action_used_sending_addresses");
@@ -462,22 +424,60 @@ void GUI::createActions()
     usedReceivingAddressesAction->setObjectName("action_used_receiving_addresses");
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
-    openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
-    openAction->setObjectName("action_open_uri");
-    openAction->setStatusTip(tr("Open a gulden: URI or payment request"));
+    quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction->setObjectName("action_quit");
+    quitAction->setStatusTip(tr("Quit application"));
+    quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+    quitAction->setMenuRole(QAction::QuitRole);
+
+    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
+    openRPCConsoleAction->setObjectName("action_open_rpc_console");
+    openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
+    openRPCConsoleAction->setEnabled(false); // initially disable the debug window menu item
 
     showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
     showHelpMessageAction->setObjectName("action_show_help_message");
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible Gulden command-line options").arg(tr(PACKAGE_NAME)));
 
+    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
+    aboutAction->setObjectName("action_about");
+    aboutAction->setStatusTip(tr("Show information about %1").arg(tr(PACKAGE_NAME)));
+    aboutAction->setMenuRole(QAction::AboutRole);
+
+    aboutAction->setEnabled(false);
+    aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
+    aboutQtAction->setObjectName("action_about_qt");
+    aboutQtAction->setStatusTip(tr("Show information about Qt"));
+    aboutQtAction->setMenuRole(QAction::AboutQtRole);
+
+    encryptWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
+    encryptWalletAction->setObjectName("action_encrypt_wallet");
+    encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
+    encryptWalletAction->setCheckable(true);
+
+    changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
+    changePassphraseAction->setObjectName("action_change_passphrase");
+    changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
+
+    optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
+    optionsAction->setObjectName("action_options");
+    optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr(PACKAGE_NAME)));
+    optionsAction->setMenuRole(QAction::PreferencesRole);
+    optionsAction->setEnabled(false);
+
+    currencyAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
+    currencyAction->setObjectName("action_currency");
+    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    currencyAction->setCheckable(false);
+
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
-    connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+    connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()));
+    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
+    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
