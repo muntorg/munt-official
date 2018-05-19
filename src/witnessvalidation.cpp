@@ -178,8 +178,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
 // pblock is either NULL or a pointer to a CBlock corresponding to pActiveIndex, to bypass loading it again from disk.
 bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBlock> pblock, CValidationState& state, const CChainParams& chainparams, CChain& currentChain, CCoinsViewCache& coinView)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: ForceActivateChain", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: ForceActivateChain", BCLog::BENCH|BCLog::WITNESS);
 
     CBlockIndex* pindexNewTip = nullptr;
     do {
@@ -230,8 +229,7 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: expectedWitnessBlockPeriod", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: expectedWitnessBlockPeriod", BCLog::BENCH|BCLog::WITNESS);
 
     if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
@@ -249,8 +247,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
 
 uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: estimatedWitnessBlockPeriod", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: estimatedWitnessBlockPeriod", BCLog::BENCH|BCLog::WITNESS);
 
     if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
@@ -269,8 +266,7 @@ uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeig
 
 bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain_, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock, CCoinsViewCache* viewOverride)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: getAllUnspentWitnessCoins", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: getAllUnspentWitnessCoins", BCLog::BENCH|BCLog::WITNESS);
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
     assert(pPreviousIndexChain_);
@@ -359,8 +355,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
 bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: GetWitnessHelper", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: GetWitnessHelper", BCLog::BENCH|BCLog::WITNESS);
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
@@ -462,8 +457,7 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
 
 bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: GetWitnessInfo", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: GetWitnessInfo", BCLog::BENCH|BCLog::WITNESS);
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
@@ -493,8 +487,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
 
 bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: GetWitness", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: GetWitness", BCLog::BENCH|BCLog::WITNESS);
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
 
@@ -510,8 +503,7 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 // total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
-    static uint64_t nTotalTime = 0;
-    BenchMarkHelper("WIT: witnessHasExpired", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: witnessHasExpired", BCLog::BENCH|BCLog::WITNESS);
 
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
     return ( nWitnessAge > nMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );

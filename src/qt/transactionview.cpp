@@ -215,7 +215,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     connect(editLabelAction, SIGNAL(triggered()), this, SLOT(editLabel()));
     connect(showDetailsAction, SIGNAL(triggered()), this, SLOT(showDetails()));
 
-    transactionView->setItemDelegate(new RichTextDelegate);
+    transactionView->setItemDelegate(new RichTextDelegate(this));
 }
 
 void TransactionView::setModel(WalletModel *_model)

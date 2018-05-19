@@ -232,6 +232,7 @@ const CLogCategoryDesc LogCategories[] =
     {BCLog::MEMPOOL, "mempool"},
     {BCLog::HTTP, "http"},
     {BCLog::BENCH, "bench"},
+    {BCLog::IO, "io"},
     {BCLog::ZMQ, "zmq"},
     {BCLog::DB, "db"},
     {BCLog::RPC, "rpc"},
@@ -940,5 +941,3 @@ std::string CopyrightHolders(const std::string& strPrefix)
     }
     return strCopyrightHolders;
 }
-
-uint32_t BenchMarkHelper::nCount = 0;

@@ -39,6 +39,7 @@ class GuldenAmountField: public QWidget
 
 public:
     explicit GuldenAmountField(QWidget *parent = 0);
+    virtual ~GuldenAmountField();
 
     CAmount value(bool *value=0) const;
     CAmount valueForCurrency(bool *value=0) const;

@@ -11,6 +11,11 @@
 #include <QPainter>
 #include <QApplication>
 
+RichTextDelegate::RichTextDelegate(QObject* parent)
+: QStyledItemDelegate(parent)
+{
+}
+
 void RichTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItem styleOption = option;

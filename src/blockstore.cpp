@@ -14,6 +14,7 @@
 #include "streams.h"
 #include "clientversion.h"
 #include "validation.h" //For cs_main
+#include "util.h" // For DO_BENCHMARK
 
 CBlockStore blockStore;
 
@@ -80,6 +81,8 @@ void CBlockStore::CloseBlockFiles()
 
 bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart)
 {
+    DO_BENCHMARK("CBlockStore: WriteBlockToDisk", BCLog::BENCH|BCLog::IO);
+
     AssertLockHeld(cs_main);
 
     // Open history file to append
@@ -104,6 +107,8 @@ bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, cons
 
 bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
 {
+    DO_BENCHMARK("CBlockStore: ReadBlockFromDisk", BCLog::BENCH|BCLog::IO);
+
     AssertLockHeld(cs_main);
 
     block.SetNull();
@@ -132,6 +137,8 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
 
 bool CBlockStore::UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart)
 {
+    DO_BENCHMARK("CBlockStore: UndoWriteToDisk", BCLog::BENCH|BCLog::IO);
+
     // Open history file to append
     CFile fileout(GetUndoFile(pos), SER_DISK, CLIENT_VERSION);
     if (fileout.IsNull())
@@ -159,6 +166,8 @@ bool CBlockStore::UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& po
 
 bool CBlockStore::UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock)
 {
+    DO_BENCHMARK("CBlockStore: UndoReadFromDisk", BCLog::BENCH|BCLog::IO);
+
     // Open history file to read
     CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION | (isLegacy ? SERIALIZE_TXUNDO_LEGACY_COMPRESSION : 0) );
     if (filein.IsNull())

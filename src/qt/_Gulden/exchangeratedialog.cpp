@@ -28,7 +28,7 @@ ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidg
     ui->ExchangeRateTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->ExchangeRateTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    RichTextDelegate* delegate = new RichTextDelegate();
+    RichTextDelegate* delegate = new RichTextDelegate(this);
     ui->ExchangeRateTable->setItemDelegate(delegate);
 
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);

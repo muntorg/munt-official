@@ -1335,8 +1335,7 @@ void static GuldenWitness()
                     MilliSleep(5000);
                 } while (true);
             }
-            static uint64_t nTotalTime = 0;
-            BenchMarkHelper("WIT: GuldenWitness", nTotalTime, BCLog::BENCH|BCLog::WITNESS);
+            DO_BENCHMARK("WIT: GuldenWitness", BCLog::BENCH|BCLog::WITNESS);
 
             CBlockIndex* pindexTip = chainActive.Tip();
             Consensus::Params pParams = chainparams.GetConsensus();

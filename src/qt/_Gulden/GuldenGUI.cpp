@@ -173,7 +173,7 @@ void GUI::NotifyRequestUnlock(void* wallet, QString reason)
     if (!requestUnlockDialogAlreadyShowing)
     {
         requestUnlockDialogAlreadyShowing = true;
-        LogPrintf("NotifyRequestUnlock\n");
+        LogPrint(BCLog::QT, "NotifyRequestUnlock\n");
         AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, this, reason);
         dlg.setModel(new WalletModel(NULL, (CWallet*)wallet, NULL, NULL));
         dlg.exec();
@@ -186,7 +186,7 @@ void GUI::NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::fun
     if (!requestUnlockDialogAlreadyShowing)
     {
         requestUnlockDialogAlreadyShowing = true;
-        LogPrintf("NotifyRequestUnlockWithCallback\n");
+        LogPrint(BCLog::QT, "NotifyRequestUnlockWithCallback\n");
         AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, this, reason);
         dlg.setModel(new WalletModel(NULL, (CWallet*)wallet, NULL, NULL));
         int result = dlg.exec();
@@ -1121,7 +1121,7 @@ std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>
 
 void GUI::refreshAccountControls()
 {
-    LogPrintf("GUI::refreshAccountControls\n");
+    LogPrint(BCLog::QT, "GUI::refreshAccountControls\n");
 
     refreshTabVisibilities();
 
@@ -1194,7 +1194,7 @@ ClickableLabel* GUI::createAccountButton( const QString& accountName )
 
 void GUI::setActiveAccountButton( ClickableLabel* activeButton )
 {
-    LogPrintf("GUI::setActiveAccountButton\n");
+    LogPrint(BCLog::QT, "GUI::setActiveAccountButton\n");
 
     for ( const auto & button : accountBar->findChildren<ClickableLabel*>( "" ) )
     {
@@ -1221,10 +1221,7 @@ void GUI::updateAccount(CAccount* account)
 {
     LOCK(pactiveWallet->cs_wallet);
 
-    if (receiveAddress)
-        delete receiveAddress;
-
-    receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
+    CReserveKey* receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
     if (receiveAddress->GetReservedKey(pubKey))
     {
@@ -1233,9 +1230,12 @@ void GUI::updateAccount(CAccount* account)
     }
     else
     {
+        LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
         walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
     }
     walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
+
+    delete receiveAddress;
 }
 
 void GUI::balanceChanged()
@@ -1644,7 +1644,7 @@ void GUI::acceptNewAccountMobile()
 
 void GUI::showAccountSettings()
 {
-    LogPrintf("GUI::showAccountSettings\n");
+    LogPrint(BCLog::QT, "GUI::showAccountSettings\n");
 
     if ( walletFrame )
     {

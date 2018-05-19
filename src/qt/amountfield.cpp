@@ -353,6 +353,19 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     //unitChanged(unit->currentIndex());
 }
 
+GuldenAmountField::~GuldenAmountField()
+{
+    disconnect(amount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    disconnect(this, SIGNAL(valueChanged()), this, SLOT(update()));
+    //disconnect(unit, SIGNAL(currentIndexChanged(int)), this, SLOT(unitChanged(int)));
+    disconnect(secondaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
+    disconnect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
+    disconnect(tertiaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToTertiaryCurrency()));
+    disconnect(quadAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToQuadCurrency()));
+    if (ticker)
+        disconnect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
+}
+
 void GuldenAmountField::clear()
 {
     amount->clear();

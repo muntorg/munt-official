@@ -108,6 +108,7 @@ namespace BCLog {
         LEVELDB     = (1 << 21),
         DELTA       = (1 << 22),
         WITNESS     = (1 << 23),
+        IO          = (1 << 24),
         ALL         = ~(uint32_t)0,
     };
 }
@@ -365,39 +366,47 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
 
 std::string CopyrightHolders(const std::string& strPrefix);
 
-
-// Little helper class to RAII encapusulate benchmarks.
-class BenchMarkHelper
+//fixme: (C++-14) We should be able to take the string desc as a constant compile time paramater as well.
+// Little helper class to RAII encapusulate benchmarks at minimal runtime overhead.
+template <uint32_t logCategory=BCLog::BENCH> class BenchMarkHelper
 {
-    public:
-    BenchMarkHelper(std::string sDescription_, uint64_t& nTotal_, uint32_t nCategory_=BCLog::BENCH, uint32_t nLogThreshold_=1)
-    : nTotal(nTotal_)
-    , sDescription(sDescription_)
-    , nCategory(nCategory_)
+public:
+    BenchMarkHelper(const char* strDesc_, uint64_t& nTotal_, uint64_t& nCounter_, const uint32_t nLogThreshold_=1)
+    : strDesc(strDesc_)
+    , nTotal(nTotal_)
+    , nCounter(nCounter_)
     , nLogThreshold(nLogThreshold_)
     {
         nStart = GetTimeMicros();
-        ++nCount;
+        ++nCounter_;
     }
     ~BenchMarkHelper()
     {
         Split();
-        --nCount;
     }
     void Split()
     {
         uint64_t nTime1 = GetTimeMicros(); 
         nTotal += nTime1 - nStart;
-        if (nTotal * 0.000001 > nLogThreshold)
-            LogPrint(nCategory, "%s%s: %.2fms [%.2fs]\n", sDescription.c_str(), std::string(nCount,' '), 0.001 * (nTime1 - nStart), nTotal * 0.000001);
+        if (++nCounter % 100 == 0)
+        {
+            if (nTotal * 0.000001 > nLogThreshold)
+            {
+                //fixme: (C++-14) We should be able to concat the strDesc at compile time as well.
+                LogPrint(logCategory, "%s: %.2fms [%.2fs]\n", strDesc, 0.001 * (nTime1 - nStart), nTotal * 0.000001);
+            }
+        }
     }
-    private:
+private:
+    const char* strDesc;
     uint64_t& nTotal;
-    std::string sDescription;
-    uint32_t nCategory;
+    uint64_t& nCounter;
     uint32_t nLogThreshold;
     uint64_t nStart;
-    static uint32_t nCount; //Automatically indent based on number of currently opened helpers.
 };
+
+/** Run a benchmark - only logs once every 100 calls, and only once overall time passes THRESHOLD (default 1) */
+#define DO_BENCHMARK(DESC, LOGCATEGORY) static uint64_t nTotalBenchMarkTime = 0; static uint64_t nBenchmarkCounter = 0; BenchMarkHelper<LOGCATEGORY>(DESC, nTotalBenchMarkTime, nBenchmarkCounter);
+#define DO_BENCHMARKT(DESC, LOGCATEGORY, THRESHOLD) static uint64_t nTotalBenchMarkTime = 0; static uint64_t nBenchmarkCounter = 0; BenchMarkHelper<LOGCATEGORY>(DESC, nTotalBenchMarkTime, nBenchmarkCounter, THRESHOLD);
 
 #endif // GULDEN_UTIL_H

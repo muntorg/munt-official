@@ -206,8 +206,6 @@ private:
 
     OptionsModel* optionsModel = nullptr;
 
-    CReserveKey* receiveAddress = nullptr;
-
     GuldenProxyStyle* guldenStyle = nullptr;
     GuldenEventFilter* guldenEventFilter = nullptr;
 
