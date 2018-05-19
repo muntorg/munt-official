@@ -348,29 +348,6 @@ void GUI::setOptionsModel(OptionsModel* optionsModel_)
     updateExchangeRates();
 }
 
-void GUI::createMenusGulden()
-{
-    toolsMenu = appMenuBar->addMenu(tr("&Tools"));
-
-    importPrivateKeyAction = new QAction(platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
-    importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
-    importPrivateKeyAction->setCheckable(false);
-    toolsMenu->addAction(importPrivateKeyAction);
-    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
-    rescanAction = new QAction(platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
-    rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
-    rescanAction->setCheckable(false);
-    toolsMenu->addAction(rescanAction);
-    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
-    currencyAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
-    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
-    currencyAction->setCheckable(false);
-    settingsMenu->addAction(currencyAction);
-    connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-}
-
 void GUI::createToolBars()
 {
     if (!walletFrame)
@@ -407,6 +384,7 @@ void GUI::createToolBars()
         QFrame* myAccountsFrame = new QFrame( this );
         myAccountsFrame->setObjectName( "frameMyAccounts" );
         QHBoxLayout* layoutMyAccounts = new QHBoxLayout;
+        layoutMyAccounts->setObjectName("my_accounts_layout");
         myAccountsFrame->setLayout(layoutMyAccounts);
         myAccountsFrame->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         accountBar->addWidget( myAccountsFrame );
@@ -423,6 +401,7 @@ void GUI::createToolBars()
         //Spacer to fill width
         {
             QWidget* spacerMid = new QWidget( myAccountsFrame );
+            spacerMid->setObjectName("my_accounts_mid_spacer");
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutMyAccounts->addWidget( spacerMid );
         }
@@ -440,7 +419,9 @@ void GUI::createToolBars()
     //Spacer to fill height
     {
         QScrollArea* scrollArea = new QScrollArea ( this );
+        scrollArea->setObjectName("scroll_area_for_account_scroll_area");
         accountScrollArea = new QFrame( scrollArea );
+        accountScrollArea->setObjectName("account_scroll_area");
         scrollArea->setContentsMargins( 0, 0, 0, 0);
         scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
         scrollArea->setWidget(accountScrollArea);
@@ -490,7 +471,9 @@ void GUI::createToolBars()
     // We place all the widgets for this action bar inside a frame of fixed width - otherwise the sizing comes out wrong
     {
         balanceContainer = new QFrame();
+        balanceContainer->setObjectName("balance_container");
         QHBoxLayout* layoutBalance = new QHBoxLayout;
+        layoutBalance->setObjectName("balance_layout");
         balanceContainer->setLayout(layoutBalance);
         balanceContainer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         balanceContainer->setContentsMargins( 0, 0, 0, 0 );
@@ -517,6 +500,7 @@ void GUI::createToolBars()
         // Use spacer to push balance label to the right
         {
             QWidget* spacerMid = new QWidget();
+            spacerMid->setObjectName("layout_balance_mid_spacer");
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerMid );
         }
@@ -552,14 +536,15 @@ void GUI::createToolBars()
     //Add spacer bar
     spacerBarL = new QToolBar( QCoreApplication::translate( "toolbar", "Spacer  toolbar" ) );
     spacerBarL->setFixedHeight( horizontalBarHeight );
-    spacerBarL->setObjectName( "spacer_bar" );
+    spacerBarL->setObjectName( "spacer_bar_left" );
     spacerBarL->setMovable( false );
     //Spacer to fill width
     {
-        QWidget* spacerR = new QWidget();
-        spacerR->setMinimumWidth( 40 );
-        spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-        spacerBarL->addWidget( spacerR );
+        QWidget* spacerL = new QWidget();
+        spacerL->setObjectName( "spacer_bar_left_spacer" );
+        spacerL->setMinimumWidth( 40 );
+        spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+        spacerBarL->addWidget( spacerL );
         spacerBarL->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     }
     addToolBar( spacerBarL );
@@ -584,6 +569,7 @@ void GUI::createToolBars()
     tabsBar->addAction( historyAction );
 
     passwordAction = new QAction(platformStyle->SingleColorIcon(":/icons/password"), tr("&Password"), this);
+    passwordAction->setObjectName("action_password");
     passwordAction->setStatusTip(tr("Change wallet password"));
     passwordAction->setToolTip(passwordAction->statusTip());
     passwordAction->setCheckable(true);
@@ -591,6 +577,7 @@ void GUI::createToolBars()
     tabsBar->addAction(passwordAction);
 
     backupAction = new QAction(platformStyle->SingleColorIcon(":/icons/backup"), tr("&Backup"), this);
+    backupAction->setObjectName("action_backup");
     backupAction->setStatusTip(tr("Backup wallet"));
     backupAction->setToolTip(backupAction->statusTip());
     backupAction->setCheckable(true);
@@ -604,22 +591,30 @@ void GUI::createToolBars()
     receiveCoinsAction->setChecked( true );
 
     tabsBar->widgetForAction( historyAction )->setCursor( Qt::PointingHandCursor );
-    tabsBar->widgetForAction( sendCoinsAction )->setCursor( Qt::PointingHandCursor );
-    tabsBar->widgetForAction( receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
-    tabsBar->widgetForAction( witnessDialogAction )->setCursor( Qt::PointingHandCursor );
+
+    tabsBar->widgetForAction( passwordAction )->setObjectName( "password_button" );
+    tabsBar->widgetForAction( passwordAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( passwordAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( backupAction )->setObjectName( "backup_button" );
+    tabsBar->widgetForAction( backupAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( backupAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( receiveCoinsAction )->setObjectName( "receive_coins_button" );
     tabsBar->widgetForAction( receiveCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
-    tabsBar->widgetForAction( receiveCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( sendCoinsAction )->setObjectName( "send_coins_button" );
     tabsBar->widgetForAction( sendCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( sendCoinsAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( historyAction )->setObjectName( "history_button" );
     tabsBar->widgetForAction( historyAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( witnessDialogAction )->setObjectName( "witness_button" );
     tabsBar->widgetForAction( witnessDialogAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( witnessDialogAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->setContentsMargins( 0, 0, 0, 0 );
 
     //Spacer to fill width
     {
         QWidget* spacerR = new QWidget();
+        spacerR->setObjectName("navigation_bar_right_spacer");
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         //Delibritely large amount - to push the next toolbar as far right as possible.
         spacerR->setMinimumWidth( 500000 );
@@ -661,11 +656,12 @@ void GUI::createToolBars()
     //Add spacer bar
     spacerBarR = new QToolBar( QCoreApplication::translate( "toolbar", "Spacer  toolbar" ) );
     spacerBarR->setFixedHeight( horizontalBarHeight );
-    spacerBarR->setObjectName( "spacer_bar" );
+    spacerBarR->setObjectName( "spacer_bar_right" );
     spacerBarR->setMovable( false );
     //Spacer to fill width
     {
         QWidget* spacerR = new QWidget();
+        spacerR->setObjectName("spacer_bar_right_spacer");
         spacerR->setMinimumWidth( 40 );
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         spacerBarR->addWidget( spacerR );

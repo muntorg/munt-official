@@ -380,6 +380,7 @@ void PaymentServer::initNetManager()
 
     // netManager is used to fetch paymentrequests given in Gulden: URIs
     netManager = new QNetworkAccessManager(this);
+    netManager->setObjectName("payment_server_net_manager");
 
     QNetworkProxy proxy;
 

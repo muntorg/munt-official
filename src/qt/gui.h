@@ -106,7 +106,6 @@ public:
     void refreshTabVisibilities();
     void refreshAccountControls();
     void setOptionsModel(OptionsModel* optionsModel);
-    void createMenusGulden();
     bool welcomeScreenIsVisible();
     static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight);
     ClickableLabel* createAccountButton(const QString& accountName);
@@ -159,10 +158,13 @@ private:
     QAction* openRPCConsoleAction = nullptr;
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
+    QAction* importPrivateKeyAction = nullptr;
+    QAction* rescanAction = nullptr;
+    QAction* currencyAction = nullptr;
 
     QSystemTrayIcon* trayIcon = nullptr;
     QMenu* trayIconMenu = nullptr;
-    QMenu* settingsMenu = nullptr;
+
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
@@ -181,11 +183,6 @@ private:
     WelcomeDialog* welcomeScreen = nullptr;
 
     QFrame* accountScrollArea = nullptr;
-
-    QMenu* toolsMenu = nullptr;
-    QAction* importPrivateKeyAction = nullptr;
-    QAction* rescanAction = nullptr;
-    QAction* currencyAction = nullptr;
 
     NewAccountDialog* dialogNewAccount = nullptr;
     AccountSettingsDialog* dialogAccountSettings = nullptr;

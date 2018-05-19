@@ -325,13 +325,16 @@ GUI::~GUI()
 void GUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
+    tabGroup->setObjectName("gui_action_tab_group");
 
     witnessDialogAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Overview"), this);
+    witnessDialogAction->setObjectName("action_witness_dialog");
     witnessDialogAction->setStatusTip(tr("View statistics and information for witness account."));
     witnessDialogAction->setCheckable(true);
     tabGroup->addAction(witnessDialogAction);
 
     overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview"), tr("&Overview"), this);
+    overviewAction->setObjectName("action_overview");
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
@@ -339,6 +342,7 @@ void GUI::createActions()
     tabGroup->addAction(overviewAction);
 
     sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&Send"), this);
+    sendCoinsAction->setObjectName("action_send_coins");
     sendCoinsAction->setStatusTip(tr("Send coins to a Gulden address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
@@ -346,10 +350,12 @@ void GUI::createActions()
     tabGroup->addAction(sendCoinsAction);
 
     sendCoinsMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/send"), sendCoinsAction->text(), this);
+    sendCoinsMenuAction->setObjectName("action_send_coins_menu");
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
     receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
+    receiveCoinsAction->setObjectName("action_receive_coins");
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and gulden: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
@@ -357,10 +363,12 @@ void GUI::createActions()
     tabGroup->addAction(receiveCoinsAction);
 
     receiveCoinsMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/receiving_addresses"), receiveCoinsAction->text(), this);
+    receiveCoinsMenuAction->setObjectName("action_receive_menu");
     receiveCoinsMenuAction->setStatusTip(receiveCoinsAction->statusTip());
     receiveCoinsMenuAction->setToolTip(receiveCoinsMenuAction->statusTip());
 
     historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history"), tr("&Transactions"), this);
+    historyAction->setObjectName("action_history");
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
@@ -387,45 +395,79 @@ void GUI::createActions()
 #endif // ENABLE_WALLET
 
     quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction->setObjectName("action_quit");
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
+
     aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
+    aboutAction->setObjectName("action_about");
     aboutAction->setStatusTip(tr("Show information about %1").arg(tr(PACKAGE_NAME)));
     aboutAction->setMenuRole(QAction::AboutRole);
+
     aboutAction->setEnabled(false);
     aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
+    aboutQtAction->setObjectName("action_about_qt");
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
+
     optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
+    optionsAction->setObjectName("action_options");
     optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr(PACKAGE_NAME)));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     optionsAction->setEnabled(false);
+
+    currencyAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
+    currencyAction->setObjectName("action_currency");
+    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    currencyAction->setCheckable(false);
+
     toggleHideAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&Show / Hide"), this);
+    toggleHideAction->setObjectName("action_toggle_hide");
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
+    importPrivateKeyAction = new QAction(platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
+    importPrivateKeyAction->setObjectName("action_import_privkey");
+    importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
+    importPrivateKeyAction->setCheckable(false);
+
+    rescanAction = new QAction(platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
+    rescanAction->setObjectName("action_rescan");
+    rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    rescanAction->setCheckable(false);
+
     encryptWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
+    encryptWalletAction->setObjectName("action_encrypt_wallet");
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
     encryptWalletAction->setCheckable(true);
+
     backupWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
+    backupWalletAction->setObjectName("action_backup_wallet");
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
+
     changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
+    changePassphraseAction->setObjectName("action_change_passphrase");
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
 
     openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
+    openRPCConsoleAction->setObjectName("action_open_rpc_console");
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
-    // initially disable the debug window menu item
-    openRPCConsoleAction->setEnabled(false);
+    openRPCConsoleAction->setEnabled(false); // initially disable the debug window menu item
 
     usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
+    usedSendingAddressesAction->setObjectName("action_used_sending_addresses");
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
+
     usedReceivingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
+    usedReceivingAddressesAction->setObjectName("action_used_receiving_addresses");
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
     openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
+    openAction->setObjectName("action_open_uri");
     openAction->setStatusTip(tr("Open a gulden: URI or payment request"));
 
     showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
+    showHelpMessageAction->setObjectName("action_show_help_message");
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible Gulden command-line options").arg(tr(PACKAGE_NAME)));
 
@@ -433,6 +475,9 @@ void GUI::createActions()
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
+    connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+    connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+    connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
@@ -464,9 +509,11 @@ void GUI::createMenuBar()
     // Get the main window's menu bar on other platforms
     appMenuBar = menuBar();
 #endif
+    appMenuBar->setObjectName("menu_bar_app");
 
     // Configure the menus
     QMenu *file = appMenuBar->addMenu(tr("&File"));
+    file->setObjectName("menu_file");
     if(walletFrame)
     {
         file->addAction(openAction);
@@ -478,7 +525,8 @@ void GUI::createMenuBar()
     }
     file->addAction(quitAction);
 
-    settingsMenu = appMenuBar->addMenu(tr("&Settings"));
+    QMenu* settingsMenu = appMenuBar->addMenu(tr("&Settings"));
+    settingsMenu->setObjectName("menu_settings");
     if(walletFrame)
     {
         settingsMenu->addAction(encryptWalletAction);
@@ -486,10 +534,15 @@ void GUI::createMenuBar()
         settingsMenu->addSeparator();
     }
     settingsMenu->addAction(optionsAction);
+    settingsMenu->addAction(currencyAction);
 
-    createMenusGulden();
+    QMenu* toolsMenu = appMenuBar->addMenu(tr("&Tools"));
+    toolsMenu->setObjectName("menu_tools");
+    toolsMenu->addAction(importPrivateKeyAction);
+    toolsMenu->addAction(rescanAction);
 
-    QMenu *help = appMenuBar->addMenu(tr("&Help"));
+    QMenu* help = appMenuBar->addMenu(tr("&Help"));
+    help->setObjectName("menu_help");
     if(walletFrame)
     {
         help->addAction(openRPCConsoleAction);
@@ -656,6 +709,7 @@ void GUI::createTrayIconMenu()
         return;
 
     trayIconMenu = new QMenu(this);
+    trayIconMenu->setObjectName("menu_tray_icon");
     trayIcon->setContextMenu(trayIconMenu);
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -1349,9 +1403,11 @@ void UnitDisplayStatusBarControl::mousePressEvent(QMouseEvent *event)
 void UnitDisplayStatusBarControl::createContextMenu()
 {
     menu = new QMenu(this);
+    menu->setObjectName("menu_unit_change");
     for(GuldenUnits::Unit u : GuldenUnits::availableUnits())
     {
         QAction *menuAction = new QAction(QString(GuldenUnits::name(u)), this);
+        menuAction->setObjectName("action_units_menu");
         menuAction->setData(QVariant(u));
         menu->addAction(menuAction);
     }

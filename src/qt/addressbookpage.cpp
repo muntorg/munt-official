@@ -101,9 +101,13 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
 
     // Context menu actions
     QAction *copyAddressAction = new QAction(tr("&Copy Address"), this);
+    copyAddressAction->setObjectName("action_addressbook_copy_address");
     QAction *copyLabelAction = new QAction(tr("Copy &Label"), this);
+    copyLabelAction->setObjectName("action_addressbook_copy_label");
     QAction *editAction = new QAction(tr("&Edit"), this);
+    editAction->setObjectName("action_addressbook_edit_label");
     deleteAction = new QAction(ui->deleteAddress->text(), this);
+    deleteAction->setObjectName("action_addressbook_delete");
 
     // Build context menu
     contextMenu = new QMenu(this);

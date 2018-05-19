@@ -553,10 +553,15 @@ void RPCConsole::setClientModel(ClientModel *model)
 
         // create peer table context menu actions
         QAction* disconnectAction = new QAction(tr("&Disconnect"), this);
+        disconnectAction->setObjectName("action_rpc_peer_disconnect");
         QAction* banAction1h      = new QAction(tr("Ban for") + " " + tr("1 &hour"), this);
+        banAction1h->setObjectName("action_rpc_ban_1h");
         QAction* banAction24h     = new QAction(tr("Ban for") + " " + tr("1 &day"), this);
+        banAction24h->setObjectName("action_rpc_ban_24h");
         QAction* banAction7d      = new QAction(tr("Ban for") + " " + tr("1 &week"), this);
+        banAction7d->setObjectName("action_rpc_ban_7d");
         QAction* banAction365d    = new QAction(tr("Ban for") + " " + tr("1 &year"), this);
+        banAction365d->setObjectName("action_rpc_ban_365d");
 
         // create peer table context menu
         peersTableContextMenu = new QMenu(this);
@@ -605,9 +610,11 @@ void RPCConsole::setClientModel(ClientModel *model)
 
         // create ban table context menu action
         QAction* unbanAction = new QAction(tr("&Unban"), this);
+        unbanAction->setObjectName("action_rpc_unban");
 
         // create ban table context menu
         banTableContextMenu = new QMenu(this);
+        banTableContextMenu->setObjectName("menu_rpc_ban_context");
         banTableContextMenu->addAction(unbanAction);
 
         // ban table context menu signals

@@ -168,13 +168,21 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     bumpFeeAction = new QAction(tr("Increase transaction fee"), this);
     bumpFeeAction->setObjectName("bumpFeeAction");
     QAction *copyAddressAction = new QAction(tr("Copy address"), this);
+    copyAddressAction->setObjectName("action_transaction_view_copy_address");
     QAction *copyLabelAction = new QAction(tr("Copy label"), this);
+    copyLabelAction->setObjectName("action_transaction_view_copy_label");
     QAction *copyAmountAction = new QAction(tr("Copy amount"), this);
+    copyAmountAction->setObjectName("action_transaction_view_copy_amount");
     QAction *copyTxIDAction = new QAction(tr("Copy transaction ID"), this);
+    copyTxIDAction->setObjectName("action_transaction_view_tx_id");
     QAction *copyTxHexAction = new QAction(tr("Copy raw transaction"), this);
+    copyTxHexAction->setObjectName("action_transaction_view_raw_tx");
     QAction *copyTxPlainText = new QAction(tr("Copy full transaction details"), this);
+    copyTxPlainText->setObjectName("action_transaction_view_tx_details_full");
     QAction *editLabelAction = new QAction(tr("Edit label"), this);
+    editLabelAction->setObjectName("action_transaction_view_edit_label");
     QAction *showDetailsAction = new QAction(tr("Show transaction details"), this);
+    showDetailsAction->setObjectName("action_transaction_view_show_details");
 
     contextMenu = new QMenu(this);
     contextMenu->setObjectName("contextMenu");
@@ -273,6 +281,7 @@ void TransactionView::setModel(WalletModel *_model)
                 if (!host.isEmpty())
                 {
                     QAction *thirdPartyTxUrlAction = new QAction(host, this); // use host as menu item label
+                    thirdPartyTxUrlAction->setObjectName("action_transaction_view_third_party_url");
                     if (i == 0)
                         contextMenu->addSeparator();
                     contextMenu->addAction(thirdPartyTxUrlAction);

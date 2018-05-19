@@ -265,9 +265,13 @@ WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* paren
     new PlotMouseTracker( ui->witnessEarningsPlot->canvas() );
 
     QAction* unitBlocksAction = new QAction(tr("&Blocks"), this);
+    unitBlocksAction->setObjectName("action_unit_blocks");
     QAction* unitDaysAction = new QAction(tr("&Days"), this);
+    unitDaysAction->setObjectName("action_days");
     QAction* unitWeeksAction = new QAction(tr("&Weeks"), this);
+    unitWeeksAction->setObjectName("action_weeks");
     QAction* unitMonthsAction = new QAction(tr("&Months"), this);
+    unitMonthsAction->setObjectName("action_months");
 
     // Build context menu for unit selection button
     unitSelectionMenu = new QMenu(this);
@@ -634,7 +638,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
-    DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
+    DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;

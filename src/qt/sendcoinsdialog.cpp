@@ -74,12 +74,19 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
 
     // Coin Control: clipboard actions
     QAction *clipboardQuantityAction = new QAction(tr("Copy quantity"), this);
+    clipboardQuantityAction->setObjectName("action_sendcoins_clipboarc_copy_quantity");
     QAction *clipboardAmountAction = new QAction(tr("Copy amount"), this);
+    clipboardAmountAction->setObjectName("action_sendcoins_clipboarc_copy_amount");
     QAction *clipboardFeeAction = new QAction(tr("Copy fee"), this);
+    clipboardFeeAction->setObjectName("action_sendcoins_clipboarc_copy_fee");
     QAction *clipboardAfterFeeAction = new QAction(tr("Copy after fee"), this);
+    clipboardAfterFeeAction->setObjectName("action_sendcoins_clipboarc_copy_after_fee");
     QAction *clipboardBytesAction = new QAction(tr("Copy bytes"), this);
+    clipboardBytesAction->setObjectName("action_sendcoins_clipboarc_copy_bytes");
     QAction *clipboardLowOutputAction = new QAction(tr("Copy dust"), this);
+    clipboardLowOutputAction->setObjectName("action_sendcoins_clipboarc_copy_dust");
     QAction *clipboardChangeAction = new QAction(tr("Copy change"), this);
+    clipboardChangeAction->setObjectName("action_sendcoins_clipboarc_copy_change");
     connect(clipboardQuantityAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardQuantity()));
     connect(clipboardAmountAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardAmount()));
     connect(clipboardFeeAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardFee()));

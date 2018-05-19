@@ -34,6 +34,7 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
 , requestType(type)
 {
     netManager = new QNetworkAccessManager( this );
+    netManager->setObjectName("nocks_request_manager");
 
     connect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
     connect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );

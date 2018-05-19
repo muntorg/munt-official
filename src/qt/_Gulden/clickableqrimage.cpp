@@ -24,9 +24,11 @@ ClickableQRImage::ClickableQRImage(QWidget *parent):
 {
     contextMenu = new QMenu();
     QAction *saveImageAction = new QAction(tr("&Save Image..."), this);
+    saveImageAction->setObjectName("action_save_qr_image");
     connect(saveImageAction, SIGNAL(triggered()), this, SLOT(saveImage()));
     contextMenu->addAction(saveImageAction);
     QAction *copyImageAction = new QAction(tr("&Copy Image"), this);
+    copyImageAction->setObjectName("action_copy_qr_image");
     connect(copyImageAction, SIGNAL(triggered()), this, SLOT(copyImage()));
     contextMenu->addAction(copyImageAction);
 

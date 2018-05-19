@@ -83,15 +83,13 @@ QVariant CurrencyTableModel::data(const QModelIndex& index, int role) const
 
 void CurrencyTableModel::setBalance(CAmount balanceNLG)
 {
-    if (balanceNLG != m_balanceNLG)
-    {
-        m_balanceNLG = balanceNLG;
-    }
+    m_balanceNLG = balanceNLG;
 }
 
 void CurrencyTableModel::balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     setBalance(balance + unconfirmedBalance + immatureBalance);
+    //fixme: (2.1) Only emit if data actually changes.
     Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(rowCount()-1, columnCount()-1, QModelIndex()));
 }
 
@@ -100,6 +98,7 @@ CurrencyTicker::CurrencyTicker( QObject* parent )
 , count(0)
 {
     netManager = new QNetworkAccessManager( this );
+    netManager->setObjectName("currency_ticker_net_manager");
 
     connect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
     connect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
@@ -107,7 +106,8 @@ CurrencyTicker::CurrencyTicker( QObject* parent )
 
 CurrencyTicker::~CurrencyTicker()
 {
-
+    disconnect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
+    disconnect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
 }
 
 void CurrencyTicker::setOptionsModel( OptionsModel* optionsModel_ )
@@ -165,6 +165,7 @@ CAmount CurrencyTicker::convertForexToGulden(CAmount forexAmount, std::string fo
 CurrencyTableModel* CurrencyTicker::GetCurrencyTableModel()
 {
     CurrencyTableModel* model = new CurrencyTableModel(this, this);
+    model->setObjectName("ticker_currency_table_model");
     model->setMap(&m_ExchangeRates);
     model->setBalance(CAmount(0));
     return model;

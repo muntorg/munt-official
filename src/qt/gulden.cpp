@@ -206,7 +206,7 @@ private:
     /// Pass fatal exception message to UI thread
     void handleRunawayException(const std::exception *e);
 };
-
+#include <QMetaEnum>
 /** Main Gulden application object */
 class GuldenApplication: public QApplication
 {
@@ -226,10 +226,26 @@ public:
     /// Create main window
     void createWindow(const NetworkStyle *networkStyle);
 
-    /*GULDEN - move to public section
-    /// Request core initialization
-    void requestInitialize();
-    */
+    bool logEvents = false;
+    virtual bool notify(QObject* receiver, QEvent* event)
+    {
+        if (logEvents)
+        {
+            static int eventEnumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
+            QString name = QEvent::staticMetaObject.enumerator(eventEnumIndex).valueToKey(event->type());
+            if (!name.isEmpty())
+            {
+                QString receiveName = receiver->objectName().toLocal8Bit().data();
+                LogPrintf("QTEVENT: event type %s for object %s\n", name.toStdString().c_str(), receiveName.toStdString().c_str());
+                if (name == "ActionRemoved" && receiveName == "navigation_bar")
+                {
+                    int nBreak = 1;
+                }
+            }
+        }
+        QApplication::notify(receiver, event);
+    }
+
     /// Request core shutdown
     void requestShutdown();
 
@@ -433,6 +449,7 @@ void GuldenApplication::parameterSetup()
 
 void GuldenApplication::requestInitialize()
 {
+    logEvents = true;
     qDebug() << __func__ << ": Requesting initialize";
     startThread();
     Q_EMIT requestedInitialize();
