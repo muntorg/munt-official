@@ -1,8 +1,9 @@
 ---
 name: "Gulden-win-0.15"
 enable_cache: true
+sudo: true
 suites:
-- "trusty"
+- "bionic"
 architectures:
 - "amd64"
 packages:
@@ -22,6 +23,7 @@ packages:
 - "zip"
 - "ca-certificates"
 - "python"
+- "rename"
 - "gperf"
 - "ruby"
 - "bison"
@@ -101,6 +103,10 @@ script: |
     done
   done
   }
+
+  for i in $HOSTS; do
+    sudo update-alternatives --set ${i}-g++ $(which ${i}-g++-posix)
+  done
 
   # Faketime for depends so intermediate results are comparable
   export PATH_orig=${PATH}
