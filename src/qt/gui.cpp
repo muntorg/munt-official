@@ -298,32 +298,42 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 
 GUI::~GUI()
 {
-    //fixme: (2.1) - Ex GuldenGUI code - factor this in with the rest of the code.
+    LogPrint(BCLog::QT, "GUI::~GUI\n");
+
+    if (guldenEventFilter)
     {
-        disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
-        if (guldenEventFilter)
-        {
-            removeEventFilter(guldenEventFilter);
-            delete guldenEventFilter;
-        }
+        removeEventFilter(guldenEventFilter);
+        delete guldenEventFilter;
+        guldenEventFilter = nullptr;
     }
 
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
+    disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
 
+    if (rpcConsole)
+    {
+        delete rpcConsole;
+        rpcConsole = nullptr;
+    }
+
+    // Save window size and position for future loads.
     GUIUtil::saveWindowGeometry("nWindow", this);
-    if(trayIcon) // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
+
+    // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
+    if(trayIcon) 
         trayIcon->hide();
+
 #ifdef Q_OS_MAC
     delete appMenuBar;
     MacDockIconHandler::cleanup();
 #endif
-
-    delete rpcConsole;
 }
 
 void GUI::createActions()
 {
+    LogPrint(BCLog::QT, "GUI::createActions\n");
+
     QActionGroup *tabGroup = new QActionGroup(this);
     tabGroup->setObjectName("gui_action_tab_group");
 
@@ -502,6 +512,8 @@ void GUI::createActions()
 
 void GUI::createMenuBar()
 {
+    LogPrint(BCLog::QT, "GUI::createMenuBar\n");
+
 #ifdef Q_OS_MAC
     // Create a decoupled menu bar on Mac which stays even if the window is closed
     appMenuBar = new QMenuBar();
@@ -555,6 +567,8 @@ void GUI::createMenuBar()
 
 void GUI::setClientModel(ClientModel *_clientModel)
 {
+    LogPrint(BCLog::QT, "GUI::setClientModel\n");
+
     this->clientModel = _clientModel;
     if(_clientModel)
     {
@@ -623,6 +637,8 @@ void GUI::setClientModel(ClientModel *_clientModel)
 #ifdef ENABLE_WALLET
 bool GUI::addWallet(const QString& name, WalletModel *walletModel)
 {
+    LogPrint(BCLog::QT, "GUI::addWallet\n");
+
     if(!walletFrame)
         return false;
     setWalletActionsEnabled(true);
@@ -640,11 +656,16 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
 
 bool GUI::setCurrentWallet(const QString& name)
 {
+    LogPrint(BCLog::QT, "GUI::setCurrentWallet\n");
+
     if(!walletFrame)
         return false;
     bool ret =  walletFrame->setCurrentWallet(name);
 
+    // Now that we have an active wallet it is safe to show the toolbars and menubars again.
     showToolBars();
+    appMenuBar->setVisible(true);
+
     refreshAccountControls();
 
     connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), accountSummaryWidget , SLOT( balanceChanged() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -664,6 +685,8 @@ bool GUI::setCurrentWallet(const QString& name)
 
 void GUI::removeAllWallets()
 {
+    LogPrint(BCLog::QT, "GUI::removeAllWallets\n");
+
     if(!walletFrame)
         return;
     setWalletActionsEnabled(false);
@@ -673,6 +696,8 @@ void GUI::removeAllWallets()
 
 void GUI::setWalletActionsEnabled(bool enabled)
 {
+    LogPrint(BCLog::QT, "GUI::setWalletActionsEnabled\n");
+
     witnessDialogAction->setEnabled(enabled);
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
@@ -690,6 +715,8 @@ void GUI::setWalletActionsEnabled(bool enabled)
 
 void GUI::createTrayIcon(const NetworkStyle *networkStyle)
 {
+    LogPrint(BCLog::QT, "GUI::createTrayIcon\n");
+
 #ifndef Q_OS_MAC
     trayIcon = new QSystemTrayIcon(this);
     QString toolTip = tr("%1 client").arg(tr(PACKAGE_NAME)) + " " + networkStyle->getTitleAddText();
@@ -703,6 +730,8 @@ void GUI::createTrayIcon(const NetworkStyle *networkStyle)
 
 void GUI::createTrayIconMenu()
 {
+    LogPrint(BCLog::QT, "GUI::createTrayIconMenu\n");
+
 #ifndef Q_OS_MAC
     // return if trayIcon is unset (only on non-Mac OSes)
     if (!trayIcon)
@@ -739,6 +768,8 @@ void GUI::createTrayIconMenu()
 #ifndef Q_OS_MAC
 void GUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    LogPrint(BCLog::QT, "GUI::trayIconActivated\n");
+
     if(reason == QSystemTrayIcon::Trigger)
     {
         // Click on system tray icon triggers show/hide of the main window
@@ -749,6 +780,8 @@ void GUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void GUI::optionsClicked()
 {
+    LogPrint(BCLog::QT, "GUI::optionsClicked\n");
+
     if(!clientModel || !clientModel->getOptionsModel())
         return;
 
@@ -759,6 +792,8 @@ void GUI::optionsClicked()
 
 void GUI::aboutClicked()
 {
+    LogPrint(BCLog::QT, "GUI::aboutClicked\n");
+
     if(!clientModel)
         return;
 
@@ -768,6 +803,8 @@ void GUI::aboutClicked()
 
 void GUI::showDebugWindow()
 {
+    LogPrint(BCLog::QT, "GUI::showDebugWindow\n");
+
     rpcConsole->showNormal();
     rpcConsole->show();
     rpcConsole->raise();
@@ -776,18 +813,24 @@ void GUI::showDebugWindow()
 
 void GUI::showDebugWindowActivateConsole()
 {
+    LogPrint(BCLog::QT, "GUI::showDebugWindowActivateConsole\n");
+
     rpcConsole->setTabFocus(RPCConsole::TAB_CONSOLE);
     showDebugWindow();
 }
 
 void GUI::showHelpMessageClicked()
 {
+    LogPrint(BCLog::QT, "GUI::showHelpMessageClicked\n");
+
     helpMessageDialog->show();
 }
 
 #ifdef ENABLE_WALLET
 void GUI::openClicked()
 {
+    LogPrint(BCLog::QT, "GUI::openClicked\n");
+
     OpenURIDialog dlg(this);
     if(dlg.exec())
     {
@@ -797,6 +840,8 @@ void GUI::openClicked()
 
 void GUI::showWitnessDialog()
 {
+    LogPrint(BCLog::QT, "GUI::showWitnessDialog\n");
+
     witnessDialogAction->setChecked(true);
     walletFrame->currentWalletView()->witnessDialogPage->update();
     walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
@@ -804,12 +849,16 @@ void GUI::showWitnessDialog()
 
 void GUI::gotoOverviewPage()
 {
+    LogPrint(BCLog::QT, "GUI::gotoOverviewPage\n");
+
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
 }
 
 void GUI::gotoHistoryPage()
 {
+    LogPrint(BCLog::QT, "GUI::gotoHistoryPage\n");
+
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
     //if (walletFrame) walletFrame->currentWalletView()->historyPage->update();
@@ -817,6 +866,8 @@ void GUI::gotoHistoryPage()
 
 void GUI::gotoReceiveCoinsPage()
 {
+    LogPrint(BCLog::QT, "GUI::gotoReceiveCoinsPage\n");
+
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
     //if (walletFrame) walletFrame->currentWalletView()->receiveCoinsPage->update();
@@ -824,6 +875,8 @@ void GUI::gotoReceiveCoinsPage()
 
 void GUI::gotoSendCoinsPage(QString addr)
 {
+    LogPrint(BCLog::QT, "GUI::gotoSendCoinsPage\n");
+
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     if (walletFrame) walletFrame->currentWalletView()->sendCoinsPage->update();
@@ -832,6 +885,8 @@ void GUI::gotoSendCoinsPage(QString addr)
 
 void GUI::updateNetworkState()
 {
+    LogPrint(BCLog::QT, "GUI::updateNetworkState\n");
+
     int count = clientModel->getNumConnections();
     float devicePixelRatio = 1.0;
     #if QT_VERSION > 0x050100
@@ -866,22 +921,30 @@ void GUI::updateNetworkState()
 
 void GUI::setNumConnections(int count)
 {
+    LogPrint(BCLog::QT, "GUI::setNumConnections\n");
+
     updateNetworkState();
 }
 
 void GUI::setNetworkActive(bool networkActive)
 {
+    LogPrint(BCLog::QT, "GUI::setNetworkActive\n");
+
     updateNetworkState();
 }
 
 void GUI::updateHeadersSyncProgressLabel(int current, int total)
 {
+    LogPrint(BCLog::QT, "GUI::updateHeadersSyncProgressLabel\n");
+
     if (total - current > HEADER_HEIGHT_DELTA_SYNC)
         progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 * current / total, 'f', 1)));
 }
 
 void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
+    LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
+
     if (!clientModel)
         return;
 
@@ -1006,6 +1069,8 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 
 void GUI::setNumHeaders(int current, int total)
 {
+    LogPrint(BCLog::QT, "GUI::setNumHeaders\n");
+
     if (!clientModel)
         return;
 
@@ -1020,6 +1085,8 @@ void GUI::setNumHeaders(int current, int total)
 
 void GUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
 {
+    LogPrint(BCLog::QT, "GUI::message\n");
+
     QString strTitle = title; // default title
     // Default to information icon
     int nMBoxIcon = QMessageBox::Information;
@@ -1076,6 +1143,8 @@ void GUI::message(const QString &title, const QString &message, unsigned int sty
 
 void GUI::resizeEvent(QResizeEvent* event)
 {
+    LogPrint(BCLog::QT, "GUI::resizeEvent\n");
+
     QMainWindow::resizeEvent(event);
 
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
@@ -1090,6 +1159,8 @@ void GUI::resizeEvent(QResizeEvent* event)
 
 void GUI::changeEvent(QEvent *e)
 {
+    LogPrint(BCLog::QT, "GUI::changeEvent\n");
+
     QMainWindow::changeEvent(e);
 #ifndef Q_OS_MAC // Ignored on Mac
     if(e->type() == QEvent::WindowStateChange)
@@ -1109,6 +1180,8 @@ void GUI::changeEvent(QEvent *e)
 
 void GUI::closeEvent(QCloseEvent *event)
 {
+    LogPrint(BCLog::QT, "GUI::closeEvent\n");
+
 #ifndef Q_OS_MAC // Ignored on Mac
     //NB! This is a bit subtle, but we want to ignore this close event even when we are closing.
     //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
@@ -1135,6 +1208,8 @@ void GUI::closeEvent(QCloseEvent *event)
 
 void GUI::showEvent(QShowEvent *event)
 {
+    LogPrint(BCLog::QT, "GUI::showEvent\n");
+
     // enable the debug window when the main window shows up
     openRPCConsoleAction->setEnabled(true);
     aboutAction->setEnabled(true);
@@ -1144,6 +1219,8 @@ void GUI::showEvent(QShowEvent *event)
 #ifdef ENABLE_WALLET
 void GUI::incomingTransaction(const QString& date, int unit, const CAmount& amountReceived, const CAmount& amountSent, const QString& type, const QString& address, const QString& account, const QString& label)
 {
+    LogPrint(BCLog::QT, "GUI::incomingTransaction\n");
+
     // On new transaction, make an info balloon
     QString msg = tr("Date: %1\n").arg(date) +
                   tr("Received: %1\n").arg(GuldenUnits::formatWithUnit(unit, amountReceived, true)) +
@@ -1177,6 +1254,8 @@ void GUI::incomingTransaction(const QString& date, int unit, const CAmount& amou
 
 void GUI::dragEnterEvent(QDragEnterEvent *event)
 {
+    LogPrint(BCLog::QT, "GUI::dragEnterEvent\n");
+
     // Accept only URIs
     if(event->mimeData()->hasUrls())
         event->acceptProposedAction();
@@ -1184,6 +1263,8 @@ void GUI::dragEnterEvent(QDragEnterEvent *event)
 
 void GUI::dropEvent(QDropEvent *event)
 {
+    LogPrint(BCLog::QT, "GUI::dropEvent\n");
+
     if(event->mimeData()->hasUrls())
     {
         for(const QUrl &uri : event->mimeData()->urls())
@@ -1196,6 +1277,8 @@ void GUI::dropEvent(QDropEvent *event)
 
 bool GUI::eventFilter(QObject *object, QEvent *event)
 {
+    LogPrint(BCLog::QT, "GUI::eventFilter\n");
+
     // Catch status tip events
     if (event->type() == QEvent::StatusTip)
     {
@@ -1209,6 +1292,8 @@ bool GUI::eventFilter(QObject *object, QEvent *event)
 #ifdef ENABLE_WALLET
 bool GUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
+    LogPrint(BCLog::QT, "GUI::handlePaymentRequest\n");
+
     // URI has to be valid
     if (walletFrame && walletFrame->handlePaymentRequest(recipient))
     {
@@ -1221,6 +1306,8 @@ bool GUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 
 void GUI::setEncryptionStatus(int status)
 {
+    LogPrint(BCLog::QT, "GUI::setEncryptionStatus\n");
+
     float devicePixelRatio = 1.0;
     #if QT_VERSION > 0x050100
     devicePixelRatio = ((QGuiApplication*)QCoreApplication::instance())->devicePixelRatio();
@@ -1256,6 +1343,8 @@ void GUI::setEncryptionStatus(int status)
 
 void GUI::showNormalIfMinimized(bool fToggleHidden)
 {
+    LogPrint(BCLog::QT, "GUI::showNormalIfMinimized\n");
+
     if(!clientModel)
         return;
 
@@ -1281,11 +1370,15 @@ void GUI::showNormalIfMinimized(bool fToggleHidden)
 
 void GUI::toggleHidden()
 {
+    LogPrint(BCLog::QT, "GUI::toggleHidden\n");
+
     showNormalIfMinimized(true);
 }
 
 void GUI::detectShutdown()
 {
+    LogPrint(BCLog::QT, "GUI::detectShutdown\n");
+
     if (ShutdownRequested())
     {
         if(rpcConsole)
@@ -1296,6 +1389,8 @@ void GUI::detectShutdown()
 
 void GUI::showProgress(const QString &title, int nProgress)
 {
+    LogPrint(BCLog::QT, "GUI::showProgress\n");
+
     if (nProgress == 100)
     {
         if (progressBarLabel->text() == title)
@@ -1325,6 +1420,8 @@ void GUI::showProgress(const QString &title, int nProgress)
 
 void GUI::setTrayIconVisible(bool fHideTrayIcon)
 {
+    LogPrint(BCLog::QT, "GUI::setTrayIconVisible\n");
+
     if (trayIcon)
     {
         trayIcon->setVisible(!fHideTrayIcon);
@@ -1333,6 +1430,8 @@ void GUI::setTrayIconVisible(bool fHideTrayIcon)
 
 void GUI::showModalOverlay()
 {
+    LogPrint(BCLog::QT, "GUI::showModalOverlay\n");
+
     if (modalOverlay && (progressBar->isVisible() || modalOverlay->isLayerVisible()))
         modalOverlay->toggleVisibility();
 }
@@ -1356,6 +1455,8 @@ static bool ThreadSafeMessageBox(GUI *gui, const std::string& message, const std
 
 void GUI::subscribeToCoreSignals()
 {
+    LogPrint(BCLog::QT, "GUI::subscribeToCoreSignals\n");
+
     // Connect signals to client
     uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
@@ -1363,6 +1464,8 @@ void GUI::subscribeToCoreSignals()
 
 void GUI::unsubscribeFromCoreSignals()
 {
+    LogPrint(BCLog::QT, "GUI::unsubscribeFromCoreSignals\n");
+
     // Disconnect signals from client
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
@@ -1370,6 +1473,8 @@ void GUI::unsubscribeFromCoreSignals()
 
 void GUI::toggleNetworkActive()
 {
+    LogPrint(BCLog::QT, "GUI::toggleNetworkActive\n");
+
     if (clientModel) {
         clientModel->setNetworkActive(!clientModel->getNetworkActive());
     }
@@ -1379,6 +1484,8 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
     optionsModel(0),
     menu(0)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::UnitDisplayStatusBarControl\n");
+
     createContextMenu();
     setToolTip(tr("Unit to show amounts in. Click to select another unit."));
     QList<GuldenUnits::Unit> units = GuldenUnits::availableUnits();
@@ -1396,12 +1503,16 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
 /** So that it responds to button clicks */
 void UnitDisplayStatusBarControl::mousePressEvent(QMouseEvent *event)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::mousePressEvent\n");
+
     onDisplayUnitsClicked(event->pos());
 }
 
 /** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
 void UnitDisplayStatusBarControl::createContextMenu()
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::createContextMenu\n");
+
     menu = new QMenu(this);
     menu->setObjectName("menu_unit_change");
     for(GuldenUnits::Unit u : GuldenUnits::availableUnits())
@@ -1417,6 +1528,8 @@ void UnitDisplayStatusBarControl::createContextMenu()
 /** Lets the control know about the Options Model (and its signals) */
 void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel *_optionsModel)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::setOptionsModel\n");
+
     if (_optionsModel)
     {
         this->optionsModel = _optionsModel;
@@ -1432,12 +1545,16 @@ void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel *_optionsModel)
 /** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
 void UnitDisplayStatusBarControl::updateDisplayUnit(int newUnits)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::updateDisplayUnit\n");
+
     setText(GuldenUnits::name(newUnits));
 }
 
 /** Shows context menu with Display Unit options by the mouse coordinates */
 void UnitDisplayStatusBarControl::onDisplayUnitsClicked(const QPoint& point)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::onDisplayUnitsClicked\n");
+
     QPoint globalPos = mapToGlobal(point);
     menu->exec(globalPos);
 }
@@ -1445,6 +1562,8 @@ void UnitDisplayStatusBarControl::onDisplayUnitsClicked(const QPoint& point)
 /** Tells underlying optionsModel to update its current display unit. */
 void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
 {
+    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::onMenuSelection\n");
+
     if (action)
     {
         optionsModel->setDisplayUnit(action->data());

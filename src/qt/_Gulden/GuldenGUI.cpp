@@ -198,11 +198,14 @@ void GUI::NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::fun
 
 void GUI::handlePaymentAccepted()
 {
+    LogPrint(BCLog::QT, "GUI::handlePaymentAccepted\n");
+
     refreshTabVisibilities();
 }
 
 void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
+    LogPrint(BCLog::QT, "GUI::setBalance\n");
     if (ShutdownRequested())
         return;
 
@@ -262,11 +265,14 @@ void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, 
 
 void GUI::updateExchangeRates()
 {
+    LogPrint(BCLog::QT, "GUI::updateExchangeRates\n");
     setBalance(balanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached);
 }
 
 void GUI::requestRenewWitness(CAccount* funderAccount)
 {
+    LogPrint(BCLog::QT, "GUI::requestRenewWitness\n");
+
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
     std::string strError;
@@ -312,6 +318,8 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
 void GUI::requestFundWitness(CAccount* funderAccount)
 {
+    LogPrint(BCLog::QT, "GUI::requestFundWitness\n");
+
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
     pactiveWallet->setActiveAccount(funderAccount);
     refreshAccountControls();
@@ -321,6 +329,8 @@ void GUI::requestFundWitness(CAccount* funderAccount)
 
 void GUI::requestEmptyWitness()
 {
+    LogPrint(BCLog::QT, "GUI::requestEmptyWitness\n");
+
     CAccount* fromWitnessAccount = pactiveWallet->getActiveAccount();
     CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
     if (availableAmount > 0)
@@ -338,6 +348,8 @@ void GUI::requestEmptyWitness()
 
 void GUI::setOptionsModel(OptionsModel* optionsModel_)
 {
+    LogPrint(BCLog::QT, "GUI::setOptionsModel\n");
+
     optionsModel = optionsModel_;
     ticker->setOptionsModel(optionsModel);
     optionsModel->setTicker(ticker);
@@ -350,6 +362,8 @@ void GUI::setOptionsModel(OptionsModel* optionsModel_)
 
 void GUI::createToolBars()
 {
+    LogPrint(BCLog::QT, "GUI::createToolBars\n");
+
     if (!walletFrame)
         return;
 
@@ -419,9 +433,9 @@ void GUI::createToolBars()
     //Spacer to fill height
     {
         QScrollArea* scrollArea = new QScrollArea ( this );
-        scrollArea->setObjectName("scroll_area_for_account_scroll_area");
+        scrollArea->setObjectName("account_scroll_area");
         accountScrollArea = new QFrame( scrollArea );
-        accountScrollArea->setObjectName("account_scroll_area");
+        accountScrollArea->setObjectName("account_scroll_area_frame");
         scrollArea->setContentsMargins( 0, 0, 0, 0);
         scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
         scrollArea->setWidget(accountScrollArea);
@@ -434,6 +448,7 @@ void GUI::createToolBars()
         accountBar->addWidget( scrollArea );
 
         QVBoxLayout* vbox = new QVBoxLayout();
+        vbox->setObjectName("account_scroll_area_frame");
         vbox->setSpacing(0);
         vbox->setContentsMargins( 0, 0, 0, 0 );
 
@@ -441,9 +456,9 @@ void GUI::createToolBars()
     }
 
     ClickableLabel* addAccButton = new ClickableLabel( this );
+    addAccButton->setObjectName( "add_account_button" );
     addAccButton->setTextFormat( Qt::RichText );
     addAccButton->setText( GUIUtil::fontAwesomeRegular("\uf067 ")+tr("Add account") );
-    addAccButton->setObjectName( "add_account_button" );
     addAccButton->setCursor( Qt::PointingHandCursor );
     accountBar->addWidget( addAccButton );
     addToolBar( Qt::LeftToolBarArea, accountBar );
@@ -458,11 +473,11 @@ void GUI::createToolBars()
 
     //Add the 'Gulden bar' - on the left with the Gulden sign and balance
     guldenBar = new QToolBar( QCoreApplication::translate( "toolbar", "Overview toolbar" ) );
+    guldenBar->setObjectName( "gulden_bar" );
     guldenBar->setFixedHeight( horizontalBarHeight );
     guldenBar->setFixedWidth( sideBarWidth );
     guldenBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     guldenBar->setMinimumWidth( sideBarWidth );
-    guldenBar->setObjectName( "gulden_bar" );
     guldenBar->setMovable( false );
     guldenBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
     guldenBar->setIconSize( QSize( 18, 18 ) );
@@ -669,8 +684,9 @@ void GUI::createToolBars()
     }
     addToolBar( spacerBarR );
 
-    //Hide all toolbars until UI fully loaded
+    //Hide all toolbars and menus until UI fully loaded
     hideToolBars();
+    appMenuBar->setVisible(false);
 
 
     //Init the welcome dialog inside walletFrame
@@ -682,6 +698,8 @@ void GUI::createToolBars()
 
 void GUI::hideToolBars()
 {
+    LogPrint(BCLog::QT, "GUI::hideToolBars\n");
+
     if (accountBar) accountBar->setVisible(false);
     if (guldenBar) guldenBar->setVisible(false);
     if (spacerBarL) spacerBarL->setVisible(false);
@@ -693,6 +711,8 @@ void GUI::hideToolBars()
 
 void GUI::showToolBars()
 {
+    LogPrint(BCLog::QT, "GUI::showToolBars\n");
+
     welcomeScreen = NULL;
     if (appMenuBar) appMenuBar->setStyleSheet("");
     if (accountBar) accountBar->setVisible(true);
@@ -707,6 +727,8 @@ void GUI::showToolBars()
 
 void GUI::doApplyStyleSheet()
 {
+    LogPrint(BCLog::QT, "GUI::doApplyStyleSheet\n");
+
     if(!enableWallet || !enableFullUI)
         return;
 
@@ -724,6 +746,7 @@ void GUI::doApplyStyleSheet()
         delete guldenEventFilter;
     }
     guldenEventFilter = new GuldenEventFilter(style(), this, guldenStyle);
+    guldenEventFilter->setObjectName("gui_event_filter");
     installEventFilter(guldenEventFilter);
 
     //Replace variables in the 'template' with actual values
@@ -755,6 +778,8 @@ void GUI::doApplyStyleSheet()
 
 void GUI::resizeToolBarsGulden()
 {
+    LogPrint(BCLog::QT, "GUI::resizeToolBarsGulden\n");
+
     //Filler for right of menu bar.
     #ifndef MAC_OSX
     menuBarSpaceFiller->move(sideBarWidth, 0);
@@ -768,6 +793,8 @@ void GUI::resizeToolBarsGulden()
 
 void GUI::doPostInit()
 {
+    LogPrint(BCLog::QT, "GUI::doPostInit\n");
+
     //Fonts
     // We 'abuse' the translation system here to allow different 'font stacks' for different languages.
     //QString MAIN_FONTSTACK = QObject::tr("Arial, 'Helvetica Neue', Helvetica, sans-serif");
@@ -902,6 +929,8 @@ void GUI::doPostInit()
 
 void GUI::hideProgressBarLabel()
 {
+    LogPrint(BCLog::QT, "GUI::hideProgressBarLabel\n");
+
     if (progressBarLabel)
     {
         progressBarLabel->setText("");
@@ -913,6 +942,8 @@ void GUI::hideProgressBarLabel()
 
 void GUI::showProgressBarLabel()
 {
+    LogPrint(BCLog::QT, "GUI::showProgressBarLabel\n");
+
     if (progressBarLabel)
         progressBarLabel->setVisible(true);
     if(statusToolBar)
@@ -921,6 +952,8 @@ void GUI::showProgressBarLabel()
 
 void GUI::hideBalances()
 {
+    LogPrint(BCLog::QT, "GUI::hideBalances\n");
+
     if (!labelBalance)
         return;
 
@@ -931,6 +964,8 @@ void GUI::hideBalances()
 
 void GUI::showBalances()
 {
+    LogPrint(BCLog::QT, "GUI::showBalances\n");
+
     if (!labelBalance || !labelBalance->isVisible())
         return;
 
@@ -947,6 +982,8 @@ bool GUI::welcomeScreenIsVisible()
 
 QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight)
 {
+    LogPrint(BCLog::QT, "GUI::createDialog\n");
+
     QDialog* d = new QDialog(parent);
     d->setWindowFlags(Qt::Dialog);
     d->setMinimumSize(QSize(minWidth, minHeight));
@@ -1019,7 +1056,7 @@ QString limitString(const QString& string, int maxLength)
     auto beforeEllipsis = string.left(std::ceil(spacePerPart));
     auto afterEllipsis = string.right(std::floor(spacePerPart));
 
-    return beforeEllipsis + ELLIPSIS + afterEllipsis;
+    return beforeEllipsis + GUIUtil::fontAwesomeLight(ELLIPSIS) + afterEllipsis;
 }
 
 QString superscriptSpan(const QString& sText)
@@ -1075,6 +1112,8 @@ QString getAccountLabel(CAccount* account)
 
 void GUI::refreshTabVisibilities()
 {
+    LogPrint(BCLog::QT, "GUI::refreshTabVisibilities\n");
+
     receiveCoinsAction->setVisible( true );
     sendCoinsAction->setVisible( true );
 
@@ -1181,6 +1220,7 @@ void GUI::refreshAccountControls()
 ClickableLabel* GUI::createAccountButton( const QString& accountName )
 {
     ClickableLabel* newAccountButton = new ClickableLabel( this );
+    newAccountButton->setObjectName(QString("account_selection_button_%1").arg(rand()));
     newAccountButton->setTextFormat( Qt::RichText );
     newAccountButton->setText( accountName );
     newAccountButton->setCursor( Qt::PointingHandCursor );
@@ -1215,6 +1255,7 @@ void GUI::setActiveAccountButton( ClickableLabel* activeButton )
 
 void GUI::updateAccount(CAccount* account)
 {
+    LogPrint(BCLog::QT, "GUI::updateAccount\n");
     LOCK(pactiveWallet->cs_wallet);
 
     CReserveKey* receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
@@ -1230,12 +1271,14 @@ void GUI::updateAccount(CAccount* account)
         walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
     }
     walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
-
+    receiveAddress->ReturnKey();
     delete receiveAddress;
 }
 
 void GUI::balanceChanged()
 {
+    LogPrint(BCLog::QT, "GUI::balanceChanged\n");
+
     // Force receive Qr code to update on balance change.
     if (this && walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->walletModel)
         updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
@@ -1244,6 +1287,8 @@ void GUI::balanceChanged()
 
 void GUI::accountNameChanged(CAccount* account)
 {
+    LogPrint(BCLog::QT, "GUI::accountNameChanged\n");
+
     //Disable layout to prevent updating to changes immediately
     accountScrollArea->layout()->setEnabled(false);
     {
@@ -1258,6 +1303,8 @@ void GUI::accountNameChanged(CAccount* account)
 
 void GUI::accountWarningChanged(CAccount* account)
 {
+    LogPrint(BCLog::QT, "GUI::accountWarningChanged\n");
+
     if (!account)
         return;
 
@@ -1274,6 +1321,8 @@ void GUI::accountWarningChanged(CAccount* account)
 
 void GUI::activeAccountChanged(CAccount* account)
 {
+    LogPrint(BCLog::QT, "GUI::activeAccountChanged\n");
+
     if (accountSummaryWidget)
         accountSummaryWidget->setActiveAccount(account);
 
@@ -1333,6 +1382,8 @@ ClickableLabel* GUI::accountAddedHelper(CAccount* addedAccount)
 
 void GUI::accountAdded(CAccount* addedAccount)
 {
+    LogPrint(BCLog::QT, "GUI::accountAdded\n");
+
     if (!addedAccount || (addedAccount->m_State != AccountState::Normal && !(fShowChildAccountsSeperately && addedAccount->m_State == AccountState::ShadowChild)) )
         return;
 
@@ -1349,6 +1400,8 @@ void GUI::accountAdded(CAccount* addedAccount)
 
 void GUI::accountDeleted(CAccount* account)
 {
+    LogPrint(BCLog::QT, "GUI::accountDeleted\n");
+
     if (!account)
         return;
 
@@ -1377,6 +1430,8 @@ void GUI::accountButtonPressed()
 
 void GUI::promptImportPrivKey()
 {
+    LogPrint(BCLog::QT, "GUI::promptImportPrivKey\n");
+
     ImportPrivKeyDialog dlg(this);
     dlg.exec();
 
@@ -1423,6 +1478,8 @@ void GUI::promptImportPrivKey()
 
 void GUI::promptRescan()
 {
+    LogPrint(BCLog::QT, "GUI::promptRescan\n");
+
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pactiveWallet->nTimeFirstKey = 1;
     boost::thread t(rescanThread); // thread runs free
@@ -1430,11 +1487,15 @@ void GUI::promptRescan()
 
 void GUI::gotoWebsite()
 {
+    LogPrint(BCLog::QT, "GUI::gotoWebsite\n");
+
     QDesktopServices::openUrl( QUrl( "http://www.Gulden.com/" ) );
 }
 
 void GUI::restoreCachedWidgetIfNeeded()
 {
+    LogPrint(BCLog::QT, "GUI::restoreCachedWidgetIfNeeded\n");
+
     bool stateReceiveCoinsAction = true;
     bool stateSendCoinsAction = true;
 
@@ -1511,6 +1572,8 @@ void GUI::restoreCachedWidgetIfNeeded()
 
 void GUI::gotoNewAccountDialog()
 {
+    LogPrint(BCLog::QT, "GUI::gotoNewAccountDialog\n");
+
     if ( walletFrame )
     {
         restoreCachedWidgetIfNeeded();
@@ -1527,6 +1590,8 @@ void GUI::gotoNewAccountDialog()
 
 void GUI::gotoPasswordDialog()
 {
+    LogPrint(BCLog::QT, "GUI::gotoPasswordDialog\n");
+
     if ( walletFrame )
     {
         restoreCachedWidgetIfNeeded();
@@ -1552,6 +1617,8 @@ void GUI::gotoPasswordDialog()
 
 void GUI::gotoBackupDialog()
 {
+    LogPrint(BCLog::QT, "GUI::gotoBackupDialog\n");
+
     if ( walletFrame )
     {
         restoreCachedWidgetIfNeeded();
@@ -1578,23 +1645,29 @@ void GUI::gotoBackupDialog()
 
 void GUI::dismissBackupDialog()
 {
+    LogPrint(BCLog::QT, "GUI::dismissBackupDialog\n");
+
     restoreCachedWidgetIfNeeded();
 }
 
 void GUI::dismissPasswordDialog()
 {
+    LogPrint(BCLog::QT, "GUI::dismissPasswordDialog\n");
+
     restoreCachedWidgetIfNeeded();
 }
 
-
-
 void GUI::cancelNewAccountDialog()
 {
+    LogPrint(BCLog::QT, "GUI::cancelNewAccountDialog\n");
+
     restoreCachedWidgetIfNeeded();
 }
 
 void GUI::acceptNewAccount()
-{ 
+{
+    LogPrint(BCLog::QT, "GUI::acceptNewAccount\n");
+
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
         CAccount* newAccount = nullptr;
@@ -1635,6 +1708,8 @@ void GUI::acceptNewAccount()
 
 void GUI::acceptNewAccountMobile()
 {
+    LogPrint(BCLog::QT, "GUI::acceptNewAccountMobile\n");
+
     restoreCachedWidgetIfNeeded();
 }
 
@@ -1657,11 +1732,15 @@ void GUI::showAccountSettings()
 
 void GUI::dismissAccountSettings()
 {
+    LogPrint(BCLog::QT, "GUI::dismissAccountSettings\n");
+
     restoreCachedWidgetIfNeeded();
 }
 
 void GUI::showExchangeRateDialog()
 {
+    LogPrint(BCLog::QT, "GUI::showExchangeRateDialog\n");
+
     if (!dialogExchangeRate)
     {
         CurrencyTableModel* currencyTabelmodel = ticker->GetCurrencyTableModel();
