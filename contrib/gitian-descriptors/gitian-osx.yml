@@ -34,7 +34,7 @@ packages:
 - "flex"
 - "genisoimage"
 remotes:
-- "url": "https://github.com/Gulden/gulden-dev.git"
+- "url": https://github.com/Gulden/gulden-official.git
   "dir": "Gulden"
 files:
 - "MacOSX10.11.sdk.tar.gz"

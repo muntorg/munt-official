@@ -30,11 +30,12 @@ packages:
 - "flex"
 - "libssl-dev"
 remotes:
-- "url": "https://github.com/Gulden/gulden-dev.git"
+- "url": https://github.com/Gulden/gulden-official.git
   "dir": "Gulden"
 files:
-- "osslsigncode-1.4.tar.gz" #Optional (only needed for official builds)
-- "codesign.tar.gz" #Optional (only needed for official builds)
+- "osslsigncode-1.7.1.tar.gz" #Optional; Only needed for official builds.
+- "0001-Make-code-work-with-OpenSSL-1.1.patch" #Optional - only needed for official builds - https://sourceforge.net/p/osslsigncode/patches/10/attachment/0001-Make-code-work-with-OpenSSL-1.1.patch
+- "codesign.tar.gz" #Optional; only needed for official builds.
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="i686-w64-mingw32 x86_64-w64-mingw32"
@@ -115,11 +116,13 @@ script: |
   create_per-host_linker_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  tar xf osslsigncode-1.4.tar.gz || true
-  mkdir osslsigncode-1.4 || true
-  cd osslsigncode-1.4
-  ./configure --without-gsf --without-curl --disable-dependency-tracking || true
-  make || true
+  tar xf osslsigncode-1.7.1.tar.gz || true
+  # Make the directory (for cases where the tar does not exist and fails)
+  mkdir osslsigncode-1.7.1 || true
+  cd osslsigncode-1.7.1
+      patch < ../0001-Make-code-work-with-OpenSSL-1.1.patch
+      ./configure --without-gsf --without-curl --disable-dependency-tracking || true
+      make || true
   cd ..
 
   tar -xf codesign.tar.gz || true
@@ -173,7 +176,7 @@ script: |
     cp -rf ${BASEPREFIX}/${i}/plugins/platforms release/ | true
     cp -rf ${BASEPREFIX}/${i}/plugins/imageformats release/ | true
     cp -rf /usr/${i}/lib/libwinpthread-1.dll release/ | true
-    cp -rf /usr/lib/gcc/${i}/4.8/*.dll release/ | true
+    cp -rf /usr/lib/gcc/${i}/7.3-posix/*.dll release/ | true
     make ${MAKEOPTS}
 
     make ${MAKEOPTS} -C src check-security
@@ -181,7 +184,7 @@ script: |
 
     if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
         find . -name "*.exe" | while read i; do
-            (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i})
+            (${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i})
         done
     fi
 
@@ -191,7 +194,7 @@ script: |
     
     if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
         find . -name "*setup*.exe" | while read i; do
-            (${BUILD_DIR}/osslsigncode-1.4/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i})
+            (${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc "${BUILD_DIR}/codesign/codesign.spc" -key "${BUILD_DIR}/codesign/codesign.key" -n "Gulden" -i "https://www.Gulden.com" -in "${i}" -out "${i}s") && (mv ${i}s ${i})
         done
         rename 's/-setup-unsigned\.exe$/-setup.exe/' *-setup-unsigned.exe
     fi
