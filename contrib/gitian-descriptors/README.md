@@ -1,4 +1,4 @@
-### Gavin's notes on getting gitian builds up and running using KVM
+### Notes on getting gitian builds up and running using KVM
 
 These instructions distilled from
 [https://help.ubuntu.com/community/KVM/Installation](https://help.ubuntu.com/community/KVM/Installation).
@@ -20,7 +20,7 @@ Sanity checks:
 Once you've got the right hardware and software:
 
     git clone git://github.com/Gulden/Gulden.git
-    git clone git://github.com/devrandom/gitian-builder.git
+    git clone git://github.com/Gulden/gitian-builder.git
     mkdir gitian-builder/inputs
     cd gitian-builder/inputs
 
