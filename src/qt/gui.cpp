@@ -843,8 +843,11 @@ void GUI::showWitnessDialog()
     LogPrint(BCLog::QT, "GUI::showWitnessDialog\n");
 
     witnessDialogAction->setChecked(true);
-    walletFrame->currentWalletView()->witnessDialogPage->update();
-    walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
+    if (walletFrame)
+    {
+        walletFrame->currentWalletView()->witnessDialogPage->update();
+        walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
+    }
 }
 
 void GUI::gotoOverviewPage()
@@ -1373,18 +1376,6 @@ void GUI::toggleHidden()
     LogPrint(BCLog::QT, "GUI::toggleHidden\n");
 
     showNormalIfMinimized(true);
-}
-
-void GUI::detectShutdown()
-{
-    LogPrint(BCLog::QT, "GUI::detectShutdown\n");
-
-    if (ShutdownRequested())
-    {
-        if(rpcConsole)
-            rpcConsole->hide();
-        qApp->quit();
-    }
 }
 
 void GUI::showProgress(const QString &title, int nProgress)

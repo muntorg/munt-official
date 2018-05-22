@@ -328,9 +328,6 @@ private Q_SLOTS:
     /** Simply calls showNormalIfMinimized(true) for use in SLOT() macro */
     void toggleHidden();
 
-    /** called by a timer to check if fRequestShutdown has been set **/
-    void detectShutdown();
-
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString &title, int nProgress);
 

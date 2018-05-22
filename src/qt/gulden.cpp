@@ -273,7 +273,6 @@ private:
     OptionsModel *optionsModel;
     ClientModel *clientModel;
     GUI *window;
-    QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
     WalletModel *walletModel;
@@ -353,7 +352,6 @@ GuldenApplication::GuldenApplication(int &argc, char **argv):
     optionsModel(0),
     clientModel(0),
     window(0),
-    pollShutdownTimer(0),
 #ifdef ENABLE_WALLET
     paymentServer(0),
     walletModel(0),
@@ -413,10 +411,6 @@ void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
     window = new GUI(platformStyle, networkStyle, 0);
     connect( (QObject*)window->walletFrame, SIGNAL( loadWallet() ), this, SLOT( requestInitialize() ) );
 
-    pollShutdownTimer = new QTimer(window);
-    connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
-    pollShutdownTimer->start(200);
-
     window->show();
 }
 
@@ -466,7 +460,6 @@ void GuldenApplication::requestShutdown()
     startThread();
     window->hide();
     window->setClientModel(0);
-    pollShutdownTimer->stop();
 
     shutDownRequested = true;
 
