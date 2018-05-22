@@ -261,6 +261,7 @@ const CLogCategoryDesc LogCategories[] =
     {BCLog::WITNESS, "witness"},
     {BCLog::QT, "qt"},
     {BCLog::LEVELDB, "leveldb"},
+    {BCLog::WALLET, "wallet"},
     {BCLog::ALL, "1"},
     {BCLog::ALL, "all"},
 };

@@ -112,6 +112,7 @@ namespace BCLog {
         DELTA       = (1 << 22),
         WITNESS     = (1 << 23),
         IO          = (1 << 24),
+        WALLET      = (1 << 25),
         ALL         = ~(uint32_t)0,
     };
 }
