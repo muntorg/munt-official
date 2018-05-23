@@ -43,6 +43,10 @@ static constexpr int64_t HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 1000; // 1ms/head
 static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_BASE = 1 * 60 * 1000000; // 1 minute
 static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 305; // 305usec/header
 
+/** When most recent header is newer, then block download is allowed when using SPV
+ * (and automatic block requests is enabled). */
+static constexpr int64_t HEADERS_RECENT_FOR_BLOCKDOWNLOAD = 24 * 3600; // a day
+
 /** Register with a network node to receive its signals */
 void RegisterNodeSignals(CNodeSignals& nodeSignals);
 /** Unregister a network node */
@@ -87,6 +91,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
 void SetAutoRequestBlocks(bool state);
 bool isAutoRequestingBlocks();
+void PreventBlockDownloadDuringHeaderSync(bool state);
 
 /**
  * Prioritize a block for downloading

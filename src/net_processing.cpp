@@ -51,6 +51,7 @@
 #endif
 
 static std::atomic<bool> fAutoRequestBlocks(DEFAULT_AUTOMATIC_BLOCK_REQUESTS);
+static std::atomic<bool> fPreventBlockDownloadDuringHeaderSync(false);
 
 std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
 
@@ -562,6 +563,11 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     }
 
     if (!fAutoRequestBlocks) {
+        return false;
+    }
+
+    bool headerTipStillOld = !headerChain.Tip() || headerChain.Tip()->GetBlockTime() < GetAdjustedTime() - HEADERS_RECENT_FOR_BLOCKDOWNLOAD;
+    if (fPreventBlockDownloadDuringHeaderSync && headerTipStillOld) {
         return false;
     }
 
@@ -3925,6 +3931,10 @@ void SetAutoRequestBlocks(bool state) {
 
 bool isAutoRequestingBlocks() {
     return fAutoRequestBlocks;
+}
+
+void PreventBlockDownloadDuringHeaderSync(bool state) {
+    fPreventBlockDownloadDuringHeaderSync = state;
 }
 
 void ProcessPriorityRequests(const std::shared_ptr<CBlock> blockRef) {
