@@ -7,10 +7,15 @@
 // the requests can be reasonably distributed over our peers.
 const static int nMaxPendingRequests = 512;
 
-CSPVScanner::CSPVScanner(CWallet& _wallet, const CBlockLocator& locator) :
+CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet)
 {
     LOCK(cs_main);
+
+    CWalletDB walletdb(*wallet.dbw);
+    CBlockLocator locator;
+    if (!walletdb.ReadLastSPVBlockProcessed(locator))
+        locator = chainActive.GetLocatorPoW2(chainActive.Genesis());
 
     lastProcessed = FindForkInGlobalIndex(headerChain, locator);
     requestTip = lastProcessed;

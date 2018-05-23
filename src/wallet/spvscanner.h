@@ -8,7 +8,7 @@ class CWallet;
 class CSPVScanner : public CValidationInterface
 {
 public:
-    CSPVScanner(CWallet& _wallet, const CBlockLocator& locator);
+    CSPVScanner(CWallet& _wallet);
     ~CSPVScanner();
 
     void StartScan();
