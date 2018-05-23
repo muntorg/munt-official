@@ -14,6 +14,7 @@
 #endif
 
 #include "gui.h"
+#include <unity/appmanager.h>
 
 #include "chainparams.h"
 #include "clientmodel.h"
@@ -86,6 +87,9 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #if QT_VERSION < 0x050000
 #include <QTextCodec>
 #endif
+
+//fixme: (BUILD_SYSTEM) - Enable turning this on for special debugging cases
+//#define LOG_ALL_QT_EVENTS
 
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
@@ -181,31 +185,7 @@ void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, cons
 }
 #endif
 
-/** Class encapsulating Gulden Core startup and shutdown.
- * Allows running startup and shutdown in a different thread from the UI thread.
- */
-class GuldenCore: public QObject
-{
-    Q_OBJECT
-public:
-    explicit GuldenCore();
 
-public Q_SLOTS:
-    void initialize();
-    void shutdown();
-
-Q_SIGNALS:
-    void initializeResult(bool success);
-    void shutdownResult();
-    void runawayException(const QString &message);
-
-private:
-    boost::thread_group threadGroup;
-    CScheduler scheduler;
-
-    /// Pass fatal exception message to UI thread
-    void handleRunawayException(const std::exception *e);
-};
 #include <QMetaEnum>
 /** Main Gulden application object */
 class GuldenApplication: public QApplication
@@ -226,6 +206,7 @@ public:
     /// Create main window
     void createWindow(const NetworkStyle *networkStyle);
 
+    #ifdef LOG_ALL_QT_EVENTS
     bool logEvents = false;
     virtual bool notify(QObject* receiver, QEvent* event)
     {
@@ -245,9 +226,7 @@ public:
         }
         QApplication::notify(receiver, event);
     }
-
-    /// Request core shutdown
-    void requestShutdown();
+    #endif
 
     /// Get process return value
     int getReturnValue() { return returnValue; }
@@ -259,17 +238,15 @@ public Q_SLOTS:
     /// Request core initialization
     void requestInitialize();
     void initializeResult(bool success);
-    void shutdownResult();
+    void shutdown_InitialUINotification();
+    void shutdown_CloseModels();
+    void shutdown_TerminateApp();
     /// Handle runaway exceptions. Shows a message box with the problem and quits the program.
     void handleRunawayException(const QString &message);
 
 Q_SIGNALS:
-    void requestedInitialize();
-    void requestedShutdown();
-    void stopThread();
 
 private:
-    QThread *coreThread;
     OptionsModel *optionsModel;
     ClientModel *clientModel;
     GUI *window;
@@ -281,74 +258,14 @@ private:
     const PlatformStyle *platformStyle;
     std::unique_ptr<QWidget> shutdownWindow;
 
-    void startThread();
-
     // GULDEN - rescan code needs this to tell if we try shut down midway through a rescan.
     bool shutDownRequested;
 };
 
 #include "gulden.moc"
 
-GuldenCore::GuldenCore():
-    QObject()
-{
-}
-
-void GuldenCore::handleRunawayException(const std::exception *e)
-{
-    PrintExceptionContinue(e, "Runaway exception");
-    Q_EMIT runawayException(QString::fromStdString(GetWarnings("gui")));
-}
-
-void GuldenCore::initialize()
-{
-    try
-    {
-        qDebug() << __func__ << ": Running initialization in thread";
-        if (!AppInitBasicSetup())
-        {
-            Q_EMIT initializeResult(false);
-            return;
-        }
-        if (!AppInitParameterInteraction())
-        {
-            Q_EMIT initializeResult(false);
-            return;
-        }
-        if (!AppInitSanityChecks())
-        {
-            Q_EMIT initializeResult(false);
-            return;
-        }
-        bool rv = AppInitMain(threadGroup, scheduler);
-        Q_EMIT initializeResult(rv);
-    } catch (const std::exception& e) {
-        handleRunawayException(&e);
-    } catch (...) {
-        handleRunawayException(NULL);
-    }
-}
-
-void GuldenCore::shutdown()
-{
-    try
-    {
-        qDebug() << __func__ << ": Running Shutdown in thread";
-        Interrupt(threadGroup);
-        threadGroup.join_all();
-        Shutdown();
-        qDebug() << __func__ << ": Shutdown finished";
-        Q_EMIT shutdownResult();
-    } catch (const std::exception& e) {
-        handleRunawayException(&e);
-    } catch (...) {
-        handleRunawayException(NULL);
-    }
-}
-
 GuldenApplication::GuldenApplication(int &argc, char **argv):
     QApplication(argc, argv),
-    coreThread(0),
     optionsModel(0),
     clientModel(0),
     window(0),
@@ -370,18 +287,17 @@ GuldenApplication::GuldenApplication(int &argc, char **argv):
     if (!platformStyle) // Fall back to "other" if specified name not found
         platformStyle = PlatformStyle::instantiate("other");
     assert(platformStyle);
+
+    /*  communication to and from thread */
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalRunawayException, std::string, this, "handleRunawayException");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalAppInitializeResult, bool, this, "initializeResult");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownStarted, this, "shutdown_InitialUINotification");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownCoreInterrupted, this, "shutdown_CloseModels");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownFinished, this, "shutdown_TerminateApp");
 }
 
 GuldenApplication::~GuldenApplication()
 {
-    if(coreThread)
-    {
-        qDebug() << __func__ << ": Stopping thread";
-        Q_EMIT stopThread();
-        coreThread->wait();
-        qDebug() << __func__ << ": Stopped thread";
-    }
-
     delete window;
     window = 0;
 #ifdef ENABLE_WALLET
@@ -414,27 +330,6 @@ void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
     window->show();
 }
 
-void GuldenApplication::startThread()
-{
-    if(coreThread)
-        return;
-    coreThread = new QThread(this);
-    GuldenCore *executor = new GuldenCore();
-    executor->moveToThread(coreThread);
-
-    /*  communication to and from thread */
-    connect(executor, SIGNAL(initializeResult(bool)), this, SLOT(initializeResult(bool)));
-    connect(executor, SIGNAL(shutdownResult()), this, SLOT(shutdownResult()));
-    connect(executor, SIGNAL(runawayException(QString)), this, SLOT(handleRunawayException(QString)));
-    connect(this, SIGNAL(requestedInitialize()), executor, SLOT(initialize()));
-    connect(this, SIGNAL(requestedShutdown()), executor, SLOT(shutdown()));
-    /*  make sure executor object is deleted in its own thread */
-    connect(this, SIGNAL(stopThread()), executor, SLOT(deleteLater()));
-    connect(this, SIGNAL(stopThread()), coreThread, SLOT(quit()));
-
-    coreThread->start();
-}
-
 void GuldenApplication::parameterSetup()
 {
     InitLogging();
@@ -443,38 +338,11 @@ void GuldenApplication::parameterSetup()
 
 void GuldenApplication::requestInitialize()
 {
+    #ifdef LOG_ALL_QT_EVENTS
     logEvents = true;
+    #endif
     qDebug() << __func__ << ": Requesting initialize";
-    startThread();
-    Q_EMIT requestedInitialize();
-}
-
-void GuldenApplication::requestShutdown()
-{
-    // Show a simple window indicating shutdown status
-    // Do this first as some of the steps may take some time below,
-    // for example the RPC console may still be executing a command.
-    shutdownWindow.reset(ShutdownWindow::showShutdownWindow(window));
-
-    qDebug() << __func__ << ": Requesting shutdown";
-    startThread();
-    window->hide();
-    window->setClientModel(0);
-
-    shutDownRequested = true;
-
-#ifdef ENABLE_WALLET
-    window->removeAllWallets();
-    delete walletModel;
-    walletModel = 0;
-#endif
-    delete clientModel;
-    clientModel = 0;
-
-    StartShutdown();
-
-    // Request shutdown from core thread
-    Q_EMIT requestedShutdown();
+    GuldenAppManager::gApp->initialize();
 }
 
 void GuldenApplication::initializeResult(bool success)
@@ -534,9 +402,30 @@ void GuldenApplication::initializeResult(bool success)
     }
 }
 
-void GuldenApplication::shutdownResult()
+void GuldenApplication::shutdown_InitialUINotification()
 {
-    quit(); // Exit main loop after shutdown finished
+    shutDownRequested = true;
+    shutdownWindow.reset(ShutdownWindow::showShutdownWindow(window));
+    window->hide();
+    window->setClientModel(nullptr);
+}
+
+void GuldenApplication::shutdown_CloseModels()
+{
+    #ifdef ENABLE_WALLET
+    window->removeAllWallets();
+    delete walletModel;
+    walletModel = 0;
+    #endif
+    delete clientModel;
+    clientModel = nullptr;
+}
+
+void GuldenApplication::shutdown_TerminateApp()
+{
+    // Finally exit main loop after shutdown finished
+    LogPrintf("%s: Shuting down UI\n", __func__);
+    quit();
 }
 
 void GuldenApplication::handleRunawayException(const QString &message)
@@ -586,6 +475,7 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
 
+    GuldenAppManager appManager;
     GuldenApplication app(argc, argv);
 #if QT_VERSION >= 0x050500
     // Because of the POODLE attack it is recommended to disable SSLv3 (https://disablessl3.com/),
@@ -735,19 +625,19 @@ int main(int argc, char *argv[])
     try
     {
         app.createWindow(networkStyle.data());
-        /* GULDEN - we request initialization from elsewhere (welcome screen)
-        app.requestInitialize();
-        */
-#if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
+        #if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
         WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());
-#endif
+        #endif
         app.exec();
-        app.requestShutdown();
-        app.exec();
-    } catch (const std::exception& e) {
+        LogPrintf("%s: UI shutdown done, terminating.\n", __func__);
+    }
+    catch (const std::exception& e)
+    {
         PrintExceptionContinue(&e, "Runaway exception");
         app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
-    } catch (...) {
+    }
+    catch (...)
+    {
         PrintExceptionContinue(NULL, "Runaway exception");
         app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
     }

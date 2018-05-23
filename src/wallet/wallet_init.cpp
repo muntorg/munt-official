@@ -19,7 +19,7 @@
 #include "timedata.h"
 #include "utilmoneystr.h"
 #include "init.h"
-#include <Gulden/guldenapplication.h>
+#include <unity/appmanager.h>
 #include <Gulden/mnemonic.h>
 
 
@@ -173,10 +173,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             {
                 std::vector<unsigned char> entropy(16);
                 GetStrongRandBytes(&entropy[0], 16);
-                GuldenApplication::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+                GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
             }
 
-            if (GuldenApplication::gApp->getRecoveryPhrase().size() == 0)
+            if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
             {
                 //Work around an issue with "non HD" wallets from older versions where active account may not be set in the wallet.
                 if (!walletInstance->mapAccounts.empty())
@@ -185,7 +185,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             }
 
             // Generate a new primary seed and account (BIP44)
-            walletInstance->activeSeed = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
+            walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
             if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
             {
                 throw std::runtime_error("Writing seed failed");
@@ -195,14 +195,14 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
             // Now generate children shadow accounts to handle legacy transactions
             // Only for recovery wallets though, new ones don't need them
-            if (GuldenApplication::gApp->isRecovery)
+            if (GuldenAppManager::gApp->isRecovery)
             {
-                CHDSeed* seedBip32 = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
+                CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
                 if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32))
                 {
                     throw std::runtime_error("Writing bip32 seed failed");
                 }
-                CHDSeed* seedBip32Legacy = new CHDSeed(GuldenApplication::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
+                CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
                 if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32Legacy))
                 {
                     throw std::runtime_error("Writing bip32 legacy seed failed");
@@ -230,7 +230,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 walletdb.WritePrimaryAccount(walletInstance->activeAccount);
             }
 
-            GuldenApplication::gApp->BurnRecoveryPhrase();
+            GuldenAppManager::gApp->BurnRecoveryPhrase();
 
             //Assign the bare minimum keys here, let the rest take place in the background thread
             walletInstance->TopUpKeyPool(1);
@@ -408,7 +408,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         throw std::runtime_error("Unknown wallet load state.");
     }
 
-    if (GuldenApplication::gApp->isRecovery)
+    if (GuldenAppManager::gApp->isRecovery)
     {
         walletInstance->nTimeFirstKey = Params().GenesisBlock().nTime;
     }
@@ -418,7 +418,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     RegisterValidationInterface(walletInstance);
 
     CBlockIndex *pindexRescan = chainActive.Tip();
-    if (GetBoolArg("-rescan", false) || GuldenApplication::gApp->isRecovery)
+    if (GetBoolArg("-rescan", false) || GuldenAppManager::gApp->isRecovery)
     {
         pindexRescan = chainActive.Genesis();
     }

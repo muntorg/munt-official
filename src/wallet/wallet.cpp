@@ -48,7 +48,7 @@
 
 //Gulden specific includes
 #include "init.h"
-#include <Gulden/guldenapplication.h>
+#include <unity/appmanager.h>
 #include <Gulden/mnemonic.h>
 #include <script/ismine.h>
 

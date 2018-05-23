@@ -82,7 +82,8 @@ endif
 
 .PHONY: FORCE check-symbols check-security
 
-GDN_INCLUDES = Gulden/rpcgulden.h \
+# core #
+GULDEN_CORE_H = Gulden/rpcgulden.h \
   Gulden/Common/diff.h \
   Gulden/Common/diff_delta.h \
   Gulden/Common/diff_old.h \
@@ -94,34 +95,10 @@ GDN_INCLUDES = Gulden/rpcgulden.h \
   Gulden/mnemonic.h \
   Gulden/util.h \
   Gulden/auto_checkpoints.h \
-  Gulden/guldenapplication.h \
   wallet/Gulden/guldenwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
-  account.h
-
-GDN_SERVER_SRCS = Gulden/rpcgulden.cpp
-
-GDN_COMMON_SRCS = \
-  Gulden/auto_checkpoints.cpp \
-  alert.cpp
-
-GDN_CONSENSUS_SRCS = \
-  Gulden/Common/scrypt.cpp \
-  Gulden/Common/diff_delta.cpp \
-  Gulden/Common/diff_old.cpp \
-  Gulden/Common/diff_common.cpp \
-  Gulden/Common/hash/city.cpp 
-
-GDN_WALLET_SRCS = account.cpp \
-   Gulden/mnemonic.cpp \
-   Gulden/util.cpp \
-   Gulden/guldenapplication.cpp \
-   wallet/Gulden/guldenwallet.cpp
-
-# bitcoin core #
-GULDEN_CORE_H = \
-  $(GDN_INCLUDES) \
+  account.h \
   addrdb.h \
   addrman.h \
   base58.h \
@@ -151,6 +128,8 @@ GULDEN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  unity/appmanager.h \
+  unity/signals.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -231,7 +210,7 @@ libgulden_util_a-clientversion.$(OBJEXT): obj/build.h
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
-  $(GDN_SERVER_SRCS) \
+  Gulden/rpcgulden.cpp \
   addrdb.cpp \
   addrman.cpp \
   bloom.cpp \
@@ -290,7 +269,10 @@ endif
 libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
-  $(GDN_WALLET_SRCS) \
+  account.cpp \
+  Gulden/mnemonic.cpp \
+  Gulden/util.cpp \
+  wallet/Gulden/guldenwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
@@ -333,7 +315,11 @@ crypto_libgulden_crypto_a_SOURCES = \
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_consensus_a_SOURCES = \
-  $(GDN_CONSENSUS_SRCS) \
+  Gulden/Common/scrypt.cpp \
+  Gulden/Common/diff_delta.cpp \
+  Gulden/Common/diff_old.cpp \
+  Gulden/Common/diff_common.cpp \
+  Gulden/Common/hash/city.cpp \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -370,7 +356,9 @@ libgulden_consensus_a_SOURCES = \
 libgulden_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_common_a_SOURCES = \
-  $(GDN_COMMON_SRCS) \
+  Gulden/auto_checkpoints.cpp \
+  alert.cpp \
+  unity/appmanager.cpp \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
@@ -591,13 +579,13 @@ if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
 endif
 
-#if ENABLE_TESTS
+if ENABLE_TESTS
 include Makefile.test.include
-#endif
+endif
 
-#if ENABLE_BENCH
+if ENABLE_BENCH
 #include Makefile.bench.include
-#endif
+endif
 
 if ENABLE_QT
 include Makefile.qt.include

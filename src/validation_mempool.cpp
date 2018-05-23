@@ -17,6 +17,7 @@
 #include <consensus/validation.h>
 
 #include "init.h"
+#include <unity/appmanager.h>
 #include "policy/policy.h"
 #include "primitives/block.h"
 #include "primitives/transaction.h"

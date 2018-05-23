@@ -14,6 +14,8 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
+#include <unity/appmanager.h>
+
 #include <univalue.h>
 
 #include <boost/bind.hpp>
@@ -254,7 +256,7 @@ UniValue stop(const JSONRPCRequest& jsonRequest)
             "\nStop Gulden server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
-    StartShutdown();
+    GuldenAppManager::gApp->shutdown();
     return "Gulden server stopping";
 }
 

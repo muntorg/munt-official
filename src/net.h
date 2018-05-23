@@ -30,6 +30,8 @@
 #include "threadinterrupt.h"
 #include "netbase.h"
 
+#include "unity/signals.h"
+
 #include <atomic>
 #include <deque>
 #include <stdint.h>
@@ -408,6 +410,9 @@ private:
     /** flag for waking the message processor. */
     bool fMsgProcWake;
 
+    /** flag to check that Stop has been called on us */
+    bool hasBeenStopped = false;
+
     std::condition_variable condMsgProc;
     std::mutex mutexMsgProc;
     std::atomic<bool> flagInterruptMsgProc;
@@ -429,26 +434,11 @@ void MapPort(bool fUseUPnP);
 unsigned short GetListenPort();
 bool BindListenPort(const CService &bindAddr, std::string& strError, bool fWhitelisted = false);
 
-struct CombinerAll
-{
-    typedef bool result_type;
-
-    template<typename I>
-    bool operator()(I first, I last) const
-    {
-        while (first != last) {
-            if (!(*first)) return false;
-            ++first;
-        }
-        return true;
-    }
-};
-
 // Signals for message handling
 struct CNodeSignals
 {
-    boost::signals2::signal<bool (CNode*, CConnman&, std::atomic<bool>&), CombinerAll> ProcessMessages;
-    boost::signals2::signal<bool (CNode*, CConnman&, std::atomic<bool>&), CombinerAll> SendMessages;
+    boost::signals2::signal<bool (CNode*, CConnman&, std::atomic<bool>&), BooleanAndAllReturnValues> ProcessMessages;
+    boost::signals2::signal<bool (CNode*, CConnman&, std::atomic<bool>&), BooleanAndAllReturnValues> SendMessages;
     boost::signals2::signal<void (CNode*, CConnman&)> InitializeNode;
     boost::signals2::signal<void (NodeId, bool&)> FinalizeNode;
 };

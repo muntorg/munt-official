@@ -2253,6 +2253,8 @@ void CConnman::Stop()
     semOutbound = NULL;
     delete semAddnode;
     semAddnode = NULL;
+
+    hasBeenStopped = true;
 }
 
 void CConnman::DeleteNode(CNode* pnode)
@@ -2267,8 +2269,7 @@ void CConnman::DeleteNode(CNode* pnode)
 
 CConnman::~CConnman()
 {
-    Interrupt();
-    Stop();
+    assert(hasBeenStopped);
 }
 
 size_t CConnman::GetAddressCount() const

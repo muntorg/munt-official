@@ -15,6 +15,7 @@
 #endif
 
 #include "init.h"
+#include <unity/appmanager.h>
 
 #include "addrman.h"
 #include "amount.h"
@@ -123,32 +124,17 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 // The network-processing threads are all part of a thread group
 // created by AppInit() or the Qt main() function.
 //
-// A clean exit happens when StartShutdown() or the SIGTERM
-// signal handler sets fRequestShutdown, which triggers
-// the DetectShutdownThread(), which interrupts the main thread group.
-// DetectShutdownThread() then exits, which causes AppInit() to
-// continue (it .joins the shutdown thread).
-// Shutdown() is then
-// called to clean up database connections, and stop other
-// threads that should only be stopped after the main network-processing
-// threads have exited.
-//
-// Shutdown for Qt is very similar, only it uses a QTimer to detect
-// fRequestShutdown getting set, and then does the normal Qt
-// shutdown thing.
-//
+// A clean exit happens when qt or the SIGTERM signal handler call GuldenAppManager::shutdown()
+// This signals to the shutdown thread that shutdown can commence.
+// The shutdown thread systematically shuts down the application:
+// 1 - Alerts the UI to perform basic pre shutdown preparation (hide UI, show an exit message etc.)
+// 2 - Interrupts the thread groups.
+// 3 - Notifies the UI to disconnect from signals.
+// 4 - Stops all the thread groups, syncs all files to disk etc.
+// 5 - Notifies the App/UI to close themeselves (or in the case of GuldenD to simply exit).
 
-std::atomic<bool> fRequestShutdown(false);
+
 std::atomic<bool> fDumpMempoolLater(false);
-
-void StartShutdown()
-{
-    fRequestShutdown = true;
-}
-bool ShutdownRequested()
-{
-    return fRequestShutdown;
-}
 
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
@@ -180,23 +166,26 @@ static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
 
 static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
 
-void Interrupt(boost::thread_group& threadGroup)
+void CoreInterrupt(boost::thread_group& threadGroup)
 {
+    LogPrintf("%s: Core interrupt in progress...\n", __func__);
+    PoWMineGulden(false, 0, Params());
+    if (g_connman)
+        g_connman->Interrupt();
     InterruptHTTPServer();
     InterruptHTTPRPC();
     InterruptRPC();
     InterruptREST();
     InterruptTorControl();
-    if (g_connman)
-        g_connman->Interrupt();
     threadGroup.interrupt_all();
+    LogPrintf("%s: Core interrupt done.\n", __func__);
 }
 
-void Shutdown()
+void CoreShutdown(boost::thread_group& threadGroup)
 {
-    fRequestShutdown = true;
-    LogPrintf("%s: In progress...\n", __func__);
+    LogPrintf("%s: Core shutdown in progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
+
     TRY_LOCK(cs_Shutdown, lockShutdown);
     if (!lockShutdown)
         return;
@@ -205,25 +194,27 @@ void Shutdown()
     /// for example if the data directory was found to be locked.
     /// Be sure that anything that writes files or flushes caches only does this if the respective
     /// module was initialized.
-    RenameThread("Gulden-shutoff");
     mempool.AddTransactionsUpdated(1);
 
-    PoWMineGulden(false, 0, Params());
-    StopHTTPRPC();
-    StopREST();
-    StopRPC();
+    if (g_connman)
+        g_connman->Stop();
     StopHTTPServer();
-#ifdef ENABLE_WALLET
+    StopHTTPRPC();
+    StopRPC();
+    StopREST();
+    StopTorControl();
+    threadGroup.join_all();
+
+    #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(false);
     }
-#endif
+    #endif
     MapPort(false);
     UnregisterValidationInterface(peerLogic.get());
     peerLogic.reset();
     g_connman.reset();
 
-    StopTorControl();
     UnregisterNodeSignals(GetNodeSignals());
     if (fDumpMempoolLater && GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
         DumpMempool();
@@ -263,47 +254,54 @@ void Shutdown()
         delete ppow2witdbview;
         ppow2witdbview = NULL;
     }
-#ifdef ENABLE_WALLET
+    #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(true);
     }
-#endif
+    #endif
 
-#if ENABLE_ZMQ
+    #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
         UnregisterValidationInterface(pzmqNotificationInterface);
         delete pzmqNotificationInterface;
         pzmqNotificationInterface = NULL;
     }
-#endif
+    #endif
 
-#ifndef WIN32
-    try {
+    #ifndef WIN32
+    try
+    {
         fs::remove(GetPidFile());
-    } catch (const fs::filesystem_error& e) {
+    }
+    catch (const fs::filesystem_error& e)
+    {
         LogPrintf("%s: Unable to remove pidfile: %s\n", __func__, e.what());
     }
-#endif
+    #endif
     UnregisterAllValidationInterfaces();
-#ifdef ENABLE_WALLET
-    for (CWalletRef pwallet : vpwallets) {
+    #ifdef ENABLE_WALLET
+    for (CWalletRef pwallet : vpwallets)
+    {
         delete pwallet;
     }
     vpwallets.clear();
-#endif
+    #endif
     globalVerifyHandle.reset();
     ECC_Stop();
-    LogPrintf("%s: done\n", __func__);
+    LogPrintf("%s: Core shutdown done.\n", __func__);
 }
 
-/**
- * Signal handlers are very limited in what they are allowed to do.
- * The execution context the handler is invoked in is not guaranteed,
- * so we restrict handler operations to just touching variables:
- */
+//Signal handlers should be written in a way that does not result in any unwanted side-effects
+//e.g. errno alteration, signal mask alteration, signal disposition change, and other global process attribute changes.
+//Use of non-reentrant functions, e.g., malloc or printf, inside signal handlers is also unsafe.
+//In particular, the POSIX specification and the Linux man page signal(7) requires that all system functions directly or indirectly called from a signal function are async-signal safe and gives
+//list of such async-signal safe system functions (practically the system calls), otherwise it is an undefined behavior. It is suggested to simply set some volatile sig_atomic_t variable in a signal handler, and to test it elsewhere.
 static void HandleSIGTERM(int)
 {
-    fRequestShutdown = true;
+    // We call a sigterm safe 'shutdown' function that does nothing but write to a socket.
+    // The shutdown thread then safely handles the rest from within the already existing shutdown thread.
+    if (GuldenAppManager::gApp)
+        GuldenAppManager::gApp->shutdown();
 }
 
 static void HandleSIGHUP(int)
@@ -724,17 +722,17 @@ void ThreadImport(std::vector<fs::path> vImportFiles)
     CValidationState state;
     if (!ActivateBestChain(state, chainparams)) {
         LogPrintf("Failed to connect best block");
-        StartShutdown();
+        GuldenAppManager::gApp->shutdown();
     }
 
     if (GetBoolArg("-stopafterblockimport", DEFAULT_STOPAFTERBLOCKIMPORT)) {
         LogPrintf("Stopping after block import\n");
-        StartShutdown();
+        GuldenAppManager::gApp->shutdown();
     }
     } // End scope of CImportingNow
     if (GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
         LoadMempool();
-        fDumpMempoolLater = !fRequestShutdown;
+        fDumpMempoolLater = !ShutdownRequested();
     }
 }
 
@@ -1659,7 +1657,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
                 if (fRet) {
                     fReindex = true;
-                    fRequestShutdown = false;
                 } else {
                     LogPrintf("Aborted block database rebuild. Exiting.\n");
                     return false;
@@ -1673,7 +1670,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     // As LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill the GUI during the last operation. If so, exit.
     // As the program has not fully started yet, Shutdown() is possibly overkill.
-    if (fRequestShutdown)
+    if (ShutdownRequested())
     {
         LogPrintf("Shutdown requested. Exiting.\n");
         return false;
@@ -1807,5 +1804,5 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     }
 #endif
 
-    return !fRequestShutdown;
+    return !ShutdownRequested();
 }

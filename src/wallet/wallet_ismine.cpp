@@ -19,6 +19,7 @@
 #include "timedata.h"
 #include "utilmoneystr.h"
 #include "init.h"
+#include <unity/appmanager.h>
 #include <script/ismine.h>
 
 isminetype CWallet::IsMine(const CTxIn &txin) const

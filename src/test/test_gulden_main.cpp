@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-std::unique_ptr<CConnman> g_connman;
+/*std::unique_ptr<CConnman> g_connman;
 
 void Shutdown(void* parg)
 {
@@ -23,4 +23,4 @@ void StartShutdown()
 bool ShutdownRequested()
 {
   return false;
-}
+}*/

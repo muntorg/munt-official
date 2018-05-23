@@ -27,6 +27,7 @@
 #include "consensus/validation.h"
 #include "fs.h"
 #include "hash.h"
+#include "unity/appmanager.h"
 #include "init.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
@@ -643,10 +644,8 @@ bool AbortNode(const std::string& strMessage, const std::string& userMessage="")
 {
     SetMiscWarning(strMessage);
     LogPrintf("*** %s\n", strMessage);
-    uiInterface.ThreadSafeMessageBox(
-        userMessage.empty() ? _("Error: A fatal internal error occurred, see debug.log for details") : userMessage,
-        "", CClientUIInterface::MSG_ERROR);
-    StartShutdown();
+    uiInterface.ThreadSafeMessageBox(userMessage.empty() ? _("Error: A fatal internal error occurred, see debug.log for details") : userMessage, "", CClientUIInterface::MSG_ERROR);
+    GuldenAppManager::gApp->shutdown();
     return false;
 }
 
@@ -1926,7 +1925,8 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             uiInterface.NotifyBlockTip(fInitialDownload, pindexNewTip);
         }
 
-        if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
+        if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight)
+            GuldenAppManager::gApp->shutdown();
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
 

@@ -5,7 +5,7 @@
 
 #include "welcomedialog.h"
 #include <qt/_Gulden/forms/ui_welcomedialog.h>
-#include <Gulden/guldenapplication.h>
+#include <unity/appmanager.h>
 #include "gui.h"
 #include <wallet/wallet.h>
 #include "ui_interface.h"
@@ -112,9 +112,9 @@ void WelcomeDialog::newWallet()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    GuldenApplication::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+    GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
 
-    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenApplication::gApp->getRecoveryPhrase().c_str()));
+    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getRecoveryPhrase().c_str()));
     ui->edittextEnterRecoveryPhrase->setReadOnly(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setVisible(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setChecked(false);
@@ -124,7 +124,7 @@ void WelcomeDialog::newWallet()
     ui->labelEnterRecoveryPhrase->setVisible(false);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
 
-    GuldenApplication::gApp->isRecovery = false;
+    GuldenAppManager::gApp->isRecovery = false;
 }
 
 void WelcomeDialog::recoverWallet()
@@ -137,7 +137,7 @@ void WelcomeDialog::recoverWallet()
     ui->labelEnterRecoveryPhrase->setVisible(true);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
 
-    GuldenApplication::gApp->isRecovery = true;
+    GuldenAppManager::gApp->isRecovery = true;
 }
 
 void WelcomeDialog::processRecoveryPhrase()
@@ -173,7 +173,7 @@ void WelcomeDialog::processRecoveryPhrase()
                 recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
             }
 
-            GuldenApplication::gApp->setRecoveryPhrase(recoveryPhrase.toStdString().c_str());
+            GuldenAppManager::gApp->setRecoveryPhrase(recoveryPhrase.toStdString().c_str());
 
             //Try burn memory - just in case - not guaranteed to work everywhere but better than doing nothing.
             burnTextEditMemory(ui->edittextEnterRecoveryPhrase);

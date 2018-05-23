@@ -5,7 +5,7 @@
 
 #include "witnessdialog.h"
 #include <qt/_Gulden/forms/ui_witnessdialog.h>
-#include <Gulden/guldenapplication.h>
+#include <unity/appmanager.h>
 #include "GuldenGUI.h"
 #include <wallet/wallet.h>
 #include "ui_interface.h"

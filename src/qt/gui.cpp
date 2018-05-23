@@ -14,6 +14,7 @@
 #endif
 
 #include "gui.h"
+#include <unity/appmanager.h>
 
 #include "units.h"
 #include "clientmodel.h"
@@ -1197,13 +1198,13 @@ void GUI::closeEvent(QCloseEvent *event)
         {
             // close rpcConsole in case it was open to make some space for the shutdown window
             rpcConsole->close();
-            QApplication::quit();
+            GuldenAppManager::gApp->shutdown();
         }
         else
             QMainWindow::showMinimized();
     }
     else if(welcomeScreenIsVisible())
-        QApplication::quit();
+        GuldenAppManager::gApp->shutdown();
 #else
     QMainWindow::closeEvent(event);
 #endif

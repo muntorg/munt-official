@@ -16,6 +16,7 @@
 #include "validation.h"
 #include "guiutil.h"
 #include "init.h"
+#include "unity/appmanager.h"
 
 #include <QAction>
 #include <QApplication>
