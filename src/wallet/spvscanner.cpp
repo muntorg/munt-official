@@ -72,9 +72,10 @@ void CSPVScanner::RequestBlocks()
         blocksToRequest.push_back(requestTip);
     }
 
-    AddPriorityDownload(blocksToRequest);
-
-    LogPrint(BCLog::WALLET, "Requested %d blocks for SPV, up to height %d\n", blocksToRequest.size(), requestTip->nHeight);
+    if (!blocksToRequest.empty()) {
+        LogPrint(BCLog::WALLET, "Requesting %d blocks for SPV, up to height %d\n", blocksToRequest.size(), requestTip->nHeight);
+        AddPriorityDownload(blocksToRequest);
+    }
 }
 
 void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex)
