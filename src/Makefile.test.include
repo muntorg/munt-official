@@ -109,6 +109,9 @@ test_test_gulden_LDADD =
 if ENABLE_WALLET
 test_test_gulden_LDADD += $(LIBGULDEN_WALLET)
 endif
+if ENABLE_ZMQ
+test_test_gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+endif
 test_test_gulden_LDADD += $(LIBGULDEN_SERVER) $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
 test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -116,9 +119,7 @@ test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_LDADD += $(LIBGULDEN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
 test_test_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
-if ENABLE_ZMQ
-test_test_gulden_LDADD += $(ZMQ_LIBS)
-endif
+
 #
 
 # test_gulden_fuzzy binary #
