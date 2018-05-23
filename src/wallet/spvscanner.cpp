@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Willem de Jonge (willem@isnapp.nl)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #include "spvscanner.h"
 #include "../net_processing.h"
 #include "../validation.h"
