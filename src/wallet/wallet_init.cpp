@@ -515,7 +515,23 @@ bool CWallet::InitLoadWallet()
         pactiveWallet = pwallet;
     }
 
+    if (GetBoolArg("-spv", DEFAULT_SPV)) {
+        for (CWallet* pwallet : vpwallets)
+            pwallet->StartSPV();
+    }
+
     return true;
+}
+
+void CWallet::StartSPV()
+{
+    CWalletDB walletdb(*dbw);
+    CBlockLocator locator;
+    if (!walletdb.ReadLastSPVBlockProcessed(locator))
+        locator = chainActive.GetLocatorPoW2(chainActive.Genesis());
+
+    pSPVScanner = std::unique_ptr<CSPVScanner>(new CSPVScanner(*this, locator));
+    pSPVScanner->StartScan();
 }
 
 std::atomic<bool> CWallet::fFlushScheduled(false);

@@ -171,6 +171,9 @@ public:
     bool WriteBestBlock(const CBlockLocator& locator);
     bool ReadBestBlock(CBlockLocator& locator);
 
+    bool WriteLastSPVBlockProcessed(const CBlockLocator& locator);
+    bool ReadLastSPVBlockProcessed(CBlockLocator& locator);
+
     bool WriteOrderPosNext(int64_t nOrderPosNext);
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);

@@ -177,6 +177,16 @@ bool CWalletDB::ReadBestBlock(CBlockLocator& locator)
     return batch.Read(std::string("bestblock_nomerkle"), locator);
 }
 
+bool CWalletDB::WriteLastSPVBlockProcessed(const CBlockLocator& locator)
+{
+    return WriteIC(std::string("lastspvblock"), locator);
+}
+
+bool CWalletDB::ReadLastSPVBlockProcessed(CBlockLocator& locator)
+{
+    return batch.Read(std::string("lastspvblock"), locator);
+}
+
 bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
 {
     return WriteIC(std::string("orderposnext"), nOrderPosNext);
