@@ -23,6 +23,10 @@ protected:
 private:
     CWallet& wallet;
 
+    // timestamp to start block requests, older blocks are known to have no
+    // transactions for the wallet
+    int64_t startTime;
+
     // SPV scan processed up to this block
     const CBlockIndex* lastProcessed;
 
@@ -30,6 +34,9 @@ private:
     const CBlockIndex* requestTip;
 
     void RequestBlocks();
+
+    // Update value of lastProcessed to pindex and persist it to the wallet db
+    void UpdateLastProcessed(const CBlockIndex* pindex);
 };
 
 #endif // SPVSCANNER_H

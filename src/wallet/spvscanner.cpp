@@ -3,12 +3,18 @@
 #include "../validation.h"
 #include "wallet.h"
 
+#include <algorithm>
+
 // Maximum number of requests pending. This number should be high enough so that
 // the requests can be reasonably distributed over our peers.
 const static int nMaxPendingRequests = 512;
 
+// Seconds before oldest key to start scanning blocks.
+const static int64_t startTimeGap = 3 * 3600;
+
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
-    wallet(_wallet)
+    wallet(_wallet),
+    startTime(0)
 {
     LOCK(cs_main);
 
@@ -19,6 +25,8 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 
     lastProcessed = FindForkInGlobalIndex(headerChain, locator);
     requestTip = lastProcessed;
+
+    startTime =  std::max(0LL, wallet.GetOldestKeyPoolTime() - startTimeGap);
 
     LogPrint(BCLog::WALLET, "Using %s (height = %d) as last processed SPV block\n",
              lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
@@ -41,6 +49,18 @@ void CSPVScanner::RequestBlocks()
     LOCK2(cs_main, wallet.cs_wallet);
 
     // TODO handle forks, ie might need to revert lastProcessed and/or requestTip
+
+
+    // skip blocks that are before startTime
+    const CBlockIndex* skip = lastProcessed;
+    while (skip->GetBlockTime() < startTime && headerChain.Height() > skip->nHeight)
+        skip = headerChain.Next(skip);
+    if (skip != lastProcessed) {
+        LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - lastProcessed->nHeight, skip->nHeight);
+        UpdateLastProcessed(skip);
+        if (lastProcessed->nHeight > requestTip->nHeight)
+            requestTip = lastProcessed;
+    }
 
     std::vector<const CBlockIndex*> blocksToRequest;
 
@@ -71,10 +91,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         std::vector<CTransactionRef> vtxConflicted; // dummy for now
         wallet.BlockConnected(block, pindex, vtxConflicted);
 
-        lastProcessed = pindex;
-
-        CWalletDB walletdb(*wallet.dbw);
-        walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed));
+        UpdateLastProcessed(pindex);
 
         RequestBlocks();
     }
@@ -83,4 +100,11 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 {
     RequestBlocks();
+}
+
+void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
+{
+    lastProcessed = pindex;
+    CWalletDB walletdb(*wallet.dbw);
+    walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed));
 }
