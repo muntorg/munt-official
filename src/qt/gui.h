@@ -114,6 +114,9 @@ public:
     void updateAccount(CAccount* account);
     ClickableLabel* accountAddedHelper(CAccount* addedAccount);
 
+    /** Early disconnect timer signals/slots and similar for clean shutdown */
+    void disconnectNonEssentialSignals();
+
 protected:
     void resizeEvent(QResizeEvent* event);
     void changeEvent(QEvent *e);
@@ -124,6 +127,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 public:
+    bool exitApp=false;
     WalletFrame* walletFrame = nullptr;
 private:
     ClientModel* clientModel = nullptr;

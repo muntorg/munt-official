@@ -54,14 +54,17 @@ AccountSummaryWidget::AccountSummaryWidget( CurrencyTicker* ticker, QWidget* par
     connect( ui->accountBalanceForex, SIGNAL( clicked() ), this, SIGNAL( requestExchangeRateDialog() ) );
 }
 
-AccountSummaryWidget::~AccountSummaryWidget()
+void AccountSummaryWidget::disconnectSlots()
 {
     disconnect( ui->accountBalanceForex, SIGNAL( clicked() ), this, SIGNAL( requestExchangeRateDialog() ) );
     disconnect( ui->accountSettings, SIGNAL( clicked() ), this, SIGNAL( requestAccountSettings() ) );
     disconnect( m_ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
     if (optionsModel && optionsModel->guldenSettings)
         disconnect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ) );
+}
 
+AccountSummaryWidget::~AccountSummaryWidget()
+{
     delete ui;
 }
 

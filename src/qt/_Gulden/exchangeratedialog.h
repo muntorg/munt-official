@@ -35,6 +35,8 @@ public:
 
     void setOptionsModel(OptionsModel* model);
 
+    void disconnectSlots();
+
 protected:
 private:
     Ui::ExchangeRateDialog *ui;

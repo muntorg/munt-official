@@ -29,6 +29,8 @@ public:
     explicit AccountSummaryWidget(CurrencyTicker* ticker, QWidget *parent = 0);
     ~AccountSummaryWidget();
 
+    void disconnectSlots();
+
     void setActiveAccount(const CAccount* account);
     void setOptionsModel(OptionsModel* model);
     void hideBalances();

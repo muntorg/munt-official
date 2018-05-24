@@ -34,11 +34,6 @@ ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidg
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 }
 
-ExchangeRateDialog::~ExchangeRateDialog()
-{
-    delete ui;
-}
-
 void ExchangeRateDialog::setOptionsModel(OptionsModel* model)
 {
     optionsModel = model;
@@ -57,7 +52,17 @@ void ExchangeRateDialog::setOptionsModel(OptionsModel* model)
     }
 
 
-    connect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),  SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+    connect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+}
+
+void ExchangeRateDialog::disconnectSlots()
+{
+    disconnect(ui->ExchangeRateTable->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(selectionChanged(const QItemSelection &, const QItemSelection &)));
+}
+
+ExchangeRateDialog::~ExchangeRateDialog()
+{
+    delete ui;
 }
 
 void ExchangeRateDialog::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)

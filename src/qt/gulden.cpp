@@ -298,14 +298,6 @@ GuldenApplication::GuldenApplication(int &argc, char **argv):
 
 GuldenApplication::~GuldenApplication()
 {
-    delete window;
-    window = 0;
-#ifdef ENABLE_WALLET
-    delete paymentServer;
-    paymentServer = 0;
-#endif
-    delete optionsModel;
-    optionsModel = 0;
     delete platformStyle;
     platformStyle = 0;
 }
@@ -326,6 +318,7 @@ void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
 {
     window = new GUI(platformStyle, networkStyle, 0);
     connect( (QObject*)window->walletFrame, SIGNAL( loadWallet() ), this, SLOT( requestInitialize() ) );
+    connect( window, SIGNAL( destroyed() ), this, SLOT( quit() ) );
 
     window->show();
 }
@@ -412,6 +405,9 @@ void GuldenApplication::shutdown_InitialUINotification()
 
 void GuldenApplication::shutdown_CloseModels()
 {
+    // Remove all timer slots now already so that they aren't a problem when we are shutting down.
+    window->disconnectNonEssentialSignals();
+
     #ifdef ENABLE_WALLET
     window->removeAllWallets();
     delete walletModel;
@@ -424,8 +420,17 @@ void GuldenApplication::shutdown_CloseModels()
 void GuldenApplication::shutdown_TerminateApp()
 {
     // Finally exit main loop after shutdown finished
-    LogPrintf("%s: Shuting down UI\n", __func__);
-    quit();
+    LogPrintf("%s: Shutting down UI\n", __func__);
+
+    window->exitApp=true;
+    window->close();
+    window = 0;
+#ifdef ENABLE_WALLET
+    delete paymentServer;
+    paymentServer = 0;
+#endif
+    delete optionsModel;
+    optionsModel = 0;
 }
 
 void GuldenApplication::handleRunawayException(const QString &message)

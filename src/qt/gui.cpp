@@ -33,6 +33,7 @@
 #include "chainparams.h"
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
+#include "qt/_Gulden/exchangeratedialog.h"
 
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
@@ -117,6 +118,8 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 : QMainWindow(parent)
 , platformStyle(_platformStyle)
 {
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
     //fixme: (2.1) ex GuldenGUI code, integrate this better
     {
         ticker = new CurrencyTicker( this );
@@ -297,6 +300,15 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
 #endif
 }
 
+void GUI::disconnectNonEssentialSignals()
+{
+    disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
+    if (dialogExchangeRate)
+        dialogExchangeRate->disconnectSlots();
+    if (accountSummaryWidget)
+        accountSummaryWidget->disconnectSlots();
+}
+
 GUI::~GUI()
 {
     LogPrint(BCLog::QT, "GUI::~GUI\n");
@@ -308,9 +320,12 @@ GUI::~GUI()
         guldenEventFilter = nullptr;
     }
 
+    // Delete items that respond to timers
+    delete ticker;
+    delete nocksSettings;
+
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
-    disconnect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
 
     if (rpcConsole)
     {
@@ -1186,7 +1201,16 @@ void GUI::closeEvent(QCloseEvent *event)
 {
     LogPrint(BCLog::QT, "GUI::closeEvent\n");
 
-#ifndef Q_OS_MAC // Ignored on Mac
+    if (exitApp)
+    {
+        QMainWindow::closeEvent(event);
+        return;
+    }
+
+#ifdef Q_OS_MAC // Ignored on Mac
+    QMainWindow::closeEvent(event);
+    return;
+#else
     //NB! This is a bit subtle, but we want to ignore this close event even when we are closing.
     //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
     //In the meantime we hide the window for immediate user feedback.
@@ -1205,8 +1229,6 @@ void GUI::closeEvent(QCloseEvent *event)
     }
     else if(welcomeScreenIsVisible())
         GuldenAppManager::gApp->shutdown();
-#else
-    QMainWindow::closeEvent(event);
 #endif
 }
 
@@ -1281,8 +1303,6 @@ void GUI::dropEvent(QDropEvent *event)
 
 bool GUI::eventFilter(QObject *object, QEvent *event)
 {
-    LogPrint(BCLog::QT, "GUI::eventFilter\n");
-
     // Catch status tip events
     if (event->type() == QEvent::StatusTip)
     {

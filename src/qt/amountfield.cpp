@@ -362,8 +362,9 @@ GuldenAmountField::~GuldenAmountField()
     disconnect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
     disconnect(tertiaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToTertiaryCurrency()));
     disconnect(quadAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToQuadCurrency()));
-    if (ticker)
-        disconnect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
+
+    //NB! Ticker will already be deleted by the time we reach this point.
+    //disconnect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
 }
 
 void GuldenAmountField::clear()
