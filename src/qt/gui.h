@@ -126,7 +126,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 public:
-    bool exitApp=false;
+    bool coreAppIsReadyForUIToQuit=false;
     WalletFrame* walletFrame = nullptr;
 private:
     ClientModel* clientModel = nullptr;
@@ -270,8 +270,10 @@ public Q_SLOTS:
     */
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
 
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+
+    /* UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc. */
+    void userWantsToQuit();
 
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.

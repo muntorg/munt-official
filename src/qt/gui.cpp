@@ -488,7 +488,7 @@ void GUI::createActions()
     currencyAction->setStatusTip(tr("Change the local currency that is used to display estimates"));
     currencyAction->setCheckable(false);
 
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(userWantsToQuit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
@@ -498,8 +498,6 @@ void GUI::createActions()
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
-    // prevents an open debug window from becoming stuck/unusable on client shutdown
-    connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
 #ifdef ENABLE_WALLET
     if(walletFrame)
@@ -1185,11 +1183,22 @@ void GUI::changeEvent(QEvent *e)
 #endif
 }
 
+void GUI::userWantsToQuit()
+{
+    // close rpcConsole in case it was open to make some space for the shutdown window
+    rpcConsole->close();
+    GuldenAppManager::gApp->shutdown();
+}
+
+//NB! This is a bit subtle/tricky, but we want to ignore this close event even when we are closing.
+//The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
+//In the meantime we hide the window for immediate user feedback.
 void GUI::closeEvent(QCloseEvent *event)
 {
     LogPrint(BCLog::QT, "GUI::closeEvent\n");
 
-    if (exitApp)
+    // We are really in the exit phase now, so this time really exit.
+    if (coreAppIsReadyForUIToQuit)
     {
         QMainWindow::closeEvent(event);
         return;
@@ -1199,24 +1208,18 @@ void GUI::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
     return;
 #else
-    //NB! This is a bit subtle, but we want to ignore this close event even when we are closing.
-    //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
-    //In the meantime we hide the window for immediate user feedback.
     QMainWindow::hide();
     event->ignore();
     if(clientModel && clientModel->getOptionsModel())
     {
-        if(!clientModel->getOptionsModel()->getMinimizeOnClose())
+        if(clientModel->getOptionsModel()->getMinimizeOnClose())
         {
-            // close rpcConsole in case it was open to make some space for the shutdown window
-            rpcConsole->close();
-            GuldenAppManager::gApp->shutdown();
-        }
-        else
             QMainWindow::showMinimized();
+            return;
+        }
     }
-    else if(welcomeScreenIsVisible())
-        GuldenAppManager::gApp->shutdown();
+    //Initiate the exit process
+    userWantsToQuit();
 #endif
 }
 

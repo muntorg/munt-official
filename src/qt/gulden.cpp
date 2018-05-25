@@ -501,7 +501,8 @@ void GuldenApplication::shutdown_TerminateApp()
 
     translationInterface.Translate.disconnect(Translate);
 
-    window->exitApp=true;
+    //Signal the UI to shut itself down.
+    window->coreAppIsReadyForUIToQuit=true;
     window->close();
     window = 0;
 }

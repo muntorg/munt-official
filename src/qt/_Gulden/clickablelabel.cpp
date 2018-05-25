@@ -7,6 +7,8 @@
 
 #include <QVariant>
 #include <QStyle>
+#include <QShortcut>
+#include <QKeySequence>
 
 ClickableLabel::ClickableLabel( QWidget * parent )
 : QLabel( parent )
@@ -19,6 +21,9 @@ ClickableLabel::ClickableLabel( QWidget * parent )
     setProperty("pressed", QVariant(false));
 
     mouseIn = false;
+
+    //QShortcut mnemonicShortcut = new QShortcut(QKeySequence::mnemonic(), this);
+    //connect(mnemonicShortcut, SIGNAL(activated()), this, SIGNAL(clicked()));
 }
 
 void ClickableLabel::mousePressEvent( QMouseEvent * event ) 

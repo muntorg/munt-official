@@ -20,13 +20,6 @@ QMainWindow *
     font-weight: 400;
 }
 
-/*Buttons get FontAwesome for icons*/
-QToolButton, QPushButton, #searchLabel1, #searchLabel2, #accountSettings, #labelWalletSettings, #account_bar QLabel
-{
-    font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-
-
 QMainWindow, QDialog
 {
     border-image: url(':/Gulden/main_background') 0 0 0 0 stretch stretch;
@@ -442,7 +435,7 @@ QTabWidget *
 
 
 
-GUI QDialog:window QPushButton
+GUI QDialog:window QPushButton, GUI QDialog:window ClickableLabel
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -455,7 +448,7 @@ GUI QDialog:window QPushButton
     margin-bottom: 20px;
 }
 
-GUI QDialog:window QPushButton:pressed
+GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:pressed
 {
     color: ACCENT_COLOR_2;
 }
@@ -470,7 +463,7 @@ GUI QDialog:window QPushButton:pressed
     height: 34px;
     color: #e02121;
     margin: 0px;
-    padding: 0px;   
+    padding: 0px;
     margin-bottom: 18px;
 }
 #clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, GUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
