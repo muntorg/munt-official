@@ -15,7 +15,7 @@
 #include "gui.h"
 #include "walletmodel.h"
 
-AccountSettingsDialog::AccountSettingsDialog(const PlatformStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
+AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
 : QFrame(parent)
 , walletModel(model)
 , ui(new Ui::AccountSettingsDialog)

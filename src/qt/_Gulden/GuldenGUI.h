@@ -65,34 +65,4 @@ void burnLineEditMemory(QLineEdit* edit);
 void burnTextEditMemory(QTextEdit* edit);
 QString limitString(const QString& string, int maxLength);
 
-class GuldenProxyStyle : public QProxyStyle
-{
-    Q_OBJECT
-public:
-    GuldenProxyStyle();
-    void drawItemText(QPainter *painter, const QRect &rectangle, int alignment, const QPalette &palette, bool enabled, const QString &text, QPalette::ColorRole textRole = QPalette::NoRole) const;
-    bool altDown;
-};
-
-class GuldenEventFilter : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit GuldenEventFilter(QStyle* style, QWidget *parent, GuldenProxyStyle* guldenStyle, QObject* _parentObject = 0)
-    : QObject(_parentObject)
-    , parentStyle(style)
-    , parentObject(parent)
-    , guldenProxyStyle(guldenStyle)
-    {
-    }
-protected:
-    bool eventFilter(QObject *obj, QEvent *evt);
-
-private:
-    QStyle* parentStyle;
-    QWidget* parentObject;
-    GuldenProxyStyle* guldenProxyStyle;
-};
-
 #endif // GULDEN_QT_GULDENGUI_H

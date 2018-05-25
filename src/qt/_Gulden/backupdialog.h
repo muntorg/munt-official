@@ -17,7 +17,7 @@
 #include <QVariant>
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 
 namespace Ui {
@@ -29,7 +29,7 @@ class BackupDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit BackupDialog(const PlatformStyle* platformStyle, QWidget* parent, WalletModel* model);
+    explicit BackupDialog(const QStyle* platformStyle, QWidget* parent, WalletModel* model);
     ~BackupDialog();
 
 Q_SIGNALS:
@@ -43,7 +43,7 @@ protected:
 
 private:
     Ui::BackupDialog* ui;
-    const PlatformStyle* platformStyle;
+    const QStyle* platformStyle;
     WalletModel* walletModel;
 
 private Q_SLOTS:

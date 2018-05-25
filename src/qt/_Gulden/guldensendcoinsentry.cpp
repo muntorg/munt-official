@@ -11,7 +11,6 @@
 #include "accounttablemodel.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "walletmodel.h"
 #include "wallet/wallet.h"
 
@@ -26,7 +25,7 @@
 #include "validation.h"//chainActive
 #include "Gulden/util.h"
 
-GuldenSendCoinsEntry::GuldenSendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *parent) :
+GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget *parent) :
     QFrame(parent),
     ui(new Ui::GuldenSendCoinsEntry),
     model(0),

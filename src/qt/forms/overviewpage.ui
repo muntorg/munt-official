@@ -62,7 +62,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="labelWalletStatus">
+             <widget class="ClickableLabel" name="labelWalletStatus">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -78,19 +78,8 @@
               <property name="text">
                <string/>
               </property>
-              <property name="icon">
-               <iconset resource="../gulden.qrc">
-                <normaloff>:/icons/warning</normaloff>
-                <disabledoff>:/icons/warning</disabledoff>:/icons/warning</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
+              <property name="indent">
+               <number>0</number>
               </property>
              </widget>
             </item>
@@ -448,7 +437,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="labelTransactionsStatus">
+             <widget class="ClickableLabel" name="labelTransactionsStatus">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -464,19 +453,8 @@
               <property name="text">
                <string/>
               </property>
-              <property name="icon">
-               <iconset resource="../gulden.qrc">
-                <normaloff>:/icons/warning</normaloff>
-                <disabledoff>:/icons/warning</disabledoff>:/icons/warning</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
+              <property name="indent">
+               <number>0</number>
               </property>
              </widget>
             </item>
@@ -536,6 +514,15 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">qt/_Gulden/clickablelabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../gulden.qrc"/>
+ </resources>
  <connections/>
 </ui>

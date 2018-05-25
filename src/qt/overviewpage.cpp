@@ -10,7 +10,6 @@
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "transactionfilterproxy.h"
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
@@ -25,7 +24,7 @@ class TxViewDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
-    TxViewDelegate(const PlatformStyle *_platformStyle, QObject *parent=nullptr):
+    TxViewDelegate(const QStyle *_platformStyle, QObject *parent=nullptr):
         QAbstractItemDelegate(parent), unit(GuldenUnits::NLG),
         platformStyle(_platformStyle)
     {
@@ -45,7 +44,6 @@ public:
         int halfheight = (mainRect.height() - 2*ypad)/2;
         QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace, halfheight);
         QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
-        icon = platformStyle->SingleColorIcon(icon);
         icon.paint(painter, decorationRect);
 
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
@@ -103,12 +101,12 @@ public:
     }
 
     int unit;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
 };
 #include "overviewpage.moc"
 
-OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) :
+OverviewPage::OverviewPage(const QStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::OverviewPage),
     clientModel(0),
@@ -123,11 +121,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 {
     ui->setupUi(this);
 
-    // use a SingleColorIcon for the "out of sync warning" icon
-    QIcon icon = platformStyle->SingleColorIcon(":/icons/warning");
-    icon.addPixmap(icon.pixmap(QSize(64,64), QIcon::Normal), QIcon::Disabled); // also set the disabled icon because we are using a disabled QPushButton to work around missing HiDPI support of QLabel (https://bugreports.qt.io/browse/QTBUG-42503)
-    ui->labelTransactionsStatus->setIcon(icon);
-    ui->labelWalletStatus->setIcon(icon);
+    ui->labelTransactionsStatus->setText(GUIUtil::fontAwesomeRegular("\uf071"));
+    ui->labelTransactionsStatus->setTextFormat( Qt::RichText );
+    ui->labelWalletStatus->setText(GUIUtil::fontAwesomeRegular("\uf071"));
+    ui->labelWalletStatus->setTextFormat( Qt::RichText );
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);

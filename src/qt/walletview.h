@@ -19,7 +19,7 @@
 class GUI;
 class ClientModel;
 class OverviewPage;
-class PlatformStyle;
+class QStyle;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class WitnessDialog;
@@ -44,7 +44,7 @@ class WalletView : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit WalletView(const QStyle *platformStyle, QWidget *parent);
     ~WalletView();
 
     void setGUI(GUI *gui);
@@ -77,7 +77,7 @@ private:
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
     friend class GuldenGUI;
     friend class GUI;

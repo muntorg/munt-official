@@ -13,7 +13,7 @@
 class ClientModel;
 class TransactionFilterProxy;
 class TxViewDelegate;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 
 namespace Ui {
@@ -30,7 +30,7 @@ class OverviewPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit OverviewPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit OverviewPage(const QStyle *platformStyle, QWidget *parent = 0);
     ~OverviewPage();
 
     void setClientModel(ClientModel *clientModel);

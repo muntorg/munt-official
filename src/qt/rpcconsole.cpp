@@ -19,7 +19,6 @@
 #include "bantablemodel.h"
 #include "clientmodel.h"
 #include "guiutil.h"
-#include "platformstyle.h"
 #include "chainparams.h"
 #include "netbase.h"
 #include "rpc/server.h"
@@ -404,7 +403,7 @@ void RPCExecutor::request(const QString &command)
     }
 }
 
-RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
+RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RPCConsole),
     clientModel(0),
@@ -419,9 +418,12 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
 
     ui->openDebugLogfileButton->setToolTip(ui->openDebugLogfileButton->toolTip().arg(tr(PACKAGE_NAME)));
 
-    if (platformStyle->getImagesOnButtons()) {
-        ui->openDebugLogfileButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
+    if (GUIUtil::showImagesOnButtons())
+    {
+        ui->openDebugLogfileButton->setTextFormat( Qt::RichText );
+        ui->openDebugLogfileButton->setText(GUIUtil::fontAwesomeRegular("\uf064") + " " + ui->openDebugLogfileButton->text());
     }
+
     ui->clearButton->setTextFormat( Qt::RichText );
     ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf057") );
     ui->fontBiggerButton->setText( GUIUtil::fontAwesomeRegular("\uf00e") );
@@ -440,6 +442,7 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
+    connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(on_openDebugLogfileButton_clicked()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
 
     // set library version labels

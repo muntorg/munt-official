@@ -11,7 +11,7 @@
 #include <QModelIndex>
 
 
-ExchangeRateDialog::ExchangeRateDialog(const PlatformStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel)
+ExchangeRateDialog::ExchangeRateDialog(const QStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel)
 : QDialog( parent, Qt::Dialog )
 , ui( new Ui::ExchangeRateDialog )
 , platformStyle( platformStyle )

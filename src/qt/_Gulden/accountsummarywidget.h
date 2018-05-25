@@ -12,7 +12,7 @@
 #include <string>
 
 class WalletModel;
-class PlatformStyle;
+class QStyle;
 class QSortFilterProxyModel;
 class CurrencyTicker;
 class CAccount;

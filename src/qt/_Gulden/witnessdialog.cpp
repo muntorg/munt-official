@@ -114,7 +114,7 @@ QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, co
 
 enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING};
 
-WitnessDialog::WitnessDialog(const PlatformStyle* _platformStyle, QWidget* parent)
+WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
 , ui( new Ui::WitnessDialog )
 , platformStyle( _platformStyle )

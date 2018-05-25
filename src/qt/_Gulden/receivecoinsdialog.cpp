@@ -12,7 +12,6 @@
 #include "guiutil.h"
 #include "guiconstants.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "receiverequestdialog.h"
 #include "recentrequeststablemodel.h"
 #include "walletmodel.h"
@@ -98,7 +97,7 @@ public:
 
 bool ReceiveCoinsDialog::showCopyQRAsImagebutton = true;
 
-ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWidget *parent)
+ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *parent)
 : QDialog( parent )
 , ui( new Ui::ReceiveCoinsDialog )
 , model( 0 )

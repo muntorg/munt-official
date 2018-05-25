@@ -9,7 +9,6 @@
 
 #include "GuldenGUI.h"
 #include "gui.h"
-#include "platformstyle.h"
 #include "units.h"
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
@@ -99,53 +98,6 @@ const char* SIDE_BAR_WIDTH = "300px";
 //Extended width for large balances.
 unsigned int sideBarWidthExtended = 340;
 const char* SIDE_BAR_WIDTH_EXTENDED = "340px";
-
-GuldenProxyStyle::GuldenProxyStyle()
-: QProxyStyle("windows") //Use the same style on all platforms to simplify skinning
-{
-    altDown = false;
-}
-
-void GuldenProxyStyle::drawItemText(QPainter *painter, const QRect &rectangle, int alignment, const QPalette &palette, bool enabled, const QString &text, QPalette::ColorRole textRole) const
-{
-    // Only draw underline hints on buttons etc. if the alt key is pressed.
-    if (altDown)
-    {
-        alignment |= Qt::TextShowMnemonic;
-        alignment &= ~(Qt::TextHideMnemonic);
-    }
-    else
-    {
-        alignment |= Qt::TextHideMnemonic;
-        alignment &= ~(Qt::TextShowMnemonic);
-    }
-
-    QProxyStyle::drawItemText(painter, rectangle, alignment, palette, enabled, text, textRole);
-}
-
-
-bool GuldenEventFilter::eventFilter(QObject *obj, QEvent *evt)
-{
-    if (evt->type() == QEvent::KeyPress || evt->type() == QEvent::KeyRelease)
-    {
-        QKeyEvent *KeyEvent = (QKeyEvent*)evt;
-        if (KeyEvent->key() == Qt::Key_Alt)
-        {
-            guldenProxyStyle->altDown = (evt->type() == QEvent::KeyPress);
-            parentObject->repaint();
-        }
-    }
-    else if(evt->type() == QEvent::ApplicationDeactivate || evt->type() == QEvent::ApplicationStateChange || evt->type() == QEvent::Leave)
-    {
-        if(guldenProxyStyle->altDown)
-        {
-            guldenProxyStyle->altDown = false;
-            parentObject->repaint();
-        }
-    }
-    return QObject::eventFilter(obj, evt);
-}
-
 
 void setValid(QWidget* control, bool validity)
 {
@@ -584,7 +536,7 @@ void GUI::createToolBars()
     tabsBar->addAction( sendCoinsAction );
     tabsBar->addAction( historyAction );
 
-    passwordAction = new QAction(platformStyle->SingleColorIcon(":/icons/password"), tr("&Password"), this);
+    passwordAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf084), tr("&Password"), this);
     passwordAction->setObjectName("action_password");
     passwordAction->setStatusTip(tr("Change wallet password"));
     passwordAction->setToolTip(passwordAction->statusTip());
@@ -592,7 +544,7 @@ void GUI::createToolBars()
     passwordAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabsBar->addAction(passwordAction);
 
-    backupAction = new QAction(platformStyle->SingleColorIcon(":/icons/backup"), tr("&Backup"), this);
+    backupAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf0c7), tr("&Backup"), this);
     backupAction->setObjectName("action_backup");
     backupAction->setStatusTip(tr("Backup wallet"));
     backupAction->setToolTip(backupAction->statusTip());
@@ -737,19 +689,6 @@ void GUI::doApplyStyleSheet()
     QFile styleFile( ":Gulden/qss" );
     styleFile.open( QFile::ReadOnly );
 
-    //Use the same style on all platforms to simplify skinning
-    guldenStyle = new GuldenProxyStyle();
-    QApplication::setStyle( guldenStyle );
-
-    if (guldenEventFilter)
-    {
-        removeEventFilter(guldenEventFilter);
-        delete guldenEventFilter;
-    }
-    guldenEventFilter = new GuldenEventFilter(style(), this, guldenStyle);
-    guldenEventFilter->setObjectName("gui_event_filter");
-    installEventFilter(guldenEventFilter);
-
     //Replace variables in the 'template' with actual values
     QString style( styleFile.readAll() );
     style.replace( "ACCENT_COLOR_1", QString(ACCENT_COLOR_1) );
@@ -822,7 +761,6 @@ void GUI::doPostInit()
         frameBlocks->layout()->setSpacing( 0 );
 
         //Hide some of the 'task items' we don't need
-        unitDisplayControl->setVisible( false );
         //labelBlocksIcon->setVisible( false );
 
         //Status bar

@@ -18,7 +18,6 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
-#include "platformstyle.h"
 #include "qt/_Gulden/receivecoinsdialog.h"
 #include "qt/_Gulden/witnessdialog.h"
 #include "sendcoinsdialog.h"
@@ -43,7 +42,7 @@
 
 
 
-WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
+WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent):
     QStackedWidget(parent),
     clientModel(0),
     walletModel(0),
@@ -64,10 +63,10 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     vbox->addWidget(transactionView,6);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
     exportButton->setVisible(false);
-    exportButton->setToolTip(tr("Export the data in the current tab to a file"));
+    /*exportButton->setToolTip(tr("Export the data in the current tab to a file"));
     if (platformStyle->getImagesOnButtons()) {
         exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-    }
+    }*/
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);

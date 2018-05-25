@@ -16,7 +16,7 @@
 #include <QPoint>
 #include <QVariant>
 
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 class CAccountHD;
 class WalletModel;
@@ -36,7 +36,7 @@ class NewAccountDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit NewAccountDialog(const PlatformStyle *platformStyle, QWidget *parent, WalletModel* model);
+    explicit NewAccountDialog(const QStyle *platformStyle, QWidget *parent, WalletModel* model);
     ~NewAccountDialog();
 
     QString getAccountName();
@@ -52,7 +52,7 @@ protected:
 
 private:
     Ui::NewAccountDialog *ui;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
     CAccountHD* newAccount;
     WalletModel* walletModel;
 

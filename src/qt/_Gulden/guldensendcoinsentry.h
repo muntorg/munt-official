@@ -11,7 +11,7 @@
 #include <QStackedWidget>
 
 class WalletModel;
-class PlatformStyle;
+class QStyle;
 class QSortFilterProxyModel;
 
 namespace Ui {
@@ -26,7 +26,7 @@ class GuldenSendCoinsEntry : public QFrame
     Q_OBJECT
 
 public:
-    explicit GuldenSendCoinsEntry(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit GuldenSendCoinsEntry(const QStyle *platformStyle, QWidget *parent = 0);
     ~GuldenSendCoinsEntry();
 
     void setModel(WalletModel *model);
@@ -90,7 +90,7 @@ private:
     SendCoinsRecipient recipient;
     Ui::GuldenSendCoinsEntry *ui;
     WalletModel *model;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
     QSortFilterProxyModel* proxyModelRecipients;
     QSortFilterProxyModel* proxyModelAddresses;

@@ -86,19 +86,18 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="deleteAddress">
+      <widget class="ClickableLabel" name="deleteAddress">
        <property name="toolTip">
         <string>Delete the currently selected address from the list</string>
        </property>
        <property name="text">
         <string>&amp;Delete</string>
        </property>
-       <property name="icon">
-        <iconset resource="../gulden.qrc">
-         <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
-       </property>
-       <property name="autoDefault">
+       <property name="autoDefault" stdset="0">
         <bool>false</bool>
+       </property>
+       <property name="indent">
+         <number>0</number>
        </property>
       </widget>
      </item>
@@ -116,53 +115,50 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="exportButton">
+      <widget class="ClickableLabel" name="exportButton">
        <property name="toolTip">
         <string>Export the data in the current tab to a file</string>
        </property>
        <property name="text">
         <string>&amp;Export</string>
        </property>
-       <property name="icon">
-        <iconset resource="../gulden.qrc">
-         <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
-       </property>
-       <property name="autoDefault">
+       <property name="autoDefault" stdset="0">
         <bool>false</bool>
+       </property>
+       <property name="indent">
+         <number>0</number>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="newAddress">
+      <widget class="ClickableLabel" name="newAddress">
        <property name="toolTip">
         <string>Create a new address</string>
        </property>
        <property name="text">
         <string>&amp;New</string>
        </property>
-       <property name="icon">
-        <iconset resource="../gulden.qrc">
-         <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
-       </property>
-       <property name="autoDefault">
+       <property name="autoDefault" stdset="0">
         <bool>false</bool>
+       </property>
+       <property name="indent">
+         <number>0</number>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="copyAddress">
+      <widget class="ClickableLabel" name="copyAddress">
        <property name="toolTip">
         <string>Copy the currently selected address to the system clipboard</string>
        </property>
        <property name="text">
         <string>&amp;Copy</string>
        </property>
-       <property name="icon">
-        <iconset resource="../gulden.qrc">
-         <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
-       </property>
-       <property name="autoDefault">
+       <property name="autoDefault" stdset="0">
         <bool>false</bool>
+       </property>
+       <property name="indent">
+         <number>0</number>
        </property>
       </widget>
      </item>
@@ -170,6 +166,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">qt/_Gulden/clickablelabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../gulden.qrc"/>
  </resources>

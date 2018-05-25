@@ -17,7 +17,7 @@
 
 class GUI;
 class ClientModel;
-class PlatformStyle;
+class QStyle;
 class SendCoinsRecipient;
 class WalletModel;
 class WalletView;
@@ -38,7 +38,7 @@ class WalletFrame : public QFrame
     Q_OBJECT
 
 public:
-    explicit WalletFrame(const PlatformStyle *platformStyle, GUI *_gui = 0);
+    explicit WalletFrame(const QStyle *platformStyle, GUI *_gui = 0);
     ~WalletFrame();
 
     void setClientModel(ClientModel *clientModel);
@@ -64,7 +64,7 @@ private:
 
     bool bOutOfSync;
 
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
     WalletView *currentWalletView();
 

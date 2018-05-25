@@ -22,7 +22,7 @@
 #include <QThread>
 
 class ClientModel;
-class PlatformStyle;
+class QStyle;
 class RPCTimerInterface;
 
 namespace Ui {
@@ -40,7 +40,7 @@ class RPCConsole: public QWidget
     Q_OBJECT
 
 public:
-    explicit RPCConsole(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit RPCConsole(const QStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
 
     static bool RPCParseCommandLine(std::string &strResult, const std::string &strCommand, bool fExecute, std::string * const pstrFilteredOut = NULL);
@@ -155,7 +155,7 @@ private:
     int historyPtr;
     QString cmdBeforeBrowsing;
     QList<NodeId> cachedNodeids;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
     RPCTimerInterface *rpcTimerInterface;
     QMenu *peersTableContextMenu;
     QMenu *banTableContextMenu;

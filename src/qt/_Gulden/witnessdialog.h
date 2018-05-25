@@ -14,7 +14,7 @@
 #include <QDateTime>
 
 class QMenu;
-class PlatformStyle;
+class QStyle;
 class QwtPlotCurve;
 class ClientModel;
 class OptionsModel;
@@ -44,7 +44,7 @@ class WitnessDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit WitnessDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit WitnessDialog(const QStyle *platformStyle, QWidget *parent = 0);
     ~WitnessDialog();
 
     void setClientModel(ClientModel *clientModel);
@@ -69,7 +69,7 @@ protected:
 
 private:
     Ui::WitnessDialog *ui;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
     ClientModel *clientModel;
     WalletModel *model;
 

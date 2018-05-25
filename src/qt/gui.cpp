@@ -26,7 +26,6 @@
 #include "openuridialog.h"
 #include "optionsdialog.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "rpcconsole.h"
 #include "utilitydialog.h"
 #include "checkpoints.h"
@@ -114,10 +113,11 @@ static void NotifyRequestUnlockWithCallbackS(GUI* parent, CWallet* wallet, std::
  * collisions in the future with additional wallets */
 const QString GUI::DEFAULT_WALLET = "~Default";
 
-GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
+GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
 : QMainWindow(parent)
 , platformStyle(_platformStyle)
 {
+    // Delete ourselves on close, application catches this and uses it as a signal to exit.
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     //fixme: (2.1) ex GuldenGUI code, integrate this better
@@ -238,7 +238,6 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
-    unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
     labelWalletEncryptionIcon = new QLabel(this);
     labelWalletHDStatusIcon = new QLabel(this);
     connectionsControl = new GUIUtil::ClickableLabel();
@@ -246,7 +245,6 @@ GUI::GUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, 
     if(enableWallet && enableFullUI)
     {
         //frameBlocksLayout->addStretch();
-        frameBlocksLayout->addWidget(unitDisplayControl);
         //frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelWalletEncryptionIcon);
         frameBlocksLayout->addWidget(labelWalletHDStatusIcon);
@@ -313,13 +311,6 @@ GUI::~GUI()
 {
     LogPrint(BCLog::QT, "GUI::~GUI\n");
 
-    if (guldenEventFilter)
-    {
-        removeEventFilter(guldenEventFilter);
-        delete guldenEventFilter;
-        guldenEventFilter = nullptr;
-    }
-
     // Delete items that respond to timers
     delete ticker;
     delete nocksSettings;
@@ -353,13 +344,13 @@ void GUI::createActions()
     QActionGroup *tabGroup = new QActionGroup(this);
     tabGroup->setObjectName("gui_action_tab_group");
 
-    witnessDialogAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Overview"), this);
+    witnessDialogAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf1fe), tr("&Overview"), this);
     witnessDialogAction->setObjectName("action_witness_dialog");
     witnessDialogAction->setStatusTip(tr("View statistics and information for witness account."));
     witnessDialogAction->setCheckable(true);
     tabGroup->addAction(witnessDialogAction);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview"), tr("&Overview"), this);
+    overviewAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf1fe), tr("&Overview"), this);
     overviewAction->setObjectName("action_overview");
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
@@ -367,7 +358,7 @@ void GUI::createActions()
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
-    sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&Send"), this);
+    sendCoinsAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f5), tr("&Send"), this);
     sendCoinsAction->setObjectName("action_send_coins");
     sendCoinsAction->setStatusTip(tr("Send coins to a Gulden address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
@@ -375,12 +366,12 @@ void GUI::createActions()
     sendCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_2));
     tabGroup->addAction(sendCoinsAction);
 
-    sendCoinsMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/send"), sendCoinsAction->text(), this);
+    sendCoinsMenuAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f5), tr("&Send"), this);
     sendCoinsMenuAction->setObjectName("action_send_coins_menu");
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
-    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
+    receiveCoinsAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f6), tr("&Receive"), this);
     receiveCoinsAction->setObjectName("action_receive_coins");
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and gulden: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
@@ -388,12 +379,12 @@ void GUI::createActions()
     receiveCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_3));
     tabGroup->addAction(receiveCoinsAction);
 
-    receiveCoinsMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/receiving_addresses"), receiveCoinsAction->text(), this);
+    receiveCoinsMenuAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f6), tr("&Receive"), this);
     receiveCoinsMenuAction->setObjectName("action_receive_menu");
     receiveCoinsMenuAction->setStatusTip(receiveCoinsAction->statusTip());
     receiveCoinsMenuAction->setToolTip(receiveCoinsMenuAction->statusTip());
 
-    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history"), tr("&Transactions"), this);
+    historyAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf362), tr("&Transactions"), this);
     historyAction->setObjectName("action_history");
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
@@ -420,81 +411,81 @@ void GUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
 #endif // ENABLE_WALLET
 
-    toggleHideAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&Show / Hide"), this);
+    toggleHideAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf070), tr("&Show / Hide"), this);
     toggleHideAction->setObjectName("action_toggle_hide");
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
-    importPrivateKeyAction = new QAction(platformStyle->TextColorIcon(":/Gulden/import"), tr("&Import key"), this);
+    importPrivateKeyAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf019), tr("&Import key"), this);
     importPrivateKeyAction->setObjectName("action_import_privkey");
     importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
     importPrivateKeyAction->setCheckable(false);
 
-    rescanAction = new QAction(platformStyle->TextColorIcon(":/Gulden/rescan"), tr("&Rescan transactions"), this);
+    rescanAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf002), tr("&Rescan transactions"), this);
     rescanAction->setObjectName("action_rescan");
     rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
     rescanAction->setCheckable(false);
 
-    openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
+    openAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf35d), tr("Open &URI..."), this);
     openAction->setObjectName("action_open_uri");
     openAction->setStatusTip(tr("Open a gulden: URI or payment request"));
 
-    backupWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
+    backupWalletAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf0c7), tr("&Backup Wallet..."), this);
     backupWalletAction->setObjectName("action_backup_wallet");
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
 
-    usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
+    usedSendingAddressesAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f5), tr("&Sending addresses..."), this);
     usedSendingAddressesAction->setObjectName("action_used_sending_addresses");
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
 
-    usedReceivingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
+    usedReceivingAddressesAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f6), tr("&Receiving addresses..."), this);
     usedReceivingAddressesAction->setObjectName("action_used_receiving_addresses");
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
-    quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf057), tr("E&xit"), this);
     quitAction->setObjectName("action_quit");
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
 
-    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
+    openRPCConsoleAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf390), tr("&Debug window"), this);
     openRPCConsoleAction->setObjectName("action_open_rpc_console");
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     openRPCConsoleAction->setEnabled(false); // initially disable the debug window menu item
 
-    showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
+    showHelpMessageAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf120), tr("&Command-line options"), this);
     showHelpMessageAction->setObjectName("action_show_help_message");
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible Gulden command-line options").arg(tr(PACKAGE_NAME)));
 
-    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
+    aboutAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf05a), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
     aboutAction->setObjectName("action_about");
     aboutAction->setStatusTip(tr("Show information about %1").arg(tr(PACKAGE_NAME)));
     aboutAction->setMenuRole(QAction::AboutRole);
 
     aboutAction->setEnabled(false);
-    aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
+    aboutQtAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf05a), tr("About &Qt"), this);
     aboutQtAction->setObjectName("action_about_qt");
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
 
-    encryptWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
+    encryptWalletAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf30d), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setObjectName("action_encrypt_wallet");
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
     encryptWalletAction->setCheckable(true);
 
-    changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
+    changePassphraseAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf084), tr("&Change Passphrase..."), this);
     changePassphraseAction->setObjectName("action_change_passphrase");
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
 
-    optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
+    optionsAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf085), tr("&Options..."), this);
     optionsAction->setObjectName("action_options");
     optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr(PACKAGE_NAME)));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     optionsAction->setEnabled(false);
 
-    currencyAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Select currency"), this);
+    currencyAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf3d1), tr("&Select currency"), this);
     currencyAction->setObjectName("action_currency");
-    currencyAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
+    currencyAction->setStatusTip(tr("Change the local currency that is used to display estimates"));
     currencyAction->setCheckable(false);
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -617,8 +608,6 @@ void GUI::setClientModel(ClientModel *_clientModel)
             walletFrame->setClientModel(_clientModel);
         }
 #endif // ENABLE_WALLET
-        unitDisplayControl->setOptionsModel(_clientModel->getOptionsModel());
-
         OptionsModel* optionsModel = _clientModel->getOptionsModel();
         if(optionsModel)
         {
@@ -646,7 +635,6 @@ void GUI::setClientModel(ClientModel *_clientModel)
             walletFrame->setClientModel(nullptr);
         }
 #endif // ENABLE_WALLET
-        unitDisplayControl->setOptionsModel(nullptr);
     }
 }
 
@@ -1489,95 +1477,5 @@ void GUI::toggleNetworkActive()
 
     if (clientModel) {
         clientModel->setNetworkActive(!clientModel->getNetworkActive());
-    }
-}
-
-UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
-    optionsModel(0),
-    menu(0)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::UnitDisplayStatusBarControl\n");
-
-    createContextMenu();
-    setToolTip(tr("Unit to show amounts in. Click to select another unit."));
-    QList<GuldenUnits::Unit> units = GuldenUnits::availableUnits();
-    int max_width = 0;
-    const QFontMetrics fm(font());
-    for (const GuldenUnits::Unit unit : units)
-    {
-        max_width = qMax(max_width, fm.width(GuldenUnits::name(unit)));
-    }
-    setMinimumSize(max_width, 0);
-    setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    setStyleSheet(QString("QLabel { color : %1 }").arg(platformStyle->SingleColor().name()));
-}
-
-/** So that it responds to button clicks */
-void UnitDisplayStatusBarControl::mousePressEvent(QMouseEvent *event)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::mousePressEvent\n");
-
-    onDisplayUnitsClicked(event->pos());
-}
-
-/** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
-void UnitDisplayStatusBarControl::createContextMenu()
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::createContextMenu\n");
-
-    menu = new QMenu(this);
-    menu->setObjectName("menu_unit_change");
-    for(GuldenUnits::Unit u : GuldenUnits::availableUnits())
-    {
-        QAction *menuAction = new QAction(QString(GuldenUnits::name(u)), this);
-        menuAction->setObjectName("action_units_menu");
-        menuAction->setData(QVariant(u));
-        menu->addAction(menuAction);
-    }
-    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(onMenuSelection(QAction*)));
-}
-
-/** Lets the control know about the Options Model (and its signals) */
-void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel *_optionsModel)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::setOptionsModel\n");
-
-    if (_optionsModel)
-    {
-        this->optionsModel = _optionsModel;
-
-        // be aware of a display unit change reported by the OptionsModel object.
-        connect(_optionsModel,SIGNAL(displayUnitChanged(int)),this,SLOT(updateDisplayUnit(int)));
-
-        // initialize the display units label with the current value in the model.
-        updateDisplayUnit(_optionsModel->getDisplayUnit());
-    }
-}
-
-/** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
-void UnitDisplayStatusBarControl::updateDisplayUnit(int newUnits)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::updateDisplayUnit\n");
-
-    setText(GuldenUnits::name(newUnits));
-}
-
-/** Shows context menu with Display Unit options by the mouse coordinates */
-void UnitDisplayStatusBarControl::onDisplayUnitsClicked(const QPoint& point)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::onDisplayUnitsClicked\n");
-
-    QPoint globalPos = mapToGlobal(point);
-    menu->exec(globalPos);
-}
-
-/** Tells underlying optionsModel to update its current display unit. */
-void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
-{
-    LogPrint(BCLog::QT, "UnitDisplayStatusBarControl::onMenuSelection\n");
-
-    if (action)
-    {
-        optionsModel->setDisplayUnit(action->data());
     }
 }

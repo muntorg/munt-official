@@ -3,10 +3,9 @@
 #include "qt/amountfield.h"
 #include "qt/callback.h"
 #include "qt/optionsmodel.h"
-#include "qt/platformstyle.h"
 #include "qt/qvalidatedlineedit.h"
 #include "qt/sendcoinsdialog.h"
-#include "qt/sendcoinsentry.h"
+#include "qt/_Gulden/guldensendcoinsentry.h"
 #include "qt/transactiontablemodel.h"
 #include "qt/transactionview.h"
 #include "qt/walletmodel.h"
@@ -21,6 +20,7 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QProxyStyle>
 
 namespace
 {
@@ -60,7 +60,7 @@ void ConfirmSend(QString* text = nullptr, bool cancel = false)
 uint256 SendCoins(CWallet& wallet, SendCoinsDialog& sendCoinsDialog, const CGuldenAddress& address, CAmount amount, bool rbf)
 {
     QVBoxLayout* entries = sendCoinsDialog.findChild<QVBoxLayout*>("entries");
-    SendCoinsEntry* entry = qobject_cast<SendCoinsEntry*>(entries->itemAt(0)->widget());
+    GuldenSendCoinsEntry* entry = qobject_cast<GuldenSendCoinsEntry*>(entries->itemAt(0)->widget());
     entry->findChild<QValidatedLineEdit*>("payTo")->setText(QString::fromStdString(address.ToString()));
     entry->findChild<GuldenAmountField*>("payAmount")->setValue(amount);
     sendCoinsDialog.findChild<QFrame*>("frameFee")
@@ -164,7 +164,7 @@ void TestSendCoins()
     wallet->SetBroadcastTransactions(true);
 
     // Create widgets for sending coins and listing transactions.
-    std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
+    std::unique_ptr<const QStyle> platformStyle(new QProxyStyle("windows"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
     OptionsModel optionsModel;

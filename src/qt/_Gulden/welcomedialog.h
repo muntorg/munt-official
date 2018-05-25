@@ -17,7 +17,7 @@
 #include <QVariant>
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 class QMovie;
 
@@ -30,7 +30,7 @@ class WelcomeDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit WelcomeDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit WelcomeDialog(const QStyle *platformStyle, QWidget *parent = 0);
     ~WelcomeDialog();
 
     void showEvent(QShowEvent *ev);
@@ -49,7 +49,7 @@ protected:
 
 private:
     Ui::WelcomeDialog *ui;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
     QMovie* loadingAnimation;
 
 private Q_SLOTS:

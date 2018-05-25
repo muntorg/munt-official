@@ -20,7 +20,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-WalletFrame::WalletFrame(const PlatformStyle *_platformStyle, GUI *_gui) :
+WalletFrame::WalletFrame(const QStyle *_platformStyle, GUI *_gui) :
     QFrame(_gui),
     gui(_gui),
     platformStyle(_platformStyle)

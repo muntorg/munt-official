@@ -17,7 +17,7 @@
 #include <QVariant>
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 class CAccount;
 
@@ -30,7 +30,7 @@ class AccountSettingsDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit AccountSettingsDialog(const PlatformStyle *platformStyle, QWidget *parent, CAccount* activeAccount, WalletModel* model);
+    explicit AccountSettingsDialog(const QStyle *platformStyle, QWidget *parent, CAccount* activeAccount, WalletModel* model);
     ~AccountSettingsDialog();
 
 Q_SIGNALS:
@@ -48,7 +48,7 @@ protected:
 private:
     WalletModel* walletModel;
     Ui::AccountSettingsDialog* ui;
-    const PlatformStyle* platformStyle;
+    const QStyle* platformStyle;
     CAccount* activeAccount;
 
 private Q_SLOTS:

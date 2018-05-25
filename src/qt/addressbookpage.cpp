@@ -21,7 +21,6 @@
 #include "csvmodelwriter.h"
 #include "editaddressdialog.h"
 #include "guiutil.h"
-#include "platformstyle.h"
 
 #include <QIcon>
 #include <QMenu>
@@ -29,7 +28,7 @@
 #include <QSortFilterProxyModel>
 #include "_Gulden/GuldenGUI.h"
 
-AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode, Tabs _tab, QWidget *parent) :
+AddressBookPage::AddressBookPage(const QStyle *platformStyle, Mode _mode, Tabs _tab, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddressBookPage),
     model(0),
@@ -40,16 +39,16 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
 
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 
-    if (!platformStyle->getImagesOnButtons()) {
-        ui->newAddress->setIcon(QIcon());
-        ui->copyAddress->setIcon(QIcon());
-        ui->deleteAddress->setIcon(QIcon());
-        ui->exportButton->setIcon(QIcon());
-    } else {
-        ui->newAddress->setIcon(platformStyle->SingleColorIcon(":/icons/add"));
-        ui->copyAddress->setIcon(platformStyle->SingleColorIcon(":/icons/editcopy"));
-        ui->deleteAddress->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
-        ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
+    if (GUIUtil::showImagesOnButtons())
+    {
+        ui->newAddress->setText(GUIUtil::fontAwesomeRegular("\uf067") + " " + ui->newAddress->text());
+        ui->newAddress->setTextFormat( Qt::RichText );
+        ui->copyAddress->setText(GUIUtil::fontAwesomeRegular("\uf0c5") + " " + ui->copyAddress->text());
+        ui->copyAddress->setTextFormat( Qt::RichText );
+        ui->deleteAddress->setText(GUIUtil::fontAwesomeRegular("\uf1f8") + " " + ui->deleteAddress->text());
+        ui->deleteAddress->setTextFormat( Qt::RichText );
+        ui->exportButton->setText(GUIUtil::fontAwesomeRegular("\uf064") + " " + ui->exportButton->text());
+        ui->exportButton->setTextFormat( Qt::RichText );
     }
 
     QFrame* horizontalLine = new QFrame(this);

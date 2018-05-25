@@ -1045,6 +1045,34 @@ QString fontAwesomeSolid(const QString& text)
     return QString("<span style='font-family: \"Font Awesome 5 Pro Solid\"'>%1</span>").arg(text);
 }
 
+/* Get any font glyph as an icon */
+QIcon getIconFromFontGlyph(QChar charCode, QString fontFamily, QColor fontColor)
+{
+    QFontIconEngine* fontEngine = new QFontIconEngine();
+    fontEngine->setLetter(charCode);
+    fontEngine->setFontFamily(fontFamily);
+    fontEngine->setBaseColor(fontColor);
+    return QIcon(fontEngine);
+}
+/* Get any font glyph as an icon - convenience helper for Font Awesome light */
+QIcon getIconFromFontAwesomeLightGlyph(QChar charCode, QColor fontColor)
+{
+    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Light", fontColor);
+}
+
+/* Get any font glyph as an icon - convenience helper for Font Awesome regular */
+QIcon getIconFromFontAwesomeRegularGlyph(QChar charCode, QColor fontColor)
+{
+    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Regular", fontColor);
+}
+
+/* Get any font glyph as an icon - convenience helper for Font Awesome solid */
+QIcon getIconFromFontAwesomeSolidGlyph(QChar charCode, QColor fontColor)
+{
+    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Regular", fontColor);
+}
+
+
 void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_EMIT clicked(event->pos());
@@ -1053,6 +1081,12 @@ void ClickableLabel::mouseReleaseEvent(QMouseEvent *event)
 void ClickableProgressBar::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_EMIT clicked(event->pos());
+}
+
+// Future placeholder in case we decide to implement this behaviour - currently always true.
+bool showImagesOnButtons()
+{
+    return true;
 }
 
 } // namespace GUIUtil

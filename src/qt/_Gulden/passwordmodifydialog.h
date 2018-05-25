@@ -17,7 +17,7 @@
 #include <QVariant>
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 
 namespace Ui {
@@ -29,7 +29,7 @@ class PasswordModifyDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit PasswordModifyDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit PasswordModifyDialog(const QStyle *platformStyle, QWidget *parent = 0);
     ~PasswordModifyDialog();
 
 Q_SIGNALS:
@@ -41,7 +41,7 @@ protected:
 
 private:
     Ui::PasswordModifyDialog *ui;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
 private Q_SLOTS:
     void setPassword();

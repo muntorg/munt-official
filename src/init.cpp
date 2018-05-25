@@ -244,15 +244,16 @@ void CoreShutdown(boost::thread_group& threadGroup)
         pcoinscatcher = NULL;
         delete pcoinsdbview;
         pcoinsdbview = NULL;
-        delete pblocktree;
-        pblocktree = NULL;
 
-        //Already flushed to disk by FlushStateToDisk, and already deleted by shared_ptr in pcoinsTip.
+        //Already flushed to disk by FlushStateToDisk, setting to nullptr should trigger deletion.
         ppow2witTip = nullptr;
         delete ppow2witcatcher;
         ppow2witcatcher = NULL;
         delete ppow2witdbview;
         ppow2witdbview = NULL;
+
+        delete pblocktree;
+        pblocktree = NULL;
     }
     #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {

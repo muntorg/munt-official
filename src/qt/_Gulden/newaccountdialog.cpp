@@ -14,7 +14,6 @@
 #include "guiutil.h"
 #include "guiconstants.h"
 #include "optionsmodel.h"
-#include "platformstyle.h"
 #include "receiverequestdialog.h"
 #include "recentrequeststablemodel.h"
 #include "walletmodel.h"
@@ -31,7 +30,7 @@
 #include <qrencode.h>
 #endif
 
-NewAccountDialog::NewAccountDialog(const PlatformStyle *_platformStyle, QWidget *parent, WalletModel* model)
+NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent, WalletModel* model)
 : QFrame(parent)
 , ui(new Ui::NewAccountDialog)
 , platformStyle(_platformStyle)

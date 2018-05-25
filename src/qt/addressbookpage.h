@@ -9,7 +9,7 @@
 
 class AddressTableModel;
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 
 namespace Ui {
     class AddressBookPage;
@@ -40,7 +40,7 @@ public:
         ForEditing  /**< Open address book for editing */
     };
 
-    explicit AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent);
+    explicit AddressBookPage(const QStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent);
     ~AddressBookPage();
 
     void setModel(AddressTableModel *model);

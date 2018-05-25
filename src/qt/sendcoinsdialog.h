@@ -21,7 +21,7 @@
 
 class ClientModel;
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class GuldenSendCoinsEntry;
 class SendCoinsRecipient;
 class NocksRequest;
@@ -40,7 +40,7 @@ class SendCoinsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit SendCoinsDialog(const QStyle *platformStyle, QWidget *parent = 0);
     ~SendCoinsDialog();
 
     void setClientModel(ClientModel *clientModel);
@@ -78,7 +78,7 @@ private:
     WalletModel *model;
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
 
     NocksRequest* nocksRequest;
 

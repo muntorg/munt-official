@@ -14,6 +14,7 @@
 
 #include "amount.h"
 #include "fs.h"
+#include "qfonticon/qfonticon.h"
 
 #include <QEvent>
 #include <QHeaderView>
@@ -23,6 +24,7 @@
 #include <QString>
 #include <QTableView>
 #include <QLabel>
+
 
 class QValidatedLineEdit;
 class SendCoinsRecipient;
@@ -221,6 +223,15 @@ namespace GUIUtil
     /* Force rich text font to the solid typeface of Font Awesome. */
     QString fontAwesomeSolid(const QString& text);
 
+    /* Get any font glyph as an icon */
+    QIcon getIconFromFontGlyph(QChar charCode, QString fontFamily, QColor fontColor = Qt::black);
+    /* Get any font glyph as an icon - convenience helper for Font Awesome light */
+    QIcon getIconFromFontAwesomeLightGlyph(QChar charCode, QColor fontColor = Qt::black);
+    /* Get any font glyph as an icon - convenience helper for Font Awesome regular */
+    QIcon getIconFromFontAwesomeRegularGlyph(QChar charCode, QColor fontColor = Qt::black);
+    /* Get any font glyph as an icon - convenience helper for Font Awesome solid */
+    QIcon getIconFromFontAwesomeSolidGlyph(QChar charCode, QColor fontColor = Qt::black);
+
     class ClickableLabel : public QLabel
     {
         Q_OBJECT
@@ -260,6 +271,8 @@ namespace GUIUtil
 #else
     typedef ClickableProgressBar ProgressBar;
 #endif
+
+    bool showImagesOnButtons();
 
 } // namespace GUIUtil
 

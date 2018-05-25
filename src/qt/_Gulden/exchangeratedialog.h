@@ -18,7 +18,7 @@
 #include <QAbstractTableModel>
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 
 namespace Ui {
@@ -30,7 +30,7 @@ class ExchangeRateDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ExchangeRateDialog(const PlatformStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel);
+    explicit ExchangeRateDialog(const QStyle *platformStyle, QWidget *parent, QAbstractTableModel* tableModel);
     ~ExchangeRateDialog();
 
     void setOptionsModel(OptionsModel* model);
@@ -40,7 +40,7 @@ public:
 protected:
 private:
     Ui::ExchangeRateDialog *ui;
-    const PlatformStyle *platformStyle;
+    const QStyle *platformStyle;
     OptionsModel* optionsModel;
 
 public Q_SLOTS:

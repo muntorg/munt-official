@@ -28,7 +28,7 @@
 #endif
 
 class OptionsModel;
-class PlatformStyle;
+class QStyle;
 class WalletModel;
 #if defined(HAVE_WEBENGINE_VIEW)
 class QWebEngineView;
@@ -48,7 +48,7 @@ class ReceiveCoinsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit ReceiveCoinsDialog(const QStyle *platformStyle, QWidget *parent = 0);
     ~ReceiveCoinsDialog();
 
     void setModel(WalletModel *model);
@@ -70,7 +70,7 @@ protected:
 private:
     Ui::ReceiveCoinsDialog* ui;
     WalletModel* model;
-    const PlatformStyle* platformStyle;
+    const QStyle* platformStyle;
     QString accountAddress;
     #if defined(HAVE_WEBENGINE_VIEW)
     QWebEngineView* buyView;
