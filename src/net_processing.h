@@ -99,6 +99,7 @@ void PreventBlockDownloadDuringHeaderSync(bool state);
  * Downloaded blocks will not trigger ActivateBestChain
  */
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload);
+void CancelPriorityDownload(const CBlockIndex* index);
 void ProcessPriorityRequests(const std::shared_ptr<CBlock> block);
 bool FlushPriorityDownloads();
 size_t CountPriorityDownloads();

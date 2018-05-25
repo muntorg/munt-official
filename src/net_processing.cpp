@@ -156,7 +156,7 @@ namespace {
         bool downloaded;
     };
 
-    std::vector<PriorityBlockRequest> blocksToDownloadFirst;
+    std::list<PriorityBlockRequest> blocksToDownloadFirst;
 } // anon namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -3923,6 +3923,11 @@ void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload
         // we add blocks regardless of duplicates
         blocksToDownloadFirst.push_back({pindex, false});
     }
+}
+
+void CancelPriorityDownload(const CBlockIndex *index) {
+    LOCK(cs_main);
+    blocksToDownloadFirst.remove_if([&index](const PriorityBlockRequest& request){ return request.pindex == index; });
 }
 
 void SetAutoRequestBlocks(bool state) {
