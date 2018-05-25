@@ -2772,8 +2772,9 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     return true;
 }
 
-bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock, bool fAssumePOWGood, bool activateBestChain)
+bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock, bool fAssumePOWGood, bool checkFarAhead)
 {
+    bool fCloseToTip;
     {
         CBlockIndex *pindex = NULL;
         if (fNewBlock) *fNewBlock = false;
@@ -2786,18 +2787,21 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
 
         if (ret) {
             // Store to disk, skip toFarAway check if we are not planing to activate the best chain
-            ret = AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock, fAssumePOWGood, activateBestChain);
+            ret = AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock, fAssumePOWGood, checkFarAhead);
         }
         CheckBlockIndex(chainparams.GetConsensus());
         if (!ret) {
             GetMainSignals().BlockChecked(*pblock, state);
             return error("%s: AcceptBlock FAILED", __func__);
         }
+        fCloseToTip = pindex->nHeight <= chainActive.Height() + int(MIN_BLOCKS_TO_KEEP);
     }
 
-    CValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (activateBestChain && !ActivateBestChain(state, chainparams, pblock))
-        return error("%s: ActivateBestChain failed", __func__);
+    if (fCloseToTip) {
+        CValidationState state; // Only used to report errors, not invalidity - ignore it
+        if (!ActivateBestChain(state, chainparams, pblock))
+            return error("%s: ActivateBestChain failed", __func__);
+    }
 
     if (!IsInitialBlockDownload())
     {

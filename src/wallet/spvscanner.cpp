@@ -103,11 +103,19 @@ void CSPVScanner::RequestBlocks()
 
 void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex)
 {
+    LOCK2(cs_main, wallet.cs_wallet);
+
+    // if chainActive is up-to-date no SPV blocks need to be requested, we can update SPV to the activeChain
+    if (chainActive.Tip() == headerChain.Tip()) {
+        LogPrint(BCLog::WALLET, "chainActive is up-to-date, skipping SPV processing block %d\n", pindex->nHeight);
+        if (lastProcessed != headerChain.Tip()) {
+            UpdateLastProcessed(chainActive.Tip());
+            requestTip = lastProcessed;
+        }
+    }
 
     // if this is the block we're waiting for process it and request new block(s)
     if (pindex->pprev == lastProcessed) {
-        LOCK2(cs_main, wallet.cs_wallet);
-
         LogPrint(BCLog::WALLET, "SPV processing block %d\n", pindex->nHeight);
 
         // TODO handle mempool effects
