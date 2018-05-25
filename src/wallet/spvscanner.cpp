@@ -53,8 +53,26 @@ void CSPVScanner::RequestBlocks()
 {
     LOCK2(cs_main, wallet.cs_wallet);
 
-    // TODO handle forks, ie might need to revert lastProcessed and/or requestTip
-
+    // put lastProcessed and/or requestTip back on chain if forked
+    while (!headerChain.Contains(requestTip)) {
+        if (requestTip->nHeight > lastProcessed->nHeight) {
+            CancelPriorityDownload(requestTip);
+            requestTip = requestTip->pprev;
+        }
+        else { // so here requestTip == lastProcessed
+            std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
+            if (!ReadBlockFromDisk(*pblock, lastProcessed, Params().GetConsensus())) {
+                wallet.BlockDisconnected(pblock);
+            }
+            else {
+                // This block must be on disk, it was processed before.
+                // So pruning has to keep at least as many blocks back as the longest fork we are willing to handle.
+                assert(false);
+            }
+            UpdateLastProcessed(lastProcessed->pprev);
+            requestTip = lastProcessed;
+        }
+    }
 
     // skip blocks that are before startTime
     const CBlockIndex* skip = lastProcessed;
