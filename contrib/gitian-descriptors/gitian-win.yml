@@ -144,6 +144,8 @@ script: |
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
+    export HOST_NATIVE_PATH=${PATH}
+    export PATH=${PATH}:/home/ubuntu/build/Gulden/depends/${i}/native/bin/
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
   done
 

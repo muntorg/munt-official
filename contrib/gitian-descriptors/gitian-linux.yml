@@ -127,6 +127,8 @@ script: |
       export HOST_ID_SALT="$EXTRA_INCLUDES"
     fi
     export LD_LIBRARY_PATH="/home/ubuntu/build/Gulden/depends/${i}/lib/:../../qtbase/lib/"
+    export HOST_NATIVE_PATH=${PATH}
+    export PATH=${PATH}:/home/ubuntu/build/Gulden/depends/${i}/native/bin/
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
     unset HOST_ID_SALT
     unset LD_LIBRARY_PATH

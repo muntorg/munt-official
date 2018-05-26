@@ -68,7 +68,6 @@ $(package)_config_opts += -no-linuxfb
 $(package)_config_opts += -no-libudev
 $(package)_config_opts += -no-mitshm
 $(package)_config_opts += -no-mtdev
-$(package)_config_opts += -no-nis
 $(package)_config_opts += -no-pulseaudio
 $(package)_config_opts += -no-openvg
 $(package)_config_opts += -no-reduce-relocations

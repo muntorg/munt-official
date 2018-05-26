@@ -44,6 +44,8 @@
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/thread.hpp>
+#include <algorithm>
+#include <random>
 #include <fstream>
 
 //Gulden specific includes
@@ -1731,7 +1733,9 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     std::vector<CInputCoin> vValue;
     CAmount nTotalLower = 0;
 
-    random_shuffle(vCoins.begin(), vCoins.end(), GetRandInt);
+    std::random_device rng;
+    std::mt19937 urng(rng());
+    std::shuffle(vCoins.begin(), vCoins.end(), urng);
 
     for(const COutput &output : vCoins)
     {
