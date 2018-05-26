@@ -44,6 +44,10 @@ script: |
   CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
+  HOST_CFLAGS="-O2 -g"
+  HOST_CXXFLAGS="-O2 -g"
+  HOST_LDFLAGS=
+
 
   export QT_RCC_TEST=1
   export GZIP="-9n"
@@ -138,7 +142,7 @@ script: |
     sed -i.old "s|Libs.private:.*|Libs.private:|" /home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig/Qt5*.pc
 
     echo "<<<<<<<<<<<<<<<<<<<< START make Gulden >>>>>>>>>>>>>>>>>>>"
-    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --enable-shared="qt" --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS}
+    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --enable-shared="qt" --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}"
     make ${MAKEOPTS}
     make install-strip DESTDIR=${INSTALLPATH}
 

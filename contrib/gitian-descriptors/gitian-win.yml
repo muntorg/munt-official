@@ -44,6 +44,8 @@ script: |
   FAKETIME_PROGS="date makensis zip"
   HOST_CFLAGS="-O2 -g"
   HOST_CXXFLAGS="-O2 -g"
+  HOST_LDFLAGS=
+
 
   export QT_RCC_TEST=1
   export GZIP="-9n"
@@ -184,7 +186,7 @@ script: |
     tar --strip-components=1 -xf ../$SOURCEDIST
 
     # Configure
-    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}"
+    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}"
 
     # Place all the dependencies in release folder ready for installer
     mkdir release

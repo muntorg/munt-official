@@ -488,7 +488,8 @@ void GUI::createActions()
     currencyAction->setStatusTip(tr("Change the local currency that is used to display estimates"));
     currencyAction->setCheckable(false);
 
-    connect(quitAction, SIGNAL(triggered()), this, SLOT(userWantsToQuit()));
+    //NB! It is important that we use a queued connection here, otherwise on WIN32 we end up (in some cases) with the app closing while menu handling code has not yet exited cleanly.
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(userWantsToQuit()), (Qt::ConnectionType)(Qt::QueuedConnection|Qt::UniqueConnection));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
@@ -1186,7 +1187,8 @@ void GUI::changeEvent(QEvent *e)
 void GUI::userWantsToQuit()
 {
     // close rpcConsole in case it was open to make some space for the shutdown window
-    rpcConsole->close();
+    if (rpcConsole)
+        rpcConsole->close();
     GuldenAppManager::gApp->shutdown();
 }
 
