@@ -15,7 +15,7 @@ define $(package)_config_cmds
   mkdir native && cd native && \
   PATH=${HOST_NATIVE_PATH} ../configure && \
   PATH=${HOST_NATIVE_PATH}  make -j 10 && cd .. && \
-  ./configure --with-cross-build=$($(package)_build_dir)/native --enable-extras=no \
+  $($(package)_autoconf) --with-cross-build=$($(package)_build_dir)/native --prefix=$(host_prefix) --enable-extras=no \
   --enable-strict=no -enable-shared=yes --enable-tests=no \
   --enable-samples=no --enable-dyload=no --enable-tools=no
 endef
@@ -27,6 +27,6 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install $($(package)_build_opts)
 endef
 
