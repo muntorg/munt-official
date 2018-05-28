@@ -353,9 +353,10 @@ BOOST_AUTO_TEST_CASE(test_Get)
     BOOST_CHECK_EQUAL(coins.GetValueIn(t1), (50+21+22)*CENT);
 }
 
-void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
+static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
 {
-//SignSignature issues
+    //fixme: (2.0)
+    //SignSignature issues
 	#if 0
     CMutableTransaction outputm;
     outputm.nVersion = 1;
@@ -417,7 +418,7 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
+static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 {
     std::vector<valtype> stack;
     EvalScript(stack, script, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(), SIGVERSION_BASE);

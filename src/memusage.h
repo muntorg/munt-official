@@ -24,18 +24,18 @@ namespace memusage
 static size_t MallocUsage(size_t alloc);
 
 /** Dynamic memory usage for built-in types is zero. */
-static inline size_t DynamicUsage(const int8_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint8_t& v) { return 0; }
-static inline size_t DynamicUsage(const int16_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint16_t& v) { return 0; }
-static inline size_t DynamicUsage(const int32_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint32_t& v) { return 0; }
-static inline size_t DynamicUsage(const int64_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint64_t& v) { return 0; }
-static inline size_t DynamicUsage(const float& v) { return 0; }
-static inline size_t DynamicUsage(const double& v) { return 0; }
-template<typename X> static inline size_t DynamicUsage(X * const &v) { return 0; }
-template<typename X> static inline size_t DynamicUsage(const X * const &v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const int8_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const uint8_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const int16_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const uint16_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const int32_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const uint32_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const int64_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const uint64_t& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const float& v) { return 0; }
+static inline size_t DynamicUsage([[maybe_unused]] const double& v) { return 0; }
+template<typename X> static inline size_t DynamicUsage([[maybe_unused]] X * const &v) { return 0; }
+template<typename X> static inline size_t DynamicUsage([[maybe_unused]] const X * const &v) { return 0; }
 
 /** Compute the memory used for dynamically allocated but owned data structures.
  *  For generic data types, this is *not* recursive. DynamicUsage(vector<vector<int> >)
@@ -100,7 +100,7 @@ static inline size_t DynamicUsage(const std::set<X, Y>& s)
 }
 
 template<typename X, typename Y>
-static inline size_t IncrementalDynamicUsage(const std::set<X, Y>& s)
+static inline size_t IncrementalDynamicUsage([[maybe_unused]] const std::set<X, Y>& s)
 {
     return MallocUsage(sizeof(stl_tree_node<X>));
 }

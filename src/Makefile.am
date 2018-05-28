@@ -213,7 +213,7 @@ libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
   addrdb.cpp \
   addrman.cpp \
-	alert.cpp \
+  alert.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \

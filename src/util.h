@@ -131,7 +131,7 @@ bool GetLogCategory(uint32_t *f, const std::string *str);
 int LogPrintStr(const std::string &str);
 
 /** Get format string from VA_ARGS for error reporting */
-template<typename... Args> std::string FormatStringFromLogArgs(const char *fmt, const Args&... args) { return fmt; }
+template<typename... Args> std::string FormatStringFromLogArgs(const char *fmt, [[maybe_unused]] const Args&... args) { return fmt; }
 
 #define LogPrintf(...) do { \
     std::string _log_msg_; /* Unlikely name to avoid shadowing variables */ \

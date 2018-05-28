@@ -925,7 +925,7 @@ void GUI::updateNetworkState()
     connectionsControl->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
 }
 
-void GUI::setNumConnections(int count)
+void GUI::setNumConnections([[maybe_unused]] int count)
 {
     LogPrint(BCLog::QT, "GUI::setNumConnections\n");
 
@@ -1206,12 +1206,9 @@ void GUI::closeEvent(QCloseEvent *event)
         return;
     }
 
-#ifdef Q_OS_MAC // Ignored on Mac
-    QMainWindow::closeEvent(event);
-    return;
-#else
     QMainWindow::hide();
     event->ignore();
+    #ifndef Q_OS_MAC // Ignored on Mac
     if(clientModel && clientModel->getOptionsModel())
     {
         if(clientModel->getOptionsModel()->getMinimizeOnClose())
@@ -1220,12 +1217,12 @@ void GUI::closeEvent(QCloseEvent *event)
             return;
         }
     }
+    #endif
     //Initiate the exit process
     userWantsToQuit();
-#endif
 }
 
-void GUI::showEvent(QShowEvent *event)
+void GUI::showEvent([[maybe_unused]] QShowEvent* event)
 {
     LogPrint(BCLog::QT, "GUI::showEvent\n");
 

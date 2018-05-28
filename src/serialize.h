@@ -1292,52 +1292,52 @@ struct CSerActionUnserialize
 };
 
 template<typename Stream, typename T>
-inline void SerReadWrite(Stream& s, const T& obj, CSerActionSerialize ser_action)
+inline void SerReadWrite(Stream& s, const T& obj, [[maybe_unused]] CSerActionSerialize ser_action)
 {
     ::Serialize(s, obj);
 }
 
 template<typename Stream, typename T>
-inline void SerReadWrite(Stream& s, T& obj, CSerActionUnserialize ser_action)
+inline void SerReadWrite(Stream& s, T& obj, [[maybe_unused]] CSerActionUnserialize ser_action)
 {
     ::Unserialize(s, obj);
 }
 
 template<typename Stream, typename T>
-inline void SerWrite(Stream& s, const T& obj, CSerActionSerialize ser_action)
+inline void SerWrite(Stream& s, const T& obj, [[maybe_unused]] CSerActionSerialize ser_action)
 {
     ::Serialize(s, obj);
 }
 
 template<typename Stream, typename T>
-inline void SerWrite(Stream& s, const T& obj, CSerActionUnserialize ser_action)
+inline void SerWrite([[maybe_unused]] Stream& s, [[maybe_unused]] const T& obj, [[maybe_unused]] CSerActionUnserialize ser_action)
 {
 }
 
 template<typename Stream, typename T>
-inline void SerRead(Stream& s, const T& obj, CSerActionSerialize ser_action)
+inline void SerRead([[maybe_unused]] Stream& s, [[maybe_unused]] const T& obj, [[maybe_unused]] CSerActionSerialize ser_action)
 {
 }
 
 template<typename Stream, typename T>
-inline void SerRead(Stream& s, T& obj, CSerActionUnserialize ser_action)
+inline void SerRead(Stream& s, T& obj, [[maybe_unused]] CSerActionUnserialize ser_action)
 {
     ::Unserialize(s, obj);
 }
 
 template<typename Stream, typename T>
-inline void SerPeek(Stream& s, T& obj, CSerActionSerialize ser_action)
+inline void SerPeek(Stream& s, T& obj, [[maybe_unused]] CSerActionSerialize ser_action)
 {
 }
 
 template<typename Stream, typename T>
-inline void SerPeek(Stream& s, T& obj, CSerActionUnserialize ser_action)
+inline void SerPeek(Stream& s, T& obj, [[maybe_unused]] CSerActionUnserialize ser_action)
 {
     s.peek((char*)&obj, sizeof(obj));
 }
 
 template<typename Stream, typename T>
-inline void SerSkip(Stream& s, const T& obj, CSerActionSerialize ser_action)
+inline void SerSkip(Stream& s, const T& obj, [[maybe_unused]] CSerActionSerialize ser_action)
 {
 }
 
@@ -1372,7 +1372,7 @@ protected:
 public:
     CSizeComputer(int nTypeIn, int nVersionIn) : nSize(0), nType(nTypeIn), nVersion(nVersionIn) {}
 
-    void write(const char *psz, size_t _nSize)
+    void write([[maybe_unused]] const char *psz, size_t _nSize)
     {
         this->nSize += _nSize;
     }

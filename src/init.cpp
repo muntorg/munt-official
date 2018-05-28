@@ -332,12 +332,12 @@ bool static Bind(CConnman& connman, const CService &addr, unsigned int flags) {
     }
     return true;
 }
-void OnRPCStarted()
+static void OnRPCStarted()
 {
     uiInterface.NotifyBlockTip.connect(&RPCNotifyBlockChange);
 }
 
-void OnRPCStopped()
+static void OnRPCStopped()
 {
     uiInterface.NotifyBlockTip.disconnect(&RPCNotifyBlockChange);
     RPCNotifyBlockChange(false, nullptr);

@@ -232,6 +232,7 @@ static std::string RequestMethodString(HTTPRequest::RequestMethod m)
     case HTTPRequest::PUT:
         return "PUT";
         break;
+    case HTTPRequest::UNKNOWN:
     default:
         return "unknown";
     }

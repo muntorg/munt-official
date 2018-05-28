@@ -253,6 +253,14 @@ static inline bool jsonTokenIsValue(enum jtokentype jtt)
     case JTOK_STRING:
         return true;
 
+    case JTOK_NONE:
+    case JTOK_OBJ_OPEN:
+    case JTOK_OBJ_CLOSE:
+    case JTOK_ARR_OPEN:
+    case JTOK_ARR_CLOSE:
+    case JTOK_COLON:
+    case JTOK_COMMA:
+    case JTOK_ERR:
     default:
         return false;
     }

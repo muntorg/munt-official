@@ -40,18 +40,18 @@ void UnregisterAllValidationInterfaces();
 
 class CValidationInterface {
 protected:
-    virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
-    virtual void TransactionAddedToMempool(const CTransactionRef &ptxn) {}
-    virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) {}
-    virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block) {}
-    virtual void SetBestChain(const CBlockLocator &locator) {}
-    virtual void Inventory(const uint256 &hash) {}
-    virtual void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) {}
-    virtual void BlockChecked(const CBlock&, const CValidationState&) {}
-    virtual void GetScriptForMining(std::shared_ptr<CReserveScript>&, CAccount* forAccount) {};
-    virtual void NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& block) {};
-    friend void ::RegisterValidationInterface(CValidationInterface*);
-    friend void ::UnregisterValidationInterface(CValidationInterface*);
+    virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
+    virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
+    virtual void BlockConnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block, [[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::vector<CTransactionRef> &txnConflicted) {}
+    virtual void BlockDisconnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block) {}
+    virtual void SetBestChain([[maybe_unused]] const CBlockLocator &locator) {}
+    virtual void Inventory([[maybe_unused]] const uint256 &hash) {}
+    virtual void ResendWalletTransactions([[maybe_unused]] int64_t nBestBlockTime, [[maybe_unused]] CConnman* connman) {}
+    virtual void BlockChecked([[maybe_unused]] const CBlock&, [[maybe_unused]] const CValidationState&) {}
+    virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveScript>&, [[maybe_unused]] CAccount* forAccount) {};
+    virtual void NewPoWValidBlock([[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::shared_ptr<const CBlock>& block) {};
+    friend void ::RegisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
+    friend void ::UnregisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterAllValidationInterfaces();
 };
 

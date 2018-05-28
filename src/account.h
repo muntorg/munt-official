@@ -231,7 +231,7 @@ public:
     void SetNull();
 
     //fixme: (2.1) (CLEANUP)
-    virtual void GetKey(CExtKey& childKey, int nChain) {};
+    virtual void GetKey([[maybe_unused]] CExtKey& childKey, [[maybe_unused]] int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
     virtual bool IsMobi() const {return m_Type == Mobi;}
@@ -302,8 +302,8 @@ public:
     virtual bool AddCScript(const CScript& redeemScript) override;
     virtual bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain);
 
-    virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey) override {assert(0);};//Must never be called directly
-    virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey) override {assert(0);};//Must never be called directly
+    virtual bool AddKeyPubKey([[maybe_unused]] const CKey& key, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly
+    virtual bool AddKeyPubKey([[maybe_unused]] int64_t HDKeyIndex, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly
 
     virtual bool HaveWalletTx(const CTransaction& tx);
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain);

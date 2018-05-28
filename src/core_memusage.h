@@ -20,7 +20,7 @@ static inline size_t RecursiveDynamicUsage(const CScript& script) {
     return memusage::DynamicUsage(*static_cast<const CScriptBase*>(&script));
 }
 
-static inline size_t RecursiveDynamicUsage(const COutPoint& out) {
+static inline size_t RecursiveDynamicUsage([[maybe_unused]] const COutPoint& out) {
     return 0;
 }
 
