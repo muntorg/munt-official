@@ -37,7 +37,7 @@ src/qt/moc_*.cpp
 src/qt/_Gulden/moc_*.cpp
 src/qt/forms/ui_*.h
 src/qt/_Gulden/forms/ui_*.h
-
+src/qt/qfonticon/moc_*.cpp
 src/qt/test/moc*.cpp
 
 .deps
@@ -74,7 +74,7 @@ Makefile.am.user
 Gulden-tx
 Gulden-cli
 GuldenD
-#Gulden
+/src/qt/Gulden
 
 # Unit-tests
 Makefile.test
