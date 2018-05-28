@@ -349,326 +349,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Бумажник</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Узел</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Обзор</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation type="unfinished">Показать общий обзор действий с бумажником</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Отправить</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;Получить</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation type="unfinished">&amp;Транзакции</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation type="unfinished">Показать историю транзакций</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished">В&amp;ыход</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation type="unfinished">Закрыть приложение</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation type="unfinished">&amp;О %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation type="unfinished">Показать информацию о %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation type="unfinished">О &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation type="unfinished">Показать информацию о Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="unfinished">&amp;Параметры</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Изменить конфигурационные настройки для %1</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Показать / Скрыть</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation type="unfinished">Показать или скрыть главное окно</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Зашифровать бумажник...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Зашифровать приватные ключи, принадлежащие вашему бумажнику</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Сделать резервную копию бумажника...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation type="unfinished">Сделать резервную копию бумажника в другом месте</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">&amp;Изменить пароль...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Изменить пароль шифрования бумажника</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation type="unfinished">&amp;Окно отладки</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Открыть консоль отладки и диагностики</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Адреса отправки...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">Показать список использованных адресов и меток отправки</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">Адреса &amp;получения...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">Показать список использованных адресов и меток получения</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation type="unfinished">Открыть &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation type="unfinished">&amp;Параметры командной строки</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished">&amp;Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Настройки</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Помощь</translation>
-    </message>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation type="unfinished">Панель вкладок</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation type="unfinished">%1 клиент</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation type="unfinished">Кликните, чтобы запретить сетевую активность.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation type="unfinished">Сетевая активность запрещена.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation type="unfinished">Кликните, чтобы снова разрешить сетевую активность.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation type="unfinished">Синхронизация с сетью...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Индексация блоков на диске...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Обработка блоков на диске...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">Идёт переиндексация блоков на диске...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation type="unfinished">Подключение к пирам...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>Обработан %n блок истории транзакций.</numerusform>
-            <numerusform>Обработано %n блока истории транзакций.</numerusform>
-            <numerusform>Обработано %n блоков истории транзакций.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation type="unfinished">Синхронизировано</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation type="unfinished">%1 позади</translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Ошибка</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Внимание</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished">Информация</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation type="unfinished">Дата: %1
-</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation type="unfinished">Тип: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation type="unfinished">Метка: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation type="unfinished">Адрес: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Бумажник &lt;b&gt;зашифрован&lt;/b&gt; и в настоящее время &lt;b&gt;разблокирован&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Бумажник &lt;b&gt;зашифрован&lt;/b&gt; и в настоящее время &lt;b&gt;заблокирован&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
@@ -943,7 +623,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
+    <name>GUI</name>
     <message>
         <source>Pending confirmation: %1</source>
         <translation type="unfinished"></translation>
@@ -973,28 +653,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation type="unfinished"></translation>
+        <source>Tabs toolbar</source>
+        <translation type="unfinished">Панель вкладок</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1040,6 +700,347 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Бумажник</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Узел</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">&amp;Обзор</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">Показать общий обзор действий с бумажником</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Отправить</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">&amp;Получить</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">&amp;Транзакции</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">Показать историю транзакций</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">&amp;Показать / Скрыть</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">Показать или скрыть главное окно</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">Открыть &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Сделать резервную копию бумажника...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">Сделать резервную копию бумажника в другом месте</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Адреса отправки...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">Показать список использованных адресов и меток отправки</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">Адреса &amp;получения...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">Показать список использованных адресов и меток получения</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">В&amp;ыход</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">Закрыть приложение</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Окно отладки</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">Открыть консоль отладки и диагностики</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">&amp;Параметры командной строки</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;О %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">Показать информацию о %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">О &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">Показать информацию о Qt</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Зашифровать бумажник...</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">Зашифровать приватные ключи, принадлежащие вашему бумажнику</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">&amp;Изменить пароль...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">Изменить пароль шифрования бумажника</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Параметры</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">Изменить конфигурационные настройки для %1</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;Файл</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Настройки</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Помощь</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation type="unfinished">%1 клиент</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished">Кликните, чтобы запретить сетевую активность.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished">Сетевая активность запрещена.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished">Кликните, чтобы снова разрешить сетевую активность.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation type="unfinished">Синхронизация с сетью...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation type="unfinished">Индексация блоков на диске...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation type="unfinished">Обработка блоков на диске...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation type="unfinished">Идёт переиндексация блоков на диске...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished">Подключение к пирам...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform>Обработан %n блок истории транзакций.</numerusform>
+            <numerusform>Обработано %n блока истории транзакций.</numerusform>
+            <numerusform>Обработано %n блоков истории транзакций.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished">Синхронизировано</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation type="unfinished">%1 позади</translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ошибка</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Внимание</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Информация</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation type="unfinished">Дата: %1
+</translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation type="unfinished">Тип: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation type="unfinished">Метка: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation type="unfinished">Адрес: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation type="unfinished">Бумажник &lt;b&gt;зашифрован&lt;/b&gt; и в настоящее время &lt;b&gt;разблокирован&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation type="unfinished">Бумажник &lt;b&gt;зашифрован&lt;/b&gt; и в настоящее время &lt;b&gt;заблокирован&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1064,7 +1065,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source></source>
+        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1296,56 +1297,20 @@ Witness weight: %5</source>
         <translation type="unfinished">Форма</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation type="unfinished">Число оставшихся блоков</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">Неизвестно...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation type="unfinished">Время последнего блока</translation>
     </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished">Прогресс</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation type="unfinished">Прогресс за час</translation>
-    </message>
-    <message>
-        <source>calculating...</source>
-        <translation type="unfinished">расчёт...</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation type="unfinished">Примерное время до завершения синхронизации</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation type="unfinished">Скрыть</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished">Неизвестно. Синхронизация заголовков (%1)...</translation>
     </message>
 </context>
 <context>
@@ -2078,8 +2043,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Открыть отладочный лог-файл %1 из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation type="unfinished">&amp;Открыть</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2090,16 +2055,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Консоль</translation>
     </message>
     <message>
-        <source>Decrease font size</source>
-        <translation type="unfinished">Уменьшить размер текста</translation>
+        <source>-</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase font size</source>
-        <translation type="unfinished">Увеличить размер текста</translation>
+        <source>+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation type="unfinished">Очистить консоль</translation>
+        <source>x</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2828,89 +2793,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">Это нормальный платёж.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation type="unfinished">Полу&amp;чатель:</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Выберите ранее использованный адрес</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">Вставить адрес из буфера обмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation type="unfinished">Удалить эту запись</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Метка:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation type="unfinished">Введите метку для этого адреса, чтобы добавить его в список использованных</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation type="unfinished">Ко&amp;личество:</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished">Вычесть комиссию из суммы</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation type="unfinished">Сообщение:</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">Это неавторизованный запрос платежа.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">Получатель:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">Примечание:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">Это авторизованный запрос платежа.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished">Введите метку для данного адреса, чтобы добавить его в адресную книгу</translation>
-    </message>
-</context>
-<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -3459,10 +3341,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Подтверждено</translation>
     </message>
     <message>
-        <source>Watch-only</source>
-        <translation type="unfinished">Для наблюдения</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Дата</translation>
     </message>
@@ -3505,13 +3383,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>to</source>
         <translation type="unfinished">до</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">Единица измерения количества монет. Щёлкните для выбора другой единицы.</translation>
     </message>
 </context>
 <context>
@@ -3562,10 +3433,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>&amp;Export</source>
         <translation type="unfinished">&amp;Экспорт</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Backup Wallet</source>

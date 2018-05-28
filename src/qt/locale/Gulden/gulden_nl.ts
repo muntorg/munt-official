@@ -54,19 +54,19 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Total funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Totaal bedrag: </translation>
     </message>
     <message>
         <source>Locked funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">geblokkeerde bedrag: </translation>
     </message>
     <message>
         <source>Funds awaiting confirmation: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bedragen in afwachting van bevestiging: </translation>
     </message>
     <message>
         <source>Spendable funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vrije bedragen: </translation>
     </message>
 </context>
 <context>
@@ -349,321 +349,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished">Gulden</translation>
-    </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximaal toegestaan %1 bedrag is %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimaal toegestaan %1 bedrag is %2.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Portemonnee</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Knooppunt</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Overzicht</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished">Statistieken en informatie bekijken voor een witness rekening.</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation type="unfinished">Algemeen overzicht van de portemonnee weergeven</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Versturen</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation type="unfinished">Verzend Guldens naar een Guldenadres</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;Ontvangen</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished">Betaalverzoek (genereert QR codes en Gulden URI&apos;s)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation type="unfinished">&amp;Transacties</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation type="unfinished">Blader door transactieverleden</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished">&amp;Afsluiten</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation type="unfinished">Programma afsluiten</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation type="unfinished">Over %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation type="unfinished">Laat informatie zien over %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation type="unfinished">Over &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation type="unfinished">Informatie over Qt weergeven</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="unfinished">O&amp;pties...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Wijzig configuratie voor %1</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Weergeven / Verbergen</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation type="unfinished">Het hoofdvenster weergeven of verbergen.</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">Portemonnee &amp;versleutelen...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Versleutel de privésleutels die bij uw portemonnee horen.</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Backup van portemonnee maken...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation type="unfinished">Backup van portemonnee naar een andere locatie maken</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">Wachtwoord &amp;wijzigen...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Wijzig het wachtwoord voor uw portemonneversleuteling</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation type="unfinished">&amp;Debugscherm</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Debug en diagnostische console openen.</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">Adressen &amp;versturen....</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">Lijst met gebruikt verzendadressen en labels weergeven.</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">Adressen &amp;ontvangen...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">Lijst met gebruikte ontvangstadressen en labels weergeven.</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation type="unfinished">&amp;URI openen...</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished">Open een Gulden: URI of betaalverzoek</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation type="unfinished">&amp;Commandoregelopties</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished">Toon het %1 help bericht om een lijst te krijgen met mogelijke commando-regel opties</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished">&amp;Bestand</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Instellingen</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Hulp</translation>
-    </message>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation type="unfinished">Tabwerkbalk</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation type="unfinished">%1 client</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
-            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
-            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation type="unfinished">Klik om de netwerk activiteit stop te zetten.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation type="unfinished">Netwerk activiteit stop gezet.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation type="unfinished">Klik om netwerk activiteit weer aan te zetten.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished">Synchroniseer Headers (%1%)...</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation type="unfinished">Synchroniseren met netwerk...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Blokken indexeren op de schijf...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Verwerken van blokken op de schijf...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">Blokken op harde schijf herindexeren...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation type="unfinished">Verbinden met peers...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation type="unfinished">Bijgewerkt</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation type="unfinished">%1 achter</translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished">Ophalen... %1% compleet.&lt;br&gt;</translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished">Transacties en balans niet zichtbaar of compleet tot synchronisatie voltooid is.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Fout</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Waarschuwing</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished">Informatie</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation type="unfinished">Datum: %1</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation type="unfinished">Ontvangen: %1</translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation type="unfinished">Verstuurd: %1</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation type="unfinished">Soort: %1</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation type="unfinished">Omschrijving: %1</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation type="unfinished">Adres: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation type="unfinished">Verstuurd bedrag: %1</translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation type="unfinished">Ontvangen bedrag: %1</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;geopend&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;gesloten&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished">Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
-    </message>
-</context>
-<context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
@@ -938,7 +623,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
+    <name>GUI</name>
     <message>
         <source>Pending confirmation: %1</source>
         <translation type="unfinished">Wachten op bevestiging: %1</translation>
@@ -968,28 +653,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Het geld op deze rekening is momenteel geblokkeerd voor &quot;witnessing&quot; en kan niet worden overgemaakt, wacht alstublieft tot de geblokkeerde rekening verloopt of tot er inkomsten zijn verzameld voordat u het opnieuw probeert.</translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation type="unfinished">Tools</translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation type="unfinished">Sleutel importeren</translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation type="unfinished">Prive sleutel importeren</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation type="unfinished">Opnieuw scannen naar transacties</translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished">Blockchain opnieuw scannen naar missende transacties</translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation type="unfinished">&amp;Selecteer valuta</translation>
+        <source>Tabs toolbar</source>
+        <translation type="unfinished">Tabwerkbalk</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1035,6 +700,342 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation type="unfinished">Toevoegen van een sleutel aan de portemonnee mislukt.</translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Portemonnee</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Knooppunt</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">&amp;Overzicht</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished">Statistieken en informatie bekijken voor een witness rekening.</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">Algemeen overzicht van de portemonnee weergeven</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Versturen</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished">Verzend Guldens naar een Guldenadres</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">&amp;Ontvangen</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished">Betaalverzoek (genereert QR codes en Gulden URI&apos;s)</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">&amp;Transacties</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">Blader door transactieverleden</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">&amp;Weergeven / Verbergen</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">Het hoofdvenster weergeven of verbergen.</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished">Sleutel importeren</translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished">Prive sleutel importeren</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished">Opnieuw scannen naar transacties</translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished">Blockchain opnieuw scannen naar missende transacties</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">&amp;URI openen...</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished">Open een Gulden: URI of betaalverzoek</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Backup van portemonnee maken...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">Backup van portemonnee naar een andere locatie maken</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">Adressen &amp;versturen....</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">Lijst met gebruikt verzendadressen en labels weergeven.</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">Adressen &amp;ontvangen...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">Lijst met gebruikte ontvangstadressen en labels weergeven.</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">&amp;Afsluiten</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">Programma afsluiten</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Debugscherm</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">Debug en diagnostische console openen.</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">&amp;Commandoregelopties</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished">Toon het %1 help bericht om een lijst te krijgen met mogelijke commando-regel opties</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">Over %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">Laat informatie zien over %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">Over &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">Informatie over Qt weergeven</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">Portemonnee &amp;versleutelen...</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">Versleutel de privésleutels die bij uw portemonnee horen.</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">Wachtwoord &amp;wijzigen...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">Wijzig het wachtwoord voor uw portemonneversleuteling</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">O&amp;pties...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">Wijzig configuratie voor %1</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished">&amp;Selecteer valuta</translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;Bestand</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Instellingen</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished">Tools</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Hulp</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation type="unfinished">%1 client</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
+            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished">Klik om de netwerk activiteit stop te zetten.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished">Netwerk activiteit stop gezet.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished">Klik om netwerk activiteit weer aan te zetten.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished">Synchroniseer Headers (%1%)...</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation type="unfinished">Synchroniseren met netwerk...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation type="unfinished">Blokken indexeren op de schijf...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation type="unfinished">Verwerken van blokken op de schijf...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation type="unfinished">Blokken op harde schijf herindexeren...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished">Verbinden met peers...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished">Bijgewerkt</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation type="unfinished">%1 achter</translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished">Ophalen... %1% compleet.&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished">Transacties en balans niet zichtbaar of compleet tot synchronisatie voltooid is.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Fout</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Waarschuwing</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Informatie</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation type="unfinished">Datum: %1</translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished">Ontvangen: %1</translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished">Verstuurd: %1</translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation type="unfinished">Soort: %1</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation type="unfinished">Omschrijving: %1</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation type="unfinished">Adres: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished">Verstuurd bedrag: %1</translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished">Ontvangen bedrag: %1</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;geopend&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;gesloten&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished">Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished">Gulden</translation>
+    </message>
+    <message>
+        <source>Maximum allowed %1 payment is %2.</source>
+        <translation type="unfinished">Maximaal toegestaan %1 bedrag is %2.</translation>
+    </message>
+    <message>
+        <source>Minimum allowed %1 payment is %2.</source>
+        <translation type="unfinished">Minimaal toegestaan %1 bedrag is %2.</translation>
+    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1059,8 +1060,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Adresboek</translation>
     </message>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
+        <source>s</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1293,56 +1294,20 @@ Witness gewicht: %5</translation>
         <translation type="unfinished">Formulier</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
-        <translation type="unfinished">Recente transacties zijn mogelijk nog niet zichtbaar, waardoor uw portemonnee mogelijk niet in balans is. Deze informatie zal correct zijn wanneer uw portemonnee klaar is met de synchronisatie met het Gulden netwerk, zoals hieronder beschreven.</translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished">Pogingen om Gulden uit te geven die beïnvloed worden door nog niet weergegeven transacties worden niet geaccepteerd door het netwerk.</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation type="unfinished">Aantal resterende blokken</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">Onbekend...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation type="unfinished">Tijd laatste blok</translation>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu voor het eerst met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee is klaar met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
     </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished">Voortgang</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation type="unfinished">Voortgangstoename per uur</translation>
-    </message>
-    <message>
-        <source>calculating...</source>
-        <translation type="unfinished">bezig met berekenen...</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation type="unfinished">Geschatte resterende tijd tot volledige synchronisatie</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation type="unfinished">Verbergen</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu voor het eerst met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee is klaar met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
-    </message>
-    <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee is klaar met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished">Onbekend. Synchroniseer Headers (%1)...</translation>
     </message>
 </context>
 <context>
@@ -2069,8 +2034,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation type="unfinished">&amp;Openen</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2081,16 +2046,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">&amp;Console</translation>
     </message>
     <message>
-        <source>Decrease font size</source>
-        <translation type="unfinished">Verklein lettergrootte</translation>
+        <source>-</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase font size</source>
-        <translation type="unfinished">Vergroot lettergrootte</translation>
+        <source>+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation type="unfinished">Console wissen</translation>
+        <source>x</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2718,7 +2683,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Total Amount</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Totaal bedrag</translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -2814,89 +2779,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(geen label)</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">Dit is een normale betaling.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation type="unfinished">Betalen &amp;aan:</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished">Het Guldenadres om de betaling naar toe te sturen</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation type="unfinished">Verwijder deze ingang</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Label:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation type="unfinished">Vul een label voor dit adres in om het aan de lijst met gebruikte adressen toe te voegen.</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation type="unfinished">Bedra&amp;g:</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished">De transactiekosten zullen worden afgetrokken van het bedrag dat wordt verzonden. De ontvanger zal minder Gulden ontvangen dan u in het veld Bedrag invult. Als meerdere ontvangers worden geselecteerd, wordt de vergoeding gelijkelijk verdeeld.</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished">Vergoeding aftre&amp;kken van bedrag.</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation type="unfinished">Bericht:</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished">Een bericht dat aan de Gulden: URI was gehecht wordt opgeslagen bij de transactie ter referentie. Opmerking: Dit bericht wordt niet verzonden via het Gulden-netwerk.</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">Dit is een ongeverifieerde betalingsverzoek </translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">Betaal aan:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">Memo:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">Dit is een geverifieerde betalingsverzoek</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished">Vul een label in voor dit adres om het toe te voegen aan uw adresboek.</translation>
     </message>
 </context>
 <context>
@@ -3230,23 +3112,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Renew witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vernieuwen witness rekening</translation>
     </message>
     <message>
         <source>Fund witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vul witness rekening</translation>
     </message>
     <message>
         <source>Lock funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Blokkeer het bedrag</translation>
     </message>
     <message>
         <source>Empty witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Witness rekening legen</translation>
     </message>
     <message>
         <source>Received from witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ontvangen van witness rekening</translation>
     </message>
     <message>
         <source>watch-only</source>
@@ -3254,35 +3136,35 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Lock funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Blokkeer het bedrag vanaf: %1</translation>
     </message>
     <message>
         <source>Unlock funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deblokkeer het bedrag vanaf: %1</translation>
     </message>
     <message>
         <source>Internal transfer from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Interne transactie van: %1</translation>
     </message>
     <message>
         <source>Fund witness account: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vul witness rekening: %1</translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deblokkeer bedrag naar: %1</translation>
     </message>
     <message>
         <source>Internal transfer to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Interne transactie naar: %1</translation>
     </message>
     <message>
         <source>Payment from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Betaling van: %1</translation>
     </message>
     <message>
         <source>Paid to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Betaald aan: %1</translation>
     </message>
     <message>
         <source>Internal account movement</source>
@@ -3444,10 +3326,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Bevestigd</translation>
     </message>
     <message>
-        <source>Watch-only</source>
-        <translation type="unfinished">Alleen-bekijkbaar</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Datum</translation>
     </message>
@@ -3490,13 +3368,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>to</source>
         <translation type="unfinished">naar</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">Eenheid om bedragen uit te drukken. Klik om een andere eenheid te selecteren.</translation>
     </message>
 </context>
 <context>
@@ -3547,10 +3418,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>&amp;Export</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">Exporteer de data in de huidige tab naar een bestand</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3728,7 +3595,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Withdraw earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Onttrek de verdiensten</translation>
     </message>
     <message>
         <source>Fund account</source>

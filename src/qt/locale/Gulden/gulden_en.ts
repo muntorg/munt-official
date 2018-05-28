@@ -56,19 +56,19 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Total funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Total funds: </translation>
     </message>
     <message>
         <source>Locked funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Locked funds: </translation>
     </message>
     <message>
         <source>Funds awaiting confirmation: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Funds awaiting confirmation: </translation>
     </message>
     <message>
         <source>Spendable funds: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Spendable funds: </translation>
     </message>
 </context>
 <context>
@@ -351,326 +351,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished">Gulden</translation>
-    </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximum allowed %1 payment is %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimum allowed %1 payment is %2.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Wallet</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Node</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Overview</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished">View statistics and information for witness account.</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation type="unfinished">Show general overview of wallet</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Send</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation type="unfinished">Send coins to a Gulden address</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;Receive</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished">Request payments (generates QR codes and gulden: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation type="unfinished">&amp;Transactions</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation type="unfinished">Browse transaction history</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished">E&amp;xit</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation type="unfinished">Quit application</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation type="unfinished">&amp;About %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation type="unfinished">Show information about %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation type="unfinished">About &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation type="unfinished">Show information about Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="unfinished">&amp;Options...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Modify configuration options for %1</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Show / Hide</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation type="unfinished">Show or hide the main Window</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Encrypt Wallet...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Encrypt the private keys that belong to your wallet</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Backup Wallet...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation type="unfinished">Backup wallet to another location</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">&amp;Change Passphrase...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Change the passphrase used for wallet encryption</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation type="unfinished">&amp;Debug window</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Open debugging and diagnostic console</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Sending addresses...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">Show the list of used sending addresses and labels</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">&amp;Receiving addresses...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">Show the list of used receiving addresses and labels</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation type="unfinished">Open &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished">Open a gulden: URI or payment request</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation type="unfinished">&amp;Command-line options</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished">Show the %1 help message to get a list with possible Gulden command-line options</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished">&amp;File</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Settings</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Help</translation>
-    </message>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation type="unfinished">Tabs toolbar</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation type="unfinished">%1 client</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
-            <numerusform>%n active connection(s) to Gulden network</numerusform>
-            <numerusform>%n active connection(s) to Gulden network</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation type="unfinished">Click to disable network activity.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation type="unfinished">Network activity disabled.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation type="unfinished">Click to enable network activity again.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished">Syncing Headers (%1%)...</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation type="unfinished">Synchronizing with network...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Indexing blocks on disk...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Processing blocks on disk...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">Reindexing blocks on disk...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation type="unfinished">Connecting to peers...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>Processed %n block(s) of transaction history.</numerusform>
-            <numerusform>Processed %n block(s) of transaction history.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation type="unfinished">Up to date</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation type="unfinished">%1 behind</translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished">Catching up... %1% complete.&lt;br&gt;</translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished">Transactions and balances will not be accurate or correct until synchronisation is complete.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Error</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Warning</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished">Information</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation type="unfinished">Date: %1
-</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation type="unfinished">Received: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation type="unfinished">Sent: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation type="unfinished">Type: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation type="unfinished">Label: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation type="unfinished">Address: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation type="unfinished">Sent funds%1</translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation type="unfinished">Incoming funds%1</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished">A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
-    </message>
-</context>
-<context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
@@ -945,7 +625,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
+    <name>GUI</name>
     <message>
         <source>Pending confirmation: %1</source>
         <translation type="unfinished">Pending confirmation: %1</translation>
@@ -975,28 +655,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation type="unfinished">&amp;Tools</translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation type="unfinished">&amp;Import key</translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation type="unfinished">Import a private key address</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation type="unfinished">&amp;Rescan transactions</translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished">Rescan the blockchain looking for any missing transactions</translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation type="unfinished">&amp;Select currency</translation>
+        <source>Tabs toolbar</source>
+        <translation type="unfinished">Tabs toolbar</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1042,6 +702,347 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation type="unfinished">Failed to add key to wallet.</translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Wallet</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Node</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">&amp;Overview</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished">View statistics and information for witness account.</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">Show general overview of wallet</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Send</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished">Send coins to a Gulden address</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">&amp;Receive</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished">Request payments (generates QR codes and gulden: URIs)</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">&amp;Transactions</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">Browse transaction history</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">&amp;Show / Hide</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">Show or hide the main Window</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished">&amp;Import key</translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished">Import a private key address</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished">&amp;Rescan transactions</translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished">Rescan the blockchain looking for any missing transactions</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">Open &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished">Open a gulden: URI or payment request</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Backup Wallet...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">Backup wallet to another location</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Sending addresses...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">Show the list of used sending addresses and labels</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Receiving addresses...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">Show the list of used receiving addresses and labels</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">E&amp;xit</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">Quit application</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Debug window</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">Open debugging and diagnostic console</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">&amp;Command-line options</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished">Show the %1 help message to get a list with possible Gulden command-line options</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;About %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">Show information about %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">About &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">Show information about Qt</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Encrypt Wallet...</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">Encrypt the private keys that belong to your wallet</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">&amp;Change Passphrase...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">Change the passphrase used for wallet encryption</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Options...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">Modify configuration options for %1</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished">&amp;Select currency</translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;File</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Settings</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished">&amp;Tools</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Help</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation type="unfinished">%1 client</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform>%n active connection(s) to Gulden network</numerusform>
+            <numerusform>%n active connection(s) to Gulden network</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished">Click to disable network activity.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished">Network activity disabled.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished">Click to enable network activity again.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished">Syncing Headers (%1%)...</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation type="unfinished">Synchronizing with network...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation type="unfinished">Indexing blocks on disk...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation type="unfinished">Processing blocks on disk...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation type="unfinished">Reindexing blocks on disk...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished">Connecting to peers...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform>Processed %n block(s) of transaction history.</numerusform>
+            <numerusform>Processed %n block(s) of transaction history.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished">Up to date</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation type="unfinished">%1 behind</translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished">Catching up... %1% complete.&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished">Transactions and balances will not be accurate or correct until synchronisation is complete.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Warning</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Information</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation type="unfinished">Date: %1
+</translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished">Received: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished">Sent: %1
+</translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation type="unfinished">Type: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation type="unfinished">Label: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation type="unfinished">Address: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished">Sent funds%1</translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished">Incoming funds%1</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished">A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished">Gulden</translation>
+    </message>
+    <message>
+        <source>Maximum allowed %1 payment is %2.</source>
+        <translation type="unfinished">Maximum allowed %1 payment is %2.</translation>
+    </message>
+    <message>
+        <source>Minimum allowed %1 payment is %2.</source>
+        <translation type="unfinished">Minimum allowed %1 payment is %2.</translation>
+    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1066,8 +1067,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Address book</translation>
     </message>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
+        <source>s</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1300,56 +1301,20 @@ Witness weight: %5</translation>
         <translation type="unfinished">Form</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
-        <translation type="unfinished">Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished">Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation type="unfinished">Number of blocks left</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">Unknown...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation type="unfinished">Last block time</translation>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
     </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished">Progress</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation type="unfinished">Progress increase per hour</translation>
-    </message>
-    <message>
-        <source>calculating...</source>
-        <translation type="unfinished">calculating...</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation type="unfinished">Estimated time left until synced</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation type="unfinished">Hide</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
-    </message>
-    <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished">Unknown. Syncing Headers (%1)...</translation>
     </message>
 </context>
 <context>
@@ -2077,8 +2042,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation type="unfinished">&amp;Open</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2089,16 +2054,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">&amp;Console</translation>
     </message>
     <message>
-        <source>Decrease font size</source>
-        <translation type="unfinished">Decrease font size</translation>
+        <source>-</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase font size</source>
-        <translation type="unfinished">Increase font size</translation>
+        <source>+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation type="unfinished">Clear console</translation>
+        <source>x</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2726,7 +2691,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Total Amount</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Total Amount</translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -2823,89 +2788,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(no label)</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">This is a normal payment.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation type="unfinished">Pay &amp;To:</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished">The Gulden address to send the payment to</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Choose previously used address</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">Paste address from clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation type="unfinished">Remove this entry</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Label:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation type="unfinished">Enter a label for this address to add it to the list of used addresses</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation type="unfinished">A&amp;mount:</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished">The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished">S&amp;ubtract fee from amount</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation type="unfinished">Message:</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished">A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">This is an unauthenticated payment request.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">Pay To:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">Memo:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">This is an authenticated payment request.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished">Enter a label for this address to add it to your address book</translation>
     </message>
 </context>
 <context>
@@ -3239,23 +3121,23 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Renew witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Renew witness account</translation>
     </message>
     <message>
         <source>Fund witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fund witness account</translation>
     </message>
     <message>
         <source>Lock funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lock funds</translation>
     </message>
     <message>
         <source>Empty witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Empty witness account</translation>
     </message>
     <message>
         <source>Received from witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Received from witness account</translation>
     </message>
     <message>
         <source>watch-only</source>
@@ -3263,35 +3145,35 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Lock funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lock funds from: %1</translation>
     </message>
     <message>
         <source>Unlock funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unlock funds from: %1</translation>
     </message>
     <message>
         <source>Internal transfer from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Internal transfer from: %1</translation>
     </message>
     <message>
         <source>Fund witness account: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fund witness account: %1</translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unlock funds to: %1</translation>
     </message>
     <message>
         <source>Internal transfer to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Internal transfer to: %1</translation>
     </message>
     <message>
         <source>Payment from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Payment from: %1</translation>
     </message>
     <message>
         <source>Paid to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Paid to: %1</translation>
     </message>
     <message>
         <source>Internal account movement</source>
@@ -3453,10 +3335,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Confirmed</translation>
     </message>
     <message>
-        <source>Watch-only</source>
-        <translation type="unfinished">Watch-only</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Date</translation>
     </message>
@@ -3499,13 +3377,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>to</source>
         <translation type="unfinished">to</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">Unit to show amounts in. Click to select another unit.</translation>
     </message>
 </context>
 <context>
@@ -3556,10 +3427,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>&amp;Export</source>
         <translation type="unfinished">&amp;Export</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">Export the data in the current tab to a file</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3737,7 +3604,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Withdraw earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Withdraw earnings</translation>
     </message>
     <message>
         <source>Fund account</source>

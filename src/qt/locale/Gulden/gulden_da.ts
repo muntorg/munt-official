@@ -349,324 +349,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Tegnebog</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Knude</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Oversigt</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation type="unfinished">Vis generel oversigt over tegnebog</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Send</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;Modtag</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation type="unfinished">&amp;Transaktioner</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation type="unfinished">Gennemse transaktionshistorik</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished">&amp;Luk</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation type="unfinished">Afslut program</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation type="unfinished">&amp;Om %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation type="unfinished">Vis informationer om %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation type="unfinished">Om &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation type="unfinished">Vis informationer om Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="unfinished">&amp;Indstillinger…</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Redigér konfigurationsindstillinger for %1</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Vis / skjul</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation type="unfinished">Vis eller skjul hovedvinduet</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Kryptér tegnebog…</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Kryptér de private nøgler, der hører til din tegnebog</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Sikkerhedskopiér tegnebog…</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation type="unfinished">Lav sikkerhedskopi af tegnebogen til et andet sted</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">&amp;Skift adgangskode…</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Skift adgangskode anvendt til tegnebogskryptering</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation type="unfinished">&amp;Fejlsøgningsvindue</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Åbn fejlsøgnings- og diagnosticeringskonsollen</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Afsendelsesadresser…</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">Vis listen over brugte afsendelsesadresser og -mærkater</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">&amp;Modtagelsesadresser…</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">Vis listen over brugte modtagelsesadresser og -mærkater</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation type="unfinished">&amp;Åbn URI…</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation type="unfinished">Tilvalg for &amp;kommandolinje</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished">&amp;Fil</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Opsætning</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Hjælp</translation>
-    </message>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation type="unfinished">Faneværktøjslinje</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation type="unfinished">%1-klient</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation type="unfinished">Klik for at deaktivere netværksaktivitet.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation type="unfinished">Netværksaktivitet deaktiveret.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation type="unfinished">Klik for a aktivere netværksaktivitet igen.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished">Synkroniserer hoveder (%1%)…</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation type="unfinished">Synkroniserer med netværk…</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Genindekserer blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Bearbejder blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">Genindekserer blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation type="unfinished">Forbinder til knuder…</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>Bearbejdede %n blok med transaktionshistorik.</numerusform>
-            <numerusform>Bearbejdede %n blokke med transaktionshistorik.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation type="unfinished">Opdateret</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation type="unfinished">%1 bagud</translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Fejl</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Advarsel</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished">Information</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation type="unfinished">Dato: %1
-</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation type="unfinished">Type: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation type="unfinished">Mærkat: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation type="unfinished">Adresse: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;ulåst&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
@@ -941,7 +623,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
+    <name>GUI</name>
     <message>
         <source>Pending confirmation: %1</source>
         <translation type="unfinished"></translation>
@@ -971,28 +653,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation type="unfinished"></translation>
+        <source>Tabs toolbar</source>
+        <translation type="unfinished">Faneværktøjslinje</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1038,6 +700,345 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Tegnebog</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Knude</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">&amp;Oversigt</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">Vis generel oversigt over tegnebog</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Send</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">&amp;Modtag</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">&amp;Transaktioner</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">Gennemse transaktionshistorik</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">&amp;Vis / skjul</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">Vis eller skjul hovedvinduet</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">&amp;Åbn URI…</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Sikkerhedskopiér tegnebog…</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">Lav sikkerhedskopi af tegnebogen til et andet sted</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Afsendelsesadresser…</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">Vis listen over brugte afsendelsesadresser og -mærkater</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Modtagelsesadresser…</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">Vis listen over brugte modtagelsesadresser og -mærkater</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">&amp;Luk</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">Afslut program</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Fejlsøgningsvindue</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">Åbn fejlsøgnings- og diagnosticeringskonsollen</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">Tilvalg for &amp;kommandolinje</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;Om %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">Vis informationer om %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">Om &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">Vis informationer om Qt</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Kryptér tegnebog…</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">Kryptér de private nøgler, der hører til din tegnebog</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">&amp;Skift adgangskode…</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">Skift adgangskode anvendt til tegnebogskryptering</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Indstillinger…</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">Redigér konfigurationsindstillinger for %1</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;Fil</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Opsætning</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Hjælp</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation type="unfinished">%1-klient</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished">Klik for at deaktivere netværksaktivitet.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished">Netværksaktivitet deaktiveret.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished">Klik for a aktivere netværksaktivitet igen.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished">Synkroniserer hoveder (%1%)…</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation type="unfinished">Synkroniserer med netværk…</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation type="unfinished">Genindekserer blokke på disken…</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation type="unfinished">Bearbejder blokke på disken…</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation type="unfinished">Genindekserer blokke på disken…</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished">Forbinder til knuder…</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform>Bearbejdede %n blok med transaktionshistorik.</numerusform>
+            <numerusform>Bearbejdede %n blokke med transaktionshistorik.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished">Opdateret</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation type="unfinished">%1 bagud</translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Fejl</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Advarsel</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Information</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation type="unfinished">Dato: %1
+</translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation type="unfinished">Type: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation type="unfinished">Mærkat: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation type="unfinished">Adresse: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation type="unfinished">Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;ulåst&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation type="unfinished">Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1062,7 +1063,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source></source>
+        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1292,56 +1293,20 @@ Witness weight: %5</source>
         <translation type="unfinished">Formular</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation type="unfinished">Antal blokke tilbage</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">Ukendt…</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation type="unfinished">Tidsstempel for seneste blok</translation>
     </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished">Fremgang</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation type="unfinished">Øgning af fremgang pr. time</translation>
-    </message>
-    <message>
-        <source>calculating...</source>
-        <translation type="unfinished">beregner…</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation type="unfinished">Estimeret tid tilbage af synkronisering</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation type="unfinished">Skjul</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation type="unfinished">Ukendt. Synkroniserer hoveder (%1)…</translation>
     </message>
 </context>
 <context>
@@ -2068,8 +2033,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation type="unfinished">&amp;Åbn</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2080,16 +2045,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">&amp;Konsol</translation>
     </message>
     <message>
-        <source>Decrease font size</source>
-        <translation type="unfinished">Formindsk skrifttypestørrelse</translation>
+        <source>-</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase font size</source>
-        <translation type="unfinished">Forstør skrifttypestørrelse</translation>
+        <source>+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation type="unfinished">Ryd konsol</translation>
+        <source>x</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2816,89 +2781,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">Dette er en normal betaling.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation type="unfinished">Betal &amp;til:</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">Vælg tidligere brugt adresse</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">Indsæt adresse fra udklipsholderen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation type="unfinished">Fjern denne indgang</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;Mærkat:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation type="unfinished">Indtast et mærkat for denne adresse for at føje den til listen over brugte adresser</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation type="unfinished">&amp;Beløb:</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished">&amp;Træk gebyr fra beløb</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation type="unfinished">Besked:</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">Dette er en uautentificeret betalingsanmodning.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">Betal til:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">Memo:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">Dette er en autentificeret betalingsanmodning.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished">Indtast en mærkat for denne adresse for at føje den til din adressebog</translation>
-    </message>
-</context>
-<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -3443,10 +3325,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Bekræftet</translation>
     </message>
     <message>
-        <source>Watch-only</source>
-        <translation type="unfinished">Kigge</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Dato</translation>
     </message>
@@ -3489,13 +3367,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>to</source>
         <translation type="unfinished">til</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">Enhed, som beløb vises i. Klik for at vælge en anden enhed.</translation>
     </message>
 </context>
 <context>
@@ -3546,10 +3417,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>&amp;Export</source>
         <translation type="unfinished">&amp;Eksportér</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">Eksportér den aktuelle visning til en fil</translation>
     </message>
     <message>
         <source>Backup Wallet</source>

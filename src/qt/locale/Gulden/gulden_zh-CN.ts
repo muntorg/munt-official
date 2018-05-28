@@ -349,322 +349,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Wallet</source>
-        <translation type="unfinished">钱包</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">节点</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation type="unfinished">概况(&amp;O)</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation type="unfinished">显示钱包概况</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="unfinished">发送(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation type="unfinished">接收(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation type="unfinished">交易记录(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation type="unfinished">查看交易历史</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished">退出(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation type="unfinished">退出程序</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation type="unfinished">关于 %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation type="unfinished">显示 %1 相关信息</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation type="unfinished">关于Qt(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation type="unfinished">显示 Qt 相关信息</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="unfinished">选项(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation type="unfinished">修改%1配置选项</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation type="unfinished">显示 / 隐藏(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation type="unfinished">显示或隐藏主窗口</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">加密钱包(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">对钱包中的私钥加密</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">备份钱包(&amp;B)...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation type="unfinished">备份钱包到其他文件夹</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">更改密码(&amp;C)...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">更改钱包加密口令</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation type="unfinished">调试窗口(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">打开调试和诊断控制台</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">正在发送地址(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">显示用过的发送地址和标签的列表</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">正在接收地址(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">显示用过的接收地址和标签的列表</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation type="unfinished">打开 &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation type="unfinished">命令行选项(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished">文件(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished">设置(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished">帮助(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation type="unfinished">分页工具栏</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation type="unfinished">%1 客戶</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation type="unfinished">点击禁用网络活动。</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation type="unfinished">网络活动已禁用。</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation type="unfinished">点击重新开启网络活动。</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation type="unfinished">正在与网络同步...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">正在为数据块建立索引...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation type="unfinished">正在处理数据块...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">正在为数据块重建索引...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation type="unfinished">正在连接到节点……</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>已处理 %n 个交易历史数据块。</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation type="unfinished">已是最新</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation type="unfinished">落后 %1 </translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">错误</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">警告</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished">信息</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation type="unfinished">日期: %1
-</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation type="unfinished">类型: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation type="unfinished">标签: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation type="unfinished">地址: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;解锁&lt;/b&gt;状态</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;锁定&lt;/b&gt;状态</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
@@ -939,7 +623,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
+    <name>GUI</name>
     <message>
         <source>Pending confirmation: %1</source>
         <translation type="unfinished"></translation>
@@ -969,28 +653,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation type="unfinished"></translation>
+        <source>Tabs toolbar</source>
+        <translation type="unfinished">分页工具栏</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1036,6 +700,343 @@ The account will continue to be monitored and will be restored should it receive
         <source>Failed to add key to wallet.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">钱包</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">节点</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">概况(&amp;O)</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">显示钱包概况</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">发送(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">接收(&amp;R)</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">交易记录(&amp;T)</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">查看交易历史</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">显示 / 隐藏(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">显示或隐藏主窗口</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">打开 &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">备份钱包(&amp;B)...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">备份钱包到其他文件夹</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">正在发送地址(&amp;S)...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">显示用过的发送地址和标签的列表</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">正在接收地址(&amp;R)...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">显示用过的接收地址和标签的列表</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">退出(&amp;X)</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">退出程序</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">调试窗口(&amp;D)</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">打开调试和诊断控制台</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">命令行选项(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">关于 %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">显示 %1 相关信息</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">关于Qt(&amp;Q)</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">显示 Qt 相关信息</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">加密钱包(&amp;E)...</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">对钱包中的私钥加密</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">更改密码(&amp;C)...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">更改钱包加密口令</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">选项(&amp;O)...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">修改%1配置选项</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">文件(&amp;F)</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">设置(&amp;S)</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">帮助(&amp;H)</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation type="unfinished">%1 客戶</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished">点击禁用网络活动。</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished">网络活动已禁用。</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished">点击重新开启网络活动。</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation type="unfinished">正在与网络同步...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation type="unfinished">正在为数据块建立索引...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation type="unfinished">正在处理数据块...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation type="unfinished">正在为数据块重建索引...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished">正在连接到节点……</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation type="unfinished">
+            <numerusform>已处理 %n 个交易历史数据块。</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished">已是最新</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation type="unfinished">落后 %1 </translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">错误</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">信息</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation type="unfinished">日期: %1
+</translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation type="unfinished">类型: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation type="unfinished">标签: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation type="unfinished">地址: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
+        <translation type="unfinished">钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;解锁&lt;/b&gt;状态</translation>
+    </message>
+    <message>
+        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
+        <translation type="unfinished">钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;锁定&lt;/b&gt;状态</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum allowed %1 payment is %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1060,7 +1061,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source></source>
+        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1289,55 +1290,19 @@ Witness weight: %5</source>
         <translation type="unfinished">表单</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation type="unfinished">剩余区块数量</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">未知</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation type="unfinished">上一数据块时间</translation>
     </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished">进度</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation type="unfinished">每小时进度增加</translation>
-    </message>
-    <message>
-        <source>calculating...</source>
-        <translation type="unfinished">正在计算</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation type="unfinished">预计剩余同步时间</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation type="unfinished">隐藏</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2059,8 +2024,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation type="unfinished">打开(&amp;O)</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2071,16 +2036,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">控制台(&amp;C)</translation>
     </message>
     <message>
-        <source>Decrease font size</source>
-        <translation type="unfinished">缩小文字</translation>
+        <source>-</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase font size</source>
-        <translation type="unfinished">放大文字</translation>
+        <source>+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation type="unfinished">清空控制台</translation>
+        <source>x</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2805,89 +2770,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation type="unfinished">这是笔正常的支付。</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation type="unfinished">付给(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation type="unfinished">选择以前用过的地址</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation type="unfinished">Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation type="unfinished">从剪贴板粘贴地址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation type="unfinished">Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation type="unfinished">移除此项</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">标签(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation type="unfinished">请为此地址输入一个标签以将它加入用过的地址列表</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation type="unfinished">金额(&amp;M)</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation type="unfinished">从金额中减去交易费(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation type="unfinished">消息：</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">这是一个未经验证的支付请求。</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">支付给:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">便条：</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">这是一个已经验证的支付请求。</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation type="unfinished">为这个地址输入一个标签，以便将它添加到您的地址簿</translation>
-    </message>
-</context>
-<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -3428,10 +3310,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">已确认</translation>
     </message>
     <message>
-        <source>Watch-only</source>
-        <translation type="unfinished">观察地址(Watch-only) </translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">日期</translation>
     </message>
@@ -3474,13 +3352,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>to</source>
         <translation type="unfinished">到</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">金额单位。单击选择别的单位。</translation>
     </message>
 </context>
 <context>
@@ -3531,10 +3402,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>&amp;Export</source>
         <translation type="unfinished">导出(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">导出当前分页里的数据到文件</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
