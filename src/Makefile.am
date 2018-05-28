@@ -213,6 +213,7 @@ libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
   addrdb.cpp \
   addrman.cpp \
+	alert.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \
@@ -357,7 +358,6 @@ libgulden_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_common_a_SOURCES = \
   Gulden/auto_checkpoints.cpp \
-  alert.cpp \
   unity/appmanager.cpp \
   base58.cpp \
   chainparams.cpp \
