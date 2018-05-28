@@ -13,8 +13,8 @@ endef
 define $(package)_config_cmds
   find . -name *.cpp | xargs sed -i 's|xlocale[.]h|locale.h|' && \
   mkdir native && cd native && \
-  PATH=${HOST_NATIVE_PATH} ../configure && \
-  PATH=${HOST_NATIVE_PATH}  make -j 10 && cd .. && \
+	PATH="${HOST_NATIVE_PATH}:${PATH}" ../configure && \
+  PATH="${HOST_NATIVE_PATH}:${PATH}"  make -j 10 && cd .. && \
   $($(package)_autoconf) --with-cross-build=$($(package)_build_dir)/native --prefix=$(host_prefix) --enable-extras=no \
   --enable-strict=no -enable-shared=yes --enable-tests=no \
   --enable-samples=no --enable-dyload=no --enable-tools=no
