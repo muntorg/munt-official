@@ -235,11 +235,12 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
     {
         switch(rec->type)
         {
-        case AddressTableEntry::Sending:
-            return Send;
-        case AddressTableEntry::Receiving:
-            return Receive;
-        default: break;
+            case AddressTableEntry::Sending:
+                return Send;
+            case AddressTableEntry::Receiving:
+                return Receive;
+            case AddressTableEntry::Hidden:
+            default: break;
         }
     }
     //Align address table to right, all other columns to left.

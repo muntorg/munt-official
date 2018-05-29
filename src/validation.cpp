@@ -879,7 +879,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     for (const auto& tx : block.vtx)
     {
         witnessBundles.push_back(std::vector<CWitnessTxBundle>());
-        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, &witnessBundles.back(), false))
+        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, &witnessBundles.back()))
         {
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
         }
@@ -2045,7 +2045,7 @@ bool ResetBlockFailureFlags(CBlockIndex *pindex) {
     return true;
 }
 
-void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams, bool setPrevDirty)
+void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams)
 {
     LOCK(cs_main);
 
@@ -2128,7 +2128,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
 
     // Gulden: PoW2
     {
-        SetChainWorkForIndex(pindexNew, chainParams, true);
+        SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
             setBlockIndexCandidates.insert(pindexNew);
     }
@@ -3131,7 +3131,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
-        SetChainWorkForIndex(pindex, chainparams, false);
+        SetChainWorkForIndex(pindex, chainparams);
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.

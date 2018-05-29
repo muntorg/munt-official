@@ -183,8 +183,8 @@ typedef CMutexLock<CCriticalSection> CCriticalBlock;
 #define LOCK2(cs1, cs2) CCriticalBlock criticalblock1(cs1, #cs1, __FILE__, __LINE__), criticalblock2(cs2, #cs2, __FILE__, __LINE__)
 #define TRY_LOCK(cs, name) CCriticalBlock name(cs, #cs, __FILE__, __LINE__, true)
 
-template<class T> bool IsNullMutex(T& m) { return false; }
-template<class T> bool IsNullMutex(T* m) { if (m == NULL) { return true; } return false; }
+template<class T> bool IsNullMutex([[maybe_unused]] T& mutex) { return false; }
+template<class T> bool IsNullMutex(T* mutex) { if (mutex == NULL) { return true; } return false; }
 
 // Achieve LOCK2, using a loop and TRY_LOCK to allow for an opportunity for any deadlocks to resolve themselves (at the cost of performance)
 // For now we favour stability over performance, over time we should convert all DS_LOCK2 into LOCK2 one at a time with strict testing.

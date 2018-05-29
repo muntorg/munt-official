@@ -431,7 +431,7 @@ bool BlockAssembler::TestPackageTransactions(const CTxMemPool::setEntries& packa
         if (!fIncludeSegSig && it->GetTx().HasWitness())
             return false;
         CValidationState state;
-        if (!CheckTransactionContextual(it->GetTx(), state, nHeight, nullptr, true))
+        if (!CheckTransactionContextual(it->GetTx(), state, nHeight, nullptr))
             return false;
         if (fNeedSizeAccounting) {
             uint64_t nTxSize = ::GetSerializeSize(it->GetTx(), SER_NETWORK, PROTOCOL_VERSION);

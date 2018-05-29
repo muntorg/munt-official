@@ -105,7 +105,7 @@ bool TestSequenceLocks(const CTransaction &tx, int flags)
 // Test suite for ancestor feerate transaction selection.
 // Implemented as an additional function, rather than a separate test case,
 // to allow reusing the blockchain created in CreateNewBlock_validity.
-void TestPackageSelection(const CChainParams& chainparams, CScript scriptPubKey, std::vector<CTransactionRef>& txFirst)
+static void TestPackageSelection(const CChainParams& chainparams, CScript scriptPubKey, std::vector<CTransactionRef>& txFirst)
 {
     // Test the ancestor feerate transaction selection.
     TestMemPoolEntryHelper entry;
@@ -475,7 +475,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
 
     // relative time locked
     tx.vin[0].prevout.hash = txFirst[1]->GetHash();
-    tx.vin[0].SetSequence(CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | ((chainActive.Tip()->GetMedianTimePast()+1-chainActive[1]->GetMedianTimePast()) >> CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) + 1,
+    tx.vin[0].SetSequence( (CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | ((chainActive.Tip()->GetMedianTimePast()+1-chainActive[1]->GetMedianTimePast())) >> CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) + 1,
                           tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock); // txFirst[1] is the 3rd block
     prevheights[0] = baseheight + 2;
     hash = tx.GetHash();

@@ -73,7 +73,7 @@ static UniValue sethashlimit(const JSONRPCRequest& request)
     return strprintf("Throttling hash: %d", nHashThrottle);
 }
 
-UniValue getwitnessinfo(const JSONRPCRequest& request)
+static UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
@@ -369,7 +369,7 @@ UniValue getwitnessinfo(const JSONRPCRequest& request)
 }
 
 
-UniValue dumpdiffarray(const JSONRPCRequest& request)
+static UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
@@ -417,7 +417,7 @@ UniValue dumpdiffarray(const JSONRPCRequest& request)
 }
 
 
-UniValue dumpblockgaps(const JSONRPCRequest& request)
+static UniValue dumpblockgaps(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
@@ -474,7 +474,7 @@ UniValue dumpblockgaps(const JSONRPCRequest& request)
 }
 
 
-UniValue dumptransactionstats(const JSONRPCRequest& request)
+static UniValue dumptransactionstats(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
@@ -574,7 +574,7 @@ UniValue dumptransactionstats(const JSONRPCRequest& request)
 }
 
 
-UniValue changeaccountname(const JSONRPCRequest& request)
+static UniValue changeaccountname(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -614,7 +614,7 @@ UniValue changeaccountname(const JSONRPCRequest& request)
 }
 
 #define MINIMUM_VALUABLE_AMOUNT 1000000000
-UniValue deleteaccount(const JSONRPCRequest& request)
+static UniValue deleteaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -659,7 +659,7 @@ UniValue deleteaccount(const JSONRPCRequest& request)
 }
 
 
-UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
+static UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
 {
     CAccount* account = NULL;
 
@@ -687,7 +687,7 @@ UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::str
     return getUUIDAsString(account->getUUID());
 }
 
-UniValue createaccount(const JSONRPCRequest& request)
+static UniValue createaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -728,7 +728,7 @@ UniValue createaccount(const JSONRPCRequest& request)
 }
 
 
-UniValue createwitnessaccount(const JSONRPCRequest& request)
+static UniValue createwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -760,7 +760,7 @@ UniValue createwitnessaccount(const JSONRPCRequest& request)
 }
 
 
-UniValue fundwitnessaccount(const JSONRPCRequest& request)
+static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -923,7 +923,7 @@ UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
 
 
-UniValue getactiveaccount(const JSONRPCRequest& request)
+static UniValue getactiveaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -955,7 +955,7 @@ UniValue getactiveaccount(const JSONRPCRequest& request)
     return getUUIDAsString(pwallet->activeAccount->getUUID());
 }
 
-UniValue getreadonlyaccount(const JSONRPCRequest& request)
+static UniValue getreadonlyaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -996,7 +996,7 @@ UniValue getreadonlyaccount(const JSONRPCRequest& request)
     return accountHD->GetAccountMasterPubKeyEncoded().c_str();
 }
 
-UniValue importreadonlyaccount(const JSONRPCRequest& request)
+static UniValue importreadonlyaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1040,7 +1040,7 @@ UniValue importreadonlyaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
-UniValue getactiveseed(const JSONRPCRequest& request)
+static UniValue getactiveseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1072,7 +1072,7 @@ UniValue getactiveseed(const JSONRPCRequest& request)
     return getUUIDAsString(pwallet->activeSeed->getUUID());
 }
 
-UniValue setactiveaccount(const JSONRPCRequest& request)
+static UniValue setactiveaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1105,7 +1105,7 @@ UniValue setactiveaccount(const JSONRPCRequest& request)
 }
 
 //fixme: (2.1) Improve help for this.
-UniValue getaccountbalances(const JSONRPCRequest& request)
+static UniValue getaccountbalances(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
@@ -1155,7 +1155,7 @@ UniValue getaccountbalances(const JSONRPCRequest& request)
     return allAccounts;
 }
 
-CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
+static CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultIfEmpty)
 {
     std::string strSeedUUID = value.get_str();
 
@@ -1164,7 +1164,7 @@ CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultI
 
     if (strSeedUUID.empty())
     {
-        if (!pwallet->getActiveSeed())
+        if (!useDefaultIfEmpty || !pwallet->getActiveSeed())
         {
             throw std::runtime_error("No seed identifier passed, and no active seed selected, please select an active seed or pass a valid identifier.");
         }
@@ -1185,7 +1185,7 @@ CHDSeed* SeedFromValue(CWallet* pwallet, const UniValue& value, bool useDefaultI
     return foundSeed;
 }
 
-UniValue setactiveseed(const JSONRPCRequest& request)
+static UniValue setactiveseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1217,7 +1217,7 @@ UniValue setactiveseed(const JSONRPCRequest& request)
 }
 
 
-UniValue createseed(const JSONRPCRequest& request)
+static UniValue createseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1267,7 +1267,7 @@ UniValue createseed(const JSONRPCRequest& request)
     return getUUIDAsString(newSeed->getUUID());
 }
 
-UniValue deleteseed(const JSONRPCRequest& request)
+static UniValue deleteseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1304,7 +1304,7 @@ UniValue deleteseed(const JSONRPCRequest& request)
     return true;
 }
 
-UniValue importseed(const JSONRPCRequest& request)
+static UniValue importseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1371,7 +1371,7 @@ UniValue importseed(const JSONRPCRequest& request)
     return getUUIDAsString(newSeed->getUUID());
 }
 
-UniValue listallaccounts(const JSONRPCRequest& request)
+static UniValue listallaccounts(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
@@ -1450,7 +1450,7 @@ UniValue listallaccounts(const JSONRPCRequest& request)
     return allAccounts;
 }
 
-UniValue getmnemonicfromseed(const JSONRPCRequest& request)
+static UniValue getmnemonicfromseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1485,7 +1485,7 @@ UniValue getmnemonicfromseed(const JSONRPCRequest& request)
     return seed->getMnemonic().c_str();
 }
 
-UniValue getreadonlyseed(const JSONRPCRequest& request)
+static UniValue getreadonlyseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1523,7 +1523,7 @@ UniValue getreadonlyseed(const JSONRPCRequest& request)
     return seed->getPubkey().c_str();
 }
 
-UniValue listseeds(const JSONRPCRequest& request)
+static UniValue listseeds(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);

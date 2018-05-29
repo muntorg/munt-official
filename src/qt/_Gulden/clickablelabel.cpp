@@ -26,14 +26,14 @@ ClickableLabel::ClickableLabel( QWidget * parent )
     //connect(mnemonicShortcut, SIGNAL(activated()), this, SIGNAL(clicked()));
 }
 
-void ClickableLabel::mousePressEvent( QMouseEvent * event ) 
+void ClickableLabel::mousePressEvent( [[maybe_unused]] QMouseEvent * event ) 
 {
     setProperty("pressed", QVariant(true));
     style()->unpolish(this);
     style()->polish(this);
 }
 
-void ClickableLabel::mouseReleaseEvent ( QMouseEvent * event )
+void ClickableLabel::mouseReleaseEvent ( [[maybe_unused]] QMouseEvent * event )
 {
     setProperty("pressed", QVariant(false));
     style()->unpolish(this);
@@ -44,7 +44,7 @@ void ClickableLabel::mouseReleaseEvent ( QMouseEvent * event )
     }
 }
 
-void ClickableLabel::enterEvent(QEvent * event)
+void ClickableLabel::enterEvent([[maybe_unused]] QEvent * event)
 {
     mouseIn = true;
     setProperty("hover", QVariant(true));
@@ -52,7 +52,7 @@ void ClickableLabel::enterEvent(QEvent * event)
     style()->polish(this);
 }
 
-void ClickableLabel::leaveEvent(QEvent * event)
+void ClickableLabel::leaveEvent([[maybe_unused]] QEvent * event)
 {
     mouseIn = false;
     setProperty("hover", QVariant(false));

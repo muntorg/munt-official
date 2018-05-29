@@ -522,13 +522,13 @@ bool WalletModel::backupWallet(const QString &filename)
 }
 
 // Handlers for core signals
-static void NotifyKeyStoreStatusChanged(WalletModel *walletmodel, CCryptoKeyStore *wallet)
+static void NotifyKeyStoreStatusChanged(WalletModel *walletmodel,  [[maybe_unused]] CCryptoKeyStore *wallet)
 {
     qDebug() << "NotifyKeyStoreStatusChanged";
     QMetaObject::invokeMethod(walletmodel, "updateStatus", Qt::QueuedConnection);
 }
 
-static void NotifyAddressBookChanged(WalletModel *walletmodel, CWallet *wallet,
+static void NotifyAddressBookChanged(WalletModel *walletmodel, [[maybe_unused]] CWallet *wallet,
         const std::string &address, const std::string &label, bool isMine,
         const std::string &purpose, ChangeType status)
 {

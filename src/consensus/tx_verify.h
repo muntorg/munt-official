@@ -78,8 +78,8 @@ void IncrementWitnessFailCount(uint64_t& failCount);
 /** Context-independent validity checks */
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true);
 
-/** Context-independent validity checks */
-bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles, bool fCheckDuplicateInputs=true);
+/** Context-dependent validity checks */
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles);
 
 namespace Consensus {
 /**

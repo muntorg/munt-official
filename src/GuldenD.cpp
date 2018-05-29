@@ -111,7 +111,7 @@ static void handleAppInitResult(bool bResult)
     handlePostInitMain();
 }
 
-bool handlePreInitMain()
+static bool handlePreInitMain()
 {
     if (GetBoolArg("-daemon", false))
     {

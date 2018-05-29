@@ -250,7 +250,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 }
 
 
-bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles, bool fCheckDuplicateInputs)
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles)
 {
     for (const CTxOut& txout : tx.vout)
     {

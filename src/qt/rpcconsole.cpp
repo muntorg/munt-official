@@ -797,7 +797,7 @@ void RPCConsole::updateNetworkState()
     ui->numberOfConnections->setText(connections);
 }
 
-void RPCConsole::setNumConnections(int count)
+void RPCConsole::setNumConnections([[maybe_unused]] int count)
 {
     if (!clientModel)
         return;
@@ -805,12 +805,12 @@ void RPCConsole::setNumConnections(int count)
     updateNetworkState();
 }
 
-void RPCConsole::setNetworkActive(bool networkActive)
+void RPCConsole::setNetworkActive([[maybe_unused]] bool networkActive)
 {
     updateNetworkState();
 }
 
-void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers)
+void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, [[maybe_unused]] double nVerificationProgress, bool headers)
 {
     if (!headers) {
         ui->numberOfBlocks->setText(QString::number(count));

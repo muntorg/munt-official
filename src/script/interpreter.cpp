@@ -320,23 +320,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 //
                 // Push value
                 //
-                case OP_1NEGATE:
-                case OP_1:
-                case OP_2:
-                case OP_3:
-                case OP_4:
-                case OP_5:
-                case OP_6:
-                case OP_7:
-                case OP_8:
-                case OP_9:
-                case OP_10:
-                case OP_11:
-                case OP_12:
-                case OP_13:
-                case OP_14:
-                case OP_15:
-                case OP_16:
+                case OP_1NEGATE: case OP_1: case OP_2: case OP_3: case OP_4: case OP_5: case OP_6: case OP_7: case OP_8:
+                case OP_9: case OP_10: case OP_11: case OP_12: case OP_13: case OP_14: case OP_15: case OP_16:
                 {
                     // ( -- value)
                     CScriptNum bn((int)opcode - (int)(OP_1 - 1));
@@ -345,7 +330,6 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // they push, so no need for a CheckMinimalPush here.
                 }
                 break;
-
 
                 //
                 // Control
@@ -433,8 +417,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     break;
                 }
 
-                case OP_NOP1: case OP_NOP4: case OP_NOP5:
-                case OP_NOP6: case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10:
+                case OP_NOP1: case OP_NOP4: case OP_NOP5: case OP_NOP6: case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10:
                 {
                     if (flags & SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS)
                         return set_error(serror, SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS);
@@ -767,7 +750,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         case OP_ABS:        if (bn < bnZero) bn = -bn; break;
                         case OP_NOT:        bn = (bn == bnZero); break;
                         case OP_0NOTEQUAL:  bn = (bn != bnZero); break;
-                        case OP_FALSE: case OP_PUSHDATA1: case OP_PUSHDATA2: case OP_PUSHDATA4: case OP_1NEGATE: case OP_RESERVED: case OP_1: case OP_2: case OP_3: case OP_4: case OP_5: case OP_6: case OP_7: case OP_8: case OP_9: case OP_10: case OP_11: case OP_12: case OP_13: case OP_14: case OP_15: case OP_16: case OP_NOP:case OP_VER: case OP_IF: case OP_NOTIF: case OP_VERIF:
+                        case OP_FALSE: case OP_PUSHDATA1: case OP_PUSHDATA2: case OP_PUSHDATA4: case OP_1NEGATE: case OP_RESERVED: case OP_1: case OP_2: case OP_3: case OP_4: case OP_5: case OP_6: case OP_7: case OP_8: case OP_9: case OP_10: case OP_11: case OP_12: case OP_13: case OP_14: case OP_15: case OP_16: case OP_NOP:case OP_VER: case OP_IF: case OP_NOTIF: case OP_VERIF: case OP_ELSE: case OP_ENDIF: case OP_VERIFY: case OP_RETURN: case OP_TOALTSTACK: case OP_FROMALTSTACK: case OP_2DROP: case OP_2DUP: case OP_3DUP: case OP_2OVER: case OP_2ROT: case OP_2SWAP: case OP_IFDUP: case OP_DEPTH: case OP_DROP: case OP_DUP: case OP_NIP: case OP_OVER: case OP_PICK: case OP_ROLL: case OP_ROT: case OP_SWAP: case OP_TUCK: case OP_CAT: case OP_SUBSTR: case OP_LEFT: case OP_RIGHT: case OP_SIZE: case OP_INVERT: case OP_AND: case OP_OR: case OP_XOR: case OP_EQUAL: case OP_EQUALVERIFY: case OP_RESERVED1: case OP_RESERVED2: case OP_2MUL: case OP_2DIV: case OP_MUL: case OP_DIV: case OP_MOD: case OP_LSHIFT: case OP_RSHIFT: case OP_SMALLINTEGER: case OP_PUBKEYS: case OP_PUBKEYHASH: case OP_PUBKEY: case OP_INVALIDOPCODE: case OP_VERNOTIF: case OP_ADD: case OP_SUB: case OP_BOOLAND: case OP_BOOLOR: case OP_NUMEQUAL: case OP_NUMEQUALVERIFY: case OP_NUMNOTEQUAL: case OP_LESSTHAN: case OP_GREATERTHAN: case OP_LESSTHANOREQUAL: case OP_GREATERTHANOREQUAL: case OP_MIN: case OP_MAX: case OP_WITHIN: case OP_RIPEMD160: case OP_SHA1: case OP_SHA256: case OP_HASH160: case OP_HASH256: case OP_CODESEPARATOR: case OP_CHECKSIG: case OP_CHECKSIGVERIFY: case OP_CHECKMULTISIG: case OP_CHECKMULTISIGVERIFY: case OP_NOP1: case OP_CHECKLOCKTIMEVERIFY: case OP_CHECKSEQUENCEVERIFY:  case OP_NOP4: case OP_NOP5: case OP_NOP6: case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10:
                         default:            assert(!"invalid opcode"); break;
                     }
                     popstack(stack);
@@ -797,26 +780,27 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     CScriptNum bn(0);
                     switch (opcode)
                     {
-                    case OP_ADD:
-                        bn = bn1 + bn2;
-                        break;
+                        case OP_ADD:
+                            bn = bn1 + bn2;
+                            break;
 
-                    case OP_SUB:
-                        bn = bn1 - bn2;
-                        break;
+                        case OP_SUB:
+                            bn = bn1 - bn2;
+                            break;
 
-                    case OP_BOOLAND:             bn = (bn1 != bnZero && bn2 != bnZero); break;
-                    case OP_BOOLOR:              bn = (bn1 != bnZero || bn2 != bnZero); break;
-                    case OP_NUMEQUAL:            bn = (bn1 == bn2); break;
-                    case OP_NUMEQUALVERIFY:      bn = (bn1 == bn2); break;
-                    case OP_NUMNOTEQUAL:         bn = (bn1 != bn2); break;
-                    case OP_LESSTHAN:            bn = (bn1 < bn2); break;
-                    case OP_GREATERTHAN:         bn = (bn1 > bn2); break;
-                    case OP_LESSTHANOREQUAL:     bn = (bn1 <= bn2); break;
-                    case OP_GREATERTHANOREQUAL:  bn = (bn1 >= bn2); break;
-                    case OP_MIN:                 bn = (bn1 < bn2 ? bn1 : bn2); break;
-                    case OP_MAX:                 bn = (bn1 > bn2 ? bn1 : bn2); break;
-                    default:                     assert(!"invalid opcode"); break;
+                        case OP_BOOLAND:             bn = (bn1 != bnZero && bn2 != bnZero); break;
+                        case OP_BOOLOR:              bn = (bn1 != bnZero || bn2 != bnZero); break;
+                        case OP_NUMEQUAL:            bn = (bn1 == bn2); break;
+                        case OP_NUMEQUALVERIFY:      bn = (bn1 == bn2); break;
+                        case OP_NUMNOTEQUAL:         bn = (bn1 != bn2); break;
+                        case OP_LESSTHAN:            bn = (bn1 < bn2); break;
+                        case OP_GREATERTHAN:         bn = (bn1 > bn2); break;
+                        case OP_LESSTHANOREQUAL:     bn = (bn1 <= bn2); break;
+                        case OP_GREATERTHANOREQUAL:  bn = (bn1 >= bn2); break;
+                        case OP_MIN:                 bn = (bn1 < bn2 ? bn1 : bn2); break;
+                        case OP_MAX:                 bn = (bn1 > bn2 ? bn1 : bn2); break;
+                        case OP_0: case OP_1: case OP_2: case OP_3: case OP_4: case OP_5: case OP_6: case OP_7: case OP_8: case OP_9: case OP_10: case OP_11: case OP_12: case OP_13: case OP_14: case OP_15: case OP_16: case OP_PUSHDATA2: case OP_PUSHDATA4: case OP_1NEGATE: case OP_RESERVED: case OP_NOP: case OP_VER: case OP_IF: case OP_NOTIF: case OP_VERIF: case OP_VERNOTIF: case OP_ELSE: case OP_ENDIF: case OP_VERIFY: case OP_RETURN: case OP_TOALTSTACK: case OP_PUSHDATA1: case OP_3DUP: case OP_2OVER: case OP_2ROT: case OP_2SWAP: case OP_IFDUP: case OP_DEPTH: case OP_DROP: case OP_DUP: case OP_NIP: case OP_OVER: case OP_PICK: case OP_ROLL: case OP_ROT: case OP_SWAP: case OP_TUCK: case OP_CAT: case OP_SUBSTR: case OP_LEFT: case OP_RIGHT: case OP_SIZE: case OP_INVERT: case OP_AND: case OP_OR: case OP_XOR: case OP_EQUAL: case OP_EQUALVERIFY: case OP_RESERVED1: case OP_RESERVED2: case OP_1ADD: case OP_1SUB: case OP_2MUL: case OP_2DIV: case OP_NEGATE: case OP_ABS: case OP_NOT: case OP_0NOTEQUAL: case OP_MUL: case OP_DIV: case OP_MOD: case OP_LSHIFT: case OP_FROMALTSTACK: case OP_2DROP: case OP_2DUP: case OP_WITHIN: case OP_RIPEMD160: case OP_SHA1: case OP_SHA256: case OP_CODESEPARATOR: case OP_CHECKSIG: case OP_CHECKSIGVERIFY: case OP_CHECKMULTISIG: case OP_CHECKMULTISIGVERIFY: case OP_NOP1: case OP_NOP2: case OP_NOP3: case OP_NOP4: case OP_NOP5: case OP_NOP6: case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10: case OP_RSHIFT: case OP_HASH160: case OP_HASH256: case OP_SMALLINTEGER: case OP_PUBKEYS: case OP_PUBKEYHASH: case OP_PUBKEY: case OP_INVALIDOPCODE:
+                        default:                     assert(!"invalid opcode"); break;
                     }
                     popstack(stack);
                     popstack(stack);
@@ -1034,6 +1018,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 }
                 break;
 
+                case OP_FALSE: case OP_PUSHDATA1: case OP_PUSHDATA2: case OP_PUSHDATA4: case OP_RESERVED: case OP_VER: case OP_VERIF: case OP_VERNOTIF: case OP_CAT: case OP_SUBSTR: case OP_LEFT: case OP_RIGHT: case OP_INVERT: case OP_AND: case OP_OR: case OP_XOR: case OP_RESERVED1: case OP_RESERVED2: case OP_2MUL: case OP_2DIV: case OP_MUL: case OP_DIV: case OP_LSHIFT: case OP_RSHIFT: case OP_SMALLINTEGER: case OP_PUBKEYS: case OP_PUBKEYHASH: case OP_PUBKEY: case OP_INVALIDOPCODE: case OP_MOD:
                 default:
                     return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
             }

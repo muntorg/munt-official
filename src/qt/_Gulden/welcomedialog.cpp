@@ -95,7 +95,7 @@ void WelcomeDialog::showEvent(QShowEvent *ev)
 
 }
 
-void WelcomeDialog::showMessage(const QString& message, int alignment, const QColor &color)
+void WelcomeDialog::showMessage(const QString& message, [[maybe_unused]] int alignment, [[maybe_unused]] const QColor &color)
 {
     ui->labelWelcomeScreenProgressDisplay->setText(message);
 }
