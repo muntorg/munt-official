@@ -119,14 +119,14 @@ static void addFontFromResource(QString sFontResourceName)
     fontResult = QFontDatabase::addApplicationFont(sFontResourceName);
     if (fontResult == -1)
     {
-        LogPrint(BCLog::QT, "Failed to add font: %s\n", sFontResourceName.toStdString().c_str());
+        LogPrintf("GUI: Failed to add font: %s\n", sFontResourceName.toStdString().c_str());
     }
     else
     {
         QStringList fontFamilyList = QFontDatabase::applicationFontFamilies(fontResult);
         for (const auto& familyName : fontFamilyList)
         {
-            LogPrint(BCLog::QT, "Added font family: %s from: %s\n", familyName.toStdString().c_str(), sFontResourceName.toStdString().c_str());
+            LogPrintf("GUI: Added font family: %s from: %s\n", familyName.toStdString().c_str(), sFontResourceName.toStdString().c_str());
         }
     }
 }
