@@ -366,7 +366,9 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
         case STATE_ARGUMENT:
         case STATE_EATING_SPACES:
             return true;
-        default: // ERROR to end in one of the other states
+        // ERROR to end in one of the other states
+        case STATE_EATING_SPACES_IN_ARG: case STATE_EATING_SPACES_IN_BRACKETS: case STATE_SINGLEQUOTED: case STATE_DOUBLEQUOTED: case STATE_ESCAPE_OUTER: case STATE_ESCAPE_DOUBLEQUOTED: case STATE_COMMAND_EXECUTED_INNER:
+        default:
             return false;
     }
 }
@@ -430,6 +432,8 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     ui->fontBiggerButton->setTextFormat( Qt::RichText );
     ui->fontSmallerButton->setText( GUIUtil::fontAwesomeRegular("\uf010") );
     ui->fontSmallerButton->setTextFormat( Qt::RichText );
+
+    ui->promptIcon->setIcon( GUIUtil::getIconFromFontAwesomeLightGlyph(0xf120) );
 
     ui->clearButton->setCursor( Qt::PointingHandCursor );
     ui->fontBiggerButton->setCursor( Qt::PointingHandCursor );

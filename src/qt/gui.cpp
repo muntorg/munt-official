@@ -113,6 +113,24 @@ static void NotifyRequestUnlockWithCallbackS(GUI* parent, CWallet* wallet, std::
  * collisions in the future with additional wallets */
 const QString GUI::DEFAULT_WALLET = "~Default";
 
+static void addFontFromResource(QString sFontResourceName)
+{
+    int fontResult = -1;
+    fontResult = QFontDatabase::addApplicationFont(sFontResourceName);
+    if (fontResult == -1)
+    {
+        LogPrint(BCLog::QT, "Failed to add font: %s\n", sFontResourceName.toStdString().c_str());
+    }
+    else
+    {
+        QStringList fontFamilyList = QFontDatabase::applicationFontFamilies(fontResult);
+        for (const auto& familyName : fontFamilyList)
+        {
+            LogPrint(BCLog::QT, "Added font family: %s from: %s\n", familyName.toStdString().c_str(), sFontResourceName.toStdString().c_str());
+        }
+    }
+}
+
 GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
 : QMainWindow(parent)
 , platformStyle(_platformStyle)
@@ -147,19 +165,19 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
     #endif
 
-    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_regular");
-    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_light");
-    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_brands");
-    QFontDatabase::addApplicationFont(":/Gulden/fontawesome_pro_solid");
-    QFontDatabase::addApplicationFont(":/Gulden/guldensign");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_black");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_blackitalic");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_bold");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_bolditalic");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_italic");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_medium");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_mediumitalic");
-    QFontDatabase::addApplicationFont(":/Gulden/lato_regular");
+    addFontFromResource(":/Gulden/fa5pr");
+    addFontFromResource(":/Gulden/fa5pl");
+    addFontFromResource(":/Gulden/fa5br");
+    addFontFromResource(":/Gulden/fa5ps");
+    addFontFromResource(":/Gulden/guldensign");
+    addFontFromResource(":/Gulden/lato_black");
+    addFontFromResource(":/Gulden/lato_blackitalic");
+    addFontFromResource(":/Gulden/lato_bold");
+    addFontFromResource(":/Gulden/lato_bolditalic");
+    addFontFromResource(":/Gulden/lato_italic");
+    addFontFromResource(":/Gulden/lato_medium");
+    addFontFromResource(":/Gulden/lato_mediumitalic");
+    addFontFromResource(":/Gulden/lato_regular");
 
 
     GUIUtil::restoreWindowGeometry("nWindow", QSize(960, 620), this);

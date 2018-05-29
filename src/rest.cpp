@@ -17,6 +17,7 @@
 #include "primitives/transaction.h"
 #include "validation.h"
 #include "httpserver.h"
+#include "httprpc.h"
 #include "rpc/blockchain.h"
 #include "rpc/server.h"
 #include "streams.h"
@@ -181,33 +182,35 @@ static bool rest_headers(HTTPRequest* req,
         ssHeader << pindex->GetBlockHeader();
     }
 
-    switch (rf) {
-    case RF_BINARY: {
-        std::string binaryHeader = ssHeader.str();
-        req->WriteHeader("Content-Type", "application/octet-stream");
-        req->WriteReply(HTTP_OK, binaryHeader);
-        return true;
-    }
-
-    case RF_HEX: {
-        std::string strHex = HexStr(ssHeader.begin(), ssHeader.end()) + "\n";
-        req->WriteHeader("Content-Type", "text/plain");
-        req->WriteReply(HTTP_OK, strHex);
-        return true;
-    }
-    case RF_JSON: {
-        UniValue jsonHeaders(UniValue::VARR);
-        for(const CBlockIndex *pindex : headers) {
-            jsonHeaders.push_back(blockheaderToJSON(pindex));
+    switch (rf)
+    {
+        case RF_BINARY: {
+            std::string binaryHeader = ssHeader.str();
+            req->WriteHeader("Content-Type", "application/octet-stream");
+            req->WriteReply(HTTP_OK, binaryHeader);
+            return true;
         }
-        std::string strJSON = jsonHeaders.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: .bin, .hex)");
-    }
+
+        case RF_HEX: {
+            std::string strHex = HexStr(ssHeader.begin(), ssHeader.end()) + "\n";
+            req->WriteHeader("Content-Type", "text/plain");
+            req->WriteReply(HTTP_OK, strHex);
+            return true;
+        }
+        case RF_JSON: {
+            UniValue jsonHeaders(UniValue::VARR);
+            for(const CBlockIndex *pindex : headers) {
+                jsonHeaders.push_back(blockheaderToJSON(pindex));
+            }
+            std::string strJSON = jsonHeaders.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
+        case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: .bin, .hex)");
+        }
     }
 
     // not reached
@@ -246,32 +249,34 @@ static bool rest_block(HTTPRequest* req,
     CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
     ssBlock << block;
 
-    switch (rf) {
-    case RF_BINARY: {
-        std::string binaryBlock = ssBlock.str();
-        req->WriteHeader("Content-Type", "application/octet-stream");
-        req->WriteReply(HTTP_OK, binaryBlock);
-        return true;
-    }
+    switch (rf)
+    {
+        case RF_BINARY: {
+            std::string binaryBlock = ssBlock.str();
+            req->WriteHeader("Content-Type", "application/octet-stream");
+            req->WriteReply(HTTP_OK, binaryBlock);
+            return true;
+        }
 
-    case RF_HEX: {
-        std::string strHex = HexStr(ssBlock.begin(), ssBlock.end()) + "\n";
-        req->WriteHeader("Content-Type", "text/plain");
-        req->WriteReply(HTTP_OK, strHex);
-        return true;
-    }
+        case RF_HEX: {
+            std::string strHex = HexStr(ssBlock.begin(), ssBlock.end()) + "\n";
+            req->WriteHeader("Content-Type", "text/plain");
+            req->WriteReply(HTTP_OK, strHex);
+            return true;
+        }
 
-    case RF_JSON: {
-        UniValue objBlock = blockToJSON(block, pblockindex, showTxDetails);
-        std::string strJSON = objBlock.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
+        case RF_JSON: {
+            UniValue objBlock = blockToJSON(block, pblockindex, showTxDetails);
+            std::string strJSON = objBlock.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
 
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
-    }
+        case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
+        }
     }
 
     // not reached
@@ -298,19 +303,21 @@ static bool rest_chaininfo(HTTPRequest* req, const std::string& strURIPart)
     std::string param;
     const RetFormat rf = ParseDataFormat(param, strURIPart);
 
-    switch (rf) {
-    case RF_JSON: {
-        JSONRPCRequest jsonRequest;
-        jsonRequest.params = UniValue(UniValue::VARR);
-        UniValue chainInfoObject = getblockchaininfo(jsonRequest);
-        std::string strJSON = chainInfoObject.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
-    }
+    switch (rf)
+    {
+        case RF_JSON: {
+            JSONRPCRequest jsonRequest;
+            jsonRequest.params = UniValue(UniValue::VARR);
+            UniValue chainInfoObject = getblockchaininfo(jsonRequest);
+            std::string strJSON = chainInfoObject.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
+        case RF_UNDEF: case RF_BINARY: case RF_HEX:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
+        }
     }
 
     // not reached
@@ -324,18 +331,19 @@ static bool rest_mempool_info(HTTPRequest* req, const std::string& strURIPart)
     std::string param;
     const RetFormat rf = ParseDataFormat(param, strURIPart);
 
-    switch (rf) {
-    case RF_JSON: {
-        UniValue mempoolInfoObject = mempoolInfoToJSON();
+        switch (rf) {
+        case RF_JSON: {
+            UniValue mempoolInfoObject = mempoolInfoToJSON();
 
-        std::string strJSON = mempoolInfoObject.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
-    }
+            std::string strJSON = mempoolInfoObject.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
+        case RF_BINARY: case RF_HEX: case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
+        }
     }
 
     // not reached
@@ -349,18 +357,20 @@ static bool rest_mempool_contents(HTTPRequest* req, const std::string& strURIPar
     std::string param;
     const RetFormat rf = ParseDataFormat(param, strURIPart);
 
-    switch (rf) {
-    case RF_JSON: {
-        UniValue mempoolObject = mempoolToJSON(true);
+    switch (rf)
+    {
+        case RF_JSON: {
+            UniValue mempoolObject = mempoolToJSON(true);
 
-        std::string strJSON = mempoolObject.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
-    }
+            std::string strJSON = mempoolObject.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
+        case RF_BINARY: case RF_HEX: case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
+        }
     }
 
     // not reached
@@ -386,33 +396,35 @@ static bool rest_tx(HTTPRequest* req, const std::string& strURIPart)
     CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
     ssTx << tx;
 
-    switch (rf) {
-    case RF_BINARY: {
-        std::string binaryTx = ssTx.str();
-        req->WriteHeader("Content-Type", "application/octet-stream");
-        req->WriteReply(HTTP_OK, binaryTx);
-        return true;
-    }
+    switch (rf)
+    {
+        case RF_BINARY: {
+            std::string binaryTx = ssTx.str();
+            req->WriteHeader("Content-Type", "application/octet-stream");
+            req->WriteReply(HTTP_OK, binaryTx);
+            return true;
+        }
 
-    case RF_HEX: {
-        std::string strHex = HexStr(ssTx.begin(), ssTx.end()) + "\n";
-        req->WriteHeader("Content-Type", "text/plain");
-        req->WriteReply(HTTP_OK, strHex);
-        return true;
-    }
+        case RF_HEX: {
+            std::string strHex = HexStr(ssTx.begin(), ssTx.end()) + "\n";
+            req->WriteHeader("Content-Type", "text/plain");
+            req->WriteReply(HTTP_OK, strHex);
+            return true;
+        }
 
-    case RF_JSON: {
-        UniValue objTx(UniValue::VOBJ);
-        TxToUniv(*tx, hashBlock, objTx);
-        std::string strJSON = objTx.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
+        case RF_JSON: {
+            UniValue objTx(UniValue::VOBJ);
+            TxToUniv(*tx, hashBlock, objTx);
+            std::string strJSON = objTx.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
 
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
-    }
+        case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
+        }
     }
 
     // not reached
@@ -472,44 +484,47 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
             return RESTERR(req, HTTP_BAD_REQUEST, "Error: empty request");
     }
 
-    switch (rf) {
-    case RF_HEX: {
-        // convert hex to bin, continue then with bin part
-        std::vector<unsigned char> strRequestV = ParseHex(strRequestMutable);
-        strRequestMutable.assign(strRequestV.begin(), strRequestV.end());
-    }
-
-    case RF_BINARY: {
-        try {
-            //deserialize only if user sent a request
-            if (strRequestMutable.size() > 0)
-            {
-                if (fInputParsed) //don't allow sending input over URI and HTTP RAW DATA
-                    return RESTERR(req, HTTP_BAD_REQUEST, "Combination of URI scheme inputs and raw post data is not allowed");
-
-                CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
-                oss << strRequestMutable;
-                oss >> fCheckMemPool;
-                //fixme: (2.0) HIGH
-                /*
-                oss >> COMPACTSIZEVECTOR(vOutPoints);
-                */
-            }
-        } catch (const std::ios_base::failure& e) {
-            // abort in case of unreadable binary data
-            return RESTERR(req, HTTP_BAD_REQUEST, "Parse error");
+    switch (rf)
+    {
+        case RF_HEX: {
+            // convert hex to bin, continue then with bin part
+            std::vector<unsigned char> strRequestV = ParseHex(strRequestMutable);
+            strRequestMutable.assign(strRequestV.begin(), strRequestV.end());
         }
-        break;
-    }
 
-    case RF_JSON: {
-        if (!fInputParsed)
-            return RESTERR(req, HTTP_BAD_REQUEST, "Error: empty request");
-        break;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
-    }
+        case RF_BINARY: {
+            try {
+                //deserialize only if user sent a request
+                if (strRequestMutable.size() > 0)
+                {
+                    if (fInputParsed) //don't allow sending input over URI and HTTP RAW DATA
+                        return RESTERR(req, HTTP_BAD_REQUEST, "Combination of URI scheme inputs and raw post data is not allowed");
+
+                    CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
+                    oss << strRequestMutable;
+                    oss >> fCheckMemPool;
+                    //fixme: (2.0) HIGH
+                    /*
+                    oss >> COMPACTSIZEVECTOR(vOutPoints);
+                    */
+                }
+            } catch (const std::ios_base::failure& e) {
+                // abort in case of unreadable binary data
+                return RESTERR(req, HTTP_BAD_REQUEST, "Parse error");
+            }
+            break;
+        }
+
+        case RF_JSON: {
+            if (!fInputParsed)
+                return RESTERR(req, HTTP_BAD_REQUEST, "Error: empty request");
+            break;
+        }
+
+        case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
+        }
     }
 
     // limit max outpoints
@@ -548,65 +563,67 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
         }
     }
 
-    switch (rf) {
-    case RF_BINARY: {
-        // serialize data
-        // use exact same output as mentioned in Bip64
-        CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
-        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHashPoW2() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
-        std::string ssGetUTXOResponseString = ssGetUTXOResponse.str();
+    switch (rf)
+    {
+        case RF_BINARY: {
+            // serialize data
+            // use exact same output as mentioned in Bip64
+            CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
+            ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHashPoW2() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
+            std::string ssGetUTXOResponseString = ssGetUTXOResponse.str();
 
-        req->WriteHeader("Content-Type", "application/octet-stream");
-        req->WriteReply(HTTP_OK, ssGetUTXOResponseString);
-        return true;
-    }
-
-    case RF_HEX: {
-        CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
-        ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHashPoW2() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
-        std::string strHex = HexStr(ssGetUTXOResponse.begin(), ssGetUTXOResponse.end()) + "\n";
-
-        req->WriteHeader("Content-Type", "text/plain");
-        req->WriteReply(HTTP_OK, strHex);
-        return true;
-    }
-
-    case RF_JSON: {
-        UniValue objGetUTXOResponse(UniValue::VOBJ);
-
-        // pack in some essentials
-        // use more or less the same output as mentioned in Bip64
-        objGetUTXOResponse.push_back(Pair("chainHeight", chainActive.Height()));
-        objGetUTXOResponse.push_back(Pair("chaintipHash", chainActive.Tip()->GetBlockHashPoW2().GetHex()));
-        objGetUTXOResponse.push_back(Pair("bitmap", bitmapStringRepresentation));
-
-        UniValue utxos(UniValue::VARR);
-        for (const CCoin& coin : outs) {
-            UniValue utxo(UniValue::VOBJ);
-            utxo.push_back(Pair("height", (int32_t)coin.nHeight));
-            utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
-
-            //fixme: (2.0) - Implement something here for other output types.
-            if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
-            {
-                // include the script in a json output
-                UniValue o(UniValue::VOBJ);
-                ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
-                utxo.push_back(Pair("scriptPubKey", o));
-                utxos.push_back(utxo);
-            }
+            req->WriteHeader("Content-Type", "application/octet-stream");
+            req->WriteReply(HTTP_OK, ssGetUTXOResponseString);
+            return true;
         }
-        objGetUTXOResponse.push_back(Pair("utxos", utxos));
 
-        // return json string
-        std::string strJSON = objGetUTXOResponse.write() + "\n";
-        req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strJSON);
-        return true;
-    }
-    default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
-    }
+        case RF_HEX: {
+            CDataStream ssGetUTXOResponse(SER_NETWORK, PROTOCOL_VERSION);
+            ssGetUTXOResponse << chainActive.Height() << chainActive.Tip()->GetBlockHashPoW2() << COMPACTSIZEVECTOR(bitmap) << COMPACTSIZEVECTOR(outs);
+            std::string strHex = HexStr(ssGetUTXOResponse.begin(), ssGetUTXOResponse.end()) + "\n";
+
+            req->WriteHeader("Content-Type", "text/plain");
+            req->WriteReply(HTTP_OK, strHex);
+            return true;
+        }
+
+        case RF_JSON: {
+            UniValue objGetUTXOResponse(UniValue::VOBJ);
+
+            // pack in some essentials
+            // use more or less the same output as mentioned in Bip64
+            objGetUTXOResponse.push_back(Pair("chainHeight", chainActive.Height()));
+            objGetUTXOResponse.push_back(Pair("chaintipHash", chainActive.Tip()->GetBlockHashPoW2().GetHex()));
+            objGetUTXOResponse.push_back(Pair("bitmap", bitmapStringRepresentation));
+
+            UniValue utxos(UniValue::VARR);
+            for (const CCoin& coin : outs) {
+                UniValue utxo(UniValue::VOBJ);
+                utxo.push_back(Pair("height", (int32_t)coin.nHeight));
+                utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
+
+                //fixme: (2.0) - Implement something here for other output types.
+                if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
+                {
+                    // include the script in a json output
+                    UniValue o(UniValue::VOBJ);
+                    ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
+                    utxo.push_back(Pair("scriptPubKey", o));
+                    utxos.push_back(utxo);
+                }
+            }
+            objGetUTXOResponse.push_back(Pair("utxos", utxos));
+
+            // return json string
+            std::string strJSON = objGetUTXOResponse.write() + "\n";
+            req->WriteHeader("Content-Type", "application/json");
+            req->WriteReply(HTTP_OK, strJSON);
+            return true;
+        }
+        case RF_UNDEF:
+        default: {
+            return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
+        }
     }
 
     // not reached

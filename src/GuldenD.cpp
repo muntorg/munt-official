@@ -143,7 +143,7 @@ static bool handlePreInitMain()
 //
 // Start
 //
-void AppInit(int argc, char* argv[])
+static void AppInit(int argc, char* argv[])
 {
     GuldenAppManager appManager; 
     appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, _1));

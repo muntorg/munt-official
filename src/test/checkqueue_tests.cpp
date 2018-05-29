@@ -82,7 +82,7 @@ struct MemoryCheck {
         return true;
     }
     MemoryCheck(){};
-    MemoryCheck(const [[maybe_unused]] MemoryCheck& x)
+    MemoryCheck(const MemoryCheck& x)
     {
         // We have to do this to make sure that destructor calls are paired
         //

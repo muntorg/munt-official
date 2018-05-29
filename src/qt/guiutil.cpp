@@ -456,7 +456,7 @@ bool openGuldenConf()
     return QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
 }
 
-void SubstituteFonts(const QString& language)
+void SubstituteFonts([[maybe_unused]] const QString& language)
 {
 #if defined(Q_OS_MAC)
 // Background:
@@ -595,7 +595,7 @@ void TableViewLastColumnResizingFixer::stretchColumnWidth(int column)
 }
 
 // When a section is resized this is a slot-proxy for ajustAmountColumnWidth().
-void TableViewLastColumnResizingFixer::on_sectionResized(int logicalIndex, int oldSize, int newSize)
+void TableViewLastColumnResizingFixer::on_sectionResized(int logicalIndex, [[maybe_unused]] int oldSize, int newSize)
 {
     adjustTableColumnsWidth();
     int remainingWidth = getAvailableWidthForColumn(logicalIndex);
@@ -1032,17 +1032,17 @@ QString formatNiceTimeOffset(qint64 secs)
 
 QString fontAwesomeLight(const QString& text)
 {
-    return QString("<span style='font-family: \"Font Awesome 5 Pro Light\"'>%1</span>").arg(text);
+    return QString("<span style='font-family: fa5pl'>%1</span>").arg(text);
 }
 
 QString fontAwesomeRegular(const QString& text)
 {
-    return QString("<span style='font-family: \"Font Awesome 5 Pro Regular\"'>%1</span>").arg(text);
+    return QString("<span style='font-family: fa5pr'>%1</span>").arg(text);
 }
 
 QString fontAwesomeSolid(const QString& text)
 {
-    return QString("<span style='font-family: \"Font Awesome 5 Pro Solid\"'>%1</span>").arg(text);
+    return QString("<span style='font-family: fa5ps'>%1</span>").arg(text);
 }
 
 /* Get any font glyph as an icon */
@@ -1057,19 +1057,19 @@ QIcon getIconFromFontGlyph(QChar charCode, QString fontFamily, QColor fontColor)
 /* Get any font glyph as an icon - convenience helper for Font Awesome light */
 QIcon getIconFromFontAwesomeLightGlyph(QChar charCode, QColor fontColor)
 {
-    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Light", fontColor);
+    return getIconFromFontGlyph(charCode, "fa5pl", fontColor);
 }
 
 /* Get any font glyph as an icon - convenience helper for Font Awesome regular */
 QIcon getIconFromFontAwesomeRegularGlyph(QChar charCode, QColor fontColor)
 {
-    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Regular", fontColor);
+    return getIconFromFontGlyph(charCode, "fa5pr", fontColor);
 }
 
 /* Get any font glyph as an icon - convenience helper for Font Awesome solid */
 QIcon getIconFromFontAwesomeSolidGlyph(QChar charCode, QColor fontColor)
 {
-    return getIconFromFontGlyph(charCode, "Font Awesome 5 Pro Regular", fontColor);
+    return getIconFromFontGlyph(charCode, "fa5ps", fontColor);
 }
 
 

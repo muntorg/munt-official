@@ -20,10 +20,10 @@ qt/_Gulden/res/AngleUpBlue.png \
 qt/_Gulden/res/AngleDownGrey.png \
 qt/_Gulden/res/AngleUpGrey.png \
 qt/_Gulden/res/DialogBackground.png \
-qt/_Gulden/fonts/FontAwesome5ProLight.ttf \
-qt/_Gulden/fonts/FontAwesome5ProRegular.ttf \
-qt/_Gulden/fonts/FontAwesome5ProSolid.ttf \
-qt/_Gulden/fonts/FontAwesome5BrandsRegular.ttf \
+qt/_Gulden/fonts/fa5pl.ttf \
+qt/_Gulden/fonts/fa5pr.ttf \
+qt/_Gulden/fonts/fa5ps.ttf \
+qt/_Gulden/fonts/fa5br.ttf \
 qt/_Gulden/fonts/guldensign.ttf \
 qt/_Gulden/res/Import.png \
 qt/_Gulden/res/Rescan.png \

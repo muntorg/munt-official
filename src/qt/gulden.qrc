@@ -6,10 +6,10 @@
         <file alias="angle_down_grey">_Gulden/res/AngleDownGrey.png</file>
         <file alias="angle_up_grey">_Gulden/res/AngleUpGrey.png</file>
         <file alias="dialog_background">_Gulden/res/DialogBackground.png</file>
-        <file alias="fontawesome_pro_solid">_Gulden/fonts/FontAwesome5ProSolid.ttf</file>
-        <file alias="fontawesome_pro_regular">_Gulden/fonts/FontAwesome5ProRegular.ttf</file>
-        <file alias="fontawesome_pro_light">_Gulden/fonts/FontAwesome5ProLight.ttf</file>
-        <file alias="fontawesome_pro_brands">_Gulden/fonts/FontAwesome5BrandsRegular.ttf</file>
+        <file alias="fa5ps">_Gulden/fonts/fa5ps.ttf</file>
+        <file alias="fa5pr">_Gulden/fonts/fa5pr.ttf</file>
+        <file alias="fa5pl">_Gulden/fonts/fa5pl.ttf</file>
+        <file alias="fa5br">_Gulden/fonts/fa5br.ttf</file>
         <file alias="guldensign">_Gulden/fonts/guldensign.ttf</file>
         <file alias="qss">_Gulden/Gulden.qss</file>
         <file alias="import">_Gulden/res/Import.png</file>

@@ -326,6 +326,7 @@ void Notificator::notify(Class cls, const QString &title, const QString &text, c
         notifyGrowl(cls, title, text, icon);
         break;
 #endif
+    case None:
     default:
         if(cls == Critical)
         {

@@ -650,6 +650,7 @@ HTTPRequest::RequestMethod HTTPRequest::GetRequestMethod()
     case EVHTTP_REQ_PUT:
         return PUT;
         break;
+    case EVHTTP_REQ_OPTIONS: case EVHTTP_REQ_TRACE: case EVHTTP_REQ_CONNECT: case EVHTTP_REQ_PATCH: case EVHTTP_REQ_DELETE:
     default:
         return UNKNOWN;
         break;

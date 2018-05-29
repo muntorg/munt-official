@@ -150,7 +150,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
+static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -684,7 +684,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 static const unsigned int pSHA256InitState[8] =
 {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
 
-void SHA256Transform(void* pstate, void* pinput, const void* pinit)
+static void SHA256Transform(void* pstate, void* pinput, const void* pinit)
 {
     SHA256_CTX ctx;
     unsigned char data[64];
@@ -1148,7 +1148,7 @@ void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams
 }
 
 
-bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
+static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
 {
     assert(pBlock->nVersionPoW2Witness != 0);
 
@@ -1203,7 +1203,7 @@ bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOut
 
 
 
-void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, int nPoW2PhaseParent, unsigned int nSelectedWitnessBlockHeight)
+static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, int nPoW2PhaseParent, unsigned int nSelectedWitnessBlockHeight)
 {
     // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
     if (nPoW2PhaseParent == 3)
@@ -1259,7 +1259,7 @@ void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_pt
     }
 }
 
-CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhaseParent, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2PhaseParent, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
 {
     CMutableTransaction coinbaseTx(CURRENT_TX_VERSION_POW2);
     coinbaseTx.vin.resize(2);
@@ -1313,8 +1313,6 @@ void static GuldenWitness()
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
-
-    uint64_t nTimeTotal = 0;
 
     CChainParams chainparams = Params();
     try
