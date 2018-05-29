@@ -15,7 +15,7 @@
 
 #include <univalue.h>
 
-UniValue CallRPC(std::string args)
+static UniValue CallRPC(std::string args)
 {
     std::vector<std::string> vArgs;
     boost::split(vArgs, args, boost::is_any_of(" \t"));

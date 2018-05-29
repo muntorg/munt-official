@@ -36,7 +36,7 @@
 
 #ifdef ENABLE_WALLET
 
-UniValue gethashps(const JSONRPCRequest& request)
+static UniValue gethashps(const JSONRPCRequest& request)
 {
     if (request.fHelp)
         throw std::runtime_error(
@@ -51,7 +51,7 @@ UniValue gethashps(const JSONRPCRequest& request)
         return strprintf("%lf h/s (%lf)", dHashesPerSec, dBestHashesPerSec);
 }
 
-UniValue sethashlimit(const JSONRPCRequest& request)
+static UniValue sethashlimit(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(

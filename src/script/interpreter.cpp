@@ -41,7 +41,7 @@ inline bool set_error(ScriptError* ret, const ScriptError serror)
 
 } // anon namespace
 
-bool CastToBool(const valtype& vch)
+static bool CastToBool(const valtype& vch)
 {
     for (unsigned int i = 0; i < vch.size(); i++)
     {
@@ -761,13 +761,14 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     CScriptNum bn(stacktop(-1), fRequireMinimal);
                     switch (opcode)
                     {
-                    case OP_1ADD:       bn += bnOne; break;
-                    case OP_1SUB:       bn -= bnOne; break;
-                    case OP_NEGATE:     bn = -bn; break;
-                    case OP_ABS:        if (bn < bnZero) bn = -bn; break;
-                    case OP_NOT:        bn = (bn == bnZero); break;
-                    case OP_0NOTEQUAL:  bn = (bn != bnZero); break;
-                    default:            assert(!"invalid opcode"); break;
+                        case OP_1ADD:       bn += bnOne; break;
+                        case OP_1SUB:       bn -= bnOne; break;
+                        case OP_NEGATE:     bn = -bn; break;
+                        case OP_ABS:        if (bn < bnZero) bn = -bn; break;
+                        case OP_NOT:        bn = (bn == bnZero); break;
+                        case OP_0NOTEQUAL:  bn = (bn != bnZero); break;
+                        case OP_FALSE: case OP_PUSHDATA1: case OP_PUSHDATA2: case OP_PUSHDATA4: case OP_1NEGATE: case OP_RESERVED: case OP_1: case OP_2: case OP_3: case OP_4: case OP_5: case OP_6: case OP_7: case OP_8: case OP_9: case OP_10: case OP_11: case OP_12: case OP_13: case OP_14: case OP_15: case OP_16: case OP_NOP:case OP_VER: case OP_IF: case OP_NOTIF: case OP_VERIF:
+                        default:            assert(!"invalid opcode"); break;
                     }
                     popstack(stack);
                     stack.push_back(bn.getvch());

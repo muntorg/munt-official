@@ -488,7 +488,7 @@ void ReceiveCoinsDialog::buyGulden()
     #endif
 }
 
-void ReceiveCoinsDialog::loadBuyViewFinished(bool bOk)
+void ReceiveCoinsDialog::loadBuyViewFinished([[maybe_unused]] bool bOk)
 {
     #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
     if (bOk)

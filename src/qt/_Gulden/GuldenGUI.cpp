@@ -998,17 +998,17 @@ QString limitString(const QString& string, int maxLength)
     return beforeEllipsis + GUIUtil::fontAwesomeLight(ELLIPSIS) + afterEllipsis;
 }
 
-QString superscriptSpan(const QString& sText)
+static QString superscriptSpan(const QString& sText)
 {
     return QString("<span style='font-size: 8px;'>%1</span>").arg(sText);
 }
 
-QString colourSpan(QString sColour, const QString& sText)
+static QString colourSpan(QString sColour, const QString& sText)
 {
     return QString("<span style='color: %1;'>%2</span>").arg(sColour).arg(sText);
 }
 
-QString getAccountLabel(CAccount* account)
+static QString getAccountLabel(CAccount* account)
 {
     QString accountName = QString::fromStdString( account->getLabel() );
     accountName = limitString(accountName, 26);
@@ -1077,7 +1077,7 @@ void GUI::refreshTabVisibilities()
 }
 
 
-std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>> getSortedAccounts()
+static std::map<QString, CAccount*, std::function<bool(const QString&, const QString&)>> getSortedAccounts()
 {
     QCollator collateAccountsNumerically;
     collateAccountsNumerically.setNumericMode(true);
@@ -1106,7 +1106,7 @@ void GUI::refreshAccountControls()
         {
             // Get an ordered list of old account labels.
             std::vector<ClickableLabel*> allLabels;
-            for (unsigned int i=0; i<accountScrollArea->layout()->count(); ++i)
+            for (int32_t i=0; i<accountScrollArea->layout()->count(); ++i)
             {
                 allLabels.push_back(dynamic_cast<ClickableLabel*>((accountScrollArea->layout()->itemAt(i)->widget())));
             }
@@ -1120,7 +1120,7 @@ void GUI::refreshAccountControls()
                 LOCK(pactiveWallet->cs_wallet);
 
                 // Update to the sorted list
-                int nCount = 0;
+                uint32_t nCount = 0;
                 for (const auto& sortedIter : sortedAccounts)
                 {
                     ClickableLabel* accLabel = nullptr;
@@ -1219,7 +1219,7 @@ void GUI::balanceChanged()
     LogPrint(BCLog::QT, "GUI::balanceChanged\n");
 
     // Force receive Qr code to update on balance change.
-    if (this && walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->walletModel)
+    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->walletModel)
         updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
 }
 

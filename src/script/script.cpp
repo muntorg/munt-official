@@ -155,6 +155,7 @@ const char* GetOpName(opcodetype opcode)
     //  The template matching params OP_SMALLINTEGER/etc are defined in opcodetype enum
     //  as kind of implementation hack, they are *NOT* real opcodes.  If found in real
     //  Script, just let the default: case deal with them.
+    case OP_SMALLINTEGER: case OP_PUBKEYS: case OP_PUBKEYHASH:
 
     default:
         return "OP_UNKNOWN";

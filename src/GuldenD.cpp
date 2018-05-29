@@ -57,12 +57,12 @@
 int exitStatus = EXIT_SUCCESS;
 bool shutDownFinalised = false;
 
-void handleFinalShutdown()
+static void handleFinalShutdown()
 {
     shutDownFinalised = true;
 }
 
-void WaitForShutdown()
+static void WaitForShutdown()
 {
     while (!shutDownFinalised)
     {
@@ -70,7 +70,7 @@ void WaitForShutdown()
     }
 }
 
-void handlePostInitMain()
+static void handlePostInitMain()
 {
     //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
     //Also shouldn't this happen earlier in the init process?
@@ -84,7 +84,7 @@ void handlePostInitMain()
         static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
         if (!lock.try_lock())
         {
-            fprintf(stderr, _("Cannot obtain a lock on data directory %s. %s is probably already running.").c_str(), GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+            fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
             exitStatus = EXIT_FAILURE;
             GuldenAppManager::gApp->shutdown();
             return;
@@ -92,14 +92,14 @@ void handlePostInitMain()
     }
     catch(const boost::interprocess::interprocess_exception& e)
     {
-        fprintf(stderr, _("Cannot obtain a lock on data directory %s. %s is probably already running.").c_str(), GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+        fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
         exitStatus = EXIT_FAILURE;
         GuldenAppManager::gApp->shutdown();
         return;
     }
 }
 
-void handleAppInitResult(bool bResult)
+static void handleAppInitResult(bool bResult)
 {
     if (!bResult)
     {
@@ -136,6 +136,7 @@ bool handlePreInitMain()
         }
         #endif // HAVE_DECL_DAEMON
     }
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////

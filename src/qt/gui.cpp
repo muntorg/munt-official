@@ -1186,10 +1186,16 @@ void GUI::changeEvent(QEvent *e)
 
 void GUI::userWantsToQuit()
 {
-    // close rpcConsole in case it was open to make some space for the shutdown window
-    if (rpcConsole)
-        rpcConsole->close();
-    GuldenAppManager::gApp->shutdown();
+    static bool haveAlreadySignalledShutdown = false;
+    if (!haveAlreadySignalledShutdown)
+    {
+        haveAlreadySignalledShutdown = true;
+
+        // close rpcConsole in case it was open to make some space for the shutdown window
+        if (rpcConsole)
+            rpcConsole->close();
+        GuldenAppManager::gApp->shutdown();
+    }
 }
 
 //NB! This is a bit subtle/tricky, but we want to ignore this close event even when we are closing.
@@ -1206,7 +1212,6 @@ void GUI::closeEvent(QCloseEvent *event)
         return;
     }
 
-    QMainWindow::hide();
     event->ignore();
     #ifndef Q_OS_MAC // Ignored on Mac
     if(clientModel && clientModel->getOptionsModel())
@@ -1218,6 +1223,7 @@ void GUI::closeEvent(QCloseEvent *event)
         }
     }
     #endif
+    QMainWindow::hide();
     //Initiate the exit process
     userWantsToQuit();
 }
