@@ -214,9 +214,11 @@ script: |
     fi
 
     # Tarball of signed executables and debug info - direct to build host
-    find release -not -name '*.dbg' -type f  | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}.zip
-    find release -name '*.dbg' -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}-debug.zip
-    find release -name '*.dbg' -type f | xargs rm -rf
+    cd release
+    find . -not -name '*.dbg' -type f  | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}.zip
+    find . -name '*.dbg' -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}-debug.zip
+    find . -name '*.dbg' -type f | xargs rm -rf
+    cd ..
 
     # Generate NSIS installer
     make deploy
