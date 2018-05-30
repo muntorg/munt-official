@@ -585,6 +585,8 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-setwindowtitle", helptr("Change the window title name, useful for distinguishing multiple program instances during testing."));
     strUsage += HelpMessageOpt("-coinbasesignature", helptr("Insert value into coinbase of generated (mined or witnessed) blocks, useful during testing."));
     strUsage += HelpMessageOpt("-accountpool", helptr("Use to increase the default account pool look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)"));
+    // fixme: (SPV) decide if we want to keep this option
+    strUsage += HelpMessageOpt("-phrase=<phrase>", _("When creating a new wallet use this phrase. Useful for repeatedly starting fresh with the same seed when testing SPV"));
 
     if (showDebug) {
         strUsage += HelpMessageOpt("-rpcworkqueue=<n>", strprintf("Set the depth of the work queue to service RPC calls (default: %d)", DEFAULT_HTTP_WORKQUEUE));

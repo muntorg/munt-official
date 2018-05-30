@@ -183,6 +183,13 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
             }
 
+            // fixme: (SPV) decide if we want to keep this option
+            if (IsArgSet("-phrase")) {
+                SecureString phrase(GetArg("-phrase", ""));
+                GuldenAppManager::gApp->setRecoveryPhrase(phrase);
+                LogPrintf("Using phrase argument for new wallet seed\n");
+            }
+
             if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
             {
                 //Work around an issue with "non HD" wallets from older versions where active account may not be set in the wallet.
