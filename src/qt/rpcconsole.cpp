@@ -790,6 +790,9 @@ void RPCConsole::message(int category, const QString &message, bool html)
 
 void RPCConsole::updateNetworkState()
 {
+    if (!clientModel)
+        return;
+
     QString connections = QString::number(clientModel->getNumConnections()) + " (";
     connections += tr("In:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_IN)) + " / ";
     connections += tr("Out:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_OUT)) + ")";
@@ -816,6 +819,9 @@ void RPCConsole::setNetworkActive([[maybe_unused]] bool networkActive)
 
 void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, [[maybe_unused]] double nVerificationProgress, bool headers)
 {
+    if (!clientModel)
+        return;
+
     if (!headers) {
         ui->numberOfBlocks->setText(QString::number(count));
         ui->lastBlockTime->setText(blockDate.toString());
@@ -994,6 +1000,9 @@ void RPCConsole::peerSelected(const QItemSelection &selected, const QItemSelecti
 
 void RPCConsole::peerLayoutAboutToChange()
 {
+    if (!clientModel)
+        return;
+
     QModelIndexList selected = ui->peerWidget->selectionModel()->selectedIndexes();
     cachedNodeids.clear();
     for(int i = 0; i < selected.size(); i++)

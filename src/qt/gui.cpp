@@ -636,7 +636,9 @@ void GUI::setClientModel(ClientModel *_clientModel)
 
             setOptionsModel(optionsModel);
         }
-    } else {
+    }
+    else
+    {
         // Disable possibility to show main window via action
         toggleHideAction->setEnabled(false);
         if(trayIconMenu)
@@ -645,13 +647,12 @@ void GUI::setClientModel(ClientModel *_clientModel)
             trayIconMenu->clear();
         }
         // Propagate cleared model to child objects
-        rpcConsole->setClientModel(nullptr);
-#ifdef ENABLE_WALLET
+        if (rpcConsole)
+            rpcConsole->setClientModel(nullptr);
+        #ifdef ENABLE_WALLET
         if (walletFrame)
-        {
             walletFrame->setClientModel(nullptr);
-        }
-#endif // ENABLE_WALLET
+        #endif // ENABLE_WALLET
     }
 }
 
@@ -669,8 +670,10 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
 
     //fixme: (2.0) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
-    clientModel->updatePoW2Display();
-    rpcConsole->updatePoW2PhaseState();
+    if (clientModel)
+        clientModel->updatePoW2Display();
+    if (rpcConsole)
+        rpcConsole->updatePoW2PhaseState();
 
     return walletFrame->addWallet(name, walletModel);
 }
@@ -910,6 +913,9 @@ void GUI::gotoSendCoinsPage(QString addr)
 void GUI::updateNetworkState()
 {
     LogPrint(BCLog::QT, "GUI::updateNetworkState\n");
+
+    if (!clientModel)
+        return;
 
     int count = clientModel->getNumConnections();
     float devicePixelRatio = 1.0;

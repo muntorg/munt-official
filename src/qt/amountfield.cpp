@@ -48,7 +48,7 @@ public:
         connect(lineEdit(), SIGNAL(textEdited(QString)), this, SIGNAL(valueChanged()));
     }
 
-    QValidator::State validate(QString &text, int &pos) const
+    QValidator::State validate(QString &text, [[maybe_unused]] int &pos) const
     {
         if(text.isEmpty())
             return QValidator::Intermediate;
@@ -304,18 +304,24 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     layout->addWidget(amountSeperator);
     amountSeperator->setObjectName("amountSeperator");
     amountSeperator->setCursor(Qt::PointingHandCursor);
+    amountSeperator->setContentsMargins(0,0,0,0);
+    amountSeperator->setIndent(0);
 
     secondaryAmountDisplay = new ClickableLabel(this);
     secondaryAmountDisplay->setText(QString("€\u20090.00"));
     layout->addWidget(secondaryAmountDisplay);
     secondaryAmountDisplay->setObjectName("secondaryAmountDisplay");
     secondaryAmountDisplay->setCursor(Qt::PointingHandCursor);
+    secondaryAmountDisplay->setContentsMargins(0,0,0,0);
+    secondaryAmountDisplay->setIndent(0);
 
     tertiaryAmountDisplay = new ClickableLabel(this);
     tertiaryAmountDisplay->setText(QString("(\uF15A\u20090.00)"));
     layout->addWidget(tertiaryAmountDisplay);
     tertiaryAmountDisplay->setObjectName("tertiaryAmountDisplay");
     tertiaryAmountDisplay->setCursor(Qt::PointingHandCursor);
+    tertiaryAmountDisplay->setContentsMargins(0,0,0,0);
+    tertiaryAmountDisplay->setIndent(0);
 
     quadAmountDisplay = new ClickableLabel(this);
     quadAmountDisplay->setText(QString(""));
@@ -323,6 +329,8 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     quadAmountDisplay->setObjectName("quadAmountDisplay");
     quadAmountDisplay->setCursor(Qt::PointingHandCursor);
     quadAmountDisplay->setVisible(false);
+    quadAmountDisplay->setContentsMargins(0,0,0,0);
+    quadAmountDisplay->setIndent(0);
 
     forexError = new QLabel(this);
     forexError->setObjectName("forexError");
@@ -445,6 +453,7 @@ CAmount GuldenAmountField::valueForCurrency(bool *valid_out) const
                         return tertiaryAmount;
                     case AmountFieldCurrency::CurrencyLocal:
                         return quadAmount;
+                    case AmountFieldCurrency::CurrencyGulden:
                     default:
                         assert(0);
                 }
@@ -460,6 +469,7 @@ CAmount GuldenAmountField::valueForCurrency(bool *valid_out) const
                         return tertiaryAmount;
                     case AmountFieldCurrency::CurrencyLocal:
                         return quadAmount;
+                    case AmountFieldCurrency::CurrencyEuro:
                     default:
                         assert(0);
                 }
@@ -475,6 +485,7 @@ CAmount GuldenAmountField::valueForCurrency(bool *valid_out) const
                         return tertiaryAmount;
                     case AmountFieldCurrency::CurrencyLocal:
                         return quadAmount;
+                    case AmountFieldCurrency::CurrencyBitcoin:
                     default:
                         assert(0);
                 }
@@ -491,6 +502,7 @@ CAmount GuldenAmountField::valueForCurrency(bool *valid_out) const
                     break;
                     case AmountFieldCurrency::CurrencyBitcoin:
                         return quadAmount;
+                    case AmountFieldCurrency::CurrencyLocal:
                     default:
                         assert(0);
                 }
