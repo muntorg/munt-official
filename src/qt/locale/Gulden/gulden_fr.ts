@@ -703,7 +703,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Wallet</source>
-        <translation type="unfinished">Porte-monnaie</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Node</source>
@@ -719,7 +719,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Show general overview of wallet</source>
-        <translation type="unfinished">Afficher une vue d’ensemble du porte-monnaie</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Send</source>
@@ -743,15 +743,15 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Browse transaction history</source>
-        <translation type="unfinished">Parcourir l&apos;historique transactionnel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Afficher / cacher</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
-        <translation type="unfinished">Afficher ou cacher la fenêtre principale</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Import key</source>
@@ -771,7 +771,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation type="unfinished">Ouvrir une &amp;URI...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open a gulden: URI or payment request</source>
@@ -779,15 +779,15 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">Sauvegarder le &amp;porte-monnaie...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
-        <translation type="unfinished">Sauvegarder le porte-monnaie vers un autre emplacement</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">Adresses d&apos;&amp;envoi...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -795,7 +795,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">Adresses de &amp;réception...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the list of used receiving addresses and labels</source>
@@ -811,7 +811,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Debug window</source>
-        <translation type="unfinished">Fenêtre de &amp;débogage</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
@@ -819,7 +819,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Command-line options</source>
-        <translation type="unfinished">Options de ligne de &amp;commande</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
@@ -827,7 +827,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation type="unfinished">À &amp;propos de %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -843,19 +843,19 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Chiffrer le porte-monnaie...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Chiffrer les clés privées qui appartiennent à votre porte-monnaie</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">&amp;Changer la phrase de passe...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Modifier la phrase de passe utilisée pour le chiffrement du porte-monnaie</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -871,7 +871,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Change the local currency that is used to display estimates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Modifier la devise interne utilisée pour afficher les estimations</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -879,7 +879,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Paramètres</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Tools</source>
@@ -914,11 +914,11 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished">Synchronisation des en-têtes (%1)...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
-        <translation type="unfinished">Synchronisation avec le réseau…</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -939,8 +939,8 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation type="unfinished">
-            <numerusform>%n bloc d&apos;historique transactionnel a été traité</numerusform>
-            <numerusform>%n blocs d&apos;historique transactionnel ont été traités</numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -949,7 +949,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>%1 behind</source>
-        <translation type="unfinished">en retard de %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
@@ -1017,11 +1017,11 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et est actuellement &lt;b&gt;déverrouillé&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et actuellement &lt;b&gt;verrouillé&lt;/b&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
@@ -1036,7 +1036,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Le paiement maximal autorisé %1 est %2.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Minimum allowed %1 payment is %2.</source>
@@ -1067,7 +1067,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2041,7 +2041,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ouvrir</translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2053,15 +2053,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">+</translation>
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

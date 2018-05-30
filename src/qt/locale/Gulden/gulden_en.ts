@@ -872,7 +872,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Change the local currency that is used to display estimates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Change the local currency that is used to display estimates</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -1068,7 +1068,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2043,7 +2043,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Open</translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2055,15 +2055,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">+</translation>
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

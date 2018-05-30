@@ -43,7 +43,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -207,7 +207,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -557,7 +557,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>New receiving address</source>
@@ -646,7 +646,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -666,7 +666,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Password</source>
-        <translation type="unfinished">Wachtwoord</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change wallet password</source>
@@ -674,19 +674,19 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Backup wallet</source>
-        <translation type="unfinished">Maak een backup van portemonnee</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error importing private key</source>
-        <translation type="unfinished">Error opgetreden tijdens het importeren van de prive sleutel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Invalid private key.</source>
-        <translation type="unfinished">Ongeldige prive sleutel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet already contains key.</source>
@@ -694,7 +694,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Imported legacy</source>
-        <translation type="unfinished">Importeer legacy account</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Failed to add key to wallet.</source>
@@ -726,7 +726,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Send coins to a Gulden address</source>
-        <translation type="unfinished">Verzend Guldens naar een Guldenadres</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Receive</source>
@@ -742,7 +742,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Browse transaction history</source>
-        <translation type="unfinished">Blader door transactieverleden</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -754,31 +754,31 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Import key</source>
-        <translation type="unfinished">Sleutel importeren</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Import a private key address</source>
-        <translation type="unfinished">Prive sleutel importeren</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
-        <translation type="unfinished">Opnieuw scannen naar transacties</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished">Blockchain opnieuw scannen naar missende transacties</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation type="unfinished">&amp;URI openen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished">Open een Gulden: URI of betaalverzoek</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Backup van portemonnee maken...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -786,7 +786,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">Adressen &amp;versturen....</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -794,7 +794,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">Adressen &amp;ontvangen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the list of used receiving addresses and labels</source>
@@ -814,7 +814,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Debug en diagnostische console openen.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -826,7 +826,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation type="unfinished">Over %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -834,7 +834,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation type="unfinished">Over &amp;Qt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -842,7 +842,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">Portemonnee &amp;versleutelen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
@@ -850,7 +850,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">Wachtwoord &amp;wijzigen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -858,7 +858,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Options...</source>
-        <translation type="unfinished">O&amp;pties...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Modify configuration options for %1</source>
@@ -870,7 +870,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Change the local currency that is used to display estimates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wijzig de lokale valuta die wordt gebruikt om schattingen weer te geven</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -882,7 +882,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished">Tools</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -973,27 +973,27 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Date: %1
 </source>
-        <translation type="unfinished">Datum: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Received: %1
 </source>
-        <translation type="unfinished">Ontvangen: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sent: %1
 </source>
-        <translation type="unfinished">Verstuurd: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Type: %1
 </source>
-        <translation type="unfinished">Soort: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Label: %1
 </source>
-        <translation type="unfinished">Omschrijving: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Address: %1
@@ -1011,11 +1011,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;geopend&lt;/b&gt;.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;gesloten&lt;/b&gt;.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
@@ -1061,7 +1061,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1093,7 +1093,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save</source>
@@ -1207,7 +1207,7 @@ Witness gewicht: %5</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1318,7 +1318,7 @@ Witness gewicht: %5</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -1711,7 +1711,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save</source>
@@ -2035,7 +2035,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Open</translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2047,15 +2047,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">+</translation>
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2286,7 +2286,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Close</source>
@@ -2695,7 +2695,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
@@ -3488,7 +3488,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>

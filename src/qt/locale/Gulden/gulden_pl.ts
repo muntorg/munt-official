@@ -678,7 +678,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Backup wallet</source>
-        <translation type="unfinished">&amp;Kopia zapasowa portfela</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error importing private key</source>
@@ -694,7 +694,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Imported legacy</source>
-        <translation type="unfinished">&quot;Imported legacy&quot;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Failed to add key to wallet.</source>
@@ -722,7 +722,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Send</source>
-        <translation type="unfinished">Wyślij</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Send coins to a Gulden address</source>
@@ -766,11 +766,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished">Skanuj łańcuch bloków aby znaleźć brakujących transakcji</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation type="unfinished">Otwórz &amp;URI...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open a gulden: URI or payment request</source>
@@ -786,7 +786,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Adresy wysyłania...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -838,11 +838,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Show information about Qt</source>
-        <translation type="unfinished">Pokazuje informacje o Qt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Zaszyfruj Portfel..</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
@@ -854,7 +854,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Zmień hasło Passphrase użyte do szyfrowania portfela</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -870,7 +870,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Change the local currency that is used to display estimates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zmień walutę lokalną używaną do wyświetlania szacunków</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -895,9 +895,9 @@ The account will continue to be monitored and will be restored should it receive
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
-            <numerusform>%n aktywne połączenie z siecią Gulden</numerusform>
-            <numerusform>%n aktywnych połączeń z siecią Gulden</numerusform>
-            <numerusform>%n aktywnych połączeń z siecią Gulden</numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -939,9 +939,9 @@ The account will continue to be monitored and will be restored should it receive
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation type="unfinished">
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -954,11 +954,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished">odrobienie zaległości... %1% kompletny.&lt;br&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished">Transakcje i salda nie będą dokładne ani poprawne, dopóki synchronizacja nie zostanie zakończona.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error</source>
@@ -981,8 +981,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Received: %1
 </source>
-        <translation type="unfinished">Otrzymano: %1
-</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sent: %1
@@ -1014,7 +1013,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Incoming funds%1</source>
-        <translation type="unfinished">Środki przychodzące%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
@@ -1037,7 +1036,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maksymalna dozwolona %1 płatność to %2.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Minimum allowed %1 payment is %2.</source>
@@ -1068,7 +1067,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2050,7 +2049,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Otwórz</translation>
     </message>
     <message>
         <source>Current PoW² phase</source>
@@ -2062,15 +2061,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">+</translation>
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
