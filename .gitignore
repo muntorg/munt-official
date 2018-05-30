@@ -109,6 +109,7 @@ test/cache/*
 
 libguldenconsensus.pc
 contrib/devtools/split-debug.sh
+contrib/gitian-descriptors/*.yml
 
 #Private local config file for tools
 private.conf
