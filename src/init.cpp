@@ -1069,12 +1069,6 @@ bool AppInitParameterInteraction()
     fCheckpointsEnabled = GetBoolArg("-checkpoints", DEFAULT_CHECKPOINTS_ENABLED);
     SetAutoRequestBlocks(GetBoolArg("-autorequestblocks", DEFAULT_AUTOMATIC_BLOCK_REQUESTS));
 
-    // When using SPV we don't want normal block download to happen when syncing headers,
-    // it could delay SPV scanning
-    if (GetBoolArg("-spv", DEFAULT_SPV)) {
-        PreventBlockDownloadDuringHeaderSync(true);
-    }
-
     hashAssumeValid = uint256S(GetArg("-assumevalid", chainparams.GetConsensus().defaultAssumeValid.GetHex()));
     if (!hashAssumeValid.IsNull())
         LogPrintf("Assuming ancestors of block %s have valid signatures.\n", hashAssumeValid.GetHex());

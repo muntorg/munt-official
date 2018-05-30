@@ -19,6 +19,7 @@
 #include "timedata.h"
 #include "utilmoneystr.h"
 #include "init.h"
+#include "net_processing.h"
 #include <unity/appmanager.h>
 #include <Gulden/mnemonic.h>
 
@@ -515,7 +516,7 @@ bool CWallet::InitLoadWallet()
         pactiveWallet = pwallet;
     }
 
-    if (GetBoolArg("-spv", DEFAULT_SPV)) {
+    if (fSPV) {
         for (CWallet* pwallet : vpwallets)
             pwallet->StartSPV();
     }
@@ -635,6 +636,12 @@ bool CWallet::ParameterInteraction()
     nTxConfirmTarget = GetArg("-txconfirmtarget", DEFAULT_TX_CONFIRM_TARGET);
     bSpendZeroConfChange = GetBoolArg("-spendzeroconfchange", DEFAULT_SPEND_ZEROCONF_CHANGE);
     fWalletRbf = GetBoolArg("-walletrbf", DEFAULT_WALLET_RBF);
+
+    if (GetBoolArg("-spv", DEFAULT_SPV)) {
+        fSPV = true;
+        // When using SPV we don't want normal block download to happen when syncing headers, it could delay SPV scanning
+        PreventBlockDownloadDuringHeaderSync(true);
+    }
 
     return true;
 }
