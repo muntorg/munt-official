@@ -481,6 +481,16 @@ void GuldenApplication::shutdown_InitialUINotification()
     window->hide();
 
     translationInterface.Translate.disconnect(Translate);
+
+    LogPrintf("shutdown UI: disconnect wallet model from core signals\n");
+    if (walletModel)
+        walletModel->unsubscribeFromCoreSignals();
+
+    LogPrintf("shutdown UI: disconnect client model from core signals\n");
+    if (clientModel)
+        clientModel->unsubscribeFromCoreSignals();
+
+    //fixme: (2.1) - disconnect transaction table model here as well?
 }
 
 void GuldenApplication::shutdown_CloseModels()
@@ -488,13 +498,16 @@ void GuldenApplication::shutdown_CloseModels()
     LogPrintf("shutdown UI: disconnect client model\n");
     window->setClientModel(nullptr);
 
-    //NB! We must delete the wallet model now already as otherwise core shutdown cand elete the wallet while wallet model is still open.
+    //NB! We must delete the wallet model now already as otherwise core shutdown can delete the wallet while wallet model is still open.
     #ifdef ENABLE_WALLET
     LogPrintf("shutdown UI: remove all wallet models\n");
     window->removeAllWallets();
     LogPrintf("shutdown UI: delete all wallet models\n");
-    delete walletModel;
-    walletModel = nullptr;
+    if (walletModel)
+    {
+        delete walletModel;
+        walletModel = nullptr;
+    }
     #endif
 
     // Remove all timer slots now already so that they aren't a problem when we are shutting down.

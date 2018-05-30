@@ -266,6 +266,8 @@ public:
     CAccount* getActiveAccount();
     QString getAccountLabel(const boost::uuids::uuid& uuid);
 
+    void unsubscribeFromCoreSignals();
+
 private:
     CWallet *wallet;
     bool fHaveWatchOnly;
@@ -293,7 +295,6 @@ private:
     QTimer *pollTimer;
 
     void subscribeToCoreSignals();
-    void unsubscribeFromCoreSignals();
     void checkBalanceChanged();
 
     QRegularExpression patternMatcherIBAN;

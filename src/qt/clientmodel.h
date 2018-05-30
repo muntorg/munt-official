@@ -98,6 +98,8 @@ public:
     mutable std::atomic<int> cachedProbableHeight;
 
     void updatePoW2Display();
+
+    void unsubscribeFromCoreSignals();
 private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
@@ -106,7 +108,6 @@ private:
     QTimer *pollTimer;
 
     void subscribeToCoreSignals();
-    void unsubscribeFromCoreSignals();
 
 Q_SIGNALS:
     void numConnectionsChanged(int count);

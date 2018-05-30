@@ -54,6 +54,8 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
     cachedPoW2Phase = 1;
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
+
+    //fixme: (2.1) - Get rid of this timer - core signals should handle this.
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     pollTimer->start(MODEL_UPDATE_DELAY);
@@ -63,7 +65,6 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
 
 ClientModel::~ClientModel()
 {
-    unsubscribeFromCoreSignals();
 }
 
 int ClientModel::getNumConnections(unsigned int flags) const
@@ -380,6 +381,9 @@ void ClientModel::subscribeToCoreSignals()
 
 void ClientModel::unsubscribeFromCoreSignals()
 {
+    if (pollTimer)
+    disconnect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
+
     // Disconnect signals from client
     uiInterface.ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
     uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(NotifyNumConnectionsChanged, this, _1));

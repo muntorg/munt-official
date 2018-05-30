@@ -65,6 +65,7 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
     transactionTableModel = new TransactionTableModel(platformStyle, wallet, this);
     recentRequestsTableModel = new RecentRequestsTableModel(wallet, this);
 
+    //fixme: (2.1) - Get rid of this timer - core signals should handle this.
     // This timer will be fired repeatedly to update the balance
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(pollBalanceChanged()));
@@ -75,7 +76,7 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
 
 WalletModel::~WalletModel()
 {
-    unsubscribeFromCoreSignals();
+    LogPrintf("WalletModel::~WalletModel\n");
     wallet = nullptr;
 }
 
@@ -685,15 +686,22 @@ void WalletModel::subscribeToCoreSignals()
 
 void WalletModel::unsubscribeFromCoreSignals()
 {
+    LogPrintf("WalletModel::~unsubscribeFromCoreSignals\n");
+    if (pollTimer)
+    {
+        disconnect(pollTimer, SIGNAL(timeout()), this, SLOT(pollBalanceChanged()));
+    }
     if (wallet)
     {
-        // Disconnect signals from wallet
+        LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect account signals\n");
         //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
         if (wallet->activeAccount)
         {
             wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
             wallet->activeAccount->internalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
         }
+
+        LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect wallet signals\n");
         wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
         wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
         wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
@@ -703,6 +711,7 @@ void WalletModel::unsubscribeFromCoreSignals()
         wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
         wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
         wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
+        LogPrintf("WalletModel::~unsubscribeFromCoreSignals - done disconnecting signals\n");
     }
 }
 
