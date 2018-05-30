@@ -280,7 +280,7 @@ TransactionTableModel::TransactionTableModel(const QStyle *_platformStyle, CWall
 
 TransactionTableModel::~TransactionTableModel()
 {
-    unsubscribeFromCoreSignals();
+    LogPrintf("AccountTableModel::~AccountTableModel\n");
     delete priv;
 }
 

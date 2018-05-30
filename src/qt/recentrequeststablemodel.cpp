@@ -32,6 +32,7 @@ RecentRequestsTableModel::RecentRequestsTableModel(CWallet *wallet, WalletModel 
 
 RecentRequestsTableModel::~RecentRequestsTableModel()
 {
+    LogPrintf("RecentRequestsTableModel::~RecentRequestsTableModel\n");
     /* Intentionally left empty */
 }
 

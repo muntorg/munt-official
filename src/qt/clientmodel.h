@@ -51,7 +51,7 @@ class ClientModel : public QObject
 
 public:
     explicit ClientModel(OptionsModel *optionsModel, QObject *parent = 0);
-    ~ClientModel();
+    virtual ~ClientModel();
 
     OptionsModel *getOptionsModel();
     PeerTableModel *getPeerTableModel();

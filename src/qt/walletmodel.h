@@ -140,7 +140,7 @@ class WalletModel : public QObject
 
 public:
     explicit WalletModel(const QStyle *platformStyle, CWallet *wallet, OptionsModel *optionsModel, QObject *parent = 0);
-    ~WalletModel();
+    virtual ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
     {

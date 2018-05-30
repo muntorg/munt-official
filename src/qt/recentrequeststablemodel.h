@@ -61,7 +61,7 @@ class RecentRequestsTableModel: public QAbstractTableModel
 
 public:
     explicit RecentRequestsTableModel(CWallet *wallet, WalletModel *parent);
-    ~RecentRequestsTableModel();
+    virtual ~RecentRequestsTableModel();
 
     enum ColumnIndex {
         Date = 0,

@@ -22,6 +22,11 @@ AccountTableModel::AccountTableModel(CWallet *wallet, WalletModel *parent)
     connect(parent, SIGNAL(accountAdded(CAccount*)), this, SLOT(accountAdded(CAccount*)));
 }
 
+AccountTableModel::~AccountTableModel()
+{
+    LogPrintf("AccountTableModel::~AccountTableModel\n");
+}
+
 int AccountTableModel::rowCount(const QModelIndex& parent) const
 {
     LOCK(m_wallet->cs_wallet);

@@ -26,6 +26,7 @@ public:
     static const QString Inactive;
 
     explicit AccountTableModel(CWallet *wallet, WalletModel *parent = 0);
+    virtual ~AccountTableModel();
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

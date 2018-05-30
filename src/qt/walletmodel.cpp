@@ -48,14 +48,20 @@
 #include "Gulden/util.h"
 #include "validation.h"
 
-WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent) :
-    QObject(parent), wallet(_wallet), optionsModel(_optionsModel), addressTableModel(0), accountTableModel(0),
-    transactionTableModel(0),
-    recentRequestsTableModel(0),
-    cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
-    cachedEncryptionStatus(Unencrypted),
-    cachedNumBlocks(0),
-    patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$")
+WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent)
+: QObject(parent)
+, wallet(_wallet)
+, optionsModel(_optionsModel)
+, addressTableModel(0)
+, accountTableModel(0)
+, transactionTableModel(0)
+, recentRequestsTableModel(0)
+, cachedBalance(0)
+, cachedUnconfirmedBalance(0)
+, cachedImmatureBalance(0)
+, cachedEncryptionStatus(Unencrypted)
+, cachedNumBlocks(0)
+, patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$")
 {
     fHaveWatchOnly = wallet->HaveWatchOnly();
     fForceCheckBalanceChanged = false;
@@ -691,6 +697,8 @@ void WalletModel::unsubscribeFromCoreSignals()
     {
         disconnect(pollTimer, SIGNAL(timeout()), this, SLOT(pollBalanceChanged()));
     }
+    if (transactionTableModel)
+        transactionTableModel->unsubscribeFromCoreSignals();
     if (wallet)
     {
         LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect account signals\n");

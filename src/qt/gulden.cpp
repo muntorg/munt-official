@@ -505,7 +505,7 @@ void GuldenApplication::shutdown_CloseModels()
     LogPrintf("shutdown UI: delete all wallet models\n");
     if (walletModel)
     {
-        delete walletModel;
+        walletModel->deleteLater();
         walletModel = nullptr;
     }
     #endif
@@ -515,7 +515,7 @@ void GuldenApplication::shutdown_CloseModels()
     window->disconnectNonEssentialSignals();
 
     LogPrintf("shutdown UI: delete client model\n");
-    delete clientModel;
+    clientModel->deleteLater();
     clientModel = nullptr;
 }
 

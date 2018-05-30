@@ -32,7 +32,7 @@ class TransactionTableModel : public QAbstractTableModel
 
 public:
     explicit TransactionTableModel(const QStyle *platformStyle, CWallet* wallet, WalletModel *parent = 0);
-    ~TransactionTableModel();
+    virtual ~TransactionTableModel();
 
     enum ColumnIndex {
         Status = 0,
@@ -97,6 +97,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
     bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
+    void unsubscribeFromCoreSignals();
 
 private:
     CWallet* wallet;
@@ -107,7 +108,6 @@ private:
     const QStyle *platformStyle;
 
     void subscribeToCoreSignals();
-    void unsubscribeFromCoreSignals();
 
     QString lookupAddress(const std::string &address, bool tooltip) const;
     QVariant addressColor(const TransactionRecord *wtx) const;

@@ -181,6 +181,7 @@ AddressTableModel::AddressTableModel(CWallet *_wallet, WalletModel *parent) :
 
 AddressTableModel::~AddressTableModel()
 {
+    LogPrintf("AddressTableModel::~AddressTableModel\n");
     delete priv;
 }
 
