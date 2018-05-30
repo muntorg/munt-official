@@ -374,6 +374,7 @@ void GUI::createToolBars()
         }
 
         ClickableLabel* labelWalletSettings = new ClickableLabel( myAccountsFrame );
+        labelWalletSettings->setTextFormat( Qt::RichText );
         labelWalletSettings->setText( GUIUtil::fontAwesomeRegular("\uf013") );
         labelWalletSettings->setObjectName( "labelWalletSettings" );
         labelWalletSettings->setCursor ( Qt::PointingHandCursor );
@@ -409,8 +410,8 @@ void GUI::createToolBars()
     }
 
     ClickableLabel* addAccButton = new ClickableLabel( this );
-    addAccButton->setObjectName( "add_account_button" );
     addAccButton->setTextFormat( Qt::RichText );
+    addAccButton->setObjectName( "add_account_button" );
     addAccButton->setText( GUIUtil::fontAwesomeRegular("\uf067 ")+tr("Add account") );
     addAccButton->setCursor( Qt::PointingHandCursor );
     accountBar->addWidget( addAccButton );
@@ -1016,7 +1017,7 @@ static QString getAccountLabel(CAccount* account)
     QString accountNamePrefix;
     if ( account->IsMobi() )
     {
-        accountNamePrefix = "\uf10b";
+        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf10b");
     }
     else if ( account->IsPoW2Witness() )
     {
@@ -1033,16 +1034,16 @@ static QString getAccountLabel(CAccount* account)
     }
     else if ( !account->IsHD() )
     {
-        accountNamePrefix = "\uf187";
+        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf187");
     }
     else
     {
-        accountNamePrefix = "\uf09d";
+        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf09d");
     }
     if ( account->IsReadOnly() )
     {
         //fixme: make small if existing prefix
-        accountNamePrefix += "\uf06e";
+        accountNamePrefix += GUIUtil::fontAwesomeLight("\uf06e");
     }
     accountName = QString("<table cellspacing=0 padding=0><tr><td width=10></td><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
 

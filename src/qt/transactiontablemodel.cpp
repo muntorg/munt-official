@@ -440,28 +440,28 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
     switch(wtx->type)
     {
         case TransactionRecord::Generated:
-            return "\uf0c1";
+            return GUIUtil::fontAwesomeRegular("\uf0c1");
         case TransactionRecord::GeneratedWitness:
-            return "\uf0c1";
+            return GUIUtil::fontAwesomeRegular("\uf0c1");
         case TransactionRecord::RecvWithAddress:
         case TransactionRecord::RecvFromOther:
-            return "\uf2f5";
+            return GUIUtil::fontAwesomeRegular("\uf2f5");
         case TransactionRecord::SendToAddress:
         case TransactionRecord::SendToOther:
-            return "\uf2f6";
+            return GUIUtil::fontAwesomeRegular("\uf2f6");
         case TransactionRecord::WitnessFundSend:
         case TransactionRecord::WitnessFundRecv:
-            return "\uf023";
+            return GUIUtil::fontAwesomeRegular("\uf023");
         case TransactionRecord::WitnessEmptySend:
         case TransactionRecord::WitnessEmptyRecv:
-            return "\uf09c";
+            return GUIUtil::fontAwesomeRegular("\uf09c");
         case TransactionRecord::WitnessRenew:
-            return "\uf2f9";
+            return GUIUtil::fontAwesomeRegular("\uf2f9");
         case TransactionRecord::SendToSelf:
         case TransactionRecord::InternalTransfer:
-            return "\uf074";
+            return GUIUtil::fontAwesomeRegular("\uf074");
         case TransactionRecord::Other:
-            return "\uf362";
+            return GUIUtil::fontAwesomeRegular("\uf362");
     }
     return "";
 }
@@ -615,9 +615,9 @@ QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) 
     switch(wtx->status.status)
     {
         case TransactionStatus::Offline:
-            return "\uf1e6";
+            return GUIUtil::fontAwesomeRegular("\uf1e6");
         case TransactionStatus::Unconfirmed:
-            return "\uf254";
+            return GUIUtil::fontAwesomeRegular("\uf254");
         case TransactionStatus::Confirmed:
         case TransactionStatus::Confirming:
             switch(wtx->status.depth)
@@ -632,12 +632,12 @@ QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) 
         case TransactionStatus::OpenUntilBlock:
         case TransactionStatus::OpenUntilDate:
         case TransactionStatus::Immature:
-            return "\uf017";
+            return GUIUtil::fontAwesomeRegular("\uf017");
         case TransactionStatus::Abandoned:
         case TransactionStatus::Conflicted:
         case TransactionStatus::MaturesWarning:
         case TransactionStatus::NotAccepted:
-            return "\uf05e";
+            return GUIUtil::fontAwesomeRegular("\uf05e");
     }
     return "";
 }

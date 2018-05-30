@@ -30,6 +30,7 @@ AccountSummaryWidget::AccountSummaryWidget( CurrencyTicker* ticker, QWidget* par
 {
     ui->setupUi( this );
 
+    ui->accountSettings->setTextFormat( Qt::RichText );
     ui->accountSettings->setText(GUIUtil::fontAwesomeRegular("\uf013"));
 
     //Zero out all margins so that we can handle whitespace in stylesheet instead.

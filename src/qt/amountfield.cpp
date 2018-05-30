@@ -13,6 +13,7 @@
 
 #include "units.h"
 #include "guiconstants.h"
+#include "guiutil.h"
 #include "qvaluecombobox.h"
 
 #include <QApplication>
@@ -298,7 +299,8 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     layout->addWidget(unit);
 
     amountSeperator = new ClickableLabel(this);
-    amountSeperator->setText(QString("\uf0EC"));
+    amountSeperator->setTextFormat( Qt::RichText );
+    amountSeperator->setText(GUIUtil::fontAwesomeRegular("\uf0EC"));
     layout->addWidget(amountSeperator);
     amountSeperator->setObjectName("amountSeperator");
     amountSeperator->setCursor(Qt::PointingHandCursor);

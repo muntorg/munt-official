@@ -681,11 +681,11 @@ static QString categoryIcon(int category)
 {
     switch(category)
     {
-        case RPCConsole::CMD_REQUEST:  return "\uf323";
-        case RPCConsole::CMD_REPLY:    return "\uf324";
-        case RPCConsole::CMD_ERROR:    return "\uf06a";
-        case RPCConsole::CMD_INFO:     return "\uf05a";
-        default:                       return "\uf059";
+        case RPCConsole::CMD_REQUEST:  return GUIUtil::fontAwesomeRegular("\uf323");
+        case RPCConsole::CMD_REPLY:    return GUIUtil::fontAwesomeRegular("\uf324");
+        case RPCConsole::CMD_ERROR:    return GUIUtil::fontAwesomeRegular("\uf06a");
+        case RPCConsole::CMD_INFO:     return GUIUtil::fontAwesomeRegular("\uf05a");
+        default:                       return GUIUtil::fontAwesomeRegular("\uf059");
     }
 }
 
