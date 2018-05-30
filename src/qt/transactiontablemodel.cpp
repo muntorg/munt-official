@@ -280,7 +280,7 @@ TransactionTableModel::TransactionTableModel(const QStyle *_platformStyle, CWall
 
 TransactionTableModel::~TransactionTableModel()
 {
-    LogPrintf("AccountTableModel::~AccountTableModel\n");
+    LogPrintf("TransactionTableModel::~TransactionTableModel\n");
     delete priv;
 }
 

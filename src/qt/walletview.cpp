@@ -42,11 +42,11 @@
 
 
 
-WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent):
-    QStackedWidget(parent),
-    clientModel(0),
-    walletModel(0),
-    platformStyle(_platformStyle)
+WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
+: QStackedWidget(parent)
+, clientModel(0)
+, walletModel(0)
+, platformStyle(_platformStyle)
 {
     // Create tabs
     overviewPage = new OverviewPage(platformStyle);
@@ -113,6 +113,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent):
 
 WalletView::~WalletView()
 {
+    LogPrintf("WalletView::~WalletView");
 }
 
 void WalletView::setGUI(GUI *gui)

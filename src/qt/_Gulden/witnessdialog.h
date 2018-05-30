@@ -45,7 +45,7 @@ class WitnessDialog : public QFrame
 
 public:
     explicit WitnessDialog(const QStyle *platformStyle, QWidget *parent = 0);
-    ~WitnessDialog();
+    virtual ~WitnessDialog();
 
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);

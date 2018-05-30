@@ -296,11 +296,15 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 
 WitnessDialog::~WitnessDialog()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog");
+
     delete ui;
 }
 
 void WitnessDialog::viewWitnessInfoClicked()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::viewWitnessInfoClicked");
+
     ui->unitButton->setVisible(true);
     ui->viewWitnessGraphButton->setVisible(false);
     ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
@@ -308,11 +312,15 @@ void WitnessDialog::viewWitnessInfoClicked()
 
 void WitnessDialog::emptyWitnessClicked()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::emptyWitnessClicked");
+
     Q_EMIT requestEmptyWitness();
 }
 
 void WitnessDialog::fundWitnessClicked()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked");
+
     QModelIndexList selection = ui->fundWitnessAccountTableView->selectionModel()->selectedRows();
     if (selection.count() > 0)
     {
@@ -329,6 +337,8 @@ void WitnessDialog::fundWitnessClicked()
 
 void WitnessDialog::renewWitnessClicked()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked");
+
     QModelIndexList selection = ui->renewWitnessAccountTableView->selectionModel()->selectedRows();
     if (selection.count() > 0)
     {
@@ -345,11 +355,18 @@ void WitnessDialog::renewWitnessClicked()
 
 void WitnessDialog::unitButtonClicked()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::unitButtonClicked");
+
     unitSelectionMenu->exec(ui->unitButton->mapToGlobal(QPoint(0,0)));
 }
 
 void WitnessDialog::updateUnit(int nNewUnit_)
 {
+    LogPrint(BCLog::QT, "WitnessDialog::updateUnit");
+
+    if (!model)
+        return;
+
     model->getOptionsModel()->guldenSettings->setWitnessGraphScale(nNewUnit_);
     update();
 }
@@ -406,7 +423,12 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& poin
 
 void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip)
 {
+    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount");
+
     DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
+
+    if(!filter || !model)
+        return;
 
     GraphScale scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
@@ -638,7 +660,12 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
+    LogPrint(BCLog::QT, "WitnessDialog::update");
+
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
+
+    if(!model)
+        return;
 
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
@@ -789,6 +816,11 @@ void WitnessDialog::update()
 
 void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 {
+    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged");
+
+    if(!filter || !model)
+        return;
+
     //Don't update for every single block change if we are on testnet and have them streaming in at a super fast speed.
     static uint64_t nUpdateTimerStart = 0;
     if (IsArgSet("-testnet"))
@@ -892,6 +924,8 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
 {
+    LogPrint(BCLog::QT, "WitnessDialog::setClientModel");
+
     clientModel = clientModel_;
     if (clientModel)
     {
@@ -939,6 +973,8 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
 
 void WitnessDialog::setModel(WalletModel* _model)
 {
+    LogPrint(BCLog::QT, "WitnessDialog::setModel");
+
     this->model = _model;
 
     if(_model && _model->getOptionsModel())
@@ -986,5 +1022,11 @@ void WitnessDialog::setModel(WalletModel* _model)
 
             connect( _model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
+    }
+    else if(model)
+    {
+        filter.reset(nullptr);
+        disconnect( model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ));
+        model = nullptr;
     }
 }

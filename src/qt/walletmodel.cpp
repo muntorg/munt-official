@@ -83,6 +83,7 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
 WalletModel::~WalletModel()
 {
     LogPrintf("WalletModel::~WalletModel\n");
+    transactionTableModel = nullptr;
     wallet = nullptr;
 }
 

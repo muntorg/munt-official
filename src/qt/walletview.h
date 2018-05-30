@@ -45,7 +45,7 @@ class WalletView : public QStackedWidget
 
 public:
     explicit WalletView(const QStyle *platformStyle, QWidget *parent);
-    ~WalletView();
+    virtual ~WalletView();
 
     void setGUI(GUI *gui);
     /** Set the client model.
