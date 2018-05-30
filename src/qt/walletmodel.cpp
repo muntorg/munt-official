@@ -76,6 +76,7 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
 WalletModel::~WalletModel()
 {
     unsubscribeFromCoreSignals();
+    wallet = nullptr;
 }
 
 CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinControl) const
@@ -85,18 +86,26 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
     {
         return wallet->GetAvailableBalance(coinControl);
     }*/
-
-    return wallet->GetBalance(forAccount, true, false);
+    if (wallet)
+        return wallet->GetBalance(forAccount, true, false);
+    else
+        return 0;
 }
 
 CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 {
-    return wallet->GetUnconfirmedBalance(forAccount);
+    if (wallet)
+        return wallet->GetUnconfirmedBalance(forAccount);
+    else
+        return 0;
 }
 
 CAmount WalletModel::getImmatureBalance() const
 {
-    return wallet->GetImmatureBalance();
+    if (wallet)
+        return wallet->GetImmatureBalance();
+    else
+        return 0;
 }
 
 bool WalletModel::haveWatchOnly() const
@@ -106,17 +115,26 @@ bool WalletModel::haveWatchOnly() const
 
 CAmount WalletModel::getWatchBalance() const
 {
-    return wallet->GetWatchOnlyBalance();
+    if (wallet)
+        return wallet->GetWatchOnlyBalance();
+    else
+        return 0;
 }
 
 CAmount WalletModel::getWatchUnconfirmedBalance() const
 {
-    return wallet->GetUnconfirmedWatchOnlyBalance();
+    if (wallet)
+        return wallet->GetUnconfirmedWatchOnlyBalance();
+    else
+        return 0;
 }
 
 CAmount WalletModel::getWatchImmatureBalance() const
 {
-    return wallet->GetImmatureWatchOnlyBalance();
+    if (wallet)
+        return wallet->GetImmatureWatchOnlyBalance();
+    else
+        return 0;
 }
 
 void WalletModel::updateStatus()
@@ -129,6 +147,9 @@ void WalletModel::updateStatus()
 
 void WalletModel::pollBalanceChanged()
 {
+    if (!wallet)
+        return;
+
     // Get required locks upfront. This avoids the GUI from getting stuck on
     // periodical polls if the core is holding the locks for a longer time -
     // for example, during a wallet rescan.
@@ -463,6 +484,9 @@ RecentRequestsTableModel *WalletModel::getRecentRequestsTableModel()
 
 WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
 {
+    if (!wallet)
+        return Locked;
+
     if(!wallet->IsCrypted())
     {
         return Unencrypted;
@@ -479,6 +503,9 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
 
 bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphrase)
 {
+    if (!wallet)
+        return false;
+
     if(encrypted)
     {
         // Encrypt
@@ -493,6 +520,9 @@ bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphr
 
 bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
 {
+    if (!wallet)
+        return false;
+
     if(locked)
     {
         // Lock
@@ -507,6 +537,9 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
 
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
 {
+    if (!wallet)
+        return false;
+
     bool retval;
     {
         LOCK(wallet->cs_wallet);
@@ -518,6 +551,9 @@ bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureStri
 
 bool WalletModel::backupWallet(const QString &filename)
 {
+    if (!wallet)
+        return false;
+
     return wallet->BackupWallet(filename.toLocal8Bit().data());
 }
 
@@ -626,6 +662,9 @@ static void NotifyWatchonlyChanged(WalletModel *walletmodel, bool fHaveWatchonly
 
 void WalletModel::subscribeToCoreSignals()
 {
+    if (!wallet)
+        return;
+
     // Connect signals to wallet
     //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
     if (wallet->mapAccounts.size() > 0)
@@ -646,22 +685,25 @@ void WalletModel::subscribeToCoreSignals()
 
 void WalletModel::unsubscribeFromCoreSignals()
 {
-    // Disconnect signals from wallet
-    //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
-    if (wallet->activeAccount)
+    if (wallet)
     {
-        wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
-        wallet->activeAccount->internalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        // Disconnect signals from wallet
+        //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
+        if (wallet->activeAccount)
+        {
+            wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+            wallet->activeAccount->internalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        }
+        wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
+        wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+        wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
+        wallet->NotifyAccountWarningChanged.disconnect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
+        wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
+        wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
+        wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
+        wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
+        wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
     }
-    wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
-    wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
-    wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
-    wallet->NotifyAccountWarningChanged.disconnect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
-    wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
-    wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
-    wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
-    wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
-    wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
 }
 
 // WalletModel::UnlockContext implementation
@@ -679,10 +721,10 @@ WalletModel::UnlockContext WalletModel::requestUnlock()
     return UnlockContext(this, valid, was_locked);
 }
 
-WalletModel::UnlockContext::UnlockContext(WalletModel *_wallet, bool _valid, bool _relock):
-        wallet(_wallet),
-        valid(_valid),
-        relock(_relock)
+WalletModel::UnlockContext::UnlockContext(WalletModel *_wallet, bool _valid, bool _relock)
+: wallet(_wallet)
+, valid(_valid)
+, relock(_relock)
 {
 }
 

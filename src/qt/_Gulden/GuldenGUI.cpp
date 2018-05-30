@@ -303,14 +303,22 @@ void GUI::setOptionsModel(OptionsModel* optionsModel_)
 {
     LogPrint(BCLog::QT, "GUI::setOptionsModel\n");
 
-    optionsModel = optionsModel_;
-    ticker->setOptionsModel(optionsModel);
-    optionsModel->setTicker(ticker);
-    optionsModel->setNocksSettings(nocksSettings);
-    if (accountSummaryWidget)
-        accountSummaryWidget->setOptionsModel(optionsModel);
-    connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
-    updateExchangeRates();
+    if (optionsModel_)
+    {
+        optionsModel = optionsModel_;
+        optionsModel->setTicker(ticker);
+        optionsModel->setNocksSettings(nocksSettings);
+        if (accountSummaryWidget)
+            accountSummaryWidget->setOptionsModel(optionsModel);
+        connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+        updateExchangeRates();
+    }
+    else
+    {
+        optionsModel = nullptr;
+        if (accountSummaryWidget)
+            accountSummaryWidget->setOptionsModel(nullptr);
+    }
 }
 
 void GUI::createToolBars()

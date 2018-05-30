@@ -604,27 +604,25 @@ void GUI::setClientModel(ClientModel *_clientModel)
 
         // Keep up to date with client
         updateNetworkState();
-        connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-        connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
         modalOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
         setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL), false);
+
+        connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(headerProgressChanged(int, int)), this, SLOT(setNumHeaders(int,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
         // Receive and report messages from client model
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
         // Show progress dialog
         connect(_clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-        rpcConsole->setClientModel(_clientModel);
-#ifdef ENABLE_WALLET
+        if (rpcConsole)
+            rpcConsole->setClientModel(_clientModel);
+        #ifdef ENABLE_WALLET
         if(walletFrame)
-        {
             walletFrame->setClientModel(_clientModel);
-        }
-#endif // ENABLE_WALLET
+        #endif
+
         OptionsModel* optionsModel = _clientModel->getOptionsModel();
         if(optionsModel)
         {
@@ -640,19 +638,21 @@ void GUI::setClientModel(ClientModel *_clientModel)
     else
     {
         // Disable possibility to show main window via action
-        toggleHideAction->setEnabled(false);
+        if (toggleHideAction)
+            toggleHideAction->setEnabled(false);
+
+        // Disable context menu on tray icon
         if(trayIconMenu)
-        {
-            // Disable context menu on tray icon
             trayIconMenu->clear();
-        }
+
         // Propagate cleared model to child objects
         if (rpcConsole)
             rpcConsole->setClientModel(nullptr);
         #ifdef ENABLE_WALLET
         if (walletFrame)
             walletFrame->setClientModel(nullptr);
-        #endif // ENABLE_WALLET
+        #endif
+        setOptionsModel(nullptr);
     }
 }
 

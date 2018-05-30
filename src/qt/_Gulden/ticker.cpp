@@ -94,8 +94,7 @@ void CurrencyTableModel::balanceChanged(const CAmount& balance, const CAmount& u
 }
 
 CurrencyTicker::CurrencyTicker( QObject* parent )
-: optionsModel( NULL )
-, count(0)
+: count(0)
 {
     netManager = new QNetworkAccessManager( this );
     netManager->setObjectName("currency_ticker_net_manager");
@@ -108,25 +107,6 @@ CurrencyTicker::~CurrencyTicker()
 {
     disconnect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
     disconnect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
-}
-
-void CurrencyTicker::setOptionsModel( OptionsModel* optionsModel_ )
-{
-    /*optionsModel = optionsModel;
-
-    if ( optionsModel )
-    {
-        QNetworkProxy proxy;
-
-        // Query active SOCKS5 proxy
-        if ( optionsModel->getProxySettings( proxy ) )
-        {
-            netManager->setProxy( proxy );
-            qDebug() << "PaymentServer::initNetManager: Using SOCKS5 proxy" << proxy.hostName() << ":" << proxy.port();
-        }
-        else
-            qDebug() << "PaymentServer::initNetManager: No active proxy server found.";
-    }*/
 }
 
 CAmount CurrencyTicker::convertGuldenToForex(CAmount guldenAmount, std::string forexCurrencyCode)

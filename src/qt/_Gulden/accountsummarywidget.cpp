@@ -81,8 +81,15 @@ void AccountSummaryWidget::setActiveAccount(const CAccount* account)
 
 void AccountSummaryWidget::setOptionsModel( OptionsModel* model )
 {
-    optionsModel = model;
-    connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    if (model)
+    {
+        optionsModel = model;
+        connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+    }
+    else
+    {
+        optionsModel = nullptr;
+    }
 }
 
 void AccountSummaryWidget::hideBalances()

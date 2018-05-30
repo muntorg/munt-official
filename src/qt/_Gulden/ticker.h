@@ -60,9 +60,6 @@ public:
     CurrencyTicker(QObject* parent);
     ~CurrencyTicker();
 
-    // OptionsModel is used for getting proxy settings and display unit
-    void setOptionsModel(OptionsModel *optionsModel);
-
     CAmount convertGuldenToForex(CAmount guldenAmount, std::string forexCurrencyCode);
     CAmount convertForexToGulden(CAmount forexAmount, std::string forexCurrencyCode);
 

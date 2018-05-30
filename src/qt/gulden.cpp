@@ -482,14 +482,16 @@ void GuldenApplication::shutdown_InitialUINotification()
 
 void GuldenApplication::shutdown_CloseModels()
 {
-    // Remove all timer slots now already so that they aren't a problem when we are shutting down.
-    window->disconnectNonEssentialSignals();
-
+    //NB! We must delete the wallet model now already as otherwise core shutdown cand elete the wallet while wallet model is still open.
     #ifdef ENABLE_WALLET
     delete walletModel;
     walletModel = 0;
     window->removeAllWallets();
     #endif
+
+    // Remove all timer slots now already so that they aren't a problem when we are shutting down.
+    window->disconnectNonEssentialSignals();
+
     delete clientModel;
     clientModel = nullptr;
 }
