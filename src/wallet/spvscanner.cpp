@@ -31,7 +31,11 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     lastProcessed = FindForkInGlobalIndex(headerChain, locator);
     requestTip = lastProcessed;
 
-    startTime =  std::max(0LL, wallet.GetOldestKeyPoolTime() - startTimeGap);
+    // fixme (SPV): get actual seed time, now for testing hacked to birth of test wallet
+    // was uint64_t seedTime = wallet.GetOldestKeyPoolTime();
+    int64_t seedTime = 1527681623; // 05/30/2018 @ 12:00pm (UTC)
+
+    startTime =  std::max(0LL, seedTime - startTimeGap);
 
     LogPrint(BCLog::WALLET, "Using %s (height = %d) as last processed SPV block\n",
              lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
