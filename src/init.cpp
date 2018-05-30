@@ -168,7 +168,7 @@ static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
 
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
-    LogPrintf("%s: Core interrupt in progress...\n", __func__);
+    LogPrintf("Core interrupt: commence core interrupt\n");
     PoWMineGulden(false, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
@@ -178,12 +178,12 @@ void CoreInterrupt(boost::thread_group& threadGroup)
     InterruptREST();
     InterruptTorControl();
     threadGroup.interrupt_all();
-    LogPrintf("%s: Core interrupt done.\n", __func__);
+    LogPrintf("Core interrupt: done.\n");
 }
 
 void CoreShutdown(boost::thread_group& threadGroup)
 {
-    LogPrintf("%s: Core shutdown in progress...\n", __func__);
+    LogPrintf("Core shutdown: commence core shutdown\n");
     static CCriticalSection cs_Shutdown;
 
     TRY_LOCK(cs_Shutdown, lockShutdown);
@@ -196,8 +196,11 @@ void CoreShutdown(boost::thread_group& threadGroup)
     /// module was initialized.
     mempool.AddTransactionsUpdated(1);
 
+    LogPrintf("Core shutdown: stop network threads.\n");
     if (g_connman)
         g_connman->Stop();
+
+    LogPrintf("Core shutdown: stop remaining worker threads.\n");
     StopHTTPServer();
     StopHTTPRPC();
     StopRPC();
@@ -206,10 +209,13 @@ void CoreShutdown(boost::thread_group& threadGroup)
     threadGroup.join_all();
 
     #ifdef ENABLE_WALLET
+    LogPrintf("Core shutdown: final flush wallets.\n");
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(false);
     }
     #endif
+
+    LogPrintf("Core shutdown: delete network threads.\n");
     MapPort(false);
     UnregisterValidationInterface(peerLogic.get());
     peerLogic.reset();
@@ -232,6 +238,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
         fFeeEstimatesInitialized = false;
     }
 
+    LogPrintf("Core shutdown: close coin databases.\n");
     {
         LOCK(cs_main);
         if (pcoinsTip != NULL) {
@@ -255,20 +262,25 @@ void CoreShutdown(boost::thread_group& threadGroup)
         delete pblocktree;
         pblocktree = NULL;
     }
+
     #ifdef ENABLE_WALLET
+    LogPrintf("Core shutdown: final flush wallets.\n");
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(true);
     }
     #endif
 
     #if ENABLE_ZMQ
-    if (pzmqNotificationInterface) {
+    LogPrintf("Core shutdown: close zmq interfaces.\n");
+    if (pzmqNotificationInterface)
+    {
         UnregisterValidationInterface(pzmqNotificationInterface);
         delete pzmqNotificationInterface;
         pzmqNotificationInterface = NULL;
     }
     #endif
 
+    LogPrintf("Core shutdown: unregister validation interfaces.\n");
     #ifndef WIN32
     try
     {
@@ -280,7 +292,9 @@ void CoreShutdown(boost::thread_group& threadGroup)
     }
     #endif
     UnregisterAllValidationInterfaces();
+
     #ifdef ENABLE_WALLET
+    LogPrintf("Core shutdown: delete wallets.\n");
     for (CWalletRef pwallet : vpwallets)
     {
         delete pwallet;
@@ -289,7 +303,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
     #endif
     globalVerifyHandle.reset();
     ECC_Stop();
-    LogPrintf("%s: Core shutdown done.\n", __func__);
+    LogPrintf("Core shutdown: done.\n");
 }
 
 //Signal handlers should be written in a way that does not result in any unwanted side-effects

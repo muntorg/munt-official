@@ -134,28 +134,34 @@ void GuldenAppManager::shutdownThread()
         #else
         char signalClose = 0;
         ::read(sigtermFd[1], &signalClose, sizeof(signalClose));
-        LogPrintf("%s: App shutdown requested\n", __func__);
+        LogPrintf("shutdown thread: App shutdown requested\n");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         #endif
 
-        LogPrintf("%s: Running App Shutdown in thread\n", __func__);
+        LogPrintf("shutdown thread: Commence app shutdown\n");
 
         try
         {
             // Allow UI to visually alert start of shutdown progress.
+            LogPrintf("shutdown thread: Signal start of shutdown to UI\n");
             signalAppShutdownStarted();
 
             // Notify all core and network threads to start "wrapping up".
+            LogPrintf("shutdown thread: Interrupt core\n");
             CoreInterrupt(threadGroup);
 
             // Notify UI that core shutdown has begun and that it should start disconnecting the various models/signals.
+            LogPrintf("shutdown thread: Signal core interrupt to UI\n");
             signalAppShutdownCoreInterrupted();
 
             // Terminate all core threads.
+            LogPrintf("shutdown thread: Shut down core\n");
             CoreShutdown(threadGroup);
 
-            LogPrintf("%s: App shutdown finished\n", __func__);
+            LogPrintf("shutdown thread: Core shutdown finished, signaling UI to shut itself down\n");
             signalAppShutdownFinished();
+
+            LogPrintf("shutdown thread: Exiting shutdown thread\n");
         }
         catch (const std::exception& e)
         {

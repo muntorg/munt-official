@@ -474,15 +474,19 @@ void GuldenApplication::initializeResult(bool success)
 
 void GuldenApplication::shutdown_InitialUINotification()
 {
+    LogPrintf("shutdown UI: notify user of shutdown and hide window\n");
+
     shutDownRequested = true;
     shutdownWindow = ShutdownWindow::showShutdownWindow(window);
     window->hide();
-    window->setClientModel(nullptr);
+
+    translationInterface.Translate.disconnect(Translate);
 }
 
 void GuldenApplication::shutdown_CloseModels()
 {
     //NB! We must delete the wallet model now already as otherwise core shutdown cand elete the wallet while wallet model is still open.
+    LogPrintf("shutdown UI: delete wallet models\n");
     #ifdef ENABLE_WALLET
     delete walletModel;
     walletModel = 0;
@@ -490,8 +494,12 @@ void GuldenApplication::shutdown_CloseModels()
     #endif
 
     // Remove all timer slots now already so that they aren't a problem when we are shutting down.
+    LogPrintf("shutdown UI: disconnect all timers and non-essential signals\n");
     window->disconnectNonEssentialSignals();
 
+    LogPrintf("shutdown UI: disconnect client model\n");
+    window->setClientModel(nullptr);
+    LogPrintf("shutdown UI: delete client model\n");
     delete clientModel;
     clientModel = nullptr;
 }
@@ -499,11 +507,8 @@ void GuldenApplication::shutdown_CloseModels()
 void GuldenApplication::shutdown_TerminateApp()
 {
     // Finally exit main loop after shutdown finished
-    LogPrintf("%s: Shutting down UI\n", __func__);
-
-    translationInterface.Translate.disconnect(Translate);
-
     //Signal the UI to shut itself down.
+    LogPrintf("shutdown UI: all cleanup done, closing UI\n");
     window->coreAppIsReadyForUIToQuit=true;
     window->close();
     window = 0;
