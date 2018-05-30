@@ -1145,6 +1145,9 @@ void GUI::refreshAccountControls()
                         accountScrollArea->layout()->addWidget( accLabel );
                     }
                     m_accountMap[accLabel] = sortedIter.second;
+                    if (!walletFrame->currentWalletView()->walletModel)
+                        return;
+
                     if (sortedIter.second->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
                         makeActive = accLabel;
                     ++nCount;
@@ -1193,6 +1196,9 @@ void GUI::setActiveAccountButton( ClickableLabel* activeButton )
     {
         if ( walletFrame->currentWalletView()->receiveCoinsPage )
         {
+            if (!walletFrame->currentWalletView()->walletModel)
+                return;
+
             accountSummaryWidget->setActiveAccount( m_accountMap[activeButton] );
             walletFrame->currentWalletView()->walletModel->setActiveAccount( m_accountMap[activeButton] );
 
@@ -1227,9 +1233,11 @@ void GUI::balanceChanged()
 {
     LogPrint(BCLog::QT, "GUI::balanceChanged\n");
 
+    if (!walletFrame || !walletFrame->currentWalletView() || !walletFrame->currentWalletView()->walletModel)
+        return;
+
     // Force receive Qr code to update on balance change.
-    if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->walletModel)
-        updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
+    updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
 }
 
 
@@ -1242,6 +1250,10 @@ void GUI::accountNameChanged(CAccount* account)
     {
         accountDeleted(account);
         ClickableLabel* added = accountAddedHelper(account);
+
+        if (!walletFrame || !walletFrame->currentWalletView() || !walletFrame->currentWalletView()->walletModel)
+            return;
+
         if (account->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
             setActiveAccountButton(added);
     }
@@ -1338,6 +1350,9 @@ void GUI::accountAdded(CAccount* addedAccount)
     //Disable layout to prevent updating to changes immediately
     accountScrollArea->layout()->setEnabled(false);
     {
+        if (!walletFrame || !walletFrame->currentWalletView() || !walletFrame->currentWalletView()->walletModel)
+            return;
+
         ClickableLabel* added = accountAddedHelper(addedAccount);
         if (addedAccount->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
             setActiveAccountButton(added);

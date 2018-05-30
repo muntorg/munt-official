@@ -186,6 +186,9 @@ void WalletFrame::usedReceivingAddresses()
 
 WalletView *WalletFrame::currentWalletView()
 {
+    if (mapWalletViews.count() == 0 || !walletStack->currentWidget())
+        return nullptr;
+
     return qobject_cast<WalletView*>(walletStack->currentWidget());
 }
 
