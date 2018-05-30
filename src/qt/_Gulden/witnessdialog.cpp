@@ -296,14 +296,14 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 
 WitnessDialog::~WitnessDialog()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog");
+    LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
 
     delete ui;
 }
 
 void WitnessDialog::viewWitnessInfoClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::viewWitnessInfoClicked");
+    LogPrint(BCLog::QT, "WitnessDialog::viewWitnessInfoClicked\n");
 
     ui->unitButton->setVisible(true);
     ui->viewWitnessGraphButton->setVisible(false);
@@ -312,14 +312,14 @@ void WitnessDialog::viewWitnessInfoClicked()
 
 void WitnessDialog::emptyWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::emptyWitnessClicked");
+    LogPrint(BCLog::QT, "WitnessDialog::emptyWitnessClicked\n");
 
     Q_EMIT requestEmptyWitness();
 }
 
 void WitnessDialog::fundWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked");
+    LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked\n");
 
     QModelIndexList selection = ui->fundWitnessAccountTableView->selectionModel()->selectedRows();
     if (selection.count() > 0)
@@ -337,7 +337,7 @@ void WitnessDialog::fundWitnessClicked()
 
 void WitnessDialog::renewWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked");
+    LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked\n");
 
     QModelIndexList selection = ui->renewWitnessAccountTableView->selectionModel()->selectedRows();
     if (selection.count() > 0)
@@ -355,14 +355,14 @@ void WitnessDialog::renewWitnessClicked()
 
 void WitnessDialog::unitButtonClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::unitButtonClicked");
+    LogPrint(BCLog::QT, "WitnessDialog::unitButtonClicked\n");
 
     unitSelectionMenu->exec(ui->unitButton->mapToGlobal(QPoint(0,0)));
 }
 
 void WitnessDialog::updateUnit(int nNewUnit_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::updateUnit");
+    LogPrint(BCLog::QT, "WitnessDialog::updateUnit\n");
 
     if (!model)
         return;
@@ -423,7 +423,7 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& poin
 
 void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount");
+    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
 
@@ -660,7 +660,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 
 void WitnessDialog::update()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::update");
+    LogPrint(BCLog::QT, "WitnessDialog::update\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
@@ -816,7 +816,7 @@ void WitnessDialog::update()
 
 void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged");
+    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged\n");
 
     if(!filter || !model)
         return;
@@ -924,7 +924,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setClientModel");
+    LogPrint(BCLog::QT, "WitnessDialog::setClientModel\n");
 
     clientModel = clientModel_;
     if (clientModel)
@@ -973,7 +973,7 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
 
 void WitnessDialog::setModel(WalletModel* _model)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setModel");
+    LogPrint(BCLog::QT, "WitnessDialog::setModel\n");
 
     this->model = _model;
 

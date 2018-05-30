@@ -27,7 +27,7 @@
  */
 bool CWallet::NewKeyPool()
 {
-    LogPrintf("keypool - newkeypool");
+    LogPrintf("keypool - newkeypool\n");
     {
         LOCK(cs_wallet);
         CWalletDB walletdb(*dbw);

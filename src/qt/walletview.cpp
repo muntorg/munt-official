@@ -113,7 +113,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
 
 WalletView::~WalletView()
 {
-    LogPrintf("WalletView::~WalletView");
+    LogPrintf("WalletView::~WalletView\n");
 }
 
 void WalletView::setGUI(GUI *gui)

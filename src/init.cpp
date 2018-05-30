@@ -736,7 +736,7 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
     CValidationState state;
     if (!ActivateBestChain(state, chainparams)) {
-        LogPrintf("Failed to connect best block");
+        LogPrintf("Failed to connect best block\n");
         GuldenAppManager::gApp->shutdown();
     }
 

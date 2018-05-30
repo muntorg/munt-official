@@ -809,7 +809,7 @@ bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
                 CPubKey pubKey;
                 if (!GetPubKey(keyID, pubKey))
                 {
-                    LogPrintf("CAccount::EncryptKeys(): Failed to get pubkey");
+                    LogPrintf("CAccount::EncryptKeys(): Failed to get pubkey\n");
                     return false;
                 }
                 if (pactiveWallet->pwalletdbEncryption)
@@ -820,14 +820,14 @@ bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
                 std::vector<unsigned char> secret;
                 if (!GetKey(keyID, secret))
                 { 
-                    LogPrintf("CAccount::EncryptKeys(): Failed to get crypted key");
+                    LogPrintf("CAccount::EncryptKeys(): Failed to get crypted key\n");
                     return false;
                 }
                 if (pactiveWallet->pwalletdbEncryption)
                 {
                     if (!pactiveWallet->pwalletdbEncryption->WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUIDAsString(getUUID()), KEYCHAIN_EXTERNAL))
                     {
-                        LogPrintf("CAccount::EncryptKeys(): Failed to write key");
+                        LogPrintf("CAccount::EncryptKeys(): Failed to write key\n");
                         return false;
                     }
                 }
@@ -835,7 +835,7 @@ bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
                 {
                     if (!CWalletDB(*pactiveWallet->dbw).WriteCryptedKey(pubKey, secret, pactiveWallet->mapKeyMetadata[keyID], getUUIDAsString(getUUID()), KEYCHAIN_EXTERNAL))
                     {
-                        LogPrintf("CAccount::EncryptKeys(): Failed to write key");
+                        LogPrintf("CAccount::EncryptKeys(): Failed to write key\n");
                         return false;
                     }
                 }
