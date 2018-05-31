@@ -317,6 +317,7 @@ public Q_SLOTS:
     /// Request core initialization
     void requestInitialize();
     void initializeResult(bool success);
+    void shutdown_hideUIForShutdown();
     void shutdown_InitialUINotification();
     void shutdown_CloseModels();
     void shutdown_TerminateApp();
@@ -356,7 +357,8 @@ GuldenApplication::GuldenApplication(int &argc, char **argv)
     /*  communication to and from initialisation/shutdown threads */
     THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalRunawayException, std::string, this, "handleRunawayException");
     THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalAppInitializeResult, bool, this, "initializeResult");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownStarted, this, "shutdown_InitialUINotification");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownStarted, this, "shutdown_hideUIForShutdown");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownAlertUser, this, "shutdown_InitialUINotification");
     THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownCoreInterrupted, this, "shutdown_CloseModels");
     THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownFinished, this, "shutdown_TerminateApp");
 }
@@ -472,15 +474,18 @@ void GuldenApplication::initializeResult(bool success)
     }
 }
 
+void GuldenApplication::shutdown_hideUIForShutdown()
+{
+    LogPrintf("shutdown UI: hide window for clean shutdown\n");
+
+    window->hideForClose();
+    shutDownRequested = true;
+}
+
 void GuldenApplication::shutdown_InitialUINotification()
 {
-    LogPrintf("shutdown UI: notify user of shutdown and hide window\n");
-
-    shutDownRequested = true;
+    LogPrintf("shutdown UI: notify user of shutdown\n");
     shutdownWindow = ShutdownWindow::showShutdownWindow(window);
-    window->hide();
-
-    translationInterface.Translate.disconnect(Translate);
 
     LogPrintf("shutdown UI: disconnect wallet model from core signals\n");
     if (walletModel)
@@ -489,6 +494,8 @@ void GuldenApplication::shutdown_InitialUINotification()
     LogPrintf("shutdown UI: disconnect client model from core signals\n");
     if (clientModel)
         clientModel->unsubscribeFromCoreSignals();
+
+    translationInterface.Translate.disconnect(Translate);
 
     //fixme: (2.1) - disconnect transaction table model here as well?
 }

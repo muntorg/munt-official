@@ -145,24 +145,30 @@ void GuldenAppManager::shutdownThread()
             // Allow UI to visually alert start of shutdown progress.
             LogPrintf("shutdown thread: Signal start of shutdown to UI\n");
             signalAppShutdownStarted();
-            MilliSleep(10);
+            MilliSleep(200);
+
+            LogPrintf("shutdown thread: Signal start of shutdown to UI\n");
+            signalAppShutdownAlertUser();
+            MilliSleep(50);
 
             // Notify all core and network threads to start "wrapping up".
             LogPrintf("shutdown thread: Interrupt core\n");
             CoreInterrupt(threadGroup);
+            MilliSleep(50);
 
             // Notify UI that core shutdown has begun and that it should start disconnecting the various models/signals.
             LogPrintf("shutdown thread: Signal core interrupt to UI\n");
             signalAppShutdownCoreInterrupted();
-            MilliSleep(10);
+            MilliSleep(50);
 
             // Terminate all core threads.
             LogPrintf("shutdown thread: Shut down core\n");
             CoreShutdown(threadGroup);
+            MilliSleep(50);
 
             LogPrintf("shutdown thread: Core shutdown finished, signaling UI to shut itself down\n");
             signalAppShutdownFinished();
-            MilliSleep(10);
+            MilliSleep(50);
 
             LogPrintf("shutdown thread: Exiting shutdown thread\n");
         }

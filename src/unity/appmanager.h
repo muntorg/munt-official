@@ -42,9 +42,10 @@ public:
     //NB! The below signals are -not- from UI thread, if the UI handles them it should take this into account.
     boost::signals2::signal<void (bool initializeResult)> signalAppInitializeResult;
     boost::signals2::signal<bool (), BooleanAndAllReturnValues> signalAboutToInitMain;
-    boost::signals2::signal<void ()> signalAppShutdownFinished;
     boost::signals2::signal<void ()> signalAppShutdownStarted;
+    boost::signals2::signal<void ()> signalAppShutdownAlertUser;
     boost::signals2::signal<void ()> signalAppShutdownCoreInterrupted;
+    boost::signals2::signal<void ()> signalAppShutdownFinished;
     boost::signals2::signal<void (std::string exceptionMessage)> signalRunawayException;
 private:
     std::mutex appManagerInitShutDownMutex;

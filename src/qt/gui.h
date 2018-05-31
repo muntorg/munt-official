@@ -94,6 +94,7 @@ public:
 
     //fixme: (2.1) - The below are all ex GuldenGUI members that should be refactored back into the codebase to clean things up.
     void hideToolBars();
+    void hideForClose();
     void showToolBars();
     void hideBalances();
     void showBalances();

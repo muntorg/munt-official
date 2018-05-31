@@ -199,20 +199,26 @@ void CoreShutdown(boost::thread_group& threadGroup)
     LogPrintf("Core shutdown: stop network threads.\n");
     if (g_connman)
         g_connman->Stop();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
+
 
     LogPrintf("Core shutdown: stop remaining worker threads.\n");
     StopHTTPServer();
     StopHTTPRPC();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     StopRPC();
     StopREST();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     StopTorControl();
     threadGroup.join_all();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
     #ifdef ENABLE_WALLET
     LogPrintf("Core shutdown: final flush wallets.\n");
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(false);
     }
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     #endif
 
     LogPrintf("Core shutdown: delete network threads.\n");
@@ -220,6 +226,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
     UnregisterValidationInterface(peerLogic.get());
     peerLogic.reset();
     g_connman.reset();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
     UnregisterNodeSignals(GetNodeSignals());
     if (fDumpMempoolLater && GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
@@ -262,12 +269,15 @@ void CoreShutdown(boost::thread_group& threadGroup)
         delete pblocktree;
         pblocktree = NULL;
     }
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
+
 
     #ifdef ENABLE_WALLET
     LogPrintf("Core shutdown: final flush wallets.\n");
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(true);
     }
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     #endif
 
     #if ENABLE_ZMQ
@@ -292,6 +302,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
     }
     #endif
     UnregisterAllValidationInterfaces();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
     #ifdef ENABLE_WALLET
     LogPrintf("Core shutdown: delete wallets.\n");
@@ -300,10 +311,12 @@ void CoreShutdown(boost::thread_group& threadGroup)
         delete pwallet;
     }
     vpwallets.clear();
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     #endif
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("Core shutdown: done.\n");
+    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 }
 
 //Signal handlers should be written in a way that does not result in any unwanted side-effects

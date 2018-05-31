@@ -1208,23 +1208,11 @@ void GUI::changeEvent(QEvent *e)
 #endif
 }
 
-void GUI::userWantsToQuit()
-{
-    static bool haveAlreadySignalledShutdown = false;
-    if (!haveAlreadySignalledShutdown)
-    {
-        haveAlreadySignalledShutdown = true;
 
-        // close rpcConsole in case it was open to make some space for the shutdown window
-        if (rpcConsole)
-            rpcConsole->close();
-        GuldenAppManager::gApp->shutdown();
-    }
-}
 
 //NB! This is a bit subtle/tricky, but we want to ignore this close event even when we are closing.
 //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
-//In the meantime we hide the window for immediate user feedback.
+//In the meantime we hide the window for immediate user feedback and cleaner app exit.
 void GUI::closeEvent(QCloseEvent *event)
 {
     LogPrint(BCLog::QT, "GUI::closeEvent\n");
@@ -1237,20 +1225,36 @@ void GUI::closeEvent(QCloseEvent *event)
     }
 
     event->ignore();
-    #ifndef Q_OS_MAC // Ignored on Mac
-    if(clientModel && clientModel->getOptionsModel())
-    {
-        if(clientModel->getOptionsModel()->getMinimizeOnClose())
-        {
-            QMainWindow::showMinimized();
-            return;
-        }
-    }
+    #ifndef Q_OS_MAC // osx is "minimise on close" by default.
+    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
     #endif
-    QMainWindow::hide();
-    //Initiate the exit process
+    {
+        QMainWindow::showMinimized();
+        return;
+    }
+
     userWantsToQuit();
 }
+
+void GUI::hideForClose()
+{
+    QMainWindow::hide();
+    if (rpcConsole)
+        rpcConsole->close();
+}
+
+void GUI::userWantsToQuit()
+{
+     //Initiate the exit process
+    static bool haveAlreadySignalledShutdown = false;
+    if (!haveAlreadySignalledShutdown)
+    {
+        hideForClose();
+        haveAlreadySignalledShutdown = true;
+        GuldenAppManager::gApp->shutdown();
+    }
+}
+
 
 void GUI::showEvent([[maybe_unused]] QShowEvent* event)
 {
