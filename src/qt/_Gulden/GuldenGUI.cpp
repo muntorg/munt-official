@@ -914,7 +914,7 @@ void GUI::showBalances()
 {
     LogPrint(BCLog::QT, "GUI::showBalances\n");
 
-    if (!labelBalance || !labelBalance->isVisible())
+    if (!labelBalance)
         return;
 
     labelBalance->setVisible(true);
