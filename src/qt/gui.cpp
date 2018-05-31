@@ -1224,16 +1224,15 @@ void GUI::closeEvent(QCloseEvent *event)
         return;
     }
 
-    event->ignore();
     #ifndef Q_OS_MAC // osx is "minimise on close" by default.
+    event->ignore();
     if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
-    #endif
     {
         QMainWindow::showMinimized();
         return;
     }
-
     userWantsToQuit();
+    #endif
 }
 
 void GUI::hideForClose()

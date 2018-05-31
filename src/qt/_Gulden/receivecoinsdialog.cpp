@@ -296,7 +296,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     bool externalBuyPage = false;
     #if defined(WIN32)
     // Workaround for bug page crash on 32 bit windows builds
-    // https://github.com/bitcoin/gulden-official/issues/41
+    // https://github.com/gulden/gulden-official/issues/41
     if(_WIN32 && !GetBoolArg("-testbuypage32", false))
         externalBuyPage = true;
     #endif

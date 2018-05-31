@@ -2595,9 +2595,33 @@ UniValue rescan(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    std::thread t(rescanThread).detach();
+    std::thread(rescanThread).detach();
 
     return NullUniValue;
+}
+
+UniValue getrescanprogress(const JSONRPCRequest& request)
+{
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+             "getrescanprogress\n"
+            "\nGet progress of wallet rescan.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getrescanprogress", "\"\"") +
+            "\nAs a JSON-RPC call\n"
+            + HelpExampleRpc("getrescanprogress", "")
+        );
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (!pwallet->IsScanning() || pwallet->IsAbortingRescan())
+        return false;
+
+    return pwallet->GetTransactionScanProgressPercent();
 }
 
 UniValue getwalletinfo(const JSONRPCRequest& request)
@@ -3318,6 +3342,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,   {} },
     //{ "wallet",             "getreceivedbyaccount",     &getreceivedbyaccount,     false,  {"account","minconf"} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false,  {"address","minconf"} },
+    { "wallet",             "getrescanprogress",        &getrescanprogress,           false,  {} },
     { "wallet",             "gettransaction",           &gettransaction,           false,  {"txid","include_watchonly"} },
     { "wallet",             "getunconfirmedbalance",    &getunconfirmedbalance,    false,  {} },
     { "wallet",             "getwalletinfo",            &getwalletinfo,            false,  {} },
