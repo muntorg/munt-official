@@ -2576,6 +2576,30 @@ UniValue settxfee(const JSONRPCRequest& request)
     return true;
 }
 
+UniValue rescan(const JSONRPCRequest& request)
+{
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+             "rescan\n"
+            "\nRun a wallet rescan against the blockchain.\n"
+            "\nExamples:\n"
+            "\nRescan for missing transactions\n"
+            + HelpExampleCli("rescan", "\"\"") +
+            "\nAs a JSON-RPC call\n"
+            + HelpExampleRpc("rescan", "")
+        );
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    std::thread t(rescanThread).detach();
+
+    return NullUniValue;
+}
+
 UniValue getwalletinfo(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -3314,6 +3338,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listunspentforaccount",    &listunspentforaccount,    false,  {"account","minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "lockunspent",              &lockunspent,              true,   {"unlock","transactions"} },
     { "wallet",             "move",                     &movecmd,                  false,  {"fromaccount","toaccount","amount","minconf","comment"} },
+    { "wallet",             "rescan",                   &rescan,                   false,  {} },
     { "wallet",             "sendfrom",                 &sendfrom,                 false,  {"fromaccount","toaddress","amount","minconf","comment","comment_to"} },
     { "wallet",             "sendmany",                 &sendmany,                 false,  {"fromaccount","amounts","minconf","comment","subtractfeefrom"} },
     { "wallet",             "sendtoaddress",            &sendtoaddress,            false,  {"address","amount","comment","comment_to","subtractfeefromamount"} },
