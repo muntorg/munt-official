@@ -207,8 +207,9 @@ void ReceiveCoinsDialog::activeAccountChanged(CAccount* activeAccount)
     setActiveAccount(activeAccount);
 }
 
-void ReceiveCoinsDialog::updateQRCode(const QString& uri)
+void ReceiveCoinsDialog::updateQRCode(const QString& sAddress)
 {
+    QString uri = QString("Gulden:") + sAddress;
     if(!uri.isEmpty())
     {
         // limit URI length

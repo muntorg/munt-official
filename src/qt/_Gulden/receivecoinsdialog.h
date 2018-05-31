@@ -55,7 +55,7 @@ public:
     ~ReceiveCoinsDialog();
 
     void setModel(WalletModel *model);
-    void updateQRCode(const QString& uri);
+    void updateQRCode(const QString& sAddress);
     void setActiveAccount(CAccount* account);
     void setShowCopyQRAsImageButton(bool showCopyQRAsImagebutton_);
     static bool showCopyQRAsImagebutton;
