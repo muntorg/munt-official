@@ -342,9 +342,6 @@ GUI::~GUI()
         rpcConsole = nullptr;
     }
 
-    // Save window size and position for future loads.
-    GUIUtil::saveWindowGeometry("nWindow", this);
-
     // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
     if(trayIcon) 
         trayIcon->hide();
@@ -1244,7 +1241,10 @@ void GUI::hideForClose()
 
 void GUI::userWantsToQuit()
 {
-     //Initiate the exit process
+    // Save window size and position for future loads.
+    GUIUtil::saveWindowGeometry("nWindow", this);
+
+    //Initiate the exit process
     static bool haveAlreadySignalledShutdown = false;
     if (!haveAlreadySignalledShutdown)
     {
