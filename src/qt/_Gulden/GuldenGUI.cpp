@@ -1306,6 +1306,10 @@ void GUI::activeAccountChanged(CAccount* account)
                 accountPair.first->setTextFormat( Qt::RichText );
                 accountPair.first->setText( getAccountLabel(account) );
             }
+            else if (accountPair.first->isChecked())
+            {
+                accountPair.first->setChecked(false);
+            }
         }
     }
 
