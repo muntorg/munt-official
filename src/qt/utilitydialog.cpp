@@ -188,10 +188,9 @@ QWidget *ShutdownWindow::showShutdownWindow(GUI *window)
     QWidget *shutdownWindow = new ShutdownWindow();
     shutdownWindow->setWindowTitle(window->windowTitle());
 
-    // Center shutdown window at where main window was
-    const QPoint global = window->mapToGlobal(window->rect().center());
-    shutdownWindow->move(global.x() - shutdownWindow->width() / 2, global.y() - shutdownWindow->height() / 2);
+    // Center shutdown window at where main window was.
     shutdownWindow->show();
+    GUIUtil::centerWindowGeometry("nWindow", shutdownWindow);
     return shutdownWindow;
 }
 
