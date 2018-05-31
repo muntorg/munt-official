@@ -446,7 +446,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     // fixme: (2.1) Make this work for multiple 'origin' blocks.
     // Iterate the transaction history and extract all 'origin' block details.
     // Also extract details for every witness reward we have received.
-    filter->setAccountFilter(model->getActiveAccount());
+    filter->setAccountFilter(account);
     int rows = filter->rowCount();
     for (int row = 0; row < rows; ++row)
     {
