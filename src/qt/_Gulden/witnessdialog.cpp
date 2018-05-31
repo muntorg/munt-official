@@ -368,7 +368,7 @@ void WitnessDialog::updateUnit(int nNewUnit_)
         return;
 
     model->getOptionsModel()->guldenSettings->setWitnessGraphScale(nNewUnit_);
-    update();
+    doUpdate(true);
 }
 
 static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale)
@@ -661,11 +661,14 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 void WitnessDialog::update()
 {
     LogPrint(BCLog::QT, "WitnessDialog::update\n");
+    doUpdate(false);
+}
+
+void WitnessDialog::doUpdate(bool forceUpdate)
+{
+    LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
-
-    if(!model)
-        return;
 
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
@@ -710,7 +713,7 @@ void WitnessDialog::update()
                     static AccountStatus cachedWarningState = AccountStatus::Default;
 
                     // Prevent same update being called repeatedly for same account/tip (can happen in some event sequences)
-                    if (cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
+                    if (!forceUpdate && cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
                         return;
                     cachedForAccount = forAccount;
                     cachedHashTip = chainActive.Tip()->GetBlockHashPoW2();
@@ -919,7 +922,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
     }
 
     // Update graph and witness info for current account to latest block.
-    update();
+    doUpdate(false);
 }
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)

@@ -147,7 +147,7 @@ void GuldenAppManager::shutdownThread()
             signalAppShutdownStarted();
             MilliSleep(200);
 
-            LogPrintf("shutdown thread: Signal start of shutdown to UI\n");
+            LogPrintf("shutdown thread: Signal UI to alert user of shutdown\n");
             signalAppShutdownAlertUser();
             MilliSleep(50);
 
