@@ -1160,7 +1160,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 
     tooltip += tr("Processed %n block(s) of transaction history.", "", count);
 
-    if (IsInitialBlockDownload())
+    if (IsInitialBlockDownload()  && !fSPV)
     {
         hideBalances();
     }
