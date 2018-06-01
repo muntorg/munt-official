@@ -2621,3 +2621,9 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
     }
     return CRecipient();
 }
+
+int CWallet::ChainHeight()
+{
+    LOCK(cs_main);
+    return fSPV ? headerChain.Height() : chainActive.Height();
+}

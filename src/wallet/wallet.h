@@ -944,8 +944,12 @@ public:
 
     bool BackupWallet(const std::string& strDest);
 
-    private:
+    //! Chain height for wallets (height used depends on SPV).
+    static int ChainHeight();
+
+private:
     int nTransactionScanProgressPercent;
+
     friend class CAccount;
 };
 
