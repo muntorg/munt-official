@@ -275,6 +275,9 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
+    progressBarLabel->setObjectName("progress_bar_label");
+    progressBarLabel->setIndent(0);
+    progressBarLabel->setContentsMargins(0,0,0,0);
     hideProgressBarLabel();
     progressBarLabel->setVisible(false);
     progressBar = new GUIUtil::ProgressBar();

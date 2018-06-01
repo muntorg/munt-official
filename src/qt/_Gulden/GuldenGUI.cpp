@@ -799,7 +799,6 @@ void GUI::doPostInit()
             statusBarStatusAreaLayout->setContentsMargins( 0, 0, 0, 0 );
             statusToolBar->addWidget(statusBarStatusArea);
 
-            progressBarLabel->setObjectName("progress_bar_label");
             statusBarStatusAreaLayout->addWidget(progressBarLabel);
 
             QFrame* statusProgressSpacerL = new QFrame(statusToolBar);

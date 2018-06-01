@@ -427,7 +427,7 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     }
 
     ui->clearButton->setTextFormat( Qt::RichText );
-    ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf057") );
+    ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf12d") );
     ui->fontBiggerButton->setText( GUIUtil::fontAwesomeRegular("\uf00e") );
     ui->fontBiggerButton->setTextFormat( Qt::RichText );
     ui->fontSmallerButton->setText( GUIUtil::fontAwesomeRegular("\uf010") );
