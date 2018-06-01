@@ -794,7 +794,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         }
                         else
                         {
-                            if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true))
+                            if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true) && pactiveWallet->GetImmatureBalance(forAccount) == 0)
                                 stateEmptyWitnessButton = true;
                             else
                                 stateWithdrawEarningsButton = true;
