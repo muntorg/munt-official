@@ -1224,8 +1224,10 @@ void GUI::closeEvent(QCloseEvent *event)
         return;
     }
 
-    #ifndef Q_OS_MAC // osx is "minimise on close" by default.
     event->ignore();
+    #ifdef Q_OS_MAC //Standard osx behaviour is for app to remain open in dock when close button is pushed.
+    QMainWindow::hide();
+    #else
     if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
     {
         QMainWindow::showMinimized();
