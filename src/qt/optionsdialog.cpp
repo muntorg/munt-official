@@ -141,6 +141,10 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     mapper->setOrientation(Qt::Vertical);
 
+    #ifdef Q_OS_MAC
+    ui->minimizeOnClose->setText("M&inimize to dock on close");
+    #endif
+
     /* setup/change UI elements when proxy IPs are invalid/valid */
     ui->proxyIp->setCheckValidator(new ProxyAddressValidator(parent));
     ui->proxyIpTor->setCheckValidator(new ProxyAddressValidator(parent));
@@ -228,8 +232,8 @@ void OptionsDialog::setMapper()
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->hideTrayIcon, OptionsModel::HideTrayIcon);
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
-    mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
 #endif
+    mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
 
     /* Display */
     mapper->addMapping(ui->lang, OptionsModel::Language);
