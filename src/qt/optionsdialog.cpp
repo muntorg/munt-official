@@ -86,10 +86,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     connect(ui->connectSocksTor, SIGNAL(toggled(bool)), this, SLOT(updateProxyValidationState()));
 
     /* Window elements init */
-#ifdef Q_OS_MAC
-    /* remove Window tab on Mac */
-    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabWindow));
-#endif
+    #ifdef Q_OS_MAC
+    // Hide these options on osx as they don't make any sense for the os.
+    ui->hideTrayIcon->setVisible(false);
+    ui->minimizeToTray->setVisible(false);
+    #endif
 
     /* remove Wallet tab in case of -disablewallet */
     if (!enableWallet) {
