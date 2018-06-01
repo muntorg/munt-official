@@ -120,7 +120,13 @@ void OptionsModel::Init(bool resetSettings)
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && !fHideTrayIcon;
 
     if (!settings.contains("fMinimizeOnClose"))
+    {
+        #ifdef Q_OS_MAC //Standard osx behaviour is for app to remain open in dock when close button is pushed.
+        settings.setValue("fMinimizeOnClose", true);
+        #else
         settings.setValue("fMinimizeOnClose", false);
+        #endif
+    }
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display

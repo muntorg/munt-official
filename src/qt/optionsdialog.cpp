@@ -142,7 +142,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper->setOrientation(Qt::Vertical);
 
     #ifdef Q_OS_MAC
-    ui->minimizeOnClose->setText("M&inimize to dock on close");
+    ui->minimizeOnClose->setText(tr("H&ide to dock on close"));
+    ui->minimizeOnClose->setToolTip(tr("Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu."));
     #endif
 
     /* setup/change UI elements when proxy IPs are invalid/valid */
