@@ -1330,22 +1330,35 @@ ClickableLabel* GUI::accountAddedHelper(CAccount* addedAccount)
 {
     if (pactiveWallet)
     {
-        //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton - we lock inside the function and not outside where setActive potentially takes place.
         LOCK(pactiveWallet->cs_wallet);
 
+        QString addedAccountLabel = QString::fromStdString(addedAccount->getLabel());
         auto sortedAccounts = getSortedAccounts();
-        sortedAccounts[QString::fromStdString(addedAccount->getLabel())] = addedAccount;
-        for (const auto& sortedIter : sortedAccounts)
+        if (sortedAccounts.find(addedAccountLabel) != sortedAccounts.end())
         {
-            if (sortedIter.second->getUUID() == addedAccount->getUUID())
+            for (const auto& [accountLabel, account] : m_accountMap)
             {
-                QString label = getAccountLabel(sortedIter.second);
-                ClickableLabel* accLabel = createAccountButton( label );
-                m_accountMap[accLabel] = sortedIter.second;
-                int pos = std::distance(sortedAccounts.begin(), sortedAccounts.find(QString::fromStdString(addedAccount->getLabel())));
-                ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(pos, accLabel);
+                if (account->getUUID() == addedAccount->getUUID())
+                {
+                    return accountLabel;
+                }
+            }
+        }
+
+        sortedAccounts[addedAccountLabel] = addedAccount;
+        uint32_t nCount = 0;
+        for (const auto& [sortedLabel, sortedAccount] : sortedAccounts)
+        {
+            Q_UNUSED(sortedLabel);
+            if (sortedAccount->getUUID() == addedAccount->getUUID())
+            {
+                QString decoratedAccountlabel = getAccountLabel(sortedAccount);
+                ClickableLabel* accLabel = createAccountButton(decoratedAccountlabel);
+                m_accountMap[accLabel] = sortedAccount;
+                ((QVBoxLayout*)accountScrollArea->layout())->insertWidget(nCount, accLabel);
                 return accLabel;
             }
+            nCount++;
         }
     }
     return nullptr;

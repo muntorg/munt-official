@@ -865,59 +865,63 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 
         LOCK(pactiveWallet->cs_wallet);
 
-        for ( const auto& accountPair : pactiveWallet->mapAccounts )
+        for ( const auto& [uuid, account] : pactiveWallet->mapAccounts )
         {
-            AccountStatus prevState = accountPair.second->GetWarningState();
+            Q_UNUSED(uuid);
+            AccountStatus prevState = account->GetWarningState();
             AccountStatus newState = AccountStatus::Default;
             bool bAnyAreMine = false;
-            for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+            if (account->m_State != AccountState::Shadow && account->IsPoW2Witness())
             {
-                if (IsMine(*accountPair.second, witCoin.coin.out))
+                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                 {
-                    bAnyAreMine = true;
-                    CTxOutPoW2Witness details;
-                    GetPow2WitnessOutput(witCoin.coin.out, details);
-                    if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
+                    if (IsMine(*account, witCoin.coin.out))
                     {
-                        newState = AccountStatus::WitnessEnded;
-                    }
-                    else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
-                    {
-                        newState = AccountStatus::WitnessExpired;
-
-                        // Due to lock changing cached balance for certain transactions will now be invalidated.
-                        // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
-                        if (prevState != AccountStatus::WitnessExpired)
+                        bAnyAreMine = true;
+                        CTxOutPoW2Witness details;
+                        GetPow2WitnessOutput(witCoin.coin.out, details);
+                        if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
                         {
-                            for(auto& wtxIter : pactiveWallet->mapWallet)
+                            newState = AccountStatus::WitnessEnded;
+                        }
+                        else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                        {
+                            newState = AccountStatus::WitnessExpired;
+
+                            // Due to lock changing cached balance for certain transactions will now be invalidated.
+                            // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
+                            if (prevState != AccountStatus::WitnessExpired)
                             {
-                                wtxIter.second.clearAllCaches();
+                                for(auto& wtxIter : pactiveWallet->mapWallet)
+                                {
+                                    wtxIter.second.clearAllCaches();
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (!bAnyAreMine)
-            {
-                newState = AccountStatus::WitnessEmpty;
-                filter->setAccountFilter(accountPair.second);
-                int rows = filter->rowCount();
-                for (int row = 0; row < rows; ++row)
+                if (!bAnyAreMine)
                 {
-                    QModelIndex index = filter->index(row, 0);
-
-                    int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
-                    if (nStatus == TransactionStatus::Status::Unconfirmed)
+                    newState = AccountStatus::WitnessEmpty;
+                    filter->setAccountFilter(account);
+                    int rows = filter->rowCount();
+                    for (int row = 0; row < rows; ++row)
                     {
-                        newState = AccountStatus::WitnessPending;
-                        break;
+                        QModelIndex index = filter->index(row, 0);
+
+                        int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                        if (nStatus == TransactionStatus::Status::Unconfirmed)
+                        {
+                            newState = AccountStatus::WitnessPending;
+                            break;
+                        }
                     }
                 }
-            }
-            if (newState != prevState)
-            {
-                accountPair.second->SetWarningState(newState);
-                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, accountPair.second);
+                if (newState != prevState)
+                {
+                    account->SetWarningState(newState);
+                    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, account);
+                }
             }
         }
     }
