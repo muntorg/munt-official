@@ -1210,8 +1210,9 @@ void GUI::changeEvent(QEvent *e)
 
 
 
-//NB! This is a bit subtle/tricky, but we want to ignore this close event even when we are closing.
-//The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
+//NB! This is a bit subtle/tricky, but we want to ignore this close event when fired from the UI to prevent Qt from starting the UI shutdown.
+//The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal back to us when we should actually do so.
+//We only start the actual UI close and let Qt handle it once the core has set coreAppIsReadyForUIToQuit.
 //In the meantime we hide the window for immediate user feedback and cleaner app exit.
 void GUI::closeEvent(QCloseEvent *event)
 {
@@ -1225,13 +1226,14 @@ void GUI::closeEvent(QCloseEvent *event)
     }
 
     event->ignore();
-    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
+    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getDockOnClose())
     {
-        #ifdef Q_OS_MAC //For osx we want to go to the dock rather than minimise
         QMainWindow::hide();
-        #else
+        return;
+    }
+    else if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
+    {
         QMainWindow::showMinimized();
-        #endif
         return;
     }
     userWantsToQuit();

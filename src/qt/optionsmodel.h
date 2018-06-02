@@ -74,6 +74,7 @@ public:
         MinimizeToTray,         // bool
         MapPortUPnP,            // bool
         MinimizeOnClose,        // bool
+        DockOnClose,            // bool
         ProxyUse,               // bool
         ProxyIP,                // QString
         ProxyPort,              // int
@@ -104,6 +105,7 @@ public:
     /* Explicit getters */
     bool getHideTrayIcon() { return fHideTrayIcon; }
     bool getMinimizeToTray() { return fMinimizeToTray; }
+    bool getDockOnClose() { return fDockOnClose; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
@@ -140,6 +142,7 @@ private:
     /* Qt-only settings */
     bool fHideTrayIcon;
     bool fMinimizeToTray;
+    bool fDockOnClose;
     bool fMinimizeOnClose;
     QString language;
     int nDisplayUnit;

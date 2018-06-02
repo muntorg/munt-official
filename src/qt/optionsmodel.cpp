@@ -119,13 +119,19 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && !fHideTrayIcon;
 
+    //Standard osx behaviour is for app to remain open in dock when close button is pushed.
+    if (!settings.contains("fDockOnClose"))
+    {
+        #ifdef Q_OS_MAC 
+        settings.setValue("fDockOnClose", true);
+        #else
+        settings.setValue("fDockOnClose", false);
+        #endif
+    }
+
     if (!settings.contains("fMinimizeOnClose"))
     {
-        #ifdef Q_OS_MAC //Standard osx behaviour is for app to remain open in dock when close button is pushed.
-        settings.setValue("fMinimizeOnClose", true);
-        #else
         settings.setValue("fMinimizeOnClose", false);
-        #endif
     }
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
@@ -265,6 +271,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #endif
         case MinimizeOnClose:
             return fMinimizeOnClose;
+        case DockOnClose:
+            return fDockOnClose;
 
         // default proxy
         case ProxyUse:
@@ -347,6 +355,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();
             settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
+            break;
+        case DockOnClose:
+            fDockOnClose = value.toBool();
+            settings.setValue("fDockOnClose", fDockOnClose);
             break;
 
         // default proxy

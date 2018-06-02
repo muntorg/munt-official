@@ -234,8 +234,10 @@ void OptionsDialog::setMapper()
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->hideTrayIcon, OptionsModel::HideTrayIcon);
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
-#endif
     mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
+#else
+    mapper->addMapping(ui->minimizeOnClose, OptionsModel::DockOnClose);
+#endif
 
     /* Display */
     mapper->addMapping(ui->lang, OptionsModel::Language);
