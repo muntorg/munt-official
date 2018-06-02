@@ -57,7 +57,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
 
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
-    transactionView = new TransactionView(platformStyle, this);
+    transactionView = new TransactionView(this);
     transactionsPage->setObjectName("transactionView");
     transactionView->setObjectName("transactionViewTable");
     vbox->addWidget(transactionView,6);
