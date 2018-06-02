@@ -76,6 +76,11 @@ bool CWallet::IsAllFromMe(const CTransaction& tx, const isminefilter& filter) co
     return true;
 }
 
+int CWallet::GetTransactionScanProgressPercent()
+{
+    return nTransactionScanProgressPercent;
+}
+
 /**
  * Scan the block chain (starting in pindexStart) for transactions
  * from or to us. If fUpdate is true, found transactions that already
@@ -102,7 +107,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         while (pindex && nTimeFirstKey && (pindex->GetBlockTime() < (nTimeFirstKey - TIMESTAMP_WINDOW)))
             pindex = chainActive.Next(pindex);
 
-        ShowProgress(_("Rescanning..."), 0); // show rescan progress in GUI, if -rescan on startup
+        nTransactionScanProgressPercent = 0;
+        ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent); // show rescan progress in GUI, if -rescan on startup
         double dProgressStart = GuessVerificationProgress(chainParams.TxData(), pindex);
         double dProgressTip = GuessVerificationProgress(chainParams.TxData(), chainActive.Tip());
         while (pindex && !fAbortRescan)
@@ -110,13 +116,16 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
             // Temporarily release lock to allow shadow key allocation a chance to do it's thing
             LEAVE_CRITICAL_SECTION(cs_main)
             LEAVE_CRITICAL_SECTION(cs_wallet)
+            double dProgress = GuessVerificationProgress(chainParams.TxData(), pindex);
+            int nTransactionScanProgressPercent = (int)(dProgress - dProgressStart) / (dProgressTip - dProgressStart) * 100;
+            nTransactionScanProgressPercent = std::max(1, std::min(99, nTransactionScanProgressPercent));
             if (pindex->nHeight % 100 == 0 && dProgressTip - dProgressStart > 0.0)
             {
-                ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((GuessVerificationProgress(chainParams.TxData(), pindex) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
+                ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent);
             }
             if (GetTime() >= nNow + 60) {
                 nNow = GetTime();
-                LogPrintf("Still rescanning. At block %d. Progress=%f\n", pindex->nHeight, GuessVerificationProgress(chainParams.TxData(), pindex));
+                LogPrintf("Still rescanning. At block %d. Progress=%d%%\n", pindex->nHeight, nTransactionScanProgressPercent);
             }
             ENTER_CRITICAL_SECTION(cs_main)
             ENTER_CRITICAL_SECTION(cs_wallet)
@@ -137,7 +146,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         if (pindex && fAbortRescan) {
             LogPrintf("Rescan aborted at block %d. Progress=%f\n", pindex->nHeight, GuessVerificationProgress(chainParams.TxData(), pindex));
         }
-        ShowProgress(_("Rescanning..."), 100); // hide progress dialog in GUI
+        nTransactionScanProgressPercent = 100;
+        ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent); // hide progress dialog in GUI
 
         fScanningWallet = false;
     }

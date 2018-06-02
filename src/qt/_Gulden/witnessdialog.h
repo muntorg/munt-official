@@ -68,6 +68,7 @@ public Q_SLOTS:
 protected:
 
 private:
+    void doUpdate(bool forceUpdate=false);
     Ui::WitnessDialog *ui;
     const QStyle *platformStyle;
     ClientModel *clientModel;

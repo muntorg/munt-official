@@ -135,7 +135,7 @@ void ModalOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
     }
 }
 
-void ModalOverlay::tipUpdate(int count, [[maybe_unused]] const QDateTime& blockDate, double nSyncProgress)
+void ModalOverlay::tipUpdate([[maybe_unused]] int count, [[maybe_unused]] const QDateTime& blockDate, double nSyncProgress)
 {
     QDateTime currentDate = QDateTime::currentDateTime();
 

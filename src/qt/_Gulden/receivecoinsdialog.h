@@ -18,6 +18,9 @@
 #include <QVariant>
 #include <QSslError>
 
+//fixme: (2.1) - Set from autotools
+#define HAVE_WEBKIT
+
 //Uncomment the below to build without either webkit or webengine - see https://github.com/Gulden/gulden-official/issues/96
 //#undef HAVE_WEBKIT
 //#undef HAVE_WEBENGINE_VIEW
@@ -52,7 +55,7 @@ public:
     ~ReceiveCoinsDialog();
 
     void setModel(WalletModel *model);
-    void updateQRCode(const QString& uri);
+    void updateQRCode(const QString& sAddress);
     void setActiveAccount(CAccount* account);
     void setShowCopyQRAsImageButton(bool showCopyQRAsImagebutton_);
     static bool showCopyQRAsImagebutton;

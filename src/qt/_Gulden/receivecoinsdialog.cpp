@@ -207,8 +207,9 @@ void ReceiveCoinsDialog::activeAccountChanged(CAccount* activeAccount)
     setActiveAccount(activeAccount);
 }
 
-void ReceiveCoinsDialog::updateQRCode(const QString& uri)
+void ReceiveCoinsDialog::updateQRCode(const QString& sAddress)
 {
+    QString uri = QString("Gulden:") + sAddress;
     if(!uri.isEmpty())
     {
         // limit URI length
@@ -294,12 +295,6 @@ void ReceiveCoinsDialog::gotoReceievePage()
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
     bool externalBuyPage = false;
-    #if defined(WIN32)
-    // Workaround for bug page crash on 32 bit windows builds
-    // https://github.com/bitcoin/gulden-official/issues/41
-    if(_WIN32 && !GetBoolArg("-testbuypage32", false))
-        externalBuyPage = true;
-    #endif
     #if !(defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT))
     externalBuyPage = true;
     #endif

@@ -166,7 +166,7 @@ void TestSendCoins()
     // Create widgets for sending coins and listing transactions.
     std::unique_ptr<const QStyle> platformStyle(new QProxyStyle("windows"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
-    TransactionView transactionView(platformStyle.get());
+    TransactionView transactionView;
     OptionsModel optionsModel;
     WalletModel walletModel(platformStyle.get(), wallet, &optionsModel);
     sendCoinsDialog.setModel(&walletModel);

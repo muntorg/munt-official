@@ -86,10 +86,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     connect(ui->connectSocksTor, SIGNAL(toggled(bool)), this, SLOT(updateProxyValidationState()));
 
     /* Window elements init */
-#ifdef Q_OS_MAC
-    /* remove Window tab on Mac */
-    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabWindow));
-#endif
+    #ifdef Q_OS_MAC
+    // Hide these options on osx as they don't make any sense for the os.
+    ui->hideTrayIcon->setVisible(false);
+    ui->minimizeToTray->setVisible(false);
+    #endif
 
     /* remove Wallet tab in case of -disablewallet */
     if (!enableWallet) {
@@ -140,6 +141,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper = new QDataWidgetMapper(this);
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     mapper->setOrientation(Qt::Vertical);
+
+    #ifdef Q_OS_MAC
+    ui->minimizeOnClose->setText(tr("H&ide to dock on close"));
+    ui->minimizeOnClose->setToolTip(tr("Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu."));
+    #endif
 
     /* setup/change UI elements when proxy IPs are invalid/valid */
     ui->proxyIp->setCheckValidator(new ProxyAddressValidator(parent));
@@ -229,6 +235,8 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->hideTrayIcon, OptionsModel::HideTrayIcon);
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
     mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
+#else
+    mapper->addMapping(ui->minimizeOnClose, OptionsModel::DockOnClose);
 #endif
 
     /* Display */

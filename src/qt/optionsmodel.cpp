@@ -119,8 +119,20 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && !fHideTrayIcon;
 
+    //Standard osx behaviour is for app to remain open in dock when close button is pushed.
+    if (!settings.contains("fDockOnClose"))
+    {
+        #ifdef Q_OS_MAC 
+        settings.setValue("fDockOnClose", true);
+        #else
+        settings.setValue("fDockOnClose", false);
+        #endif
+    }
+
     if (!settings.contains("fMinimizeOnClose"))
+    {
         settings.setValue("fMinimizeOnClose", false);
+    }
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display
@@ -232,7 +244,7 @@ void OptionsModel::Reset()
         GUIUtil::SetStartOnSystemStartup(false);
 }
 
-int OptionsModel::rowCount(const QModelIndex & parent) const
+int OptionsModel::rowCount([[maybe_unused]] const QModelIndex & parent) const
 {
     return OptionIDRowCount;
 }
@@ -259,6 +271,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #endif
         case MinimizeOnClose:
             return fMinimizeOnClose;
+        case DockOnClose:
+            return fDockOnClose;
 
         // default proxy
         case ProxyUse:
@@ -328,7 +342,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case HideTrayIcon:
             fHideTrayIcon = value.toBool();
             settings.setValue("fHideTrayIcon", fHideTrayIcon);
-    		Q_EMIT hideTrayIconChanged(fHideTrayIcon);
+            Q_EMIT hideTrayIconChanged(fHideTrayIcon);
             break;
         case MinimizeToTray:
             fMinimizeToTray = value.toBool();
@@ -341,6 +355,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();
             settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
+            break;
+        case DockOnClose:
+            fDockOnClose = value.toBool();
+            settings.setValue("fDockOnClose", fDockOnClose);
             break;
 
         // default proxy

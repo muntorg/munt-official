@@ -658,6 +658,7 @@ public:
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
     void ClearCacheForTransaction(const uint256& hash);
     bool AddToWalletIfInvolvingMe(const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
+    int GetTransactionScanProgressPercent();
     CBlockIndex* ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
@@ -869,6 +870,8 @@ public:
 
     bool BackupWallet(const std::string& strDest);
 
+    private:
+    int nTransactionScanProgressPercent;
     friend class CAccount;
 };
 

@@ -275,6 +275,9 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
+    progressBarLabel->setObjectName("progress_bar_label");
+    progressBarLabel->setIndent(0);
+    progressBarLabel->setContentsMargins(0,0,0,0);
     hideProgressBarLabel();
     progressBarLabel->setVisible(false);
     progressBar = new GUIUtil::ProgressBar();
@@ -341,9 +344,6 @@ GUI::~GUI()
         delete rpcConsole;
         rpcConsole = nullptr;
     }
-
-    // Save window size and position for future loads.
-    GUIUtil::saveWindowGeometry("nWindow", this);
 
     // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
     if(trayIcon) 
@@ -1210,8 +1210,9 @@ void GUI::changeEvent(QEvent *e)
 
 
 
-//NB! This is a bit subtle/tricky, but we want to ignore this close event even when we are closing.
-//The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal to us when we should actually do so.
+//NB! This is a bit subtle/tricky, but we want to ignore this close event when fired from the UI to prevent Qt from starting the UI shutdown.
+//The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal back to us when we should actually do so.
+//We only start the actual UI close and let Qt handle it once the core has set coreAppIsReadyForUIToQuit.
 //In the meantime we hide the window for immediate user feedback and cleaner app exit.
 void GUI::closeEvent(QCloseEvent *event)
 {
@@ -1225,14 +1226,16 @@ void GUI::closeEvent(QCloseEvent *event)
     }
 
     event->ignore();
-    #ifndef Q_OS_MAC // osx is "minimise on close" by default.
-    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
-    #endif
+    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getDockOnClose())
+    {
+        QMainWindow::hide();
+        return;
+    }
+    else if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
     {
         QMainWindow::showMinimized();
         return;
     }
-
     userWantsToQuit();
 }
 
@@ -1245,7 +1248,10 @@ void GUI::hideForClose()
 
 void GUI::userWantsToQuit()
 {
-     //Initiate the exit process
+    // Save window size and position for future loads.
+    GUIUtil::saveWindowGeometry("nWindow", this);
+
+    //Initiate the exit process
     static bool haveAlreadySignalledShutdown = false;
     if (!haveAlreadySignalledShutdown)
     {

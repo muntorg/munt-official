@@ -368,7 +368,7 @@ void WitnessDialog::updateUnit(int nNewUnit_)
         return;
 
     model->getOptionsModel()->guldenSettings->setWitnessGraphScale(nNewUnit_);
-    update();
+    doUpdate(true);
 }
 
 static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale)
@@ -442,11 +442,12 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     uint64_t nOriginBlock = 0;
     uint64_t nOriginWeight = 0;
     uint64_t nOriginLength = 0;
+    uint64_t nEarningsToDate = 0;
 
     // fixme: (2.1) Make this work for multiple 'origin' blocks.
     // Iterate the transaction history and extract all 'origin' block details.
     // Also extract details for every witness reward we have received.
-    filter->setAccountFilter(model->getActiveAccount());
+    filter->setAccountFilter(account);
     int rows = filter->rowCount();
     for (int row = 0; row < rows; ++row)
     {
@@ -503,6 +504,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
                 {
                     lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
+                    nEarningsToDate += nY;
                     uint64_t nDays = originDate.daysTo(lastEarningsDate);
                     AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
                 }
@@ -510,12 +512,12 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
         }
     }
 
+    QDateTime tipTime = QDateTime::fromTime_t(chainActive.Tip()->GetBlockTime());
     // One last datapoint for 'current' block.
     if (!pointMapGenerated.empty())
     {
         uint64_t nY = pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
-        QDateTime tipTime = QDateTime::fromTime_t(chainActive.Tip()->GetBlockTime());
         uint64_t nDays = originDate.daysTo(tipTime);
         AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
     }
@@ -529,8 +531,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
-        //fixme: (2.0) (HIGH)
-        uint64_t nDays = 0;
+        uint64_t nDays = originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
         AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, scale);
     }
 
@@ -559,7 +560,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
     }
     if (generatedPoints.size() > 1)
     {
-        generatedPoints.back().setY(generatedPoints[generatedPoints.size()-2].y());
+        generatedPoints.back().setY(nEarningsToDate);
     }
     currentEarningsCurveShadow->setSamples( generatedPoints );
     currentEarningsCurve->setSamples( generatedPoints );
@@ -603,7 +604,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
         ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
     }
     ui->labelLastEarningsDateValue->setText(lastEarningsDate.isNull() ? tr("n/a") : lastEarningsDate.toString("dd/MM/yy hh:mm"));
-    ui->labelWitnessEarningsValue->setText(generatedPoints.size() == 0 ? tr("n/a") : QString::number(generatedPoints.back().y(), 'f', 2));
+    ui->labelWitnessEarningsValue->setText(generatedPoints.size() == 0 ? tr("n/a") : QString::number(nEarningsToDate));
 
     uint64_t nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(nOriginWeight, nTotalNetworkWeightTip);
     uint64_t nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(nOriginWeight, nTotalNetworkWeightTip);
@@ -661,11 +662,14 @@ void WitnessDialog::plotGraphForAccount(CAccount* account, uint64_t nTotalNetwor
 void WitnessDialog::update()
 {
     LogPrint(BCLog::QT, "WitnessDialog::update\n");
+    doUpdate(false);
+}
+
+void WitnessDialog::doUpdate(bool forceUpdate)
+{
+    LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
-
-    if(!model)
-        return;
 
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
@@ -710,7 +714,7 @@ void WitnessDialog::update()
                     static AccountStatus cachedWarningState = AccountStatus::Default;
 
                     // Prevent same update being called repeatedly for same account/tip (can happen in some event sequences)
-                    if (cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
+                    if (!forceUpdate && cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
                         return;
                     cachedForAccount = forAccount;
                     cachedHashTip = chainActive.Tip()->GetBlockHashPoW2();
@@ -760,7 +764,8 @@ void WitnessDialog::update()
                             }
                             if (bAnyExpired)
                             {
-                                if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true))
+                                // If the full account balance is spendable than show an "empty account" button otherwise an "empty earnings" button.
+                                if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true) && pactiveWallet->GetImmatureBalance(forAccount) == 0)
                                     stateEmptyWitnessButton2 = true;
                                 else
                                     stateWithdrawEarningsButton2 = true;
@@ -789,7 +794,7 @@ void WitnessDialog::update()
                         }
                         else
                         {
-                            if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true))
+                            if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true) && pactiveWallet->GetImmatureBalance(forAccount) == 0)
                                 stateEmptyWitnessButton = true;
                             else
                                 stateWithdrawEarningsButton = true;
@@ -825,8 +830,8 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
     static uint64_t nUpdateTimerStart = 0;
     if (IsArgSet("-testnet"))
     {
-        // Only update at most once every 20 seconds (prevent this from being a bottleneck on testnet)
-        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > (IsArgSet("-testnet") ? 20000 : 10000)))
+        // Only update at most once every four seconds (prevent this from being a bottleneck on testnet when blocks are coming in fast)
+        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 4000))
         {
             nUpdateTimerStart = GetTimeMillis();
         }
@@ -841,7 +846,6 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
     //However - we would have to update account serialization to serialist the warning state and/or test some things before removing this.
     {
         LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
-        nUpdateTimerStart = GetTimeMillis();
 
         std::unique_ptr<TransactionFilterProxy> filter;
         filter.reset(new TransactionFilterProxy);
@@ -919,7 +923,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
     }
 
     // Update graph and witness info for current account to latest block.
-    update();
+    doUpdate(false);
 }
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
@@ -1020,13 +1024,13 @@ void WitnessDialog::setModel(WalletModel* _model)
             ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFundSorted);
             ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenewSorted);
 
-            connect( _model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+            connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
     }
     else if(model)
     {
         filter.reset(nullptr);
-        disconnect( model, SIGNAL( accountAdded(CAccount*) ), this , SLOT( update() ));
+        disconnect( model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ));
         model = nullptr;
     }
 }

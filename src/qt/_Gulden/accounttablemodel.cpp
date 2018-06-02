@@ -39,7 +39,7 @@ int AccountTableModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-int AccountTableModel::columnCount(const QModelIndex & parent) const
+int AccountTableModel::columnCount([[maybe_unused]] const QModelIndex & parent) const
 {
     return 2;
 }

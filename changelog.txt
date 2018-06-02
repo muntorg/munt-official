@@ -13,6 +13,8 @@ RPC - New command 'fundwitnessaccount' used to lock funds into a witness account
 RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
 RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
 RPC - New command 'listunspentforaccount' as account specific counterpart for listunspent.
+RPC - New command 'rescan' to trigger a wallet rescan (Same as Tools>rescan via UI).
+RPC - New command 'getrescanprogress' to view the progress percentageof an ongoing wallet rescan.
 RPC - Add account capability to 'sendmany' command.
 RPC - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
 

@@ -120,6 +120,18 @@ void burnTextEditMemory(QTextEdit* edit)
     edit->clear();
 }
 
+static void setAccountLabelSelected(ClickableLabel* checkLabel)
+{
+    checkLabel->setChecked(true);
+    checkLabel->setCursor ( Qt::ArrowCursor );
+}
+
+static void setAccountLabelUnselected(ClickableLabel* checkLabel)
+{
+    checkLabel->setChecked(false);
+    checkLabel->setCursor ( Qt::PointingHandCursor );
+}
+
 bool requestUnlockDialogAlreadyShowing=false;
 void GUI::NotifyRequestUnlock(void* wallet, QString reason)
 {
@@ -275,7 +287,6 @@ void GUI::requestFundWitness(CAccount* funderAccount)
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
     pactiveWallet->setActiveAccount(funderAccount);
-    refreshAccountControls();
     gotoSendCoinsPage();
     walletFrame->currentWalletView()->sendCoinsPage->gotoWitnessTab(targetWitnessAccount);
 }
@@ -788,7 +799,6 @@ void GUI::doPostInit()
             statusBarStatusAreaLayout->setContentsMargins( 0, 0, 0, 0 );
             statusToolBar->addWidget(statusBarStatusArea);
 
-            progressBarLabel->setObjectName("progress_bar_label");
             statusBarStatusAreaLayout->addWidget(progressBarLabel);
 
             QFrame* statusProgressSpacerL = new QFrame(statusToolBar);
@@ -914,7 +924,7 @@ void GUI::showBalances()
 {
     LogPrint(BCLog::QT, "GUI::showBalances\n");
 
-    if (!labelBalance || !labelBalance->isVisible())
+    if (!labelBalance)
         return;
 
     labelBalance->setVisible(true);
@@ -1122,7 +1132,6 @@ void GUI::refreshAccountControls()
             m_accountMap.clear();
 
             // Sort the accounts.
-            ClickableLabel* makeActive = NULL;
             auto sortedAccounts = getSortedAccounts();
             {
                 //NB! Mutex scope here is important to avoid deadlock inside setActiveAccountButton
@@ -1149,7 +1158,10 @@ void GUI::refreshAccountControls()
                         return;
 
                     if (sortedIter.second->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
-                        makeActive = accLabel;
+                        setAccountLabelSelected(accLabel);
+                    else
+                        setAccountLabelUnselected(accLabel);
+
                     ++nCount;
                 }
 
@@ -1159,8 +1171,6 @@ void GUI::refreshAccountControls()
                     accountScrollArea->layout()->removeWidget(allLabels[nCount]);
                 }
             }
-            if (makeActive)
-                setActiveAccountButton( makeActive );
         }
         // Force layout to update now that all the changes are made.
         accountScrollArea->layout()->setEnabled(true);
@@ -1185,11 +1195,9 @@ void GUI::setActiveAccountButton( ClickableLabel* activeButton )
 
     for ( const auto & button : accountBar->findChildren<ClickableLabel*>( "" ) )
     {
-        button->setChecked( false );
-        button->setCursor( Qt::PointingHandCursor );
+        setAccountLabelUnselected(button);
     }
-    activeButton->setChecked( true );
-    activeButton->setCursor( Qt::ArrowCursor );
+    setAccountLabelSelected(activeButton);
 
      // Update the account
     if ( walletFrame->currentWalletView() )
@@ -1255,7 +1263,7 @@ void GUI::accountNameChanged(CAccount* account)
             return;
 
         if (account->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
-            setActiveAccountButton(added);
+            setAccountLabelSelected(added);
     }
     // Force layout to update now that all the changes are made.
     accountScrollArea->layout()->setEnabled(true);
@@ -1301,10 +1309,13 @@ void GUI::activeAccountChanged(CAccount* account)
                 haveAccount = true;
                 if (!accountPair.first->isChecked())
                 {
-                    setActiveAccountButton(accountPair.first);
+                    setAccountLabelSelected(accountPair.first);
                 }
-                accountPair.first->setTextFormat( Qt::RichText );
                 accountPair.first->setText( getAccountLabel(account) );
+            }
+            else if (accountPair.first->isChecked())
+            {
+                setAccountLabelUnselected(accountPair.first);
             }
         }
     }
@@ -1355,7 +1366,7 @@ void GUI::accountAdded(CAccount* addedAccount)
 
         ClickableLabel* added = accountAddedHelper(addedAccount);
         if (addedAccount->getUUID() == walletFrame->currentWalletView()->walletModel->getActiveAccount()->getUUID())
-            setActiveAccountButton(added);
+            setAccountLabelSelected(added);
     }
     // Force layout to update now that all the changes are made.
     accountScrollArea->layout()->setEnabled(true);

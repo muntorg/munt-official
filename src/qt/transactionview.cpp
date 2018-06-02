@@ -45,9 +45,14 @@
 #include <QUrl>
 #include <QVBoxLayout>
 
-TransactionView::TransactionView(const QStyle *platformStyle, QWidget *parent) :
-    QWidget(parent), model(0), transactionProxyModel(0),
-    transactionView(0), abandonAction(0), bumpFeeAction(0), columnResizingFixer(0)
+TransactionView::TransactionView(QWidget *parent)
+: QWidget(parent)
+, model(nullptr)
+, transactionProxyModel(nullptr)
+, transactionView(nullptr)
+, abandonAction(nullptr)
+, bumpFeeAction(nullptr)
+, columnResizingFixer(nullptr)
 {
     // Build filter row
     setContentsMargins(0,0,0,0);
@@ -55,28 +60,15 @@ TransactionView::TransactionView(const QStyle *platformStyle, QWidget *parent) :
     QHBoxLayout *hlayout = new QHBoxLayout();
     hlayout->setContentsMargins(0,0,0,0);
 
-    /*if (platformStyle->getUseExtraSpacing()) {
-        hlayout->setSpacing(5);
-        hlayout->addSpacing(26);
-    } else {
-        hlayout->setSpacing(0);
-        hlayout->addSpacing(23);
-    }*/
-
     //fixme: (WATCHONLY)
     /*watchOnlyWidget = new QComboBox(this);
     watchOnlyWidget->setFixedWidth(24);
     watchOnlyWidget->addItem("", TransactionFilterProxy::WatchOnlyFilter_All);
-    watchOnlyWidget->addItem(platformStyle->SingleColorIcon(":/icons/eye_plus"), "", TransactionFilterProxy::WatchOnlyFilter_Yes);
-    watchOnlyWidget->addItem(platformStyle->SingleColorIcon(":/icons/eye_minus"), "", TransactionFilterProxy::WatchOnlyFilter_No);
+    watchOnlyWidget->addItem(":/icons/eye_plus", "", TransactionFilterProxy::WatchOnlyFilter_Yes);
+    watchOnlyWidget->addItem(":/icons/eye_minus", "", TransactionFilterProxy::WatchOnlyFilter_No);
     hlayout->addWidget(watchOnlyWidget);*/
 
     dateWidget = new QComboBox(this);
-    /*if (platformStyle->getUseExtraSpacing()) {
-        dateWidget->setFixedWidth(121);
-    } else {
-        dateWidget->setFixedWidth(120);
-    }*/
     dateWidget->addItem(tr("All dates"), All);
     dateWidget->addItem(tr("Today"), Today);
     dateWidget->addItem(tr("This week"), ThisWeek);
@@ -87,11 +79,6 @@ TransactionView::TransactionView(const QStyle *platformStyle, QWidget *parent) :
     hlayout->addWidget(dateWidget);
 
     typeWidget = new QComboBox(this);
-    /*if (platformStyle->getUseExtraSpacing()) {
-        typeWidget->setFixedWidth(121);
-    } else {
-        typeWidget->setFixedWidth(120);
-    }*/
 
     typeWidget->addItem(tr("All transaction types"), TransactionFilterProxy::ALL_TYPES);
     typeWidget->addItem(tr("Received with"), TransactionFilterProxy::TYPE(TransactionRecord::RecvWithAddress) |
@@ -146,13 +133,7 @@ TransactionView::TransactionView(const QStyle *platformStyle, QWidget *parent) :
     vlayout->addWidget(createDateRangeWidget());
     vlayout->addWidget(view);
     vlayout->setSpacing(0);
-    /*int width = view->verticalScrollBar()->sizeHint().width();
-    // Cover scroll bar width with spacing
-    if (platformStyle->getUseExtraSpacing()) {
-        hlayout->addSpacing(width+2);
-    } else {
-        hlayout->addSpacing(width);
-    }*/
+
     // Always show scroll bar
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     view->setTabKeyNavigation(false);
