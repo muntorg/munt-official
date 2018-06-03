@@ -183,11 +183,14 @@ void TestSendCoins()
     QVERIFY(FindTx(*transactionTableModel, txid1).isValid());
     QVERIFY(FindTx(*transactionTableModel, txid2).isValid());
 
+    //fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+    #if 0
     // Call bumpfee. Test disabled, canceled, enabled, then failing cases.
     BumpFee(transactionView, txid1, true /* expect disabled */, "not BIP 125 replaceable" /* expected error */, false /* cancel */);
     BumpFee(transactionView, txid2, false /* expect disabled */, {} /* expected error */, true /* cancel */);
     BumpFee(transactionView, txid2, false /* expect disabled */, {} /* expected error */, false /* cancel */);
     BumpFee(transactionView, txid2, true /* expect disabled */, "already bumped" /* expected error */, false /* cancel */);
+    #endif
 
     wallet->Flush(true);
     delete wallet;
