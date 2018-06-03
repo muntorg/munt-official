@@ -54,6 +54,11 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
 BasicTestingSetup::~BasicTestingSetup()
 {
         ECC_Stop();
+        if (g_connman)
+        {
+            g_connman->Interrupt();
+            g_connman->Stop();
+        }
         g_connman.reset();
 }
 
@@ -126,8 +131,7 @@ TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
 // Create a new block with just given transactions, coinbase paying to
 // scriptPubKey, and try to add it to the current chain.
 //
-CBlock
-TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, const CScript& scriptPubKey)
+CBlock TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, const CScript& scriptPubKey)
 {
     const CChainParams& chainparams = Params();
     std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(chainparams).CreateNewBlock(chainActive.Tip(), scriptPubKey);
@@ -135,16 +139,19 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
 
     // Replace mempool-selected txns with just coinbase plus passed-in txns:
     block.vtx.resize(1);
-    for(const CMutableTransaction& tx : txns)
+    for (const CMutableTransaction& tx : txns)
         block.vtx.push_back(MakeTransactionRef(tx));
     // IncrementExtraNonce creates a valid coinbase and merkleRoot
-    unsigned int extraNonce = 0;
-    IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
+    {
+        LOCK(cs_main);
+        unsigned int extraNonce = 0;
+        IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
+    }
 
     while (!CheckProofOfWork(block.GetPoWHash(), block.nBits, chainparams.GetConsensus())) ++block.nNonce;
 
     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-    ProcessNewBlock(chainparams, shared_pblock, true, NULL);
+    ProcessNewBlock(chainparams, shared_pblock, true, nullptr);
 
     CBlock result = block;
     return result;

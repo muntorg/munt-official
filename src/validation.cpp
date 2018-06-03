@@ -1119,7 +1119,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     //fixme: (2.0) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
-                    mempool.removeRecursive(tx, MemPoolRemovalReason::CONFLICT);
+                    mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
                     return state.DoS(100, error("ConnectBlock(): inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                 }
 
