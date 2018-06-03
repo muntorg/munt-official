@@ -938,7 +938,7 @@ bool GUI::welcomeScreenIsVisible()
     return welcomeScreen != NULL;
 }
 
-QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight)
+QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight, QString objectName)
 {
     LogPrint(BCLog::QT, "GUI::createDialog\n");
 
@@ -948,6 +948,9 @@ QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabe
     QVBoxLayout* vbox = new QVBoxLayout();
     vbox->setSpacing(0);
     vbox->setContentsMargins( 0, 0, 0, 0 );
+
+    if (!objectName.isEmpty())
+        d->setObjectName(objectName);
 
     QLabel* labelDialogMessage = new QLabel(d);
     labelDialogMessage->setText(message);
@@ -985,6 +988,7 @@ QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabe
 
     if(!confirmLabel.isEmpty())
     {
+        buttonBox->button(QDialogButtonBox::Ok)->setObjectName("dialogConfirmButton");
         buttonBox->button(QDialogButtonBox::Ok)->setText(confirmLabel);
         buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
         buttonBox->button(QDialogButtonBox::Ok)->setStyleSheet(GULDEN_DIALOG_CONFIRM_BUTTON_STYLE);
@@ -993,6 +997,7 @@ QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabe
 
     if (!cancelLabel.isEmpty())
     {
+        buttonBox->button(QDialogButtonBox::Reset)->setObjectName("dialogCancelButton");
         buttonBox->button(QDialogButtonBox::Reset)->setText(cancelLabel);
         buttonBox->button(QDialogButtonBox::Reset)->setCursor(Qt::PointingHandCursor);
         buttonBox->button(QDialogButtonBox::Reset)->setStyleSheet(GULDEN_DIALOG_CANCEL_BUTTON_STYLE);
@@ -1420,46 +1425,9 @@ void GUI::promptImportPrivKey()
     LogPrint(BCLog::QT, "GUI::promptImportPrivKey\n");
 
     ImportPrivKeyDialog dlg(this);
-    dlg.exec();
-
-    CGuldenSecret vchSecret;
-    bool fGood = vchSecret.SetString(dlg.getPrivKey().c_str());
-
-    if (fGood)
+    if (dlg.exec())
     {
-        LOCK2(cs_main, pactiveWallet->cs_wallet);
-
-        CKey key = vchSecret.GetKey();
-        if (!key.IsValid())
-        {
-            message(tr("Error importing private key"), tr("Invalid private key."), CClientUIInterface::MSG_ERROR, NULL);
-            return;
-        }
-
-        CPubKey pubkey = key.GetPubKey();
-        assert(key.VerifyPubKey(pubkey));
-        CKeyID vchAddress = pubkey.GetID();
-
-        //Don't import an address that is already in wallet.
-        if (pactiveWallet->HaveKey(vchAddress))
-        {
-            message(tr("Error importing private key"), tr("Wallet already contains key."), CClientUIInterface::MSG_ERROR, NULL);
-            return;
-        }
-
-        CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(tr("Imported legacy").toStdString());
-        pactiveWallet->MarkDirty();
-        pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
-
-        if (!pactiveWallet->AddKeyPubKey(key, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
-        {
-            message(tr("Error importing private key"), tr("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR, NULL);
-            return;
-        }
-
-        // Whenever a key is imported, we need to scan the whole chain - do so now
-        pactiveWallet->nTimeFirstKey = 1;
-        boost::thread t(rescanThread); // thread runs free
+        pactiveWallet->importPrivKey(dlg.getPrivKey());
     }
 }
 

@@ -513,7 +513,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     }
 
 
-    QDialog* d = GUI::createDialog(this, questionString.arg(formatted.join("<br />")), tr("Send"), tr("Cancel"), 600, 360);
+    QDialog* d = GUI::createDialog(this, questionString.arg(formatted.join("<br />")), tr("Send"), tr("Cancel"), 600, 360, "SendConfirmationDialog");
 
     int result = d->exec();
     if(result != QDialog::Accepted)

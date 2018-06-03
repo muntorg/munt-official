@@ -42,12 +42,17 @@ void ConfirmMessage(QString* text = nullptr)
 //! Press "Yes" or "Cancel" buttons in modal send confirmation dialog.
 void ConfirmSend(QString* text = nullptr, bool cancel = false)
 {
-    QTimer::singleShot(0, makeCallback([text, cancel](Callback* callback) {
-        for (QWidget* widget : QApplication::topLevelWidgets()) {
-            if (widget->inherits("SendConfirmationDialog")) {
-                SendConfirmationDialog* dialog = qobject_cast<SendConfirmationDialog*>(widget);
-                if (text) *text = dialog->text();
-                QAbstractButton* button = dialog->button(cancel ? QMessageBox::Cancel : QMessageBox::Yes);
+    QTimer::singleShot(0, makeCallback([text, cancel](Callback* callback)
+    {
+        for (QWidget* widget : QApplication::topLevelWidgets())
+        {
+            if (widget->objectName() == ("SendConfirmationDialog"))
+            {
+                QDialog* dialog = qobject_cast<QDialog*>(widget);
+                if (text)
+                    *text = dialog->findChild<QLabel*>("labelDialogMessage")->text();
+
+                QAbstractButton* button = dialog->findChild<QAbstractButton*>(cancel ? "dialogCancelButton" : "dialogConfirmButton");
                 button->setEnabled(true);
                 button->click();
             }
@@ -61,12 +66,12 @@ uint256 SendCoins(CWallet& wallet, SendCoinsDialog& sendCoinsDialog, const CGuld
 {
     QVBoxLayout* entries = sendCoinsDialog.findChild<QVBoxLayout*>("entries");
     GuldenSendCoinsEntry* entry = qobject_cast<GuldenSendCoinsEntry*>(entries->itemAt(0)->widget());
-    entry->findChild<QValidatedLineEdit*>("payTo")->setText(QString::fromStdString(address.ToString()));
+    entry->findChild<QLineEdit*>("receivingAddress")->setText(QString::fromStdString(address.ToString()));
     entry->findChild<GuldenAmountField*>("payAmount")->setValue(amount);
-    sendCoinsDialog.findChild<QFrame*>("frameFee")
+    /*sendCoinsDialog.findChild<QFrame*>("frameFee")
         ->findChild<QFrame*>("frameFeeSelection")
         ->findChild<QCheckBox*>("optInRBF")
-        ->setCheckState(rbf ? Qt::Checked : Qt::Unchecked);
+        ->setCheckState(rbf ? Qt::Checked : Qt::Unchecked);*/
     uint256 txid;
     boost::signals2::scoped_connection c(wallet.NotifyTransactionChanged.connect([&txid](CWallet*, const uint256& hash, ChangeType status) {
         if (status == CT_NEW) txid = hash;
@@ -154,11 +159,8 @@ void TestSendCoins()
     wallet->LoadWallet(loadState);
     {
         LOCK(wallet->cs_wallet);
-        //fixme: (2.1) (MERGE)
-        /*
-        wallet.SetAddressBook(CGuldenAddress(test.coinbaseKey.GetPubKey()).ToString(), "", "receive");
-        wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
-        */
+
+        wallet->importPrivKey(test.coinbaseKey);
     }
     wallet->ScanForWalletTransactions(chainActive.Genesis(), true);
     wallet->SetBroadcastTransactions(true);
