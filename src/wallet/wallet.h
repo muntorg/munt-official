@@ -641,6 +641,9 @@ public:
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
     unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
+    void importPrivKey(const SecureString& sKey);
+    void importPrivKey(const CKey& privKey);
+
     /** 
      * Increment the next transaction order id
      * @return next transaction order id

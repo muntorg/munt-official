@@ -20,6 +20,7 @@
 #include "init.h"
 #include "key.h"
 #include "keystore.h"
+#include "Gulden/util.h"
 
 /**
  * Mark old keypool keys as used,
@@ -226,4 +227,53 @@ int64_t CWallet::GetOldestKeyPoolTime()
         }
     }
     return nTime;
+}
+
+void CWallet::importPrivKey(const SecureString& sKey)
+{
+    CGuldenSecret vchSecret;
+    bool fGood = vchSecret.SetString(sKey.c_str());
+
+    if (fGood)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+        CKey privKey = vchSecret.GetKey();
+        if (!privKey.IsValid())
+        {
+            uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Invalid private key."), CClientUIInterface::MSG_ERROR);
+            return;
+        }
+
+        importPrivKey(privKey);
+    }
+}
+
+void CWallet::importPrivKey(const CKey& privKey)
+{
+    CPubKey pubkey = privKey.GetPubKey();
+    assert(privKey.VerifyPubKey(pubkey));
+
+    CKeyID vchAddress = pubkey.GetID();
+
+    //Don't import an address that is already in wallet.
+    if (pactiveWallet->HaveKey(vchAddress))
+    {
+        uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Wallet already contains key."), CClientUIInterface::MSG_ERROR);
+        return;
+    }
+
+    CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(_("Imported legacy"));
+    pactiveWallet->MarkDirty();
+    pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+    if (!pactiveWallet->AddKeyPubKey(privKey, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
+    {
+        uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR);
+        return;
+    }
+
+    // Whenever a key is imported, we need to scan the whole chain - do so now
+    pactiveWallet->nTimeFirstKey = 1;
+    boost::thread t(rescanThread); // thread runs free
 }

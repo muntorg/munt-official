@@ -107,7 +107,7 @@ public:
     void refreshAccountControls();
     void setOptionsModel(OptionsModel* optionsModel);
     bool welcomeScreenIsVisible();
-    static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight);
+    static QDialog* createDialog(QWidget* parent, QString message, QString confirmLabel, QString cancelLabel, int minWidth, int minHeight, QString objectName="");
     ClickableLabel* createAccountButton(const QString& accountName);
     void setActiveAccountButton(ClickableLabel* button);
     void restoreCachedWidgetIfNeeded();

@@ -203,5 +203,5 @@ void GuldenAppManager::BurnRecoveryPhrase()
 
 bool ShutdownRequested()
 {
-    return GuldenAppManager::gApp->fShutDownHasBeenInitiated;
+    return GuldenAppManager::gApp ? (bool)GuldenAppManager::gApp->fShutDownHasBeenInitiated : false;
 }

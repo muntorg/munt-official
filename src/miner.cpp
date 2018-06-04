@@ -248,7 +248,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
     LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
-    LOCK(mempool.cs);
 
     nHeight = pParent->nHeight + 1;
 
@@ -285,17 +284,20 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
                        ? nMedianTimePast
                        : pblock->GetBlockTime();
 
-    // Decide whether to include segsig signature information
-    // This is only needed in case the segsig signature activation is reverted
-    // (which would require a very deep reorganization) or when
-    // -promiscuousmempoolflags is used.
-    // TODO: replace this with a call to main to assess validity of a mempool
-    // transaction (which in most cases can be a no-op).
-    fIncludeSegSig = IsSegSigEnabled(pParent, chainparams, chainActive, nullptr) && fMineSegSig;
-
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
-    addPackageTxs(nPackagesSelected, nDescendantsUpdated);
+    {
+        LOCK(mempool.cs);
+
+        // Decide whether to include segsig signature information
+        // This is only needed in case the segsig signature activation is reverted
+        // (which would require a very deep reorganization) or when
+        // -promiscuousmempoolflags is used.
+        // TODO: replace this with a call to main to assess validity of a mempool
+        // transaction (which in most cases can be a no-op).
+        fIncludeSegSig = IsSegSigEnabled(pParent, chainparams, chainActive, nullptr) && fMineSegSig;
+        addPackageTxs(nPackagesSelected, nDescendantsUpdated);
+    }
 
     int64_t nTime1 = GetTimeMicros();
 

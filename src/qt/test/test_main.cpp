@@ -28,6 +28,8 @@
 #include <QObject>
 #include <QTest>
 
+#include "unity/appmanager.h"
+
 #include <openssl/ssl.h>
 
 #if defined(QT_STATICPLUGIN)
@@ -70,6 +72,7 @@ int main(int argc, char *argv[])
 
     // Don't remove this, it's needed to access
     // QApplication:: and QCoreApplication:: in the tests
+    GuldenAppManager appManager;
     QApplication app(argc, argv);
     app.setApplicationName("Gulden-test");
 
