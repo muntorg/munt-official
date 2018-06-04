@@ -1,5 +1,7 @@
 # Gulden
 
+[![Build Status](https://travis-ci.org/Gulden/gulden-official.svg?branch=2.0_development)](https://travis-ci.org/Gulden/gulden-official)
+
 ### About
 Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
 
