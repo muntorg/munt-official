@@ -224,7 +224,7 @@ bool static CheckPubKeyEncoding(const valtype &vchPubKey, unsigned int flags, co
     // Only compressed keys are accepted in segsig
     if (sigversion == SIGVERSION_SEGSIG && !IsCompressedPubKey(vchPubKey))
     {
-        return set_error(serror, SCRIPT_ERR_WITNESS_PUBKEYTYPE);
+        return set_error(serror, SCRIPT_ERR_SEGSIG_PUBKEYTYPE);
     }
     return true;
 }
@@ -884,7 +884,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // Subset of script starting at the most recent codeseparator
                     CScript scriptCode(pbegincodehash, pend);
 
-                    // Drop the signature in pre-segwit scripts but not segwit scripts
+                    // Drop the signature in pre-segsig scripts but not segsig scripts
                     if (sigversion == SIGVERSION_BASE) {
                         scriptCode.FindAndDelete(CScript(vchSig));
                     }
@@ -946,7 +946,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // Subset of script starting at the most recent codeseparator
                     CScript scriptCode(pbegincodehash, pend);
 
-                    // Drop the signature in pre-segwit scripts but not segwit scripts
+                    // Drop the signature in pre-segsig scripts but not segsig scripts
                     for (int k = 0; k < nSigsCount; k++)
                     {
                         valtype& vchSig = stacktop(-isig-k);

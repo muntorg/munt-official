@@ -672,8 +672,6 @@ public:
     unsigned int GetSigOpCount(const CScript& scriptSig) const;
 
     bool IsPayToScriptHash() const;
-    bool IsPayToWitnessScriptHash() const;
-    bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
 
     bool IsPoW2Witness() const;
     std::vector<unsigned char> GetPow2WitnessHash() const;

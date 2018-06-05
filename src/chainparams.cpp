@@ -104,12 +104,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
-        // Deployment of SegWit (BIP141, BIP143, and BIP147)
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
-
         //fixme: (2.0) (Release) (HIGH) Enable this when ready for final launch.
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
@@ -261,12 +255,6 @@ public:
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
-            // Deployment of SegWit (BIP141, BIP143, and BIP147)
-            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
-            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
-            consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
-
             // Deployment of PoW2 - phase 2
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = seedTimestamp; 
@@ -377,11 +365,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
-
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 999999999999ULL; 
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL; 
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].type = Consensus::DEPLOYMENT_POW;
 
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
