@@ -116,7 +116,7 @@ uint256 CTransaction::GetWitnessHash() const
 {
     if (nVersion < 3)
     {
-        if (!HasWitness()) {
+        if (!HasSegregatedSignatures()) {
             return GetHash();
         }
     }
@@ -170,5 +170,6 @@ std::string CTransaction::ToString() const
 
 int64_t GetTransactionWeight(const CTransaction& tx)
 {
-    return ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR -1) + ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
+    // segsig: transaction weight = transaction size, including the size of the segregated signatures - no complicated segwit weighting shenanigans necessary.
+    return ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 }

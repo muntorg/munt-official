@@ -119,7 +119,7 @@ static BlockAssembler::Options DefaultOptions(const CChainParams& params)
     if (IsArgSet("-blockmaxsize")) {
         options.nBlockMaxSize = GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE);
         if (!fWeightSet) {
-            options.nBlockMaxWeight = options.nBlockMaxSize * WITNESS_SCALE_FACTOR;
+            options.nBlockMaxWeight = options.nBlockMaxSize;
         }
     }
     if (IsArgSet("-blockmintxfee")) {
@@ -364,7 +364,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // (GULDEN) Already done inside UpdateTime - don't need to do it again.
     //pblock->nBits          = GetNextWorkRequired(pParent, pblock, consensusParams);
     pblock->nNonce         = 0;
-    pblocktemplate->vTxSigOpsCost[0] = WITNESS_SCALE_FACTOR * GetLegacySigOpCount(*pblock->vtx[0]);
+    pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(*pblock->vtx[0]);
 
     if (nParentPoW2Phase/*nGrandParentPoW2Phase*/ >= 3) // For phase 3 we need to do some gymnastics to ensure the right chain tip before calling TestBlockValidity.
     {
@@ -412,7 +412,7 @@ void BlockAssembler::onlyUnconfirmed(CTxMemPool::setEntries& testSet)
 bool BlockAssembler::TestPackage(uint64_t packageSize, int64_t packageSigOpsCost)
 {
     // TODO: switch to weight-based accounting for packages instead of vsize-based accounting.
-    if (nBlockWeight + WITNESS_SCALE_FACTOR * packageSize >= nBlockMaxWeight)
+    if (nBlockWeight + packageSize >= nBlockMaxWeight)
         return false;
     if (nBlockSigOpsCost + packageSigOpsCost >= MAX_BLOCK_SIGOPS_COST)
         return false;
@@ -430,7 +430,7 @@ bool BlockAssembler::TestPackageTransactions(const CTxMemPool::setEntries& packa
     for (const CTxMemPool::txiter it : package) {
         if (!IsFinalTx(it->GetTx(), nHeight, nLockTimeCutoff))
             return false;
-        if (!fIncludeSegSig && it->GetTx().HasWitness())
+        if (!fIncludeSegSig && it->GetTx().HasSegregatedSignatures())
             return false;
         CValidationState state;
         if (!CheckTransactionContextual(it->GetTx(), state, nHeight, nullptr))

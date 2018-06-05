@@ -41,12 +41,7 @@ static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE = 300;
 static const unsigned int DEFAULT_INCREMENTAL_RELAY_FEE = 1000;
 /** Default for -bytespersigop */
 static const unsigned int DEFAULT_BYTES_PER_SIGOP = 20;
-/** The maximum number of witness stack items in a standard P2WSH script */
-static const unsigned int MAX_STANDARD_P2WSH_STACK_ITEMS = 100;
-/** The maximum size of each witness stack item in a standard P2WSH script */
-static const unsigned int MAX_STANDARD_P2WSH_STACK_ITEM_SIZE = 80;
-/** The maximum size of a standard witnessScript */
-static const unsigned int MAX_STANDARD_P2WSH_SCRIPT_SIZE = 3600;
+
 /** Min feerate for defining dust. Historically this has been the same as the
  * minRelayTxFee, however changing the dust limit changes which transactions are
  * standard and should be done with care and ideally rarely. It makes sense to
@@ -69,10 +64,8 @@ static const unsigned int STANDARD_SCRIPT_VERIFY_FLAGS = MANDATORY_SCRIPT_VERIFY
                                                          SCRIPT_VERIFY_NULLFAIL |
                                                          SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY |
                                                          SCRIPT_VERIFY_CHECKSEQUENCEVERIFY |
-                                                         SCRIPT_VERIFY_LOW_S |
-                                                         SCRIPT_VERIFY_WITNESS |
-                                                         SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM |
-                                                         SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
+                                                         SCRIPT_VERIFY_LOW_S
+                                                         ;
 
 /** For convenience, standard but not mandatory verify flags. */
 static const unsigned int STANDARD_NOT_MANDATORY_VERIFY_FLAGS = STANDARD_SCRIPT_VERIFY_FLAGS & ~MANDATORY_SCRIPT_VERIFY_FLAGS;
@@ -85,24 +78,18 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFee);
 
 bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFee);
 
-bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool witnessEnabled = false);
+bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool segsigEnabled = false);
     /**
      * Check for standard transaction types
      * @return True if all outputs (scriptPubKeys) use only standard transaction forms
      */
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled = false);
+bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool segsigEnabled = false);
     /**
      * Check for standard transaction types
      * @param[in] mapInputs    Map of previous transactions that have outputs we're spending
      * @return True if all inputs (scriptSigs) use only standard transaction forms
      */
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
-    /**
-     * Check if the transaction is over standard P2WSH resources limit:
-     * 3600bytes witnessScript size, 80bytes per witness stack element, 100 witness stack elements
-     * These limits are adequate for multi-signature up to n-of-100 using OP_CHECKSIG, OP_ADD, and OP_EQUAL,
-     */
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
 
 extern CFeeRate incrementalRelayFee;
 extern CFeeRate dustRelayFee;

@@ -1274,109 +1274,6 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     return "";
 }
 
-#if 0
-class Witnessifier : public boost::static_visitor<bool>
-{
-public:
-    CWallet * const pwallet;
-    CScriptID result;
-
-    Witnessifier(CWallet *_pwallet) : pwallet(_pwallet) {}
-
-    bool operator()(const CNoDestination &dest) const { return false; }
-
-    //fixme: (2.0) (PoW) - Is this needed
-    bool operator()(const CPoW2WitnessDestination &dest) const { return false; }
-
-    bool operator()(const CKeyID &keyID) {
-        CPubKey pubkey;
-        if (pwallet) {
-            CScript basescript = GetScriptForDestination(keyID);
-            isminetype typ;
-            //fixme: (2.0) (HIGH)
-            //typ = IsMine(*pwallet, basescript, SIGVERSION_WITNESS_V0);
-            if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
-                return false;
-            CScript witscript = GetScriptForWitness(basescript);
-            pwallet->AddCScript(witscript);
-            result = CScriptID(witscript);
-            return true;
-        }
-        return false;
-    }
-
-    bool operator()(const CScriptID &scriptID) {
-        CScript subscript;
-        if (pwallet && pwallet->GetCScript(scriptID, subscript)) {
-            int witnessversion;
-            std::vector<unsigned char> witprog;
-            if (subscript.IsWitnessProgram(witnessversion, witprog)) {
-                result = scriptID;
-                return true;
-            }
-            isminetype typ;
-            //fixme: (2.0) (HIGH)
-            //typ = IsMine(*pwallet, subscript, SIGVERSION_WITNESS_V0);
-            if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
-                return false;
-            CScript witscript = GetScriptForWitness(subscript);
-            pwallet->AddCScript(witscript);
-            result = CScriptID(witscript);
-            return true;
-        }
-        return false;
-    }
-};
-
-UniValue addwitnessaddress(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 1)
-    {
-        std::string msg = "addwitnessaddress \"address\"\n"
-            "\nAdd a witness address for a script (with pubkey or redeemscript known).\n"
-            "It returns the witness script.\n"
-
-            "\nArguments:\n"
-            "1. \"address\"       (string, required) An address known to the wallet\n"
-
-            "\nResult:\n"
-            "\"witnessaddress\",  (string) The value of the new address (P2SH of witness script).\n"
-            "}\n"
-        ;
-        throw std::runtime_error(msg);
-    }
-
-    throw std::runtime_error("segwit not yet enabled.");
-
-    {
-        LOCK(cs_main);
-        if (!IsSegSigEnabled(chainActive.Tip(), Params().GetConsensus()) && !GetBoolArg("-walletprematurewitness", false)) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Segregated witness not enabled on network");
-        }
-    }
-
-    CGuldenAddress address(request.params[0].get_str());
-    if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
-
-    Witnessifier w(pwallet);
-    CTxDestination dest = address.Get();
-    bool ret = boost::apply_visitor(w, dest);
-    if (!ret) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Public key or redeemscript not known to wallet, or the key is uncompressed");
-    }
-
-    pwallet->SetAddressBook(CGuldenAddress(w.result).ToString(), "", "receive");
-
-    return CGuldenAddress(w.result).ToString();
-}
-#endif
-
 struct tallyitem
 {
     CAmount nAmount;
@@ -3328,7 +3225,6 @@ static const CRPCCommand commands[] =
     { "wallet",             "abandontransaction",       &abandontransaction,       false,  {"txid"} },
     { "wallet",             "abortrescan",              &abortrescan,              false,  {} },
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       true,   {"nrequired","keys","account"} },
-    //{ "wallet",             "addwitnessaddress",        &addwitnessaddress,        true,   {"address"} },
     { "wallet",             "backupwallet",             &backupwallet,             true,   {"destination"} },
     //{ "wallet",             "bumpfee",                  &bumpfee,                  true,   {"txid", "options"} },
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },

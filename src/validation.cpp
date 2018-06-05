@@ -978,11 +978,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nLockTimeFlags |= LOCKTIME_VERIFY_SEQUENCE;
     }
 
+    //fixme: (2.0) (SEGSIG)
     // Start enforcing WITNESS rules using versionbits logic.
-    if (IsSegSigEnabled(pindex->pprev, chainparams, chain, &view)) {
-        flags |= SCRIPT_VERIFY_WITNESS;
+    if (IsSegSigEnabled(pindex->pprev, chainparams, chain, &view))
         flags |= SCRIPT_VERIFY_NULLDUMMY;
-    }
 
     int64_t nTime2 = GetTimeMicros(); nTimeForks += nTime2 - nTime1;
     LogPrint(BCLog::BENCH, "    - Fork checks: %.2fms [%.2fs]\n", 0.001 * (nTime2 - nTime1), nTimeForks * 0.000001);
@@ -2375,7 +2374,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     {
         nSigOps += GetLegacySigOpCount(*tx);
     }
-    if (nSigOps * WITNESS_SCALE_FACTOR > MAX_BLOCK_SIGOPS_COST)
+    if (nSigOps > MAX_BLOCK_SIGOPS_COST)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-sigops", false, "out-of-bounds SigOpCount");
 
     if (fCheckPOW && fCheckMerkleRoot)
@@ -2415,66 +2414,6 @@ bool IsSegSigEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainPar
         return true;
     return false;
 }
-
-#if 0
-//GULDEN - We don't implement any of this because our witness commitment just becomes part of the merkle root.
-// Compute at which vout of the block's coinbase transaction the witness
-// commitment occurs, or -1 if not found.
-static int GetWitnessCommitmentIndex(const CBlock& block)
-{
-    int commitpos = -1;
-    if (!block.vtx.empty()) {
-        for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
-            if (block.vtx[0]->vout[o].scriptPubKey.size() >= 38 && block.vtx[0]->vout[o].scriptPubKey[0] == OP_RETURN && block.vtx[0]->vout[o].scriptPubKey[1] == 0x24 && block.vtx[0]->vout[o].scriptPubKey[2] == 0xaa && block.vtx[0]->vout[o].scriptPubKey[3] == 0x21 && block.vtx[0]->vout[o].scriptPubKey[4] == 0xa9 && block.vtx[0]->vout[o].scriptPubKey[5] == 0xed) {
-                commitpos = o;
-            }
-        }
-    }
-    return commitpos;
-}
-
-void UpdateUncommittedBlockStructures(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams)
-{
-    int commitpos = GetWitnessCommitmentIndex(block);
-    static const std::vector<unsigned char> nonce(32, 0x00);
-    if (commitpos != -1 && IsSegSigEnabled(pindexPrev, consensusParams) && !block.vtx[0]->HasWitness()) {
-        CMutableTransaction tx(*block.vtx[0]);
-        tx.vin[0].scriptWitness.stack.resize(1);
-        tx.vin[0].scriptWitness.stack[0] = nonce;
-        block.vtx[0] = MakeTransactionRef(std::move(tx));
-    }
-}
-
-std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams)
-{
-    std::vector<unsigned char> commitment;
-    int commitpos = GetWitnessCommitmentIndex(block);
-    std::vector<unsigned char> ret(32, 0x00);
-    if (consensusParams.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout != 0) {
-        if (commitpos == -1) {
-            uint256 witnessroot = BlockWitnessMerkleRoot(block, NULL);
-            CHash256().Write(witnessroot.begin(), 32).Write(&ret[0], 32).Finalize(witnessroot.begin());
-            CTxOut out;
-            out.nValue = 0;
-            out.scriptPubKey.resize(38);
-            out.scriptPubKey[0] = OP_RETURN;
-            out.scriptPubKey[1] = 0x24;
-            out.scriptPubKey[2] = 0xaa;
-            out.scriptPubKey[3] = 0x21;
-            out.scriptPubKey[4] = 0xa9;
-            out.scriptPubKey[5] = 0xed;
-            memcpy(&out.scriptPubKey[6], witnessroot.begin(), 32);
-            commitment = std::vector<unsigned char>(out.scriptPubKey.begin(), out.scriptPubKey.end());
-            CMutableTransaction tx(*block.vtx[0]);
-            tx.vout.push_back(out);
-            block.vtx[0] = MakeTransactionRef(std::move(tx));
-        }
-    }
-    UpdateUncommittedBlockStructures(block, pindexPrev, consensusParams);
-    return commitment;
-}
-#endif
-
 
 
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
@@ -2640,8 +2579,6 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
-    if (doUTXOChecks)
-    {
     // Validation for witness commitments.
     // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the
     //   coinbase (where 0x0000....0000 is used instead).
@@ -2673,25 +2610,23 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     }
     #endif
 
+    //fixme: (2.1) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
-    if (!fHaveWitness) {
-      for (const auto& tx : block.vtx) {
-            if (tx->HasWitness()) {
-                return state.DoS(100, false, REJECT_INVALID, "unexpected-witness", true, strprintf("%s : unexpected witness data found", __func__));
-            }
+    if (fHaveWitness)
+    {
+        for (const auto& tx : block.vtx)
+        {
+            if (!tx->HasSegregatedSignatures())
+                return state.DoS(100, false, REJECT_INVALID, "missing-segregated-signature", true, strprintf("%s : missing segregated signature data found", __func__));
         }
     }
     else
     {
-        if (nPoW2PhaseGreatGrandParent >=4)
+        for (const auto& tx : block.vtx)
         {
-            for (const auto& tx : block.vtx) {
-                if (!tx->HasWitness()) {
-                    return state.DoS(100, false, REJECT_INVALID, "missing-witness", true, strprintf("%s : missing witness data found", __func__));
-                }
-            }
+            if (tx->HasSegregatedSignatures())
+                return state.DoS(100, false, REJECT_INVALID, "invalid-segregated-signature", true, strprintf("%s : segregated signature not allowed before phase 4 activation", __func__));
         }
-    }
     }
 
     // After the coinbase witness nonce and commitment are verified,

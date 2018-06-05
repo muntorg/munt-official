@@ -163,9 +163,9 @@ static CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, co
 static void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& scriptWitness, int flags, const std::string& message, int scriptError, CAmount nValue = 0)
 {
     bool expect = (scriptError == SCRIPT_ERR_OK);
-    if (flags & SCRIPT_VERIFY_CLEANSTACK) {
+    if (flags & SCRIPT_VERIFY_CLEANSTACK)
+    {
         flags |= SCRIPT_VERIFY_P2SH;
-        flags |= SCRIPT_VERIFY_WITNESS;
     }
     ScriptError err;
     CMutableTransaction txCredit = BuildCreditingTransaction(scriptPubKey, nValue);
@@ -263,12 +263,6 @@ struct KeyData
     }
 };
 
-enum WitnessMode {
-    WITNESS_NONE,
-    WITNESS_PKH,
-    WITNESS_SH
-};
-
 class TestBuilder
 {
 private:
@@ -304,21 +298,11 @@ private:
     }
 
 public:
-    TestBuilder(const CScript& script_, const std::string& comment_, int flags_, bool P2SH = false, WitnessMode wm = WITNESS_NONE, int witnessversion = 0, CAmount nValue_ = 0) : script(script_), spendTx(TEST_DEFAULT_TX_VERSION), havePush(false), comment(comment_), flags(flags_), scriptError(SCRIPT_ERR_OK), nValue(nValue_)
+    TestBuilder(const CScript& script_, const std::string& comment_, int flags_, bool P2SH = false, CAmount nValue_ = 0) : script(script_), spendTx(TEST_DEFAULT_TX_VERSION), havePush(false), comment(comment_), flags(flags_), scriptError(SCRIPT_ERR_OK), nValue(nValue_)
     {
         CScript scriptPubKey = script;
-        if (wm == WITNESS_PKH) {
-            uint160 hash;
-            CHash160().Write(&script[1], script.size() - 1).Finalize(hash.begin());
-            script = CScript() << OP_DUP << OP_HASH160 << ToByteVector(hash) << OP_EQUALVERIFY << OP_CHECKSIG;
-            scriptPubKey = CScript() << witnessversion << ToByteVector(hash);
-        } else if (wm == WITNESS_SH) {
-            witscript = scriptPubKey;
-            uint256 hash;
-            CSHA256().Write(&witscript[0], witscript.size()).Finalize(hash.begin());
-            scriptPubKey = CScript() << witnessversion << ToByteVector(hash);
-        }
-        if (P2SH) {
+        if (P2SH)
+        {
             redeemscript = scriptPubKey;
             scriptPubKey = CScript() << OP_HASH160 << ToByteVector(CScriptID(redeemscript)) << OP_EQUAL;
         }
@@ -373,13 +357,6 @@ public:
         vchSig.push_back(static_cast<unsigned char>(nHashType));
         DoPush(vchSig);
         return *this;
-    }
-
-    TestBuilder& PushWitSig(const CKey& key, CAmount amount = -1, int nHashType = SIGHASH_ALL, unsigned int lenR = 32, unsigned int lenS = 32, SigVersion sigversion = SIGVERSION_WITNESS_V0)
-    {
-        if (amount == -1)
-            amount = nValue;
-        return PushSig(key, nHashType, lenR, lenS, sigversion, amount).AsWit();
     }
 
     TestBuilder& Push(const CPubKey& pubkey)
@@ -584,81 +561,7 @@ BOOST_AUTO_TEST_CASE(script_build)
     AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"P2SH with unnecessary input", SCRIPT_VERIFY_CLEANSTACK | SCRIPT_VERIFY_P2SH, true).Num(11).PushSig(keys.key0).PushRedeem().ScriptError(SCRIPT_ERR_CLEANSTACK));
     AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"P2SH with CLEANSTACK", SCRIPT_VERIFY_CLEANSTACK | SCRIPT_VERIFY_P2SH, true).PushSig(keys.key0).PushRedeem());
 
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2WSH", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 1).PushWitSig(keys.key0).PushWitRedeem());
-    AST(MKTEST(PUBKEY0,"Basic P2WPKH", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_PKH,0, 1).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit());
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2SH(P2WSH)", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 1).PushWitSig(keys.key0).PushWitRedeem().PushRedeem());
-    AST(MKTEST(PUBKEY0,"Basic P2SH(P2WPKH)", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_PKH,0, 1).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().PushRedeem());
-    AST(MKTEST(PUBKEY1 << OP_CHECKSIG,"Basic P2WSH with the wrong key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH).PushWitSig(keys.key0).PushWitRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY1,"Basic P2WPKH with the wrong key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey1).AsWit().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY1 << OP_CHECKSIG,"Basic P2SH(P2WSH) with the wrong key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH).PushWitSig(keys.key0).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY1,"Basic P2SH(P2WPKH) with the wrong key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey1).AsWit().PushRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY1 << OP_CHECKSIG,"Basic P2WSH with the wrong key but no WITNESS", SCRIPT_VERIFY_P2SH, false, WITNESS_SH).PushWitSig(keys.key0).PushWitRedeem());
-    AST(MKTEST(PUBKEY1,"Basic P2WPKH with the wrong key but no WITNESS", SCRIPT_VERIFY_P2SH, false, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey1).AsWit());
-    AST(MKTEST(PUBKEY1 << OP_CHECKSIG,"Basic P2SH(P2WSH) with the wrong key but no WITNESS", SCRIPT_VERIFY_P2SH, true, WITNESS_SH).PushWitSig(keys.key0).PushWitRedeem().PushRedeem());
-    AST(MKTEST(PUBKEY1,"Basic P2SH(P2WPKH) with the wrong key but no WITNESS", SCRIPT_VERIFY_P2SH, true, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey1).AsWit().PushRedeem());
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2WSH with wrong value", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 0).PushWitSig(keys.key0, 1).PushWitRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY0,"Basic P2WPKH with wrong value", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_PKH,0, 0).PushWitSig(keys.key0, 1).Push(keys.pubkey0).AsWit().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2SH(P2WSH) with wrong value", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 0).PushWitSig(keys.key0, 1).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-    AST(MKTEST(PUBKEY0,"Basic P2SH(P2WPKH) with wrong value", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_PKH,0, 0).PushWitSig(keys.key0, 1).Push(keys.pubkey0).AsWit().PushRedeem().ScriptError(SCRIPT_ERR_EVAL_FALSE));
-
-    AST(MKTEST(PUBKEY0,"P2WPKH with future witness version", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH |SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM, false, WITNESS_PKH, 1).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().ScriptError(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM));
-    {
-        CScript witscript = CScript() << PUBKEY0;
-        uint256 hash;
-        CSHA256().Write(&witscript[0], witscript.size()).Finalize(hash.begin());
-        std::vector<unsigned char> hashBytes = ToByteVector(hash);
-        hashBytes.pop_back();
-        AST(MKTEST(OP_0 << hashBytes,"P2WPKH with wrong witness program length", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().ScriptError(SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH));
-    }
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"P2WSH with empty witness", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH).ScriptError(SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY));
-    {
-        CScript witscript = CScript() << PUBKEY0 << OP_CHECKSIG;
-        AST(MKTEST(witscript,"P2WSH with witness program mismatch", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH).PushWitSig(keys.key0).Push(witscript).DamagePush(0).AsWit().ScriptError(SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH));
-    }
-    AST(MKTEST(PUBKEY0,"P2WPKH with witness program mismatch", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().Push("0").AsWit().ScriptError(SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH));
-    AST(MKTEST(PUBKEY0,"P2WPKH with non-empty scriptSig", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().Num(11).ScriptError(SCRIPT_ERR_WITNESS_MALLEATED));
-    AST(MKTEST(PUBKEY1,"P2SH(P2WPKH) with superfluous push in scriptSig", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_PKH).PushWitSig(keys.key0).Push(keys.pubkey1).AsWit().Num(11).PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_MALLEATED_P2SH));
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"P2PK with witness", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH).PushSig(keys.key0).Push("0").AsWit().ScriptError(SCRIPT_ERR_WITNESS_UNEXPECTED));
-
-    // Compressed keys should pass SCRIPT_VERIFY_WITNESS_PUBKEYTYPE
-    AST(MKTEST(PUBKEY0C << OP_CHECKSIG,"Basic P2WSH with compressed key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).PushWitSig(keys.key0C).PushWitRedeem());
-    AST(MKTEST(PUBKEY0C,"Basic P2WPKH with compressed key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_PKH,0, 1).PushWitSig(keys.key0C).Push(keys.pubkey0C).AsWit());
-    AST(MKTEST(PUBKEY0C << OP_CHECKSIG,"Basic P2SH(P2WSH) with compressed key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).PushWitSig(keys.key0C).PushWitRedeem().PushRedeem());
-    AST(MKTEST(PUBKEY0C,"Basic P2SH(P2WPKH) with compressed key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_PKH,0, 1).PushWitSig(keys.key0C).Push(keys.pubkey0C).AsWit().PushRedeem());
-
-    // Testing uncompressed key in witness with SCRIPT_VERIFY_WITNESS_PUBKEYTYPE
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2WSH", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).PushWitSig(keys.key0).PushWitRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(PUBKEY0,"Basic P2WPKH", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_PKH,0, 1).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(PUBKEY0 << OP_CHECKSIG,"Basic P2SH(P2WSH)", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).PushWitSig(keys.key0).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(PUBKEY0,"Basic P2SH(P2WPKH)", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_PKH,0, 1).PushWitSig(keys.key0).Push(keys.pubkey0).AsWit().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-
-    // P2WSH 1-of-2 multisig with compressed keys
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with compressed keys", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with compressed keys", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with compressed keys", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with compressed keys", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem().PushRedeem());
-
-    // P2WSH 1-of-2 multisig with first key uncompressed
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with first key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG first key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with first key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0).PushWitRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with first key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with first key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with first key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with first key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(OP_1 << PUBKEY1C << PUBKEY0 << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with first key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1C).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    // P2WSH 1-of-2 multisig with second key uncompressed
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with second key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG second key uncompressed and signing with the first key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with second key uncompressed and signing with the first key should pass as the uncompressed key is not used", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with second key uncompressed and signing with the first key should pass as the uncompressed key is not used", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key0C).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with second key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1).PushWitRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with second key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1).PushWitRedeem().PushRedeem());
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2WSH CHECKMULTISIG with second key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, false, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1).PushWitRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-    AST(MKTEST(OP_1 << PUBKEY1 << PUBKEY0C << OP_2 << OP_CHECKMULTISIG,"P2SH(P2WSH) CHECKMULTISIG with second key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WITNESS_SH,0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
-
     std::set<std::string> tests_set;
-
     {
         UniValue json_tests = read_json(std::string(json_tests::script_tests, json_tests::script_tests + sizeof(json_tests::script_tests)));
 

@@ -87,7 +87,8 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
         int nCoinHeight = (*prevHeights)[txinIndex];
 
         if ((tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
-            || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasTimeBasedRelativeLock)))) {
+            || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasTimeBasedRelativeLock))))
+        {
             int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast();
             // NOTE: Subtract 1 to maintain nLockTime semantics
             // BIP 68 relative lock times have the semantics of calculating
@@ -168,24 +169,24 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
 
 int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, int flags)
 {
-    int64_t nSigOps = GetLegacySigOpCount(tx) * WITNESS_SCALE_FACTOR;
+    int64_t nSigOps = GetLegacySigOpCount(tx);
 
     if (tx.IsCoinBase())
         return nSigOps;
 
     if (flags & SCRIPT_VERIFY_P2SH) {
-        nSigOps += GetP2SHSigOpCount(tx, inputs) * WITNESS_SCALE_FACTOR;
+        nSigOps += GetP2SHSigOpCount(tx, inputs);
     }
 
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        //checkme: (GULDEN) (2.0) - Is this right?
+        //fixme: (GULDEN) (2.0) - Is this right? - make sure we are counting sigops in segsig scripts correctly
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
-            case CTxOutType::ScriptLegacyOutput: nSigOps += CountWitnessSigOps(tx.vin[i].scriptSig, prevout.output.scriptPubKey, &tx.vin[i].scriptWitness, flags);
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
             case CTxOutType::PoW2WitnessOutput: nSigOps += 1; break;
+            case CTxOutType::ScriptLegacyOutput: /*already handled by GetP2SHSigOpCount*/ break;
         }
     }
     return nSigOps;

@@ -496,14 +496,8 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 
         // Bytes
         CTxDestination address;
-        /*int witnessversion = 0;
-        std::vector<unsigned char> witnessprogram;
-        if (out.tx->tx->vout[out.i].scriptPubKey.IsWitnessProgram(witnessversion, witnessprogram))
-        {
-            nBytesInputs += (32 + 4 + 1 + (107 / WITNESS_SCALE_FACTOR) + 4);
-            fWitness = true;
-        }
-        else */if(ExtractDestination(out.tx->tx->vout[out.i], address))
+        //fixme: (2.1) SEGSIG - change the size calculations here.
+        if(ExtractDestination(out.tx->tx->vout[out.i], address))
         {
             CPubKey pubkey;
             CKeyID *keyid = boost::get<CKeyID>(&address);

@@ -95,25 +95,13 @@ enum
     // See BIP112 for details
     SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10),
 
-    // Support segregated witness
+    // Require the argument of OP_IF/NOTIF to be exactly 0x01 or empty vector
     //
-    SCRIPT_VERIFY_WITNESS = (1U << 11),
-
-    // Making v1-v16 witness program non-standard
-    //
-    SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM = (1U << 12),
-
-    // Segwit script only: Require the argument of OP_IF/NOTIF to be exactly 0x01 or empty vector
-    //
-    SCRIPT_VERIFY_MINIMALIF = (1U << 13),
+    SCRIPT_VERIFY_MINIMALIF = (1U << 11),
 
     // Signature(s) must be empty vector if an CHECK(MULTI)SIG operation failed
     //
-    SCRIPT_VERIFY_NULLFAIL = (1U << 14),
-
-    // Public keys in segregated witness scripts must be compressed
-    //
-    SCRIPT_VERIFY_WITNESS_PUBKEYTYPE = (1U << 15),
+    SCRIPT_VERIFY_NULLFAIL = (1U << 12),
 };
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
@@ -129,7 +117,6 @@ struct PrecomputedTransactionData
 enum SigVersion
 {
     SIGVERSION_BASE = 0,
-    SIGVERSION_WITNESS_V0 = 1,
     SIGVERSION_SEGSIG = 1
 };
 
@@ -187,7 +174,5 @@ public:
 
 bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = NULL);
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror = NULL);
-
-size_t CountWitnessSigOps(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags);
 
 #endif // GULDEN_SCRIPT_INTERPRETER_H
