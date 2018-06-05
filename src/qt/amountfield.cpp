@@ -5,7 +5,6 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -29,6 +28,8 @@
 #include "_Gulden/clickablelabel.h"
 #include "_Gulden/nocksrequest.h"
 #include <assert.h>
+
+const int DISPLAY_DECIMALS = 2;
 
 /** QSpinBox that uses fixed-point numbers internally and uses our own
  * formatting/parsing functions.
@@ -113,7 +114,7 @@ public:
         if(valid)
         {
             int currentDecimalPlaces = getCurrentDecimalPlaces(input);
-            input = GuldenUnits::format(currentUnit, val, false, GuldenUnits::separatorAlways);
+            input = GuldenUnits::format(currentUnit, val, false, GuldenUnits::separatorAlways, currentDecimalPlaces);
             trimTailingZerosToCurrentDecimalPlace(input, currentDecimalPlaces);
             lineEdit()->setText(input);
         }
@@ -133,10 +134,9 @@ public:
 
     void setValue(const CAmount& value, int limitDecimals=-1)
     {
-        QString val = GuldenUnits::format(currentUnit, value, false, GuldenUnits::separatorAlways);
+        QString val = GuldenUnits::format(currentUnit, value, false, GuldenUnits::separatorAlways, limitDecimals);
         trimTailingZerosToCurrentDecimalPlace(val, limitDecimals);
         lineEdit()->setText(val);
-        Q_EMIT valueChanged();
     }
 
     void stepBy(int steps)
@@ -147,6 +147,7 @@ public:
         val = val + steps * singleStep;
         val = qMin(qMax(val, CAmount(0)), GuldenUnits::maxMoney());
         setValue(val, currentDecimalPlaces);
+        Q_EMIT valueChanged();
     }
 
     void setDisplayUnit(int unit)
@@ -266,76 +267,75 @@ Q_SIGNALS:
 
 #include "amountfield.moc"
 
+// This lookup of short name for currency code could be usefull more general
+// and be extended with more currency names.
+const QString ShortNameForCurrencyCode(const std::string& currencyCode)
+{
+    static std::map<std::string, QString> currencyNames = {
+        {"NLG", "Gulden"},
+        {"EUR", "Euro"},
+        {"BTC", "Bitcoin"}
+    };
+
+    const auto it = currencyNames.find(currencyCode);
+    if ( it != currencyNames.end())
+        return it->second;
+
+    // fallback to just using the currency short code
+    return QString::fromStdString(currencyCode);
+}
+
 GuldenAmountField::GuldenAmountField(QWidget *parent) :
     QWidget(parent),
-    amount(0),
-    optionsModel(NULL),
-    ticker(NULL)
+    primaryCurrency(Currency::Euro),
+    amountGulden(0),
+    amountEuro(0),
+    amountLocal(0),
+    optionsModel(nullptr),
+    ticker(nullptr)
 {
-    nocksRequestBTCtoNLG = NULL;
-    nocksRequestEURtoNLG = NULL;
-    nocksRequestNLGtoBTC = NULL;
-    nocksRequestNLGtoEUR = NULL;
-
-    secondaryAmount = CAmount(0);
-    tertiaryAmount = CAmount(0);
-    quadAmount = CAmount(0);
-
-    primaryCurrency = AmountFieldCurrency::CurrencyGulden;
-    displayCurrency = AmountFieldCurrency::CurrencyGulden;
-
-    amount = new AmountSpinBox(this);
-    amount->setLocale(QLocale::c());
-    amount->installEventFilter(this);
-    amount->setMaximumWidth(170);
-    amount->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    primaryCurrency = Currency::Gulden;
 
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->addWidget(amount);
-    //unit = new QValueComboBox(this);
-    //unit->setModel(new GuldenUnits(this));
-    unit = new QLabel(this);
-    unit->setText(tr("Gulden"));
-    layout->addWidget(unit);
+
+    primaryAmountDisplay = new AmountSpinBox(this);
+    primaryAmountDisplay->setLocale(QLocale::c());
+    primaryAmountDisplay->installEventFilter(this);
+    primaryAmountDisplay->setMaximumWidth(170);
+    primaryAmountDisplay->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    layout->addWidget(primaryAmountDisplay);
+
+    primaryAmountName = new QLabel(this);
+    primaryAmountName->setText(tr("Gulden"));
+    layout->addWidget(primaryAmountName);
 
     amountSeperator = new ClickableLabel(this);
     amountSeperator->setTextFormat( Qt::RichText );
     amountSeperator->setText(GUIUtil::fontAwesomeRegular("\uf0EC"));
-    layout->addWidget(amountSeperator);
     amountSeperator->setObjectName("amountSeperator");
     amountSeperator->setCursor(Qt::PointingHandCursor);
     amountSeperator->setContentsMargins(0,0,0,0);
     amountSeperator->setIndent(0);
+    amountSeperator->setVisible(false);
+    layout->addWidget(amountSeperator);
 
-    secondaryAmountDisplay = new ClickableLabel(this);
-    secondaryAmountDisplay->setText(QString("€\u20090.00"));
-    layout->addWidget(secondaryAmountDisplay);
-    secondaryAmountDisplay->setObjectName("secondaryAmountDisplay");
-    secondaryAmountDisplay->setCursor(Qt::PointingHandCursor);
-    secondaryAmountDisplay->setContentsMargins(0,0,0,0);
-    secondaryAmountDisplay->setIndent(0);
+    firstAuxAmountDisplay = new ClickableLabel(this);
+    firstAuxAmountDisplay->setText(QString("€\u20090.00"));
+    firstAuxAmountDisplay->setObjectName("secondaryAmountDisplay");
+    firstAuxAmountDisplay->setCursor(Qt::PointingHandCursor);
+    firstAuxAmountDisplay->setContentsMargins(0,0,0,0);
+    firstAuxAmountDisplay->setIndent(0);
+    firstAuxAmountDisplay->setVisible(false);
+    layout->addWidget(firstAuxAmountDisplay);
 
-    tertiaryAmountDisplay = new ClickableLabel(this);
-    tertiaryAmountDisplay->setText(QString("(\uF15A\u20090.00)"));
-    layout->addWidget(tertiaryAmountDisplay);
-    tertiaryAmountDisplay->setObjectName("tertiaryAmountDisplay");
-    tertiaryAmountDisplay->setCursor(Qt::PointingHandCursor);
-    tertiaryAmountDisplay->setContentsMargins(0,0,0,0);
-    tertiaryAmountDisplay->setIndent(0);
-
-    quadAmountDisplay = new ClickableLabel(this);
-    quadAmountDisplay->setText(QString(""));
-    layout->addWidget(quadAmountDisplay);
-    quadAmountDisplay->setObjectName("quadAmountDisplay");
-    quadAmountDisplay->setCursor(Qt::PointingHandCursor);
-    quadAmountDisplay->setVisible(false);
-    quadAmountDisplay->setContentsMargins(0,0,0,0);
-    quadAmountDisplay->setIndent(0);
-
-    forexError = new QLabel(this);
-    forexError->setObjectName("forexError");
-    forexError->setText("");
-    layout->addWidget(forexError);
+    secondAuxAmountDisplay = new ClickableLabel(this);
+    secondAuxAmountDisplay->setText(QString("(\uF15A\u20090.00)"));
+    secondAuxAmountDisplay->setObjectName("tertiaryAmountDisplay");
+    secondAuxAmountDisplay->setCursor(Qt::PointingHandCursor);
+    secondAuxAmountDisplay->setContentsMargins(0,0,0,0);
+    secondAuxAmountDisplay->setIndent(0);
+    secondAuxAmountDisplay->setVisible(false);
+    layout->addWidget(secondAuxAmountDisplay);
 
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
@@ -343,68 +343,105 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     setLayout(layout);
 
     setFocusPolicy(Qt::TabFocus);
-    setFocusProxy(amount);
+    setFocusProxy(primaryAmountDisplay);
 
-    // If one if the widgets changes, the combined content changes as well
-    connect(amount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    connect(this, SIGNAL(valueChanged()), this, SLOT(update()));
-    //connect(unit, SIGNAL(currentIndexChanged(int)), this, SLOT(unitChanged(int)));
-    connect(secondaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
-    connect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
-    connect(tertiaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToTertiaryCurrency()));
-    connect(quadAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToQuadCurrency()));
-
-    #ifndef SUPPORT_BITCOIN_AS_FOREX
-    tertiaryAmountDisplay->setVisible(false);
-    #endif
-
-    update();
-    // Set default based on configuration
-    //unitChanged(unit->currentIndex());
+    connect(primaryAmountDisplay, SIGNAL(valueChanged()), this, SLOT(primaryValueChanged()));
+    connect(firstAuxAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToFirstAuxCurrency()));
+    connect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToFirstAuxCurrency()));
+    connect(secondAuxAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToSecondAuxCurrency()));
 }
 
 GuldenAmountField::~GuldenAmountField()
 {
-    disconnect(amount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    disconnect(this, SIGNAL(valueChanged()), this, SLOT(update()));
-    //disconnect(unit, SIGNAL(currentIndexChanged(int)), this, SLOT(unitChanged(int)));
-    disconnect(secondaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
-    disconnect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToSecondaryCurrency()));
-    disconnect(tertiaryAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToTertiaryCurrency()));
-    disconnect(quadAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToQuadCurrency()));
+    disconnect(primaryAmountDisplay, SIGNAL(valueChanged()), this, SLOT(primaryValueChanged()));
+    disconnect(firstAuxAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToFirstAuxCurrency()));
+    disconnect(amountSeperator, SIGNAL(clicked()), this, SLOT(changeToFirstAuxCurrency()));
+    disconnect(secondAuxAmountDisplay, SIGNAL(clicked()), this, SLOT(changeToSecondAuxCurrency()));
 
-    //NB! Ticker will already be deleted by the time we reach this point.
-    //disconnect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
+    if (ticker)
+        ticker->disconnect(this);
 }
 
-void GuldenAmountField::clear()
+CAmount GuldenAmountField::amount() const
 {
-    amount->clear();
-    secondaryAmountDisplay->setText(QString("(€\u20090.00)"));
-    tertiaryAmountDisplay->setText(QString("(\uF15A\u20090.00)"));
-    //unit->setCurrentIndex(0);
+    return amountGulden;
 }
 
-void GuldenAmountField::setEnabled(bool fEnabled)
+void GuldenAmountField::setAmount(const CAmount& value)
 {
-    amount->setEnabled(fEnabled);
-    unit->setEnabled(fEnabled);
+    primaryAmountDisplay->setValue(value);
 }
 
-bool GuldenAmountField::validate()
+void GuldenAmountField::setAmount(const CAmount& value, int nLimit)
 {
-    bool valid = false;
-    value(&valid);
-    setValid(valid);
-    return valid;
+    CAmount finalValue;
+    GuldenUnits::parse(GuldenUnits::NLG, GuldenUnits::format(GuldenUnits::NLG, value, false, GuldenUnits::separatorAlways, nLimit), &finalValue);
+    if (finalValue > MAX_MONEY)
+    {
+        finalValue = MAX_MONEY;
+    }
+    primaryAmountDisplay->setValue(finalValue, nLimit);
+}
+
+void GuldenAmountField::setSingleStep(const CAmount& step)
+{
+    primaryAmountDisplay->setSingleStep(step);
+}
+
+void GuldenAmountField::setReadOnly(bool fReadOnly)
+{
+    primaryAmountDisplay->setReadOnly(fReadOnly);
 }
 
 void GuldenAmountField::setValid(bool valid)
 {
     if (valid)
-        amount->setStyleSheet("");
+        primaryAmountDisplay->setStyleSheet("");
     else
-        amount->setStyleSheet(STYLE_INVALID);
+        primaryAmountDisplay->setStyleSheet(STYLE_INVALID);
+}
+
+void GuldenAmountField::clear()
+{
+    primaryAmountDisplay->clear();
+    firstAuxAmountDisplay->setText(QString("(€\u20090.00)"));
+    //unit->setCurrentIndex(0);
+}
+
+void GuldenAmountField::setEnabled(bool fEnabled)
+{
+    primaryAmountDisplay->setEnabled(fEnabled);
+    primaryAmountName->setEnabled(fEnabled);
+}
+
+void GuldenAmountField::setPrimaryDisplayCurrency(const Currency currency)
+{
+    primaryCurrency = currency;
+    primaryAmountName->setText( ShortNameForCurrencyCode( CurrencyCode(primaryCurrency) ) );
+    updatePrimaryFromData();
+    updateAuxilaryFromData();
+}
+
+void GuldenAmountField::setOptionsModel(OptionsModel* optionsModel_)
+{
+    if (!optionsModel && optionsModel_ && optionsModel_->getTicker())
+    {
+        optionsModel = optionsModel_;
+        ticker = optionsModel_->getTicker();
+        connect( ticker, SIGNAL(destroyed(obj)), this, SLOT(tickerDestroyed(obj)) );
+        connect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( exchangeRateUpdate() ) );
+
+        firstAuxAmountDisplay->setVisible(true);
+        amountSeperator->setVisible(true);
+        updateAuxilaryFromData();
+    }
+}
+
+QWidget *GuldenAmountField::setupTabChain(QWidget *prev)
+{
+    QWidget::setTabOrder(prev, primaryAmountDisplay);
+    QWidget::setTabOrder(primaryAmountDisplay, primaryAmountName);
+    return primaryAmountName;
 }
 
 bool GuldenAmountField::eventFilter(QObject *object, QEvent *event)
@@ -417,675 +454,172 @@ bool GuldenAmountField::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
-QWidget *GuldenAmountField::setupTabChain(QWidget *prev)
+void GuldenAmountField::updatePrimaryFromData()
 {
-    QWidget::setTabOrder(prev, amount);
-    QWidget::setTabOrder(amount, unit);
-    return unit;
+    primaryAmountDisplay->setValue(AmountForCurrency(primaryCurrency), DISPLAY_DECIMALS);
 }
 
-CAmount GuldenAmountField::value(bool *valid_out) const
+void GuldenAmountField::updateDataFromPrimary()
 {
-    return amount->value(valid_out);
-}
+    CAmount amount = primaryAmountDisplay->value();
 
-CAmount GuldenAmountField::valueForCurrency(bool *valid_out) const
-{
-    if (primaryCurrency == displayCurrency)
+    switch (primaryCurrency)
     {
-        return amount->value(valid_out);
+    case Currency::Gulden:
+        amountGulden = amount;
+        if (ticker) {
+            amountEuro = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Euro));
+            amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
+        }
+        break;
+    case Currency::Euro:
+        amountEuro = amount;
+        if (ticker) {
+            amountGulden = ticker->convertForexToGulden(amountEuro, CurrencyCode(Currency::Euro));
+            amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
+        }
+        break;
+    case Currency::Local:
+        amountLocal = amount;
+        if (ticker) {
+            amountGulden = ticker->convertForexToGulden(amountLocal, CurrencyCode(Currency::Local));
+            amountEuro = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Euro));
+        }
+        break;
+    default:
+        assert(false);
+        break;
+    }
+
+    updateAuxilaryFromData();
+}
+
+void GuldenAmountField::updateAuxilaryFromData()
+{
+    if (!optionsModel || !ticker)
+        return;
+
+    firstAuxAmountDisplay->setText( FormatAuxAmount(firstAuxCurrency()) );
+    secondAuxAmountDisplay->setText( QString("(%1)").arg(FormatAuxAmount(secondAuxCurrency())) );
+    secondAuxAmountDisplay->setVisible(secondAuxCurrency() != Currency::None);
+}
+
+GuldenAmountField::Currency GuldenAmountField::firstAuxCurrency() const
+{
+    // options and ticker required to display auxilary currencies
+    if (!optionsModel || !ticker)
+        return Currency::None;
+
+    switch (primaryCurrency) {
+    case Currency::Gulden:
+        return Currency::Euro;
+    case Currency::Euro:
+        return Currency::Gulden;
+    case Currency::Local:
+        return Currency::Gulden;
+    default:
+        assert(false);
+        break;
+    }
+}
+
+GuldenAmountField::Currency GuldenAmountField::secondAuxCurrency() const
+{
+    // options and ticker required to display auxilary currencies
+    if (!optionsModel || !ticker)
+        return Currency::None;
+
+    // no display of 2nd auxilary if local equal to Euro, just first Aux will do
+    if (optionsModel->guldenSettings->getLocalCurrency() == "EUR")
+        return Currency::None;
+
+    switch (primaryCurrency) {
+    case Currency::Gulden:
+        return Currency::Local;
+    case Currency::Euro:
+        return Currency::Local;
+    case Currency::Local:
+        return Currency::Euro;
+    default:
+        return Currency::None;
+    }
+}
+
+std::string GuldenAmountField::CurrencyCode(const Currency currency) const
+{
+    switch (currency) {
+    case Currency::Gulden:
+        return "NLG";
+    case Currency::Euro:
+        return "EUR";
+    case Currency::Local:
+        if (!optionsModel)
+            return "EUR";
+        return optionsModel->guldenSettings->getLocalCurrency().toStdString();
+    default:
+        return "EUR";
+    }
+}
+
+CAmount GuldenAmountField::AmountForCurrency(const Currency currency) const
+{
+    switch (currency) {
+    case Currency::Gulden:
+        return amountGulden;
+        break;
+    case Currency::Euro:
+        return amountEuro;
+        break;
+    case Currency::Local:
+        return amountLocal;
+        break;
+    default:
+        return CAmount(0);
+    }
+}
+
+QString GuldenAmountField::FormatAuxAmount(const Currency currency) const
+{
+    if (currency == Currency::None)
+        return "";
+
+    if (amountGulden > 0)
+    {
+        return QString::fromStdString(CurrencySymbolForCurrencyCode( CurrencyCode(currency) ))
+                                        + QString("\u2009")
+                                        + GuldenUnits::format(GuldenUnits::NLG,
+                                                              AmountForCurrency(currency),
+                                                              false, GuldenUnits::separatorAlways, 2);
     }
     else
     {
-        // [...] Gulden <> E... (B...) (R...)
-        // [...] Gulden <> G... (E...) (R...)
-        // [...] Euro <> G... (B...) (R...)
-        // [...] ZAR <> G... (E...) (B...)
-        switch(displayCurrency)
-        {
-            case AmountFieldCurrency::CurrencyGulden:
-            {
-                switch(primaryCurrency)
-                {
-                    case AmountFieldCurrency::CurrencyEuro:
-                        return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                        return tertiaryAmount;
-                    case AmountFieldCurrency::CurrencyLocal:
-                        return quadAmount;
-                    case AmountFieldCurrency::CurrencyGulden:
-                    default:
-                        assert(0);
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyEuro:
-            {
-                switch(primaryCurrency)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                        return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                        return tertiaryAmount;
-                    case AmountFieldCurrency::CurrencyLocal:
-                        return quadAmount;
-                    case AmountFieldCurrency::CurrencyEuro:
-                    default:
-                        assert(0);
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyBitcoin:
-            {
-                switch(primaryCurrency)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                        return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyEuro:
-                        return tertiaryAmount;
-                    case AmountFieldCurrency::CurrencyLocal:
-                        return quadAmount;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                    default:
-                        assert(0);
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyLocal:
-            {
-                switch(primaryCurrency)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                        return secondaryAmount;
-                    case AmountFieldCurrency::CurrencyEuro:
-                        return tertiaryAmount;
-                    break;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                        return quadAmount;
-                    case AmountFieldCurrency::CurrencyLocal:
-                    default:
-                        assert(0);
-                }
-            }
-            break;
-        }
-    }
-    return amount->value(valid_out);
-}
-
-void GuldenAmountField::setValue(const CAmount& value)
-{
-    amount->setValue(value);
-}
-
-void GuldenAmountField::setValue(const CAmount& value, int nLimit)
-{
-    CAmount finalValue;
-    GuldenUnits::parse(GuldenUnits::NLG, GuldenUnits::format(GuldenUnits::NLG, value, false, GuldenUnits::separatorAlways, nLimit), &finalValue);
-    if (finalValue > MAX_MONEY)
-    {
-        finalValue = MAX_MONEY;
-    }
-    amount->setValue(finalValue, nLimit);
-}
-
-void GuldenAmountField::setReadOnly(bool fReadOnly)
-{
-    amount->setReadOnly(fReadOnly);
-}
-
-void GuldenAmountField::unitChanged(int idx)
-{
-    // Use description tooltip for current unit for the combobox
-    /*unit->setToolTip(unit->itemData(idx, Qt::ToolTipRole).toString());
-
-    // Determine new unit ID
-    int newUnit = unit->itemData(idx, GuldenUnits::UnitRole).toInt();
-
-    amount->setDisplayUnit(newUnit);*/
-}
-
-void GuldenAmountField::changeToSecondaryCurrency()
-{
-    // [...] Gulden <> E... (B...) (R...)
-    // [...] Gulden <> G... (E...) (R...)
-    // [...] Euro <> G... (B...) (R...)
-    // [...] ZAR <> G... (E...) (B...)
-    switch(displayCurrency)
-    {
-        case AmountFieldCurrency::CurrencyGulden:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyEuro;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyBitcoin:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyGulden;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyEuro:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyGulden;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyLocal:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyGulden;
-        }
-        break;
-        default:
-            assert(0);
-    }
-    setValue(secondaryAmount, 2);
-}
-
-void GuldenAmountField::changeToTertiaryCurrency()
-{
-    // [...] Gulden <> E... (B...) (R...)
-    // [...] Gulden <> G... (E...) (R...)
-    // [...] Euro <> G... (B...) (R...)
-    // [...] ZAR <> G... (E...) (B...)
-    switch(displayCurrency)
-    {
-        case AmountFieldCurrency::CurrencyGulden:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyBitcoin:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyEuro;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyEuro:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyLocal:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyEuro;
-        }
-        break;
-        default:
-            assert(0);
-    }
-    setValue(tertiaryAmount, 2);
-}
-
-void GuldenAmountField::changeToQuadCurrency()
-{
-    // [...] Gulden <> E... (B...) (R...)
-    // [...] Gulden <> G... (E...) (R...)
-    // [...] Euro <> G... (B...) (R...)
-    // [...] ZAR <> G... (E...) (B...)
-    switch(displayCurrency)
-    {
-        case AmountFieldCurrency::CurrencyGulden:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyLocal;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyBitcoin:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyLocal;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyEuro:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyLocal;
-        }
-        break;
-        case AmountFieldCurrency::CurrencyLocal:
-        {
-            displayCurrency = AmountFieldCurrency::CurrencyBitcoin;
-        }
-        break;
-        default:
-            assert(0);
-    }
-    setValue(quadAmount, 2);
-}
-
-bool GuldenAmountField::validateEurLimits(CAmount EURAmount)
-{
-    CAmount currencyMax = optionsModel->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
-    CAmount currencyMin = optionsModel->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
-    if (EURAmount > currencyMax)
-    {
-        secondaryAmountDisplay->setText("");
-        tertiaryAmountDisplay->setText("");
-        quadAmountDisplay->setText("");
-        forexError->setText(tr("Maximum allowed %1 payment is %2.").arg("Euro", QString::fromStdString(optionsModel->getNocksSettings()->getMaximumForCurrencyAsString("NLG-EUR"))));
-        return false;
-    }
-    else if(EURAmount < currencyMin)
-    {
-        secondaryAmountDisplay->setText("");
-        tertiaryAmountDisplay->setText("");
-        quadAmountDisplay->setText("");
-        forexError->setText(tr("Minimum allowed %1 payment is %2.").arg("Euro", QString::fromStdString(optionsModel->getNocksSettings()->getMinimumForCurrencyAsString("NLG-EUR"))));
-        return false;
-    }
-    forexError->setText("");
-    return true;
-}
-
-bool GuldenAmountField::validateBTCLimits(CAmount BTCAmount)
-{
-    CAmount currencyMax = optionsModel->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
-    CAmount currencyMin = optionsModel->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
-    if (BTCAmount > currencyMax)
-    {
-        secondaryAmountDisplay->setText("");
-        tertiaryAmountDisplay->setText("");
-        quadAmountDisplay->setText("");
-        forexError->setText(tr("Maximum allowed %1 payment is %2.").arg("Bitcoin", QString::fromStdString(optionsModel->getNocksSettings()->getMaximumForCurrencyAsString("NLG-BTC"))));
-        return false;
-    }
-    else if(BTCAmount < currencyMin)
-    {
-        secondaryAmountDisplay->setText("");
-        tertiaryAmountDisplay->setText("");
-        quadAmountDisplay->setText("");
-        forexError->setText(tr("Minimum allowed %1 payment is %2.").arg("Bitcoin", QString::fromStdString(optionsModel->getNocksSettings()->getMinimumForCurrencyAsString("NLG-BTC"))));
-        return false;
-    }
-    forexError->setText("");
-    return true;
-}
-
-void GuldenAmountField::update()
-{
-    CAmount amount = value();
-    if (!optionsModel)
-        return;
-    if (!ticker)
-        return;
-
-    if (nocksRequestBTCtoNLG)
-    {
-        nocksRequestBTCtoNLG->deleteLater();
-        nocksRequestBTCtoNLG = NULL;
-    }
-    if (nocksRequestEURtoNLG)
-    {
-        nocksRequestEURtoNLG->deleteLater();
-        nocksRequestEURtoNLG = NULL;
-    }
-    if (nocksRequestNLGtoBTC)
-    {
-        nocksRequestNLGtoBTC->deleteLater();
-        nocksRequestNLGtoBTC = NULL;
-    }
-    if (nocksRequestNLGtoEUR)
-    {
-        nocksRequestNLGtoEUR->deleteLater();
-        nocksRequestNLGtoEUR = NULL;
-    }
-
-    secondaryAmountDisplay->setVisible(true);
-    tertiaryAmountDisplay->setVisible(true);
-
-    if ( optionsModel->guldenSettings->getLocalCurrency().toStdString() == "BTC" )
-    {
-        quadAmountDisplay->setVisible(false);
-    }
-    else if (optionsModel->guldenSettings->getLocalCurrency().toStdString() == "EUR")
-    {
-        quadAmountDisplay->setVisible(false);
-    }
-    else
-    {
-        quadAmountDisplay->setVisible(true);
-    }
-
-
-    if (displayCurrency == AmountFieldCurrency::CurrencyGulden)
-    {
-        // [...] Gulden <> E... (B...) (R...)
-        unit->setText("Gulden");
-        forexError->setText("");
-
-        #ifndef SUPPORT_BITCOIN_AS_FOREX
-        tertiaryAmountDisplay->setVisible(false);
-        #endif
-
-        if (amount > 0)
-        {
-            if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
-            {
-                CAmount EURAmount = ticker->convertGuldenToForex(amount, "EUR");
-                if (!validateEurLimits(EURAmount))
-                    return;
-            }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
-            {
-                CAmount BTCAmount = ticker->convertGuldenToForex(amount, "BTC");
-                if (!validateBTCLimits(BTCAmount))
-                    return;
-            }
-
-            secondaryAmount = ticker->convertGuldenToForex(amount, "EUR");
-            nocksRequestNLGtoEUR = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "EUR", "NLG", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
-            //fixme: (2.0) (HIGH) (Crash) - This can cause a crash if network is slow - the c allback into the "GuldenAmountField" can occur after it is deleted if changing between accounts...
-            //connect(nocksRequestNLGtoEUR, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoEUR, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
-            tertiaryAmount = ticker->convertGuldenToForex(amount, "BTC");
-            nocksRequestNLGtoBTC = new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "BTC", "NLG", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
-            //connect(nocksRequestNLGtoBTC, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestNLGtoBTC, 3); });
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-            quadAmount = ticker->convertGuldenToForex(amount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        }
-        else
-        {
-            secondaryAmount = CAmount(0);
-            tertiaryAmount = CAmount(0);
-            quadAmount = CAmount(0);
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + QString("0.00"));
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + QString("0.00)"));
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + QString("0.00)"));
-        }
-    }
-    else if(displayCurrency == AmountFieldCurrency::CurrencyBitcoin)
-    {
-        // [...] Gulden <> G... (E...) (R...)
-
-        unit->setText("Bitcoin");
-        forexError->setText("");
-
-        secondaryAmountDisplay->setVisible(true);
-        tertiaryAmountDisplay->setVisible(true);
-        quadAmountDisplay->setVisible(true);
-
-        if (amount > 0)
-        {
-            CAmount guldenAmount = ticker->convertForexToGulden(amount, "BTC");
-            if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
-            {
-                CAmount EURAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-                if (!validateEurLimits(EURAmount))
-                    return;
-            }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
-            {
-                if (!validateBTCLimits(amount))
-                    return;
-            }
-
-            secondaryAmount = guldenAmount;
-            nocksRequestBTCtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "BTC", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
-            connect(nocksRequestBTCtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestBTCtoNLG, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
-            tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-            quadAmount = ticker->convertGuldenToForex(guldenAmount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        }
-        else
-        {
-            secondaryAmount = CAmount(0);
-            tertiaryAmount = CAmount(0);
-            quadAmount = CAmount(0);
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + QString("0.00"));
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + QString("0.00)"));
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + QString("0.00)"));
-        }
-    }
-    else if(displayCurrency == AmountFieldCurrency::CurrencyEuro)
-    {
-        // [...] Euro <> G... (B...) (R...)
-        unit->setText("Euro");
-        forexError->setText("");
-
-        #ifndef SUPPORT_BITCOIN_AS_FOREX
-        tertiaryAmountDisplay->setVisible(false);
-        #endif
-
-        if (amount > 0)
-        {
-            CAmount guldenAmount = ticker->convertForexToGulden(amount, "EUR");
-            if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
-            {
-                if (!validateEurLimits(amount))
-                    return;
-            }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
-            {
-                CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-
-                if (!validateBTCLimits(BTCAmount))
-                    return;
-            }
-
-            secondaryAmount = guldenAmount;
-            nocksRequestEURtoNLG= new NocksRequest(this, NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR", GuldenUnits::format(GuldenUnits::NLG, amount, false, GuldenUnits::separatorNever, 2));
-            connect(nocksRequestEURtoNLG, &NocksRequest::requestProcessed, [this]() { nocksRequestProcessed(nocksRequestEURtoNLG, 2); });
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG"))  + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
-            tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-            quadAmount = ticker->convertGuldenToForex(guldenAmount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        }
-        else
-        {
-            secondaryAmount = CAmount(0);
-            tertiaryAmount = CAmount(0);
-            quadAmount = CAmount(0);
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + QString("0.00"));
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + QString("0.00)"));
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + QString("0.00)"));
-        }
-    }
-    else if(displayCurrency == AmountFieldCurrency::CurrencyLocal)
-    {
-        // [...] ZAR <> G... (E...) (B...)
-        unit->setText(optionsModel->guldenSettings->getLocalCurrency());
-        forexError->setText("");
-
-        #ifndef SUPPORT_BITCOIN_AS_FOREX
-        quadAmountDisplay->setVisible(false);
-        #endif
-
-        if (amount > 0)
-        {
-            CAmount guldenAmount = ticker->convertForexToGulden(amount, optionsModel->guldenSettings->getLocalCurrency().toStdString());
-            if (primaryCurrency == AmountFieldCurrency::CurrencyEuro)
-            {
-                CAmount EURAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-
-                if (!validateEurLimits(EURAmount))
-                    return;
-            }
-            else if (primaryCurrency == AmountFieldCurrency::CurrencyBitcoin)
-            {
-                CAmount BTCAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-
-                if (!validateBTCLimits(BTCAmount))
-                    return;
-            }
-
-            secondaryAmount = guldenAmount;
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
-            tertiaryAmount = ticker->convertGuldenToForex(guldenAmount, "EUR");
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-            quadAmount = ticker->convertGuldenToForex(guldenAmount, "BTC");
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        }
-        else
-        {
-            secondaryAmount = CAmount(0);
-            tertiaryAmount = CAmount(0);
-            quadAmount = CAmount(0);
-            secondaryAmountDisplay->setText(QString::fromStdString(CurrencySymbolForCurrencyCode("NLG")) + QString("0.00"));
-            tertiaryAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("EUR")) + QString("\u2009") + QString("0.00)"));
-            quadAmountDisplay->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode("BTC")) + QString("\u2009") + QString("0.00)"));
-        }
+        return QString::fromStdString(CurrencySymbolForCurrencyCode( CurrencyCode(currency) ))
+                                       + QString("\u2009") + QString("0.00");
     }
 }
 
-void GuldenAmountField::nocksRequestProcessed(NocksRequest*& request, int position)
+void GuldenAmountField::changeToFirstAuxCurrency()
 {
-    if (position == 2)
-    {
-        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &secondaryAmount);
-        QString oldText = secondaryAmountDisplay->text();
-        oldText = oldText.replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, secondaryAmount, false, GuldenUnits::separatorAlways, 2));
-        secondaryAmountDisplay->setText(oldText);
-    }
-    else if (position == 3)
-    {
-        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &tertiaryAmount);
-        tertiaryAmountDisplay->setText(tertiaryAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, tertiaryAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
-    }
-    else if (position == 4)
-    {
-        GuldenUnits::parse(GuldenUnits::NLG, request->nativeAmount, &quadAmount);
-        quadAmountDisplay->setText(quadAmountDisplay->text().replace(QRegExp("[0-9].*"), GuldenUnits::format(GuldenUnits::NLG, quadAmount, false, GuldenUnits::separatorAlways, 2) + QString(")")));
-    }
-    request->deleteLater();
-    request = NULL;
+    setPrimaryDisplayCurrency(firstAuxCurrency());
 }
 
-void GuldenAmountField::setDisplayUnit(int unit)
+void GuldenAmountField::changeToSecondAuxCurrency()
 {
-    //unit->setValue(newUnit);
+    setPrimaryDisplayCurrency(secondAuxCurrency());
 }
 
-void GuldenAmountField::setSingleStep(const CAmount& step)
+void GuldenAmountField::exchangeRateUpdate()
 {
-    amount->setSingleStep(step);
+    updateDataFromPrimary();
 }
 
-void GuldenAmountField::setCurrency(OptionsModel* optionsModel_, CurrencyTicker* ticker_, AmountFieldCurrency currency_)
+void GuldenAmountField::tickerDestroyed(QObject *obj)
 {
-    if (!optionsModel)
-    {
-        optionsModel = optionsModel_;
-        ticker = ticker_;
+    ticker = nullptr;
+}
 
-        connect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( update() ) );
-    }
-
-    if (displayCurrency != currency_)
-    {
-        // [...] Gulden <> E... (B...) (R...)
-        // [...] Gulden <> G... (E...) (R...)
-        // [...] Euro <> G... (B...) (R...)
-        // [...] ZAR <> G... (E...) (B...)
-        switch(displayCurrency)
-        {
-            case AmountFieldCurrency::CurrencyGulden:
-            {
-                switch(currency_)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                    {
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyEuro:
-                    {
-                        changeToSecondaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                    {
-                        changeToTertiaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyLocal:
-                    {
-                        changeToQuadCurrency();
-                    }
-                    break;
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyEuro:
-            {
-                switch(currency_)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                    {
-                        changeToSecondaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyEuro:
-                    {
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                    {
-                        changeToTertiaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyLocal:
-                    {
-                        changeToQuadCurrency();
-                    }
-                    break;
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyBitcoin:
-            {
-                switch(currency_)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                    {
-                        changeToSecondaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyEuro:
-                    {
-                        changeToTertiaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                    {
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyLocal:
-                    {
-                        changeToQuadCurrency();
-                    }
-                    break;
-                }
-            }
-            break;
-            case AmountFieldCurrency::CurrencyLocal:
-            {
-                switch(currency_)
-                {
-                    case AmountFieldCurrency::CurrencyGulden:
-                    {
-                        changeToSecondaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyEuro:
-                    {
-                        changeToTertiaryCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyBitcoin:
-                    {
-                        changeToQuadCurrency();
-                    }
-                    break;
-                    case AmountFieldCurrency::CurrencyLocal:
-                    {
-                    }
-                    break;
-                }
-            }
-            break;
-        }
-        displayCurrency = currency_;
-    }
-    if (primaryCurrency != currency_)
-    {
-        primaryCurrency = currency_;
-        update();
-    }
+void GuldenAmountField::primaryValueChanged()
+{
+    updateDataFromPrimary();
+    Q_EMIT valueChanged();
 }

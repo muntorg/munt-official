@@ -5,7 +5,6 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -33,18 +32,35 @@ class GuldenAmountField: public QWidget
 {
     Q_OBJECT
 
-    // ugly hack: for some unknown reason CAmount (instead of qint64) does not work here as expected
-    // discussion: https://github.com/bitcoin/bitcoin/pull/5117
-    Q_PROPERTY(qint64 value READ value WRITE setValue NOTIFY valueChanged USER true)
-
 public:
     explicit GuldenAmountField(QWidget *parent = 0);
     virtual ~GuldenAmountField();
 
-    CAmount value(bool *value=0) const;
-    CAmount valueForCurrency(bool *value=0) const;
-    void setValue(const CAmount& value);
-    void setValue(const CAmount& value, int nLimit);
+    //! Amount in Gulden.
+    CAmount amount() const;
+
+    //! Set amount in Gulden.
+    void setAmount(const CAmount& value);
+    void setAmount(const CAmount& value, int nLimit);
+
+
+    //! Gulden amount. Do not use for new code! Legacy method to keep the changeset small.
+    CAmount value(bool *valid=nullptr) const
+    {
+        return amount();
+    }
+
+    //! Set Gulden amount. Legacy method to keep the changeset small. Do not use for new code!
+    void setValue(const CAmount& value)
+    {
+        setAmount(value);
+    }
+
+    //! Always returns the Gulden amount. Legacy method to keep the changeset small. Do not use for new code!
+    CAmount valueForCurrency(bool *valid = nullptr)
+    {
+        return amount();
+    }
 
     /** Set single step in satoshis **/
     void setSingleStep(const CAmount& step);
@@ -54,11 +70,6 @@ public:
 
     /** Mark current value as invalid in UI. */
     void setValid(bool valid);
-    /** Perform input validation, mark field as invalid if entered value is not valid. */
-    bool validate();
-
-    /** Change unit used to display amount. */
-    void setDisplayUnit(int unit);
 
     /** Make field empty and ready for new input. */
     void clear();
@@ -66,21 +77,27 @@ public:
     /** Enable/Disable. */
     void setEnabled(bool fEnabled);
 
+    enum class Currency
+    {
+        None,
+        Gulden, // Gulden
+        Euro,   // Quote currency, Euro
+        Local   // Local currency configured in options
+    };
+
+    //! Set currency used for main display and editing.
+    void setPrimaryDisplayCurrency(const Currency currency);
+
+    /** Set OptionsModel for ticker information and configured local currency.
+        Without OptionsModel auxilary currencies will not be displayed.
+    */
+    void setOptionsModel(OptionsModel* optionsModel_);
+
     /** Qt messes up the tab chain by default in some cases (issue https://bugreports.qt-project.org/browse/QTBUG-10907),
         in these cases we have to set it up manually.
     */
     QWidget *setupTabChain(QWidget *prev);
 
-    enum AmountFieldCurrency
-    {
-        CurrencyGulden,
-        CurrencyBitcoin,
-        CurrencyEuro,
-        CurrencyLocal
-    };
-    void setCurrency(OptionsModel* optionsModel_, CurrencyTicker* ticker, AmountFieldCurrency currency_);
-
-    void nocksRequestProcessed(NocksRequest*& request, int position);
 
 Q_SIGNALS:
     void valueChanged();
@@ -90,36 +107,50 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    AmountSpinBox *amount;
-    QLabel* unit;
-    ClickableLabel* secondaryAmountDisplay;
-    ClickableLabel* tertiaryAmountDisplay;
-    ClickableLabel* quadAmountDisplay;
-    ClickableLabel* amountSeperator;
-    AmountFieldCurrency primaryCurrency;
-    AmountFieldCurrency displayCurrency;
-    QLabel* forexError;
+    // Principal internal state/data members. These are updated by external events such as user
+    // entering data and exchange rate updates. Amounts in all currencies are kept so that display
+    // values can be swapped without need of repeated conversion which would lead to the values
+    // changing due to loss of precision.
+    //    The primaryCurrency determines the primary input field and display order of the
+    //    auxilary currencies as follows:
+    //        Gulden : [Gulden] <-> Euro (Local)
+    //        Euro   : [Euro]   <-> Gulden (Local)
+    //        Local  : [Local]  <-> Gulden (Euro)
+    //    If the local currency is EUR only the first auxilary currency is displayed.
+    Currency primaryCurrency; // which currency is used for the input field
+    CAmount amountGulden;
+    CAmount amountEuro;
+    CAmount amountLocal;
 
+    // UI widgets
+    AmountSpinBox* primaryAmountDisplay;
+    QLabel* primaryAmountName;
+    ClickableLabel* firstAuxAmountDisplay;
+    ClickableLabel* amountSeperator;
+    ClickableLabel* secondAuxAmountDisplay;
+
+    // external sources
     OptionsModel* optionsModel;
     CurrencyTicker* ticker;
 
-    CAmount secondaryAmount;
-    CAmount tertiaryAmount;
-    CAmount quadAmount;
+    // helpers for syncing data with UI
+    void updatePrimaryFromData();
+    void updateDataFromPrimary();
+    void updateAuxilaryFromData();
 
-    NocksRequest* nocksRequestBTCtoNLG;
-    NocksRequest* nocksRequestEURtoNLG;
-    NocksRequest* nocksRequestNLGtoBTC;
-    NocksRequest* nocksRequestNLGtoEUR;
+    // util and formatting helpers
+    Currency firstAuxCurrency() const;
+    Currency secondAuxCurrency() const;
+    std::string CurrencyCode(const Currency currency) const;
+    CAmount AmountForCurrency(const Currency currency) const;
+    QString FormatAuxAmount(const Currency currency) const;
 
-    bool validateEurLimits(CAmount EURAmount);
-    bool validateBTCLimits(CAmount EURAmount);
 private Q_SLOTS:
-    void unitChanged(int idx);
-    void update();
-    void changeToSecondaryCurrency();
-    void changeToTertiaryCurrency();
-    void changeToQuadCurrency();
+    void changeToFirstAuxCurrency();
+    void changeToSecondAuxCurrency();
+    void exchangeRateUpdate();
+    void tickerDestroyed(QObject* obj);
+    void primaryValueChanged();
 };
 
 #endif // GULDEN_QT_GULDENAMOUNTFIELD_H

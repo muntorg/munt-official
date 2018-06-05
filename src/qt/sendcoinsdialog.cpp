@@ -743,7 +743,6 @@ void SendCoinsDialog::updateActionButtons()
 void SendCoinsDialog::updateDisplayUnit()
 {
     setBalance(model->getBalance(), 0, 0, 0, 0, 0);
-    ui->customFee->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
     updateMinFeeLabel();
     updateSmartFeeLabel();
 }

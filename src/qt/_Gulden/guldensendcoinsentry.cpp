@@ -134,7 +134,7 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
     if (model && model->getOptionsModel())
     {
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-        ui->payAmount->setCurrency(model->getOptionsModel(), model->getOptionsModel()->getTicker(), GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
+        ui->payAmount->setOptionsModel(model->getOptionsModel());
     }
 
     if (model)
@@ -219,15 +219,15 @@ void GuldenSendCoinsEntry::addressChanged()
 
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyBitcoin);
+            // ui->payAmount->setDisplayCurrency(GuldenAmountField::Currency::Bitcoin);
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyEuro);
+            ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Euro);
         }
         else
         {
-            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
+            ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Gulden);
         }
     }
 }
@@ -248,7 +248,7 @@ void GuldenSendCoinsEntry::tabChanged()
         break;
         case 2:
         {
-            ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyGulden);
+            ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Gulden);
         }
         break;
     }
@@ -342,7 +342,7 @@ bool GuldenSendCoinsEntry::validate()
 
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
-            if ( ui->payAmount->valueForCurrency(0) > currencyMax || ui->payAmount->valueForCurrency(0) < currencyMin )
+            if ( ui->payAmount->amount() > currencyMax || ui->payAmount->amount() < currencyMin )
             {
                 ui->payAmount->setValid(false);
                 return false;
@@ -354,7 +354,7 @@ bool GuldenSendCoinsEntry::validate()
 
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
-            if ( ui->payAmount->valueForCurrency(0) > currencyMax || ui->payAmount->valueForCurrency(0) < currencyMin )
+            if ( ui->payAmount->amount() > currencyMax || ui->payAmount->amount() < currencyMin )
             {
                 ui->payAmount->setValid(false);
                 return false;
@@ -366,13 +366,8 @@ bool GuldenSendCoinsEntry::validate()
         }
     }
 
-    if (!ui->payAmount->validate())
-    {
-        retval = false;
-    }
-
     // Sending a zero amount is invalid
-    if (ui->payAmount->valueForCurrency(0) <= 0)
+    if (ui->payAmount->amount() <= 0)
     {
         ui->payAmount->setValid(false);
         retval = false;
