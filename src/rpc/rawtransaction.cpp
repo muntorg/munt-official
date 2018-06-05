@@ -95,9 +95,9 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
             "{\n"
             "  \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
             "  \"txid\" : \"id\",        (string) The transaction id (same as provided)\n"
-            "  \"hash\" : \"id\",        (string) The transaction hash (differs from txid for witness transactions)\n"
+            "  \"hash\" : \"id\",        (string) The transaction hash\n"
             "  \"size\" : n,             (numeric) The serialized transaction size\n"
-            "  \"vsize\" : n,            (numeric) The virtual transaction size (differs from size for witness transactions)\n"
+            "  \"vsize\" : n,            (numeric) The virtual transaction size\n"
             "  \"version\" : n,          (numeric) The version\n"
             "  \"locktime\" : ttt,       (numeric) The lock time\n"
             "  \"vin\" : [               (array of json objects)\n"
@@ -256,7 +256,7 @@ UniValue gettxoutproof(const JSONRPCRequest& request)
     if (ntxFound != setTxids.size())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "(Not all) transactions not found in specified block");
 
-    CDataStream ssMB(SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS);
+    CDataStream ssMB(SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES);
     CMerkleBlock mb(block, setTxids);
     ssMB << mb;
     std::string strHex = HexStr(ssMB.begin(), ssMB.end());
@@ -276,7 +276,7 @@ UniValue verifytxoutproof(const JSONRPCRequest& request)
             "[\"txid\"]      (array, strings) The txid(s) which the proof commits to, or empty array if the proof is invalid\n"
         );
 
-    CDataStream ssMB(ParseHexV(request.params[0], "proof"), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS);
+    CDataStream ssMB(ParseHexV(request.params[0], "proof"), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES);
     CMerkleBlock merkleBlock;
     ssMB >> merkleBlock;
 
@@ -562,8 +562,8 @@ static void TxInErrorToJSON(const uint64_t nTransactionVersion, const CTxIn& txi
     entry.push_back(Pair("txid", txin.prevout.hash.ToString()));
     entry.push_back(Pair("vout", (uint64_t)txin.prevout.n));
     UniValue witness(UniValue::VARR);
-    for (unsigned int i = 0; i < txin.scriptWitness.stack.size(); i++) {
-        witness.push_back(HexStr(txin.scriptWitness.stack[i].begin(), txin.scriptWitness.stack[i].end()));
+    for (unsigned int i = 0; i < txin.segregatedSignatureData.stack.size(); i++) {
+        witness.push_back(HexStr(txin.segregatedSignatureData.stack[i].begin(), txin.segregatedSignatureData.stack[i].end()));
     }
     entry.push_back(Pair("witness", witness));
     entry.push_back(Pair("scriptSig", HexStr(txin.scriptSig.begin(), txin.scriptSig.end())));
@@ -847,7 +847,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         UpdateTransaction(mergedTx, i, sigdata);
 
         ScriptError serror = SCRIPT_ERR_OK;
-        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, &txConst, i, amount), &serror)) {
+        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, &txConst, i, amount), &serror)) {
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, ScriptErrorString(serror));
         }
     }

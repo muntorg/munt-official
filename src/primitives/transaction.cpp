@@ -101,7 +101,7 @@ uint256 CMutableTransaction::GetHash() const
     if (!IsOldTransactionVersion(nVersion))
         return SerializeHash(*this, SER_GETHASH, 0);
     else
-        return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_WITNESS);
+        return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES);
 }
 
 uint256 CTransaction::ComputeHash() const
@@ -109,7 +109,7 @@ uint256 CTransaction::ComputeHash() const
     if (!IsOldTransactionVersion(nVersion))
         return SerializeHash(*this, SER_GETHASH, 0);
     else
-        return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_WITNESS);
+        return SerializeHash(*this, SER_GETHASH, SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES);
 }
 
 uint256 CTransaction::GetWitnessHash() const
@@ -162,7 +162,7 @@ std::string CTransaction::ToString() const
     for (unsigned int i = 0; i < vin.size(); i++)
         str += "    " + vin[i].ToString() + "\n";
     for (unsigned int i = 0; i < vin.size(); i++)
-        str += "    " + vin[i].scriptWitness.ToString() + "\n";
+        str += "    " + vin[i].segregatedSignatureData.ToString() + "\n";
     for (unsigned int i = 0; i < vout.size(); i++)
         str += "    " + vout[i].ToString() + "\n";
     return str;

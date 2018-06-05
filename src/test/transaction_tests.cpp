@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(tx_valid)
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
-                const CScriptWitness *witness = &tx.vin[i].scriptWitness;
+                const CSegregatedSignatureData *witness = &tx.vin[i].segregatedSignatureData;
                 BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],
                                                  witness, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err),
                                     strTest);
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
                 if (mapprevOutValues.count(tx.vin[i].prevout)) {
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
-                const CScriptWitness *witness = &tx.vin[i].scriptWitness;
+                const CSegregatedSignatureData *witness = &tx.vin[i].segregatedSignatureData;
                 fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],
                                       witness, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err);
             }
@@ -388,7 +388,7 @@ static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outsc
     assert(input.vin[0] == inputm.vin[0]);
     assert(input.vout.size() == 1);
     assert(input.vout[0] == inputm.vout[0]);
-    assert(input.vin[0].scriptWitness.stack == inputm.vin[0].scriptWitness.stack);
+    assert(input.vin[0].segregatedSignatureData.stack == inputm.vin[0].segregatedSignatureData.stack);
 #endif
 }
 
@@ -396,7 +396,7 @@ void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& inp
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].scriptWitness, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output->vout[0].nValue), &error);
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output->vout[0].nValue), &error);
     assert(ret == success);
 }
 

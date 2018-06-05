@@ -26,7 +26,7 @@
 #include <bitset>
 
 
-static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
+static const int SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES = 0x40000000;
 
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
@@ -266,7 +266,7 @@ public:
 private:
     mutable uint32_t nSequence;
 public:
-    CScriptWitness scriptWitness; //! Only serialized through CTransaction
+    CSegregatedSignatureData segregatedSignatureData; //! Only serialized through CTransaction
 
     /* Setting nSequence to this value for every input in a transaction
      * disables nLockTime. */
@@ -315,7 +315,7 @@ public:
             STRREAD(nTypeAndFlags_);
 
             prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
-            //scriptSig is no longer used - everything goes in scriptWitness.
+            //scriptSig is no longer used - everything goes in segregatedSignatureData.
             if (FlagIsSet(CTxInFlags::HasRelativeLock))
             {
                 s >> VARINT(nSequence);
@@ -953,10 +953,10 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
     }
 
     //Witness data
-    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES)) {
         for (size_t i = 0; i < tx.vin.size(); i++)
         {
-            s << VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+            s << VARINTVECTOR(tx.vin[i].segregatedSignatureData.stack);
         }
     }
 
@@ -1043,9 +1043,9 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
         txOut.ReadFromStream(s, tx.nVersion);
     }
 
-    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES)) {
         for (size_t i = 0; i < tx.vin.size(); i++) {
-            s >> VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+            s >> VARINTVECTOR(tx.vin[i].segregatedSignatureData.stack);
         }
     }
 
@@ -1167,7 +1167,7 @@ public:
         for (size_t i = 0; i < vin.size(); i++)
         {
             //fixme: (2.0) - Rather test on transaction version?
-            if (!vin[i].scriptWitness.IsNull()) 
+            if (!vin[i].segregatedSignatureData.IsNull()) 
                 return true;
         }
         return false;
@@ -1218,7 +1218,7 @@ struct CMutableTransaction
         for (size_t i = 0; i < vin.size(); i++)
         {
             //fixme: (2.0) - Rather test on transaction version?
-            if (!vin[i].scriptWitness.IsNull())
+            if (!vin[i].segregatedSignatureData.IsNull())
                 return true;
         }
         return false;

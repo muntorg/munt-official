@@ -23,7 +23,7 @@
 #include <unordered_map>
 
 //fixme: (2.0) (SEGSIG)
-#define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(1), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS))
+#define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(1), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES))
 
 CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block, bool fUseWTXID) :
         nonce(GetRand(std::numeric_limits<uint64_t>::max())),

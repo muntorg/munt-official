@@ -297,9 +297,9 @@ bool CScript::IsPushOnly() const
     return this->IsPushOnly(begin());
 }
 
-std::string CScriptWitness::ToString() const
+std::string CSegregatedSignatureData::ToString() const
 {
-    std::string ret = "CScriptWitness(";
+    std::string ret = "CSegregatedSignatureData(";
     for (unsigned int i = 0; i < stack.size(); i++) {
         if (i) {
             ret += ", ";

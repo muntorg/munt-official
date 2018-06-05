@@ -457,7 +457,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight)
 
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
-    const CScriptWitness *witness = &ptxTo->vin[nIn].scriptWitness;
+    const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
     return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
 }
 
@@ -537,15 +537,15 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         CKeyID spendSigningKeyID;
                         if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
                         {
-                            if (tx.vin[i].scriptWitness.stack.size() != 1)
-                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (standard-key-hash-input should always have a scriptwitness stack size of exactly 1)", tx.vin[i].scriptWitness.stack.size()));
+                            if (tx.vin[i].segregatedSignatureData.stack.size() != 1)
+                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-segregated-signature-stack-size (%d) (standard-key-hash-input should always have a segregatedSignatureData stack size of exactly 1)", tx.vin[i].segregatedSignatureData.stack.size()));
                         }
                         else
                         {
                             // NB! The checks in tx_verify ensure that we have the right number of signatures (2 or 1) based on the type of witness operation.
                             // So we can assume at this point in the code that a spend will always have 2 signatures and won't try trick the system by providing only 1 signature.
                             // We therefore just validate here based on number of signatures provided.
-                            if (tx.vin[i].scriptWitness.stack.size() == 2)
+                            if (tx.vin[i].segregatedSignatureData.stack.size() == 2)
                             {
                                 spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
                                 if (spendSigningKeyID.IsNull())
@@ -553,14 +553,14 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                                 if (signingKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
-                            else if (tx.vin[i].scriptWitness.stack.size() == 1)
+                            else if (tx.vin[i].segregatedSignatureData.stack.size() == 1)
                             {
                                 if (signingKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
                             else
                             {
-                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-size (%d) (witness-input should always have a scriptwitness stack size of either 1 or 2 depending on whether it is a spend or witness operation)", tx.vin[i].scriptWitness.stack.size()));
+                                return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-scriptwitness-segregated-signature-data-size (%d) (witness-input should always have a segregatedSignatureData stack size of either 1 or 2 depending on whether it is a spend or witness operation)", tx.vin[i].segregatedSignatureData.stack.size()));
                             }
                         }
 
@@ -579,7 +579,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
                         CachingTransactionSignatureChecker check1(signingKeyID, &tx, i, amount, cacheStore, txdata);
-                        if (!check1.CheckSig(tx.vin[i].scriptWitness.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
+                        if (!check1.CheckSig(tx.vin[i].segregatedSignatureData.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
                         }
@@ -587,7 +587,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         if (!spendSigningKeyID.IsNull())
                         {
                             CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
-                            if (!check2.CheckSig(tx.vin[i].scriptWitness.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
+                            if (!check2.CheckSig(tx.vin[i].segregatedSignatureData.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                             {
                                 return false;
                             }
@@ -2314,7 +2314,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     // checks that use witness data may be performed here.
 
     // Size limits
-    if (block.vtx.empty() || block.vtx.size() > MAX_BLOCK_BASE_SIZE || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) > MAX_BLOCK_BASE_SIZE)
+    if (block.vtx.empty() || block.vtx.size() > MAX_BLOCK_BASE_SIZE || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES) > MAX_BLOCK_BASE_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
     // First transaction must be coinbase, the rest must not be
@@ -2525,7 +2525,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
-            if (block.vtx[0]->vin[0].scriptWitness.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptWitness.stack[0].begin()))
+            if (block.vtx[0]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].segregatedSignatureData.stack[0].begin()))
             {
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase2");
             }
@@ -2572,25 +2572,16 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
-            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptWitness.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptWitness.stack[0].begin()))
+            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack[0].begin()))
             {
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase3");
             }
         }
     }
 
-    // Validation for witness commitments.
-    // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the
-    //   coinbase (where 0x0000....0000 is used instead).
-    // * The coinbase scriptWitness is a stack of a single 32-byte vector, containing a witness nonce (unconstrained).
-    // * We build a merkle tree with all those witness hashes as leaves (similar to the hashMerkleRoot in the block header).
-    // * There must be at least one output whose scriptPubKey is a single 36-byte push, the first 4 bytes of which are
-    //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness nonce). In case there are
-    //   multiple, the last one is used.
-    bool fHaveSegregatedSignatures = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
-
     //NB!! GULDEN - segsig commits/adds a coinbase commitment here.
     //For segsig this is unnecessary; we hash this data as part of the normal merkle root instead.
+    bool fHaveSegregatedSignatures = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
 
     //fixme: (2.1) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam

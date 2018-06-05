@@ -77,7 +77,7 @@ static ScriptError VerifyWithFlag(const CTransaction& output, const CMutableTran
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].output.scriptPubKey, &inputi.vin[0].scriptWitness, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output.vout[0].nValue), &error);
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output.vout[0].nValue), &error);
     BOOST_CHECK((ret == true) == (error == SCRIPT_ERR_OK));
 
     return error;
@@ -85,10 +85,10 @@ static ScriptError VerifyWithFlag(const CTransaction& output, const CMutableTran
 
 /**
  * Builds a creationTx from scriptPubKey and a spendingTx from scriptSig
- * and witness such that spendingTx spends output zero of creationTx.
+ * and segregatedSignatureData such that spendingTx spends output zero of creationTx.
  * Also inserts creationTx's output into the coins view.
  */
-static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableTransaction& creationTx, const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& witness)
+static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableTransaction& creationTx, const CScript& scriptPubKey, const CScript& scriptSig, const CSegregatedSignatureData& segregatedSignatureData)
 {
     creationTx.nVersion = 1;
     creationTx.vin.resize(1);
@@ -103,7 +103,7 @@ static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CM
     spendingTx.vin[0].prevout.hash = creationTx.GetHash();
     spendingTx.vin[0].prevout.n = 0;
     spendingTx.vin[0].scriptSig = scriptSig;
-    spendingTx.vin[0].scriptWitness = witness;
+    spendingTx.vin[0].segregatedSignatureData = segregatedSignatureData;
     spendingTx.vout.resize(1);
     spendingTx.vout[0].nValue = 1;
     spendingTx.vout[0].output.scriptPubKey = CScript();
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
         // Do not use a valid signature to avoid using wallet operations.
         CScript scriptSig = CScript() << OP_0 << OP_0;
 
-        BuildTxs(spendingTx, coins, creationTx, scriptPubKey, scriptSig, CScriptWitness());
+        BuildTxs(spendingTx, coins, creationTx, scriptPubKey, scriptSig, CSegregatedSignatureData());
         // Legacy counting only includes signature operations in scriptSigs and scriptPubKeys
         // of a transaction and does not take the actual executed sig operations into account.
         // spendingTx in itself does not contain a signature operation.
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
         CScript scriptPubKey = GetScriptForDestination(CScriptID(redeemScript));
         CScript scriptSig = CScript() << OP_0 << OP_0 << ToByteVector(redeemScript);
 
-        BuildTxs(spendingTx, coins, creationTx, scriptPubKey, scriptSig, CScriptWitness());
+        BuildTxs(spendingTx, coins, creationTx, scriptPubKey, scriptSig, CSegregatedSignatureData());
         BOOST_CHECK(GetTransactionSigOpCost(CTransaction(spendingTx), coins, flags) == 2 );
         BOOST_CHECK(VerifyWithFlag(creationTx, spendingTx, flags) == SCRIPT_ERR_CHECKMULTISIGVERIFY);
     }

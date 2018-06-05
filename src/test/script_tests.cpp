@@ -136,14 +136,14 @@ static CMutableTransaction BuildCreditingTransaction(const CScript& scriptPubKey
     return txCredit;
 }
 
-static CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CScriptWitness& scriptWitness, const CMutableTransaction& txCredit)
+static CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CSegregatedSignatureData& segregatedSignatureData, const CMutableTransaction& txCredit)
 {
     CMutableTransaction txSpend(TEST_DEFAULT_TX_VERSION);
     txSpend.nVersion = 1;
     txSpend.nLockTime = 0;
     txSpend.vin.resize(1);
     txSpend.vout.resize(1);
-    txSpend.vin[0].scriptWitness = scriptWitness;
+    txSpend.vin[0].segregatedSignatureData = segregatedSignatureData;
     txSpend.vin[0].prevout.hash = txCredit.GetHash();
     txSpend.vin[0].prevout.n = 0;
     txSpend.vin[0].scriptSig = scriptSig;
@@ -154,7 +154,7 @@ static CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, co
     return txSpend;
 }
 
-static void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& scriptWitness, int flags, const std::string& message, int scriptError, CAmount nValue = 0)
+static void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CSegregatedSignatureData& segregatedSignatureData, int flags, const std::string& message, int scriptError, CAmount nValue = 0)
 {
     bool expect = (scriptError == SCRIPT_ERR_OK);
     if (flags & SCRIPT_VERIFY_CLEANSTACK)
@@ -163,9 +163,9 @@ static void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const 
     }
     ScriptError err;
     CMutableTransaction txCredit = BuildCreditingTransaction(scriptPubKey, nValue);
-    CMutableTransaction tx = BuildSpendingTransaction(scriptSig, scriptWitness, txCredit);
+    CMutableTransaction tx = BuildSpendingTransaction(scriptSig, segregatedSignatureData, txCredit);
     CMutableTransaction tx2 = tx;
-    BOOST_CHECK_MESSAGE(VerifyScript(scriptSig, scriptPubKey, &scriptWitness, flags, MutableTransactionSignatureChecker(CKeyID(), &tx, 0, txCredit.vout[0].nValue), &err) == expect, message);
+    BOOST_CHECK_MESSAGE(VerifyScript(scriptSig, scriptPubKey, &segregatedSignatureData, flags, MutableTransactionSignatureChecker(CKeyID(), &tx, 0, txCredit.vout[0].nValue), &err) == expect, message);
     BOOST_CHECK_MESSAGE(err == scriptError, std::string(FormatScriptError(err)) + " where " + std::string(FormatScriptError((ScriptError_t)scriptError)) + " expected: " + message);
 #if defined(HAVE_CONSENSUS_LIB)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
@@ -264,9 +264,7 @@ private:
     CScript script;
     //! The P2SH redeemscript
     CScript redeemscript;
-    //! The Witness embedded script
-    CScript witscript;
-    CScriptWitness scriptWitness;
+    CSegregatedSignatureData segregatedSignatureData;
     CTransactionRef creditTx;
     CMutableTransaction spendTx;
     bool havePush;
@@ -301,7 +299,7 @@ public:
             scriptPubKey = CScript() << OP_HASH160 << ToByteVector(CScriptID(redeemscript)) << OP_EQUAL;
         }
         creditTx = MakeTransactionRef(BuildCreditingTransaction(scriptPubKey, nValue));
-        spendTx = BuildSpendingTransaction(CScript(), CScriptWitness(), *creditTx);
+        spendTx = BuildSpendingTransaction(CScript(), CSegregatedSignatureData(), *creditTx);
     }
 
     TestBuilder& ScriptError(ScriptError_t err)
@@ -365,12 +363,6 @@ public:
         return *this;
     }
 
-    TestBuilder& PushWitRedeem()
-    {
-        DoPush(std::vector<unsigned char>(witscript.begin(), witscript.end()));
-        return AsWit();
-    }
-
     TestBuilder& EditPush(unsigned int pos, const std::string& hexin, const std::string& hexout)
     {
         assert(havePush);
@@ -395,7 +387,7 @@ public:
     {
         TestBuilder copy = *this; // Make a copy so we can rollback the push.
         DoPush();
-        DoTest(creditTx->vout[0].output.scriptPubKey, spendTx.vin[0].scriptSig, scriptWitness, flags, comment, scriptError, nValue);
+        DoTest(creditTx->vout[0].output.scriptPubKey, spendTx.vin[0].scriptSig, segregatedSignatureData, flags, comment, scriptError, nValue);
         *this = copy;
         return *this;
     }
@@ -403,7 +395,7 @@ public:
     TestBuilder& AsWit()
     {
         assert(havePush);
-        scriptWitness.stack.push_back(push);
+        segregatedSignatureData.stack.push_back(push);
         havePush = false;
         return *this;
     }
@@ -412,10 +404,10 @@ public:
     {
         DoPush();
         UniValue array(UniValue::VARR);
-        if (!scriptWitness.stack.empty()) {
+        if (!segregatedSignatureData.stack.empty()) {
             UniValue wit(UniValue::VARR);
-            for (unsigned i = 0; i < scriptWitness.stack.size(); i++) {
-                wit.push_back(HexStr(scriptWitness.stack[i]));
+            for (unsigned i = 0; i < segregatedSignatureData.stack.size(); i++) {
+                wit.push_back(HexStr(segregatedSignatureData.stack[i]));
             }
             wit.push_back(ValueFromAmount(nValue));
             array.push_back(wit);
@@ -599,7 +591,7 @@ BOOST_AUTO_TEST_CASE(script_json_test)
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
         UniValue test = tests[idx];
         std::string strTest = test.write();
-        CScriptWitness witness;
+        CSegregatedSignatureData witness;
         CAmount nValue = 0;
         unsigned int pos = 0;
         if (test.size() > 0 && test[pos].isArray()) {
@@ -701,7 +693,7 @@ BOOST_AUTO_TEST_CASE(script_CHECKMULTISIG12)
     scriptPubKey12 << OP_1 << ToByteVector(key1.GetPubKey()) << ToByteVector(key2.GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
 
     CMutableTransaction txFrom12 = BuildCreditingTransaction(scriptPubKey12);
-    CMutableTransaction txTo12 = BuildSpendingTransaction(CScript(), CScriptWitness(), txFrom12);
+    CMutableTransaction txTo12 = BuildSpendingTransaction(CScript(), CSegregatedSignatureData(), txFrom12);
 
     CScript goodsig1 = sign_multisig(scriptPubKey12, key1, txTo12);
     BOOST_CHECK(VerifyScript(goodsig1, scriptPubKey12, NULL, gFlags, MutableTransactionSignatureChecker(CKeyID(), &txTo12, 0, txFrom12.vout[0].nValue), &err));
@@ -732,7 +724,7 @@ BOOST_AUTO_TEST_CASE(script_CHECKMULTISIG23)
     scriptPubKey23 << OP_2 << ToByteVector(key1.GetPubKey()) << ToByteVector(key2.GetPubKey()) << ToByteVector(key3.GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
 
     CMutableTransaction txFrom23 = BuildCreditingTransaction(scriptPubKey23);
-    CMutableTransaction txTo23 = BuildSpendingTransaction(CScript(), CScriptWitness(), txFrom23);
+    CMutableTransaction txTo23 = BuildSpendingTransaction(CScript(), CSegregatedSignatureData(), txFrom23);
 
     std::vector<CKey> keys;
     keys.push_back(key1); keys.push_back(key2);
@@ -807,7 +799,7 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
     }
 
     CMutableTransaction txFrom = BuildCreditingTransaction(GetScriptForDestination(keys[0].GetPubKey().GetID()));
-    CMutableTransaction txTo = BuildSpendingTransaction(CScript(), CScriptWitness(), txFrom);
+    CMutableTransaction txTo = BuildSpendingTransaction(CScript(), CSegregatedSignatureData(), txFrom);
     CScript& scriptPubKey = txFrom.vout[0].scriptPubKey;
     CScript& scriptSig = txTo.vin[0].scriptSig;
 

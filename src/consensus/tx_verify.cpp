@@ -200,7 +200,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     if (tx.vout.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
     // Size limits (this doesn't take the witness into account, as that hasn't been checked for malleability)
-    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) > MAX_BLOCK_BASE_SIZE)
+    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES) > MAX_BLOCK_BASE_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-txns-oversize");
 
     // Check for negative or overflow output values
@@ -237,7 +237,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (2.0) (HIGH) implement - check the scriptWitness here?
+            //fixme: (2.0) (HIGH) implement - check the segregatedSignatureData here?
         }
     }
     else
@@ -367,7 +367,7 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetails)
 {
     // 2 signatures, spending key and witness key.
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     return true;
 }
@@ -388,7 +388,7 @@ inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 {
     //fixme: (2.0) (HIGH) - test coinbase type.
     // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
-    if (input.scriptWitness.stack.size() != 1 && input.scriptWitness.stack.size() != 0)
+    if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
         return false;
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
@@ -435,7 +435,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight)
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // Needs 2 signature (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Amount keys and lock unchanged.
     if (nInputAmount != nOutputAmount)
@@ -464,7 +464,7 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // Needs 2 signature (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Keys unchanged.
     if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
@@ -567,7 +567,7 @@ bool CWitnessTxBundle::IsValidMergeBundle()
 inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // 2 signatures (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Everything unchanged except witness key.
     if (nInputAmount != nOutputAmount)

@@ -1179,7 +1179,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         }
                     }
                     if (inv.type == MSG_BLOCK)
-                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_WITNESS, NetMsgType::BLOCK, *pblock));
+                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::BLOCK, *pblock));
                     else if (inv.type == MSG_WITNESS_BLOCK)
                         connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::BLOCK, *pblock));
                     else if (inv.type == MSG_FILTERED_BLOCK)
@@ -1203,7 +1203,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                             // however we MUST always provide at least what the remote peer needs
                             typedef std::pair<unsigned int, uint256> PairType;
                             for(PairType& pair : merkleBlock.vMatchedTxn)
-                                connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_WITNESS, NetMsgType::TX, *pblock->vtx[pair.first]));
+                                connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
                         }
                         // else
                             // no response
@@ -1215,7 +1215,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         // and we don't feel like constructing the object for them, so
                         // instead we respond with the full, non-compact block.
                         bool fPeerWantsWitness = State(pfrom->GetId())->fWantsCmpctWitness;
-                        int nSendFlags = fPeerWantsWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
+                        int nSendFlags = fPeerWantsWitness ? 0 : SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES;
                         if (CanDirectFetch(consensusParams) && mi->second->nHeight >= chainActive.Height() - MAX_CMPCTBLOCK_DEPTH) {
                             if (pfrom->IsPoW2Capable())
                             {
@@ -1265,7 +1265,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                 // Send stream from relay memory
                 bool push = false;
                 auto mi = mapRelay.find(inv.hash);
-                int nSendFlags = (inv.type == MSG_TX ? SERIALIZE_TRANSACTION_NO_WITNESS : 0);
+                int nSendFlags = (inv.type == MSG_TX ? SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES : 0);
                 if (mi != mapRelay.end()) {
                     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::TX, *mi->second));
                     push = true;
@@ -1326,7 +1326,7 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     }
     LOCK(cs_main);
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
-    int nSendFlags = State(pfrom->GetId())->fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
+    int nSendFlags = State(pfrom->GetId())->fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES;
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
@@ -3488,7 +3488,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     LogPrint(BCLog::NET, "%s sending header-and-ids %s to peer=%d\n", __func__,
                             vHeaders.front().GetHashPoW2().ToString(), pto->GetId());
 
-                    int nSendFlags = state.fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS;
+                    int nSendFlags = state.fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES;
 
                     bool fGotBlockFromCache = false;
                     {

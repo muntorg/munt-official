@@ -32,6 +32,7 @@
 #include "validationinterface.h"
 #include "arith_uint256.h"
 #include "warnings.h"
+#include "Gulden/util.h"
 
 #include <memory>
 #include <stdint.h>
@@ -669,11 +670,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         }
     }
 
-    const struct VBDeploymentInfo& segwit_info = VersionBitsDeploymentInfo[Consensus::DEPLOYMENT_SEGWIT];
-    // If the caller is indicating segwit support, then allow CreateNewBlock()
-    // to select witness transactions, after segwit activates (otherwise
-    // don't).
-    bool fSupportsSegwit = setClientRules.find(segwit_info.name) != setClientRules.end();
+    //fixme: (2.0)
+    bool fSupportsSegwit = true;
 
     // Update block
     static CBlockIndex* pindexPrev;
@@ -711,7 +709,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     pblock->nNonce = 0;
 
     // NOTE: If at some point we support pre-segwit miners post-segwit-activation, this needs to take segwit support into consideration
-    const bool fPreSegWit = (THRESHOLD_ACTIVE != VersionBitsState(pindexPrev, consensusParams, Consensus::DEPLOYMENT_SEGWIT, versionbitscache));
+    const bool fPreSegWit = (chainActive.Tip() == NULL) || (GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive) >= 4);
 
     UniValue aCaps(UniValue::VARR); aCaps.push_back("proposal");
 

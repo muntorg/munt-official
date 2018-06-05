@@ -1417,9 +1417,9 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
+bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CSegregatedSignatureData* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
 {
-    static const CScriptWitness emptyWitness;
+    static const CSegregatedSignatureData emptyWitness;
     if (witness == NULL) {
         witness = &emptyWitness;
     }

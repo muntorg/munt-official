@@ -323,10 +323,10 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
     else
     {
-        coinbaseTx.vin[0].scriptWitness.stack.clear();
-        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>());
-        CVectorWriter(0, 0, coinbaseTx.vin[0].scriptWitness.stack[0], 0) << VARINT(nHeight);
-        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
+        coinbaseTx.vin[0].segregatedSignatureData.stack.clear();
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
+        CVectorWriter(0, 0, coinbaseTx.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(nHeight);
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
     }
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
@@ -1278,10 +1278,10 @@ static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, int nPoW2Ph
     else
     {
         std::string coinbaseSignature = GetArg("-coinbasesignature", "");
-        coinbaseTx.vin[0].scriptWitness.stack.clear();
-        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>());
-        CVectorWriter(0, 0, coinbaseTx.vin[0].scriptWitness.stack[0], 0) << VARINT(nWitnessHeight);
-        coinbaseTx.vin[0].scriptWitness.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
+        coinbaseTx.vin[0].segregatedSignatureData.stack.clear();
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
+        CVectorWriter(0, 0, coinbaseTx.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(nWitnessHeight);
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
     }
 
     // Sign witness coinbase.

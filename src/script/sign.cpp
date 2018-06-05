@@ -183,22 +183,23 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     ret.clear();
 
     //fixme: (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
-    std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-    CScript scriptWitnessPlaceholder(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
+    //As we have no segregated signature data to sign we instead sign a standard placeholder.
+    std::vector<unsigned char> sSignatureDataPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
+    CScript scriptSignatureDataPlaceholder(sSignatureDataPlaceholder.begin(), sSignatureDataPlaceholder.end());
 
     switch(type)
     {
         case Spend:
         {
-            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
+            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
-            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
+            if (!Sign1(pow2Witness.spendingKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             return true;
         }
         case Witness:
         {
-            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptWitnessPlaceholder, ret, SIGVERSION_SEGSIG))
+            if (!Sign1(pow2Witness.witnessKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             return true;
         }
@@ -213,10 +214,11 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutStandardKe
     ret.clear();
 
     //fixme: (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
-    std::vector<unsigned char> sKeyHashPlaceholder = {'k','e','y','h','a','s','h'};
-    CScript scriptKeyHashPlaceholder(sKeyHashPlaceholder.begin(), sKeyHashPlaceholder.end());
+    //As we have no segregated signature data to sign we instead sign a standard placeholder.
+    std::vector<unsigned char> sSignatureDataPlaceholder = {'k','e','y','h','a','s','h'};
+    CScript scriptSignatureDataPlaceholder(sSignatureDataPlaceholder.begin(), sSignatureDataPlaceholder.end());
 
-    if (!Sign1(standardKeyHash.keyID, creator, scriptKeyHashPlaceholder, ret, SIGVERSION_SEGSIG))
+    if (!Sign1(standardKeyHash.keyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
         return false;
     return true;
 }
@@ -312,18 +314,18 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
         txnouttype whichType;
         bool solved = SignStep(creator, script, result, whichType, SIGVERSION_BASE, type);
         CScript subscript;
-        sigdata.scriptWitness.stack.clear();
+        sigdata.segregatedSignatureData.stack.clear();
 
         if (nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
         {
             if (solved && whichType == TX_SCRIPTHASH)
             {
                 //fixme: (2.0) HIGH NEXTNEXTNEXT
-                 sigdata.scriptWitness.stack = result;
+                 sigdata.segregatedSignatureData.stack = result;
             }
             else
             {
-                sigdata.scriptWitness.stack = result;
+                sigdata.segregatedSignatureData.stack = result;
             }
         }
         else
@@ -347,7 +349,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
         //fixme: (2.0) TESTME
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, SIGVERSION_BASE, type);
-        sigdata.scriptWitness.stack = result;
+        sigdata.segregatedSignatureData.stack = result;
 
         //fixme: (2.0) - Do we need to verify anything here?
         return solved;
@@ -357,7 +359,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
         //fixme: (2.0) TESTME
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, SIGVERSION_BASE, type);
-        sigdata.scriptWitness.stack = result;
+        sigdata.segregatedSignatureData.stack = result;
 
         return solved;
     }
@@ -373,7 +375,7 @@ SignatureData DataFromTransaction(const CMutableTransaction& tx, unsigned int nI
     SignatureData data;
     assert(tx.vin.size() > nIn);
     data.scriptSig = tx.vin[nIn].scriptSig;
-    data.scriptWitness = tx.vin[nIn].scriptWitness;
+    data.segregatedSignatureData = tx.vin[nIn].segregatedSignatureData;
     return data;
 }
 
@@ -381,7 +383,7 @@ void UpdateTransaction(CMutableTransaction& tx, unsigned int nIn, const Signatur
 {
     assert(tx.vin.size() > nIn);
     tx.vin[nIn].scriptSig = data.scriptSig;
-    tx.vin[nIn].scriptWitness = data.scriptWitness;
+    tx.vin[nIn].segregatedSignatureData = data.segregatedSignatureData;
 }
 
 bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType, SignType type)
@@ -469,18 +471,18 @@ namespace
 struct Stacks
 {
     std::vector<valtype> script;
-    std::vector<valtype> witness;
+    std::vector<valtype> segregatedSignatureData;
 
     Stacks() {}
-    explicit Stacks(const std::vector<valtype>& scriptSigStack_) : script(scriptSigStack_), witness() {}
-    explicit Stacks(const SignatureData& data) : witness(data.scriptWitness.stack) {
+    explicit Stacks(const std::vector<valtype>& scriptSigStack_) : script(scriptSigStack_), segregatedSignatureData() {}
+    explicit Stacks(const SignatureData& data) : segregatedSignatureData(data.segregatedSignatureData.stack) {
         EvalScript(script, data.scriptSig, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(), SIGVERSION_BASE);
     }
 
     SignatureData Output() const {
         SignatureData result;
         result.scriptSig = PushAll(script);
-        result.scriptWitness.stack = witness;
+        result.segregatedSignatureData.stack = segregatedSignatureData;
         return result;
     }
 };

@@ -443,7 +443,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
                 for (auto& vin : txNew.vin) {
                     vin.scriptSig = CScript();
-                    vin.scriptWitness.SetNull();
+                    vin.segregatedSignatureData.SetNull();
                 }
 
                 // Allow to override the default confirmation target over the CoinControl instance
@@ -685,7 +685,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
                 for (auto& vin : txNew.vin) {
                     vin.scriptSig = CScript();
-                    vin.scriptWitness.SetNull();
+                    vin.segregatedSignatureData.SetNull();
                 }
 
                 // Allow to override the default confirmation target over the CoinControl instance

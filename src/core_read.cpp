@@ -128,7 +128,7 @@ bool DecodeHexTx(CMutableTransaction& tx, const std::string& strHexTx, bool fTry
     std::vector<unsigned char> txData(ParseHex(strHexTx));
 
     if (fTryNoWitness) {
-        CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS);
+        CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES);
         try {
             ssData >> tx;
             if (ssData.eof() && CheckTxScriptsSanity(tx)) {
