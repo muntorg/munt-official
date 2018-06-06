@@ -454,8 +454,8 @@ void CNode::CloseSocketDisconnect()
         hSocket.close();
         inactivityTimer.cancel();
     }
-    catch(const boost::system::error_code& ec) {
-        LogPrint(BCLog::NET, "disconnecting peer=%d socket close:\n", id, ec.message());
+    catch(const boost::system::system_error& ec) {
+        LogPrint(BCLog::NET, "disconnecting peer=%d socket close: %s\n", id, ec.what());
     }
 }
 
@@ -1161,26 +1161,29 @@ void CConnman::ResumeReceive(CNode* pnode)
                                  [this,pnode] (const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (!ec) {
             bool msgcomplete = false;
-            if (!pnode->ReceiveMsgBytes(pnode->pchBuf, bytes_transferred, msgcomplete))
-                pnode->CloseSocketDisconnect();
-            RecordBytesRecv(bytes_transferred);
-            if (msgcomplete) {
-                size_t nSizeAdded = 0;
-                auto it(pnode->vRecvMsg.begin());
-                for (; it != pnode->vRecvMsg.end(); ++it) {
-                    if (!it->complete())
-                        break;
-                    nSizeAdded += it->vRecv.size() + CMessageHeader::HEADER_SIZE;
-                }
-                {
-                    LOCK(pnode->cs_vProcessMsg);
-                    pnode->vProcessMsg.splice(pnode->vProcessMsg.end(), pnode->vRecvMsg, pnode->vRecvMsg.begin(), it);
-                    pnode->nProcessQueueSize += nSizeAdded;
-                    pnode->fPauseRecv = pnode->nProcessQueueSize > nReceiveFloodSize;
-                }
-                WakeMessageHandler();
+            if (!pnode->ReceiveMsgBytes(pnode->pchBuf, bytes_transferred, msgcomplete)) {
+                pnode->fDisconnect = true;
             }
-            this->ResumeReceive(pnode);
+            else {
+                RecordBytesRecv(bytes_transferred);
+                if (msgcomplete) {
+                    size_t nSizeAdded = 0;
+                    auto it(pnode->vRecvMsg.begin());
+                    for (; it != pnode->vRecvMsg.end(); ++it) {
+                        if (!it->complete())
+                            break;
+                        nSizeAdded += it->vRecv.size() + CMessageHeader::HEADER_SIZE;
+                    }
+                    {
+                        LOCK(pnode->cs_vProcessMsg);
+                        pnode->vProcessMsg.splice(pnode->vProcessMsg.end(), pnode->vRecvMsg, pnode->vRecvMsg.begin(), it);
+                        pnode->nProcessQueueSize += nSizeAdded;
+                        pnode->fPauseRecv = pnode->nProcessQueueSize > nReceiveFloodSize;
+                    }
+                    WakeMessageHandler();
+                }
+                this->ResumeReceive(pnode);
+            }
         }
         else {
             if (boost::asio::error::eof == ec) {
@@ -1193,7 +1196,7 @@ void CConnman::ResumeReceive(CNode* pnode)
                 if (!pnode->fDisconnect)
                     LogPrintf("socket recv error %s\n", ec.message());
             }
-            pnode->CloseSocketDisconnect();
+            pnode->fDisconnect = true;
         }
 
         pnode->Release();
@@ -2009,7 +2012,7 @@ void CConnman::SetNetworkActive(bool active)
         LOCK(cs_vNodes);
         // Close sockets to all nodes
         for(CNode* pnode : vNodes) {
-            pnode->CloseSocketDisconnect();
+            pnode->fDisconnect = true;
         }
     } else {
         fNetworkActive = true;
@@ -2177,26 +2180,8 @@ void CConnman::Interrupt()
     }
     condMsgProc.notify_all();
 
-    // close all sockets and end io_context event loop
-    boost::asio::post(get_io_context(), [this]() {
-        LogPrint(BCLog::NET, "closing all sockets\n");
-        LOCK(cs_vNodes);
-        for (CNode* pnode : vNodes) {
-            pnode->CloseSocketDisconnect();
-        }
-
-        for (ListenSocket& ls : vhListenSocket) {
-            try {
-                ls.acceptor.close();
-            }
-            catch (const boost::system::error_code& ec) {
-                LogPrint(BCLog::NET, "close listening socket: %s\n", ec.message());
-            }
-        }
-        get_io_context().stop();
-    });
-
     interruptNet();
+    get_io_context().stop();
     InterruptSocks5(true);
 
     if (semOutbound) {
@@ -2233,22 +2218,30 @@ void CConnman::Stop()
         fAddressesInitialized = false;
     }
 
-    // Close sockets
-    for(CNode* pnode : vNodes)
+    LogPrint(BCLog::NET, "closing all sockets\n");
+    for (CNode* pnode : vNodes) {
         pnode->CloseSocketDisconnect();
-
-    vhListenSocket.clear();
-
-    // clean up some globals (to help leak detection)
+    }
     for(CNode *pnode : vNodes) {
         DeleteNode(pnode);
     }
+    vNodes.clear();
     for(CNode *pnode : vNodesDisconnected) {
         DeleteNode(pnode);
     }
-    vNodes.clear();
     vNodesDisconnected.clear();
+
+    for (ListenSocket& ls : vhListenSocket) {
+        try {
+            ls.acceptor.close();
+        }
+        catch (const boost::system::system_error& ec) {
+            LogPrint(BCLog::NET, "close listening socket: %s\n", ec.what());
+        }
+    }
     vhListenSocket.clear();
+
+    // clean up some globals (to help leak detection)
     delete semOutbound;
     semOutbound = NULL;
     delete semAddnode;
@@ -2670,7 +2663,7 @@ void CConnman::ResumeSend(CNode *pnode)
                              [this, pnode, bufferHolder](const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (ec) {
             LogPrint(BCLog::NET, "socket send error %s\n", ec.message());
-            pnode->CloseSocketDisconnect();
+            pnode->fDisconnect = true;
             pnode->Release();
             return;
         }
