@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation>Scan QR code om te linken met je mobiele Gulden app</translation>
+        <translation>Scan QR-code om te linken met je mobiele Gulden-app</translation>
     </message>
     <message>
         <source>Delete account</source>
@@ -26,7 +26,7 @@
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation>Klik hier om je QR-code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR-code zien, anders heeft diegene toegang tot je Guldens.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -121,7 +121,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dit zijn uw Gulden-adressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangende adres voordat u uw bitcoins verzendt.</translation>
+        <translation>Dit zijn uw Gulden-adressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangende adres voordat u uw Bitcoins verzendt.</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
@@ -379,7 +379,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Betaling aanvragen (genereert QR codes en bitcoin: URIs)</translation>
+        <translation>Betaling aanvragen (genereert QR-codes en Bitcoin: URIs)</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -488,7 +488,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Open a bitcoin: URI or payment request</source>
-        <translation>Open een bitcoin: URI of betalingsverzoek.</translation>
+        <translation>Open een Bitcoin: URI of betalingsverzoek.</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -1097,7 +1097,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Select currency</source>
-        <translation type="unfinished"></translation>
+        <translation>Kies valuta</translation>
     </message>
 </context>
 <context>
@@ -1286,7 +1286,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Formulier</translation>
+        <translation>Formulier</translation>
     </message>
     <message>
         <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
@@ -1362,7 +1362,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation>Klik hier om je QR-code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR-code zien, anders heeft diegene toegang tot je Guldens.</translation>
     </message>
 </context>
 <context>
@@ -1584,15 +1584,15 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>IPv4</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv4</translation>
     </message>
     <message>
         <source>IPv6</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv6</translation>
     </message>
     <message>
         <source>Tor</source>
-        <translation type="unfinished"></translation>
+        <translation>Tor</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
@@ -1698,19 +1698,19 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <name>PasswordModifyDialog</name>
     <message>
         <source>Change password</source>
-        <translation type="unfinished"></translation>
+        <translation>Wijzig wachtwoord</translation>
     </message>
     <message>
         <source>Enter old password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer oud wachtwoord in</translation>
     </message>
     <message>
         <source>Enter new password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer nieuw wachtwoord in</translation>
     </message>
     <message>
         <source>Repeat new password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Herhaal nieuw wachtwoord</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1729,7 +1729,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Kan bitcoin: click-to-pay verwerker niet starten</translation>
+        <translation>Kan Bitcoin: click-to-pay verwerker niet starten</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -2281,7 +2281,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>QR code</source>
-        <translation>QR code</translation>
+        <translation>QR-code</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2571,7 +2571,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation>Betalen van het minimum vergoeding is geen probleem zolang het transactievolume minder is dan de ruimte in blokken. Maar wees ervan bewust dat dit ervoor kan zorgen dat een transactie nooit bevestigd wordt zodra er meer vraag naar bitcointransacties is, dan het netwerk kan verwerken.</translation>
+        <translation>Betalen van het minimum vergoeding is geen probleem zolang het transactievolume minder is dan de ruimte in blokken. Maar wees ervan bewust dat dit ervoor kan zorgen dat een transactie nooit bevestigd wordt zodra er meer vraag naar Bitcointransacties is, dan het netwerk kan verwerken.</translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
@@ -2731,7 +2731,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>The amount exceeds your balance.
 If you  have recently received funds you may need to wait for them to clear before spending them.</source>
-        <translation>Als u recentelijk guldens hebt ontvangen, moet u even wachten voor u deze kunt uitgeven</translation>
+        <translation>Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt uitgeven</translation>
     </message>
     <message>
         <source>Duplicate address found: addresses should only be used once each.</source>
@@ -2798,7 +2798,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation>De vergoeding wordt van het verzonden bedrag afgetrokken. De ontvanger zal dus minder bitcoins ontvangen dan aangegeven in het bedrag veld. Als meerdere ontvangers opgegeven zijn, zal de vergoeding gelijkmatig verdeeld worden.</translation>
+        <translation>De vergoeding wordt van het verzonden bedrag afgetrokken. De ontvanger zal dus minder Bitcoins ontvangen dan aangegeven in het bedrag veld. Als meerdere ontvangers opgegeven zijn, zal de vergoeding gelijkmatig verdeeld worden.</translation>
     </message>
     <message>
         <source>S&amp;ubtract fee from amount</source>
@@ -2810,7 +2810,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation>Een bericht dat werd toegevoegd aan de bitcoin: URI dewelke wordt opgeslagen met de transactie ter referentie. Opmerking: Dit bericht zal niet worden verzonden over het Bitcoinnetwerk.</translation>
+        <translation>Een bericht dat werd toegevoegd aan de Bitcoin: URI dewelke wordt opgeslagen met de transactie ter referentie. Opmerking: Dit bericht zal niet worden verzonden over het Bitcoinnetwerk.</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -2863,7 +2863,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>U kan berichten/overeenkomsten met uw adres ondertekenen om te bewijzen dat u bitcoins die erheen gestuurd worden kan ontvangen. Kijk uit dat u niets vaags of willekeurigs ondertekent, omdat phishing aanvallen u kunnen overhalen om uw identiteit eraan te koppelen. Onderteken alleen volledig beschreven verklaringen waar u het mee eens bent.</translation>
+        <translation>U kan berichten/overeenkomsten met uw adres ondertekenen om te bewijzen dat u Bitcoins die erheen gestuurd worden kan ontvangen. Kijk uit dat u niets vaags of willekeurigs ondertekent, omdat phishing aanvallen u kunnen overhalen om uw identiteit eraan te koppelen. Onderteken alleen volledig beschreven verklaringen waar u het mee eens bent.</translation>
     </message>
     <message>
         <source>The Bitcoin address to sign the message with</source>
@@ -3597,7 +3597,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
-        <translation>De herstelzin die u heeft ingevoerd is geen geldige gulden herstelzin. Als u zeker bent dat de zin correct is dan kan het programma proberen deze zin te gebruiken. Besef dat de zin gebruikt word zoals ingevoerd, let op dubbele spaties en grammaticale fouten worden niet hersteld. Het zelf bedenken van een zin kan de veiligheid drastisch verlagen, er kan geen support worden aangeboden voor ongeldige herstelzinnen</translation>
+        <translation>De herstelzin die u heeft ingevoerd is geen geldige Guldenherstelzin. Als u zeker bent dat de zin correct is dan kan het programma proberen deze zin te gebruiken. Besef dat de zin gebruikt word zoals ingevoerd, let op dubbele spaties en grammaticale fouten worden niet hersteld. Het zelf bedenken van een zin kan de veiligheid drastisch verlagen, er kan geen support worden aangeboden voor ongeldige herstelzinnen</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -3613,7 +3613,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
-        <translation>Zonder herstelzin kunt u uw guldens verliezen wanneer u geen toegang meer hebt tot uw portemonnee</translation>
+        <translation>Zonder herstelzin kunt u uw Guldens verliezen wanneer u geen toegang meer hebt tot uw portemonnee</translation>
     </message>
     <message>
         <source>I understand</source>
@@ -3629,7 +3629,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Als u de guldenapp gebruikt gaat u accoord met de voorwaarden en stemt u in dat alleen u verantwoordlijk bent voor het beheren en opslag van uw guldens. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Als u de Gulden-app gebruikt gaat u accoord met de voorwaarden en stemt u in dat alleen u verantwoordlijk bent voor het beheren en opslag van uw Guldens. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
