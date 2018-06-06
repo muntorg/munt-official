@@ -43,13 +43,14 @@ public:
     unsigned int fCoinBase : 1;
     unsigned int fSegSig : 1;
 
-    //! at which height this containing transaction was included in the active block chain
+    //! The height this containing transaction was included in the active block chain
     //NB! This limits us to ~5000 years before we need to update serialisation format - so may eventually have to change but not an issue for now.
+    //MEMPOOL_HEIGHT indicates it is not yet in the chain - any adjustments to the size of this type should also adjust the value of MEMPOOL_HEIGHT
     uint32_t nHeight : 30;
 
     //! construct a Coin from a CTxOut and height/coinbase information.
-    Coin(CTxOut&& outIn, int nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(std::move(outIn)), fCoinBase(fCoinBaseIn), fSegSig(fSegSigIn), nHeight(nHeightIn) {}
-    Coin(const CTxOut& outIn, int nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(outIn), fCoinBase(fCoinBaseIn),fSegSig(fSegSigIn),nHeight(nHeightIn) {}
+    Coin(CTxOut&& outIn, uint32_t nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(std::move(outIn)), fCoinBase(fCoinBaseIn), fSegSig(fSegSigIn), nHeight(nHeightIn) {}
+    Coin(const CTxOut& outIn, uint32_t nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(outIn), fCoinBase(fCoinBaseIn),fSegSig(fSegSigIn),nHeight(nHeightIn) {}
 
     void Clear() {
         out.SetNull();

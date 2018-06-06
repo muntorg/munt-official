@@ -87,7 +87,8 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
         int nCoinHeight = (*prevHeights)[txinIndex];
 
         if ((tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
-            || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasTimeBasedRelativeLock)))) {
+            || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasTimeBasedRelativeLock))))
+        {
             int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast();
             // NOTE: Subtract 1 to maintain nLockTime semantics
             // BIP 68 relative lock times have the semantics of calculating
@@ -168,24 +169,24 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
 
 int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, int flags)
 {
-    int64_t nSigOps = GetLegacySigOpCount(tx) * WITNESS_SCALE_FACTOR;
+    int64_t nSigOps = GetLegacySigOpCount(tx);
 
     if (tx.IsCoinBase())
         return nSigOps;
 
     if (flags & SCRIPT_VERIFY_P2SH) {
-        nSigOps += GetP2SHSigOpCount(tx, inputs) * WITNESS_SCALE_FACTOR;
+        nSigOps += GetP2SHSigOpCount(tx, inputs);
     }
 
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        //checkme: (GULDEN) (2.0) - Is this right?
+        //fixme: (GULDEN) (2.0) - Is this right? - make sure we are counting sigops in segsig scripts correctly
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
-            case CTxOutType::ScriptLegacyOutput: nSigOps += CountWitnessSigOps(tx.vin[i].scriptSig, prevout.output.scriptPubKey, &tx.vin[i].scriptWitness, flags);
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
             case CTxOutType::PoW2WitnessOutput: nSigOps += 1; break;
+            case CTxOutType::ScriptLegacyOutput: /*already handled by GetP2SHSigOpCount*/ break;
         }
     }
     return nSigOps;
@@ -199,7 +200,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     if (tx.vout.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
     // Size limits (this doesn't take the witness into account, as that hasn't been checked for malleability)
-    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) > MAX_BLOCK_BASE_SIZE)
+    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES) > MAX_BLOCK_BASE_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-txns-oversize");
 
     // Check for negative or overflow output values
@@ -236,7 +237,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (2.0) (HIGH) implement - check the scriptWitness here?
+            //fixme: (2.0) (HIGH) implement - check the segregatedSignatureData here?
         }
     }
     else
@@ -366,7 +367,7 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetails)
 {
     // 2 signatures, spending key and witness key.
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     return true;
 }
@@ -387,7 +388,7 @@ inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 {
     //fixme: (2.0) (HIGH) - test coinbase type.
     // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
-    if (input.scriptWitness.stack.size() != 1 && input.scriptWitness.stack.size() != 0)
+    if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
         return false;
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
@@ -434,7 +435,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight)
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // Needs 2 signature (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Amount keys and lock unchanged.
     if (nInputAmount != nOutputAmount)
@@ -463,7 +464,7 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // Needs 2 signature (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Keys unchanged.
     if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
@@ -566,7 +567,7 @@ bool CWitnessTxBundle::IsValidMergeBundle()
 inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     // 2 signatures (spending key)
-    if (input.scriptWitness.stack.size() != 2)
+    if (input.segregatedSignatureData.stack.size() != 2)
         return false;
     // Everything unchanged except witness key.
     if (nInputAmount != nOutputAmount)

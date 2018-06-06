@@ -31,30 +31,6 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     // which has units satoshis-per-kilobyte.
     // If you'd pay more than 1/3 in fees
     // to spend something, then we consider it dust.
-    // A typical spendable non-segwit txout is 34 bytes big, and will
-    // need a CTxIn of at least 148 bytes to spend:
-    // so dust is a spendable txout less than
-    // 546*dustRelayFee/1000 (in satoshis).
-    // A typical spendable segwit txout is 31 bytes big, and will
-    // need a CTxIn of at least 67 bytes to spend:
-    // so dust is a spendable txout less than
-    // 294*dustRelayFee/1000 (in satoshis).
-    if (txout.scriptPubKey.IsUnspendable())
-        return 0;
-
-    size_t nSize = GetSerializeSize(txout, SER_DISK, 0);
-    int witnessversion = 0;
-    std::vector<unsigned char> witnessprogram;
-
-    if (txout.scriptPubKey.IsWitnessProgram(witnessversion, witnessprogram)) {
-        // sum the sizes of the parts of a transaction input
-        // with 75% segwit discount applied to the script size.
-        nSize += (32 + 4 + 1 + (107 / WITNESS_SCALE_FACTOR) + 4);
-    } else {
-        nSize += (32 + 4 + 1 + 107 + 4); // the 148 mentioned above
-    }
-
-    return 3 * dustRelayFeeIn.GetFee(nSize);
     */
     // Gulden: IsDust() detection disabled, allows any valid dust to be relayed.
     // The fees imposed on each dust txo is considered sufficient spam deterrant. 
@@ -85,7 +61,7 @@ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
      *   DUP CHECKSIG DROP ... repeated 100 times... OP_1
      */
 
-bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool witnessEnabled)
+bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool segsigEnabled)
 {
     std::vector<std::vector<unsigned char> > vSolutions;
     if (!Solver(scriptPubKey, whichType, vSolutions))
@@ -104,13 +80,10 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
                (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
           return false;
 
-    else if (!witnessEnabled && (whichType == TX_WITNESS_V0_KEYHASH || whichType == TX_WITNESS_V0_SCRIPTHASH))
-        return false;
-
     return whichType != TX_NONSTANDARD;
 }
 
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled)
+bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool segsigEnabled)
 {
     if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
         reason = "version";
@@ -166,7 +139,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     for(const CTxOut& txout : tx.vout) {
         if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
         {
-            if (!::IsStandard(txout.output.scriptPubKey, whichType, witnessEnabled)) {
+            if (!::IsStandard(txout.output.scriptPubKey, whichType, segsigEnabled)) {
                 reason = "scriptpubkey";
                 return false;
             }
@@ -231,60 +204,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
 bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
-    if (tx.IsCoinBase())
-        return true; // Coinbases are skipped
-
-    for (unsigned int i = 0; i < tx.vin.size(); i++)
-    {
-        // We don't care if witness for this input is empty, since it must not be bloated.
-        // If the script is invalid without witness, it would be caught sooner or later during validation.
-        if (tx.vin[i].scriptWitness.IsNull())
-            continue;
-
-        const CTxOut &prev = mapInputs.AccessCoin(tx.vin[i].prevout).out;
-
-        // get the scriptPubKey corresponding to this input:
-        if (prev.GetType() <= CTxOutType::ScriptLegacyOutput)
-        {
-            CScript prevScript = prev.output.scriptPubKey;
-
-            if (prevScript.IsPayToScriptHash()) {
-                std::vector <std::vector<unsigned char> > stack;
-                // If the scriptPubKey is P2SH, we try to extract the redeemScript casually by converting the scriptSig
-                // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
-                // If the check fails at this stage, we know that this txid must be a bad one.
-                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
-                    return false;
-                if (stack.empty())
-                    return false;
-                prevScript = CScript(stack.back().begin(), stack.back().end());
-            }
-
-            //fixme: (2.0)
-            #if 0
-            int witnessversion = 0;
-            std::vector<unsigned char> witnessprogram;
-
-            // Non-witness program must not be associated with any witness
-            if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
-                return false;
-
-            // Check P2WSH standard limits
-            if (witnessversion == 0 && witnessprogram.size() == 32) {
-                if (tx.vin[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)
-                    return false;
-                size_t sizeWitnessStack = tx.vin[i].scriptWitness.stack.size() - 1;
-                if (sizeWitnessStack > MAX_STANDARD_P2WSH_STACK_ITEMS)
-                    return false;
-                for (unsigned int j = 0; j < sizeWitnessStack; j++) {
-                    if (tx.vin[i].scriptWitness.stack[j].size() > MAX_STANDARD_P2WSH_STACK_ITEM_SIZE)
-                        return false;
-                }
-            }
-            #endif
-        }
-    }
-    return true;
+    //fixme: (2.0) - Do we need to re-implement this for segsig?
 }
 
 CFeeRate incrementalRelayFee = CFeeRate(DEFAULT_INCREMENTAL_RELAY_FEE);
@@ -293,7 +213,7 @@ unsigned int nBytesPerSigOp = DEFAULT_BYTES_PER_SIGOP;
 
 int64_t GetVirtualTransactionSize(int64_t nWeight, int64_t nSigOpCost)
 {
-    return (std::max(nWeight, nSigOpCost * nBytesPerSigOp) + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
+    return (std::max(nWeight, nSigOpCost * nBytesPerSigOp));
 }
 
 int64_t GetVirtualTransactionSize(const CTransaction& tx, int64_t nSigOpCost)

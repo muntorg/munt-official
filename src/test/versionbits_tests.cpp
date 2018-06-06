@@ -145,13 +145,6 @@ BOOST_FIXTURE_TEST_SUITE(versionbits_tests, TestingSetup)
 
 BOOST_AUTO_TEST_CASE(versionbits_test)
 {
-BOOST_FAIL("This test can't be made to work.\n \
-It accesses CBlockIndex::phashBlock while it is NULL.\n \
-The test makes heavy use of CBlockIndex in isolation of the stuff in validation so they are not put\n \
-in mapBlockIndex and therefore don't have a valid phashBlock assigned.\n \
-With commit ed5c46528cd0e923e5f7de8182b06f8dfafcf262 these tests became hash dependent.\n \
-Consider if this change can be reverted.");
-
     for (int i = 0; i < 64; i++) {
         // DEFINED -> FAILED
         VersionBitsTester().TestDefined().TestStateSinceHeight(0)
@@ -240,13 +233,6 @@ Consider if this change can be reverted.");
 
 BOOST_AUTO_TEST_CASE(versionbits_computeblockversion)
 {
-BOOST_FAIL("This test can't be made to work.\n \
-It accesses CBlockIndex::phashBlock while it is NULL.\n \
-The test makes heavy use of CBlockIndex in isolation of the stuff in validation so they are not put\n \
-in mapBlockIndex and therefore don't have a valid phashBlock assigned.\n \
-With commit ed5c46528cd0e923e5f7de8182b06f8dfafcf262 these tests became hash dependent.\n \
-Consider if this change can be reverted.");
-
     // Check that ComputeBlockVersion will set the appropriate bit correctly
     // on mainnet.
     const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
@@ -347,6 +333,8 @@ Consider if this change can be reverted.");
     // Finally, verify that after a soft fork has activated, CBV no longer uses
     // VERSIONBITS_LAST_OLD_BLOCK_VERSION.
     //BOOST_CHECK_EQUAL(ComputeBlockVersion(lastBlock, mainnetParams) & VERSIONBITS_TOP_MASK, VERSIONBITS_TOP_BITS);
+
+    //fixme: (2.0) - Add unit tests for new version bits functionality here.
 }
 
 

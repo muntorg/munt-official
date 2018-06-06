@@ -672,8 +672,6 @@ public:
     unsigned int GetSigOpCount(const CScript& scriptSig) const;
 
     bool IsPayToScriptHash() const;
-    bool IsPayToWitnessScriptHash() const;
-    bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
 
     bool IsPoW2Witness() const;
     std::vector<unsigned char> GetPow2WitnessHash() const;
@@ -703,14 +701,14 @@ public:
     }
 };
 
-struct CScriptWitness
+struct CSegregatedSignatureData
 {
     // Note that this encodes the data elements being pushed, rather than
     // encoding them as a CScript that pushes them.
     std::vector<std::vector<unsigned char> > stack;
 
     // Some compilers complain without a default constructor
-    CScriptWitness() { }
+    CSegregatedSignatureData() { }
 
     bool IsNull() const { return stack.empty(); }
 

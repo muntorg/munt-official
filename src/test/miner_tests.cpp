@@ -170,8 +170,8 @@ static void TestPackageSelection(const CChainParams& chainparams, CScript script
     hashLowFeeTx = tx.GetHash();
     mempool.addUnchecked(hashLowFeeTx, entry.Fee(feeToUse+2).FromTx(tx));
     pblocktemplate = AssemblerForTest(chainparams).CreateNewBlock(chainActive.Tip(), scriptPubKey);
-    BOOST_CHECK(pblocktemplate->block.vtx[4]->GetHash() == hashFreeTx);
-    BOOST_CHECK(pblocktemplate->block.vtx[5]->GetHash() == hashLowFeeTx);
+    BOOST_CHECK(pblocktemplate->block.vtx.size() >= 5 && pblocktemplate->block.vtx[4]->GetHash() == hashFreeTx);
+    BOOST_CHECK(pblocktemplate->block.vtx.size() >= 6 && pblocktemplate->block.vtx[5]->GetHash() == hashLowFeeTx);
 
     // Test that transaction selection properly updates ancestor fee
     // calculations as ancestor transactions get included in a block.
@@ -204,7 +204,7 @@ static void TestPackageSelection(const CChainParams& chainparams, CScript script
     tx.vout[0].nValue = 100000000 - 10000; // 10k satoshi fee
     mempool.addUnchecked(tx.GetHash(), entry.Fee(10000).FromTx(tx));
     pblocktemplate = AssemblerForTest(chainparams).CreateNewBlock(chainActive.Tip(), scriptPubKey);
-    BOOST_CHECK(pblocktemplate->block.vtx[8]->GetHash() == hashLowFeeTx2);
+    BOOST_CHECK(pblocktemplate->block.vtx.size() >= 9 && pblocktemplate->block.vtx[8]->GetHash() == hashLowFeeTx2);
 }
 
 // Define PRINT_TEST_NONCES_CPP to generate the blockinfo table once

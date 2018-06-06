@@ -94,14 +94,11 @@ static int AppInitRawTx(int argc, char* argv[])
         strUsage += HelpMessageOpt("rbfoptin(=N)", _("Set RBF opt-in sequence number for input N (if not provided, opt-in all available inputs)"));
         strUsage += HelpMessageOpt("outaddr=VALUE:ADDRESS", _("Add address-based output to TX"));
         strUsage += HelpMessageOpt("outpubkey=VALUE:PUBKEY[:FLAGS]", _("Add pay-to-pubkey output to TX") + ". " +
-            _("Optionally add the \"W\" flag to produce a pay-to-witness-pubkey-hash output") + ". " +
             _("Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash."));
         strUsage += HelpMessageOpt("outdata=[VALUE:]DATA", _("Add data-based output to TX"));
         strUsage += HelpMessageOpt("outscript=VALUE:SCRIPT[:FLAGS]", _("Add raw script output to TX") + ". " +
-            _("Optionally add the \"W\" flag to produce a pay-to-witness-script-hash output") + ". " +
             _("Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash."));
         strUsage += HelpMessageOpt("outmultisig=VALUE:REQUIRED:PUBKEYS:PUBKEY1:PUBKEY2:....[:FLAGS]", _("Add Pay To n-of-m Multi-sig output to TX. n = REQUIRED, m = PUBKEYS") + ". " +
-            _("Optionally add the \"W\" flag to produce a pay-to-witness-script-hash output") + ". " +
             _("Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash."));
         strUsage += HelpMessageOpt("sign=SIGHASH-FLAGS", _("Add zero or more signatures to transaction") + ". " +
             _("This command requires JSON registers:") +
@@ -331,18 +328,12 @@ static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& str
     CGuldenAddress addr(scriptPubKey);
 
     // Extract and validate FLAGS
-    bool bSegWit = false;
     bool bScriptHash = false;
     if (vStrInputParts.size() == 3) {
         std::string flags = vStrInputParts[2];
-        bSegWit = (flags.find("W") != std::string::npos);
         bScriptHash = (flags.find("S") != std::string::npos);
     }
 
-    if (bSegWit) {
-        // Call GetScriptForWitness() to build a P2WSH scriptPubKey
-        scriptPubKey = GetScriptForWitness(scriptPubKey);
-    }
     if (bScriptHash) {
         // Get the address for the redeem script, then call
         // GetScriptForDestination() to construct a P2SH scriptPubKey.
@@ -392,11 +383,9 @@ static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& s
     }
 
     // Extract FLAGS
-    bool bSegWit = false;
     bool bScriptHash = false;
     if (vStrInputParts.size() == numkeys + 4) {
         std::string flags = vStrInputParts.back();
-        bSegWit = (flags.find("W") != std::string::npos);
         bScriptHash = (flags.find("S") != std::string::npos);
     }
     else if (vStrInputParts.size() > numkeys + 4) {
@@ -406,10 +395,6 @@ static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& s
 
     CScript scriptPubKey = GetScriptForMultisig(required, pubkeys);
 
-    if (bSegWit) {
-        // Call GetScriptForWitness() to build a P2WSH scriptPubKey
-        scriptPubKey = GetScriptForWitness(scriptPubKey);
-    }
     if (bScriptHash) {
         // Get the address for the redeem script, then call
         // GetScriptForDestination() to construct a P2SH scriptPubKey.
@@ -465,17 +450,12 @@ static void MutateTxAddOutScript(CMutableTransaction& tx, const std::string& str
     CScript scriptPubKey = ParseScript(strScript);
 
     // Extract FLAGS
-    bool bSegWit = false;
     bool bScriptHash = false;
     if (vStrInputParts.size() == 3) {
         std::string flags = vStrInputParts.back();
-        bSegWit = (flags.find("W") != std::string::npos);
         bScriptHash = (flags.find("S") != std::string::npos);
     }
 
-    if (bSegWit) {
-      scriptPubKey = GetScriptForWitness(scriptPubKey);
-    }
     if (bScriptHash) {
       CGuldenAddress addr(scriptPubKey);
       scriptPubKey = GetScriptForDestination(addr.Get());
@@ -636,8 +616,8 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
 
             // if redeemScript given and private keys given,
             // add redeemScript to the tempKeystore so it can be signed:
-            if ((scriptPubKey.IsPayToScriptHash() || scriptPubKey.IsPayToWitnessScriptHash()) &&
-                prevOut.exists("redeemScript")) {
+            if ((scriptPubKey.IsPayToScriptHash()) && prevOut.exists("redeemScript"))
+            {
                 UniValue v = prevOut["redeemScript"];
                 std::vector<unsigned char> rsData(ParseHexUV(v, "redeemScript"));
                 CScript redeemScript(rsData.begin(), rsData.end());
@@ -674,7 +654,7 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(signingKeyID, &mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
         UpdateTransaction(mergedTx, i, sigdata);
 
-        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(signingKeyID, &mergedTx, i, amount)))
+        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(signingKeyID, &mergedTx, i, amount)))
             fComplete = false;
     }
 

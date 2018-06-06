@@ -26,9 +26,7 @@
 #include <bitset>
 
 
-static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
-
-static const int WITNESS_SCALE_FACTOR = 4;
+static const int SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES = 0x40000000;
 
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
@@ -268,7 +266,7 @@ public:
 private:
     mutable uint32_t nSequence;
 public:
-    CScriptWitness scriptWitness; //! Only serialized through CTransaction
+    CSegregatedSignatureData segregatedSignatureData; //! Only serialized through CTransaction
 
     /* Setting nSequence to this value for every input in a transaction
      * disables nLockTime. */
@@ -317,7 +315,7 @@ public:
             STRREAD(nTypeAndFlags_);
 
             prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
-            //scriptSig is no longer used - everything goes in scriptWitness.
+            //scriptSig is no longer used - everything goes in segregatedSignatureData.
             if (FlagIsSet(CTxInFlags::HasRelativeLock))
             {
                 s >> VARINT(nSequence);
@@ -805,8 +803,6 @@ public:
 
 struct CMutableTransaction;
 
-#define UnserializeTransaction UnserializeTransactionOld
-#define SerializeTransaction SerializeTransactionOld
 /**
  * Basic transaction serialization format:
  * - int32_t nVersion
@@ -825,83 +821,40 @@ struct CMutableTransaction;
  * - uint32_t nLockTime
  */
 template<typename Stream, typename TxType>
-inline void UnserializeTransaction(TxType& tx, Stream& s) {
-    const bool fAllowWitness = !(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS);
-
+inline void UnserializeTransactionOld(TxType& tx, Stream& s)
+{
     s >> tx.nVersion;
-    unsigned char flags = 0;
     tx.vin.clear();
     tx.vout.clear();
-    /* Try to read the vin. In case the dummy is there, this will be read as an empty vector. */
-    uint64_t nSize;
-    s >> COMPACTSIZE(nSize);
-    tx.vin.resize(nSize);
-    for (auto& in : tx.vin)
+
+    /* Try to read the vin. */
     {
-        in.ReadFromStream(s, tx.nVersion);
-    }
-    if (tx.vin.size() == 0 && fAllowWitness) {
-        /* We read a dummy or an empty vin. */
-        s >> flags;
-        if (flags != 0) {
-            uint64_t nSize;
-            s >> COMPACTSIZE(nSize);
-            tx.vin.resize(nSize);
-            for (auto& in : tx.vin)
-            {
-                in.ReadFromStream(s, tx.nVersion);
-            }
-            s >> COMPACTSIZE(nSize);
-            tx.vout.resize(nSize);
-            for (auto& out : tx.vout)
-            {
-                out.ReadFromStream(s, tx.nVersion);
-            }
-        }
-    } else {
-        /* We read a non-empty vin. Assume a normal vout follows. */
-            uint64_t nSize;
-            s >> COMPACTSIZE(nSize);
-            tx.vout.resize(nSize);
-            for (auto& out : tx.vout)
-            {
-                out.ReadFromStream(s, tx.nVersion);
-            }
-    }
-    if ((flags & 1) && fAllowWitness) {
-        /* The witness flag is present, and we support witnesses. */
-        flags ^= 1;
-        for (size_t i = 0; i < tx.vin.size(); i++) {
-            s >> COMPACTSIZEVECTOR(tx.vin[i].scriptWitness.stack);
+        uint64_t nSize;
+        s >> COMPACTSIZE(nSize);
+        tx.vin.resize(nSize);
+        for (auto& in : tx.vin)
+        {
+            in.ReadFromStream(s, tx.nVersion);
         }
     }
-    if (flags) {
-        /* Unknown flag in the serialization */
-        throw std::ios_base::failure("Unknown transaction optional data");
+
+    /* We read a non-empty vin. Assume a normal vout follows. */
+    {
+        uint64_t nSize;
+        s >> COMPACTSIZE(nSize);
+        tx.vout.resize(nSize);
+        for (auto& out : tx.vout)
+        {
+            out.ReadFromStream(s, tx.nVersion);
+        }
     }
     s >> tx.nLockTime;
 }
 
 template<typename Stream, typename TxType>
-inline void SerializeTransaction(const TxType& tx, Stream& s) {
-    const bool fAllowWitness = !(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS);
-
+inline void SerializeTransactionOld(const TxType& tx, Stream& s)
+{
     s << tx.nVersion;
-    unsigned char flags = 0;
-    // Consistency check
-    if (fAllowWitness) {
-        /* Check whether witnesses need to be serialized. */
-        if (tx.HasWitness()) {
-            flags |= 1;
-        }
-    }
-    if (flags) {
-        /* Use extended format in case witnesses are to be serialized. */
-        std::vector<CTxIn> vinDummy;
-        s << COMPACTSIZE(vinDummy.size());
-        //vinDummy[0].WriteToStream(s, tx.nVersion);
-        s << flags;
-    }
     s << COMPACTSIZE(tx.vin.size());
     for (const auto& in : tx.vin)
     {
@@ -912,15 +865,8 @@ inline void SerializeTransaction(const TxType& tx, Stream& s) {
     {
         out.WriteToStream(s, tx.nVersion);
     }
-    if (flags & 1) {
-        for (size_t i = 0; i < tx.vin.size(); i++) {
-            s << COMPACTSIZEVECTOR(tx.vin[i].scriptWitness.stack);
-        }
-    }
     s << tx.nLockTime;
 }
-#undef UnserializeTransaction
-#undef SerializeTransaction
 
 //New transaction format:
 //Version number: CVarInt [1 byte] (but forward compat for larger sizes)
@@ -1007,10 +953,10 @@ template<typename Stream, typename TxType> inline void SerializeTransaction(cons
     }
 
     //Witness data
-    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES)) {
         for (size_t i = 0; i < tx.vin.size(); i++)
         {
-            s << VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+            s << VARINTVECTOR(tx.vin[i].segregatedSignatureData.stack);
         }
     }
 
@@ -1097,9 +1043,9 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
         txOut.ReadFromStream(s, tx.nVersion);
     }
 
-    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_WITNESS)) {
+    if (!(s.GetVersion() & SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES)) {
         for (size_t i = 0; i < tx.vin.size(); i++) {
-            s >> VARINTVECTOR(tx.vin[i].scriptWitness.stack);
+            s >> VARINTVECTOR(tx.vin[i].segregatedSignatureData.stack);
         }
     }
 
@@ -1216,12 +1162,13 @@ public:
 
     std::string ToString() const;
 
-    bool HasWitness() const
+    bool HasSegregatedSignatures() const
     {
-        for (size_t i = 0; i < vin.size(); i++) {
-            if (!vin[i].scriptWitness.IsNull()) {
+        for (size_t i = 0; i < vin.size(); i++)
+        {
+            //fixme: (2.0) - Rather test on transaction version?
+            if (!vin[i].segregatedSignatureData.IsNull()) 
                 return true;
-            }
         }
         return false;
     }
@@ -1266,12 +1213,13 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
-    bool HasWitness() const
+    bool HasSegregatedSignatures() const
     {
-        for (size_t i = 0; i < vin.size(); i++) {
-            if (!vin[i].scriptWitness.IsNull()) {
+        for (size_t i = 0; i < vin.size(); i++)
+        {
+            //fixme: (2.0) - Rather test on transaction version?
+            if (!vin[i].segregatedSignatureData.IsNull())
                 return true;
-            }
         }
         return false;
     }

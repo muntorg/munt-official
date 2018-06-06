@@ -25,8 +25,8 @@ static inline size_t RecursiveDynamicUsage([[maybe_unused]] const COutPoint& out
 }
 
 static inline size_t RecursiveDynamicUsage(const CTxIn& in) {
-    size_t mem = RecursiveDynamicUsage(in.scriptSig) + RecursiveDynamicUsage(in.prevout) + memusage::DynamicUsage(in.scriptWitness.stack);
-    for (std::vector<std::vector<unsigned char> >::const_iterator it = in.scriptWitness.stack.begin(); it != in.scriptWitness.stack.end(); it++) {
+    size_t mem = RecursiveDynamicUsage(in.scriptSig) + RecursiveDynamicUsage(in.prevout) + memusage::DynamicUsage(in.segregatedSignatureData.stack);
+    for (std::vector<std::vector<unsigned char> >::const_iterator it = in.segregatedSignatureData.stack.begin(); it != in.segregatedSignatureData.stack.end(); it++) {
          mem += memusage::DynamicUsage(*it);
     }
     return mem;
