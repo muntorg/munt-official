@@ -440,21 +440,26 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         key.pushKV("timestamp", newTip->GetBlockTimeMax() + TIMESTAMP_WINDOW + 1);
         key.pushKV("internal", UniValue(true));
         keys.push_back(key);
+
+        // We need a legacy account where we want the keys to go.
+        wallet.GenerateNewLegacyAccount("LegacyForImport");
+
         JSONRPCRequest request;
         request.params.setArray();
+        request.params.push_back("LegacyForImport");
         request.params.push_back(keys);
 
-        BOOST_ERROR("wallet/rpcdump.cpp importmulti() needs to be fixed for Gulden");
-//        UniValue response = importmulti(request);
-//        BOOST_CHECK_EQUAL(response.write(),
-//            strprintf("[{\"success\":false,\"error\":{\"code\":-1,\"message\":\"Rescan failed for key with creation "
-//                      "timestamp %d. There was an error reading a block from time %d, which is after or within %d "
-//                      "seconds of key creation, and could contain transactions pertaining to the key. As a result, "
-//                      "transactions and coins using this key may not appear in the wallet. This error could be caused "
-//                      "by pruning or data corruption (see GuldenD log for details) and could be dealt with by "
-//                      "downloading and rescanning the relevant blocks (see -reindex and -rescan "
-//                      "options).\"}},{\"success\":true}]",
-//                              0, oldTip->GetBlockTimeMax(), TIMESTAMP_WINDOW));
+
+
+        UniValue response = importmulti(request);
+        BOOST_CHECK_EQUAL(response.write(),
+            strprintf("[{\"success\":false,\"error\":{\"code\":-1,\"message\":\"Rescan failed for key with creation "
+                      "timestamp %d. There was an error reading a block from time %d, which is after or within %d "
+                      "seconds of key creation, and could contain transactions pertaining to the key. As a result, "
+                      "transactions and coins using this key may not appear in the wallet. This error could be caused "
+                      "by pruning or data corruption (see GuldenD log for details) and could be dealt with by "
+                      "downloading and rescanning the relevant blocks (see -reindex and -rescan "
+                      "options).\"}},{\"success\":true}]", 0, oldTip->GetBlockTimeMax(), TIMESTAMP_WINDOW));
         vpwallets.erase(vpwallets.begin());
     }
 }

@@ -662,6 +662,7 @@ public:
     void ClearCacheForTransaction(const uint256& hash);
     bool AddToWalletIfInvolvingMe(const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
     int GetTransactionScanProgressPercent();
+    int64_t RescanFromTime(int64_t startTime, bool update);
     CBlockIndex* ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
