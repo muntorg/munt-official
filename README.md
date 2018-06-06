@@ -8,6 +8,8 @@ Gulden is a simple and very powerful payment system. Gulden uses blockchain tech
 ### License
 All code is subject to The Gulden license - https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden
 
+### Contributing
+If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
 * PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
