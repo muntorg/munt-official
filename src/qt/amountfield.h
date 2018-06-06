@@ -149,7 +149,8 @@ private Q_SLOTS:
     void changeToFirstAuxCurrency();
     void changeToSecondAuxCurrency();
     void exchangeRateUpdate();
-    void tickerDestroyed(QObject* obj);
+    void localCurrencyChanged(QString);
+    void tickerOrOptionsDestroyed(QObject*);
     void primaryValueChanged();
 };
 

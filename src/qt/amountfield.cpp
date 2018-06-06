@@ -360,6 +360,9 @@ GuldenAmountField::~GuldenAmountField()
 
     if (ticker)
         ticker->disconnect(this);
+
+    if (optionsModel)
+        optionsModel->guldenSettings->disconnect(this);
 }
 
 CAmount GuldenAmountField::amount() const
@@ -428,8 +431,11 @@ void GuldenAmountField::setOptionsModel(OptionsModel* optionsModel_)
     {
         optionsModel = optionsModel_;
         ticker = optionsModel_->getTicker();
-        connect( ticker, SIGNAL(destroyed(obj)), this, SLOT(tickerDestroyed(obj)) );
+        connect( ticker, SIGNAL(destroyed(QObject*)), this, SLOT(tickerOrOptionsDestroyed(QObject*)) );
+        connect( optionsModel, SIGNAL(destroyed(QObject*)), this, SLOT(tickerOrOptionsDestroyed(QObject*)) );
         connect( ticker, SIGNAL( exchangeRatesUpdatedLongPoll() ), this, SLOT( exchangeRateUpdate() ) );
+
+        connect(optionsModel->guldenSettings, SIGNAL( localCurrencyChanged(QString)), this, SLOT( localCurrencyChanged(QString) ) );
 
         firstAuxAmountDisplay->setVisible(true);
         amountSeperator->setVisible(true);
@@ -613,9 +619,27 @@ void GuldenAmountField::exchangeRateUpdate()
     updateDataFromPrimary();
 }
 
-void GuldenAmountField::tickerDestroyed(QObject *obj)
+void GuldenAmountField::localCurrencyChanged(QString)
 {
+    std::string code = CurrencyCode(Currency::Local);
+
+    // adjust local amount to new currency
+    amountLocal = ticker->convertGuldenToForex(amountGulden, code);
+
+    // When switching local to Euro while local currency is currently primary
+    // make Euro primary instead.
+    if (code == "EUR" && primaryCurrency == Currency::Local)
+        primaryCurrency = Currency::Euro;
+
+    // force update of all display amounts
+    setPrimaryDisplayCurrency(primaryCurrency);
+}
+
+void GuldenAmountField::tickerOrOptionsDestroyed(QObject*)
+{
+    optionsModel = nullptr;
     ticker = nullptr;
+    setPrimaryDisplayCurrency(Currency::Gulden);
 }
 
 void GuldenAmountField::primaryValueChanged()
