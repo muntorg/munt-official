@@ -43,25 +43,6 @@ public:
     void setAmount(const CAmount& value);
     void setAmount(const CAmount& value, int nLimit);
 
-
-    //! Gulden amount. Do not use for new code! Legacy method to keep the changeset small.
-    CAmount value(bool *valid=nullptr) const
-    {
-        return amount();
-    }
-
-    //! Set Gulden amount. Legacy method to keep the changeset small. Do not use for new code!
-    void setValue(const CAmount& value)
-    {
-        setAmount(value);
-    }
-
-    //! Always returns the Gulden amount. Legacy method to keep the changeset small. Do not use for new code!
-    CAmount valueForCurrency(bool *valid = nullptr)
-    {
-        return amount();
-    }
-
     /** Set single step in satoshis **/
     void setSingleStep(const CAmount& step);
 
@@ -100,7 +81,7 @@ public:
 
 
 Q_SIGNALS:
-    void valueChanged();
+    void amountChanged();
 
 protected:
     /** Intercept focus-in event and ',' key presses */

@@ -77,8 +77,8 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
     connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(witnessSliderValueChanged(int)));
 
-    connect(ui->payAmount, SIGNAL(valueChanged()), this, SLOT(payAmountChanged()));
-    connect(ui->payAmount, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(payAmountChanged()));
+    connect(ui->payAmount, SIGNAL(amountChanged()), this, SIGNAL(valueChanged()));
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
@@ -420,7 +420,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     recipient.addToAddressBook = false;
     recipient.fSubtractFeeFromAmount = false;
-    recipient.amount = ui->payAmount->valueForCurrency();
+    recipient.amount = ui->payAmount->amount();
 
     recipient.destinationPoW2Witness.lockFromBlock = 0;
     recipient.destinationPoW2Witness.lockUntilBlock = 0;
@@ -600,7 +600,7 @@ void GuldenSendCoinsEntry::setValue(const SendCoinsRecipient &value)
 
 void GuldenSendCoinsEntry::setAmount(const CAmount amount)
 {
-    ui->payAmount->setValue(amount);
+    ui->payAmount->setAmount(amount);
 }
 
 void GuldenSendCoinsEntry::setAddress(const QString &address)
@@ -790,7 +790,7 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
     //fixme: (2.0) (POW2) (CLEANUP)
-    CAmount nAmount = ui->payAmount->valueForCurrency();
+    CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
     if (nAmount < CAmount(500000000000))

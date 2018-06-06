@@ -645,5 +645,5 @@ void GuldenAmountField::tickerOrOptionsDestroyed(QObject*)
 void GuldenAmountField::primaryValueChanged()
 {
     updateDataFromPrimary();
-    Q_EMIT valueChanged();
+    Q_EMIT amountChanged();
 }
