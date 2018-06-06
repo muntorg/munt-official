@@ -184,7 +184,7 @@
                <item>
                 <widget class="QLabel" name="searchLabel1">
                  <property name="text">
-                  <string>s</string>
+                  <string notr="true">s</string>
                  </property>
                  <property name="indent">
                   <number>0</number>
@@ -261,7 +261,7 @@
                <item>
                 <widget class="QLabel" name="searchLabel2">
                  <property name="text">
-                  <string>s</string>
+                  <string notr="true">s</string>
                  </property>
                  <property name="indent">
                   <number>0</number>

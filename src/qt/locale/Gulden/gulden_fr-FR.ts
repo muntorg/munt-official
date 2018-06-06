@@ -51,10 +51,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1011,14 +1007,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <source>Gulden</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1040,10 +1028,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2031,18 +2015,6 @@ AVERTISSEMENT : veuillez vous assurer que vous êtes la seule personne qui peut 
     </message>
     <message>
         <source>&amp;Console</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

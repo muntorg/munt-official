@@ -49,10 +49,6 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished">Razem środki: </translation>
     </message>
@@ -1014,14 +1010,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimalna dozwolona %1 płatność wynosi %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1044,10 +1032,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation type="unfinished">Książka adresowa</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2046,18 +2030,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Konsola</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished">+</translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

@@ -74,7 +74,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string></string>
+        <string notr="true"></string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>

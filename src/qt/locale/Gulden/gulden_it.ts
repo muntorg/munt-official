@@ -49,10 +49,6 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1011,14 +1007,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Gulden</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1040,10 +1028,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2032,18 +2016,6 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Console</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

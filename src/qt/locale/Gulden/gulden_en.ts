@@ -51,10 +51,6 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished">Total funds: </translation>
     </message>
@@ -1015,14 +1011,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximum allowed %1 payment is %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimum allowed %1 payment is %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1045,10 +1033,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation type="unfinished">Address book</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1569,11 +1553,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">H&amp;ide to dock on close</translation>
     </message>
     <message>
         <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -2040,18 +2024,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Console</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished">+</translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

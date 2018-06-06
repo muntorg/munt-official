@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR-code om te linken met je mobiele Gulden app</translation>
+        <translation type="unfinished">Scan QR-code om te linken met je mobiele Gulden-app</translation>
     </message>
     <message>
         <source>Delete account</source>
@@ -48,10 +48,6 @@ The account will continue to be monitored and will be restored should it receive
 </context>
 <context>
     <name>AccountSummaryWidget</name>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Total funds: </source>
         <translation type="unfinished">Totaalbedrag: </translation>
@@ -203,7 +199,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oké</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -239,7 +235,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation type="unfinished">Voer het oude wachtwoord en het nieuwe wachtwoord in.</translation>
+        <translation type="unfinished">Voer de oude herstelzin en de nieuwe herstelzin in.</translation>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
@@ -259,11 +255,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">%1 zal nu sluiten om het versleutelingsproces af te ronden. Bedenk dat versleuteling van uw wallet uw Gulden niet volledig kan beschermen tegen malware besmetting van uw computer.</translation>
+        <translation type="unfinished">%1 zal nu sluiten om het versleutelingsproces af te ronden. Bedenk dat versleuteling van uw portemonnee uw Gulden niet volledig kan beschermen tegen malware besmetting van uw computer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation type="unfinished">BELANGRIJK: ieder eerder gemaakte backup van uw portemonneebestand dient u te vervangen door het nieuw gegenereerde, versleutelde portemonneebestand. Om veiligheidsredenen zullen eerdere backups van het niet-versleutelde portemonneebestand onbruikbaar worden zodra u uw nieuwe, versleutelde, portemonnee begint te gebruiken.</translation>
+        <translation type="unfinished">BELANGRIJK: ieder eerder gemaakte back-up van uw portemonneebestand dient u te vervangen door het nieuw gegenereerde, versleutelde portemonneebestand. Om veiligheidsredenen zullen eerdere back-ups van het niet-versleutelde portemonneebestand onbruikbaar worden zodra u uw nieuwe, versleutelde, portemonnee begint te gebruiken.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -310,7 +306,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation type="unfinished">Het is aangeraden om ook een beveiligde backup van je portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+        <translation type="unfinished">Het is aangeraden om ook een beveiligde back-up van je portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
     </message>
     <message>
         <source>Done</source>
@@ -334,7 +330,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation type="unfinished">Jouw portemonnee bevat legacy non-HD accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat backup. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD account.</translation>
+        <translation type="unfinished">Jouw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
     </message>
 </context>
 <context>
@@ -514,7 +510,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation type="unfinished">Kan per input +/- %1 satoshi(s) variëren.</translation>
+        <translation type="unfinished">Kan per ingang +/- %1 satoshi(s) variëren.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -553,7 +549,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oké</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -758,11 +754,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Back-up van portemonnee maken...</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
-        <translation type="unfinished">Backup van portemonnee naar een andere locatie maken</translation>
+        <translation type="unfinished">Back-up van portemonnee naar een andere locatie maken</translation>
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
@@ -870,7 +866,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 client</source>
-        <translation type="unfinished">%1 client</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
@@ -1008,14 +1004,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximaal toegestaan %1 bedrag is %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimaal toegestaan %1 bedrag is %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1038,10 +1026,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation type="unfinished">Adresboek</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -1183,7 +1167,7 @@ Witness gewicht: %5</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oké</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1553,7 +1537,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation type="unfinished">&amp;OK</translation>
+        <translation type="unfinished">&amp;Oké</translation>
     </message>
     <message>
         <source>default</source>
@@ -1561,11 +1545,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verberg naar dok en sluit</translation>
     </message>
     <message>
         <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verberg de applicatie naar het dok als het venster wordt gesloten. Als deze optie is ingeschakeld zal de applicatie wordt pas afgesloten als Sluit af in het menu is gekozen.</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1801,11 +1785,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <name>PeerTableModel</name>
     <message>
         <source>NodeId</source>
-        <translation type="unfinished">Node Id</translation>
+        <translation type="unfinished">Knooppunt-ID</translation>
     </message>
     <message>
         <source>Node/Service</source>
-        <translation type="unfinished">Node/Service</translation>
+        <translation type="unfinished">Knooppunt/Service</translation>
     </message>
     <message>
         <source>User Agent</source>
@@ -2034,18 +2018,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">&amp;Console</translation>
     </message>
     <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished">+</translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished">x</translation>
-    </message>
-    <message>
         <source>&amp;Network Traffic</source>
         <translation type="unfinished">&amp;Netwerkverkeer</translation>
     </message>
@@ -2215,7 +2187,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>(node id: %1)</source>
-        <translation type="unfinished">(node id: %1)</translation>
+        <translation type="unfinished">(knooppunt-ID: %1)</translation>
     </message>
     <message>
         <source>via %1</source>
@@ -2270,7 +2242,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>QR code</source>
-        <translation type="unfinished">QR code</translation>
+        <translation type="unfinished">QR-code</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2318,7 +2290,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>€ 10.00</source>
-        <translation type="unfinished">€ 10.00</translation>
+        <translation type="unfinished">€ 10,00</translation>
     </message>
     <message>
         <source></source>
@@ -2330,7 +2302,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>€ 25.00</source>
-        <translation type="unfinished">€ 25.00</translation>
+        <translation type="unfinished">€ 25,00</translation>
     </message>
     <message>
         <source>5000</source>
@@ -2483,7 +2455,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Inputs...</source>
-        <translation type="unfinished">Invoer...</translation>
+        <translation type="unfinished">Ingangen...</translation>
     </message>
     <message>
         <source>automatically selected</source>
@@ -2947,7 +2919,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Output index</source>
-        <translation type="unfinished">Output index</translation>
+        <translation type="unfinished">Uitgangindex</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -2967,7 +2939,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Inputs</source>
-        <translation type="unfinished">Inputs</translation>
+        <translation type="unfinished">Ingangen</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -3056,7 +3028,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation type="unfinished">Dit blok is niet ontvangen bij andere nodes en zal waarschijnlijk niet worden geaccepteerd!</translation>
+        <translation type="unfinished">Dit blok is niet ontvangen bij andere knooppunten en zal waarschijnlijk niet worden geaccepteerd!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3409,7 +3381,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Backup Wallet</source>
-        <translation type="unfinished">Backup van portemonnee maken</translation>
+        <translation type="unfinished">Back-up van portemonnee maken</translation>
     </message>
     <message>
         <source>Wallet Data (*.dat)</source>
@@ -3417,7 +3389,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Backup Failed</source>
-        <translation type="unfinished">Backup mislukt</translation>
+        <translation type="unfinished">Back-up is mislukt</translation>
     </message>
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
@@ -3425,7 +3397,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Backup Successful</source>
-        <translation type="unfinished">Backup succesvol</translation>
+        <translation type="unfinished">Back-up is succesvol</translation>
     </message>
     <message>
         <source>The wallet data was successfully saved to %1.</source>
@@ -3666,7 +3638,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation type="unfinished">Back-up</translation>
     </message>
 </context>
 </TS>

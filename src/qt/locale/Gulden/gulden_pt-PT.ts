@@ -53,10 +53,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished">Fundos totais: </translation>
     </message>
@@ -1015,14 +1011,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">O pagamento máximo permitido %1 é %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">O pagamento mínimo permitido %1 é %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1044,10 +1032,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2038,18 +2022,6 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Consola</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

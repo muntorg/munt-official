@@ -451,7 +451,7 @@
          <item>
           <widget class="ClickableLabel" name="fontSmallerButton">
            <property name="text">
-            <string>-</string>
+            <string notr="true">-</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -464,7 +464,7 @@
          <item>
           <widget class="ClickableLabel" name="fontBiggerButton">
            <property name="text">
-            <string>+</string>
+            <string notr="true">+</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -482,7 +482,7 @@
             </font>
            </property>
            <property name="text">
-            <string>x</string>
+            <string notr="true">x</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>

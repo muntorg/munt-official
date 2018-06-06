@@ -50,10 +50,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished">Total des fonds: </translation>
     </message>
@@ -1014,14 +1010,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Le paiement minimum autorisé %1  est %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1044,10 +1032,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Address book</source>
         <translation type="unfinished">Carnet d&apos;adresses</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation type="unfinished">s</translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2038,18 +2022,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Console</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished">+</translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished">x</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
