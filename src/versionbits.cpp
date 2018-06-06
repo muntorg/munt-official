@@ -31,8 +31,6 @@ const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_B
     }
 };
 
-#define PREVHASH (!pindexPrev?uint256():pindexPrev->GetBlockHeader().GetHashPoW2())
-
 ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex* pindexPrev, const Consensus::Params& params, ThresholdConditionCache& cache) const
 {
     int nPeriod = Period(params);
@@ -47,15 +45,15 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
 
     // Walk backwards in steps of nPeriod to find a pindexPrev whose information is known
     std::vector<const CBlockIndex*> vToCompute;
-    while (cache.count(PREVHASH) == 0) {
+    while (cache.count(pindexPrev) == 0) {
         if (pindexPrev == NULL) {
             // The genesis block is by definition defined.
-            cache[PREVHASH] = THRESHOLD_DEFINED;
+            cache[pindexPrev] = THRESHOLD_DEFINED;
             break;
         }
         if (pindexPrev->GetMedianTimePast() < nTimeStart) {
             // Optimization: don't recompute down further, as we know every earlier block will be before the start time
-            cache[PREVHASH] = THRESHOLD_DEFINED;
+            cache[pindexPrev] = THRESHOLD_DEFINED;
             break;
         }
         vToCompute.push_back(pindexPrev);
@@ -63,8 +61,8 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
     }
 
     // At this point, cache[pindexPrev] is known
-    assert(cache.count(PREVHASH));
-    ThresholdState state = cache[PREVHASH];
+    assert(cache.count(pindexPrev));
+    ThresholdState state = cache[pindexPrev];
 
     // Now walk forward and compute the state of descendants of pindexPrev
     while (!vToCompute.empty()) {
@@ -111,7 +109,7 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
                 break;
             }
         }
-        cache[PREVHASH] = state = stateNext;
+        cache[pindexPrev] = state = stateNext;
     }
 
     return state;

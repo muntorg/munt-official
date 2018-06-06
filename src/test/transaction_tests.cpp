@@ -174,10 +174,8 @@ BOOST_AUTO_TEST_CASE(tx_valid)
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
-                const CSegregatedSignatureData *witness = &tx.vin[i].segregatedSignatureData;
-                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],
-                                                 witness, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err),
-                                    strTest);
+                const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
+                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err), strTest);
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
         }
@@ -260,9 +258,8 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
                 if (mapprevOutValues.count(tx.vin[i].prevout)) {
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
-                const CSegregatedSignatureData *witness = &tx.vin[i].segregatedSignatureData;
-                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],
-                                      witness, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err);
+                const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
+                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err);
             }
             BOOST_CHECK_MESSAGE(!fValid, strTest);
             BOOST_CHECK_MESSAGE(err != SCRIPT_ERR_OK, ScriptErrorString(err));
