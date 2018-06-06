@@ -1068,7 +1068,7 @@ static QString getAccountLabel(CAccount* account)
         //fixme: make small if existing prefix
         accountNamePrefix += GUIUtil::fontAwesomeLight("\uf06e");
     }
-    accountName = QString("<table cellspacing=0 padding=0><tr><td width=10></td><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
+    accountName = QString("<table cellspacing=0 padding=0><tr><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
 
     return accountName;
 }

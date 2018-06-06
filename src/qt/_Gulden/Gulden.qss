@@ -308,15 +308,12 @@ GUI > QToolBar > QToolButton:checked
     color: TEXT_COLOR_1;
 }
 
-#account_bar #labelMyAccounts, #account_bar #add_account_button
+#account_bar #labelMyAccounts, #account_bar #add_account_button, #account_bar ClickableLabel
 {
     padding-left: 40px;
 }
 
-#account_bar QLabel
-{
-    padding-left: 0px;
-}
+
 
 
 
@@ -430,9 +427,6 @@ QTabWidget *
     margin-top: 40px;
     color: ACCENT_COLOR_1;
 }
-
-
-
 
 
 GUI QDialog:window QPushButton, GUI QDialog:window ClickableLabel

@@ -12,6 +12,7 @@
 
 #include <QFrame>
 #include <QDateTime>
+#include <qwt_plot_picker.h>
 
 class QMenu;
 class QStyle;
@@ -25,6 +26,20 @@ namespace Ui {
     class WitnessDialog;
 }
 
+class PlotMouseTracker: public QwtPlotPicker
+{
+Q_OBJECT
+public:
+    PlotMouseTracker( QWidget* );
+    virtual ~PlotMouseTracker() {}
+
+protected:
+    virtual QwtText trackerText( const QPoint & ) const;
+    virtual QRect trackerRect( const QFont & ) const;
+
+private:
+    QString curveInfoAt(QString legendColor,  QString sHeading, const QwtPlotCurve*, const QPoint & ) const;
+};
 
 class WitnessSortFilterProxyModel : public QSortFilterProxyModel
 {
