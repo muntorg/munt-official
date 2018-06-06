@@ -321,8 +321,9 @@ void SendCoinsDialog::on_sendButton_clicked()
     {
         if (pendingRecipients[i].paymentType != SendCoinsRecipient::PaymentType::NormalPayment)
         {
-            nocksRequest = new NocksRequest(this, &pendingRecipients[i], NocksRequest::RequestType::Order);
+            nocksRequest = new NocksRequest(this);
             connect(nocksRequest, SIGNAL(requestProcessed()), this, SLOT(on_sendButton_clicked()));
+            nocksRequest->startRequest(&pendingRecipients[i], NocksRequest::RequestType::Order);
             ui->sendButton->setEnabled(false);
             return;
         }

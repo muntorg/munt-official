@@ -19,7 +19,6 @@ class AmountSpinBox;
 class OptionsModel;
 class CurrencyTicker;
 class ClickableLabel;
-class NocksRequest;
 
 QT_BEGIN_NAMESPACE
 class QValueComboBox;

@@ -26,7 +26,6 @@
 #include "_Gulden/ticker.h"
 #include "_Gulden/GuldenGUI.h"
 #include "_Gulden/clickablelabel.h"
-#include "_Gulden/nocksrequest.h"
 #include <assert.h>
 
 const int DISPLAY_DECIMALS = 2;

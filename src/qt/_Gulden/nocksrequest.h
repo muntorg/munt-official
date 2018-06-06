@@ -34,8 +34,14 @@ public:
     };
 
     // parent should be QApplication object
-    NocksRequest(QObject* parent, SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="");
+    NocksRequest(QObject* parent);
     ~NocksRequest();
+
+    /** Start request.
+        Connect to the requestProcessed() signal BEFORE starting the request. Though the request
+        is asynchrounous it is possible that it finishes early and the signal would be missed.
+    */
+    void startRequest(SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="");
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
