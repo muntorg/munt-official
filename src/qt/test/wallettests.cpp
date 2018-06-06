@@ -67,7 +67,7 @@ uint256 SendCoins(CWallet& wallet, SendCoinsDialog& sendCoinsDialog, const CGuld
     QVBoxLayout* entries = sendCoinsDialog.findChild<QVBoxLayout*>("entries");
     GuldenSendCoinsEntry* entry = qobject_cast<GuldenSendCoinsEntry*>(entries->itemAt(0)->widget());
     entry->findChild<QLineEdit*>("receivingAddress")->setText(QString::fromStdString(address.ToString()));
-    entry->findChild<GuldenAmountField*>("payAmount")->setValue(amount);
+    entry->findChild<GuldenAmountField*>("payAmount")->setAmount(amount);
     /*sendCoinsDialog.findChild<QFrame*>("frameFee")
         ->findChild<QFrame*>("frameFeeSelection")
         ->findChild<QCheckBox*>("optInRBF")
