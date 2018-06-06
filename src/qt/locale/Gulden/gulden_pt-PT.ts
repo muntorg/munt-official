@@ -685,26 +685,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error importing private key</source>
-        <translation type="unfinished">Erro ao importar chave privada</translation>
-    </message>
-    <message>
-        <source>Invalid private key.</source>
-        <translation type="unfinished">Chave privada inválida.</translation>
-    </message>
-    <message>
-        <source>Wallet already contains key.</source>
-        <translation type="unfinished">A carteira já contém a chave.</translation>
-    </message>
-    <message>
-        <source>Imported legacy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to add key to wallet.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Wallet</source>
         <translation type="unfinished">Carteira</translation>
     </message>
@@ -1584,6 +1564,14 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
     <message>
         <source>default</source>
         <translation type="unfinished">predefinição</translation>
+    </message>
+    <message>
+        <source>H&amp;ide to dock on close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Confirm options reset</source>

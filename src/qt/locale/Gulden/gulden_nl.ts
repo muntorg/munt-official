@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR code om te linken met je mobiele Gulden app</translation>
+        <translation type="unfinished">Scan QR-code om te linken met je mobiele Gulden app</translation>
     </message>
     <message>
         <source>Delete account</source>
@@ -26,20 +26,20 @@
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished">Account is niet leeg. Transfer eerst je Guldens voor je deze account verwijderd</translation>
+        <translation type="unfinished">Account is niet leeg. Maak eerst je Guldens over voor je deze account verwijderd.</translation>
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished">Weet je zeker dat je %1 van je account lijst wil verwijderen? De adressen van deze account blijven actief.</translation>
+        <translation type="unfinished">Weet je zeker dat je %1 van je accountlijst wil verwijderen? De adressen van deze account blijven actief.</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -54,11 +54,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Total funds: </source>
-        <translation type="unfinished">Totaal bedrag: </translation>
+        <translation type="unfinished">Totaalbedrag: </translation>
     </message>
     <message>
         <source>Locked funds: </source>
-        <translation type="unfinished">geblokkeerde bedrag: </translation>
+        <translation type="unfinished">Geblokkeerde bedrag: </translation>
     </message>
     <message>
         <source>Funds awaiting confirmation: </source>
@@ -66,7 +66,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Spendable funds: </source>
-        <translation type="unfinished">Vrije bedragen: </translation>
+        <translation type="unfinished">Beschikbare bedragen: </translation>
     </message>
 </context>
 <context>
@@ -77,7 +77,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation type="unfinished">&amp;Sluiten</translation>
+        <translation type="unfinished">&amp;Sluit</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -109,7 +109,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation type="unfinished">&amp;Kopiëren</translation>
+        <translation type="unfinished">&amp;Kopieer</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
@@ -125,7 +125,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation type="unfinished">Bezig met het versturen van de adressen</translation>
+        <translation type="unfinished">Adressen aan het versturen</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
@@ -133,19 +133,19 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Dit zijn uw Gulden adressen om betalingen te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
+        <translation type="unfinished">Dit zijn uw Guldenadressen om betalingen te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation type="unfinished">Dit zijn uw Gulden adressen om betalingen te ontvangen. Het wordt aanbevolen om voor iedere ontvangst een nieuw ontvangstadres te gebruiken.</translation>
+        <translation type="unfinished">Dit zijn uw Guldenadressen om betalingen te ontvangen. Het wordt aanbevolen om voor iedere ontvangst een nieuw ontvangstadres te gebruiken.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation type="unfinished">Adres &amp;kopiëren</translation>
+        <translation type="unfinished">&amp;Kopieer adres</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation type="unfinished">Kopiëer &amp;label</translation>
+        <translation type="unfinished">Kopieer &amp;label</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -157,7 +157,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished">Kommagescheiden bestand (*.csv)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -203,7 +203,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -239,7 +239,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation type="unfinished">Voer de oude herstelzin in en de nieuwe herstelzin.</translation>
+        <translation type="unfinished">Voer het oude wachtwoord en het nieuwe wachtwoord in.</translation>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
@@ -255,7 +255,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Wallet encrypted</source>
-        <translation type="unfinished">Portemonnee versleuteld</translation>
+        <translation type="unfinished">Portemonnee is versleuteld</translation>
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
@@ -553,7 +553,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -634,7 +634,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
@@ -681,26 +681,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Error importing private key</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid private key.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Wallet already contains key.</source>
-        <translation type="unfinished">Portemonnee bevat al een sleutel</translation>
-    </message>
-    <message>
-        <source>Imported legacy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to add key to wallet.</source>
-        <translation type="unfinished">Toevoegen van een sleutel aan de portemonnee mislukt.</translation>
-    </message>
-    <message>
         <source>Wallet</source>
         <translation type="unfinished">Portemonnee</translation>
     </message>
@@ -714,7 +694,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>View statistics and information for witness account.</source>
-        <translation type="unfinished">Statistieken en informatie bekijken voor een witness rekening.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -734,7 +714,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished">Betaalverzoek (genereert QR codes en Gulden URI&apos;s)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -806,7 +786,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Quit application</source>
-        <translation type="unfinished">Programma afsluiten</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Debug window</source>
@@ -830,7 +810,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Show information about %1</source>
-        <translation type="unfinished">Laat informatie zien over %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -1081,7 +1061,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Okay</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
@@ -1203,7 +1183,7 @@ Witness gewicht: %5</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1343,7 +1323,7 @@ Witness gewicht: %5</translation>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1578,6 +1558,14 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>default</source>
         <translation type="unfinished">standaard</translation>
+    </message>
+    <message>
+        <source>H&amp;ide to dock on close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -3319,7 +3307,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished">Kommagescheiden bestand (*.csv)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Confirmed</source>
