@@ -1,46 +1,44 @@
-# Gulden
-
+[![Gulden](https://dev.gulden.com/images/branding/gblue128x128.png)](https://www.Gulden.com)
 [![Build Status](https://travis-ci.org/Gulden/gulden-official.svg?branch=pow2_testing)](https://travis-ci.org/Gulden/gulden-official)
 
-### About
-Gulden is a simple and very powerful payment system. Gulden uses blockchain technology to improve financial systems, speed up transactions and offer a cost-effective solution to all things finance. Our software is open source, meaning you can implement Gulden in your own software and build tools and services that help accomplish our goal; creating a stable and blockchain-based financial system built on a trustless and permissionless network that connects with all our financial needs.
-
 ### License
-All code is subject to The Gulden license - https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden
+All code is subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden)
 
 ### Contributing
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* PoW² whitepaper - https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
+* [PoW² whitepaper](https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf)
 
 ### Community
 
 Connect with the community through one or more of the following:
 
-|Website:|https://gulden.com|
-|:-----------|:-------|
-|Slack:|https://gulden.com/join|
-|Twitter:|http://twitter.com/gulden|
-|Facebook:|http://facebook.com/gulden|
-|Meetup:|https://www.meetup.com/gulden|
-|Reddit:|https://www.reddit.com/r/GuldenCommunity|
-|IRC:|https://webchat.freenode.net/?channels=Gulden|
+* [Website](https://gulden.com)
+* [Slack](https://gulden.com/join)
+* [Twitter](http://twitter.com/gulden)
+* [Facebook](http://facebook.com/gulden)
+* [Meetup](https://www.meetup.com/gulden)
+* [Reddit](https://www.reddit.com/r/GuldenCommunity)
+* [IRC](https://webchat.freenode.net/?channels=Gulden)
 
 
+### Downloading
+
+The latest binaries and installers can be found [here](https://github.com/Gulden/gulden-official/releases) for all platforms, including raspbian.
 
 ### Building
-First, reconsider whether it is actually necessary for you to build. Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer. https://github.com/Gulden/gulden-official/releases
+First, reconsider whether it is actually necessary for you to build.
+[Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.](https://github.com/Gulden/gulden-official/releases)
 
-Should you disregard the above and decide to build the software for yourself anyway, please make sure that you thoroughly read all of the extra information below before requesting assistance.
-
+Please read all the below instructions before attempting to build the software or asking for assistance with building the software.
 
 Distro specific instructions:
 
 |Distro|Version|Instructions|
 |:-----------|:-------|:-------|
-|Ubuntu|16.04.1|https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d |
-|Ubuntu|14.04.4|https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76 |
+|Ubuntu|[16.04.1](https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d) |
+|Ubuntu|[14.04.4](https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76) |
 
 
 Generic instructions:
@@ -91,7 +89,7 @@ Binaries are output as follows by the build process:
 |Gulden RPC client|src/Gulden-cli|
 |Gulden tx utility|src/Gulden-tx|
 
-Alternatively pre-compiled binaries are also available at https://github.com/Gulden/gulden-official/releases
+
 
 
 ### Additional technical information
