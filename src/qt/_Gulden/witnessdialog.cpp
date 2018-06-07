@@ -45,21 +45,8 @@
 
 #include <QMenu>
 
-class PlotMouseTracker: public QwtPlotPicker
-{
-public:
-    PlotMouseTracker( QWidget* );
-
-protected:
-    virtual QwtText trackerText( const QPoint & ) const;
-    virtual QRect trackerRect( const QFont & ) const;
-
-private:
-    QString curveInfoAt(QString legendColor,  QString sHeading, const QwtPlotCurve*, const QPoint & ) const;
-};
-
-PlotMouseTracker::PlotMouseTracker( QWidget* canvas ):
-    QwtPlotPicker( canvas )
+PlotMouseTracker::PlotMouseTracker( QWidget* canvas )
+: QwtPlotPicker( canvas )
 {
     setTrackerMode( QwtPlotPicker::ActiveOnly );
     setRubberBand( VLineRubberBand );

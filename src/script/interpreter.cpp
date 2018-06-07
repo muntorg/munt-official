@@ -408,7 +408,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // operand has the disabled lock-time flag set,
                     // CHECKSEQUENCEVERIFY behaves as a NOP.
                     //fixme: (2.0) HIGH
-                    //if ((tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txin.FlagIsSet(HasSequenceNumberMask)))) {
+                    //if ((IsOldTransactionVersion(tx.nVersion) && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasSequenceNumberMask)))) {
                         //break;
 
                     // Compare the specified sequence number with the input.
@@ -1100,7 +1100,7 @@ public:
             ::Serialize(s, CScriptBase());
         else
             SerializeScriptCode(s);
-        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        if (!IsOldTransactionVersion(txTo.nVersion))
         {
             if (nInput != nIn && (fHashSingle || fHashNone))
             {
@@ -1166,7 +1166,7 @@ uint256 GetPrevoutHash(const CTransaction& txTo) {
 uint256 GetSequenceHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
     for (const auto& txin : txTo.vin) {
-        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        if (!IsOldTransactionVersion(txTo.nVersion))
             ss << txin.nTypeAndFlags;
         ss << txin.GetSequence(txTo.nVersion);
     }
@@ -1230,7 +1230,7 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         ss << static_cast<const CScriptBase&>(scriptCode);
         ss << amount;
 
-        if (txTo.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        if (!IsOldTransactionVersion(txTo.nVersion))
             ss << txTo.vin[nIn].nTypeAndFlags;
         ss << txTo.vin[nIn].GetSequence(txTo.nVersion);
         // Outputs (none/one/all, depending on flags)
@@ -1363,13 +1363,13 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     // consensus constrained. Testing that the transaction's sequence
     // number do not have this bit set prevents using this property
     // to get around a CHECKSEQUENCEVERIFY check.
-    if ((txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION && (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
-        || (txTo->nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION && (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasRelativeLock))))
+    if ((IsOldTransactionVersion(txTo->nVersion) && (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
+        || (!IsOldTransactionVersion(txTo->nVersion) && (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasRelativeLock))))
         return false;
 
     // Mask off any bits that do not have consensus-enforced meaning
     // before doing the integer comparisons
-    const uint32_t nLockTimeMask = (txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION) ? (CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK) : (std::numeric_limits<uint32_t>::max());
+    const uint32_t nLockTimeMask = IsOldTransactionVersion(txTo->nVersion) ? (CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK) : (std::numeric_limits<uint32_t>::max());
     const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
     const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
 
@@ -1380,7 +1380,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     // We want to compare apples to apples, so fail the script
     // unless the type of nSequenceMasked being tested is the same as
     // the nSequenceMasked in the transaction.
-    if (txTo->nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+    if (IsOldTransactionVersion(txTo->nVersion))
     {
         if (!(
             (txToSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) ||

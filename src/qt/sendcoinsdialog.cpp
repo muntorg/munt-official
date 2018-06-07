@@ -114,7 +114,7 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     ui->groupFee->button((int)std::max(0, std::min(1, settings.value("nFeeRadio").toInt())))->setChecked(true);
     ui->groupCustomFee->setId(ui->radioCustomPerKilobyte, 0);
     //ui->groupCustomFee->button((int)std::max(0, std::min(1, settings.value("nCustomFeeRadio").toInt())))->setChecked(true);
-    ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
+    ui->customFee->setAmount(settings.value("nTransactionFee").toLongLong());
     ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
     minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
 
@@ -212,8 +212,8 @@ void SendCoinsDialog::setModel(WalletModel *_model)
         connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
         connect(ui->groupCustomFee, SIGNAL(buttonClicked(int)), this, SLOT(updateGlobalFeeVariables()));
         connect(ui->groupCustomFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
+        connect(ui->customFee, SIGNAL(amountChanged()), this, SLOT(updateGlobalFeeVariables()));
+        connect(ui->customFee, SIGNAL(amountChanged()), this, SLOT(coinControlUpdateLabels()));
         connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
         connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
         connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
@@ -243,7 +243,7 @@ SendCoinsDialog::~SendCoinsDialog()
     settings.setValue("nFeeRadio", ui->groupFee->checkedId());
     settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
     settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
-    settings.setValue("nTransactionFee", (qint64)ui->customFee->value());
+    settings.setValue("nTransactionFee", (qint64)ui->customFee->amount());
     settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
 
     delete ui;
@@ -321,8 +321,9 @@ void SendCoinsDialog::on_sendButton_clicked()
     {
         if (pendingRecipients[i].paymentType != SendCoinsRecipient::PaymentType::NormalPayment)
         {
-            nocksRequest = new NocksRequest(this, &pendingRecipients[i], NocksRequest::RequestType::Order);
+            nocksRequest = new NocksRequest(this);
             connect(nocksRequest, SIGNAL(requestProcessed()), this, SLOT(on_sendButton_clicked()));
+            nocksRequest->startRequest(&pendingRecipients[i], NocksRequest::RequestType::Order);
             ui->sendButton->setEnabled(false);
             return;
         }
@@ -743,7 +744,6 @@ void SendCoinsDialog::updateActionButtons()
 void SendCoinsDialog::updateDisplayUnit()
 {
     setBalance(model->getBalance(), 0, 0, 0, 0, 0);
-    ui->customFee->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
     updateMinFeeLabel();
     updateSmartFeeLabel();
 }
@@ -829,7 +829,7 @@ void SendCoinsDialog::on_buttonMinimizeFee_clicked()
 void SendCoinsDialog::setMinimumFee()
 {
     ui->radioCustomPerKilobyte->setChecked(true);
-    ui->customFee->setValue(CWallet::GetRequiredFee(1000));
+    ui->customFee->setAmount(CWallet::GetRequiredFee(1000));
 }
 
 void SendCoinsDialog::updateFeeSectionControls()
@@ -860,7 +860,7 @@ void SendCoinsDialog::updateGlobalFeeVariables()
     }
     else
     {
-        payTxFee = CFeeRate(ui->customFee->value());
+        payTxFee = CFeeRate(ui->customFee->amount());
     }
 }
 
@@ -872,7 +872,7 @@ void SendCoinsDialog::updateFeeMinimizedLabel()
     if (ui->radioSmartFee->isChecked())
         ui->labelFeeMinimized->setText(ui->labelSmartFee->text());
     else {
-        ui->labelFeeMinimized->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), ui->customFee->value()) +
+        ui->labelFeeMinimized->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), ui->customFee->amount()) +
             ((ui->radioCustomPerKilobyte->isChecked()) ? "/kB" : ""));
     }
 }

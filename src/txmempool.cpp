@@ -906,7 +906,7 @@ bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin) const {
     CTransactionRef ptx = mempool.get(outpoint.hash);
     if (ptx) {
         if (outpoint.n < ptx->vout.size()) {
-            coin = Coin(ptx->vout[outpoint.n], MEMPOOL_HEIGHT, false, (ptx->nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION));
+            coin = Coin(ptx->vout[outpoint.n], MEMPOOL_HEIGHT, false, !IsOldTransactionVersion(ptx->nVersion));
             return true;
         } else {
             return false;

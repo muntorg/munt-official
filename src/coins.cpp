@@ -110,7 +110,7 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
     for (size_t i = 0; i < tx.vout.size(); ++i) {
         // Pass fCoinbase as the possible_overwrite flag to AddCoin, in order to correctly
         // deal with the pre-BIP30 occurrences of duplicate coinbase transactions.
-        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase, (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)), fCoinbase);
+        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase, !IsOldTransactionVersion(tx.nVersion)), fCoinbase);
     }
 }
 

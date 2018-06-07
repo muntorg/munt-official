@@ -28,17 +28,28 @@
 
 #include <openssl/x509_vfy.h>
 
-NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
-: optionsModel( NULL )
-, m_recipient( recipient )
-, requestType(type)
+NocksRequest::NocksRequest( QObject* parent)
+: optionsModel( nullptr )
+, m_recipient( nullptr )
 {
     netManager = new QNetworkAccessManager( this );
     netManager->setObjectName("nocks_request_manager");
 
     connect( netManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( netRequestFinished( QNetworkReply* ) ) );
     connect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
+}
 
+NocksRequest::~NocksRequest()
+{
+
+}
+
+void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
+{
+    assert(m_recipient == nullptr);
+
+    m_recipient = recipient;
+    requestType = type;
 
     QNetworkRequest netRequest;
     QString httpPostParamaters;
@@ -95,11 +106,6 @@ NocksRequest::NocksRequest( QObject* parent, SendCoinsRecipient* recipient, Requ
     QByteArray data = httpPostParamaters.toStdString().c_str();
 
     netManager->post( netRequest, data );
-}
-
-NocksRequest::~NocksRequest()
-{
-
 }
 
 void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )

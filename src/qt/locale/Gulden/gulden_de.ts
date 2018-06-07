@@ -49,10 +49,6 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1011,14 +1007,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Gulden</source>
         <translation type="unfinished">Gulden</translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Maximal erlaubte %1 Zahlung ist %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished">Minimal erlaubte %1 Zahlung ist %2.</translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1041,10 +1029,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation type="unfinished">Adressbuch</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>My accounts</source>
@@ -2031,18 +2015,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>&amp;Console</source>
         <translation type="unfinished">&amp;Konsole</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>

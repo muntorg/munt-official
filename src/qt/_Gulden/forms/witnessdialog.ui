@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1222</width>
+    <width>870</width>
     <height>578</height>
    </rect>
   </property>
@@ -138,7 +138,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="2,0,0,0,0">
+            <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="2,0,0,2,0">
              <property name="bottomMargin">
               <number>20</number>
              </property>
@@ -722,12 +722,12 @@
               </widget>
              </item>
              <item>
-             <widget class="QPushButton" name="withdrawEarningsButton">
+              <widget class="QPushButton" name="withdrawEarningsButton">
                <property name="text">
-                 <string>Withdraw earnings</string>
+                <string>Withdraw earnings</string>
                </property>
               </widget>
-          </item>
+             </item>
             </layout>
            </widget>
           </item>

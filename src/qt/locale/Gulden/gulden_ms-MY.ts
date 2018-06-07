@@ -49,10 +49,6 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1006,14 +1002,6 @@ Alihkan fail data ke dalam tab semasa</translation>
         <source>Gulden</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
@@ -1035,10 +1023,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     </message>
     <message>
         <source>Address book</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2017,18 +2001,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;Console</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

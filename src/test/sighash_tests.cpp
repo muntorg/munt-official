@@ -106,11 +106,10 @@ BOOST_AUTO_TEST_CASE(sighash_test)
 // Goal: check that SignatureHash generates correct hash
 BOOST_AUTO_TEST_CASE(sighash_from_data)
 {
-    BOOST_FAIL("still need further work to pass");
-
     UniValue tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
 
-    for (unsigned int idx = 0; idx < tests.size(); idx++) {
+    for (unsigned int idx = 0; idx < tests.size(); idx++)
+    {
         UniValue test = tests[idx];
         std::string strTest = test.write();
         if (test.size() < 1) // Allow for extra stuff (useful for comments)
@@ -126,7 +125,8 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
         CTransactionRef tx;
         CScript scriptCode = CScript();
 
-        try {
+        try
+        {
           // deserialize test data
           raw_tx = test[0].get_str();
           raw_script = test[1].get_str();
@@ -143,7 +143,9 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
 
           std::vector<unsigned char> raw = ParseHex(raw_script);
           scriptCode.insert(scriptCode.end(), raw.begin(), raw.end());
-        } catch (...) {
+        }
+        catch (...)
+        {
           BOOST_ERROR("Bad test, couldn't deserialize data: " << strTest);
           continue;
         }

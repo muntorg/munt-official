@@ -396,7 +396,7 @@ void ReceiveCoinsDialog::generateRequest()
 
     ui->accountCopyToClipboardButton->setText(tr("Copy request to clipboard"));
 
-    CAmount amount = ui->requestAmount->value();
+    CAmount amount = ui->requestAmount->amount();
     if (amount > 0)
     {
         ui->labelPaymentRequestHeading->setText(tr("Request %1 Gulden").arg(GuldenUnits::format( GuldenUnits::NLG, amount, false, GuldenUnits::separatorStandard, 2 )));

@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "macdockiconhandler.h"
+#include <unity/appmanager.h>
 
 #include <QImageWriter>
 #include <QMenu>
@@ -30,6 +31,14 @@ bool dockClickHandler(id self,SEL _cmd,...) {
     return false;
 }
 
+int quitFromDockMenuHandler(id self,SEL _cmd,...)
+{
+    if (GuldenAppManager::gApp)
+        GuldenAppManager::gApp->shutdown();
+    /// Return NO (false) to suppress the default OS X actions
+    return false;
+}
+
 void setupDockClickHandler() {
     Class cls = objc_getClass("NSApplication");
     id appInst = objc_msgSend((id)cls, sel_registerName("sharedApplication"));
@@ -37,11 +46,18 @@ void setupDockClickHandler() {
     if (appInst != NULL) {
         id delegate = objc_msgSend(appInst, sel_registerName("delegate"));
         Class delClass = (Class)objc_msgSend(delegate,  sel_registerName("class"));
+
         SEL shouldHandle = sel_registerName("applicationShouldHandleReopen:hasVisibleWindows:");
         if (class_getInstanceMethod(delClass, shouldHandle))
             class_replaceMethod(delClass, shouldHandle, (IMP)dockClickHandler, "B@:");
         else
             class_addMethod(delClass, shouldHandle, (IMP)dockClickHandler,"B@:");
+
+        SEL closeHandle = sel_registerName("applicationShouldTerminate:");
+        if (class_getInstanceMethod(delClass, closeHandle))
+            class_replaceMethod(delClass, closeHandle, (IMP)quitFromDockMenuHandler, "B@:");
+        else
+            class_addMethod(delClass, closeHandle, (IMP)quitFromDockMenuHandler,"B@:");
     }
 }
 

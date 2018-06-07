@@ -316,7 +316,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
         CScript subscript;
         sigdata.segregatedSignatureData.stack.clear();
 
-        if (nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+        if (!IsOldTransactionVersion(nVersion))
         {
             if (solved && whichType == TX_SCRIPTHASH)
             {
