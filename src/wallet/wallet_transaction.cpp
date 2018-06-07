@@ -138,7 +138,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
 {
     uint8_t nFlags = 0;
     uint32_t nSequence = 0;
-    if (tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+    if (IsOldTransactionVersion(tx.nVersion))
     {
         if (rbf)
         {
@@ -310,7 +310,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
-                    if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+                    if (!IsOldTransactionVersion(txNew.nVersion))
                     {
                         //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
@@ -595,7 +595,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
-                    if (txNew.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+                    if (!IsOldTransactionVersion(txNew.nVersion))
                     {
                         //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool

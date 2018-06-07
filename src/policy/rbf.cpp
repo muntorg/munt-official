@@ -24,7 +24,7 @@ static bool SignalsOptInRBFSegSig(const CTransaction &tx)
 
 bool SignalsOptInRBF(const CTransaction &tx)
 {
-    if (tx.nVersion >= CTransaction::SEGSIG_ACTIVATION_VERSION)
+    if (!IsOldTransactionVersion(tx.nVersion))
         return SignalsOptInRBFSegSig(tx);
 
     for(const CTxIn &txin : tx.vin) {

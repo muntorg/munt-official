@@ -208,7 +208,7 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
                 in.pushKV("txinwitness", txinwitness);
             }
         }
-        if (tx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION || txin.FlagIsSet(CTxInFlags::HasRelativeLock))
+        if (IsOldTransactionVersion(tx.nVersion) || txin.FlagIsSet(CTxInFlags::HasRelativeLock))
             in.pushKV("sequence", (int64_t)txin.GetSequence(tx.nVersion));
         if (txin.FlagIsSet(CTxInFlags::OptInRBF))
             in.pushKV("rbf", true);

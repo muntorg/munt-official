@@ -369,7 +369,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
 
         uint32_t nSequence = 0;
         uint8_t nFlags = 0;
-        if (rawTx.nVersion < CTransaction::SEGSIG_ACTIVATION_VERSION)
+        if (IsOldTransactionVersion(rawTx.nVersion))
         {
             if (rbfOptIn) {
                 nSequence = MAX_BIP125_RBF_SEQUENCE;
