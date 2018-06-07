@@ -35,8 +35,8 @@ Please read all the below instructions before attempting to build the software o
 
 Distro specific instructions:
 
-|Distro|Version|Instructions|
-|:-----------|:-------|:-------|
+|Distro|Version|
+|:-----------|:-------|
 |Ubuntu|[16.04.1](https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d) |
 |Ubuntu|[14.04.4](https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76) |
 
