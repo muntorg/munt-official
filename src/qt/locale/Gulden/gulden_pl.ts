@@ -1553,11 +1553,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U&amp;kryj, by zadokować przy zamknięciu</translation>
     </message>
     <message>
         <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ukryj aplikację w doku, gdy okno jest zamknięte. Gdy ta opcja jest włączona, aplikacja zostanie zamknięta dopiero po wybraniu opcji Zakończ w menu.</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
