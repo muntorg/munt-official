@@ -94,9 +94,7 @@ Please read all the [build instructions](./doc/building.md) before attempting to
 |Address version byte|38 (G)|65 (T)|
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057||
-
-|Infrastructure|Main network|Testnet|
-|:-----------|:---------|:---------|
+|**Infrastructure**|**Main network**|**Testnet**|
 |Official block explorer|blockchain.gulden.com||
 |Community block explorer|guldenchain.com|testnet.guldenchain.com|
 |Electrum server 1|electrum1.gulden.com:5038||
