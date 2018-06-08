@@ -1,13 +1,46 @@
 <table cellspacing="0" cellpadding="0" color="grey" border="1px">
-<trborder=0>
-<td border="0px" width="80%" rowspan="7"><img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/></td>
-<td width="20%" border=0><img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=pow2_testing" alt="ci build status"/>
-</tr>
-<tr border=0><td border=0><img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/></td></tr>
-<tr><td><img  height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/></td></tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr><td>&nbsp;</td></tr>
+  <tr border=0>
+    <td border="0px" width="80%" rowspan="7">
+      <a href="https://www.Gulden.com">
+        <img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/>
+      </a>
+    </td>
+    <td width="20%" border=0>
+      <a href="#">
+        <img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=pow2_testing" alt="ci build status"/>
+      </a>
+    </td>
+  </tr>
+  <tr border=0>
+    <td>
+      <a href="https://github.com/Gulden/gulden-official/issues">
+        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg" alt="open issues"/>
+    </td>
+  </tr>
+  <tr border=0>
+    <td>
+      <a href="https://github.com/Gulden/gulden-official/issues?q=is%3Aissue+is%3Aclosed">
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg" alt="closed issues"/>
+      </a>
+    </td>
+  </tr>
+  <tr border=0>
+    <td border=0>
+      <a href="https://github.com/Gulden/gulden-official/releases">
+        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/>
+      </a>
+    </td>
+  </tr>
+  <tr border=0>
+    <td>
+      <a href="https://github.com/Gulden/gulden-official/commits/master">
+        <img height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
 </table>
 
 
