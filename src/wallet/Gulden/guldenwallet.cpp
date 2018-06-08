@@ -240,21 +240,22 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     uint256 outHash = out.output.GetHash();
 
     isminetype ret = isminetype::ISMINE_NO;
-    for (const auto& accountItem : wallet.mapAccounts)
+    for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
-        auto iter = accountItem.second->isminecache.find(outHash);
-        if (iter != accountItem.second->isminecache.end())
+        boost::ignore_unused(accountUUID);
+        auto iter = account->isminecache.find(outHash);
+        if (iter != account->isminecache.end())
         {
             if (iter->second > ret)
                 ret = iter->second;
         }
         else
         {
-            isminetype temp = IsMine(*accountItem.second, out);
+            isminetype temp = IsMine(*account, out);
             if (temp > ret)
                 ret = temp;
             //fixme: (2.0) keep trimmed by MRU
-            accountItem.second->isminecache[outHash] = ret;
+            account->isminecache[outHash] = ret;
         }
         // No need to keep going through the remaining accounts at this point.
         if (ret >= ISMINE_SPENDABLE)

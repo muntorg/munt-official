@@ -133,6 +133,7 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     }
     for (const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
+        boost::ignore_unused(accountUUID);
         if (account->getLabel() == strAccountUUIDOrLabel)
         {
             if (foundAccount)
@@ -646,6 +647,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             //fixme: (Post-2.1) CBSU - Rather do this inside GetAddressGroupings
             for(const auto& [accountUUID, account] : pwallet->mapAccounts)
             {
+                boost::ignore_unused(accountUUID);
                 if (IsMine(*account, address))
                 {
                     addressInfo.push_back(account->getLabel());
@@ -1528,6 +1530,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     {
         for (const auto& [accountUUID, account] : pwallet->mapAccounts)
         {
+            boost::ignore_unused(accountUUID);
             if (account->m_State != AccountState::Shadow)
             {
                 doForAccounts.push_back(account);
@@ -2798,6 +2801,7 @@ UniValue listunspent(const JSONRPCRequest& request)
     std::vector<CAccount*> doForAccounts;
     for (const auto& [accountUUID, account] : pWallet->mapAccounts)
     {
+        boost::ignore_unused(accountUUID);
         if (account->m_State != AccountState::Shadow)
         {
             doForAccounts.push_back(account);
