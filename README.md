@@ -1,12 +1,14 @@
 <table>
 <tr>
-<td width="80%" rowspan="5"><img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/></td>
+<td width="80%" rowspan="7"><img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/></td>
 <td><img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=2.0_development" alt="ci build status"/>
 </tr>
-<tr><td><img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/</tr>
-<tr><td><img  height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/</tr>
-<tr><td><img  height="20px" src="https://img.shields.io/github/issues/badges/shields.svg" alt="issues"/</tr>
-<tr><td><img height="20px" src="https://img.shields.io/github/issues-closed/badges/shields.svg" alt="closed issues"/</tr>
+<tr><td><img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/></td></tr>
+<tr><td><img  height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/></td></tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td></tr>
 </table>
 
 
