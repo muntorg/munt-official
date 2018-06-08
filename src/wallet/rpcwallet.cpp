@@ -131,15 +131,15 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     {
         foundAccount = pwallet->mapAccounts[getUUIDFromString(strAccountUUIDOrLabel)];
     }
-    for (const auto& accountIter : pwallet->mapAccounts)
+    for (const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
-        if (accountIter.second->getLabel() == strAccountUUIDOrLabel)
+        if (account->getLabel() == strAccountUUIDOrLabel)
         {
             if (foundAccount)
             {
                 throw std::runtime_error("failed due to ambiguity, given UUID or label matches multiple accounts.");
             }
-            foundAccount = accountIter.second;
+            foundAccount = account;
         }
     }
 
@@ -364,14 +364,14 @@ UniValue getaccount(const JSONRPCRequest& request)
     UniValue jsonGroupings(UniValue::VARR);
 
     //fixme: (Post-2.1) (WATCHONLY)
-    for(const auto& accountIter : pwallet->mapAccounts)
+    for(const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
-        if (::IsMine(*accountIter.second, address.Get()))
+        if (::IsMine(*account, address.Get()))
         {
             UniValue jsonGrouping(UniValue::VARR);
             UniValue addressInfo(UniValue::VARR);
-            addressInfo.push_back(getUUIDAsString(accountIter.second->getUUID()));
-            addressInfo.push_back(accountIter.second->getLabel());
+            addressInfo.push_back(getUUIDAsString(accountUUID));
+            addressInfo.push_back(account->getLabel());
             jsonGrouping.push_back(addressInfo);
             jsonGroupings.push_back(jsonGrouping);
         }
@@ -644,11 +644,11 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             addressInfo.push_back(CGuldenAddress(address).ToString());
             addressInfo.push_back(ValueFromAmount(balances[address]));
             //fixme: (Post-2.1) CBSU - Rather do this inside GetAddressGroupings
-            for(const auto& accountIter : pwallet->mapAccounts)
+            for(const auto& [accountUUID, account] : pwallet->mapAccounts)
             {
-                if (IsMine(*accountIter.second, address))
+                if (IsMine(*account, address))
                 {
-                    addressInfo.push_back(accountIter.second->getLabel());
+                    addressInfo.push_back(account->getLabel());
                 }
             }
             jsonGrouping.push_back(addressInfo);
@@ -1339,22 +1339,18 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
     // Reply
     UniValue ret(UniValue::VARR);
     std::map<boost::uuids::uuid, tallyitem> mapAccountTally;
-    for (const auto &accountIter : pwallet->mapAccounts)
+    for (const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
-        if (accountIter.second->m_State == AccountState::Shadow)
+        if (account->m_State == AccountState::Shadow)
             continue;
 
-        boost::uuids::uuid accountUUID = accountIter.second->getUUID();
-        std::string accountLabel = accountIter.second->getLabel();
+        std::string accountLabel = account->getLabel();
 
-        if (accountIter.second->m_State == AccountState::Shadow)
-        {
-            accountUUID = accountIter.second->getParentUUID();
+        if (account->m_State == AccountState::Shadow)
             accountLabel = pwallet->mapAccounts[accountUUID]->getLabel();
-        }
 
         std::set<CKeyID> setAddress;
-        accountIter.second->GetKeys(setAddress);
+        account->GetKeys(setAddress);
         for(const auto& key : setAddress)
         {
             CGuldenAddress address(key);
@@ -1530,11 +1526,11 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     std::vector<CAccount*> doForAccounts;
     if (strAccount == std::string("*"))
     {
-        for (const auto& accountIter : pwallet->mapAccounts)
+        for (const auto& [accountUUID, account] : pwallet->mapAccounts)
         {
-            if (accountIter.second->m_State != AccountState::Shadow)
+            if (account->m_State != AccountState::Shadow)
             {
-                doForAccounts.push_back(accountIter.second);
+                doForAccounts.push_back(account);
             }
             //fixme: (Post-2.1) - Handle shadow children
         }
@@ -2800,11 +2796,11 @@ UniValue listunspent(const JSONRPCRequest& request)
     assert(pWallet != NULL);
     DS_LOCK2(cs_main, pWallet->cs_wallet);
     std::vector<CAccount*> doForAccounts;
-    for (const auto& accountIter : pWallet->mapAccounts)
+    for (const auto& [accountUUID, account] : pWallet->mapAccounts)
     {
-        if (accountIter.second->m_State != AccountState::Shadow)
+        if (account->m_State != AccountState::Shadow)
         {
-            doForAccounts.push_back(accountIter.second);
+            doForAccounts.push_back(account);
         }
         //fixme: (Post-2.1) - Handle shadow children
     }
