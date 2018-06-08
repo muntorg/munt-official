@@ -1,5 +1,15 @@
-[![Gulden](https://dev.gulden.com/images/branding/gblue128x128.png)](https://www.Gulden.com)
-[![Build Status](https://travis-ci.org/Gulden/gulden-official.svg?branch=2.0_development)](https://travis-ci.org/Gulden/gulden-official)
+<table>
+<tr>
+<td width="80%" rowspan="5"><img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/></td>
+<td><img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=2.0_development" alt="ci build status"/>
+</tr>
+<tr><td><img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/</tr>
+<tr><td><img  height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/</tr>
+<tr><td><img  height="20px" src="https://img.shields.io/github/issues/badges/shields.svg" alt="issues"/</tr>
+<tr><td><img height="20px" src="https://img.shields.io/github/issues-closed/badges/shields.svg" alt="closed issues"/</tr>
+</table>
+
+
 
 ### License
 All code is subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden)
