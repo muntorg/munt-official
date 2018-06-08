@@ -364,9 +364,18 @@ GuldenAmountField::~GuldenAmountField()
         optionsModel->guldenSettings->disconnect(this);
 }
 
-CAmount GuldenAmountField::amount() const
+CAmount GuldenAmountField::amount(const Currency currency) const
 {
-    return amountGulden;
+    switch (currency) {
+    case Currency::Gulden:
+        return amountGulden;
+    case Currency::Euro:
+        return amountEuro;
+    case Currency::Local:
+        return amountLocal;
+    default:
+        return CAmount(0);
+    }
 }
 
 void GuldenAmountField::setAmount(const CAmount& value)
@@ -461,7 +470,7 @@ bool GuldenAmountField::eventFilter(QObject *object, QEvent *event)
 
 void GuldenAmountField::updatePrimaryFromData()
 {
-    primaryAmountDisplay->setValue(AmountForCurrency(primaryCurrency), DISPLAY_DECIMALS);
+    primaryAmountDisplay->setValue(amount(primaryCurrency), DISPLAY_DECIMALS);
 }
 
 void GuldenAmountField::updateDataFromPrimary()
@@ -566,23 +575,6 @@ std::string GuldenAmountField::CurrencyCode(const Currency currency) const
     }
 }
 
-CAmount GuldenAmountField::AmountForCurrency(const Currency currency) const
-{
-    switch (currency) {
-    case Currency::Gulden:
-        return amountGulden;
-        break;
-    case Currency::Euro:
-        return amountEuro;
-        break;
-    case Currency::Local:
-        return amountLocal;
-        break;
-    default:
-        return CAmount(0);
-    }
-}
-
 QString GuldenAmountField::FormatAuxAmount(const Currency currency) const
 {
     if (currency == Currency::None)
@@ -593,7 +585,7 @@ QString GuldenAmountField::FormatAuxAmount(const Currency currency) const
         return QString::fromStdString(CurrencySymbolForCurrencyCode( CurrencyCode(currency) ))
                                         + QString("\u2009")
                                         + GuldenUnits::format(GuldenUnits::NLG,
-                                                              AmountForCurrency(currency),
+                                                              amount(currency),
                                                               false, GuldenUnits::separatorAlways, 2);
     }
     else
