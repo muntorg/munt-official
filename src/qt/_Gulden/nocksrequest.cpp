@@ -31,6 +31,7 @@
 NocksRequest::NocksRequest( QObject* parent)
 : optionsModel( nullptr )
 , m_recipient( nullptr )
+, networkReply( nullptr )
 {
     netManager = new QNetworkAccessManager( this );
     netManager->setObjectName("nocks_request_manager");
@@ -46,7 +47,7 @@ NocksRequest::~NocksRequest()
 
 void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
 {
-    assert(m_recipient == nullptr);
+    assert(networkReply == nullptr);
 
     m_recipient = recipient;
     requestType = type;
@@ -105,7 +106,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
 
     QByteArray data = httpPostParamaters.toStdString().c_str();
 
-    netManager->post( netRequest, data );
+    networkReply = netManager->post( netRequest, data );
 }
 
 void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )
@@ -129,6 +130,8 @@ void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )
 
 void NocksRequest::netRequestFinished( QNetworkReply* reply )
 {
+    assert(networkReply == reply);
+
     if ( reply->error() != QNetworkReply::NetworkError::NoError )
     {
         //fixme: (Post-2.1) Better error code
@@ -184,7 +187,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             {
                 if (requestType == RequestType::Quotation)
                 {
-                    nativeAmount = successValue.toObject().value("amount").toString();
+                    GuldenUnits::parse(GuldenUnits::NLG, successValue.toObject().value("amount").toString(), &nativeAmount);
                 }
                 else
                 {

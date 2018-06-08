@@ -6,6 +6,8 @@
 #ifndef GULDEN_NOCKSREQUEST_H
 #define GULDEN_NOCKSREQUEST_H
 
+#include "amount.h"
+
 #include <string>
 #include <map>
 
@@ -46,7 +48,7 @@ public:
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
 
-    QString nativeAmount;
+    CAmount nativeAmount;
 
 Q_SIGNALS:
     void requestProcessed();
@@ -64,6 +66,7 @@ private:
     SendCoinsRecipient* m_recipient;
     std::string originalAddress;
     RequestType requestType;
+    QNetworkReply* networkReply;
 };
 
 #endif
