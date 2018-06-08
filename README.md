@@ -42,7 +42,7 @@ The latest binaries and installers can be found [here](https://github.com/Gulden
 First, reconsider whether it is actually necessary for you to build.
 [Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.](https://github.com/Gulden/gulden-official/releases)
 
-Please read all the [build instructions](./doc/BUILDING.md) before attempting to build the software or asking for assistance with building the software.
+Please read all the [build instructions](./doc/building.md) before attempting to build the software or asking for assistance with building the software.
 
 ### Additional technical information
 
