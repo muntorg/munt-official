@@ -99,7 +99,7 @@ QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, co
     return QString( "<font color=\"%1\">%2 </font><font color=\"%3\">%4 %5 Gulden</font>" ).arg(legendColour).arg(GUIUtil::fontAwesomeRegular("\uf201")).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
 }
 
-enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING};
+enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING, FINAL};
 
 WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
@@ -788,6 +788,21 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             stateUnitButton = true;
                             setIndex = WitnessDialogStates::STATISTICS;
                             plotGraphForAccount(forAccount, nTotalNetworkWeight);
+                        }
+                    }
+                    else
+                    {
+                        filter->setAccountFilter(model->getActiveAccount());
+                        int rows = filter->rowCount();
+                        if (rows > 0)
+                        {
+                            setIndex = WitnessDialogStates::FINAL;
+                            stateRenewWitnessButton = false;
+                            stateRenewWitnessButton = false;
+                            stateEmptyWitnessButton = stateEmptyWitnessButton2 = false;
+                            stateWithdrawEarningsButton = stateWithdrawEarningsButton2 = false;
+                            stateEmptyWitnessButton2 = stateWithdrawEarningsButton2 = false;
+                            stateViewWitnessGraphButton = true;
                         }
                     }
                 }
