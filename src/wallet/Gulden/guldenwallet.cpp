@@ -58,7 +58,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
                     newShadow->m_State = AccountState::Shadow;
 
                     // Write new account
-                    pactiveWallet->addAccount(newShadow, "Shadow");
+                    pactiveWallet->addAccount(newShadow, "Shadow_"+GetAccountTypeString(shadowSubType));
 
                     if (nNumNewAccountsAllocated > 4)
                         return;
