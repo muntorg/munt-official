@@ -2581,10 +2581,11 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
 
     //NB!! GULDEN - segsig commits/adds a coinbase commitment here.
     //For segsig this is unnecessary; we hash this data as part of the normal merkle root instead.
-    bool fHaveSegregatedSignatures = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
+
 
     //fixme: (2.1) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
+    bool fHaveSegregatedSignatures = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
     if (fHaveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
