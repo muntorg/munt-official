@@ -49,7 +49,7 @@
 
 
 ### License
-All code is subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden)
+All code, binaries and other assets in this repository are subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden) except where explicitely stated otherwise.
 
 ### Contributing
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
