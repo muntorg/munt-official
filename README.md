@@ -70,7 +70,7 @@ The latest binaries and installers can be found [here](https://github.com/Gulden
 
 ### Building
 Reconsider whether it is actually necessary for you to build.
-[Binaries for both the UI software as well as the command line/server are provided by us at every release for multiple architectures](https://github.com/Gulden/gulden-official/releases) For users who are not developers a lot of headaches can be avoided by simply using these.
+[Binaries for both the UI software as well as the command line/server are provided by us at every release for multiple architectures.](https://github.com/Gulden/gulden-official/releases) For users who are not developers a lot of headaches can be avoided by simply using these.
 
 If you are sure you need to build the software yourself, please read the [build instructions](./doc/building.md) before attempting to build the software.
 
