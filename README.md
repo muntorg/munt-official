@@ -2,8 +2,11 @@
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
       <a href="https://www.Gulden.com">
-        <img src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/>
+        <img align="left" src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/>
       </a>
+      <p>Gulden is a <i>revolutionary</i> next generation blockchain based currency and payment system.<br/>
+      Gulden takes the blockchain concept to a whole new level; improving on multiple downsides and deficiencies in the earlier implementations of blockchain.</p>
+      <p>The project is driven at the core by a focus on key concepts like <i>usability</i> and <i>quality</i> which shows through in our software.</p><p>Join the Gulden project today and help build the future!</p>
     </td>
     <td width="20%" border=0>
       <a href="#">
