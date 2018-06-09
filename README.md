@@ -61,13 +61,7 @@ If you are thinking about contributing toward the development of Gulden in some 
 
 Connect with the community through one or more of the following:
 
-* [Website](https://gulden.com)
-* [Slack](https://gulden.com/join)
-* [Twitter](http://twitter.com/gulden)
-* [Facebook](http://facebook.com/gulden)
-* [Meetup](https://www.meetup.com/gulden)
-* [Reddit](https://www.reddit.com/r/GuldenCommunity)
-* [IRC](https://webchat.freenode.net/?channels=Gulden)
+[Website](https://gulden.com) ◾ [Slack](https://gulden.com/join) ◾ [Twitter](http://twitter.com/gulden) ◾ [Facebook](http://facebook.com/gulden) ◾ [Meetup](https://www.meetup.com/gulden) ◾ [Reddit](https://www.reddit.com/r/GuldenCommunity) ◾ [IRC](https://webchat.freenode.net/?channels=Gulden)
 
 
 ### Downloading
@@ -75,10 +69,10 @@ Connect with the community through one or more of the following:
 The latest binaries and installers can be found [here](https://github.com/Gulden/gulden-official/releases) for all platforms, including raspbian.
 
 ### Building
-First, reconsider whether it is actually necessary for you to build.
-[Linux binaries for the daemon are provided by us at every release for multiple architectures and are best in most cases. A lot of headaches can be saved by simply using these, especially if you are not an experienced developer.](https://github.com/Gulden/gulden-official/releases)
+Reconsider whether it is actually necessary for you to build.
+[Binaries for both the UI software as well as the command line/server are provided by us at every release for multiple architectures](https://github.com/Gulden/gulden-official/releases) For users who are not developers a lot of headaches can be avoided by simply using these.
 
-Please read all the [build instructions](./doc/building.md) before attempting to build the software or asking for assistance with building the software.
+If you are sure you need to build the software yourself, please read the [build instructions](./doc/building.md) before attempting to build the software.
 
 ### Additional technical information
 
