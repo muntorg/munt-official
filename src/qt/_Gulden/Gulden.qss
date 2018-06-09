@@ -1058,7 +1058,7 @@ QToolTip
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader
 {
     margin: 0px;
     padding: 0px;
@@ -1069,7 +1069,7 @@ QToolTip
     text-transform: uppercase;
 }
 
-#labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo
+#labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo, #labelUsedAccountInfo
 {
     margin-top: 6px;
     margin: 0px;
@@ -1079,7 +1079,7 @@ QToolTip
     color: TEXT_COLOR_1;
 }
 
-#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader
 {
     margin-top: 35px;
     margin-bottom: 10px;

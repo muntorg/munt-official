@@ -48,7 +48,7 @@
        <item>
         <widget class="QStackedWidget" name="witnessDialogStackedWidget">
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="emptyAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -440,6 +440,21 @@
          </widget>
          <widget class="QWidget" name="expiredAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QLabel" name="labelInactiveWitnessAccount">
              <property name="text">
@@ -520,6 +535,21 @@
          </widget>
          <widget class="QWidget" name="pendingAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QLabel" name="labelPendingWitnessAccount">
              <property name="text">
@@ -563,6 +593,21 @@
          </widget>
          <widget class="QWidget" name="usedAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QLabel" name="labelUsedAccountHeader">
              <property name="text">
