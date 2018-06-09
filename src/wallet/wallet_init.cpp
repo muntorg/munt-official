@@ -203,12 +203,6 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     throw std::runtime_error("Writing bip32 seed failed");
                 }
                 CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
-                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32Legacy))
-                {
-                    throw std::runtime_error("Writing bip32 legacy seed failed");
-                }
-                walletInstance->mapSeeds[seedBip32->getUUID()] = seedBip32;
-                walletInstance->mapSeeds[seedBip32Legacy->getUUID()] = seedBip32Legacy;
 
                 // Write new accounts
                 CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountType::Desktop, NULL);
@@ -221,6 +215,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 newAccountBip32Legacy->m_State = AccountState::ShadowChild;
                 walletInstance->activeAccount->AddChild(newAccountBip32Legacy);
                 walletInstance->addAccount(newAccountBip32Legacy, "BIP32 legacy child account");
+
+                //NB! We intentionally delete these seeds we only want the one account from them (for backwards compatibility with old phones).
+                delete seedBip32Legacy;
+                delete seedBip32;
             }
 
             // Write the seed last so that account index changes are reflected
