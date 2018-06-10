@@ -658,6 +658,9 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
+    static WitnessDialogStates cachedIndex = WitnessDialogStates::EMPTY;
+    static CAccount* cachedIndexForAccount = nullptr;
+
     WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
     bool stateEmptyWitnessButton2 = false;
@@ -836,6 +839,17 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                 }
             }
         }
+
+        // Stop view jumping back and forth if user has pushed "view statistics" and a new block comes in.
+        if (cachedIndexForAccount && cachedIndexForAccount == forAccount && cachedIndex == setIndex)
+        {
+            setIndex = (WitnessDialogStates)ui->witnessDialogStackedWidget->currentIndex();
+        }
+        else
+        {
+            cachedIndex = setIndex;
+            cachedIndexForAccount = forAccount;
+        }
     }
 
     ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
@@ -897,7 +911,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 
         for ( const auto& [uuid, account] : pactiveWallet->mapAccounts )
         {
-            (void)uuid;
+            (unused)uuid;
             AccountStatus prevState = account->GetWarningState();
             AccountStatus newState = AccountStatus::Default;
             bool bAnyAreMine = false;
