@@ -15,7 +15,7 @@
 RecentRequestsTableModel::RecentRequestsTableModel(CWallet *wallet, WalletModel *parent) :
     QAbstractTableModel(parent), walletModel(parent)
 {
-    Q_UNUSED(wallet);
+    (unused)wallet;
     nReceiveRequestsMaxId = 0;
 
     // Load entries from wallet
@@ -38,14 +38,14 @@ RecentRequestsTableModel::~RecentRequestsTableModel()
 
 int RecentRequestsTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
 
     return list.length();
 }
 
 int RecentRequestsTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
 
     return columns.length();
 }
@@ -129,14 +129,14 @@ QString RecentRequestsTableModel::getAmountTitle()
 
 QModelIndex RecentRequestsTableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
 
     return createIndex(row, column);
 }
 
 bool RecentRequestsTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    Q_UNUSED(parent);
+    (unused)parent;
 
     if(count > 0 && row >= 0 && (row+count) <= list.size())
     {

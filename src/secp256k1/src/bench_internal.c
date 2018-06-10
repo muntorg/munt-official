@@ -294,7 +294,7 @@ void bench_rfc6979_hmac_sha256(void* arg) {
 
 void bench_context_verify(void* arg) {
     int i;
-    (void)arg;
+    (unused)arg;
     for (i = 0; i < 20; i++) {
         secp256k1_context_destroy(secp256k1_context_create(SECP256K1_CONTEXT_VERIFY));
     }
@@ -302,7 +302,7 @@ void bench_context_verify(void* arg) {
 
 void bench_context_sign(void* arg) {
     int i;
-    (void)arg;
+    (unused)arg;
     for (i = 0; i < 200; i++) {
         secp256k1_context_destroy(secp256k1_context_create(SECP256K1_CONTEXT_SIGN));
     }

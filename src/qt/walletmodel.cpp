@@ -590,15 +590,15 @@ static void NotifyAddressBookChanged(WalletModel *walletmodel, [[maybe_unused]] 
 
 static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, const uint256 &hash, ChangeType status)
 {
-    Q_UNUSED(wallet);
-    Q_UNUSED(hash);
-    Q_UNUSED(status);
+    (unused)wallet;
+    (unused)hash;
+    (unused)status;
     QMetaObject::invokeMethod(walletmodel, "updateTransaction", Qt::QueuedConnection);
 }
 
 static void NotifyAccountNameChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
-    Q_UNUSED(wallet);
+    (unused)wallet;
     if (account == walletmodel->getActiveAccount())
     {
         LogPrintf("NotifyAccountNameChanged\n");
@@ -608,7 +608,7 @@ static void NotifyAccountNameChanged(WalletModel *walletmodel, CWallet *wallet, 
 
 static void NotifyAccountWarningChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
-    Q_UNUSED(wallet);
+    (unused)wallet;
     LogPrintf("NotifyAccountWarningChanged\n");
     QMetaObject::invokeMethod(walletmodel, "accountWarningChanged",  Qt::QueuedConnection, Q_ARG(CAccount*, account));
 }
@@ -616,15 +616,15 @@ static void NotifyAccountWarningChanged(WalletModel *walletmodel, CWallet *walle
 
 static void NotifyActiveAccountChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
-    Q_UNUSED(wallet);
+    (unused)wallet;
     LogPrintf("walletmodel::setActiveAccount\n");
     QMetaObject::invokeMethod(walletmodel, "activeAccountChanged",  Qt::QueuedConnection, Q_ARG(CAccount*, account));
 }
 
 static void NotifyAccountAdded(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
 {
+    (unused)wallet;
     LogPrintf("NotifyAccountAdded\n");
-    Q_UNUSED(wallet);
     QMetaObject::invokeMethod(walletmodel, "accountAdded",  Qt::QueuedConnection, Q_ARG(CAccount*, account));
 }
 

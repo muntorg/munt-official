@@ -865,7 +865,7 @@ void runCommand(const std::string& strCommand)
         LogPrintf("runCommand error: system(%s) returned %d\n", strCommand, nErr);
 }
 
-void RenameThread(const char* name)
+void RenameThread([[maybe_unused]] const char* name)
 {
 #if defined(PR_SET_NAME)
     // Only the first 15 characters are used (16 - NUL terminator)
@@ -875,9 +875,6 @@ void RenameThread(const char* name)
 
 #elif defined(MAC_OSX)
     pthread_setname_np(name);
-#else
-    // Prevent warnings for unused parameters...
-    (void)name;
 #endif
 }
 

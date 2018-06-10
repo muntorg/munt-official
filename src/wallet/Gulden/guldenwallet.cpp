@@ -9,6 +9,7 @@
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
 #include <Gulden/mnemonic.h>
+#include "util.h"
 
 bool fShowChildAccountsSeperately = false;
 
@@ -242,7 +243,7 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
-        boost::ignore_unused(accountUUID);
+        (unused)accountUUID;
         auto iter = account->isminecache.find(outHash);
         if (iter != account->isminecache.end())
         {

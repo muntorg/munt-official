@@ -380,7 +380,7 @@ QValidator(parent)
 
 QValidator::State ProxyAddressValidator::validate(QString &input, int &pos) const
 {
-    Q_UNUSED(pos);
+    (unused)pos;
     // Validate the proxy
     CService serv(LookupNumeric(input.toStdString().c_str(), 9050));
     proxyType addrProxy = proxyType(serv, true);

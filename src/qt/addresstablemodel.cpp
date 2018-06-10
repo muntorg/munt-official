@@ -187,13 +187,13 @@ AddressTableModel::~AddressTableModel()
 
 int AddressTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return priv->size();
 }
 
 int AddressTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return columns.length();
 }
 
@@ -344,7 +344,7 @@ Qt::ItemFlags AddressTableModel::flags(const QModelIndex &index) const
 
 QModelIndex AddressTableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     AddressTableEntry *data = priv->index(row);
     if(data)
     {
@@ -432,7 +432,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
 
 bool AddressTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     AddressTableEntry *rec = priv->index(row);
     if(count != 1 || !rec || rec->type == AddressTableEntry::Receiving)
     {

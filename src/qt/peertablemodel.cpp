@@ -145,13 +145,13 @@ void PeerTableModel::stopAutoRefresh()
 
 int PeerTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return priv->size();
 }
 
 int PeerTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return columns.length();
 }
 
@@ -205,7 +205,7 @@ Qt::ItemFlags PeerTableModel::flags(const QModelIndex &index) const
 
 QModelIndex PeerTableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     CNodeCombinedStats *data = priv->index(row);
 
     if (data)

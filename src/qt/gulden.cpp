@@ -176,7 +176,7 @@ static void DebugMessageHandler(QtMsgType type, const char *msg)
 #else
 static void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString &msg)
 {
-    Q_UNUSED(context);
+    (unused)context;
     if (type == QtDebugMsg) {
         LogPrint(BCLog::QT, "GUI: %s\n", msg.toStdString());
     } else {

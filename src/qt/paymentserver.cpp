@@ -752,7 +752,7 @@ void PaymentServer::netRequestFinished(QNetworkReply* reply)
 
 void PaymentServer::reportSslErrors(QNetworkReply* reply, const QList<QSslError> &errs)
 {
-    Q_UNUSED(reply);
+    (unused)reply;
 
     QString errString;
     for (const QSslError& err : errs) {

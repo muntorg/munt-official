@@ -10,6 +10,7 @@
 // file COPYING
 
 #include "notificator.h"
+#include "util.h"
 
 #include <QApplication>
 #include <QByteArray>
@@ -178,7 +179,7 @@ QVariant FreedesktopImage::toVariant(const QImage &img)
 
 void Notificator::notifyDBus(Class cls, const QString &title, const QString &text, const QIcon &icon, int millisTimeout)
 {
-    Q_UNUSED(cls);
+    (unused)cls;
     // Arguments for DBus call:
     QList<QVariant> args;
 
@@ -236,7 +237,7 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
 
 void Notificator::notifySystray(Class cls, const QString &title, const QString &text, const QIcon &icon, int millisTimeout)
 {
-    Q_UNUSED(icon);
+    (unused)icon;
     QSystemTrayIcon::MessageIcon sicon = QSystemTrayIcon::NoIcon;
     switch(cls) // Set icon based on class
     {
