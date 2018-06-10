@@ -10,6 +10,9 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+This branch currently tracks version 2.0 of Gulden which is set to be released 28/06/2018 - to prevent accidental usage building has been disabled. If you want to build the current mainstream Gulden please check out the '1.6.4' branch. If you want to perform testing for 2.0 checkout the '2.0_development' branch and avoid usage on mainnet.
+Or check back on this branch at the end of the month for a release ready version.
+
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
 #endif
