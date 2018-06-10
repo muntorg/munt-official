@@ -9,6 +9,7 @@
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
 #include <Gulden/mnemonic.h>
+#include "util.h"
 
 bool fShowChildAccountsSeperately = false;
 
@@ -58,7 +59,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
                     newShadow->m_State = AccountState::Shadow;
 
                     // Write new account
-                    pactiveWallet->addAccount(newShadow, "Shadow");
+                    pactiveWallet->addAccount(newShadow, "Shadow_"+GetAccountTypeString(shadowSubType));
 
                     if (nNumNewAccountsAllocated > 4)
                         return;
@@ -240,21 +241,22 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     uint256 outHash = out.output.GetHash();
 
     isminetype ret = isminetype::ISMINE_NO;
-    for (const auto& accountItem : wallet.mapAccounts)
+    for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
-        auto iter = accountItem.second->isminecache.find(outHash);
-        if (iter != accountItem.second->isminecache.end())
+        (unused)accountUUID;
+        auto iter = account->isminecache.find(outHash);
+        if (iter != account->isminecache.end())
         {
             if (iter->second > ret)
                 ret = iter->second;
         }
         else
         {
-            isminetype temp = IsMine(*accountItem.second, out);
+            isminetype temp = IsMine(*account, out);
             if (temp > ret)
                 ret = temp;
             //fixme: (2.0) keep trimmed by MRU
-            accountItem.second->isminecache[outHash] = ret;
+            account->isminecache[outHash] = ret;
         }
         // No need to keep going through the remaining accounts at this point.
         if (ret >= ISMINE_SPENDABLE)

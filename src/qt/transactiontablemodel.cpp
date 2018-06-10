@@ -311,13 +311,13 @@ void TransactionTableModel::updateConfirmations()
 
 int TransactionTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return priv->size();
 }
 
 int TransactionTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return columns.length();
 }
 
@@ -866,7 +866,7 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
 
 QModelIndex TransactionTableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     TransactionRecord *data = priv->index(row);
     if(data)
     {

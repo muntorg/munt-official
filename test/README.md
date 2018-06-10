@@ -6,9 +6,9 @@ etc.
 There are currently two sets of tests in this directory:
 
 - [functional](/test/functional) which test the functionality of 
-GuldenD and bitcoin-qt by interacting with them through the RPC and P2P
+GuldenD and Gulden by interacting with them through the RPC and P2P
 interfaces.
-- [util](test/util) which tests the bitcoin utilities, currently only
+- [util](test/util) which tests the Gulden utilities, currently only
 Gulden-tx.
 
 The util tests are run as part of `make check` target. The functional
@@ -88,7 +88,7 @@ killall GuldenD
 Util tests
 ----------
 
-Util tests can be run locally by running `test/util/bitcoin-util-test.py`. 
+Util tests can be run locally by running `test/util/gulden-util-test.py`. 
 Use the `-v` option for verbose output.
 
 Writing functional tests

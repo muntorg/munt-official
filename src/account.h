@@ -62,7 +62,9 @@ boost::uuids::uuid getUUIDFromString(const std::string& uuid);
 std::string GetAccountTypeString(AccountType type);
 
 const int HDDesktopStartIndex = 0;
-const int HDMobileStartIndex = 100000;
+const int HDMobileStartIndex  = 100000;
+const int HDWitnessStartIndex = 200000;
+const int HDFutureReservedStartIndex = 300000;
 
 enum AccountStatus
 {
@@ -129,7 +131,6 @@ public:
 
         READWRITE(m_nAccountIndex);
         READWRITE(m_nAccountIndexMobi);
-        m_nAccountIndexWitness = 200000;
         if (nVersion >= 2)
         {
             READWRITE(m_nAccountIndexWitness);
@@ -189,11 +190,11 @@ protected:
     boost::uuids::uuid m_UUID;
 
     // Index of next account to generate (normal accounts)
-    int m_nAccountIndex;
+    int m_nAccountIndex = HDDesktopStartIndex;
     // Index of next account to generate (mobile accounts)
-    int m_nAccountIndexMobi;
+    int m_nAccountIndexMobi = HDMobileStartIndex;
     // Index of next account to generate (witness accounts)
-    int m_nAccountIndexWitness;
+    int m_nAccountIndexWitness = HDWitnessStartIndex;
 
     //Always available
     CExtPubKey masterKeyPub;  //hd master key (m)      - BIP32 and BIP44

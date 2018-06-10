@@ -36,6 +36,9 @@
 
 #include <boost/signals2/signal.hpp>
 
+// Standardise on (unused) indicator to silence unused warnings in cases where it makes sense.
+typedef void unused;
+
 static const bool DEFAULT_LOGTIMEMICROS = false;
 static const bool DEFAULT_LOGIPS        = false;
 static const bool DEFAULT_LOGTIMESTAMPS = true;

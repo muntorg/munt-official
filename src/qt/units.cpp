@@ -10,6 +10,7 @@
 // file COPYING
 
 #include "units.h"
+#include "util.h"
 
 #include "primitives/transaction.h"
 
@@ -194,7 +195,7 @@ QString GuldenUnits::getAmountColumnTitle(int unit)
 
 int GuldenUnits::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return unitlist.size();
 }
 

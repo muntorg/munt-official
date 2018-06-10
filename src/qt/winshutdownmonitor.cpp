@@ -19,7 +19,7 @@
 // the value that the window procedure should return. Otherwise return false.
 bool WinShutdownMonitor::nativeEventFilter(const QByteArray &eventType, void *pMessage, long *pnResult)
 {
-       Q_UNUSED(eventType);
+       (unused)eventType;
 
        MSG *pMsg = static_cast<MSG *>(pMessage);
 

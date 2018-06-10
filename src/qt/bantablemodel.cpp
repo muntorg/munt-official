@@ -102,13 +102,13 @@ BanTableModel::~BanTableModel()
 
 int BanTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return priv->size();
 }
 
 int BanTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     return columns.length();
 }
 
@@ -157,7 +157,7 @@ Qt::ItemFlags BanTableModel::flags(const QModelIndex &index) const
 
 QModelIndex BanTableModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    (unused)parent;
     CCombinedBan *data = priv->index(row);
 
     if (data)

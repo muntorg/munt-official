@@ -841,7 +841,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     }
     else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
     {
-        nMultiplier = 576;
+        nMultiplier = 1;
         sLockPeriodInBlocks.pop_back();
     }
     if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))

@@ -988,7 +988,7 @@ void RPCConsole::updateTrafficStats(quint64 totalBytesIn, quint64 totalBytesOut)
 
 void RPCConsole::peerSelected(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    Q_UNUSED(deselected);
+    (unused)deselected;
 
     if (!clientModel || !clientModel->getPeerTableModel() || selected.indexes().isEmpty())
         return;

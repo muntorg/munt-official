@@ -65,19 +65,13 @@ std::string GetAccountTypeString(AccountType type)
 
 
 CHDSeed::CHDSeed()
-: m_nAccountIndex(HDDesktopStartIndex)
-, m_nAccountIndexMobi(HDMobileStartIndex)
-, encrypted(false)
+: m_type(BIP44)
 , m_readOnly(false)
 {
 }
 
 CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 : m_type(type)
-, m_UUID(boost::uuids::nil_generator()())
-, m_nAccountIndex(HDDesktopStartIndex)
-, m_nAccountIndexMobi(HDMobileStartIndex)
-, encrypted(false)
 , m_readOnly(false)
 {
     //fixme: (2.1) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
@@ -87,9 +81,6 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 
 CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 : m_type(type)
-, m_UUID(boost::uuids::nil_generator()())
-, m_nAccountIndex(HDDesktopStartIndex)
-, m_nAccountIndexMobi(HDMobileStartIndex)
 , encrypted(false)
 , m_readOnly(true)
 {
@@ -173,15 +164,15 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
     switch (type)
     {
         case Desktop:
-            assert(m_nAccountIndex < 100000);
+            assert(m_nAccountIndex < HDMobileStartIndex);
             account = GenerateAccount( m_nAccountIndex++, type);
             break;
         case Mobi:
-            assert(m_nAccountIndexMobi < 200000);
+            assert(m_nAccountIndexMobi < HDWitnessStartIndex);
             account = GenerateAccount( m_nAccountIndexMobi++, type);
             break;
         case PoW2Witness:
-            assert(m_nAccountIndex < 300000);
+            assert(m_nAccountIndexWitness < HDFutureReservedStartIndex);
             account = GenerateAccount( m_nAccountIndexWitness++, type);
             break;
     }

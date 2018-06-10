@@ -34,9 +34,8 @@ QFontIconEngine::~QFontIconEngine()
 {
 }
 
-void QFontIconEngine::paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state)
+void QFontIconEngine::paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, [[maybe_unused]] QIcon::State state)
 {
-    Q_UNUSED(state);
     QFont font = QFont(mFontFamily);
     int drawSize = qRound(rect.height() * 0.8);
     font.setPixelSize(drawSize);

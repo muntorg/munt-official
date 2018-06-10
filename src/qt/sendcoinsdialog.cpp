@@ -714,11 +714,11 @@ bool SendCoinsDialog::handlePaymentRequest(const SendCoinsRecipient &rv)
 void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                                  const CAmount& watchBalance, const CAmount& watchUnconfirmedBalance, const CAmount& watchImmatureBalance)
 {
-    Q_UNUSED(unconfirmedBalance);
-    Q_UNUSED(immatureBalance);
-    Q_UNUSED(watchBalance);
-    Q_UNUSED(watchUnconfirmedBalance);
-    Q_UNUSED(watchImmatureBalance);
+    (unused)unconfirmedBalance;
+    (unused)immatureBalance;
+    (unused)watchBalance;
+    (unused)watchUnconfirmedBalance;
+    (unused)watchImmatureBalance;
 
     if(model && model->getOptionsModel())
     {

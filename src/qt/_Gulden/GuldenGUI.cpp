@@ -1354,7 +1354,7 @@ ClickableLabel* GUI::accountAddedHelper(CAccount* addedAccount)
         uint32_t nCount = 0;
         for (const auto& [sortedLabel, sortedAccount] : sortedAccounts)
         {
-            Q_UNUSED(sortedLabel);
+            (unused)sortedLabel;
             if (sortedAccount->getUUID() == addedAccount->getUUID())
             {
                 QString decoratedAccountlabel = getAccountLabel(sortedAccount);

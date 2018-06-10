@@ -190,17 +190,19 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
             return RemoveAddressFromKeypoolIfIsMine(keystore, txout.output.scriptPubKey, time);
         case CTxOutType::PoW2WitnessOutput:
         {
-            if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
-            {
+            bool haveSpendingKey = keystore.HaveKey(txout.output.witnessDetails.spendingKeyID);
+            bool haveWitnessKey = keystore.HaveKey(txout.output.witnessDetails.witnessKeyID);
+
+            if (haveSpendingKey)
                 keystore.MarkKeyUsed(txout.output.witnessDetails.spendingKeyID, time);
-                return ISMINE_SPENDABLE;
-            }
-            //fixme: (2.0) Need new ismine type here.?
-            if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
-            {
+            if (haveWitnessKey)
                 keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
+
+            //fixme: (2.0) Need new ismine type here.?
+            if (haveSpendingKey)
                 return ISMINE_SPENDABLE;
-            }
+            if (haveWitnessKey)
+                return ISMINE_SPENDABLE;
             break;
         }
         case CTxOutType::StandardKeyHashOutput:
@@ -331,15 +333,17 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
             }
         }
 
-        if (keystore.HaveKey(spendingKeyID))
+        bool haveSpendingKey = keystore.HaveKey(spendingKeyID);
+        bool haveWitnessKey = keystore.HaveKey(witnessKeyID);
+        if (haveSpendingKey)
             keystore.MarkKeyUsed(spendingKeyID, time);
-        if (keystore.HaveKey(witnessKeyID))
+        if (haveWitnessKey)
             keystore.MarkKeyUsed(witnessKeyID, time);
 
-        if (keystore.HaveKey(spendingKeyID))
+        if (haveSpendingKey)
             return ISMINE_SPENDABLE;
         //fixme: (2.0) Need new ismine type here.?
-        if (keystore.HaveKey(witnessKeyID))
+        if (haveWitnessKey)
             return ISMINE_SPENDABLE;
         break;
     }

@@ -765,25 +765,16 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
 
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
+    int nPoW2PhaseTip = GetPoW2Phase(chainActive.Tip(), chainparams, chainActive);
+    int nPoW2PhasePrev = GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive);
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), GetPoW2Phase(chainActive.Tip(), chainparams, chainActive), GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive));
+    LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
-    //fixme: (2.1) re-implement this.
+    //fixme: (2.1) we should avoid submitting stale blocks here
+    //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)
+    //so detecting this is a bit tricky...
+
     // Found a solution
-    /*
-    CBlockIndex* pIndexPrev = chainActive.Tip();
-    if (IsPow2Phase4Active(pIndexPrev->pprev, chainparams))
-    {
-        if (pIndexPrev->nVersionPoW2Witness == 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
-            return error("GuldenWitness: Generated phase4 block is stale");
-    }
-    else
-    {
-        if (pIndexPrev->nVersionPoW2Witness != 0 ||  pblock->hashPrevBlock != pIndexPrev->GetBlockHashPoW2())
-            return error("GuldenWitness: Generated block is stale");
-    }*/
-
-
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(chainparams, pblock, true, NULL))
         return error("GuldenMiner: ProcessNewBlock, block not accepted");

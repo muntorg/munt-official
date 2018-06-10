@@ -30,7 +30,7 @@ GuldenAddressEntryValidator::GuldenAddressEntryValidator(QObject *parent) :
 
 QValidator::State GuldenAddressEntryValidator::validate(QString &input, int &pos) const
 {
-    Q_UNUSED(pos);
+    (unused)pos;
 
     // Empty address is "intermediate" input
     if (input.isEmpty())
@@ -97,7 +97,7 @@ GuldenAddressCheckValidator::GuldenAddressCheckValidator(QObject *parent) :
 
 QValidator::State GuldenAddressCheckValidator::validate(QString &input, int &pos) const
 {
-    Q_UNUSED(pos);
+    (unused)pos;
     // Validate the passed Gulden address
     CGuldenAddress addr(input.toStdString());
     //fixme: (Post-2.1) Gulden Duplicate code
