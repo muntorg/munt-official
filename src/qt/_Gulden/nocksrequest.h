@@ -45,6 +45,9 @@ public:
     */
     void startRequest(SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="");
 
+    //! Cancel the request. The requestProcessed() signal will not be triggered.
+    void cancel();
+
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
 

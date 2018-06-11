@@ -50,7 +50,8 @@ NocksRequest::NocksRequest( QObject* parent)
 
 NocksRequest::~NocksRequest()
 {
-
+    cancel();
+    delete netManager;
 }
 
 void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
@@ -115,6 +116,18 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
     QByteArray data = httpPostParamaters.toStdString().c_str();
 
     networkReply = netManager->post( netRequest, data );
+}
+
+void NocksRequest::cancel()
+{
+    netManager->disconnect(this);
+
+    if (networkReply)
+    {
+        networkReply->abort();
+        networkReply->deleteLater();
+        networkReply = nullptr;
+    }
 }
 
 void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )
@@ -225,7 +238,6 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             }
         }
     }
-    //this->deleteLater();
 }
 
 void NocksRequest::reportSslErrors( [[maybe_unused]] QNetworkReply* reply, [[maybe_unused]] const QList<QSslError>& errorList )
@@ -233,9 +245,6 @@ void NocksRequest::reportSslErrors( [[maybe_unused]] QNetworkReply* reply, [[may
     if (m_recipient)
         m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
     Q_EMIT requestProcessed();
-
-    //Delete ourselves.
-    this->deleteLater();
 }
 
 
