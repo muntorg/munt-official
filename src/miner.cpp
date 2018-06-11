@@ -1103,7 +1103,7 @@ void static GuldenMiner(const CChainParams& chainparams)
                         LogPrintf("GuldenMiner: proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
                         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
                         ProcessBlockFound(shared_pblock, chainparams);
-                        coinbaseScript->KeepScript();
+                        coinbaseScript->keepScriptOnDestroy();
 
                         // In regression test mode, stop mining after a block is found.
                         if (chainparams.MineBlocksOnDemand())
@@ -1526,6 +1526,7 @@ void static GuldenWitness()
                                 {
                                     LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
                                     ProcessBlockFound(pWitnessBlock, chainparams);
+                                    coinbaseScript->keepScriptOnDestroy();
                                     continue;
                                 }
                             }

@@ -913,6 +913,8 @@ public:
 
     virtual ~CReserveKeyOrScript()
     {
+        if (shouldKeepOnDestroy)
+            KeepScript();
         if (!scriptOnly())
             ReturnKey();
     }
@@ -925,11 +927,17 @@ public:
     void ReturnKey();
     bool GetReservedKey(CPubKey &pubkey);
     void KeepKey();
-    void KeepScript()
+    void KeepScript() override
     {
         if (!scriptOnly())
             KeepKey();
     }
+    void keepScriptOnDestroy() override
+    {
+        shouldKeepOnDestroy = true;
+    }
+private:
+    bool shouldKeepOnDestroy=false;
 };
 
 
