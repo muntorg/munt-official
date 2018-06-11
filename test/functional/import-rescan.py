@@ -20,7 +20,7 @@ happened previously.
 """
 
 from test_framework.authproxy import JSONRPCException
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import (connect_nodes, sync_blocks, assert_equal, set_node_times)
 
 import collections
@@ -110,7 +110,7 @@ IMPORT_NODES = [ImportNode(*fields) for fields in itertools.product((False, True
 TIMESTAMP_WINDOW = 2 * 60 * 60
 
 
-class ImportRescanTest(BitcoinTestFramework):
+class ImportRescanTest(GuldenTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 2 + len(IMPORT_NODES)

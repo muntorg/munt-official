@@ -37,14 +37,14 @@ LIBGULDEN_CONSENSUS=libgulden_consensus.a
 LIBGULDEN_CLI=libgulden_cli.a
 LIBGULDEN_UTIL=libgulden_util.a
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
-LIBBITCOINQT=qt/libguldenqt.a
+LIBGULDENQT=qt/libguldenqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
 LIBGULDEN_ZMQ=libgulden_zmq.a
 endif
 if BUILD_GULDEN_LIBS
-LIBBITCOINCONSENSUS=libguldenconsensus.la
+LIBGULDENCONSENSUS=libguldenconsensus.la
 endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
@@ -65,7 +65,7 @@ EXTRA_LIBRARIES += \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
 
-lib_LTLIBRARIES = $(LIBBITCOINCONSENSUS)
+lib_LTLIBRARIES = $(LIBGULDENCONSENSUS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -558,18 +558,6 @@ clean-local:
 .mm.o:
 	$(AM_V_CXX) $(OBJCXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	  $(CPPFLAGS) $(AM_CXXFLAGS) $(QT_INCLUDES) $(AM_CXXFLAGS) $(PIE_FLAGS) $(CXXFLAGS) -c -o $@ $<
-
-check-symbols: $(bin_PROGRAMS)
-if GLIBC_BACK_COMPAT
-	@echo "Checking glibc back compat..."
-#	$(AM_V_at) READELF=$(READELF) CPPFILT=$(CPPFILT) $(top_srcdir)/contrib/devtools/symbol-check.py < $(bin_PROGRAMS)
-endif
-
-check-security: $(bin_PROGRAMS)
-if HARDEN
-	@echo "Checking binary security..."
-#	$(AM_V_at) READELF=$(READELF) OBJDUMP=$(OBJDUMP) $(top_srcdir)/contrib/devtools/security-check.py < $(bin_PROGRAMS)
-endif
 
 %.pb.cc %.pb.h: %.proto
 	@test -f $(PROTOC)

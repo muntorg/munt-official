@@ -10,7 +10,7 @@ forward all unrecognized arguments onto the individual test scripts.
 Functional tests are disabled on Windows by default. Use --force to run them anyway.
 
 For a description of arguments recognized by test scripts, see
-`test/functional/test_framework/test_framework.py:BitcoinTestFramework.main`.
+`test/functional/test_framework/test_framework.py:GuldenTestFramework.main`.
 
 """
 
@@ -190,14 +190,14 @@ def main():
     logging.basicConfig(format='%(message)s', level=logging_level)
 
     # Create base test directory
-    tmpdir = "%s/bitcoin_test_runner_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+    tmpdir = "%s/gulden_test_runner_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
     os.makedirs(tmpdir)
 
     logging.debug("Temporary test directory at %s" % tmpdir)
 
     enable_wallet = config["components"].getboolean("ENABLE_WALLET")
     enable_utils = config["components"].getboolean("ENABLE_UTILS")
-    enable_GuldenD = config["components"].getboolean("ENABLE_BITCOIND")
+    enable_GuldenD = config["components"].getboolean("ENABLE_GULDEND")
 
     if config["environment"]["EXEEXT"] == ".exe" and not args.force:
         # https://github.com/bitcoin/bitcoin/commit/d52802551752140cf41f0d9a225a43e84404d3e9
@@ -271,8 +271,8 @@ def run_tests(test_list, src_dir, build_dir, exeext, tmpdir, jobs=1, enable_cove
         print("%sWARNING!%s There is a cache directory here: %s. If tests fail unexpectedly, try deleting the cache directory." % (BOLD[1], BOLD[0], cache_dir))
 
     #Set env vars
-    if "BITCOIND" not in os.environ:
-        os.environ["BITCOIND"] = build_dir + '/src/GuldenD' + exeext
+    if "GULDEND" not in os.environ:
+        os.environ["GULDEND"] = build_dir + '/src/GuldenD' + exeext
 
     tests_dir = src_dir + '/test/functional/'
 

@@ -901,7 +901,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
 
-    CRecipient recipient = ( nPoW2TipPhase >= 4 ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
+    CRecipient recipient = ( IsSegSigEnabled(chainActive.Tip()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
     vecSend.push_back(recipient);
 
     CWalletTx wtx;

@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test Hierarchical Deterministic wallet function."""
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
@@ -14,7 +14,7 @@ import os
 import shutil
 
 
-class WalletHDTest(BitcoinTestFramework):
+class WalletHDTest(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

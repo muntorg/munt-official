@@ -59,7 +59,7 @@ endif
 
 nodist_qt_test_test_Gulden_SOURCES = $(TEST_QT_MOC_CPP)
 
-qt_test_test_Gulden_LDADD = $(LIBBITCOINQT) $(LIBGULDEN_SERVER)
+qt_test_test_Gulden_LDADD = $(LIBGULDENQT) $(LIBGULDEN_SERVER)
 if ENABLE_WALLET
 qt_test_test_Gulden_LDADD += $(LIBGULDEN_WALLET)
 endif
@@ -72,7 +72,7 @@ qt_test_test_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UT
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 
 
-qt_test_test_Gulden_LDADD += $(LIBBITCOINQT) $(LIBGULDEN_SERVER)
+qt_test_test_Gulden_LDADD += $(LIBGULDENQT) $(LIBGULDEN_SERVER)
 if ENABLE_WALLET
 qt_test_test_Gulden_LDADD += $(LIBGULDEN_WALLET)
 endif

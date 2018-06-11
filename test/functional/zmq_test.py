@@ -7,10 +7,10 @@ import configparser
 import os
 import struct
 
-from test_framework.test_framework import BitcoinTestFramework, SkipTest
+from test_framework.test_framework import GuldenTestFramework, SkipTest
 from test_framework.util import *
 
-class ZMQTest (BitcoinTestFramework):
+class ZMQTest (GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

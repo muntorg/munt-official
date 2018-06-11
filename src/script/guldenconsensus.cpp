@@ -155,5 +155,5 @@ int guldenconsensus_verify_script(const unsigned char *scriptPubKey, unsigned in
 unsigned int guldenconsensus_version()
 {
     // Just use the API version for now
-    return BITCOINCONSENSUS_API_VER;
+    return GULDENCONSENSUS_API_VER;
 }

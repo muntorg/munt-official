@@ -51,10 +51,10 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
-class BitcoinTestFramework(object):
-    """Base class for a bitcoin test script.
+class GuldenTestFramework(object):
+    """Base class for a Gulden test script.
 
-    Individual bitcoin test scripts should subclass this class and override the following methods:
+    Individual Gulden test scripts should subclass this class and override the following methods:
 
     - __init__()
     - add_options()
@@ -265,7 +265,7 @@ class BitcoinTestFramework(object):
         self.log.addHandler(ch)
 
         if self.options.trace_rpc:
-            rpc_logger = logging.getLogger("BitcoinRPC")
+            rpc_logger = logging.getLogger("GuldenRPC")
             rpc_logger.setLevel(logging.DEBUG)
             rpc_handler = logging.StreamHandler(sys.stdout)
             rpc_handler.setLevel(logging.DEBUG)
@@ -295,7 +295,7 @@ class BitcoinTestFramework(object):
             # Create cache directories, run GuldenDs:
             for i in range(MAX_NODES):
                 datadir = initialize_datadir(cachedir, i)
-                args = [os.getenv("BITCOIND", "GuldenD"), "-server", "-keypool=1", "-datadir=" + datadir, "-discover=0"]
+                args = [os.getenv("GULDEND", "GuldenD"), "-server", "-keypool=1", "-datadir=" + datadir, "-discover=0"]
                 if i > 0:
                     args.append("-connect=127.0.0.1:" + str(p2p_port(0)))
                 GuldenD_processes[i] = subprocess.Popen(args)
@@ -343,7 +343,7 @@ class BitcoinTestFramework(object):
             from_dir = os.path.join(cachedir, "node" + str(i))
             to_dir = os.path.join(test_dir, "node" + str(i))
             shutil.copytree(from_dir, to_dir)
-            initialize_datadir(test_dir, i)  # Overwrite port/rpcport in bitcoin.conf
+            initialize_datadir(test_dir, i)  # Overwrite port/rpcport in Gulden.conf
 
     def _initialize_chain_clean(self, test_dir, num_nodes):
         """Initialize empty blockchain for use by the test.
@@ -364,7 +364,7 @@ class SkipTest(Exception):
     def __init__(self, message):
         self.message = message
 
-class ComparisonTestFramework(BitcoinTestFramework):
+class ComparisonTestFramework(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()
@@ -373,10 +373,10 @@ class ComparisonTestFramework(BitcoinTestFramework):
 
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("BITCOIND", "GuldenD"),
+                          default=os.getenv("GULDEND", "GuldenD"),
                           help="GuldenD binary to test")
         parser.add_option("--refbinary", dest="refbinary",
-                          default=os.getenv("BITCOIND", "GuldenD"),
+                          default=os.getenv("GULDEND", "GuldenD"),
                           help="GuldenD binary to use for reference nodes (if any)")
 
     def setup_network(self):

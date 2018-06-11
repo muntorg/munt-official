@@ -15,7 +15,7 @@ make assumptions about execution order.
 """
 
 from segwit import send_to_witness
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework import blocktools
 from test_framework.mininode import CTransaction
 from test_framework.util import *
@@ -29,7 +29,7 @@ WALLET_PASSPHRASE = "test"
 WALLET_PASSPHRASE_TIMEOUT = 3600
 
 
-class BumpFeeTest(BitcoinTestFramework):
+class BumpFeeTest(GuldenTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 2

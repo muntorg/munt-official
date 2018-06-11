@@ -127,9 +127,15 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates
-    bool segsigEnabled = IsSegSigEnabled(chainActive.Tip()->pprev, chainparams, chainActive, nullptr);
-    if (tx.HasSegregatedSignatures() && !segsigEnabled) {
-        return state.DoS(0, false, REJECT_NONSTANDARD, "segregated-signatures-not-yet-active", true);
+    bool segsigEnabled = IsSegSigEnabled(chainActive.Tip()->pprev);
+    bool hasSegregatedSignatures = tx.HasSegregatedSignatures();
+    if (segsigEnabled && !hasSegregatedSignatures)
+    {
+        return state.DoS(0, false, REJECT_NONSTANDARD, "non-segregated-sigdata-after-segregated-signatures-active", true);
+    }
+    if (!segsigEnabled && hasSegregatedSignatures)
+    {
+        return state.DoS(0, false, REJECT_NONSTANDARD, "segregated-sigdata-before-segregated-signatures-active", true);
     }
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BITCOIN_UI_INTERFACE_H
-#define BITCOIN_UI_INTERFACE_H
+#ifndef GULDEN_UI_INTERFACE_H
+#define GULDEN_UI_INTERFACE_H
 
 #include <stdint.h>
 #include <string>
@@ -135,4 +135,4 @@ std::string AmountErrMsg(const char* const optname, const std::string& strValue)
 
 extern CClientUIInterface uiInterface;
 
-#endif // BITCOIN_UI_INTERFACE_H
+#endif // GULDEN_UI_INTERFACE_H

@@ -568,7 +568,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 // We consider the chain that this peer is on invalid.
                 return;
             }
-            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr)) {
+            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pindex->pprev)) {
                 // We wouldn't download this block or its descendants from this peer.
                 return;
             }
@@ -864,7 +864,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         return;
     nHighestFastAnnounce = pindex->nHeight;
 
-    bool fWitnessEnabled = IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr);
+    bool fWitnessEnabled = IsSegSigEnabled(pindex->pprev);
 
     uint256 hashBlock;
 
@@ -2352,7 +2352,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CNodeState *nodestate = State(pfrom->GetId());
 
          // Don't bother trying to process compact blocks from v1 peers after segsig activates.
-        if (IsSegSigEnabled(pindex->pprev, chainparams, chainActive, nullptr) && !nodestate->fSupportsDesiredCmpctVersion)
+        if (IsSegSigEnabled(pindex->pprev) && !nodestate->fSupportsDesiredCmpctVersion)
             return true;
 
         // We want to be a bit conservative just to be extra careful about DoS
@@ -2660,7 +2660,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             while (pindexWalk && !chainActive.Contains(pindexWalk) && vToFetch.size() <= MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
                 if (!(pindexWalk->nStatus & BLOCK_HAVE_DATA) &&
                         !mapBlocksInFlight.count(pindexWalk->GetBlockHashPoW2()) &&
-                        (!IsSegSigEnabled(pindexWalk->pprev, chainparams, chainActive, nullptr) || State(pfrom->GetId())->fHaveSegregatedSignatures)) {
+                        (!IsSegSigEnabled(pindexWalk->pprev) || State(pfrom->GetId())->fHaveSegregatedSignatures)) {
                     // We don't have this block, and it's not yet in flight.
                     vToFetch.push_back(pindexWalk);
                 }

@@ -503,7 +503,7 @@ CLEAN_QT = $(nodist_qt_libguldenqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda q
 CLEANFILES += $(CLEAN_QT)
 
 Gulden_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libguldenqt_a_OBJECTS) $(qt_Gulden_OBJECTS) qt/Gulden$(EXEEXT) $(LIBBITCOINQT)
+	rm -f $(CLEAN_QT) $(qt_libguldenqt_a_OBJECTS) $(qt_Gulden_OBJECTS) qt/Gulden$(EXEEXT) $(LIBGULDENQT)
 
 Gulden_qt : qt/Gulden$(EXEEXT)
 

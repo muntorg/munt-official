@@ -12,11 +12,11 @@
 - restart node 0 and verify that the confirmed transactions are still
   available, but that the unconfirmed transaction has been zapped.
 """
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
 
-class ZapWalletTXesTest (BitcoinTestFramework):
+class ZapWalletTXesTest (GuldenTestFramework):
 
     def __init__(self):
         super().__init__()
