@@ -80,7 +80,7 @@ if BUILD_GULDEN_UTILS
   bin_PROGRAMS += Gulden-cli Gulden-tx
 endif
 
-.PHONY: FORCE
+.PHONY: FORCE check-symbols check-security
 
 # core #
 GULDEN_CORE_H = Gulden/rpcgulden.h \
