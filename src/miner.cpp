@@ -314,8 +314,22 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
-    //fixme: (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
-    coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+    {
+        coinbaseTx.vout[0].SetType(CTxOutType::StandardKeyHashOutput);
+        CPubKey addressPubKey;
+        if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+        {
+            LogPrintf("Error in CreateNewBlock: could not retrieve public key for output address.\n");
+            return nullptr;
+        }
+        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+    }
+    else
+    {
+        coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
+        coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+    }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
@@ -838,6 +852,7 @@ void static GuldenMiner(const CChainParams& chainparams)
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
+        //fixme: (2.1) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
         if (!coinbaseScript || coinbaseScript->reserveScript.empty())
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 
@@ -1248,9 +1263,19 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     }
     else
     {
-        //fixme: (2.0) standard key hash?
-        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
-        coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+        if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
+            CPubKey addressPubKey;
+            if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+                assert(0); //fixme: (2.1) error handling - we are unlikely to run into an error here but if we do then handle it better.
+            coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        }
+        else
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+            coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+        }
         coinbaseTx.vout[1].nValue = witnessSubsidy;
     }
 }
