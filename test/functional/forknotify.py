@@ -6,10 +6,10 @@
 import os
 import time
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
-class ForkNotifyTest(BitcoinTestFramework):
+class ForkNotifyTest(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

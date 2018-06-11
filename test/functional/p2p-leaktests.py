@@ -12,7 +12,7 @@ into sending us something it shouldn't.
 """
 
 from test_framework.mininode import *
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
 banscore = 10
@@ -88,7 +88,7 @@ class CNodeNoVerackIdle(CLazyNode):
         conn.send_message(msg_ping())
         conn.send_message(msg_getaddr())
 
-class P2PLeakTest(BitcoinTestFramework):
+class P2PLeakTest(GuldenTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 1

@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test block proposals with getblocktemplate."""
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
 from binascii import a2b_hex, b2a_hex
@@ -66,7 +66,7 @@ def assert_template(node, tmpl, txlist, expect):
     if rsp != expect:
         raise AssertionError('unexpected: %s' % (rsp,))
 
-class GetBlockTemplateProposalTest(BitcoinTestFramework):
+class GetBlockTemplateProposalTest(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

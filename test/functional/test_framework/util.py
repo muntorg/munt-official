@@ -35,7 +35,7 @@ PORT_MIN = 11000
 # The number of ports to "reserve" for p2p and rpc, each
 PORT_RANGE = 5000
 
-BITCOIND_PROC_WAIT_TIMEOUT = 60
+GULDEND_PROC_WAIT_TIMEOUT = 60
 
 
 class PortSeed:
@@ -182,7 +182,7 @@ def initialize_datadir(dirname, n):
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
     rpc_u, rpc_p = rpc_auth_pair(n)
-    with open(os.path.join(datadir, "bitcoin.conf"), 'w', encoding='utf8') as f:
+    with open(os.path.join(datadir, "Gulden.conf"), 'w', encoding='utf8') as f:
         f.write("regtest=1\n")
         f.write("rpcuser=" + rpc_u + "\n")
         f.write("rpcpassword=" + rpc_p + "\n")
@@ -234,7 +234,7 @@ def _start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary
 
     datadir = os.path.join(dirname, "node"+str(i))
     if binary is None:
-        binary = os.getenv("BITCOIND", "GuldenD")
+        binary = os.getenv("GULDEND", "GuldenD")
     args = [binary, "-datadir=" + datadir, "-server", "-keypool=1", "-discover=0", "-rest", "-logtimemicros", "-debug", "-debugexclude=libevent", "-debugexclude=leveldb", "-mocktime=" + str(get_mocktime()), "-uacomment=testnode%d" % i]
     if extra_args is not None: args.extend(extra_args)
     GuldenD_processes[i] = subprocess.Popen(args, stderr=stderr)
@@ -299,7 +299,7 @@ def _stop_node(node, i):
         node.stop()
     except http.client.CannotSendRequest as e:
         logger.exception("Unable to stop node")
-    return_code = GuldenD_processes[i].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
+    return_code = GuldenD_processes[i].wait(timeout=GULDEND_PROC_WAIT_TIMEOUT)
     assert_equal(return_code, 0)
     del GuldenD_processes[i]
 

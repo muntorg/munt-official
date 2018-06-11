@@ -7,21 +7,21 @@ dnl All modifications:
 dnl Copyright (c) 2016-2018 The Gulden developers
 
 dnl Helper for cases where a qt dependency is not met.
-dnl Output: If qt version is auto, set bitcoin_enable_qt to false. Else, exit.
+dnl Output: If qt version is auto, set gulden_enable_qt to false. Else, exit.
 AC_DEFUN([GULDEN_QT_FAIL],[
   if test "x$Gulden_qt_want_version" = "xauto" && test x$Gulden_qt_force != xyes; then
-    if test x$bitcoin_enable_qt != xno; then
+    if test x$gulden_enable_qt != xno; then
       AC_MSG_WARN([$1; Gulden frontend will not be built])
     fi
-    bitcoin_enable_qt=no
-    bitcoin_enable_qt_test=no
+    gulden_enable_qt=no
+    gulden_enable_qt_test=no
   else
     AC_MSG_ERROR([$1])
   fi
 ])
 
 AC_DEFUN([GULDEN_QT_CHECK],[
-  if test "x$bitcoin_enable_qt" != "xno" && test x$Gulden_qt_want_version != xno; then
+  if test "x$gulden_enable_qt" != "xno" && test x$Gulden_qt_want_version != xno; then
     true
     $1
   else
@@ -89,7 +89,7 @@ dnl Inputs: $2: If $1 is "yes" and --with-gui=auto, which qt version should be
 dnl         tried first.
 dnl Outputs: See _GULDEN_QT_FIND_LIBS_*
 dnl Outputs: Sets variables for all qt-related tools.
-dnl Outputs: bitcoin_enable_qt, bitcoin_enable_qt_dbus, bitcoin_enable_qt_test
+dnl Outputs: gulden_enable_qt, gulden_enable_qt_dbus, gulden_enable_qt_test
 AC_DEFUN([GULDEN_QT_CONFIGURE],[
   use_pkgconfig=$1
 
@@ -119,19 +119,19 @@ AC_DEFUN([GULDEN_QT_CONFIGURE],[
   CXXFLAGS="$PIC_FLAGS $CXXFLAGS"
   if test x$Gulden_qt_got_major_vers = x5; then
     _GULDEN_QT_IS_STATIC
-    if test x$bitcoin_cv_static_qt = xyes; then
+    if test x$gulden_cv_static_qt = xyes; then
       _GULDEN_QT_FIND_STATIC_PLUGINS
       AC_DEFINE(QT_STATICPLUGIN, 1, [Define this symbol if qt plugins are static])
-      AC_CACHE_CHECK(for Qt < 5.4, bitcoin_cv_need_acc_widget,[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+      AC_CACHE_CHECK(for Qt < 5.4, gulden_cv_need_acc_widget,[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
           [[#include <QtCore>]],[[
           #if QT_VERSION >= 0x050400
           choke;
           #endif
           ]])],
-        [bitcoin_cv_need_acc_widget=yes],
-        [bitcoin_cv_need_acc_widget=no])
+        [gulden_cv_need_acc_widget=yes],
+        [gulden_cv_need_acc_widget=no])
       ])
-      if test "x$bitcoin_cv_need_acc_widget" = "xyes"; then
+      if test "x$gulden_cv_need_acc_widget" = "xyes"; then
         _GULDEN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(AccessibleFactory)], [-lqtaccessiblewidgets])
       fi
       _GULDEN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin)],[-lqminimal])
@@ -232,14 +232,14 @@ AC_DEFUN([GULDEN_QT_CONFIGURE],[
   dnl enable qt support
   AC_MSG_CHECKING(whether to build ]AC_PACKAGE_NAME[ GUI)
   GULDEN_QT_CHECK([
-    bitcoin_enable_qt=yes
-    bitcoin_enable_qt_test=yes
+    gulden_enable_qt=yes
+    gulden_enable_qt_test=yes
     if test x$have_qt_test = xno; then
-      bitcoin_enable_qt_test=no
+      gulden_enable_qt_test=no
     fi
-    bitcoin_enable_qt_dbus=no
+    gulden_enable_qt_dbus=no
     if test x$use_dbus != xno && test x$have_qt_dbus = xyes; then
-      bitcoin_enable_qt_dbus=yes
+      gulden_enable_qt_dbus=yes
     fi
     if test x$use_dbus = xyes && test x$have_qt_dbus = xno; then
       AC_MSG_ERROR("libQtDBus not found. Install libQtDBus or remove --with-qtdbus.")
@@ -248,9 +248,9 @@ AC_DEFUN([GULDEN_QT_CONFIGURE],[
       AC_MSG_WARN("lupdate is required to update qt translations")
     fi
   ],[
-    bitcoin_enable_qt=no
+    gulden_enable_qt=no
   ])
-  AC_MSG_RESULT([$bitcoin_enable_qt (Qt${Gulden_qt_got_major_vers})])
+  AC_MSG_RESULT([$gulden_enable_qt (Qt${Gulden_qt_got_major_vers})])
 
   AC_SUBST(QT_PIE_FLAGS)
   AC_SUBST(QT_INCLUDES)
@@ -270,9 +270,9 @@ dnl ----
 
 dnl Internal. Check if the included version of Qt is Qt5.
 dnl Requires: INCLUDES must be populated as necessary.
-dnl Output: bitcoin_cv_qt5=yes|no
+dnl Output: gulden_cv_qt5=yes|no
 AC_DEFUN([_GULDEN_QT_CHECK_QT5],[
-  AC_CACHE_CHECK(for Qt 5, bitcoin_cv_qt5,[
+  AC_CACHE_CHECK(for Qt 5, gulden_cv_qt5,[
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
     [[#include <QtCore>]],
     [[
@@ -282,17 +282,17 @@ AC_DEFUN([_GULDEN_QT_CHECK_QT5],[
       return 0;
       #endif
     ]])],
-    [bitcoin_cv_qt5=yes],
-    [bitcoin_cv_qt5=no])
+    [gulden_cv_qt5=yes],
+    [gulden_cv_qt5=no])
 ])])
 
 dnl Internal. Check if the linked version of Qt was built as static libs.
 dnl Requires: Qt5. This check cannot determine if Qt4 is static.
 dnl Requires: INCLUDES and LIBS must be populated as necessary.
-dnl Output: bitcoin_cv_static_qt=yes|no
+dnl Output: gulden_cv_static_qt=yes|no
 dnl Output: Defines QT_STATICPLUGIN if plugins are static.
 AC_DEFUN([_GULDEN_QT_IS_STATIC],[
-  AC_CACHE_CHECK(for static Qt, bitcoin_cv_static_qt,[
+  AC_CACHE_CHECK(for static Qt, gulden_cv_static_qt,[
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
     [[#include <QtCore>]],
     [[
@@ -302,10 +302,10 @@ AC_DEFUN([_GULDEN_QT_IS_STATIC],[
       choke me
       #endif
     ]])],
-    [bitcoin_cv_static_qt=yes],
-    [bitcoin_cv_static_qt=no])
+    [gulden_cv_static_qt=yes],
+    [gulden_cv_static_qt=no])
   ])
-  if test xbitcoin_cv_static_qt = xyes; then
+  if test xgulden_cv_static_qt = xyes; then
     AC_DEFINE(QT_STATICPLUGIN, 1, [Define this symbol for static Qt plugins])
   fi
 ])
@@ -356,16 +356,16 @@ AC_DEFUN([_GULDEN_QT_FIND_STATIC_PLUGINS],[
      ])
      else
        if test x$TARGET_OS = xwindows; then
-         AC_CACHE_CHECK(for Qt >= 5.6, bitcoin_cv_need_platformsupport,[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+         AC_CACHE_CHECK(for Qt >= 5.6, gulden_cv_need_platformsupport,[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
              [[#include <QtCore>]],[[
              #if QT_VERSION < 0x050600
              choke;
              #endif
              ]])],
-           [bitcoin_cv_need_platformsupport=yes],
-           [bitcoin_cv_need_platformsupport=no])
+           [gulden_cv_need_platformsupport=yes],
+           [gulden_cv_need_platformsupport=no])
          ])
-         if test x$bitcoin_cv_need_platformsupport = xyes; then
+         if test x$gulden_cv_need_platformsupport = xyes; then
            GULDEN_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}PlatformSupport],[main],,GULDEN_QT_FAIL(lib$QT_LIB_PREFIXPlatformSupport not found)))
          fi
        fi
@@ -458,7 +458,7 @@ AC_DEFUN([_GULDEN_QT_FIND_LIBS_WITHOUT_PKGCONFIG],[
     if test x$Gulden_qt_want_version = xauto; then
       _GULDEN_QT_CHECK_QT5
     fi
-    if test x$bitcoin_cv_qt5 = xyes || test x$Gulden_qt_want_version = xqt5; then
+    if test x$gulden_cv_qt5 = xyes || test x$Gulden_qt_want_version = xqt5; then
       QT_LIB_PREFIX=Qt5
       Gulden_qt_got_major_vers=5
     else
