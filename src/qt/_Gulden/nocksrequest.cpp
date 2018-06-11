@@ -28,6 +28,14 @@
 
 #include <openssl/x509_vfy.h>
 
+static QString nocksHost()
+{
+    if (IsArgSet("-testnet"))
+        return QString("sandbox.nocks.com");
+    else
+        return QString("www.nocks.com");
+}
+
 NocksRequest::NocksRequest( QObject* parent)
 : optionsModel( nullptr )
 , m_recipient( nullptr )
@@ -58,7 +66,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
     if (requestType == RequestType::Quotation)
     {
         httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\"}").arg(from, to, amount);
-        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/price" ) );
+        netRequest.setUrl( QString("https://%1/api/price").arg(nocksHost()));
     }
     else
     {
@@ -94,7 +102,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
         QString forexAmount = GuldenUnits::format(GuldenUnits::NLG, recipient->amount, false, GuldenUnits::separatorNever);
 
         httpPostParamaters = QString("{\"pair\": \"NLG_%1\", \"amount\": \"%2\", \"withdrawal\": \"%3\"%4}").arg(forexCurrencyType, forexAmount, recipient->address, httpExtraParams);
-        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/transaction" ) );
+        netRequest.setUrl( QString("https://%1/api/transaction").arg(nocksHost()));
     }
 
     netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
