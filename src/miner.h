@@ -26,7 +26,7 @@
 
 class CBlockIndex;
 class CChainParams;
-class CReserveKey;
+class CReserveKeyOrScript;
 class CScript;
 class CWallet;
 
@@ -195,7 +195,7 @@ public:
     BlockAssembler(const CChainParams& params, const Options& options);
 
     /** Construct a new block template with coinbase to scriptPubKeyIn */
-    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, const CScript& scriptPubKeyIn, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false);
+    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false);
 
 private:
     // utility functions

@@ -149,8 +149,10 @@ void TestSendCoins()
 {
     // Set up wallet and chain with 105 blocks (5 mature blocks for spending).
     TestChain100Setup test;
+    CScript scriptPubKey = GetScriptForRawPubKey(test.coinbaseKey.GetPubKey());
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
     for (int i = 0; i < 5; ++i) {
-        test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
+        test.CreateAndProcessBlock({}, reservedScript);
     }
     bitdb.MakeMock();
     fNoUI = true; // triggers recovery phrase generation

@@ -280,7 +280,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
 
     CWalletTx wtxBumped(pWallet, MakeTransactionRef(std::move(mtx)));
     // commit/broadcast the tx
-    CReserveKey reservekey(pWallet, pWallet->mapAccounts[getUUIDFromString(oldWtx.strFromAccount)], KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(pWallet, pWallet->mapAccounts[getUUIDFromString(oldWtx.strFromAccount)], KEYCHAIN_CHANGE);
     wtxBumped.mapValue = oldWtx.mapValue;
     wtxBumped.mapValue["replaces_txid"] = oldWtx.GetHash().ToString();
     wtxBumped.vOrderForm = oldWtx.vOrderForm;

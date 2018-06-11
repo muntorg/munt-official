@@ -454,7 +454,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     if (isPoW2WitnessCreation())
     {
-        CReserveKey keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
+        CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
@@ -466,7 +466,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         //We delibritely return the key here, so that if we fail we won't leak the key.
         //The key will be marked as used when the transaction is accepted anyway.
         keySpending.ReturnKey();
-        CReserveKey keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
+        CReserveKeyOrScript keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
         {
@@ -520,7 +520,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
                         LOCK(pactiveWallet->cs_wallet);
 
-                        CReserveKey keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
+                        CReserveKeyOrScript keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {

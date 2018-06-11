@@ -26,6 +26,8 @@
 #include <boost/test/unit_test.hpp>
 #include <univalue.h>
 
+#include <wallet/wallet.h>
+
 extern CWallet* pwalletMain;
 
 extern UniValue importmulti(const JSONRPCRequest& request);
@@ -382,11 +384,14 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 {
     LOCK(cs_main);
 
+    CScript scriptPubKey = GetScriptForRawPubKey(coinbaseKey.GetPubKey());
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+
     // Cap last block file size, and mine new block in a new block file.
     CBlockIndex* const nullBlock = nullptr;
     CBlockIndex* oldTip = chainActive.Tip();
     GetBlockFileInfo(oldTip->GetBlockPos().nFile)->nSize = MAX_BLOCKFILE_SIZE;
-    CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+    CreateAndProcessBlock({}, reservedScript);
     CBlockIndex* newTip = chainActive.Tip();
 
     // Verify ScanForWalletTransactions picks up transactions in both the old
@@ -464,18 +469,21 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
     LOCK(cs_main);
 
+    CScript scriptPubKey = GetScriptForRawPubKey(coinbaseKey.GetPubKey());
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+
     // Create two blocks with same timestamp to verify that importwallet rescan
     // will pick up both blocks, not just the first.
     const int64_t BLOCK_TIME = chainActive.Tip()->GetBlockTimeMax() + 5;
     SetMockTime(BLOCK_TIME);
-    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey())).vtx[0]);
-    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey())).vtx[0]);
+    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, reservedScript).vtx[0]);
+    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, reservedScript).vtx[0]);
 
     // Set key birthday to block time increased by the timestamp window, so
     // rescan will start at the block time.
     const int64_t KEY_TIME = BLOCK_TIME + TIMESTAMP_WINDOW;
     SetMockTime(KEY_TIME);
-    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey())).vtx[0]);
+    coinbaseTxns.emplace_back(*CreateAndProcessBlock({}, reservedScript).vtx[0]);
 
     // Import key into wallet and call dumpwallet to create backup file.
     {
@@ -618,7 +626,9 @@ class ListCoinsTestingSetup : public TestChain100Setup
 public:
     ListCoinsTestingSetup()
     {
-        CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+        CScript scriptPubKey = GetScriptForRawPubKey(coinbaseKey.GetPubKey());
+        std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+        CreateAndProcessBlock({}, reservedScript);
         ::bitdb.MakeMock();
         wallet.reset(new CWallet(std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
         WalletLoadState firstRun;
@@ -639,9 +649,12 @@ public:
 
     CWalletTx& AddTx(CRecipient recipient)
     {
+        CScript scriptPubKey = GetScriptForRawPubKey(coinbaseKey.GetPubKey());
+        std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+
         CWalletTx wtx;
         CAccount* account = wallet->getActiveAccount();
-        CReserveKey reservekey(wallet.get(), account, KEYCHAIN_EXTERNAL);
+        CReserveKeyOrScript reservekey(wallet.get(), account, KEYCHAIN_EXTERNAL);
         CAmount fee;
         int changePos = -1;
         std::string error;
@@ -650,7 +663,7 @@ public:
         BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, nullptr, state));
         auto it = wallet->mapWallet.find(wtx.GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
-        CreateAndProcessBlock({CMutableTransaction(*it->second.tx)}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+        CreateAndProcessBlock({CMutableTransaction(*it->second.tx)}, reservedScript);
         it->second.SetMerkleBranch(chainActive.Tip(), 1);
         return it->second;
     }

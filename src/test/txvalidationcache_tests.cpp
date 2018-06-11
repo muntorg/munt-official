@@ -20,6 +20,8 @@
 #include "test/test_gulden.h"
 #include "utiltime.h"
 
+#include <wallet/wallet.h>
+
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(tx_validationcache_tests)
@@ -40,6 +42,7 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup)
     // double-spends in blocks to pass validation when they should not.
 
     CScript scriptPubKey = CScript() <<  ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
 
     // Create a double-spend of mature coinbase txn:
     std::vector<CMutableTransaction> spends;
@@ -65,18 +68,18 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup)
     CBlock block;
 
     // Test 1: block with both of those transactions should be rejected.
-    block = CreateAndProcessBlock(spends, scriptPubKey);
+    block = CreateAndProcessBlock(spends, reservedScript);
     BOOST_CHECK(chainActive.Tip()->GetBlockHashLegacy() != block.GetHashLegacy());
 
     // Test 2: ... and should be rejected if spend1 is in the memory pool
     BOOST_CHECK(ToMemPool(spends[0]));
-    block = CreateAndProcessBlock(spends, scriptPubKey);
+    block = CreateAndProcessBlock(spends, reservedScript);
     BOOST_CHECK(chainActive.Tip()->GetBlockHashLegacy() != block.GetHashLegacy());
     mempool.clear();
 
     // Test 3: ... and should be rejected if spend2 is in the memory pool
     BOOST_CHECK(ToMemPool(spends[1]));
-    block = CreateAndProcessBlock(spends, scriptPubKey);
+    block = CreateAndProcessBlock(spends, reservedScript);
     BOOST_CHECK(chainActive.Tip()->GetBlockHashLegacy() != block.GetHashLegacy());
     mempool.clear();
 
@@ -84,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup)
     std::vector<CMutableTransaction> oneSpend;
     oneSpend.push_back(spends[0]);
     BOOST_CHECK(ToMemPool(spends[1]));
-    block = CreateAndProcessBlock(oneSpend, scriptPubKey);
+    block = CreateAndProcessBlock(oneSpend, reservedScript);
     BOOST_CHECK(chainActive.Tip()->GetBlockHashLegacy() == block.GetHashLegacy());
     // spends[1] should have been removed from the mempool when the
     // block with spends[0] is accepted:

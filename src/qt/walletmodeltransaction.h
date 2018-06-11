@@ -19,7 +19,7 @@
 
 class SendCoinsRecipient;
 
-class CReserveKey;
+class CReserveKeyOrScript;
 class CWallet;
 class CWalletTx;
 
@@ -41,14 +41,14 @@ public:
     CAmount getTotalTransactionAmount();
 
     void newPossibleKeyChange(CAccount* forAccount, CWallet *wallet);
-    CReserveKey *getPossibleKeyChange();
+    CReserveKeyOrScript *getPossibleKeyChange();
 
     void reassignAmounts(int nChangePosRet); // needed for the subtract-fee-from-amount feature
 
 private:
     QList<SendCoinsRecipient> recipients;
     CWalletTx *walletTransaction;
-    CReserveKey *keyChange;
+    CReserveKeyOrScript *keyChange;
     CAmount fee;
 };
 

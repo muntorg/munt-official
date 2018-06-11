@@ -88,7 +88,7 @@ extern const char * DEFAULT_WALLET_DAT;
 class CBlockIndex;
 class CCoinControl;
 class COutput;
-class CReserveKey;
+class CReserveKeyOrScript;
 class CScript;
 class CScheduler;
 class CTxMemPool;
@@ -691,23 +691,23 @@ public:
      * selected by SelectCoins(); Also create the change output, when needed
      * @note passing nChangePosInOut as -1 will result in setting a random position
      */
-    bool CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
+    bool CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
     /**
      * Add fee (and change if necessary) for a transaction that is otherwise already constructed.
      * Used currently by the witnessing code to add the fee for a witness renewal transaction.
      */
-    bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
+    bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKeyOrScript& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
     /**
      * Renew a witness account that has expired.
      */
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
     /**
      * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
      */
-    bool SignAndSubmitTransaction(CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError);
+    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError);
 
-    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
+    bool CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state);
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
     bool AddAccountingEntry(const CAccountingEntry&);
@@ -785,7 +785,7 @@ public:
         }
     }
 
-    void GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount) override;
+    void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
 
     unsigned int GetKeyPoolSize()
     {
@@ -880,7 +880,7 @@ public:
 };
 
 /** A key allocated from the key pool. */
-class CReserveKey : public CReserveScript
+class CReserveKeyOrScript : public CReserveScript
 {
 protected:
     CWallet* pwallet;
@@ -889,29 +889,47 @@ protected:
     int64_t nKeyChain;
     CPubKey vchPubKey;
 public:
-    CReserveKey(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain)
+    CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain)
     {
         pwallet = pwalletIn;
         account = forAccount;
         nIndex = -1;
         nKeyChain = forKeyChain;
     }
-
-    CReserveKey() = default;
-    CReserveKey(const CReserveKey&) = delete;
-    CReserveKey& operator=(const CReserveKey&) = delete;
-    CReserveKey(CReserveKey&&) = default;
-    CReserveKey& operator=(CReserveKey&&) = default;
-
-    ~CReserveKey()
+    CReserveKeyOrScript(CScript& script)
     {
-        ReturnKey();
+        pwallet = nullptr;
+        account = nullptr;
+        nIndex = -1;
+        nKeyChain = -1;
+        reserveScript = script;
     }
 
+    CReserveKeyOrScript() = default;
+    CReserveKeyOrScript(const CReserveKeyOrScript&) = delete;
+    CReserveKeyOrScript& operator=(const CReserveKeyOrScript&) = delete;
+    CReserveKeyOrScript(CReserveKeyOrScript&&) = default;
+    CReserveKeyOrScript& operator=(CReserveKeyOrScript&&) = default;
+
+    virtual ~CReserveKeyOrScript()
+    {
+        if (!scriptOnly())
+            ReturnKey();
+    }
+    bool scriptOnly()
+    {
+        if (account == nullptr && pwallet == nullptr)
+            return true;
+        return false;
+    }
     void ReturnKey();
     bool GetReservedKey(CPubKey &pubkey);
     void KeepKey();
-    void KeepScript() { KeepKey(); }
+    void KeepScript()
+    {
+        if (!scriptOnly())
+            KeepKey();
+    }
 };
 
 
