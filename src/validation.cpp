@@ -2044,7 +2044,7 @@ bool ResetBlockFailureFlags(CBlockIndex *pindex) {
     return true;
 }
 
-void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams)
+static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams)
 {
     LOCK(cs_main);
 
