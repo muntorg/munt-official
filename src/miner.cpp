@@ -1340,6 +1340,7 @@ void static GuldenWitness()
     CChainParams chainparams = Params();
     try
     {
+        std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>> reserveKeys;
         while (true)
         {
             if (!regTest)
@@ -1451,9 +1452,17 @@ void static GuldenWitness()
                                 unsigned int nWitnessCoinbaseIndex = pWitnessBlock->vtx.size()-1;
                                 nStartingBlockWeight += 200;
 
-                                std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
-                                //fixme: (2.0) (SEGSIG)
-                                GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
+                                std::shared_ptr<CReserveKeyOrScript> coinbaseScript = nullptr;
+                                auto findIter = reserveKeys.find(selectedWitnessAccount->getUUID());
+                                if (findIter != reserveKeys.end())
+                                {
+                                    coinbaseScript = findIter->second;
+                                }
+                                else
+                                {
+                                    GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
+                                    reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
+                                }
 
                                 int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev, chainparams, chainActive);
 
