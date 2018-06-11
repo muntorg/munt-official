@@ -84,6 +84,7 @@ private Q_SLOTS:
     void witnessSliderValueChanged(int newValue);
     void payAmountChanged();
     void nocksQuoteProcessed();
+    void nocksTimeout();
 
 private:
     CAccount* targetWitnessAccount;
@@ -106,6 +107,7 @@ private:
     void cancelNocksQuote();
 
     NocksRequest* nocksQuote;
+    QTimer* nocksTimer;
 };
 
 #endif // GULDEN_QT_SENDCOINSENTRY_H

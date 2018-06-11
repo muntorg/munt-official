@@ -23,6 +23,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QTimer>
 
 #include "gui.h"
 #include "validation.h"//chainActive
@@ -86,10 +87,16 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
+
+    nocksTimer = new QTimer(this);
+    nocksTimer->setInterval(60 * 1000); // if nothing changed update quote every 60s
+    connect(nocksTimer, SIGNAL(timeout()), this, SLOT(nocksTimeout()));
+    nocksTimer->start();
 }
 
 GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
 {
+    delete nocksTimer;
     cancelNocksQuote();
     delete ui;
 }
@@ -926,7 +933,7 @@ void GuldenSendCoinsEntry::nocksQuoteProcessed()
 {
     if (nocksQuote->nativeAmount > 0) // for very small amounts, like EUR 0.01 Nocks will return a negative amount
     {
-        QString msg = QString("Will require %1 Gulden including IBAN service fee").arg(GuldenUnits::format(
+        QString msg = QString(tr("Will require approximately %1 Gulden including IBAN service fee")).arg(GuldenUnits::format(
                                                                                            GuldenUnits::NLG,
                                                                                            nocksQuote->nativeAmount,
                                                                                            false, GuldenUnits::separatorAlways, 2));
@@ -938,6 +945,16 @@ void GuldenSendCoinsEntry::nocksQuoteProcessed()
     }
     nocksQuote->deleteLater();
     nocksQuote = nullptr;
+}
+
+void GuldenSendCoinsEntry::nocksTimeout()
+{
+    // require an update of the payInfo to keep up with Nocks exchange rate changes
+    // if there is already a pending Nocks quote we can skip this timer update
+    if (!nocksQuote)
+    {
+        payInfoUpdateRequired();
+    }
 }
 
 void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)
