@@ -120,6 +120,7 @@ void CHDSeed::Init()
             masterKeyPriv.Derive(purposeKeyPriv, 100 | BIP32_HARDENED_KEY_LIMIT);  //Unused - but we generate anyway so that we don't save predictable/blank encrypted data to disk (tiny security precaution)
             purposeKeyPriv.Derive(cointypeKeyPriv, 100 | BIP32_HARDENED_KEY_LIMIT);  //Unused - but we generate anyway so that we don't save predictable/blank encrypted data to disk (tiny security precaution)
             break;
+        case BIP44External:
         case BIP44:
             {
                 masterKeyPriv.Derive(purposeKeyPriv, 44 | BIP32_HARDENED_KEY_LIMIT);  //m/44'
@@ -436,7 +437,7 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
     return false;
 }
 
-bool CAccountHD::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const
+bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const [[no_return]]
 {
     assert(0);
 }
