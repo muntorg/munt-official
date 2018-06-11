@@ -980,7 +980,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     //fixme: (2.0) (SEGSIG)
     // Start enforcing WITNESS rules using versionbits logic.
-    if (IsSegSigEnabled(pindex->pprev, chainparams, chain, &view))
+    if (IsSegSigEnabled(pindex->pprev))
         flags |= SCRIPT_VERIFY_NULLDUMMY;
 
     int64_t nTime2 = GetTimeMicros(); nTimeForks += nTime2 - nTime1;
@@ -1033,7 +1033,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
     int nEmbeddedWitnessCoinbaseIndex = 0;
-    if (nPoW2PhaseGrandParent == 3)
+    if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
     {
         nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
         if (nEmbeddedWitnessCoinbaseIndex == -1)
@@ -2150,7 +2150,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
     pindexNew->nDataPos = pos.nPos;
     pindexNew->nUndoPos = 0;
     pindexNew->nStatus |= BLOCK_HAVE_DATA;
-    if (IsSegSigEnabled(pindexNew->pprev, Params(), chainActive, nullptr)) {
+    if (IsSegSigEnabled(pindexNew->pprev)) {
         pindexNew->nStatus |= BLOCK_OPT_WITNESS;
     }
     pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
@@ -2404,10 +2404,11 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
     return true;
 }
 
-bool IsSegSigEnabled(const CBlockIndex* pindexPrev, const CChainParams& chainParams, CChain& chainOverride, CCoinsViewCache* viewOverride)
+// We go for a cheap check here, instead of checking for phase 4 (which can be expensive and lead to problems) 
+// We instead just check if the previous block is a witness block (if it is we are in phase 4 as this isn't allowed in other phases.
+bool IsSegSigEnabled(const CBlockIndex* pindexPrev)
 {
     LOCK(cs_main);
-    // Witnessing never kicks in at genesis or block after genesis...
     if (!pindexPrev)
         return false;
     if (pindexPrev->nVersionPoW2Witness != 0)
@@ -2585,7 +2586,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
 
     //fixme: (2.1) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
-    bool fHaveSegregatedSignatures = (IsPow2Phase4Active(pindexPrev, chainParams, chainOverride, viewOverride));
+    bool fHaveSegregatedSignatures = IsSegSigEnabled(pindexPrev);
     if (fHaveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
@@ -3362,8 +3363,10 @@ bool RewindBlockIndex(const CChainParams& params)
     LOCK(cs_main);
 
     int nHeight = 1;
-    while (nHeight <= chainActive.Height()) {
-        if (IsSegSigEnabled(chainActive[nHeight - 1], params, chainActive, nullptr) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS)) {
+    while (nHeight <= chainActive.Height())
+    {
+        if (IsSegSigEnabled(chainActive[nHeight - 1]) && !(chainActive[nHeight]->nStatus & BLOCK_OPT_WITNESS))
+        {
             break;
         }
         nHeight++;
@@ -3400,7 +3403,7 @@ bool RewindBlockIndex(const CChainParams& params)
         // this block or some successor doesn't HAVE_DATA, so we were unable to
         // rewind all the way.  Blocks remaining on chainActive at this point
         // must not have their validity reduced.
-        if (IsSegSigEnabled(pindexIter->pprev, params, chainActive, nullptr) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
+        if (IsSegSigEnabled(pindexIter->pprev) && !(pindexIter->nStatus & BLOCK_OPT_WITNESS) && !chainActive.Contains(pindexIter)) {
             // Reduce validity
             pindexIter->nStatus = std::min<unsigned int>(pindexIter->nStatus & BLOCK_VALID_MASK, BLOCK_VALID_TREE) | (pindexIter->nStatus & ~BLOCK_VALID_MASK);
             // Remove have-data flags.

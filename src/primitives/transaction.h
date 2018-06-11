@@ -1062,7 +1062,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 
 
 //fixme: (2.1) Remove
-#define CURRENT_TX_VERSION_POW2 (GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive) >= 4 ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
+#define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.Tip()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
