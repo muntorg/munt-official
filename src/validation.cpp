@@ -1190,7 +1190,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     // testme: (2.0) (POW2) (HIGH) Ensure this works as intended.
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
-    if (nPoW2PhaseGrandParent == 3)
+    if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
     {
         unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
 
@@ -1198,15 +1198,11 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
 
         if (block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue != nSubsidyWitness)
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount)"), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
+            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitness), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
     }
     else if (nPoW2PhaseParent >= 4)
     {
         nSubsidy -= nSubsidyWitness;
-        // First block of phase 4 contains two witness subsidies so miner loses out on 20 NLG for this block
-        // This block is treated special. (but special casing can dissapear for 2.1 release.
-        if (nPoW2PhaseGrandParent == 3)
-            nSubsidy -= nSubsidyWitness;
     }
 
     if (block.nVersionPoW2Witness == 0)
@@ -1261,12 +1257,17 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     //fixme: (2.0) - Any other coinbase rules to enforce here?
 
-    CAmount blockReward = nFees + nSubsidy;
-    if (block.vtx[0]->GetValueOut() > blockReward)
-        return state.DoS(100,
-                         error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)",
-                               block.vtx[0]->GetValueOut(), blockReward),
-                               REJECT_INVALID, "bad-cb-amount");
+    CAmount expectedBlockReward = nFees + nSubsidy;
+    CAmount actualBlockReward = block.vtx[0]->GetValueOut() ;
+    if (actualBlockReward > expectedBlockReward)
+    {
+        return state.DoS(100, error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
+    }
+    // From phase 3 onward we forbid miners from not claiming the full reward.
+    if (nPoW2PhaseParent >= 3 && expectedBlockReward < actualBlockReward)
+    {
+        return state.DoS(100, error("ConnectBlock(): coinbase pays too little (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
+    }
 
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");
@@ -2480,12 +2481,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
-    int nPoW2PhaseParent = ( doUTXOChecks && pindexPrev ? GetPoW2Phase(pindexPrev, chainParams, chainOverride, viewOverride) : 1 );
-    int nPoW2PhaseGrandParent = ( (doUTXOChecks && pindexPrev && pindexPrev->pprev) ? GetPoW2Phase(pindexPrev->pprev, chainParams, chainOverride, viewOverride) : 1 );
-    int nPoW2PhaseGreatGrandParent = ( (doUTXOChecks && pindexPrev && pindexPrev->pprev && pindexPrev->pprev->pprev) ? GetPoW2Phase(pindexPrev->pprev->pprev, chainParams, chainOverride, viewOverride) : 1 );
-
     // Check that no transactions (from phase2 onward) have transaction version above 4 - this behaviour is no longer allowed
-    if (doUTXOChecks && nPoW2PhaseParent >= 3)
+    if (doUTXOChecks && GetPoW2Phase(pindexPrev, chainParams, chainOverride, viewOverride) >= 3)
     {
         for (const auto& tx : block.vtx)
         {
@@ -2496,8 +2493,9 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
+    bool fHaveSegregatedSignatures = IsSegSigEnabled(pindexPrev);
     // Check that no transactions (from phase4 onward) contain a scriptSig - scriptSig is completely deprecated.
-    if (doUTXOChecks && nPoW2PhaseGreatGrandParent >= 4)
+    if (fHaveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
         {
@@ -2512,23 +2510,23 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     }
 
     // Enforce rule that the coinbase starts with serialized block height
-    if (doUTXOChecks && nHeight >= chainParams.GetConsensus().BIP34Height)
+    if (nHeight >= chainParams.GetConsensus().BIP34Height)
     {
-        if (nPoW2PhaseGrandParent < 4)
-        {
-            CScript expect = CScript() << nHeight;
-            if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
-                !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
-                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
-            }
-        }
-        else
+        if (fHaveSegregatedSignatures)
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
             if (block.vtx[0]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].segregatedSignatureData.stack[0].begin()))
             {
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase2");
+            }
+        }
+        else
+        {
+            CScript expect = CScript() << nHeight;
+            if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
+                !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
             }
         }
     }
@@ -2552,11 +2550,20 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
-    if (doUTXOChecks && block.nVersionPoW2Witness != 0)
+    if (block.nVersionPoW2Witness != 0)
     {
         // Phase 3 - we restrict the coinbase signature to only the block height.
         // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
-        if (nPoW2PhaseParent < 4)
+        if (fHaveSegregatedSignatures)
+        {
+            std::vector<unsigned char> expect;
+            CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
+            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack[0].begin()))
+            {
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase3");
+            }
+        }
+        else
         {
             CScript expect = CScript() << nHeight;
             if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.size() != expect.size())
@@ -2569,15 +2576,6 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
                 return state.DoS(100, false, REJECT_INVALID, "bad-witness-cb-height", false, "block height mismatch in witness coinbase");
             }
         }
-        else
-        {
-            std::vector<unsigned char> expect;
-            CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
-            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack[0].begin()))
-            {
-                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase3");
-            }
-        }
     }
 
     //NB!! GULDEN - segsig commits/adds a coinbase commitment here.
@@ -2586,7 +2584,6 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
 
     //fixme: (2.1) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
-    bool fHaveSegregatedSignatures = IsSegSigEnabled(pindexPrev);
     if (fHaveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
