@@ -1004,6 +1004,14 @@ QToolTip
     margin-top 10px;
 }
 
+#payInfo
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    color: TEXT_COLOR_1;
+}
+
 #accountBalance
 {
     margin: 0px;
