@@ -181,7 +181,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   utiltime.h \
   validation/validation.h \
   validation/witnessvalidation.h \
-  validation/versionbitsvalidatioh.h \
+  validation/versionbitsvalidation.h \
   validation/validationinterface.h \
   versionbits.h \
   wallet/coincontrol.h \
