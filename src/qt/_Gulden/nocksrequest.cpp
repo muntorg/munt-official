@@ -28,9 +28,18 @@
 
 #include <openssl/x509_vfy.h>
 
+static QString nocksHost()
+{
+    if (IsArgSet("-testnet"))
+        return QString("sandbox.nocks.com");
+    else
+        return QString("www.nocks.com");
+}
+
 NocksRequest::NocksRequest( QObject* parent)
 : optionsModel( nullptr )
 , m_recipient( nullptr )
+, networkReply( nullptr )
 {
     netManager = new QNetworkAccessManager( this );
     netManager->setObjectName("nocks_request_manager");
@@ -41,12 +50,13 @@ NocksRequest::NocksRequest( QObject* parent)
 
 NocksRequest::~NocksRequest()
 {
-
+    cancel();
+    delete netManager;
 }
 
 void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
 {
-    assert(m_recipient == nullptr);
+    assert(networkReply == nullptr);
 
     m_recipient = recipient;
     requestType = type;
@@ -57,7 +67,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
     if (requestType == RequestType::Quotation)
     {
         httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\"}").arg(from, to, amount);
-        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/price" ) );
+        netRequest.setUrl( QString("https://%1/api/price").arg(nocksHost()));
     }
     else
     {
@@ -93,7 +103,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
         QString forexAmount = GuldenUnits::format(GuldenUnits::NLG, recipient->amount, false, GuldenUnits::separatorNever);
 
         httpPostParamaters = QString("{\"pair\": \"NLG_%1\", \"amount\": \"%2\", \"withdrawal\": \"%3\"%4}").arg(forexCurrencyType, forexAmount, recipient->address, httpExtraParams);
-        netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/transaction" ) );
+        netRequest.setUrl( QString("https://%1/api/transaction").arg(nocksHost()));
     }
 
     netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
@@ -105,7 +115,19 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
 
     QByteArray data = httpPostParamaters.toStdString().c_str();
 
-    netManager->post( netRequest, data );
+    networkReply = netManager->post( netRequest, data );
+}
+
+void NocksRequest::cancel()
+{
+    netManager->disconnect(this);
+
+    if (networkReply)
+    {
+        networkReply->abort();
+        networkReply->deleteLater();
+        networkReply = nullptr;
+    }
 }
 
 void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )
@@ -129,6 +151,8 @@ void NocksRequest::setOptionsModel( OptionsModel* optionsModel_ )
 
 void NocksRequest::netRequestFinished( QNetworkReply* reply )
 {
+    assert(networkReply == reply);
+
     if ( reply->error() != QNetworkReply::NetworkError::NoError )
     {
         //fixme: (Post-2.1) Better error code
@@ -163,9 +187,9 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             {
                 if (m_recipient)
                 {
-                    m_recipient->forexFailCode = errorValue.toArray().at(0).toString().toStdString();
-                    if (m_recipient->forexFailCode.empty())
-                        m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
+                    m_recipient->forexFailCode = errorValue.isString() ?
+                                errorValue.toString().toStdString()
+                              : "Could not process your request, please try again later.";
                     Q_EMIT requestProcessed();
                 }
                 return;
@@ -184,7 +208,7 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             {
                 if (requestType == RequestType::Quotation)
                 {
-                    nativeAmount = successValue.toObject().value("amount").toString();
+                    GuldenUnits::parse(GuldenUnits::NLG, successValue.toObject().value("amount").toString(), &nativeAmount);
                 }
                 else
                 {
@@ -214,7 +238,6 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             }
         }
     }
-    //this->deleteLater();
 }
 
 void NocksRequest::reportSslErrors( [[maybe_unused]] QNetworkReply* reply, [[maybe_unused]] const QList<QSslError>& errorList )
@@ -222,9 +245,6 @@ void NocksRequest::reportSslErrors( [[maybe_unused]] QNetworkReply* reply, [[may
     if (m_recipient)
         m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
     Q_EMIT requestProcessed();
-
-    //Delete ourselves.
-    this->deleteLater();
 }
 
 

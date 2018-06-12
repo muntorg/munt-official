@@ -35,8 +35,15 @@ public:
     explicit GuldenAmountField(QWidget *parent = 0);
     virtual ~GuldenAmountField();
 
-    //! Amount in Gulden.
-    CAmount amount() const;
+    enum class Currency
+    {
+        None,
+        Gulden, // Gulden
+        Euro,   // Quote currency, Euro
+        Local   // Local currency configured in options
+    };
+
+    CAmount amount(const Currency currency = Currency::Gulden) const;
 
     //! Set amount in Gulden.
     void setAmount(const CAmount& value);
@@ -56,14 +63,6 @@ public:
 
     /** Enable/Disable. */
     void setEnabled(bool fEnabled);
-
-    enum class Currency
-    {
-        None,
-        Gulden, // Gulden
-        Euro,   // Quote currency, Euro
-        Local   // Local currency configured in options
-    };
 
     //! Set currency used for main display and editing.
     void setPrimaryDisplayCurrency(const Currency currency);
@@ -122,7 +121,6 @@ private:
     Currency firstAuxCurrency() const;
     Currency secondAuxCurrency() const;
     std::string CurrencyCode(const Currency currency) const;
-    CAmount AmountForCurrency(const Currency currency) const;
     QString FormatAuxAmount(const Currency currency) const;
 
 private Q_SLOTS:

@@ -9,8 +9,11 @@
 #include "addressbookpage.h"
 #include "addresstablemodel.h"
 #include "accounttablemodel.h"
+#include "guiconstants.h"
 #include "guiutil.h"
+#include "nocksrequest.h"
 #include "optionsmodel.h"
+#include "units.h"
 #include "walletmodel.h"
 #include "wallet/wallet.h"
 
@@ -20,6 +23,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QTimer>
 
 #include "gui.h"
 #include "validation.h"//chainActive
@@ -29,7 +33,8 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     QFrame(parent),
     ui(new Ui::GuldenSendCoinsEntry),
     model(0),
-    platformStyle(_platformStyle)
+    platformStyle(_platformStyle),
+    nocksQuote(nullptr)
 {
     ui->setupUi(this);
 
@@ -82,10 +87,17 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
+
+    nocksTimer = new QTimer(this);
+    nocksTimer->setInterval(60 * 1000); // if nothing changed update quote every 60s
+    connect(nocksTimer, SIGNAL(timeout()), this, SLOT(nocksTimeout()));
+    nocksTimer->start();
 }
 
 GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
 {
+    delete nocksTimer;
+    cancelNocksQuote();
     delete ui;
 }
 
@@ -230,6 +242,8 @@ void GuldenSendCoinsEntry::addressChanged()
             ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Gulden);
         }
     }
+
+    payInfoUpdateRequired();
 }
 
 void GuldenSendCoinsEntry::tabChanged()
@@ -316,6 +330,8 @@ void GuldenSendCoinsEntry::deleteClicked()
 //fixme: (2.0) - enforce minimum weight for pow2.
 bool GuldenSendCoinsEntry::validate()
 {
+    cancelNocksQuote();
+
     if (!model)
         return false;
 
@@ -325,6 +341,9 @@ bool GuldenSendCoinsEntry::validate()
     // Skip checks for payment request
     if (recipient.paymentRequest.IsInitialized())
         return retval;
+
+    ui->payAmount->setValid(true);
+    clearPayInfo();
 
     SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
@@ -350,13 +369,19 @@ bool GuldenSendCoinsEntry::validate()
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            //ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyEuro);
-
             CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
             CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
-            if ( ui->payAmount->amount() > currencyMax || ui->payAmount->amount() < currencyMin )
+
+            if (val.amount > currencyMax ) {
+                ui->payAmount->setValid(false);
+                setPayInfo(tr("Amount exceeds maximum for IBAN payment."), true);
+                return false;
+            }
+
+            if (val.amount < currencyMin)
             {
                 ui->payAmount->setValid(false);
+                setPayInfo(tr("Amount below minimum for IBAN payment."), true);
                 return false;
             }
         }
@@ -549,6 +574,10 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     // Select payment type
     recipient.paymentType = getPaymentType(recipient.address);
+
+    // For IBAN transactions adjust the final amount to Euro
+    if (recipient.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
+        recipient.amount = ui->payAmount->amount(GuldenAmountField::Currency::Euro);
 
     return recipient;
 }
@@ -860,6 +889,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 void GuldenSendCoinsEntry::payAmountChanged()
 {
     witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
+    payInfoUpdateRequired();
 }
 
 bool GuldenSendCoinsEntry::updateLabel(const QString &address)
@@ -877,4 +907,79 @@ bool GuldenSendCoinsEntry::updateLabel(const QString &address)
 
     return false;
 }
+
+void GuldenSendCoinsEntry::payInfoUpdateRequired()
+{
+    // any outstanding quote request is now outdated
+    cancelNocksQuote();
+
+    // for IBAN payment that passes minimum amount request a quote
+    SendCoinsRecipient val = getValue(false);
+    CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
+    if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment && val.amount > currencyMin) {
+        nocksQuote = new NocksRequest(this);
+        connect(nocksQuote, SIGNAL(requestProcessed()), this, SLOT(nocksQuoteProcessed()));
+        nocksQuote->startRequest(NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR",
+                                 GuldenUnits::format(GuldenUnits::NLG, val.amount, false, GuldenUnits::separatorNever, 2));
+    }
+    else
+    {
+        clearPayInfo();
+    }
+
+}
+
+void GuldenSendCoinsEntry::nocksQuoteProcessed()
+{
+    if (nocksQuote->nativeAmount > 0) // for very small amounts, like EUR 0.01 Nocks will return a negative amount
+    {
+        QString msg = QString(tr("Will require approximately %1 Gulden including IBAN service fee")).arg(GuldenUnits::format(
+                                                                                           GuldenUnits::NLG,
+                                                                                           nocksQuote->nativeAmount,
+                                                                                           false, GuldenUnits::separatorAlways, 2));
+        setPayInfo(msg);
+    }
+    else
+    {
+        clearPayInfo();
+    }
+    nocksQuote->deleteLater();
+    nocksQuote = nullptr;
+}
+
+void GuldenSendCoinsEntry::nocksTimeout()
+{
+    // require an update of the payInfo to keep up with Nocks exchange rate changes
+    // if there is already a pending Nocks quote we can skip this timer update
+    if (!nocksQuote)
+    {
+        payInfoUpdateRequired();
+    }
+}
+
+void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)
+{
+    ui->payInfo->setText(msg);
+    if (attention)
+        ui->payInfo->setStyleSheet(STYLE_INVALID);
+    else
+        ui->payInfo->setStyleSheet("");
+}
+
+void GuldenSendCoinsEntry::clearPayInfo()
+{
+    ui->payInfo->setText("");
+    ui->payInfo->setStyleSheet("");
+}
+
+void GuldenSendCoinsEntry::cancelNocksQuote()
+{
+    if (nocksQuote) {
+        nocksQuote->cancel();
+        nocksQuote->deleteLater();
+        nocksQuote = nullptr;
+    }
+}
+
+
 
