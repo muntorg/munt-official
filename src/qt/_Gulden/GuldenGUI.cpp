@@ -1731,7 +1731,7 @@ std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode)
         {"BGN", "лв"},
         {"BRL", "R$"},
         {"BND", "$"},
-        {"BTC", "\uF15A"},
+        {"BTC", GUIUtil::fontAwesomeBrand("\uF15A").toStdString()},
         {"KHR", "៛"},
         {"CAD", "$"},
         {"KYD", "$"},
