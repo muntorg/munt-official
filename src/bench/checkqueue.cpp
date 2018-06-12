@@ -4,7 +4,7 @@
 
 #include "bench.h"
 #include "util.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "checkqueue.h"
 #include "prevector.h"
 #include <vector>

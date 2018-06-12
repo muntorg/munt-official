@@ -13,7 +13,7 @@
 #include "blockstore.h"
 #include "streams.h"
 #include "clientversion.h"
-#include "validation.h" //For cs_main
+#include "validation/validation.h" //For cs_main
 #include "util.h" // For DO_BENCHMARK
 
 CBlockStore blockStore;

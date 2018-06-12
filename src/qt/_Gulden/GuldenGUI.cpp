@@ -12,7 +12,7 @@
 #include "units.h"
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"
@@ -242,7 +242,7 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
-    CReserveKey changeReserveKey(pactiveWallet, funderAccount, KEYCHAIN_EXTERNAL);
+    CReserveKeyOrScript changeReserveKey(pactiveWallet, funderAccount, KEYCHAIN_EXTERNAL);
     CAmount txFee;
     if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
     {
@@ -1225,7 +1225,7 @@ void GUI::updateAccount(CAccount* account)
     LogPrint(BCLog::QT, "GUI::updateAccount\n");
     LOCK(pactiveWallet->cs_wallet);
 
-    CReserveKey* receiveAddress = new CReserveKey(pactiveWallet, account, KEYCHAIN_EXTERNAL);
+    CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;
     if (receiveAddress->GetReservedKey(pubKey))
     {
@@ -1731,7 +1731,7 @@ std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode)
         {"BGN", "лв"},
         {"BRL", "R$"},
         {"BND", "$"},
-        {"BTC", "\uF15A"},
+        {"BTC", GUIUtil::fontAwesomeBrand("\uF15A").toStdString()},
         {"KHR", "៛"},
         {"CAD", "$"},
         {"KYD", "$"},

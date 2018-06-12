@@ -64,6 +64,7 @@ struct TestingSetup: public BasicTestingSetup {
 class CBlock;
 struct CMutableTransaction;
 class CScript;
+class CReserveKeyOrScript;
 
 //
 // Testing fixture that pre-creates a
@@ -74,8 +75,7 @@ struct TestChain100Setup : public TestingSetup {
 
     // Create a new block with just given transactions, coinbase paying to
     // scriptPubKey, and try to add it to the current chain.
-    CBlock CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns,
-                                 const CScript& scriptPubKey);
+    CBlock CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, std::shared_ptr<CReserveKeyOrScript> reserveScript);
 
     ~TestChain100Setup();
 

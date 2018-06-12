@@ -1065,6 +1065,11 @@ QString fontAwesomeSolid(const QString& text)
     return QString("<span style='font-family: fa5ps'>%1</span>").arg(text);
 }
 
+QString fontAwesomeBrand(const QString& text)
+{
+    return QString("<span style='font-family: fa5br'>%1</span>").arg(text);
+}
+
 /* Get any font glyph as an icon */
 QIcon getIconFromFontGlyph(QChar charCode, QString fontFamily, QColor fontColor)
 {

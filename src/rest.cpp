@@ -15,7 +15,7 @@
 #include "core_io.h"
 #include "primitives/block.h"
 #include "primitives/transaction.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "httpserver.h"
 #include "httprpc.h"
 #include "rpc/blockchain.h"

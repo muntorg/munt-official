@@ -7,8 +7,10 @@
 #include "wallet/wallettx.h"
 #include "wallet/wallet.h"
 #include "consensus/validation.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/versionbitsvalidation.h"
+#include "validation/witnessvalidation.h"
+#include "versionbits.h"
 
 
 #include "txdb.h"

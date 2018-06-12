@@ -18,7 +18,8 @@
 #include "checkpoints.h"
 #include "coins.h"
 #include "consensus/validation.h"
-#include "validation.h"
+#include "validation/validation.h"
+#include "validation/versionbitsvalidation.h"
 #include "core_io.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
@@ -31,6 +32,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "hash.h"
+#include "versionbits.h"
 
 #include <stdint.h>
 

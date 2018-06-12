@@ -23,8 +23,8 @@
 #include "fs.h"
 #include "key.h"
 #include "keystore.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "net.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
@@ -56,7 +56,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;
 CWalletRef pactiveWallet = NULL;
@@ -2156,15 +2156,21 @@ std::set<CTxDestination> CWallet::GetAccountAddresses(const std::string& strAcco
     return result;
 }
 
-bool CReserveKey::GetReservedKey(CPubKey& pubkey)
+bool CReserveKeyOrScript::GetReservedKey(CPubKey& pubkey)
 {
+    if (scriptOnly())
+        return false;
+
     if (nIndex == -1)
     {
         CKeyPool keypool;
         pwallet->ReserveKeyFromKeyPool(nIndex, keypool, account, nKeyChain);
         if (nIndex != -1)
+        {
             vchPubKey = keypool.vchPubKey;
-        else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -2173,16 +2179,20 @@ bool CReserveKey::GetReservedKey(CPubKey& pubkey)
     return true;
 }
 
-void CReserveKey::KeepKey()
+void CReserveKeyOrScript::KeepKey()
 {
+    if (scriptOnly())
+        return;
     if (nIndex != -1)
         pwallet->KeepKey(nIndex);
     nIndex = -1;
     vchPubKey = CPubKey();
 }
 
-void CReserveKey::ReturnKey()
+void CReserveKeyOrScript::ReturnKey()
 {
+    if (scriptOnly())
+        return;
     if (nIndex != -1)
         pwallet->ReturnKey(nIndex, account, nKeyChain);
     nIndex = -1;
@@ -2216,17 +2226,17 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
     }
 }
 
-void CWallet::GetScriptForMining(std::shared_ptr<CReserveScript> &script, CAccount* forAccount)
+void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
     //fixme: (2.0) - Allow defaultmining account to be seperately selected?
-    std::shared_ptr<CReserveKey> rKey;
+    std::shared_ptr<CReserveKeyOrScript> rKey;
     if (forAccount)
     {
-        rKey = std::make_shared<CReserveKey>(this, forAccount, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
     }
     else
     {
-        rKey = std::make_shared<CReserveKey>(this, activeAccount, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(this, activeAccount, KEYCHAIN_EXTERNAL);
     }
     CPubKey pubkey;
     if (!rKey->GetReservedKey(pubkey))

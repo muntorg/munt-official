@@ -829,6 +829,11 @@ void GUI::showDebugWindow()
 {
     LogPrint(BCLog::QT, "GUI::showDebugWindow\n");
 
+    if (IsArgSet("-windowtitle"))
+    {
+        std::string windowTitle = GetArg("-windowtitle","") + " - " + tr("Debug window").toStdString();
+        rpcConsole->setWindowTitle(windowTitle.c_str());
+    }
     rpcConsole->showNormal();
     rpcConsole->show();
     rpcConsole->raise();

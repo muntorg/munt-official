@@ -8,7 +8,7 @@
 #include "units.h"
 
 #include <wallet/wallet.h>
-#include "validation.h" // For cs_main
+#include "validation/validation.h" // For cs_main
 
 const QString AccountTableModel::Active = "A";
 const QString AccountTableModel::Inactive = "I";

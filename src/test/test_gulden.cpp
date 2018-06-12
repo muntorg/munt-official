@@ -16,8 +16,8 @@
 #include "consensus/validation.h"
 #include "fs.h"
 #include "key.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "miner.h"
 #include "net_processing.h"
 #include "pubkey.h"
@@ -28,6 +28,8 @@
 #include "rpc/server.h"
 #include "rpc/register.h"
 #include "script/sigcache.h"
+
+#include <wallet/wallet.h>
 
 #include "test/testutil.h"
 
@@ -119,10 +121,11 @@ TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
     // Generate a 100-block chain:
     coinbaseKey.MakeNewKey(true);
     CScript scriptPubKey = CScript() <<  ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
     for (int i = 0; i < COINBASE_MATURITY; i++)
     {
         std::vector<CMutableTransaction> noTxns;
-        CBlock b = CreateAndProcessBlock(noTxns, scriptPubKey);
+        CBlock b = CreateAndProcessBlock(noTxns, reservedScript);
         coinbaseTxns.push_back(*b.vtx[0]);
     }
 }
@@ -131,10 +134,10 @@ TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
 // Create a new block with just given transactions, coinbase paying to
 // scriptPubKey, and try to add it to the current chain.
 //
-CBlock TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, const CScript& scriptPubKey)
+CBlock TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, std::shared_ptr<CReserveKeyOrScript> reserveScript)
 {
     const CChainParams& chainparams = Params();
-    std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(chainparams).CreateNewBlock(chainActive.Tip(), scriptPubKey);
+    std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(chainparams).CreateNewBlock(chainActive.Tip(), reserveScript);
     CBlock& block = pblocktemplate->block;
 
     // Replace mempool-selected txns with just coinbase plus passed-in txns:

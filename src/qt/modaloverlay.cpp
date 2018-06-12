@@ -20,7 +20,7 @@
 #include <QPropertyAnimation>
 
 #include "_Gulden/GuldenGUI.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 ModalOverlay::ModalOverlay(QWidget *parent) :
 QWidget(parent),

@@ -7,8 +7,8 @@
 #include "../miner.h"
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 
 #include <boost/assign/list_of.hpp>
 
@@ -873,7 +873,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     destinationPoW2Witness.failCount = 0;
     {
-        CReserveKey keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+        CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keyWitness.GetReservedKey(pubWitnessKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
@@ -885,7 +885,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     }
     {
         //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
-        CReserveKey keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
+        CReserveKeyOrScript keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
@@ -905,7 +905,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     vecSend.push_back(recipient);
 
     CWalletTx wtx;
-    CReserveKey reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
     if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
         throw JSONRPCError(RPC_WALLET_ERROR, strError);

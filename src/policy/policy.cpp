@@ -14,7 +14,7 @@
 
 #include "policy/policy.h"
 
-#include "validation.h"
+#include "validation/validation.h"
 #include "coins.h"
 #include "tinyformat.h"
 #include "util.h"
@@ -22,7 +22,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {

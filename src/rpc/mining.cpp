@@ -17,9 +17,12 @@
 #include "consensus/consensus.h"
 #include "consensus/params.h"
 #include "consensus/validation.h"
+#include "validation/validation.h"
+#include "validation/validationinterface.h"
+#include "validation/versionbitsvalidation.h"
 #include "core_io.h"
 #include "init.h"
-#include "validation.h"
+#include "versionbits.h"
 #include "miner.h"
 #include "net.h"
 #include "policy/fees.h"
@@ -29,7 +32,6 @@
 #include "txmempool.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
 #include "arith_uint256.h"
 #include "warnings.h"
 #include "Gulden/util.h"
@@ -108,7 +110,7 @@ UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
-UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
+UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     static const int nInnerLoopCount = 0x10000;
     int nHeightEnd = 0;
@@ -123,7 +125,7 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
     UniValue blockHashes(UniValue::VARR);
     while (nHeight < nHeightEnd)
     {
-        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(chainActive.Tip(), coinbaseScript->reserveScript));
+        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(chainActive.Tip(), coinbaseScript));
         if (!pblocktemplate.get())
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
         CBlock *pblock = &pblocktemplate->block;
@@ -159,7 +161,7 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
 // Key used by getblocktemplate miners.
 // Allocated in InitRPCMining, free'd in ShutdownRPCMining
 #ifdef ENABLE_WALLET
-static CReserveKey* pMiningKey = NULL;
+static CReserveKeyOrScript* pMiningKey = NULL;
 #endif
 
 void InitRPCMining()
@@ -170,7 +172,7 @@ void InitRPCMining()
 
     // getblocktemplate mining rewards paid here:
     //fixme: (Post-2.1)
-    pMiningKey = new CReserveKey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_EXTERNAL);
+    pMiningKey = new CReserveKeyOrScript(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_EXTERNAL);
     #else
 	return;
     #endif
@@ -227,7 +229,7 @@ UniValue generate(const JSONRPCRequest& request)
         nMaxTries = request.params[1].get_int();
     }
 
-    std::shared_ptr<CReserveScript> coinbaseScript;
+    std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
     GetMainSignals().ScriptForMining(coinbaseScript, NULL);
 
     // If the keypool is exhausted, no script is returned at all.  Catch this.
@@ -329,7 +331,7 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
 
-    std::shared_ptr<CReserveScript> coinbaseScript = std::make_shared<CReserveScript>();
+    std::shared_ptr<CReserveKeyOrScript> coinbaseScript = std::make_shared<CReserveKeyOrScript>();
     coinbaseScript->reserveScript = GetScriptForDestination(address.Get());
 
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, false);
@@ -694,7 +696,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(chainActive.Tip(), scriptDummy, fSupportsSegwit);
+        std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
+        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(chainActive.Tip(), reservedScript, fSupportsSegwit);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 

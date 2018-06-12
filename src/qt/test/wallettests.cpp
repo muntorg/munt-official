@@ -10,7 +10,7 @@
 #include "qt/transactionview.h"
 #include "qt/walletmodel.h"
 #include "test/test_gulden.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "wallet/wallet.h"
 
 #include <QAbstractButton>
@@ -149,8 +149,10 @@ void TestSendCoins()
 {
     // Set up wallet and chain with 105 blocks (5 mature blocks for spending).
     TestChain100Setup test;
+    CScript scriptPubKey = GetScriptForRawPubKey(test.coinbaseKey.GetPubKey());
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
     for (int i = 0; i < 5; ++i) {
-        test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
+        test.CreateAndProcessBlock({}, reservedScript);
     }
     bitdb.MakeMock();
     fNoUI = true; // triggers recovery phrase generation

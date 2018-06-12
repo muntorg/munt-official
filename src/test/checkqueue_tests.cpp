@@ -4,7 +4,7 @@
 
 #include "util.h"
 #include "utiltime.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 #include "test/test_gulden.h"
 #include "checkqueue.h"

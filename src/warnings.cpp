@@ -16,7 +16,7 @@
 #include "util.h"
 #include "warnings.h"
 #include "alert.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include <Gulden/auto_checkpoints.h>
 
 CCriticalSection cs_warnings;

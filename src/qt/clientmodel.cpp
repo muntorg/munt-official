@@ -21,7 +21,7 @@
 #include "chainparams.h"
 #include "checkpoints.h"
 #include "clientversion.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h"
 #include "txmempool.h"
 #include "ui_interface.h"

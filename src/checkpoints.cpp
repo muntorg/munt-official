@@ -6,7 +6,7 @@
 
 #include "chain.h"
 #include "chainparams.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "uint256.h"
 
 #include <boost/foreach.hpp>

@@ -1,17 +1,9 @@
 // Copyright (c) 2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-//
-// File contains modifications by: The Gulden developers
-// All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
-// Distributed under the GULDEN software license, see the accompanying
-// file COPYING
 
-
-#ifndef GULDEN_CONSENSUS_VERSIONBITS
-#define GULDEN_CONSENSUS_VERSIONBITS
+#ifndef BITCOIN_CONSENSUS_VERSIONBITS
+#define BITCOIN_CONSENSUS_VERSIONBITS
 
 #include "chain.h"
 #include <map>
@@ -38,7 +30,7 @@ enum ThresholdState {
 // A map that gives the state for blocks whose height is a multiple of Period().
 // The map is indexed by the block's parent, however, so all keys in the map
 // will either be NULL or a block with (height + 1) % Period() == 0.
-typedef std::map<const CBlockIndex*, ThresholdState> ThresholdConditionCache;
+typedef std::map<const uint256, ThresholdState> ThresholdConditionCache;
 
 struct VBDeploymentInfo {
     /** Deployment name */
@@ -82,7 +74,7 @@ struct VersionBitsCache
     VersionBitsCache& caches;
     ThresholdConditionCache& operator [](int idx)
     {
-        //fixme: (2.0) (params should be passed in)
+        //fixme: (GULDEN) (params should be passed in)
         switch (Params().GetConsensus().vDeployments[idx].type)
         {
             case Consensus::DEPLOYMENT_POW:

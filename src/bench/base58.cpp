@@ -4,7 +4,7 @@
 
 #include "bench.h"
 
-#include "validation.h"
+#include "validation/validation.h"
 #include "base58.h"
 
 #include <vector>

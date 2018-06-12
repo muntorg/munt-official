@@ -11,9 +11,9 @@
 // file COPYING
 
 
-#include "validation.h"
-#include "validationinterface.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/validationinterface.h"
+#include "validation/witnessvalidation.h"
 #include <consensus/validation.h>
 
 #include "init.h"
@@ -28,6 +28,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include "utilmoneystr.h"
+#include "chainparams.h"
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 

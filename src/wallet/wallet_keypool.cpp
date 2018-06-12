@@ -12,7 +12,7 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h"
 #include "scheduler.h"
 #include "timedata.h"

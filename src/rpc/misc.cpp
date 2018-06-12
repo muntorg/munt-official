@@ -14,7 +14,7 @@
 #include "chain.h"
 #include "clientversion.h"
 #include "init.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "httpserver.h"
 #include "net.h"
 #include "netbase.h"

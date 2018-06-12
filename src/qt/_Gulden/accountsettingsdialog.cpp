@@ -105,7 +105,7 @@ void AccountSettingsDialog::showSyncQr()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        CReserveKey reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
+        CReserveKeyOrScript reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
         CPubKey vchPubKey;
         if (!reservekey.GetReservedKey(vchPubKey))
             return;

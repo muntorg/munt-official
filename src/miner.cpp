@@ -24,8 +24,8 @@
 #include "consensus/validation.h"
 #include "Gulden/auto_checkpoints.h"
 #include "hash.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "net.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
@@ -37,7 +37,7 @@
 #include "util.h"
 #include "utiltime.h"
 #include "utilmoneystr.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 
 #include <algorithm>
 #include <queue>
@@ -132,7 +132,10 @@ static BlockAssembler::Options DefaultOptions(const CChainParams& params)
     return options;
 }
 
-BlockAssembler::BlockAssembler(const CChainParams& params) : BlockAssembler(params, DefaultOptions(params)) {}
+BlockAssembler::BlockAssembler(const CChainParams& params)
+: BlockAssembler(params, DefaultOptions(params))
+{
+}
 
 void BlockAssembler::resetBlock()
 {
@@ -227,7 +230,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     return true;
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, const CScript& scriptPubKeyIn, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
 {
     fMineSegSig = true;
 
@@ -311,8 +314,22 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
-    //fixme: (2.0) (SEGSIG) - Change to other output types for phase 4 onward?
-    coinbaseTx.vout[0].output.scriptPubKey = scriptPubKeyIn;
+    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+    {
+        coinbaseTx.vout[0].SetType(CTxOutType::StandardKeyHashOutput);
+        CPubKey addressPubKey;
+        if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+        {
+            LogPrintf("Error in CreateNewBlock: could not retrieve public key for output address.\n");
+            return nullptr;
+        }
+        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+    }
+    else
+    {
+        coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
+        coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+    }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
@@ -816,7 +833,7 @@ void static GuldenMiner(const CChainParams& chainparams)
     static bool regTest = GetBoolArg("-regtest", false);
 
     unsigned int nExtraNonce = 0;
-    std::shared_ptr<CReserveScript> coinbaseScript;
+    std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
     GetMainSignals().ScriptForMining(coinbaseScript, NULL);
 
      // Meter hashes/sec
@@ -835,6 +852,7 @@ void static GuldenMiner(const CChainParams& chainparams)
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
+        //fixme: (2.1) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
         if (!coinbaseScript || coinbaseScript->reserveScript.empty())
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 
@@ -1020,7 +1038,7 @@ void static GuldenMiner(const CChainParams& chainparams)
                     continue;
                 }
 
-                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript->reserveScript, true, pWitnessBlockToEmbed);
+                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed);
                 if (!pblocktemplate.get())
                 {
                     LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill.\n");
@@ -1085,7 +1103,7 @@ void static GuldenMiner(const CChainParams& chainparams)
                         LogPrintf("GuldenMiner: proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
                         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
                         ProcessBlockFound(shared_pblock, chainparams);
-                        coinbaseScript->KeepScript();
+                        coinbaseScript->keepScriptOnDestroy();
 
                         // In regression test mode, stop mining after a block is found.
                         if (chainparams.MineBlocksOnDemand())
@@ -1196,7 +1214,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
 
 
 
-static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
 {
     // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
     if (!bSegSigIsEnabled)
@@ -1245,14 +1263,24 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     }
     else
     {
-        //fixme: (2.0) standard key hash?
-        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
-        coinbaseTx.vout[1].output.scriptPubKey = coinbaseScript->reserveScript;
+        if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
+            CPubKey addressPubKey;
+            if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+                assert(0); //fixme: (2.1) error handling - we are unlikely to run into an error here but if we do then handle it better.
+            coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        }
+        else
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+            coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+        }
         coinbaseTx.vout[1].nValue = witnessSubsidy;
     }
 }
 
-static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
 {
     bool bSegSigIsEnabled = IsSegSigEnabled(pIndexPrev);
 
@@ -1312,6 +1340,7 @@ void static GuldenWitness()
     CChainParams chainparams = Params();
     try
     {
+        std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>> reserveKeys;
         while (true)
         {
             if (!regTest)
@@ -1423,9 +1452,17 @@ void static GuldenWitness()
                                 unsigned int nWitnessCoinbaseIndex = pWitnessBlock->vtx.size()-1;
                                 nStartingBlockWeight += 200;
 
-                                std::shared_ptr<CReserveScript> coinbaseScript;
-                                //fixme: (2.0) (SEGSIG)
-                                GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
+                                std::shared_ptr<CReserveKeyOrScript> coinbaseScript = nullptr;
+                                auto findIter = reserveKeys.find(selectedWitnessAccount->getUUID());
+                                if (findIter != reserveKeys.end())
+                                {
+                                    coinbaseScript = findIter->second;
+                                }
+                                else
+                                {
+                                    GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
+                                    reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
+                                }
 
                                 int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev, chainparams, chainActive);
 
@@ -1438,7 +1475,7 @@ void static GuldenWitness()
                                     assemblerOptions.nBlockMaxWeight = DEFAULT_BLOCK_MAX_WEIGHT - nStartingBlockWeight;
                                     assemblerOptions.nBlockMaxSize = assemblerOptions.nBlockMaxWeight;
 
-                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript->reserveScript, true, nullptr, true));
+                                    std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
                                         LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
@@ -1498,6 +1535,7 @@ void static GuldenWitness()
                                 {
                                     LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
                                     ProcessBlockFound(pWitnessBlock, chainparams);
+                                    coinbaseScript->keepScriptOnDestroy();
                                     continue;
                                 }
                             }

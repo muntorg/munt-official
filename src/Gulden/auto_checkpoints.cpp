@@ -12,7 +12,7 @@
 #include "auto_checkpoints.h"
 
 #include "chainparams.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "uint256.h"
 #include "util.h"
 #include "key.h"

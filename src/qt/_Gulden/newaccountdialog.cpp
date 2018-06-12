@@ -110,7 +110,7 @@ void NewAccountDialog::showSyncQr()
             int64_t currentTime = newAccount->getEarliestPossibleCreationTime();
 
             std::string payoutAddress;
-            CReserveKey reservekey(pactiveWallet, newAccount, KEYCHAIN_CHANGE);
+            CReserveKeyOrScript reservekey(pactiveWallet, newAccount, KEYCHAIN_CHANGE);
             CPubKey vchPubKey;
             if (!reservekey.GetReservedKey(vchPubKey))
                 return;

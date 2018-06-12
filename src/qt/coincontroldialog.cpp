@@ -23,7 +23,7 @@
 #include "init.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
-#include "validation.h" // For mempool
+#include "validation/validation.h" // For mempool
 #include "wallet/wallet.h"
 
 #include <QApplication>
@@ -440,7 +440,7 @@ void CoinControlDialog::updateLabelLocked()
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 {

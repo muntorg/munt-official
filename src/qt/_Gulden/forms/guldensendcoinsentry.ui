@@ -42,6 +42,13 @@
     <widget class="GuldenAmountField" name="payAmount"/>
    </item>
    <item>
+    <widget class="QLabel" name="payInfo">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QStackedWidget" name="sendCoinsRecipientStack">
      <property name="currentIndex">
       <number>0</number>
