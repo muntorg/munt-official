@@ -66,7 +66,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
 
     if (requestType == RequestType::Quotation)
     {
-        httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\"}").arg(from, to, amount);
+        httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}").arg(from, to, amount);
         netRequest.setUrl( QString("https://%1/api/price").arg(nocksHost()));
     }
     else
@@ -106,7 +106,7 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
         netRequest.setUrl( QString("https://%1/api/transaction").arg(nocksHost()));
     }
 
-    netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
+    netRequest.setRawHeader( "User-Agent", QByteArray(UserAgent().c_str()));
     netRequest.setRawHeader( "Accept", "application/json" );
     netRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
