@@ -823,7 +823,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             filter->setAccountFilter(model->getActiveAccount());
                             int rows = filter->rowCount();
                             bool bAnyConfirmed = false;
-                            if (rows > 0)
+                            for (int row = 0; row < rows; ++row)
                             {
                                 QModelIndex index = filter->index(row, 0);
 
