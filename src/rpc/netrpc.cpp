@@ -632,6 +632,36 @@ UniValue setnetworkactive(const JSONRPCRequest& request)
     return g_connman->GetNetworkActive();
 }
 
+static UniValue disablenetwork(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1) {
+        throw std::runtime_error(
+            "disablenetwork\n"
+            "\nStops all p2p network activity, call \"enablenetwork\" to start p2p activity again.\n"
+        );
+    }
+
+    if (!g_connman) { throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled"); }
+
+    g_connman->SetNetworkActive(true);
+    return (g_connman->GetNetworkActive() == false);
+}
+
+static UniValue enablenetwork(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1) {
+        throw std::runtime_error(
+            "enablenetwork\n"
+            "\nStops all p2p network activity, call \"enablenetwork\" to start p2p activity again.\n"
+        );
+    }
+
+    if (!g_connman) { throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled"); }
+
+    g_connman->SetNetworkActive(true);
+    return (g_connman->GetNetworkActive() == false);
+}
+
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
@@ -647,6 +677,8 @@ static const CRPCCommand commands[] =
     { "network",            "listbanned",             &listbanned,             true,  {} },
     { "network",            "clearbanned",            &clearbanned,            true,  {} },
     { "network",            "setnetworkactive",       &setnetworkactive,       true,  {"state"} },
+    { "network",            "disablenetwork",         &disablenetowrk,         true,  {} },
+    { "network",            "enablenetwork",          &enablenetwork,          true,  {} },
 };
 
 void RegisterNetRPCCommands(CRPCTable &t)
