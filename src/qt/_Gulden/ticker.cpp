@@ -3,6 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "clientversion.h"
 #include "ticker.h"
 #include "utilmoneystr.h"
 #include "arith_uint256.h"
@@ -155,7 +156,7 @@ void CurrencyTicker::pollTicker()
 {
     QNetworkRequest netRequest;
     netRequest.setUrl( QString::fromStdString( "https://api.gulden.com/api/v1/ticker" ) );
-    netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
+    netRequest.setRawHeader( "User-Agent", QByteArray(UserAgent().c_str()));
     netRequest.setRawHeader( "Accept", "application/json" );
 
     QSslConfiguration config( QSslConfiguration::defaultConfiguration() );
