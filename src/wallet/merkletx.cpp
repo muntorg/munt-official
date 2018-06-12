@@ -12,7 +12,7 @@
 
 #include "wallet/wallet.h"
 #include "wallet/merkletx.h"
-#include "validation.h" //cs_main
+#include "validation/validation.h" //cs_main
 #include <consensus/consensus.h>
 
 const uint256 CMerkleTx::ABANDON_HASH(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));

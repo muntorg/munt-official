@@ -179,9 +179,10 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   util.h \
   utilmoneystr.h \
   utiltime.h \
-  validation.h \
-  witnessvalidation.h \
-  validationinterface.h \
+  validation/validation.h \
+  validation/witnessvalidation.h \
+  validation/versionbitsvalidatioh.h \
+  validation/validationinterface.h \
   versionbits.h \
   wallet/coincontrol.h \
   wallet/crypter.h \
@@ -247,11 +248,12 @@ libgulden_server_a_SOURCES = \
   txdb.cpp \
   txmempool.cpp \
   ui_interface.cpp \
-  validation.cpp \
-  validation_mempool.cpp \
-  validation_misc.cpp \
-  witnessvalidation.cpp \
-  validationinterface.cpp \
+  validation/validation.cpp \
+  validation/validation_mempool.cpp \
+  validation/validation_misc.cpp \
+  validation/witnessvalidation.cpp \
+  validation/versionbitsvalidation.cpp \
+  validation/validationinterface.cpp \
   versionbits.cpp \
   $(GULDEN_CORE_H)
 

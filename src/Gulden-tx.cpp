@@ -15,7 +15,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 #include "base58.h"
 #include "clientversion.h"

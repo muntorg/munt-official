@@ -18,7 +18,7 @@
 
 #include "base58.h"
 #include "consensus/consensus.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "script/script.h"
 #include "timedata.h"
 #include "util.h"

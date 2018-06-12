@@ -13,7 +13,7 @@
 #include "chain.h"
 #include "rpc/server.h"
 #include "init.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "sync.h"
@@ -306,7 +306,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 UniValue importprunedfunds(const JSONRPCRequest& request)
 {

@@ -19,7 +19,7 @@
 #include "script/sign.h"
 #include "serialize.h"
 #include "util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 #include "test/test_gulden.h"
 

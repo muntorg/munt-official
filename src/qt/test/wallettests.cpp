@@ -10,7 +10,7 @@
 #include "qt/transactionview.h"
 #include "qt/walletmodel.h"
 #include "test/test_gulden.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "wallet/wallet.h"
 
 #include <QAbstractButton>

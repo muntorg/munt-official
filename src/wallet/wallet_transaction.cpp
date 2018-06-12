@@ -14,8 +14,8 @@
 #include "wallet/wallettx.h"
 
 #include "consensus/validation.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "net.h"
 #include "scheduler.h"
 #include "timedata.h"

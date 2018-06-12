@@ -26,7 +26,7 @@
 #include <QTimer>
 
 #include "gui.h"
-#include "validation.h"//chainActive
+#include "validation/validation.h"//chainActive
 #include "Gulden/util.h"
 
 GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget *parent) :

@@ -15,7 +15,7 @@
 #include "undo.h"
 #include "utilstrencodings.h"
 #include "test/test_gulden.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "consensus/validation.h"
 
 #include <vector>

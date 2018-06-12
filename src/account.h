@@ -10,7 +10,7 @@
 #include "streams.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 #include "script/ismine.h"
 #include "wallet/crypter.h"
 #include "account.h"

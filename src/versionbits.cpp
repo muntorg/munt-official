@@ -14,7 +14,7 @@
 
 //Gulden
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_BITS_DEPLOYMENTS] = {
     {
@@ -249,3 +249,5 @@ void VersionBitsCache::Clear()
         cachescombined[d].clear();
     }
 }
+
+

@@ -16,7 +16,7 @@
 #include "pubkey.h"
 #include "script/interpreter.h"
 #include "version.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 namespace {
 

@@ -17,7 +17,7 @@
 #include "core_io.h"
 #include "init.h"
 #include "keystore.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "policy/policy.h"
@@ -42,7 +42,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)

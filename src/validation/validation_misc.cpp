@@ -13,12 +13,14 @@
 #include "validation.h"
 #include "validationinterface.h"
 #include "witnessvalidation.h"
+#include "versionbitsvalidation.h"
 #include <consensus/validation.h>
 
 #include "blockstore.h"
 #include "txdb.h"
 #include "net.h"
-
+#include "chainparams.h"
+#include "versionbits.h"
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)

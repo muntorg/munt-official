@@ -26,7 +26,7 @@
 #include <QSystemTrayIcon>
 
 #include "_Gulden/GuldenGUI.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 #include <boost/uuid/uuid.hpp>
 

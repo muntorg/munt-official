@@ -5,7 +5,7 @@
 #include "bench.h"
 
 #include "key.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "util.h"
 
 int

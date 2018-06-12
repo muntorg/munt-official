@@ -12,7 +12,7 @@
 #include "units.h"
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"

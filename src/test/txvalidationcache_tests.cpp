@@ -11,7 +11,7 @@
 
 #include "consensus/validation.h"
 #include "key.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "miner.h"
 #include "pubkey.h"
 #include "txmempool.h"

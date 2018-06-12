@@ -13,7 +13,7 @@
 #include "chainparams.h"
 #include "streams.h"
 #include "zmqpublishnotifier.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "util.h"
 #include "rpc/server.h"
 

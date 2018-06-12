@@ -10,7 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 
 static CMainSignals g_signals;
 

@@ -5,8 +5,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include <consensus/validation.h>
 #include <Gulden/util.h>
 #include "timedata.h" // GetAdjustedTime()

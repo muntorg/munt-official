@@ -23,7 +23,7 @@
 #include "policy/feerate.h"
 #include "script/script_error.h"
 #include "sync.h"
-#include "versionbits.h"
+#include "chain.h"
 
 #include <algorithm>
 #include <exception>
@@ -53,6 +53,7 @@ class CTxMemPool;
 class CValidationInterface;
 class CValidationState;
 struct ChainTxData;
+
 
 struct PrecomputedTransactionData;
 struct LockPoints;
@@ -251,7 +252,7 @@ static const uint64_t MIN_DISK_SPACE_FOR_BLOCK_FILES = 550 * 1024 * 1024;
  * specific block passed to it has been checked for validity!
  *
  * If you want to *possibly* get feedback on whether pblock is valid, you must
- * install a CValidationInterface (see validationinterface.h) - this will have
+ * install a CValidationInterface (see validation/validationinterface.h) - this will have
  * its BlockChecked method called whenever *any* block completes validation.
  *
  * Note that we guarantee that either the proof-of-work is valid on pblock, or
@@ -325,16 +326,6 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
-
-/** Get the BIP9 state for a given deployment at the current tip. */
-ThresholdState VersionBitsTipState(const Consensus::Params& params, Consensus::DeploymentPos pos);
-
-/** Get the numerical statistics for the BIP9 state for a given deployment at the current tip. */
-BIP9Stats VersionBitsTipStatistics(const Consensus::Params& params, Consensus::DeploymentPos pos);
-
-/** Get the block height at which the BIP9 deployment switched into the state for the block building on the current tip. */
-int VersionBitsTipStateSinceHeight(const Consensus::Params& params, Consensus::DeploymentPos pos);
-
 
 /** Apply the effects of this transaction on the UTXO set represented by view */
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
@@ -543,8 +534,6 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
  * This is also true for mempool checks.
  */
 int GetSpendHeight(const CCoinsViewCache& inputs);
-
-extern VersionBitsCache versionbitscache;
 
 /**
  * Determine what nVersion a new block should use.

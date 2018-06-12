@@ -23,8 +23,8 @@
 #include "fs.h"
 #include "key.h"
 #include "keystore.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "net.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
@@ -56,7 +56,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;
 CWalletRef pactiveWallet = NULL;

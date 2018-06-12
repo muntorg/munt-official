@@ -25,7 +25,7 @@
 #include "base58.h"
 #include "chain.h"
 #include "keystore.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h" // for g_connman
 #include "policy/rbf.h"
 #include "sync.h"
@@ -46,7 +46,7 @@
 #include "askpassphrasedialog.h"
 
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent)
 : QObject(parent)

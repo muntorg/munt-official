@@ -17,7 +17,7 @@
 #include "core_io.h"
 #include "init.h"
 #include <unity/appmanager.h>
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h"
 #include "policy/feerate.h"
 #include "policy/fees.h"

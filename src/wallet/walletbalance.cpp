@@ -13,7 +13,7 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
-#include "validation.h"
+#include "validation/validation.h"
 #include "policy/policy.h"
 #include "Gulden/util.h"
 

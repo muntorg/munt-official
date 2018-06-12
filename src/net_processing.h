@@ -14,7 +14,7 @@
 #define GULDEN_NET_PROCESSING_H
 
 #include "net.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS = 100;
