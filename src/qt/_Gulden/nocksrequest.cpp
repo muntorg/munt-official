@@ -187,9 +187,9 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             {
                 if (m_recipient)
                 {
-                    m_recipient->forexFailCode = errorValue.toArray().at(0).toString().toStdString();
-                    if (m_recipient->forexFailCode.empty())
-                        m_recipient->forexFailCode = "Nocks is temporarily unreachable, please try again later.";
+                    m_recipient->forexFailCode = errorValue.isString() ?
+                                errorValue.toString().toStdString()
+                              : "Could not process your request, please try again later.";
                     Q_EMIT requestProcessed();
                 }
                 return;
