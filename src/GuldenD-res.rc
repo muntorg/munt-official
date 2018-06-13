@@ -16,12 +16,12 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Bitcoin"
-            VALUE "FileDescription",    "GuldenD (Bitcoin node with a JSON-RPC server)"
+            VALUE "CompanyName",        "Gulden"
+            VALUE "FileDescription",    "GuldenD (Gulden node with a JSON-RPC server)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "GuldenD"
             VALUE "LegalCopyright",     COPYRIGHT_STR
-            VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
+            VALUE "LegalTrademarks1",   "Distributed under the Gulden license, see the accompanying file COPYING or github.com/gulden/gulden-official/COPYING"
             VALUE "OriginalFilename",   "GuldenD.exe"
             VALUE "ProductName",        "GuldenD"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR

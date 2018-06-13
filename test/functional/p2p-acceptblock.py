@@ -49,15 +49,15 @@ The test:
 """
 
 from test_framework.mininode import *
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 import time
 from test_framework.blocktools import create_block, create_coinbase
 
-class AcceptBlockTest(BitcoinTestFramework):
+class AcceptBlockTest(GuldenTestFramework):
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("BITCOIND", "GuldenD"),
+                          default=os.getenv("GULDEND", "GuldenD"),
                           help="GuldenD binary to test")
 
     def __init__(self):

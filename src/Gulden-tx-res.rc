@@ -16,12 +16,12 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Bitcoin"
-            VALUE "FileDescription",    "Gulden-tx (CLI Bitcoin transaction editor utility)"
+            VALUE "CompanyName",        "Gulden"
+            VALUE "FileDescription",    "Gulden-tx (CLI Gulden transaction editor utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "Gulden-tx"
             VALUE "LegalCopyright",     COPYRIGHT_STR
-            VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
+            VALUE "LegalTrademarks1",   "Distributed under the Gulden license, see the accompanying file COPYING or github.com/gulden/gulden-official/COPYING"
             VALUE "OriginalFilename",   "Gulden-tx.exe"
             VALUE "ProductName",        "Gulden-tx"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR

@@ -19,7 +19,7 @@ Tests correspond to code in rpc/blockchain.cpp.
 
 from decimal import Decimal
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_jsonrpc,
@@ -28,7 +28,7 @@ from test_framework.util import (
 )
 
 
-class BlockchainTest(BitcoinTestFramework):
+class BlockchainTest(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

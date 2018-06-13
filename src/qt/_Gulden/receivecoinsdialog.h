@@ -38,7 +38,7 @@ class QWebEngineView;
 #elif defined(HAVE_WEBKIT)
 class QWebView;
 #endif
-class CReserveKey;
+class CReserveKeyOrScript;
 class QWebEngineNewViewRequest;
 class QNetworkReply;
 
@@ -80,7 +80,7 @@ private:
     #elif defined(HAVE_WEBKIT)
     QWebView* buyView;
     #endif
-    CReserveKey* buyReceiveAddress;
+    CReserveKeyOrScript* buyReceiveAddress;
     CAccount* currentAccount;
 
 private Q_SLOTS:

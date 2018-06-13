@@ -12,8 +12,9 @@
 #include "tx_verify.h"
 
 #include "consensus.h"
+#include "consensus/validation.h"
 #include "script/interpreter.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 // TODO remove the following dependencies
 #include "chain.h"

@@ -179,22 +179,34 @@ ShutdownWindow::ShutdownWindow(QWidget *parent, Qt::WindowFlags f):
     setLayout(layout);
 }
 
-QWidget *ShutdownWindow::showShutdownWindow(GUI *window)
+QWidget* ShutdownWindow::showShutdownWindow(GUI* centerOnWindow)
 {
-    if (!window)
+    if (!centerOnWindow)
         return nullptr;
 
     // Show a simple window indicating shutdown status
-    QWidget *shutdownWindow = new ShutdownWindow();
-    shutdownWindow->setWindowTitle(window->windowTitle());
+    if (!spInstance)
+        spInstance = new ShutdownWindow();
+    spInstance->setWindowTitle(centerOnWindow->windowTitle());
 
     // Center shutdown window at where main window was.
-    shutdownWindow->show();
-    GUIUtil::centerWindowGeometry("nWindow", shutdownWindow);
-    return shutdownWindow;
+    spInstance->show();
+    GUIUtil::centerWindowGeometry("nWindow", spInstance);
+    return spInstance;
+}
+
+void ShutdownWindow::destroyInstance()
+{
+    if (spInstance)
+    {
+        spInstance->deleteLater();
+        spInstance = nullptr;
+    }
 }
 
 void ShutdownWindow::closeEvent(QCloseEvent *event)
 {
     event->ignore();
 }
+
+ShutdownWindow* ShutdownWindow::spInstance=nullptr;

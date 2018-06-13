@@ -4,13 +4,13 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the RPC HTTP basics."""
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
 import http.client
 import urllib.parse
 
-class HTTPBasicsTest (BitcoinTestFramework):
+class HTTPBasicsTest (GuldenTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 3

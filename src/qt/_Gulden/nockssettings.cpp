@@ -3,6 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "clientversion.h"
 #include "nockssettings.h"
 #include "utilmoneystr.h"
 #include "arith_uint256.h"
@@ -105,7 +106,7 @@ void NocksSettings::pollSettings()
 {
     QNetworkRequest netRequest;
     netRequest.setUrl( QString::fromStdString( "https://www.nocks.com/api/settings" ) );
-    netRequest.setRawHeader( "User-Agent", "Gulden-qt" );
+    netRequest.setRawHeader( "User-Agent", QByteArray(UserAgent().c_str()));
     netRequest.setRawHeader( "Accept", "application/json" );
 
     QSslConfiguration config( QSslConfiguration::defaultConfiguration() );

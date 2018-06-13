@@ -20,7 +20,7 @@
 #include "consensus/validation.h"
 #include "hash.h"
 #include "init.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "netmessagemaker.h"
@@ -36,7 +36,7 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 
 #include "alert.h"
 #include "checkpoints.h"
@@ -568,7 +568,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 // We consider the chain that this peer is on invalid.
                 return;
             }
-            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr)) {
+            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pindex->pprev)) {
                 // We wouldn't download this block or its descendants from this peer.
                 return;
             }
@@ -657,7 +657,7 @@ void UnregisterNodeSignals(CNodeSignals& nodeSignals)
 // mapOrphanTransactions
 //
 
-void AddToCompactExtraTransactions(const CTransactionRef& tx)
+static void AddToCompactExtraTransactions(const CTransactionRef& tx)
 {
     size_t max_extra_txn = GetArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN);
     if (max_extra_txn <= 0)
@@ -864,7 +864,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         return;
     nHighestFastAnnounce = pindex->nHeight;
 
-    bool fWitnessEnabled = IsSegSigEnabled(pindex->pprev, Params(), chainActive, nullptr);
+    bool fWitnessEnabled = IsSegSigEnabled(pindex->pprev);
 
     uint256 hashBlock;
 
@@ -1305,7 +1305,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
     }
 }
 
-uint32_t GetFetchFlags(CNode* pfrom) {
+static uint32_t GetFetchFlags(CNode* pfrom) {
     uint32_t nFetchFlags = 0;
     if ((pfrom->GetLocalServices() & NODE_SEGSIG) && State(pfrom->GetId())->fHaveSegregatedSignatures) {
         nFetchFlags |= MSG_WITNESS_FLAG;
@@ -2352,7 +2352,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CNodeState *nodestate = State(pfrom->GetId());
 
          // Don't bother trying to process compact blocks from v1 peers after segsig activates.
-        if (IsSegSigEnabled(pindex->pprev, chainparams, chainActive, nullptr) && !nodestate->fSupportsDesiredCmpctVersion)
+        if (IsSegSigEnabled(pindex->pprev) && !nodestate->fSupportsDesiredCmpctVersion)
             return true;
 
         // We want to be a bit conservative just to be extra careful about DoS
@@ -2660,7 +2660,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             while (pindexWalk && !chainActive.Contains(pindexWalk) && vToFetch.size() <= MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
                 if (!(pindexWalk->nStatus & BLOCK_HAVE_DATA) &&
                         !mapBlocksInFlight.count(pindexWalk->GetBlockHashPoW2()) &&
-                        (!IsSegSigEnabled(pindexWalk->pprev, chainparams, chainActive, nullptr) || State(pfrom->GetId())->fHaveSegregatedSignatures)) {
+                        (!IsSegSigEnabled(pindexWalk->pprev) || State(pfrom->GetId())->fHaveSegregatedSignatures)) {
                     // We don't have this block, and it's not yet in flight.
                     vToFetch.push_back(pindexWalk);
                 }

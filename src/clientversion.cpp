@@ -10,7 +10,6 @@
 // file COPYING
 
 #include "clientversion.h"
-
 #include "tinyformat.h"
 
 #include <string>
@@ -107,4 +106,9 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
     }
     ss << "/";
     return ss.str();
+}
+
+std::string UserAgent()
+{
+    return FormatSubVersion(CLIENT_NAME, CLIENT_VERSION, std::vector<std::string>());;
 }

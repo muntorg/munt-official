@@ -13,7 +13,7 @@
 
 #include "base58.h"
 #include "consensus/consensus.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "timedata.h"
 #include <Gulden/auto_checkpoints.h>
 #include "wallet/wallet.h"

@@ -66,13 +66,11 @@ std::string GetAccountTypeString(AccountType type)
 
 CHDSeed::CHDSeed()
 : m_type(BIP44)
-, m_readOnly(false)
 {
 }
 
 CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 : m_type(type)
-, m_readOnly(false)
 {
     //fixme: (2.1) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
     unencryptedMnemonic = mnemonic;
@@ -81,7 +79,6 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 
 CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 : m_type(type)
-, encrypted(false)
 , m_readOnly(true)
 {
     unencryptedMnemonic = "";
@@ -120,6 +117,7 @@ void CHDSeed::Init()
             masterKeyPriv.Derive(purposeKeyPriv, 100 | BIP32_HARDENED_KEY_LIMIT);  //Unused - but we generate anyway so that we don't save predictable/blank encrypted data to disk (tiny security precaution)
             purposeKeyPriv.Derive(cointypeKeyPriv, 100 | BIP32_HARDENED_KEY_LIMIT);  //Unused - but we generate anyway so that we don't save predictable/blank encrypted data to disk (tiny security precaution)
             break;
+        case BIP44External:
         case BIP44:
             {
                 masterKeyPriv.Derive(purposeKeyPriv, 44 | BIP32_HARDENED_KEY_LIMIT);  //m/44'
@@ -357,9 +355,6 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountTy
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
-, m_nNextChildIndex(0)
-, m_nNextChangeIndex(0)
-, encrypted(false)
 , accountKeyPriv(accountKey_)
 {
     m_Type = type;
@@ -377,9 +372,6 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
-, m_nNextChildIndex(0)
-, m_nNextChangeIndex(0)
-, encrypted(false)
 {
     m_Type = type;
 
@@ -436,7 +428,7 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
     return false;
 }
 
-bool CAccountHD::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const
+bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const [[no_return]]
 {
     assert(0);
 }

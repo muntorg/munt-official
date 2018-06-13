@@ -722,6 +722,7 @@ class CReserveScript
 public:
     CScript reserveScript;
     virtual void KeepScript() {}
+    virtual void keepScriptOnDestroy() {}
     CReserveScript() {}
     virtual ~CReserveScript() {}
 };

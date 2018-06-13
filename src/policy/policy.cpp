@@ -14,7 +14,7 @@
 
 #include "policy/policy.h"
 
-#include "validation.h"
+#include "validation/validation.h"
 #include "coins.h"
 #include "tinyformat.h"
 #include "util.h"
@@ -22,7 +22,7 @@
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {
@@ -79,6 +79,8 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool s
     } else if (whichType == TX_NULL_DATA &&
                (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
           return false;
+
+    //fixme: (2.0) segsig
 
     return whichType != TX_NONSTANDARD;
 }
@@ -205,6 +207,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
     //fixme: (2.0) - Do we need to re-implement this for segsig?
+    return true;
 }
 
 CFeeRate incrementalRelayFee = CFeeRate(DEFAULT_INCREMENTAL_RELAY_FEE);

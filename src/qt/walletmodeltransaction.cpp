@@ -98,10 +98,10 @@ CAmount WalletModelTransaction::getTotalTransactionAmount()
 
 void WalletModelTransaction::newPossibleKeyChange(CAccount* forAccount, CWallet *wallet)
 {
-    keyChange = new CReserveKey(wallet, forAccount, KEYCHAIN_CHANGE);
+    keyChange = new CReserveKeyOrScript(wallet, forAccount, KEYCHAIN_CHANGE);
 }
 
-CReserveKey *WalletModelTransaction::getPossibleKeyChange()
+CReserveKeyOrScript *WalletModelTransaction::getPossibleKeyChange()
 {
     return keyChange;
 }

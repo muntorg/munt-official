@@ -11,9 +11,9 @@
 // file COPYING
 
 
-#include "validation.h"
-#include "validationinterface.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/validationinterface.h"
+#include "validation/witnessvalidation.h"
 #include <consensus/validation.h>
 
 #include "init.h"
@@ -28,6 +28,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include "utilmoneystr.h"
+#include "chainparams.h"
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 
@@ -127,9 +128,15 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates
-    bool segsigEnabled = IsSegSigEnabled(chainActive.Tip()->pprev, chainparams, chainActive, nullptr);
-    if (tx.HasSegregatedSignatures() && !segsigEnabled) {
-        return state.DoS(0, false, REJECT_NONSTANDARD, "segregated-signatures-not-yet-active", true);
+    bool segsigEnabled = IsSegSigEnabled(chainActive.TipPrev());
+    bool hasSegregatedSignatures = tx.HasSegregatedSignatures();
+    if (segsigEnabled && !hasSegregatedSignatures)
+    {
+        return state.DoS(0, false, REJECT_NONSTANDARD, "non-segregated-sigdata-after-segregated-signatures-active", true);
+    }
+    if (!segsigEnabled && hasSegregatedSignatures)
+    {
+        return state.DoS(0, false, REJECT_NONSTANDARD, "segregated-sigdata-before-segregated-signatures-active", true);
     }
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)

@@ -13,7 +13,7 @@
 
 bool fShowChildAccountsSeperately = false;
 
-void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {
@@ -69,7 +69,7 @@ void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAcco
     }
 }
 
-void ThreadShadowPoolManager()
+static void ThreadShadowPoolManager()
 {
     static bool promptOnceForAccountGenerationUnlock = true;
     static bool promptOnceForAddressGenerationUnlock = true;

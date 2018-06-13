@@ -225,6 +225,9 @@ namespace GUIUtil
     /* Force rich text font to the solid typeface of Font Awesome. */
     QString fontAwesomeSolid(const QString& text);
 
+    /* Force rich text font to the brand typeface of Font Awesome. */
+    QString fontAwesomeBrand(const QString& text);
+
     /* Get any font glyph as an icon */
     QIcon getIconFromFontGlyph(QChar charCode, QString fontFamily, QColor fontColor = Qt::black);
     /* Get any font glyph as an icon - convenience helper for Font Awesome light */

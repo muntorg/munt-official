@@ -6,7 +6,7 @@
 #include "zmqpublishnotifier.h"
 
 #include "version.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "streams.h"
 #include "util.h"
 

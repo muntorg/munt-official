@@ -29,8 +29,10 @@ Or check back on this branch at the end of the month for a release ready version
 #include <Gulden/auto_checkpoints.h>
 #include "compat/sanity.h"
 #include "consensus/validation.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
+#include "validation/validationinterface.h"
+#include "validation/versionbitsvalidation.h"
 #include "fs.h"
 #include "httpserver.h"
 #include "httprpc.h"
@@ -55,7 +57,6 @@ Or check back on this branch at the end of the month for a release ready version
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
-#include "validationinterface.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"

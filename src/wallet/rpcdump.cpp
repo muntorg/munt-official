@@ -13,7 +13,7 @@
 #include "chain.h"
 #include "rpc/server.h"
 #include "init.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "sync.h"
@@ -37,11 +37,11 @@
 
 
 
-std::string static EncodeDumpTime(int64_t nTime) {
+static std::string EncodeDumpTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
 }
 
-int64_t static DecodeDumpTime(const std::string &str) {
+static int64_t DecodeDumpTime(const std::string &str) {
     static const boost::posix_time::ptime epoch = boost::posix_time::from_time_t(0);
     static const std::locale loc(std::locale::classic(),
         new boost::posix_time::time_input_facet("%Y-%m-%dT%H:%M:%SZ"));
@@ -54,7 +54,7 @@ int64_t static DecodeDumpTime(const std::string &str) {
     return (ptime - epoch).total_seconds();
 }
 
-std::string static EncodeDumpString(const std::string &str) {
+static std::string EncodeDumpString(const std::string &str) {
     std::stringstream ret;
     for(unsigned char c : str) {
         if (c <= 32 || c >= 128 || c == '%') {
@@ -66,7 +66,7 @@ std::string static EncodeDumpString(const std::string &str) {
     return ret.str();
 }
 
-std::string DecodeDumpString(const std::string &str) {
+static std::string DecodeDumpString(const std::string &str) {
     std::stringstream ret;
     for (unsigned int pos = 0; pos < str.length(); pos++) {
         unsigned char c = str[pos];
@@ -306,7 +306,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 UniValue importprunedfunds(const JSONRPCRequest& request)
 {
@@ -749,7 +749,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 }
 
 
-static UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniValue& data, const int64_t timestamp)
+UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniValue& data, const int64_t timestamp)
 {
     try {
         bool success = false;
@@ -1083,7 +1083,7 @@ static UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, cons
     }
 }
 
-static int64_t GetImportTimestamp(const UniValue& data, int64_t now)
+int64_t GetImportTimestamp(const UniValue& data, int64_t now)
 {
     if (data.exists("timestamp")) {
         const UniValue& timestamp = data["timestamp"];

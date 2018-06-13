@@ -870,6 +870,10 @@ The account will continue to be monitored and will be restored should it receive
         <source>%1 client</source>
         <translation type="unfinished">%1 client</translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug window</translation>
+    </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
@@ -1047,6 +1051,14 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation type="unfinished">The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
@@ -1105,6 +1117,10 @@ Witness weight: %5</source>
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3549,6 +3565,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
         <translation type="unfinished">Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change units</source>

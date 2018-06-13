@@ -6,10 +6,12 @@
 #include "versionbits.h"
 #include "test/test_gulden.h"
 #include "chainparams.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "consensus/params.h"
 
 #include <boost/test/unit_test.hpp>
+
+static std::map<uint256, CBlockIndex*> tempBlockIndex;
 
 /* Define a virtual block time, one block per 10 minutes after Nov 14 2014, 0:55:36am */
 int32_t TestTime(int nHeight) { return 1415926536 + 600 * nHeight; }
@@ -33,7 +35,6 @@ public:
 };
 
 #define CHECKERS 6
-
 class VersionBitsTester
 {
     // A fake blockchain
@@ -68,6 +69,9 @@ public:
     VersionBitsTester& Mine(unsigned int height, int32_t nTime, int32_t nVersion) {
         while (vpblock.size() < height) {
             CBlockIndex* pindex = new CBlockIndex();
+            // Set the block up with a random hash as versionbits needs this to function correctly.
+            auto insertIter = tempBlockIndex.insert(std::make_pair(GetRandHash(), pindex)).first;
+            pindex->phashBlock = &((*insertIter).first);
             pindex->nHeight = vpblock.size();
             pindex->pprev = vpblock.size() > 0 ? vpblock.back() : NULL;
             pindex->nTime = nTime;

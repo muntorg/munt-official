@@ -8,7 +8,7 @@
 #include "policy/fees.h"
 #include "policy/policy.h"
 #include "policy/rbf.h"
-#include "validation.h" //for mempool access
+#include "validation/validation.h" //for mempool access
 #include "txmempool.h"
 #include "utilmoneystr.h"
 #include "util.h"
@@ -74,7 +74,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
 
 //fixme: (2.1)
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConfirmTarget, bool ignoreGlobalPayTxFee, CAmount totalFee, bool newTxReplaceable)
     :
@@ -280,7 +280,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
 
     CWalletTx wtxBumped(pWallet, MakeTransactionRef(std::move(mtx)));
     // commit/broadcast the tx
-    CReserveKey reservekey(pWallet, pWallet->mapAccounts[getUUIDFromString(oldWtx.strFromAccount)], KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(pWallet, pWallet->mapAccounts[getUUIDFromString(oldWtx.strFromAccount)], KEYCHAIN_CHANGE);
     wtxBumped.mapValue = oldWtx.mapValue;
     wtxBumped.mapValue["replaces_txid"] = oldWtx.GetHash().ToString();
     wtxBumped.vOrderForm = oldWtx.vOrderForm;

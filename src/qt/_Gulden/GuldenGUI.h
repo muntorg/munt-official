@@ -26,7 +26,7 @@ class QLabel;
 class QAction;
 class CAccount;
 class OptionsModel;
-class CReserveKey;
+class CReserveKeyOrScript;
 class CurrencyTicker;
 class NocksSettings;
 class QDialog;

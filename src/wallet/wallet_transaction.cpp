@@ -14,8 +14,8 @@
 #include "wallet/wallettx.h"
 
 #include "consensus/validation.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "net.h"
 #include "scheduler.h"
 #include "timedata.h"
@@ -92,7 +92,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     for(const CTxIn& txin : tx.vin)
         coinControl.Select(txin.prevout);
 
-    CReserveKey reservekey(this, fromAccount, KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(this, fromAccount, KEYCHAIN_CHANGE);
     CWalletTx wtx;
     if (!CreateTransaction(fromAccount, vecSend, wtx, reservekey, nFeeRet, nChangePosInOut, strFailReason, &coinControl, false))
         return false;
@@ -178,7 +178,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         tx.vin.push_back(CTxIn(coin.outpoint,CScript(), nSequence, nFlags));
 }
 
-bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
+bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
     if (forAccount->IsReadOnly())
@@ -555,7 +555,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 }
 
 
-bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKey& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
+bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKeyOrScript& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
 {
     CWalletTx wtxNew;
     if (forAccount->IsReadOnly())
@@ -797,7 +797,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKey& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
@@ -869,7 +869,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     return false;
 }
 
-bool CWallet::SignAndSubmitTransaction(CReserveKey& changeReserveKey, CMutableTransaction& tx, std::string& strError)
+bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError)
 {
     if (!SignTransaction(nullptr, tx, SignType::Spend))
     {
@@ -894,7 +894,7 @@ bool CWallet::SignAndSubmitTransaction(CReserveKey& changeReserveKey, CMutableTr
 /**
  * Call after CreateTransaction unless you want to abort
  */
-bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state)
+bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state)
 {
     {
         LOCK2(cs_main, cs_wallet);

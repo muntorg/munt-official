@@ -5,7 +5,7 @@
 #ifndef GULDEN_ZMQ_ZMQNOTIFICATIONINTERFACE_H
 #define GULDEN_ZMQ_ZMQNOTIFICATIONINTERFACE_H
 
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 #include <string>
 #include <map>
 #include <list>

@@ -25,7 +25,7 @@
 #include "base58.h"
 #include "chain.h"
 #include "keystore.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h" // for g_connman
 #include "policy/rbf.h"
 #include "sync.h"
@@ -46,7 +46,7 @@
 #include "askpassphrasedialog.h"
 
 #include "Gulden/util.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent)
 : QObject(parent)
@@ -310,7 +310,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
 
-                if (nTipPrevPoW2Phase >= 4)
+                if (IsSegSigEnabled(chainActive.TipPrev()))
                 {
                     CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
@@ -328,7 +328,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             }
             else
             {
-                if (nTipPrevPoW2Phase >= 4)
+                if (IsSegSigEnabled(chainActive.TipPrev()))
                 {
                     CKeyID key;
                     if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
@@ -369,7 +369,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
         std::string strFailReason;
 
         CWalletTx *newTx = transaction.getTransaction();
-        CReserveKey *keyChange = transaction.getPossibleKeyChange();
+        CReserveKeyOrScript *keyChange = transaction.getPossibleKeyChange();
         bool fCreated = wallet->CreateTransaction(forAccount, vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && fCreated)
@@ -423,7 +423,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         }
 
-        CReserveKey *keyChange = transaction.getPossibleKeyChange();
+        CReserveKeyOrScript *keyChange = transaction.getPossibleKeyChange();
         CValidationState state;
         if(!wallet->CommitTransaction(*newTx, *keyChange, g_connman.get(), state))
             return SendCoinsReturn(TransactionCommitFailed, QString::fromStdString(state.GetRejectReason()));

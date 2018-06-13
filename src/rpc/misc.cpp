@@ -14,7 +14,7 @@
 #include "chain.h"
 #include "clientversion.h"
 #include "init.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "httpserver.h"
 #include "net.h"
 #include "netbase.h"
@@ -51,7 +51,7 @@
  *
  * Or alternatively, create a specific query method for the information.
  **/
-UniValue getinfo(const JSONRPCRequest& request)
+static UniValue getinfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(

@@ -6,7 +6,7 @@
 #ifndef GULDEN_WITNESS_VALIDATION_H
 #define GULDEN_WITNESS_VALIDATION_H
 
-#include "validation.h"
+#include "validation/validation.h"
 
 //fixme: (2.0) - Properly document all of these; including pre/post conditions; implement unit tests.
 

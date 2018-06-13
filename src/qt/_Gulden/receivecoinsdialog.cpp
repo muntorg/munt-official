@@ -372,7 +372,7 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
 void ReceiveCoinsDialog::generateRequest()
 {
     //fixme: (2.1) (HD) key gaps
-    CReserveKey reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
+    CReserveKeyOrScript reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
     {
@@ -494,7 +494,7 @@ void ReceiveCoinsDialog::loadBuyViewFinished([[maybe_unused]] bool bOk)
             buyReceiveAddress = NULL;
         }
 
-        buyReceiveAddress = new CReserveKey(pactiveWallet, currentAccount, KEYCHAIN_EXTERNAL);
+        buyReceiveAddress = new CReserveKeyOrScript(pactiveWallet, currentAccount, KEYCHAIN_EXTERNAL);
         CPubKey pubKey;
         QString guldenAddress;
 

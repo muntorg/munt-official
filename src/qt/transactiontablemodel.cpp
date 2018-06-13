@@ -21,7 +21,7 @@
 #include "walletmodel.h"
 
 #include "core_io.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "sync.h"
 #include "uint256.h"
 #include "util.h"

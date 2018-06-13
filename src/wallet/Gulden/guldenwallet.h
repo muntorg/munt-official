@@ -11,7 +11,7 @@
 #include "tinyformat.h"
 #include "ui_interface.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 #include "script/ismine.h"
 #include "script/sign.h"
 #include "wallet/crypter.h"

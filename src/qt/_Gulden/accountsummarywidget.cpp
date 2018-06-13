@@ -13,7 +13,7 @@
 #include <QApplication>
 
 #include "ticker.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include <units.h>
 #include "wallet/wallet.h"
 #include "utilmoneystr.h"

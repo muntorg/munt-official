@@ -31,11 +31,11 @@ Shutdown again, restore using importwallet,
 and confirm again balances are correct.
 """
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 from random import randint
 
-class WalletBackupTest(BitcoinTestFramework):
+class WalletBackupTest(GuldenTestFramework):
 
     def __init__(self):
         super().__init__()

@@ -20,7 +20,7 @@
 
 #include "amount.h"
 #include "init.h"
-#include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
+#include "validation/validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
 #include "net.h"
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
@@ -128,6 +128,7 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fDockOnClose", false);
         #endif
     }
+    fDockOnClose = settings.value("fDockOnClose").toBool();
 
     if (!settings.contains("fMinimizeOnClose"))
     {

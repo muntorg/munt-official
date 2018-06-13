@@ -10,10 +10,10 @@
  which are not included in a block and are not currently in the mempool. It has
  no effect on transactions which are already conflicted or abandoned.
 """
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import GuldenTestFramework
 from test_framework.util import *
 
-class AbandonConflictTest(BitcoinTestFramework):
+class AbandonConflictTest(GuldenTestFramework):
     def __init__(self):
         super().__init__()
         self.num_nodes = 2

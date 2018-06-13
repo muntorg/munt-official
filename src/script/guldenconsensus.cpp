@@ -16,7 +16,7 @@
 #include "pubkey.h"
 #include "script/interpreter.h"
 #include "version.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 namespace {
 
@@ -155,5 +155,5 @@ int guldenconsensus_verify_script(const unsigned char *scriptPubKey, unsigned in
 unsigned int guldenconsensus_version()
 {
     // Just use the API version for now
-    return BITCOINCONSENSUS_API_VER;
+    return GULDENCONSENSUS_API_VER;
 }

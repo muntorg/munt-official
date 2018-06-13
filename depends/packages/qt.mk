@@ -20,7 +20,7 @@ $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
 $(package)_qwt_version=6.1.3
-$(package)_qwt_download_path=https://tenet.dl.sourceforge.net/project/qwt/qwt/$($(package)_qwt_version)/
+$(package)_qwt_download_path=https://ufpr.dl.sourceforge.net/project/qwt/qwt/$($(package)_qwt_version)/
 $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 

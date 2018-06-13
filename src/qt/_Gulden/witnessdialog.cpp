@@ -34,8 +34,8 @@
 
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
-#include "validation.h"
-#include "witnessvalidation.h"
+#include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
@@ -728,7 +728,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             bAnyAreMine = true;
                             CTxOutPoW2Witness witnessDetails;
-                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && (witnessDetails.lockUntilBlock < chainActive.Tip()->nHeight) )
+                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && (witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight) )
                             {
                                 bAnyFinished = true;
                                 break;
@@ -822,7 +822,19 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             filter->setAccountFilter(model->getActiveAccount());
                             int rows = filter->rowCount();
-                            if (rows > 0)
+                            bool bAnyConfirmed = false;
+                            for (int row = 0; row < rows; ++row)
+                            {
+                                QModelIndex index = filter->index(row, 0);
+
+                                int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                                if (nStatus == TransactionStatus::Status::Confirmed)
+                                {
+                                    bAnyConfirmed = true;
+                                    break;
+                                }
+                            }
+                            if (bAnyConfirmed)
                             {
                                 setIndex = WitnessDialogStates::FINAL;
                                 plotGraphForAccount(forAccount, nTotalNetworkWeight);
@@ -941,7 +953,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
                             {
                                 for(auto& wtxIter : pactiveWallet->mapWallet)
                                 {
-                                    wtxIter.second.clearAllCaches();
+                                    wtxIter.second.MarkDirty();
                                 }
                             }
                         }
@@ -953,20 +965,21 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
                     filter->setAccountFilter(account);
                     int rows = filter->rowCount();
 
-                    // If it has no balance but does have previous transactions then it is probably a "finished" withness account.
-                    if (rows > 0 && pactiveWallet->GetBalance(account, true, true) == 0 && pactiveWallet->GetImmatureBalance(account) == 0)
-                    {
-                        newState = AccountStatus::WitnessEnded;
-                    }
-                    // Unless it  has pending transactions then it gets the pending flag instead.
                     for (int row = 0; row < rows; ++row)
                     {
                         QModelIndex index = filter->index(row, 0);
 
                         int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                        // If it has pending transactions then it gets the pending flag instead.
                         if (nStatus == TransactionStatus::Status::Unconfirmed)
                         {
                             newState = AccountStatus::WitnessPending;
+                            break;
+                        }
+                        // If it has no balance but does have previous transactions then it is probably a "finished" withness account.
+                        if (nStatus == TransactionStatus::Status::Confirmed)
+                        {
+                            newState = AccountStatus::WitnessEnded;
                             break;
                         }
                     }

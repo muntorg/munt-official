@@ -17,7 +17,7 @@
 #include "core_io.h"
 #include "init.h"
 #include <unity/appmanager.h>
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h"
 #include "policy/feerate.h"
 #include "policy/fees.h"
@@ -273,7 +273,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
     }
 
 
-    CReserveKey reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
@@ -457,7 +457,7 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
     }
 
     // Create and send the transaction
-    CReserveKey reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
+    CReserveKeyOrScript reservekey(pwallet, fromAccount, KEYCHAIN_CHANGE);
     CAmount nFeeRequired;
     std::string strError;
     std::vector<CRecipient> vecSend;
@@ -995,7 +995,7 @@ UniValue movecmd(const JSONRPCRequest& request)
         wtx.mapValue["comment"] = request.params[4].get_str();
 
 
-    CReserveKey receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
+    CReserveKeyOrScript receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!receiveKey.GetReservedKey(vchPubKey))
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
@@ -1147,7 +1147,7 @@ UniValue sendmany(const JSONRPCRequest& request)
 
     CAmount totalAmount = 0;
     std::vector<std::string> keys = sendTo.getKeys();
-    std::vector<CReserveKey> reservedKeys;
+    std::vector<CReserveKeyOrScript> reservedKeys;
     for(const std::string& name_ : keys)
     {
         CGuldenAddress address(name_);
@@ -1155,7 +1155,7 @@ UniValue sendmany(const JSONRPCRequest& request)
         CAccount* toAccount = AccountFromValue(pwallet, name_, false);
         if (toAccount)
         {
-            CReserveKey receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
+            CReserveKeyOrScript receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
             CPubKey vchPubKey;
             if (!receiveKey.GetReservedKey(vchPubKey))
                 throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
@@ -1199,7 +1199,7 @@ UniValue sendmany(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
     // Send
-    CReserveKey keyChange(pwallet, fromAccount, KEYCHAIN_CHANGE);
+    CReserveKeyOrScript keyChange(pwallet, fromAccount, KEYCHAIN_CHANGE);
     CAmount nFeeRequired = 0;
     int nChangePosRet = -1;
     std::string strFailReason;

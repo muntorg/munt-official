@@ -10,7 +10,7 @@
 #include "streams.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
+#include "validation/validationinterface.h"
 #include "script/ismine.h"
 #include "wallet/crypter.h"
 #include "account.h"
@@ -201,7 +201,7 @@ protected:
     CExtPubKey purposeKeyPub; //key at m/44'           - BIP44 only
     CExtPubKey cointypeKeyPub;//key at m/44'/87'       - BIP44 only
 
-    bool encrypted;
+    bool encrypted = false;
     // These members are only valid when the account is unlocked/unencrypted.
     SecureString unencryptedMnemonic;
     CExtKey masterKeyPriv;  //hd master key (m)      - BIP32 and BIP44
@@ -209,7 +209,7 @@ protected:
     CExtKey cointypeKeyPriv;//key at m/44'/87'       - BIP44 only
     CKeyingMaterial vMasterKey;//Memory only.
 
-    bool m_readOnly;
+    bool m_readOnly=false;
 
     // Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> encryptedMnemonic;
@@ -341,7 +341,7 @@ protected:
     std::string accountLabel;
     uint64_t earliestPossibleCreationTime;
 
-    bool m_readOnly;
+    bool m_readOnly = false;
 
     CKeyingMaterial vMasterKey; // Memory only.
     friend class CGuldenWallet;
@@ -430,14 +430,14 @@ public:
     }
 private:
     boost::uuids::uuid m_SeedID;
-    uint32_t m_nIndex;
-    mutable uint32_t m_nNextChildIndex;
-    mutable uint32_t m_nNextChangeIndex;
+    uint32_t m_nIndex = 0;
+    mutable uint32_t m_nNextChildIndex = 0;
+    mutable uint32_t m_nNextChangeIndex = 0;
 
     //These members are always valid.
     CExtPubKey primaryChainKeyPub;
     CExtPubKey changeChainKeyPub;
-    bool encrypted;
+    bool encrypted = false;
 
     //These members are only valid when the account is unlocked/unencrypted.
     CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/n' (bip44)

@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "chainparams.h"
-#include "validation.h"
+#include "validation/validation.h"
 #include "net.h"
 #include "unity/signals.h"
 

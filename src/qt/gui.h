@@ -26,7 +26,7 @@
 #include <QSystemTrayIcon>
 
 #include "_Gulden/GuldenGUI.h"
-#include "validation.h"
+#include "validation/validation.h"
 
 #include <boost/uuid/uuid.hpp>
 
@@ -119,7 +119,6 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event);
-    void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
     void showEvent(QShowEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
