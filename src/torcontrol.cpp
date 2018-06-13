@@ -262,7 +262,7 @@ static std::pair<std::string,std::string> SplitTorReplyLine(const std::string &s
     }
     if (ptr < s.size())
         ++ptr; // skip ' '
-    return pair(type, s.substr(ptr));
+    return std::pair(type, s.substr(ptr));
 }
 
 /** Parse reply arguments in the form 'METHODS=COOKIE,SAFECOOKIE COOKIEFILE=".../control_auth_cookie"'.

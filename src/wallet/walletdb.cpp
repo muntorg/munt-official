@@ -37,49 +37,49 @@ static std::map<CKeyID, int64_t> staticPoolCache;
 
 bool CWalletDB::WriteName(const std::string& strAddress, const std::string& strName)
 {
-    return WriteIC(std::make_pair(std::string("name"), strAddress), strName);
+    return WriteIC(std::pair(std::string("name"), strAddress), strName);
 }
 
 bool CWalletDB::EraseName(const std::string& strAddress)
 {
     // This should only be used for sending addresses, never for receiving addresses,
     // receiving addresses must always have an address book entry if they're not change return.
-    return EraseIC(std::make_pair(std::string("name"), strAddress));
+    return EraseIC(std::pair(std::string("name"), strAddress));
 }
 
 bool CWalletDB::WritePurpose(const std::string& strAddress, const std::string& strPurpose)
 {
-    return WriteIC(std::make_pair(std::string("purpose"), strAddress), strPurpose);
+    return WriteIC(std::pair(std::string("purpose"), strAddress), strPurpose);
 }
 
 bool CWalletDB::ErasePurpose(const std::string& strPurpose)
 {
-    return EraseIC(std::make_pair(std::string("purpose"), strPurpose));
+    return EraseIC(std::pair(std::string("purpose"), strPurpose));
 }
 
 bool CWalletDB::WriteTx(const CWalletTx& wtx)
 {
-    return WriteIC(std::make_pair(std::string("tx"), wtx.GetHash()), wtx);
+    return WriteIC(std::pair(std::string("tx"), wtx.GetHash()), wtx);
 }
 
 bool CWalletDB::EraseTx(uint256 hash)
 {
-    return EraseIC(std::make_pair(std::string("tx"), hash));
+    return EraseIC(std::pair(std::string("tx"), hash));
 }
 
 bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
 {
-    return EraseIC(std::make_pair(std::string("keymeta"), vchPubKey)) && EraseIC(std::make_pair(std::string("key"), vchPubKey));
+    return EraseIC(std::pair(std::string("keymeta"), vchPubKey)) && EraseIC(std::pair(std::string("key"), vchPubKey));
 }
 
 bool CWalletDB::EraseEncryptedKey(const CPubKey& vchPubKey)
 {
-    return EraseIC(std::make_pair(std::string("keymeta"), vchPubKey)) && EraseIC(std::make_pair(std::string("ckey"), vchPubKey));
+    return EraseIC(std::pair(std::string("keymeta"), vchPubKey)) && EraseIC(std::pair(std::string("ckey"), vchPubKey));
 }
 
 bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata& keyMeta, const std::string forAccount, int64_t nKeyChain)
 {
-    if (!WriteIC(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta, false)) {
+    if (!WriteIC(std::pair(std::string("keymeta"), vchPubKey), keyMeta, false)) {
         return false;
     }
 
@@ -89,32 +89,32 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
     vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
 
-    return WriteIC(std::make_pair(std::string("key"), vchPubKey), std::make_tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain)  , false);
+    return WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
 }
 
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
 {
-    if (!WriteIC(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta, false))
+    if (!WriteIC(std::pair(std::string("keymeta"), vchPubKey), keyMeta, false))
         return false;
 
-    return WriteIC(std::make_pair(std::string("keyHD"), vchPubKey), std::make_tuple(HDKeyIndex, keyChain, forAccount) , false);
+    return WriteIC(std::pair(std::string("keyHD"), vchPubKey), std::tuple(HDKeyIndex, keyChain, forAccount), false);
 }
 
 bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain)
 {
     const bool fEraseUnencryptedKey = true;
 
-    if (!WriteIC(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta)) {
+    if (!WriteIC(std::pair(std::string("keymeta"), vchPubKey), keyMeta)) {
         return false;
     }
 
-    if (!WriteIC(std::make_pair(std::string("ckey"), vchPubKey), std::make_tuple(COMPACTSIZEVECTOR(vchCryptedSecret), forAccount, nKeyChain), false)) {
+    if (!WriteIC(std::pair(std::string("ckey"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchCryptedSecret), forAccount, nKeyChain), false)) {
         return false;
     }
     if (fEraseUnencryptedKey)
     {
-        EraseIC(std::make_pair(std::string("key"), vchPubKey));
-        EraseIC(std::make_pair(std::string("wkey"), vchPubKey));
+        EraseIC(std::pair(std::string("key"), vchPubKey));
+        EraseIC(std::pair(std::string("wkey"), vchPubKey));
     }
 
     return true;
@@ -122,28 +122,28 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsi
 
 bool CWalletDB::WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey)
 {
-    return WriteIC(std::make_pair(std::string("mkey"), nID), kMasterKey, true);
+    return WriteIC(std::pair(std::string("mkey"), nID), kMasterKey, true);
 }
 
 bool CWalletDB::WriteCScript(const uint160& hash, const CScript& redeemScript)
 {
-    return WriteIC(std::make_pair(std::string("cscript"), hash), *(const CScriptBase*)(&redeemScript), false);
+    return WriteIC(std::pair(std::string("cscript"), hash), *(const CScriptBase*)(&redeemScript), false);
 }
 
 bool CWalletDB::WriteWatchOnly(const CScript &dest, const CKeyMetadata& keyMeta)
 {
-    if (!WriteIC(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)), keyMeta)) {
+    if (!WriteIC(std::pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)), keyMeta)) {
         return false;
     }
-    return WriteIC(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)), '1');
+    return WriteIC(std::pair(std::string("watchs"), *(const CScriptBase*)(&dest)), '1');
 }
 
 bool CWalletDB::EraseWatchOnly(const CScript &dest)
 {
-    if (!EraseIC(std::make_pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)))) {
+    if (!EraseIC(std::pair(std::string("watchmeta"), *(const CScriptBase*)(&dest)))) {
         return false;
     }
-    return EraseIC(std::make_pair(std::string("watchs"), *(const CScriptBase*)(&dest)));
+    return EraseIC(std::pair(std::string("watchs"), *(const CScriptBase*)(&dest)));
 }
 
 bool CWalletDB::WriteBestBlock(const CBlockLocator& locator)
@@ -170,18 +170,18 @@ bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
 */
 bool CWalletDB::ReadPool(int64_t nPool, CKeyPool& keypool)
 {
-    return batch.Read(std::make_pair(std::string("pool"), nPool), keypool);
+    return batch.Read(std::pair(std::string("pool"), nPool), keypool);
 }
 
 bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 {
     staticPoolCache[keypool.vchPubKey.GetID()] = nPool;
-    return WriteIC(std::make_pair(std::string("pool"), nPool), keypool);
+    return WriteIC(std::pair(std::string("pool"), nPool), keypool);
 }
 
 bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 {
-    return EraseIC(std::make_pair(std::string("pool"), nPool));
+    return EraseIC(std::pair(std::string("pool"), nPool));
 }
 
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
@@ -195,13 +195,13 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
         iter.second->setKeyPoolInternal.erase(keyIndex);
     }
     //Remove from disk
-    return EraseIC(std::make_pair(std::string("pool"), staticPoolCache[id]));
+    return EraseIC(std::pair(std::string("pool"), staticPoolCache[id]));
 }
 
 bool CWalletDB::HasPool(CWallet* pwallet, const CKeyID& id)
 {
     //Remove from disk
-    return batch.Exists(std::make_pair(std::string("pool"), staticPoolCache[id]));
+    return batch.Exists(std::pair(std::string("pool"), staticPoolCache[id]));
 }
 
 bool CWalletDB::WriteMinVersion(int nVersion)
@@ -211,26 +211,26 @@ bool CWalletDB::WriteMinVersion(int nVersion)
 
 bool CWalletDB::WriteAccountLabel(const std::string& strUUID, const std::string& strLabel)
 {
-    return WriteIC(std::make_pair(std::string("acclabel"), strUUID), strLabel);
+    return WriteIC(std::pair(std::string("acclabel"), strUUID), strLabel);
 }
 
 bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
 {
-    return EraseIC(std::make_pair(std::string("acclabel"), strUUID));
+    return EraseIC(std::pair(std::string("acclabel"), strUUID));
 }
 
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
 {
     if (account->IsHD())
-      return WriteIC(make_pair(std::string("acchd"), strAccount), *((CAccountHD*)account));
+      return WriteIC(std::pair(std::string("acchd"), strAccount), *((CAccountHD*)account));
     else
-      return WriteIC(make_pair(std::string("accleg"), strAccount), *account);
+      return WriteIC(std::pair(std::string("accleg"), strAccount), *account);
 }
 
 
 bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry)
 {
-    return WriteIC(std::make_pair(std::string("acentry"), std::make_pair(acentry.strAccount, nAccEntryNum)), acentry);
+    return WriteIC(std::pair(std::string("acentry"), std::pair(acentry.strAccount, nAccEntryNum)), acentry);
 }
 
 CAmount CWalletDB::GetAccountCreditDebit(const std::string& strAccount)
@@ -258,7 +258,7 @@ void CWalletDB::ListAccountCreditDebit(const std::string& strAccount, std::list<
         // Read next record
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         if (setRange)
-            ssKey << std::make_pair(std::string("acentry"), std::make_pair((fAllAccounts ? std::string("") : strAccount), uint64_t(0)));
+            ssKey << std::pair(std::string("acentry"), std::pair((fAllAccounts ? std::string("") : strAccount), uint64_t(0)));
         CDataStream ssValue(SER_DISK, CLIENT_VERSION);
         int ret = batch.ReadAtCursor(pcursor, ssKey, ssValue, setRange);
         setRange = false;
@@ -954,7 +954,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     pwallet->laccentries.clear();
     ListAccountCreditDebit("*", pwallet->laccentries);
     for(CAccountingEntry& entry : pwallet->laccentries) {
-        pwallet->wtxOrdered.insert(make_pair(entry.nOrderPos, CWallet::TxPair((CWalletTx*)0, &entry)));
+        pwallet->wtxOrdered.insert(std::pair(entry.nOrderPos, CWallet::TxPair((CWalletTx*)0, &entry)));
     }
 
     return result;
@@ -1158,12 +1158,12 @@ bool CWalletDB::VerifyDatabaseFile(const std::string& walletFile, const fs::path
 
 bool CWalletDB::WriteDestData(const std::string &address, const std::string &key, const std::string &value)
 {
-    return WriteIC(std::make_pair(std::string("destdata"), std::make_pair(address, key)), value);
+    return WriteIC(std::pair(std::string("destdata"), std::pair(address, key)), value);
 }
 
 bool CWalletDB::EraseDestData(const std::string &address, const std::string &key)
 {
-    return EraseIC(std::make_pair(std::string("destdata"), std::make_pair(address, key)));
+    return EraseIC(std::pair(std::string("destdata"), std::pair(address, key)));
 }
 
 /*
@@ -1200,12 +1200,12 @@ bool CWalletDB::WriteVersion(int nVersion)
 
 bool CWalletDB::WriteHDSeed(const CHDSeed& seed)
 {
-    return WriteIC(std::make_pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())), seed);
+    return WriteIC(std::pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())), seed);
 }
 
 bool CWalletDB::DeleteHDSeed(const CHDSeed& seed)
 {
-    return EraseIC(std::make_pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())));
+    return EraseIC(std::pair(std::string("hdseed"), getUUIDAsString(seed.getUUID())));
 }
 
 bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)

@@ -417,10 +417,10 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 std::string key("PaymentRequest");
                 std::string value;
                 rcp.paymentRequest.SerializeToString(&value);
-                newTx->vOrderForm.push_back(pair(key, value));
+                newTx->vOrderForm.push_back(std::pair(key, value));
             }
             else if (!rcp.message.isEmpty()) // Message from normal Gulden:URI (Gulden:123...?message=example)
-                newTx->vOrderForm.push_back(pair("Message", rcp.message.toStdString()));
+                newTx->vOrderForm.push_back(std::pair("Message", rcp.message.toStdString()));
         }
 
         CReserveKeyOrScript *keyChange = transaction.getPossibleKeyChange();

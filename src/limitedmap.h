@@ -46,7 +46,7 @@ public:
                 map.erase(rmap.begin()->second);
                 rmap.erase(rmap.begin());
             }
-            rmap.insert(pair(x.second, ret.first));
+            rmap.insert(std::pair(x.second, ret.first));
         }
     }
     void erase(const key_type& k)
@@ -78,7 +78,7 @@ public:
             if (it->second == itTarget) {
                 rmap.erase(it);
                 itTarget->second = v;
-                rmap.insert(pair(v, itTarget));
+                rmap.insert(std::pair(v, itTarget));
                 return;
             }
         // Shouldn't ever get here
