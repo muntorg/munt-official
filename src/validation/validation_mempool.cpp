@@ -128,7 +128,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates
-    bool segsigEnabled = IsSegSigEnabled(chainActive.Tip()->pprev);
+    bool segsigEnabled = IsSegSigEnabled(chainActive.TipPrev());
     bool hasSegregatedSignatures = tx.HasSegregatedSignatures();
     if (segsigEnabled && !hasSegregatedSignatures)
     {

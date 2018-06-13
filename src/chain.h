@@ -587,6 +587,12 @@ public:
         return vChain.size() > 0 ? vChain[vChain.size() - 1] : NULL;
     }
 
+    /** Returns the index entry for the previout to tip of this chain, or NULL if none. */
+    CBlockIndex* TipPrev() const
+    {
+        return vChain.size() > 1 ? vChain[vChain.size() - 2] : NULL;
+    }
+
     /** Returns the index entry at a particular height in this chain, or NULL if no such height exists. */
     CBlockIndex *operator[](int nHeight) const {
         if (nHeight < 0 || nHeight >= (int)vChain.size())

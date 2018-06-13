@@ -310,7 +310,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
 
-                if (IsSegSigEnabled(chainActive.Tip()))
+                if (IsSegSigEnabled(chainActive.TipPrev()))
                 {
                     CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
@@ -328,7 +328,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             }
             else
             {
-                if (IsSegSigEnabled(chainActive.Tip()))
+                if (IsSegSigEnabled(chainActive.TipPrev()))
                 {
                     CKeyID key;
                     if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
