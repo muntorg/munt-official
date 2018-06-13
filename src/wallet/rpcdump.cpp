@@ -749,7 +749,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 }
 
 
-static UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniValue& data, const int64_t timestamp)
+UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniValue& data, const int64_t timestamp)
 {
     try {
         bool success = false;
@@ -1083,7 +1083,7 @@ static UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, cons
     }
 }
 
-static int64_t GetImportTimestamp(const UniValue& data, int64_t now)
+int64_t GetImportTimestamp(const UniValue& data, int64_t now)
 {
     if (data.exists("timestamp")) {
         const UniValue& timestamp = data["timestamp"];
