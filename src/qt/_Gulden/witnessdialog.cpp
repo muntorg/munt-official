@@ -659,6 +659,9 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
+    // If SegSig is enabled then allow possibility of witness compounding.
+    ui->compoundEarningsCheckBox->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
+
     static WitnessDialogStates cachedIndex = WitnessDialogStates::EMPTY;
     static CAccount* cachedIndexForAccount = nullptr;
 
