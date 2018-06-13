@@ -953,7 +953,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
                             {
                                 for(auto& wtxIter : pactiveWallet->mapWallet)
                                 {
-                                    wtxIter.second.clearAllCaches();
+                                    wtxIter.second.MarkDirty();
                                 }
                             }
                         }

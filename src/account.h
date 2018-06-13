@@ -209,7 +209,7 @@ protected:
     CExtKey cointypeKeyPriv;//key at m/44'/87'       - BIP44 only
     CKeyingMaterial vMasterKey;//Memory only.
 
-    bool m_readOnly;
+    bool m_readOnly=false;
 
     // Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> encryptedMnemonic;
