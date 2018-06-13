@@ -80,6 +80,8 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool s
                (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
           return false;
 
+    //fixme: (2.0) segsig
+
     return whichType != TX_NONSTANDARD;
 }
 
@@ -205,6 +207,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
     //fixme: (2.0) - Do we need to re-implement this for segsig?
+    return true;
 }
 
 CFeeRate incrementalRelayFee = CFeeRate(DEFAULT_INCREMENTAL_RELAY_FEE);

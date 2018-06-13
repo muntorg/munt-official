@@ -128,6 +128,7 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fDockOnClose", false);
         #endif
     }
+    fDockOnClose = settings.value("fDockOnClose").toBool();
 
     if (!settings.contains("fMinimizeOnClose"))
     {

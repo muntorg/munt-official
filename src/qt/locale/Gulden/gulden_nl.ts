@@ -997,6 +997,10 @@ The account will continue to be monitored and will be restored should it receive
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation type="unfinished">Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debugvenster</translation>
+    </message>
 </context>
 <context>
     <name>GuldenAmountField</name>
@@ -1098,6 +1102,18 @@ Witness weight: %5</source>
 Verwachtte verdiensten: %3 (%4 per maand)
 
 Witness gewicht: %5</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3608,6 +3624,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>%1 months</source>
         <translation type="unfinished">%1 maanden</translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

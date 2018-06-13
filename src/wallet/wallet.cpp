@@ -1002,7 +1002,7 @@ void CWallet::ClearCacheForTransaction(const uint256& hash)
     auto& wtx = mapWallet[hash];
     // Invalidate all caches for transaction as they will need to be recalculated.
     // Otherwise we get incorrect wallet balance displays.
-    wtx.clearAllCaches();
+    wtx.MarkDirty();
 }
 
 /**
@@ -1183,7 +1183,9 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             for(const CTxIn& txin : wtx.tx->vin)
             {
                 if (mapWallet.count(txin.prevout.hash))
+                {
                     mapWallet[txin.prevout.hash].MarkDirty();
+                }
             }
         }
     }

@@ -66,13 +66,11 @@ std::string GetAccountTypeString(AccountType type)
 
 CHDSeed::CHDSeed()
 : m_type(BIP44)
-, m_readOnly(false)
 {
 }
 
 CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 : m_type(type)
-, m_readOnly(false)
 {
     //fixme: (2.1) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
     unencryptedMnemonic = mnemonic;
@@ -81,7 +79,6 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 
 CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 : m_type(type)
-, encrypted(false)
 , m_readOnly(true)
 {
     unencryptedMnemonic = "";
@@ -358,9 +355,6 @@ CAccountHD::CAccountHD(CExtKey accountKey_, boost::uuids::uuid seedID, AccountTy
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
-, m_nNextChildIndex(0)
-, m_nNextChangeIndex(0)
-, encrypted(false)
 , accountKeyPriv(accountKey_)
 {
     m_Type = type;
@@ -378,9 +372,6 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
 : CAccount()
 , m_SeedID(seedID)
 , m_nIndex(accountKey_.nChild)
-, m_nNextChildIndex(0)
-, m_nNextChangeIndex(0)
-, encrypted(false)
 {
     m_Type = type;
 

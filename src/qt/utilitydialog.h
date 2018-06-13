@@ -36,17 +36,18 @@ private Q_SLOTS:
 };
 
 
-/** "Shutdown" window */
+/** Small utility window that is shown during shutdown once rest of app is hidden, so th at user can be aware that shutdown is still ongoing. */
 class ShutdownWindow : public QWidget
 {
     Q_OBJECT
-
 public:
-    ShutdownWindow(QWidget *parent=0, Qt::WindowFlags f=0);
-    static QWidget *showShutdownWindow(GUI *window);
-
+    static QWidget* showShutdownWindow(GUI* centerOnWindow);
+    static void destroyInstance();
 protected:
     void closeEvent(QCloseEvent *event);
+private:
+    ShutdownWindow(QWidget *parent=0, Qt::WindowFlags f=0);
+    static ShutdownWindow* spInstance;
 };
 
 #endif // GULDEN_QT_UTILITYDIALOG_H

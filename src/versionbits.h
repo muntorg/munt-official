@@ -30,6 +30,9 @@ enum ThresholdState {
 // A map that gives the state for blocks whose height is a multiple of Period().
 // The map is indexed by the block's parent, however, so all keys in the map
 // will either be NULL or a block with (height + 1) % Period() == 0.
+//NB! It is important that we cache on -hash- and not pointers here, as it is possible for the same identical block to have two pointers.
+//This can happen (amongst other times) due to the use of CCloneChains in PoW2 computation.
+//In which case it pollutes the cache with multiple entries per block (indeterministically) - using a hash instead prevents this.
 typedef std::map<const uint256, ThresholdState> ThresholdConditionCache;
 
 struct VBDeploymentInfo {
