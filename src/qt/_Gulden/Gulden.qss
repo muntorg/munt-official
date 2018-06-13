@@ -429,7 +429,7 @@ QTabWidget *
 }
 
 
-GUI QDialog:window QPushButton, GUI QDialog:window ClickableLabel
+GUI QDialog:window QPushButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -440,6 +440,15 @@ GUI QDialog:window QPushButton, GUI QDialog:window ClickableLabel
     padding-left: 20px;
     padding-right: 20px;
     margin-bottom: 20px;
+}
+
+GUI QDialog:window ClickableLabel
+{
+    color: TEXT_COLOR_1;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:pressed
