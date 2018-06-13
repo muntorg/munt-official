@@ -861,6 +861,27 @@ void GUI::showHelpMessageClicked()
     helpMessageDialog->show();
 }
 
+void GUI::changeEvent(QEvent *e)
+{
+    LogPrint(BCLog::QT, "GUI::changeEvent\n");
+
+    QMainWindow::changeEvent(e);
+#ifndef Q_OS_MAC // Ignored on Mac
+    if(e->type() == QEvent::WindowStateChange)
+    {
+        if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeToTray())
+        {
+            QWindowStateChangeEvent *wsevt = static_cast<QWindowStateChangeEvent*>(e);
+            if(!(wsevt->oldState() & Qt::WindowMinimized) && isMinimized())
+            {
+                QTimer::singleShot(0, this, SLOT(hide()));
+                e->ignore();
+            }
+        }
+    }
+#endif
+}
+
 #ifdef ENABLE_WALLET
 void GUI::openClicked()
 {
@@ -1217,13 +1238,17 @@ void GUI::closeEvent(QCloseEvent *event)
     event->ignore();
     if (clientModel && clientModel->getOptionsModel())
     {
-        if((clientModel->getOptionsModel()->getDockOnClose() || clientModel->getOptionsModel()->getMinimizeToTray()))
+        if((clientModel->getOptionsModel()->getDockOnClose()))
         {
+            if (rpcConsole)
+                rpcConsole->close();
             QMainWindow::hide();
             return;
         }
         else if(clientModel->getOptionsModel()->getMinimizeOnClose())
         {
+            if (rpcConsole)
+                rpcConsole->close();
             QMainWindow::showMinimized();
             return;
         }
