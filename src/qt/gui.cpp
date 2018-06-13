@@ -829,23 +829,29 @@ void GUI::showDebugWindow()
 {
     LogPrint(BCLog::QT, "GUI::showDebugWindow\n");
 
-    if (IsArgSet("-windowtitle"))
+    if (rpcConsole)
     {
-        std::string windowTitle = GetArg("-windowtitle","") + " - " + tr("Debug window").toStdString();
-        rpcConsole->setWindowTitle(windowTitle.c_str());
+        if (IsArgSet("-windowtitle"))
+        {
+            std::string windowTitle = GetArg("-windowtitle","") + " - " + tr("Debug window").toStdString();
+            rpcConsole->setWindowTitle(windowTitle.c_str());
+        }
+        rpcConsole->showNormal();
+        rpcConsole->show();
+        rpcConsole->raise();
+        rpcConsole->activateWindow();
     }
-    rpcConsole->showNormal();
-    rpcConsole->show();
-    rpcConsole->raise();
-    rpcConsole->activateWindow();
 }
 
 void GUI::showDebugWindowActivateConsole()
 {
     LogPrint(BCLog::QT, "GUI::showDebugWindowActivateConsole\n");
 
-    rpcConsole->setTabFocus(RPCConsole::TAB_CONSOLE);
-    showDebugWindow();
+    if (rpcConsole)
+    {
+        rpcConsole->setTabFocus(RPCConsole::TAB_CONSOLE);
+        showDebugWindow();
+    }
 }
 
 void GUI::showHelpMessageClicked()
@@ -1192,28 +1198,6 @@ void GUI::resizeEvent(QResizeEvent* event)
         ReceiveCoinsDialog::showCopyQRAsImagebutton = !restrictedHorizontalSpace;
 }
 
-void GUI::changeEvent(QEvent *e)
-{
-    LogPrint(BCLog::QT, "GUI::changeEvent\n");
-
-    QMainWindow::changeEvent(e);
-#ifndef Q_OS_MAC // Ignored on Mac
-    if(e->type() == QEvent::WindowStateChange)
-    {
-        if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeToTray())
-        {
-            QWindowStateChangeEvent *wsevt = static_cast<QWindowStateChangeEvent*>(e);
-            if(!(wsevt->oldState() & Qt::WindowMinimized) && isMinimized())
-            {
-                QTimer::singleShot(0, this, SLOT(hide()));
-                e->ignore();
-            }
-        }
-    }
-#endif
-}
-
-
 
 //NB! This is a bit subtle/tricky, but we want to ignore this close event when fired from the UI to prevent Qt from starting the UI shutdown.
 //The core needs to clean up various things before the UI can safely close, so we signal to the core that we are closing and then let the core signal back to us when we should actually do so.
@@ -1231,24 +1215,27 @@ void GUI::closeEvent(QCloseEvent *event)
     }
 
     event->ignore();
-    if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getDockOnClose())
+    if (clientModel && clientModel->getOptionsModel())
     {
-        QMainWindow::hide();
-        return;
-    }
-    else if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeOnClose())
-    {
-        QMainWindow::showMinimized();
-        return;
+        if((clientModel->getOptionsModel()->getDockOnClose() || clientModel->getOptionsModel()->getMinimizeToTray()))
+        {
+            QMainWindow::hide();
+            return;
+        }
+        else if(clientModel->getOptionsModel()->getMinimizeOnClose())
+        {
+            QMainWindow::showMinimized();
+            return;
+        }
     }
     userWantsToQuit();
 }
 
 void GUI::hideForClose()
 {
-    QMainWindow::hide();
     if (rpcConsole)
         rpcConsole->close();
+    QMainWindow::hide();
 }
 
 void GUI::userWantsToQuit()

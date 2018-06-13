@@ -321,6 +321,7 @@ public Q_SLOTS:
     void shutdown_InitialUINotification();
     void shutdown_CloseModels();
     void shutdown_TerminateApp();
+    void shutdown_MainWindowDestroyed();
     /// Handle runaway exceptions. Shows a message box with the problem and quits the program.
     void handleRunawayException(const QString &message);
 
@@ -393,7 +394,7 @@ void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
 {
     window = new GUI(platformStyle, networkStyle, 0);
     connect( (QObject*)window->walletFrame, SIGNAL( loadWallet() ), this, SLOT( requestInitialize() ) );
-    connect( window, SIGNAL( destroyed() ), this, SLOT( quit() ) );
+    connect( window, SIGNAL( destroyed() ), this, SLOT( shutdown_MainWindowDestroyed() ) );
 
     // Handle underline hints for button shorcuts when alt key is down.
     GuldenEventFilter* guldenEventFilter = new GuldenEventFilter(this, platformStyle, window);
@@ -443,8 +444,7 @@ void GuldenApplication::initializeResult(bool success)
             window->addWallet(GUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(GUI::DEFAULT_WALLET);
 
-            connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
-                             paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
+            connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)), paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
         }
 #endif
 
@@ -461,12 +461,9 @@ void GuldenApplication::initializeResult(bool success)
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
         // Gulden: URIs or payment requests:
-        connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
-                         window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
-        connect(window, SIGNAL(receivedURI(QString)),
-                         paymentServer, SLOT(handleURIOrFile(QString)));
-        connect(paymentServer, SIGNAL(message(QString,QString,unsigned int)),
-                         window, SLOT(message(QString,QString,unsigned int)));
+        connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)), window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
+        connect(window, SIGNAL(receivedURI(QString)), paymentServer, SLOT(handleURIOrFile(QString)));
+        connect(paymentServer, SIGNAL(message(QString,QString,unsigned int)), window, SLOT(message(QString,QString,unsigned int)));
         QTimer::singleShot(100, paymentServer, SLOT(uiReady()));
 #endif
     } else {
@@ -534,6 +531,13 @@ void GuldenApplication::shutdown_TerminateApp()
     window->coreAppIsReadyForUIToQuit=true;
     window->close();
     window = 0;
+}
+
+void GuldenApplication::shutdown_MainWindowDestroyed()
+{
+    //Close the final window (shutdown indicator) - which in turn should cause qt to destroy this app instance.
+    LogPrintf("shutdown UI: GUI exited cleanly, closing shutdown indicator\n");
+    ShutdownWindow::destroyInstance();
 }
 
 void GuldenApplication::handleRunawayException(const QString &message)
