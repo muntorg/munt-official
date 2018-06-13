@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017 The Gulden developers
+// Copyright (c) 2015-2018 The Gulden developers
 // Authored by: Frank (dt_cdog@yahoo.com) and Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -141,7 +141,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     // Prevent bad/negative block times - switch them for a fixed time.
     if (nLBTimespan <= nBadTimeLimit)
         nLBTimespan = nBadTimeReplace;
-    //fixme: (DELTA3)
+    //fixme: (Post-2.1) (DELTA3)
     //if (nLBTimespan > (nLongTimeLimit + nLongTimeStep))
         //nLBTimespan = nRetargetTimespan;
     // If last block took far too long, let difficulty drop faster
@@ -158,7 +158,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         // Prevent bad/negative block times - switch them for a fixed time.
         if (nDeltaTimespan <= nBadTimeLimit)
             nDeltaTimespan = nBadTimeReplace;
-        //fixme: (DELTA3)
+        //fixme: (Post-2.1) (DELTA3)
         //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
             //nDeltaTimespan = nRetargetTimespan;
 
@@ -183,7 +183,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
 
-            //fixme: (DELTA3)
+            //fixme: (Post-2.1) (DELTA3)
             //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
             //nDeltaTimespan = nRetargetTimespan;
 

@@ -1,10 +1,10 @@
-// Copyright (c) 2015 The Gulden developers
+// Copyright (c) 2015-2018 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_HASH_H
-#define GULDEN_HASH_H
+#ifndef GULDEN_COMMON_HASH_H
+#define GULDEN_COMMON_HASH_H
 
 #include <hash.h>
 #include <uint256.h>
