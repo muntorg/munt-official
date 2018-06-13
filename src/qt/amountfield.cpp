@@ -415,8 +415,8 @@ void GuldenAmountField::setValid(bool valid)
 void GuldenAmountField::clear()
 {
     primaryAmountDisplay->clear();
-    firstAuxAmountDisplay->setText(QString("(€\u20090.00)"));
-    //unit->setCurrentIndex(0);
+    amountGulden = amountEuro = amountLocal = 0;
+    updateAuxilaryFromData();
 }
 
 void GuldenAmountField::setEnabled(bool fEnabled)
