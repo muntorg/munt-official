@@ -65,9 +65,13 @@ public:
          Reset();
     }
 
+    std::vector<uint256> hashStore;
     VersionBitsTester& Mine(unsigned int height, int32_t nTime, int32_t nVersion) {
         while (vpblock.size() < height) {
             CBlockIndex* pindex = new CBlockIndex();
+            // Set the block up with a random hash as versionbits needs this to function correctly.
+            hashStore.emplace_back(GetRandHash());
+            pindex->phashBlock = &hashStore.back();
             pindex->nHeight = vpblock.size();
             pindex->pprev = vpblock.size() > 0 ? vpblock.back() : NULL;
             pindex->nTime = nTime;
