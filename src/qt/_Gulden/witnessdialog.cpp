@@ -728,7 +728,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             bAnyAreMine = true;
                             CTxOutPoW2Witness witnessDetails;
-                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && (witnessDetails.lockUntilBlock < chainActive.Tip()->nHeight) )
+                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && (witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight) )
                             {
                                 bAnyFinished = true;
                                 break;
