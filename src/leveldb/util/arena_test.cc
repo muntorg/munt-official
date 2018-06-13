@@ -45,7 +45,7 @@ TEST(ArenaTest, Simple) {
       r[b] = i % 256;
     }
     bytes += s;
-    allocated.push_back(std::make_pair(s, r));
+    allocated.push_back(std::pair(s, r));
     ASSERT_GE(arena.MemoryUsage(), bytes);
     if (i > N/10) {
       ASSERT_LE(arena.MemoryUsage(), bytes * 1.10);

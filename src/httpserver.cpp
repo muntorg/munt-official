@@ -316,8 +316,8 @@ static bool HTTPBindAddresses(struct evhttp* http)
 
     // Determine what addresses to bind to
     if (!IsArgSet("-rpcallowip")) { // Default to loopback if not allowing external IPs
-        endpoints.push_back(std::make_pair("::1", defaultPort));
-        endpoints.push_back(std::make_pair("127.0.0.1", defaultPort));
+        endpoints.push_back(std::pair("::1", defaultPort));
+        endpoints.push_back(std::pair("127.0.0.1", defaultPort));
         if (IsArgSet("-rpcbind")) {
             LogPrintf("WARNING: option -rpcbind was ignored because -rpcallowip was not specified, refusing to allow everyone to connect\n");
         }
@@ -326,11 +326,11 @@ static bool HTTPBindAddresses(struct evhttp* http)
             int port = defaultPort;
             std::string host;
             SplitHostPort(strRPCBind, port, host);
-            endpoints.push_back(std::make_pair(host, port));
+            endpoints.push_back(std::pair(host, port));
         }
     } else { // No specific bind address specified, bind to any
-        endpoints.push_back(std::make_pair("::", defaultPort));
-        endpoints.push_back(std::make_pair("0.0.0.0", defaultPort));
+        endpoints.push_back(std::pair("::", defaultPort));
+        endpoints.push_back(std::pair("0.0.0.0", defaultPort));
     }
 
     // Bind addresses
@@ -565,9 +565,9 @@ std::pair<bool, std::string> HTTPRequest::GetHeader(const std::string& hdr)
     assert(headers);
     const char* val = evhttp_find_header(headers, hdr.c_str());
     if (val)
-        return std::make_pair(true, val);
+        return std::pair(true, val);
     else
-        return std::make_pair(false, "");
+        return std::pair(false, "");
 }
 
 std::string HTTPRequest::ReadBody()

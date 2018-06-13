@@ -106,18 +106,18 @@ static void push_lock(void* c, const CLockLocation& locklocation, bool fTry)
 
     boost::unique_lock<boost::mutex> lock(lockdata.dd_mutex);
 
-    (*lockstack).push_back(std::make_pair(c, locklocation));
+    (*lockstack).push_back(std::pair(c, locklocation));
 
     for (const PAIRTYPE(void*, CLockLocation) & i : (*lockstack)) {
         if (i.first == c)
             break;
 
-        std::pair<void*, void*> p1 = std::make_pair(i.first, c);
+        std::pair<void*, void*> p1 = std::pair(i.first, c);
         if (lockdata.lockorders.count(p1))
             continue;
         lockdata.lockorders[p1] = (*lockstack);
 
-        std::pair<void*, void*> p2 = std::make_pair(c, i.first);
+        std::pair<void*, void*> p2 = std::pair(c, i.first);
         lockdata.invlockorders.insert(p2);
         if (lockdata.lockorders.count(p2))
             potential_deadlock_detected(p1, lockdata.lockorders[p2], lockdata.lockorders[p1]);
@@ -163,16 +163,16 @@ void DeleteLock(void* cs)
         return;
     }
     boost::unique_lock<boost::mutex> lock(lockdata.dd_mutex);
-    std::pair<void*, void*> item = std::make_pair(cs, (void*)0);
+    std::pair<void*, void*> item = std::pair(cs, (void*)0);
     LockOrders::iterator it = lockdata.lockorders.lower_bound(item);
     while (it != lockdata.lockorders.end() && it->first.first == cs) {
-        std::pair<void*, void*> invitem = std::make_pair(it->first.second, it->first.first);
+        std::pair<void*, void*> invitem = std::pair(it->first.second, it->first.first);
         lockdata.invlockorders.erase(invitem);
         lockdata.lockorders.erase(it++);
     }
     InvLockOrders::iterator invit = lockdata.invlockorders.lower_bound(item);
     while (invit != lockdata.invlockorders.end() && invit->first == cs) {
-        std::pair<void*, void*> invinvitem = std::make_pair(invit->second, invit->first);
+        std::pair<void*, void*> invinvitem = std::pair(invit->second, invit->first);
         lockdata.lockorders.erase(invinvitem);
         lockdata.invlockorders.erase(invit++);
     }

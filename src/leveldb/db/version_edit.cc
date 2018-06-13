@@ -165,7 +165,7 @@ Status VersionEdit::DecodeFrom(const Slice& src) {
       case kCompactPointer:
         if (GetLevel(&input, &level) &&
             GetInternalKey(&input, &key)) {
-          compact_pointers_.push_back(std::make_pair(level, key));
+          compact_pointers_.push_back(std::pair(level, key));
         } else {
           msg = "compaction pointer";
         }
@@ -174,7 +174,7 @@ Status VersionEdit::DecodeFrom(const Slice& src) {
       case kDeletedFile:
         if (GetLevel(&input, &level) &&
             GetVarint64(&input, &number)) {
-          deleted_files_.insert(std::make_pair(level, number));
+          deleted_files_.insert(std::pair(level, number));
         } else {
           msg = "deleted file";
         }
@@ -186,7 +186,7 @@ Status VersionEdit::DecodeFrom(const Slice& src) {
             GetVarint64(&input, &f.file_size) &&
             GetInternalKey(&input, &f.smallest) &&
             GetInternalKey(&input, &f.largest)) {
-          new_files_.push_back(std::make_pair(level, f));
+          new_files_.push_back(std::pair(level, f));
         } else {
           msg = "new-file entry";
         }

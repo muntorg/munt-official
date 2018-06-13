@@ -522,7 +522,7 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
             }
         }
     }
-    networkWeightCache.insert(blockHash, std::make_pair(nNumWitnessAddresses, nTotalWeight));
+    networkWeightCache.insert(blockHash, std::pair(nNumWitnessAddresses, nTotalWeight));
     return true;
 }
 

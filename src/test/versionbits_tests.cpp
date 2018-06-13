@@ -70,7 +70,7 @@ public:
         while (vpblock.size() < height) {
             CBlockIndex* pindex = new CBlockIndex();
             // Set the block up with a random hash as versionbits needs this to function correctly.
-            auto insertIter = tempBlockIndex.insert(std::make_pair(GetRandHash(), pindex)).first;
+            auto insertIter = tempBlockIndex.insert(std::pair(GetRandHash(), pindex)).first;
             pindex->phashBlock = &((*insertIter).first);
             pindex->nHeight = vpblock.size();
             pindex->pprev = vpblock.size() > 0 ? vpblock.back() : NULL;

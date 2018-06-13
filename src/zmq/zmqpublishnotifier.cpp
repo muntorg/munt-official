@@ -92,7 +92,7 @@ bool CZMQAbstractPublishNotifier::Initialize(void *pcontext)
         }
 
         // register this notifier for the address, so it can be reused for other publish notifier
-        mapPublishNotifiers.insert(std::make_pair(address, this));
+        mapPublishNotifiers.insert(std::pair(address, this));
         return true;
     }
     else
@@ -100,7 +100,7 @@ bool CZMQAbstractPublishNotifier::Initialize(void *pcontext)
         LogPrint(BCLog::ZMQ, "zmq: Reusing socket for address %s\n", address);
 
         psocket = i->second->psocket;
-        mapPublishNotifiers.insert(std::make_pair(address, this));
+        mapPublishNotifiers.insert(std::pair(address, this));
 
         return true;
     }
