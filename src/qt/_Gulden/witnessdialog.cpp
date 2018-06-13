@@ -111,14 +111,15 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->setupUi(this);
 
     // Set correct cursor for all clickable UI elements.
-    ui->unitButton->setCursor( Qt::PointingHandCursor );
-    ui->viewWitnessGraphButton->setCursor( Qt::PointingHandCursor );
-    ui->renewWitnessButton->setCursor( Qt::PointingHandCursor );
-    ui->emptyWitnessButton->setCursor( Qt::PointingHandCursor );
-    ui->emptyWitnessButton2->setCursor( Qt::PointingHandCursor );
-    ui->withdrawEarningsButton->setCursor( Qt::PointingHandCursor );
-    ui->withdrawEarningsButton2->setCursor( Qt::PointingHandCursor );
-    ui->fundWitnessButton->setCursor( Qt::PointingHandCursor );
+    ui->unitButton->setCursor(Qt::PointingHandCursor);
+    ui->viewWitnessGraphButton->setCursor(Qt::PointingHandCursor);
+    ui->renewWitnessButton->setCursor(Qt::PointingHandCursor);
+    ui->emptyWitnessButton->setCursor(Qt::PointingHandCursor);
+    ui->emptyWitnessButton2->setCursor(Qt::PointingHandCursor);
+    ui->withdrawEarningsButton->setCursor(Qt::PointingHandCursor);
+    ui->withdrawEarningsButton2->setCursor(Qt::PointingHandCursor);
+    ui->fundWitnessButton->setCursor(Qt::PointingHandCursor);
+    ui->compoundEarningsCheckBox->setCursor(Qt::PointingHandCursor);
 
     // Force qwt graph back to normal cursor instead of cross hair.
     ui->witnessEarningsPlot->canvas()->setCursor(Qt::ArrowCursor);

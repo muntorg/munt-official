@@ -934,7 +934,7 @@ OptionsDialog QSpinBox
     height: 34px;
     color: TEXT_COLOR_1;
     margin: 0px;
-    padding: 0px;   
+    padding: 0px;
     margin-bottom: 18px;
     margin-right: 20px;
 }
@@ -947,6 +947,16 @@ OptionsDialog QSpinBox
 #labelNetworkWeight, #labelWeight, #labelLockedFrom, #labelLockedUntil, #labelLastEarningsDate, #labelLockTimeRemaining, #labelExpectedEarningsDuration, #labelEstimatedEarningsDuration , #labelLockDuration, #labelWitnessEarnings
 {
     color: #000;
+}
+
+#compoundEarningsCheckBox
+{
+    margin: 0px;
+    padding: 0px;
+    height:20px;
+    font-size: MINOR_LABEL_FONT_SIZE;
+    color: #000;
+    qproperty-cursor: hand;
 }
 
 QToolTip
@@ -1101,6 +1111,7 @@ QToolTip
     margin-top: 35px;
     margin-bottom: 10px;
 }
+
 
 #witnessEarningsGraphHeader
 {

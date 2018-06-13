@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>870</width>
-    <height>578</height>
+    <width>996</width>
+    <height>579</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,7 +48,7 @@
        <item>
         <widget class="QStackedWidget" name="witnessDialogStackedWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="emptyAccountPage">
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -151,14 +151,44 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QLabel" name="witnessEarningsGraphHeader">
-                 <property name="text">
-                  <string>Projected earnings graph</string>
-                 </property>
-                 <property name="indent">
+                <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1,0">
+                 <property name="spacing">
                   <number>0</number>
                  </property>
-                </widget>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="witnessEarningsGraphHeader">
+                   <property name="text">
+                    <string>Projected earnings graph</string>
+                   </property>
+                   <property name="indent">
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="compoundEarningsCheckBox">
+                   <property name="text">
+                    <string>Compound earnings</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
                 <widget class="QwtPlot" name="witnessEarningsPlot" native="true"/>
@@ -433,6 +463,33 @@
                 <number>0</number>
                </property>
               </widget>
+             </item>
+             <item row="1" column="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="compoundEarningsCheckBoxLabel">
+                 <property name="text">
+                  <string>Compound earnings</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
