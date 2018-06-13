@@ -222,10 +222,12 @@ public:
     void MarkDirty()
     {
         fChangeCached = false;
+        nChangeCached = 0;
         debitCached.clear();
         creditCached.clear();
         immatureCreditCached.clear();
         availableCreditCached.clear();
+        availableCreditCachedIncludingLockedWitnesses.clear();
         watchDebitCached.clear();
         watchCreditCached.clear();
         immatureWatchCreditCached.clear();
