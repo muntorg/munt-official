@@ -11,6 +11,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+static std::map<uint256, CBlockIndex*> tempBlockIndex;
+
 /* Define a virtual block time, one block per 10 minutes after Nov 14 2014, 0:55:36am */
 int32_t TestTime(int nHeight) { return 1415926536 + 600 * nHeight; }
 
@@ -33,7 +35,6 @@ public:
 };
 
 #define CHECKERS 6
-static std::vector<uint256> hashStore;
 class VersionBitsTester
 {
     // A fake blockchain
@@ -69,8 +70,8 @@ public:
         while (vpblock.size() < height) {
             CBlockIndex* pindex = new CBlockIndex();
             // Set the block up with a random hash as versionbits needs this to function correctly.
-            hashStore.emplace_back(GetRandHash());
-            pindex->phashBlock = &hashStore.back();
+            auto insertIter = tempBlockIndex.insert(std::make_pair(GetRandHash(), pindex)).first;
+            pindex->phashBlock = &((*insertIter).first);
             pindex->nHeight = vpblock.size();
             pindex->pprev = vpblock.size() > 0 ? vpblock.back() : NULL;
             pindex->nTime = nTime;
