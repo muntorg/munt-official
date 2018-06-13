@@ -653,7 +653,6 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
 CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive)
 {
-
     assert(state != AccountState::ShadowChild);
     assert(state != AccountState::Deleted);
     CAccountHD* newAccount = NULL;
@@ -706,6 +705,15 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
     // Write new account
     //NB! We have to do this -after- we create the new shadow account, otherwise the shadow account ends up being the active account.
     addAccount(newAccount, strAccount, bMakeActive);
+
+    if (subType == AccountType::PoW2Witness)
+    {
+        newAccount->SetWarningState(AccountStatus::WitnessEmpty);
+    }
+    else
+    {
+        newAccount->SetWarningState(AccountStatus::Default);
+    }
 
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (2.1) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
