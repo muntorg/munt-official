@@ -1610,7 +1610,77 @@ static UniValue getwitnessgeneration(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
-static UniValue getwitnessaccountkey(const JSONRPCRequest& request)
+static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getwitnessaccountkeys \"account\" \n"
+            "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
+            "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaddress\", this will include all of them \n"
+            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
+            "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
+            "\nIf you believe your key is or may have been compromised use \"changekeyforwitnessaddress\" to rotate to a new witness key.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getwitnessaccountkeys", "")
+            + HelpExampleRpc("getwitnessaccountkeys", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    //fixme: (2.0) - Also for "WitOnly"
+    if (!forAccount->m_Type == PoW2Witness)
+        throw std::runtime_error("Can only be used on a witness account.");
+
+    if (!chainActive.Tip())
+        throw std::runtime_error("Wait for chain to synchronise before using command.");
+
+    if (!IsPow2WitnessingActive(chainActive.Tip(), Params(), chainActive, nullptr))
+        throw std::runtime_error("Wait for witnessing to activate before using this command.");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::string witnessAccountKeys = "";
+    for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
+    {
+        CTxOutPoW2Witness witnessDetails;
+        GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
+        if (forAccount->HaveKey(witnessDetails.witnessKeyID))
+        {
+            CKey witnessPrivKey;
+            if (!forAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
+            {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+            }
+            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString();
+            witnessAccountKeys += ":";
+        }
+    }
+    if (witnessAccountKeys.empty())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Witness account has no active keys.");
+
+    witnessAccountKeys.pop_back();
+    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+    return witnessAccountKeys;
+}
+
+static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
     return NullUniValue;
@@ -1640,7 +1710,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {} },
     { "witness",                 "setwitnessgeneration",            &setwitnessgeneration,           true,    {} },
     { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
-    { "accounts",                "getwitnessaccountkey",            &getwitnessaccountkey,           true,    {} },
+    { "accounts",                "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
+    { "accounts",                "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
     { "accounts",                "importwitnessaccountkey",         &importwitnessaccountkey,        true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"startheight", "count"} },

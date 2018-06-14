@@ -20,6 +20,7 @@ CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assi
 CMDFLAG - Add a new -disableui flag to start with just a RPC console (and wallet); Useful for some types of debugging.
 RPC - New command 'createwitnessaccount' as a convenience call to 'createaccount witness' used to create an account for witnessing.
 RPC - New command 'fundwitnessaccount' used to lock funds into a witness account that has previously been created.
+RPC - New command 'getwitnessaccountkeys' for exporting of witness keys to other wallets/devices.
 RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
 RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
 RPC - New command 'listunspentforaccount' as account specific counterpart for listunspent.
