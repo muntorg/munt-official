@@ -1666,7 +1666,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             CKey witnessPrivKey;
             if (!forAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
             {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness account.");
             }
             witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString();
             witnessAccountKeys += ":";
@@ -1682,8 +1682,58 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
 
 static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
 {
-    //fixme: (2.0) implement
-    return NullUniValue;
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getwitnessaddresskeys \"address\" \n"
+            "\nGet the witness key of an HD aaddress, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
+            "1. \"address\"        (required) The Gulden address for the witness key.\n"
+            "\nResult:\n"
+            "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
+            "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
+            "\nIf you believe your key is or may have been compromised use \"changekeyforwitnessaddress\" to rotate to a new witness key.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getwitnessaddresskeys", "")
+            + HelpExampleRpc("getwitnessaddresskeys", ""));
+
+    CGuldenAddress forAddress(request.params[0].get_str());
+    bool isValid = forAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    std::string witnessAccountKeys = "";
+    for (const auto& [accountUUID, forAccount] : pwallet->mapAccounts)
+    {
+        CPoW2WitnessDestination dest = boost::get<CPoW2WitnessDestination>(forAddress.Get());
+        if (forAccount->HaveKey(dest.witnessKey))
+        {
+            CKey witnessPrivKey;
+            if (!forAccount->GetKey(dest.witnessKey, witnessPrivKey))
+            {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness address.");
+            }
+            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString();
+            break;
+        }
+    }
+    if (witnessAccountKeys.empty())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Witness account has no active keys.");
+
+    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+    return witnessAccountKeys;
 }
 
 static UniValue importwitnessaccountkey(const JSONRPCRequest& request)

@@ -270,13 +270,19 @@ bool CGuldenAddress::IsValid() const
 
 bool CGuldenAddress::IsValid(const CChainParams& params) const
 {
-    if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
+    if (IsValidWitness(params))
         return true;
 
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = vchVersion == params.Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
                          vchVersion == params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
     return fCorrectSize && fKnownVersion;
+}
+
+bool CGuldenAddress::IsValidWitness(const CChainParams& params) const
+{
+    if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
+        return true;
 }
 
 bool CGuldenAddress::IsValidBitcoin() const
