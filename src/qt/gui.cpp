@@ -131,10 +131,12 @@ static void addFontFromResource(QString sFontResourceName)
     }
 }
 
-GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
+GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidget *parent)
 : QMainWindow(parent)
 , platformStyle(_platformStyle)
+, networkStyle(networkStyle_)
 {
+
     // Delete ourselves on close, application catches this and uses it as a signal to exit.
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -182,25 +184,18 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
 
     GUIUtil::restoreWindowGeometry("nWindow", QSize(960, 620), this);
 
-    QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
     enableWallet = WalletModel::isWalletEnabled();
 #endif // ENABLE_WALLET
-    if(enableWallet)
-    {
-        windowTitle += tr("Wallet");
-    } else {
-        windowTitle += tr("Node");
-    }
     enableFullUI = !GetBoolArg("-disableui", false);
-    windowTitle += " " + networkStyle->getTitleAddText();
+
 #ifndef Q_OS_MAC
     QApplication::setWindowIcon(networkStyle->getTrayAndWindowIcon());
     setWindowIcon(networkStyle->getTrayAndWindowIcon());
 #else
     MacDockIconHandler::instance()->setIcon(networkStyle->getAppIcon());
 #endif
-    setWindowTitle(IsArgSet("-windowtitle")?QString::fromStdString(GetArg("-windowtitle", "")):windowTitle);
+    updateWindowTitle();
 
 #if defined(Q_OS_MAC) && QT_VERSION < 0x050000
     // This property is not implemented in Qt 5. Setting it has no effect.
@@ -241,7 +236,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
     createToolBars();
 
     // Create system tray icon and notification
-    createTrayIcon(networkStyle);
+    createTrayIcon();
 
     // Create status bar
     statusBar();
@@ -737,7 +732,7 @@ void GUI::setWalletActionsEnabled(bool enabled)
     openAction->setEnabled(enabled);
 }
 
-void GUI::createTrayIcon(const NetworkStyle *networkStyle)
+void GUI::createTrayIcon()
 {
     LogPrint(BCLog::QT, "GUI::createTrayIcon\n");
 
@@ -1003,9 +998,42 @@ void GUI::updateHeadersSyncProgressLabel(int current, int total)
         progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 * current / total, 'f', 1)));
 }
 
+void GUI::updateWindowTitle()
+{
+    QString windowTitle;
+
+    if (IsArgSet("-windowtitle"))
+    {
+        windowTitle = QString::fromStdString(GetArg("-windowtitle", ""));
+    }
+    else
+    {
+        windowTitle = tr(PACKAGE_NAME) + " - ";
+        if(enableWallet)
+        {
+            windowTitle += tr("Wallet");
+        }
+        else
+        {
+            windowTitle += tr("Node");
+        }
+    }
+
+    windowTitle += " " + networkStyle->getTitleAddText();
+
+
+    if (IsArgSet("-testnet"))
+        windowTitle += QString(" Blocks[%1]").arg(chainActive.Tip() ? chainActive.Tip()->nHeight : 0);
+
+    setWindowTitle(windowTitle);
+}
+
 void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
+
+    if (IsArgSet("-testnet"))
+        updateWindowTitle();
 
     if (!clientModel)
         return;
