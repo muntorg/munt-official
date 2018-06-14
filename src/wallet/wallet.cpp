@@ -2230,7 +2230,7 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 
 void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
-    //fixme: (2.0) - Allow defaultmining account to be seperately selected?
+    //fixme: (2.0) - Allow default mining account to be seperately selected?
     std::shared_ptr<CReserveKeyOrScript> rKey;
     if (forAccount)
     {

@@ -1562,25 +1562,55 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
-static UniValue splitwitnessaccount(const JSONRPCRequest& request)
+static UniValue splitwitnessaddress(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
     return NullUniValue;
 }
 
-static UniValue mergewitnessaccount(const JSONRPCRequest& request)
+static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
     return NullUniValue;
 }
 
-static UniValue setwitnesscompounding(const JSONRPCRequest& request)
+static UniValue setwitnesscompound(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
     return NullUniValue;
 }
 
-static UniValue getwitnesscompounding(const JSONRPCRequest& request)
+static UniValue setwitnessscript(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue getwitnesscompound(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue setwitnessgeneration(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue getwitnessgeneration(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue getwitnessaccountkey(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue importwitnessaccountkey(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
     return NullUniValue;
@@ -1588,42 +1618,46 @@ static UniValue getwitnesscompounding(const JSONRPCRequest& request)
 
 
 static const CRPCCommand commands[] =
-{ //  category              name                      actor (function)         okSafeMode
-  //  --------------------- ------------------------  -----------------------  ----------
-    { "mining",             "gethashps",              &gethashps,              true,    {} },
-    { "mining",             "sethashlimit",           &sethashlimit,           true,    {"limit"} },
+{ //  category                   name                               actor (function)                 okSafeMode
+  //  ---------------------      ------------------------           -----------------------          ----------
+    { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
+    { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
 
-    { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {"blockspecifier", "verbose"} },
-    { "witness",            "createwitnessaccount",   &createwitnessaccount,   true,    {"name"} },
-    { "witness",            "fundwitnessaccount",     &fundwitnessaccount,     true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
+    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"blockspecifier", "verbose"} },
+    { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
+    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
 
-    { "witness",            "splitwitnessaccount",    &splitwitnessaccount,    true,    {"amount"} },
-    { "witness",            "mergewitnessaccount",    &mergewitnessaccount,    true,    {"amount"} },
-    { "witness",            "setwitnesscompounding",  &setwitnesscompounding,  true,    {"amount"} },
-    { "witness",            "getwitnesscompounding",  &getwitnesscompounding,  true,    {} },
+    { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {} },
+    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {} },
+    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {} },
+    { "witness",                 "setwitnessgeneration",            &setwitnessgeneration,           true,    {} },
+    { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
+    { "accounts",                "getwitnessaccountkey",            &getwitnessaccountkey,           true,    {} },
+    { "accounts",                "importwitnessaccountkey",         &importwitnessaccountkey,        true,    {} },
 
-    { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
-    { "developer",          "dumptransactionstats",   &dumptransactionstats,   true,    {"startheight", "count"} },
-    { "developer",          "dumpdiffarray",          &dumpdiffarray,          true,    {"height"} },
+    { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"startheight", "count"} },
+    { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"startheight", "count"} },
+    { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
 
-    { "accounts",           "changeaccountname",      &changeaccountname,      true,    {"account", "name"} },
-    { "accounts",           "createaccount",          &createaccount,          true,    {"name", "type"} },
-    { "accounts",           "deleteaccount",          &deleteaccount,          true,    {"accout", "force"} },
-    { "accounts",           "getactiveaccount",       &getactiveaccount,       true,    {} },
-    { "accounts",           "getreadonlyaccount",     &getreadonlyaccount,     true,    {"account"} },
-    { "accounts",           "importreadonlyaccount",  &importreadonlyaccount,  true,    {"name", "encodedkey"} },
-    { "accounts",           "listaccounts",           &listallaccounts,        true,    {"seed", "state"} },
-    { "accounts",           "setactiveaccount",       &setactiveaccount,       true,    {"account"} },
-    { "accounts",           "getaccountbalances",     &getaccountbalances,     false,   {"minconf","include_watchonly"} },
+    { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
+    { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
+    { "accounts",                "deleteaccount",                   &deleteaccount,                  true,    {"accout", "force"} },
+    { "accounts",                "getactiveaccount",                &getactiveaccount,               true,    {} },
+    { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
+    { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encodedkey"} },
+    { "accounts",                "listaccounts",                    &listallaccounts,                true,    {"seed", "state"} },
+    { "accounts",                "setactiveaccount",                &setactiveaccount,               true,    {"account"} },
+    { "accounts",                "getaccountbalances",              &getaccountbalances,             false,   {"minconf","include_watchonly"} },
 
-    { "mnemonics",          "createseed",             &createseed,             true,    {"type"} },
-    { "mnemonics",          "deleteseed",             &deleteseed,             true,    {"seed"} },
-    { "mnemonics",          "getactiveseed",          &getactiveseed,          true,    {} },
-    { "mnemonics",          "getmnemonicfromseed",    &getmnemonicfromseed,    true,    {"seed"} },
-    { "mnemonics",          "getreadonlyseed",        &getreadonlyseed,        true,    {"seed"} },
-    { "mnemonics",          "setactiveseed",          &setactiveseed,          true,    {"seed"} },
-    { "mnemonics",          "importseed",             &importseed,             true,    {"mnemonic or enckey", "type", "read only"} },
-    { "mnemonics",          "listseeds",              &listseeds,              true,    {} },
+    { "mnemonics",               "createseed",                      &createseed,                     true,    {"type"} },
+    { "mnemonics",               "deleteseed",                      &deleteseed,                     true,    {"seed"} },
+    { "mnemonics",               "getactiveseed",                   &getactiveseed,                  true,    {} },
+    { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
+    { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
+    { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
+    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic or enckey", "type", "read only"} },
+    { "mnemonics",               "listseeds",                       &listseeds,                      true,    {} },
 };
 
 void RegisterGuldenRPCCommands(CRPCTable &t)
