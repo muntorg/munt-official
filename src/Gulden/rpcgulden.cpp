@@ -1562,6 +1562,12 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
+static UniValue changekeyforwitnessaddress(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
 static UniValue splitwitnessaddress(const JSONRPCRequest& request)
 {
     //fixme: (2.0) implement
@@ -1627,6 +1633,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
     { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
 
+    { "witness",                 "changekeyforwitnessaddress",      &changekeyforwitnessaddress,     true,    {} },
     { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {} },
