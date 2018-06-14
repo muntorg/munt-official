@@ -971,6 +971,21 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     }
 }
 
+bool CAccount::isCompoundingEnabled() const
+{
+    return shouldCompoundEarnings;
+}
+
+void CAccount::setCompoundingEnabled(bool shouldCompoundEarnings_, CWalletDB* Db)
+{
+    shouldCompoundEarnings = shouldCompoundEarnings_;
+    if (Db)
+    {
+        Db->EraseAccountCompoundingSettings(getUUIDAsString(getUUID()));
+        Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), shouldCompoundEarnings);
+    }
+}
+
 boost::uuids::uuid CAccount::getUUID() const
 {
     return accountUUID;

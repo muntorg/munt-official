@@ -219,6 +219,16 @@ bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
     return EraseIC(std::pair(std::string("acclabel"), strUUID));
 }
 
+bool CWalletDB::WriteAccountCompoundingSettings(const std::string& strUUID, const bool shouldCompound)
+{
+    return WriteIC(std::pair(std::string("acc_compound"), strUUID), shouldCompound);
+}
+
+bool CWalletDB::EraseAccountCompoundingSettings(const std::string& strUUID)
+{
+    return EraseIC(std::pair(std::string("acc_compound"), strUUID));
+}
+
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
 {
     if (account->IsHD())
@@ -695,6 +705,20 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             pwallet->mapAccountLabels[getUUIDFromString(strAccountUUID)] = strAccountLabel;
         }
+        else if (strType == "acc_compound")
+        {
+            std::string accountUUID;
+            bool shouldCompound;
+
+            ssKey >> accountUUID;
+            ssValue >> shouldCompound;
+
+            auto findIter = pwallet->mapAccounts.find(getUUIDFromString(accountUUID));
+            if (findIter != pwallet->mapAccounts.end())
+            {
+                findIter->second->setCompoundingEnabled(shouldCompound, nullptr);
+            }
+        }
     } catch (...)
     {
         return false;
@@ -832,7 +856,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 }
 
                 pwallet->activeAccount = new CAccount();
-                pwallet->activeAccount->setLabel("Legacy", NULL);
+                pwallet->activeAccount->setLabel("Legacy", nullptr);
                 pwallet->mapAccounts[pwallet->activeAccount->getUUID()] = pwallet->activeAccount;
                 pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] = "Legacy";
             }
@@ -903,7 +927,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
             }
             else
             {
-                pwallet->mapAccounts[labelPair.first]->setLabel(labelPair.second, NULL);
+                pwallet->mapAccounts[labelPair.first]->setLabel(labelPair.second, nullptr);
             }
         }
     if (!primarySeedString.empty())

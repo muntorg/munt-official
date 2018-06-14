@@ -312,16 +312,21 @@ public:
     void AddChild(CAccount* childAccount);
 
     unsigned int GetKeyPoolSize();
+
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
+
+    bool isCompoundingEnabled() const;
+    void setCompoundingEnabled(bool shouldCompoundEarnings_, CWalletDB* Db);
+
+    AccountStatus GetWarningState() { return nWarningState; };
+    void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
+
     boost::uuids::uuid getUUID() const;
     void setUUID(const std::string& stringUUID);
     boost::uuids::uuid getParentUUID() const;
 
     bool IsReadOnly() { return m_readOnly; };
-
-    AccountStatus GetWarningState() { return nWarningState; };
-    void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
 
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
@@ -339,6 +344,7 @@ protected:
     boost::uuids::uuid accountUUID;
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
+    bool shouldCompoundEarnings = false;
     uint64_t earliestPossibleCreationTime;
 
     bool m_readOnly = false;
