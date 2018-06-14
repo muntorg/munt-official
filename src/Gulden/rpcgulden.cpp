@@ -1562,6 +1562,30 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
+static UniValue splitwitnessaccount(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue mergewitnessaccount(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue setwitnesscompounding(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
+static UniValue getwitnesscompounding(const JSONRPCRequest& request)
+{
+    //fixme: (2.0) implement
+    return NullUniValue;
+}
+
 
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
@@ -1572,6 +1596,11 @@ static const CRPCCommand commands[] =
     { "witness",            "getwitnessinfo",         &getwitnessinfo,         true,    {"blockspecifier", "verbose"} },
     { "witness",            "createwitnessaccount",   &createwitnessaccount,   true,    {"name"} },
     { "witness",            "fundwitnessaccount",     &fundwitnessaccount,     true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
+
+    { "witness",            "splitwitnessaccount",    &splitwitnessaccount,    true,    {"amount"} },
+    { "witness",            "mergewitnessaccount",    &mergewitnessaccount,    true,    {"amount"} },
+    { "witness",            "setwitnesscompounding",  &setwitnesscompounding,  true,    {"amount"} },
+    { "witness",            "getwitnesscompounding",  &getwitnesscompounding,  true,    {} },
 
     { "developer",          "dumpblockgaps",          &dumpblockgaps,          true,    {"startheight", "count"} },
     { "developer",          "dumptransactionstats",   &dumptransactionstats,   true,    {"startheight", "count"} },
