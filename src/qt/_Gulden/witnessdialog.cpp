@@ -268,14 +268,15 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     unitSelectionMenu->addAction(unitWeeksAction);
     unitSelectionMenu->addAction(unitMonthsAction);
 
-    connect(ui->unitButton, SIGNAL( clicked() ), this, SLOT( unitButtonClicked() ) );
-    connect(ui->viewWitnessGraphButton, SIGNAL( clicked() ), this, SLOT( viewWitnessInfoClicked() ) );
-    connect(ui->emptyWitnessButton,  SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
-    connect(ui->emptyWitnessButton2, SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
-    connect(ui->withdrawEarningsButton,  SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
-    connect(ui->withdrawEarningsButton2, SIGNAL( clicked() ), this, SLOT( emptyWitnessClicked() ) );
-    connect(ui->fundWitnessButton,   SIGNAL( clicked() ), this, SLOT( fundWitnessClicked() ) );
-    connect(ui->renewWitnessButton,  SIGNAL( clicked() ), this, SLOT( renewWitnessClicked() ) );
+    connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
+    connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
+    connect(ui->emptyWitnessButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
+    connect(ui->emptyWitnessButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
+    connect(ui->withdrawEarningsButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
+    connect(ui->withdrawEarningsButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
+    connect(ui->fundWitnessButton, SIGNAL(clicked()), this, SLOT(fundWitnessClicked()));
+    connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
+    connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
@@ -338,6 +339,20 @@ void WitnessDialog::renewWitnessClicked()
             funderAccount = pactiveWallet->mapAccounts[accountUUID];
         }
         Q_EMIT requestRenewWitness(funderAccount);
+    }
+}
+
+void WitnessDialog::compoundEarningsCheckboxClicked()
+{
+    LogPrint(BCLog::QT, "WitnessDialog::compundEarningsCheckboxClicked\n");
+
+    CAccount* forAccount = model->getActiveAccount();
+    if (forAccount)
+    {
+        LOCK(pactiveWallet->cs_wallet);
+
+        CWalletDB db(*pactiveWallet->dbw);
+        forAccount->setCompoundingEnabled(ui->compoundEarningsCheckBox->isChecked(), &db);
     }
 }
 
@@ -698,6 +713,8 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         {
             if ( forAccount->IsPoW2Witness() )
             {
+                ui->compoundEarningsCheckBox->setChecked(forAccount->isCompoundingEnabled());
+
                 uint64_t nTotalNetworkWeight = 0;
                 bool bAnyExpired = false;
                 bool bAnyFinished = false;

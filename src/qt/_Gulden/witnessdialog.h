@@ -75,6 +75,7 @@ public Q_SLOTS:
     void plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip);
     void update();
     void numBlocksChanged(int,QDateTime,double,bool);
+    void compoundEarningsCheckboxClicked();
     void unitButtonClicked();
     void viewWitnessInfoClicked();
     void emptyWitnessClicked();
