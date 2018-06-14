@@ -1220,7 +1220,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 if (output.out.nValue > 0)
                     nValIn += output.out.nValue;
             }
-            //fixme: (2.0) (HIGH) don't increment nSubsidyWitness but only add it for below check - we must not allow fees to be compounded.
+
             nSubsidyWitness += nFeesPoW2Witness;
             if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitness)
             {
