@@ -971,7 +971,7 @@ static UniValue getreadonlyaccount(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getreadonlyaccount \"account\" \n"
             "\nGet the public key of an HD account, this can be used to import the account as a read only account in another wallet.\n"
-            "1. \"account\"        (required) The unique UUID or label for the account or \"\" for the active account.\n"
+            "1. \"account\"        (required) The unique UUID or label for the account .\n"
             "\nResult:\n"
             "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
             "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
