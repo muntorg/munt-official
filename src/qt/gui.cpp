@@ -663,7 +663,7 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    //fixme: (2.0) This can be removed
+    //fixme: (2.1) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
     if (clientModel)
         clientModel->updatePoW2Display();
@@ -698,6 +698,12 @@ bool GUI::setCurrentWallet(const QString& name)
     connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestFundWitness(CAccount*)), this, SLOT(requestFundWitness(CAccount*)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
     connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestRenewWitness(CAccount*)), this, SLOT(requestRenewWitness(CAccount*)) );
     connect( walletFrame->currentWalletView()->sendCoinsPage, SIGNAL(notifyPaymentAccepted()), this, SLOT(handlePaymentAccepted()) );
+
+    // Update various widgets that require a wallet with their initial state.
+    if (accountSummaryWidget)
+        accountSummaryWidget->setActiveAccount(pactiveWallet->getActiveAccount());
+    // Force receive coins dialog to update with an address.
+    updateAccount(pactiveWallet->getActiveAccount());
 
     return ret;
 }
