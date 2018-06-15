@@ -43,17 +43,19 @@ class CKeyMetadata;
 
 enum AccountState
 {
-    Normal = 0,        // Standard account (or HD account)
-    Shadow = 1,        // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
-    ShadowChild = 2,   // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
-    Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
+    Normal = 0,                      // Standard account (or HD account)
+    Shadow = 1,                      // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
+    ShadowChild = 2,                 // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
+    Deleted = 3                      // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
 
 enum AccountType
 {
-    Desktop = 0,       // Standard desktop account.
-    Mobi = 1,          // Mobile phone. (Android, iOS)
-    PoW2Witness = 2    // PoW2 witness account.
+    Desktop = 0,                     // Standard desktop account.
+    Mobi = 1,                        // Mobile phone. (Android, iOS)
+    PoW2Witness = 2,                 // PoW2 witness account.
+    WitnessOnlyWitnessAccount = 3,   // non-HD witness account without spending keys only witness keys.
+    ImportedPrivateKey = 4,          // non-HD account contains one or more imported private keys.
 };
 
 std::string GetAccountStateString(AccountState state);
