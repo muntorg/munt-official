@@ -254,26 +254,33 @@ void CWallet::importPrivKey(const CKey& privKey)
     CPubKey pubkey = privKey.GetPubKey();
     assert(privKey.VerifyPubKey(pubkey));
 
-    CKeyID vchAddress = pubkey.GetID();
+    CKeyID importKeyID = pubkey.GetID();
 
     //Don't import an address that is already in wallet.
-    if (pactiveWallet->HaveKey(vchAddress))
+    if (pactiveWallet->HaveKey(importKeyID))
     {
         uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Wallet already contains key."), CClientUIInterface::MSG_ERROR);
         return;
     }
 
     CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(_("Imported legacy"));
-    pactiveWallet->MarkDirty();
-    pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
+    importPrivKeyIntoAccount(pAccount, pubkey, privKey, importKeyID, 1);
+}
 
-    if (!pactiveWallet->AddKeyPubKey(privKey, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
+void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& pubkey, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
+{
+    assert(!targetAccount->IsHD());
+
+    pactiveWallet->MarkDirty();
+    pactiveWallet->mapKeyMetadata[importKeyID].nCreateTime = 1;
+
+    if (!pactiveWallet->AddKeyPubKey(privKey, pubkey, *targetAccount, KEYCHAIN_EXTERNAL))
     {
         uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR);
         return;
     }
 
-    // Whenever a key is imported, we need to scan the whole chain - do so now
-    pactiveWallet->nTimeFirstKey = 1;
+    // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
+    pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
     boost::thread t(rescanThread); // thread runs free
 }

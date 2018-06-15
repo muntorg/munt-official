@@ -58,7 +58,7 @@ public:
 
     //Members that are shared with CWallet.
     mutable CCriticalSection cs_wallet;
-    int64_t nTimeFirstKey;
+    uint64_t nTimeFirstKey = 0;
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
@@ -250,6 +250,7 @@ public:
 
     virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
     virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
+    virtual CAccount* CreateWitnessOnlyWitnessAccount(std::string strAccount, SecureString encPrivWitnessKey);
     virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     virtual void setActiveAccount(CAccount* newActiveAccount);
