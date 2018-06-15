@@ -1023,7 +1023,7 @@ void GUI::updateWindowTitle()
 
 
     if (IsArgSet("-testnet"))
-        windowTitle += QString(" Blocks[%1]").arg(chainActive.Tip() ? chainActive.Tip()->nHeight : 0);
+        windowTitle += QString(" (Current chain tip - %1)").arg(chainActive.Tip() ? chainActive.Tip()->nHeight : 0);
 
     setWindowTitle(windowTitle);
 }
