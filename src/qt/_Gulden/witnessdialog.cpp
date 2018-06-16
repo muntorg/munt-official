@@ -981,6 +981,7 @@ void WitnessDialog::updateAccountIndicators()
                         {
                             newState = AccountStatus::WitnessExpired;
 
+                            //fixme: (2.1) I think this is only needed for (ended) accounts - and not expired ones? Double check
                             // Due to lock changing cached balance for certain transactions will now be invalidated.
                             // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
                             if (prevState != AccountStatus::WitnessExpired)
@@ -988,6 +989,21 @@ void WitnessDialog::updateAccountIndicators()
                                 for(auto& wtxIter : pactiveWallet->mapWallet)
                                 {
                                     wtxIter.second.MarkDirty();
+                                }
+                            }
+
+                            // If it has pending transactions then it gets the pending flag instead.
+                            filter->setAccountFilter(account);
+                            int rows = filter->rowCount();
+                            for (int row = 0; row < rows; ++row)
+                            {
+                                QModelIndex index = filter->index(row, 0);
+
+                                int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
+                                if (nStatus == TransactionStatus::Status::Unconfirmed)
+                                {
+                                    newState = AccountStatus::WitnessPending;
+                                    break;
                                 }
                             }
                         }
@@ -1013,6 +1029,15 @@ void WitnessDialog::updateAccountIndicators()
                         // If it has no balance but does have previous transactions then it is probably a "finished" withness account.
                         if (nStatus == TransactionStatus::Status::Confirmed)
                         {
+                            // Due to lock changing cached balance for certain transactions will now be invalidated.
+                            // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
+                            if (prevState != AccountStatus::WitnessEnded)
+                            {
+                                for(auto& wtxIter : pactiveWallet->mapWallet)
+                                {
+                                    wtxIter.second.MarkDirty();
+                                }
+                            }
                             newState = AccountStatus::WitnessEnded;
                             break;
                         }
