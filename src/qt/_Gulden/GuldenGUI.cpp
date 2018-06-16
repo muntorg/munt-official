@@ -1047,7 +1047,7 @@ static QString getAccountLabel(CAccount* account)
     {
         accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf10b"); // Mobile phone
     }
-    else if (account->m_Type == ImportedPrivateKey)
+    else if (account->m_Type == ImportedPrivateKeyAccount)
     {
         accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf084");
     }

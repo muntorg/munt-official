@@ -92,7 +92,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
         if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
         {
             //Never generate keys for these two account types.
-            if (account->m_Type == WitnessOnlyWitnessAccount || account->m_Type == ImportedPrivateKey)
+            if (account->m_Type == WitnessOnlyWitnessAccount || account->m_Type == ImportedPrivateKeyAccount)
                 continue;
 
             for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -145,7 +145,7 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         CWalletDB walletdb(*dbw);
 
         nIndex = *(keyPool.begin());
-        if (!forAccount->m_Type == WitnessOnlyWitnessAccount)
+        if (!(forAccount->m_Type == WitnessOnlyWitnessAccount))
         {
             keyPool.erase(keyPool.begin());
         }
@@ -197,7 +197,7 @@ bool CWallet::GetKeyFromPool(CPubKey& result, CAccount* forAccount, int64_t keyC
         ReserveKeyFromKeyPool(nIndex, keypool, forAccount, keyChain);
         if (nIndex == -1 )
         {
-            if (forAccount->m_Type != WitnessOnlyWitnessAccount && forAccount->m_Type != ImportedPrivateKey)
+            if (forAccount->m_Type != WitnessOnlyWitnessAccount && forAccount->m_Type != ImportedPrivateKeyAccount)
             {
                 if (IsLocked()) return false;
                 result = GenerateNewKey(*forAccount, keyChain);

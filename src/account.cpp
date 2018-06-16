@@ -59,6 +59,10 @@ std::string GetAccountTypeString(AccountType type)
             return "Mobile";
         case PoW2Witness:
             return "Witness";
+        case WitnessOnlyWitnessAccount:
+            return "Witness-only witness";
+        case ImportedPrivateKeyAccount:
+            return "Imported private key";
     }
     return "Regular";
 }
@@ -649,7 +653,7 @@ CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int ke
 {
     if (m_Type == WitnessOnlyWitnessAccount)
         throw std::runtime_error("GenerateNewKey called on a \"witness only\" witness account - this is invalid");
-    if (m_Type == ImportedPrivateKey)
+    if (m_Type == ImportedPrivateKeyAccount)
         throw std::runtime_error("GenerateNewKey called on a \"imported privatekey\" account - this is invalid");
 
     CKey secret;

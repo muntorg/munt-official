@@ -55,7 +55,7 @@ enum AccountType
     Mobi = 1,                        // Mobile phone. (Android, iOS)
     PoW2Witness = 2,                 // PoW2 witness account.
     WitnessOnlyWitnessAccount = 3,   // non-HD witness account without spending keys only witness keys.
-    ImportedPrivateKey = 4,          // non-HD account contains one or more imported private keys.
+    ImportedPrivateKeyAccount = 4,   // non-HD account contains one or more imported private keys.
 };
 
 std::string GetAccountStateString(AccountState state);
@@ -236,9 +236,18 @@ public:
     //fixme: (2.1) (CLEANUP)
     virtual void GetKey([[maybe_unused]] CExtKey& childKey, [[maybe_unused]] int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
+
+    //! Account uses hierarchial deterministic key generation and not legacy (random) key generation.
     virtual bool IsHD() const {return false;};
+
+    //! Account is of the mobile type (linkable via qr)
     virtual bool IsMobi() const {return m_Type == Mobi;}
+
+    //! Account is capable of performing witness operations.
     virtual bool IsPoW2Witness() const { return m_Type == PoW2Witness || m_Type == WitnessOnlyWitnessAccount; }
+
+    //! Account has a fixed keypool that should not remove the keys on use.
+    virtual bool IsFixedKeypool() const { return m_Type == WitnessOnlyWitnessAccount || m_Type == ImportedPrivateKeyAccount; }
 
     ADD_SERIALIZE_METHODS;
 
