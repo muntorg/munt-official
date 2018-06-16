@@ -225,41 +225,37 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         {
             bool fEligible = false;
             {
-                const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
-                auto findIter = std::lower_bound(witInfo.witnessSelectionPoolFiltered.begin(), witInfo.witnessSelectionPoolFiltered.end(), findItem);
-                while (findIter != witInfo.witnessSelectionPoolFiltered.end())
+                auto poolIter = witInfo.witnessSelectionPoolFiltered.begin();
+                while (poolIter != witInfo.witnessSelectionPoolFiltered.end())
                 {
-                    if (findIter->outpoint == iter.first)
+                    if (poolIter->outpoint == iter.first)
                     {
-                        if (findIter->coin.out == iter.second.out)
+                        if (poolIter->coin.out == iter.second.out)
                         {
                             fEligible = true;
                             break;
                         }
-                        ++findIter;
                     }
-                    else break;
+                    ++poolIter;
                 }
             }
             bool fExpired = false;
             {
-                const RouletteItem findItem = RouletteItem(iter.first, iter.second, 0, 0);
-                auto findIter = std::lower_bound(witInfo.witnessSelectionPoolUnfiltered.begin(), witInfo.witnessSelectionPoolUnfiltered.end(), findItem);
-                while (findIter != witInfo.witnessSelectionPoolUnfiltered.end())
+                auto poolIter = witInfo.witnessSelectionPoolUnfiltered.begin();
+                while (poolIter != witInfo.witnessSelectionPoolUnfiltered.end())
                 {
-                    if (findIter->outpoint == iter.first)
+                    if (poolIter->outpoint == iter.first)
                     {
-                        if (findIter->coin.out == iter.second.out)
+                        if (poolIter->coin.out == iter.second.out)
                         {
-                            if (witnessHasExpired(findIter->nAge, findIter->nWeight, witInfo.nTotalWeight))
+                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeight))
                             {
                                 fExpired = true;
                             }
                             break;
                         }
-                        ++findIter;
                     }
-                    else break;
+                    ++poolIter;
                 }
             }
 
@@ -275,24 +271,28 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
             CAmount nValue = iter.second.out.nValue;
 
+            bool fLockPeriodExpired = nLockUntilBlock < pTipIndex_->nHeight;
+
             UniValue rec(UniValue::VOBJ);
+            rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
             rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
+            rec.push_back(Pair("age", nAge));
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
             rec.push_back(Pair("weight", nRawWeight));
-            rec.push_back(Pair("eligible_to_witness", fEligible));
-            rec.push_back(Pair("expired", fExpired));
             rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
+            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));
-            rec.push_back(Pair("age", nAge));
             rec.push_back(Pair("lock_from_block", nLockFromBlock));
             rec.push_back(Pair("lock_until_block", nLockUntilBlock));
             rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+            rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
+            rec.push_back(Pair("eligible_to_witness", fEligible));
+            rec.push_back(Pair("expired_from_inactivity", fExpired));
             #ifdef ENABLE_WALLET
             rec.push_back(Pair("ismine_accountname", accountNameForAddress(*pwallet, address)));
             #else
             rec.push_back(Pair("ismine_accountname", ""));
             #endif
-            rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
 
             witnessWeightStats(nRawWeight);
             lockPeriodWeightStats(nLockPeriodInBlocks);
