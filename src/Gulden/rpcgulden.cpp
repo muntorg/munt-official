@@ -1642,8 +1642,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
-    //fixme: (2.0) - Also for "WitOnly"
-    if (!forAccount->m_Type == PoW2Witness)
+    if (!forAccount->IsPoW2Witness())
         throw std::runtime_error("Can only be used on a witness account.");
 
     if (!chainActive.Tip())
@@ -1661,6 +1660,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
     std::string witnessAccountKeys = "";
     for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
     {
+        (unused)witnessOutPoint;
         CTxOutPoW2Witness witnessDetails;
         GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
         if (forAccount->HaveKey(witnessDetails.witnessKeyID))
@@ -1720,6 +1720,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
     std::string witnessAccountKeys = "";
     for (const auto& [accountUUID, forAccount] : pwallet->mapAccounts)
     {
+        (unused)accountUUID;
         CPoW2WitnessDestination dest = boost::get<CPoW2WitnessDestination>(forAddress.Get());
         if (forAccount->HaveKey(dest.witnessKey))
         {
