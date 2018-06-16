@@ -171,8 +171,11 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
         // Ask for passphrase if needed
         connect(_walletModel, SIGNAL(requireUnlock()), this, SLOT(unlockWallet()));
 
-        if (witnessDialogPage)
-            witnessDialogPage->updateAccountIndicators();
+        if (chainActive.Tip() && chainActive.TipPrev())
+        {
+            if (witnessDialogPage)
+                witnessDialogPage->updateAccountIndicators();
+        }
     }
 }
 
