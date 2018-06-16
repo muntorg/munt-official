@@ -67,6 +67,8 @@ public:
 
     void plotGraphForAccount(CAccount* account, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip);
 
+    void updateAccountIndicators();
+
 Q_SIGNALS:
     void requestEmptyWitness();
     void requestFundWitness(CAccount* funderAccount);

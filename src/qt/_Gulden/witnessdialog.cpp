@@ -901,9 +901,9 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
 }
 
-void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
+void WitnessDialog::updateAccountIndicators()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged\n");
+    LogPrint(BCLog::QT, "WitnessDialog::updateAccountIndicators\n");
 
     if(!filter || !model)
         return;
@@ -925,7 +925,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
 
     //Update account states to the latest block
     //fixme: (2.1) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
-    //However - we would have to update account serialization to serialist the warning state and/or test some things before removing this.
+    //However - we would have to update account serialization to serialise the warning state and/or test some things before removing this.
     {
         LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
 
@@ -1018,6 +1018,14 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
             }
         }
     }
+}
+
+void WitnessDialog::numBlocksChanged(int,QDateTime,double,bool)
+{
+    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged\n");
+
+    //Update account state indicators for the latest block
+    updateAccountIndicators();
 
     // Update graph and witness info for current account to latest block.
     doUpdate(false);
