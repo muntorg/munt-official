@@ -808,6 +808,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
     if (!witnessAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
+    if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
+        throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
@@ -1013,7 +1015,7 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
             "importreadonlyaccount \"name\" \"encodedkey\" \n"
             "\nImport a read only account from an \"encodedkey\" which has been obtained by using \"getreadonlyaccount\"\n"
             "1. \"name\"       (string) Name to assign to the new account.\n"
-            "1. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
+            "2. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new account.\n"
             "\nExamples:\n"
@@ -1668,7 +1670,8 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness account.");
             }
-            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString();
+            //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             witnessAccountKeys += ":";
         }
     }
@@ -1725,7 +1728,8 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness address.");
             }
-            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString();
+            //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             break;
         }
     }
@@ -1736,10 +1740,40 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
     return witnessAccountKeys;
 }
 
-static UniValue importwitnessaccountkey(const JSONRPCRequest& request)
+static UniValue importwitnessaccountkeys(const JSONRPCRequest& request)
 {
-    //fixme: (2.0) implement
-    return NullUniValue;
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "importwitnessaccountkeys \"name\" \"encodedkey\" \n"
+            "\nCreate a new witness account with keys imported from an \"encodedkey\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
+            "1. \"name\"       (string) name/label of the new account.\n"
+            "2. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
+            "\nResult:\n"
+            "\nReturn the UUID of the new account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("importwitnessaccountkeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", "")
+            + HelpExampleRpc("importwitnessaccountkeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", ""));
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    CAccount* account = pwallet->CreateWitnessOnlyWitnessAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
+
+    if (!account)
+        throw std::runtime_error("Unable to create account.");
+
+    //NB! No need to trigger a rescan CreateWitnessOnlyWitnessAccount already did this.
+
+    return getUUIDAsString(account->getUUID());
 }
 
 
@@ -1762,7 +1796,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
     { "accounts",                "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
     { "accounts",                "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
-    { "accounts",                "importwitnessaccountkey",         &importwitnessaccountkey,        true,    {} },
+    { "accounts",                "importwitnessaccountkeys",        &importwitnessaccountkeys,       true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"startheight", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"startheight", "count"} },
