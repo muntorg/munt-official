@@ -1059,10 +1059,10 @@ static QString getAccountLabel(CAccount* account)
         switch (account->GetWarningState())
         {
             case AccountStatus::WitnessEmpty: break;
-            case AccountStatus::WitnessPending: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf251");
-            case AccountStatus::WitnessExpired: accountNamePrefixIndicatorQualifier += colourSpan("#c97676", GUIUtil::fontAwesomeSolid("\uf12a"));
-            case AccountStatus::WitnessEnded: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf11e");
-            default: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf023");
+            case AccountStatus::Default: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf023"); break; // Lock
+            case AccountStatus::WitnessPending: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf251"); break; // Hourglass
+            case AccountStatus::WitnessExpired: accountNamePrefixIndicatorQualifier += colourSpan("#c97676", GUIUtil::fontAwesomeSolid("\uf12a")); break; // Exclamation
+            case AccountStatus::WitnessEnded: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf11e"); break; // Checkered flag
         }
     }
     else if (!account->IsHD())
