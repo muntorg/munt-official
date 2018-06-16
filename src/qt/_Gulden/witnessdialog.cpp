@@ -490,14 +490,18 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
                     for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
                     {
-                        //fixme: (2.0) Handle multiple in one tx. Check ismine. Handle none (regular transaction)
-                        if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
+                        //fixme: (2.1) Handle multiple in one tx. Handle regular transactions that may have somehow been sent to the account.
+                        if (IsMine(*forAccount, walletTxIter->second.tx->vout[i]))
                         {
-                            break;
+                            if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
+                            {
+                                uint64_t nFakeLockFrom = 0;
+                                nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], nOriginBlock, nFakeLockFrom, witnessDetails.lockUntilBlock);
+                                nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
+                                break;
+                            }
                         }
                     }
-                    nOriginLength = witnessDetails.lockUntilBlock - (witnessDetails.lockFromBlock > 0 ? witnessDetails.lockFromBlock : nOriginBlock);
-                    nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
                 }
             }
             else if (nType == TransactionRecord::GeneratedWitness)
@@ -593,7 +597,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
 
     // Update all the info labels with values calculated above.
-    uint64_t nLockBlocksRemaining = witnessDetails.lockUntilBlock <= (uint64_t)chainActive.Tip()->nHeight ? 0 : witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight;
+    uint64_t nLockBlocksRemaining = witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight ? 0 : (witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight) + 1;
     ui->labelWeightValue->setText(nOurWeight<=0 ? tr("n/a") : QString::number(nOurWeight));
     ui->labelLockedFromValue->setText(originDate.isNull() ? tr("n/a") : originDate.toString("dd/MM/yy hh:mm"));
     if (!chainActive.Tip())
@@ -751,7 +755,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             bAnyAreMine = true;
                             CTxOutPoW2Witness witnessDetails;
-                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && (witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight) )
+                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && IsPoW2WitnessLocked(witnessDetails, chainActive.Tip()->nHeight) )
                             {
                                 bAnyFinished = true;
                             }
@@ -963,7 +967,7 @@ void WitnessDialog::updateAccountIndicators()
                         bAnyAreMine = true;
                         CTxOutPoW2Witness details;
                         GetPow2WitnessOutput(witCoin.coin.out, details);
-                        if (details.lockUntilBlock < (unsigned int)chainActive.Tip()->nHeight)
+                        if (!IsPoW2WitnessLocked(details, chainActive.Tip()->nHeight))
                         {
                             newState = AccountStatus::WitnessEnded;
                             bAnyFinished = true;
