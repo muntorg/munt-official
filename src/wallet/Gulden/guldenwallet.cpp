@@ -775,7 +775,7 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
     {
         CPubKey pubWitnessKey = privateWitnessKey.GetPubKey();
         CKeyID witnessKeyID = pubWitnessKey.GetID();
-        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(newAccount, pubWitnessKey, privateWitnessKey, witnessKeyID, 1);
+        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(newAccount, pubWitnessKey, privateWitnessKey, witnessKeyID, nKeyBirthDate);
     }
 
     // Write new account
