@@ -495,8 +495,8 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                         {
                             if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
                             {
-                                uint64_t nFakeLockFrom = 0;
-                                nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], nOriginBlock, nFakeLockFrom, witnessDetails.lockUntilBlock);
+                                uint64_t nUnused1, nUnused2;
+                                nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], nOriginBlock, nUnused1, nUnused2);
                                 nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
                                 break;
                             }
