@@ -238,7 +238,7 @@ public:
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
     virtual bool IsHD() const {return false;};
     virtual bool IsMobi() const {return m_Type == Mobi;}
-    virtual bool IsPoW2Witness() const {return m_Type == PoW2Witness;}
+    virtual bool IsPoW2Witness() const { return m_Type == PoW2Witness || m_Type == WitnessOnlyWitnessAccount; }
 
     ADD_SERIALIZE_METHODS;
 
