@@ -91,6 +91,10 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
         auto& account = accountPair.second;
         if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
         {
+            //Never generate keys for these two account types.
+            if (account->m_Type == WitnessOnlyWitnessAccount || account->m_Type == ImportedPrivateKey)
+                continue;
+
             for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
             {
                 auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
@@ -188,11 +192,14 @@ bool CWallet::GetKeyFromPool(CPubKey& result, CAccount* forAccount, int64_t keyC
         LOCK(cs_wallet);
         int64_t nIndex = 0;
         ReserveKeyFromKeyPool(nIndex, keypool, forAccount, keyChain);
-        if (nIndex == -1)
+        if (nIndex == -1 )
         {
-            if (IsLocked()) return false;
-            result = GenerateNewKey(*forAccount, keyChain);
-            return true;
+            if (forAccount->m_Type != WitnessOnlyWitnessAccount && forAccount->m_Type != ImportedPrivateKey)
+            {
+                if (IsLocked()) return false;
+                result = GenerateNewKey(*forAccount, keyChain);
+                return true;
+            }
         }
         KeepKey(nIndex);
         result = keypool.vchPubKey;
