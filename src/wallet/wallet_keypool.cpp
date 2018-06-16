@@ -145,7 +145,10 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         CWalletDB walletdb(*dbw);
 
         nIndex = *(keyPool.begin());
-        keyPool.erase(keyPool.begin());
+        if (!forAccount->m_Type == WitnessOnlyWitnessAccount)
+        {
+            keyPool.erase(keyPool.begin());
+        }
         if (!walletdb.ReadPool(nIndex, keypoolentry))
             throw std::runtime_error(std::string(__func__) + ": read failed");
         if (!forAccount->HaveKey(keypoolentry.vchPubKey.GetID()))
@@ -274,7 +277,7 @@ void CWallet::importPrivKey(const CKey& privKey)
     importPrivKeyIntoAccount(pAccount, pubkey, privKey, importKeyID, 1);
 }
 
-void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey)
+void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
 {
     assert(!forAccount->IsHD());
 
@@ -293,7 +296,12 @@ void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey)
         }
     }
 
-    if (!walletdb.WritePool( ++nIndex, CKeyPool(privKey.GetPubKey(), getUUIDAsString(forAccount->getUUID()), KEYCHAIN_EXTERNAL ) ) )
+    //fixme: (2.1) Add some key metadata here as well?
+
+    CPubKey pubKeyToInsert = privKeyToInsert.GetPubKey();
+    if (!AddKeyPubKey(privKeyToInsert, pubKeyToInsert, *forAccount, KEYCHAIN_EXTERNAL))
+        throw std::runtime_error("forceKeyIntoKeypool: AddKeyPubKey failed");
+    if (!walletdb.WritePool( ++nIndex, CKeyPool(pubKeyToInsert, getUUIDAsString(forAccount->getUUID()), KEYCHAIN_EXTERNAL ) ) )
         throw std::runtime_error(std::string(__func__) + ": writing imported key failed");
     forAccount->setKeyPoolExternal.insert(nIndex);
     LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
@@ -305,12 +313,6 @@ void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& p
 
     pactiveWallet->MarkDirty();
     pactiveWallet->mapKeyMetadata[importKeyID].nCreateTime = 1;
-
-    if (!pactiveWallet->AddKeyPubKey(privKey, pubkey, *targetAccount, KEYCHAIN_EXTERNAL))
-    {
-        uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR);
-        return;
-    }
 
     // Force key into the keypool
     forceKeyIntoKeypool(targetAccount, privKey);
