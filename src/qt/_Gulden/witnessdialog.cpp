@@ -597,7 +597,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
 
     // Update all the info labels with values calculated above.
-    uint64_t nLockBlocksRemaining = witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight ? 0 : (witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight) + 1;
+    uint64_t nLockBlocksRemaining = (witnessDetails.lockUntilBlock < (uint64_t)chainActive.Tip()->nHeight) ? 0 : (witnessDetails.lockUntilBlock - chainActive.Tip()->nHeight) + 1;
     ui->labelWeightValue->setText(nOurWeight<=0 ? tr("n/a") : QString::number(nOurWeight));
     ui->labelLockedFromValue->setText(originDate.isNull() ? tr("n/a") : originDate.toString("dd/MM/yy hh:mm"));
     if (!chainActive.Tip())
