@@ -644,6 +644,7 @@ public:
     void importPrivKey(const SecureString& sKey);
     void importPrivKey(const CKey& privKey);
     void importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& pubkey, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);
+    void forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey);
 
     /** 
      * Increment the next transaction order id

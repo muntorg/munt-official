@@ -159,7 +159,7 @@ void CWallet::KeepKey(int64_t nIndex)
 {
     // Remove from key pool
     CWalletDB walletdb(*dbw);
-        walletdb.ErasePool(this, nIndex);
+    walletdb.ErasePool(this, nIndex);
     LogPrintf("keypool keep %d\n", nIndex);
 }
 
@@ -274,6 +274,31 @@ void CWallet::importPrivKey(const CKey& privKey)
     importPrivKeyIntoAccount(pAccount, pubkey, privKey, importKeyID, 1);
 }
 
+void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey)
+{
+    assert(!forAccount->IsHD());
+
+    LOCK(cs_wallet);
+    CWalletDB walletdb(*dbw);
+
+    //Find current unique highest key index across *all* keypools.
+    int64_t nIndex = 1;
+    for (auto accountPair : mapAccounts)
+    {
+        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        {
+            auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
+            if (!keyPool.empty())
+                nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
+        }
+    }
+
+    if (!walletdb.WritePool( ++nIndex, CKeyPool(privKey.GetPubKey(), getUUIDAsString(forAccount->getUUID()), KEYCHAIN_EXTERNAL ) ) )
+        throw std::runtime_error(std::string(__func__) + ": writing imported key failed");
+    forAccount->setKeyPoolExternal.insert(nIndex);
+    LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
+}
+
 void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& pubkey, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
 {
     assert(!targetAccount->IsHD());
@@ -286,6 +311,9 @@ void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& p
         uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR);
         return;
     }
+
+    // Force key into the keypool
+    forceKeyIntoKeypool(targetAccount, privKey);
 
     // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
     pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
