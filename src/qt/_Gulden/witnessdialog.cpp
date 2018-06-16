@@ -679,6 +679,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
+    static CAccount* cachedForAccount = nullptr;
     // If SegSig is enabled then allow possibility of witness compounding.
     ui->compoundEarningsCheckBox->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
 
@@ -716,7 +717,14 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         CAccount* forAccount = model->getActiveAccount();
         if (forAccount)
         {
-            if ( forAccount->IsPoW2Witness() )
+            static CAccount* cachedForAccount = nullptr;
+            static uint256 cachedHashTip;
+            static AccountStatus cachedWarningState = AccountStatus::Default;
+            if ( !forAccount->IsPoW2Witness() )
+            {
+                cachedForAccount = forAccount;
+            }
+            else
             {
                 ui->compoundEarningsCheckBox->setChecked(forAccount->isCompoundingEnabled());
 
@@ -727,10 +735,6 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                 bool bAnyAreMine = false;
                 if (chainActive.Tip() && chainActive.Tip()->pprev)
                 {
-                    static CAccount* cachedForAccount = nullptr;
-                    static uint256 cachedHashTip;
-                    static AccountStatus cachedWarningState = AccountStatus::Default;
-
                     // Prevent same update being called repeatedly for same account/tip (can happen in some event sequences)
                     if (!forceUpdate && cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
                         return;
