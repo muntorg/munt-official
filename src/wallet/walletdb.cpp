@@ -181,12 +181,11 @@ bool CWalletDB::WritePool(int64_t nPool, const CKeyPool& keypool)
 
 bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 {
-    //fixme: (2.1) - Handle this in a way thats a bit more transparent to the rest of the code - this is a bit of hidden/gross behaviour that authors of other code will not expect.
+    // If account uses a fixed keypool then never remove keys from it.
     for (auto iter : pwallet->mapAccounts)
     {
-        if ((iter.second->m_Type == WitnessOnlyWitnessAccount) && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()) && (iter.second->setKeyPoolExternal.size() == 1))
+        if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
         {
-            // Refuse to erase last key in pool of WitnessOnly accounts as we need it for earnings payout.
             return true;
         }
     }
@@ -197,13 +196,14 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
 {
     int64_t keyIndex = staticPoolCache[id];
-    //fixme: (2.1) - Handle this in a way thats a bit more transparent to the rest of the code - this is a bit of hidden/gross behaviour that authors of other code will not expect.
+    // If account uses a fixed keypool then never remove keys from it.
+    bool allowErase = true;
     for (auto iter : pwallet->mapAccounts)
     {
-        if ((iter.second->m_Type == WitnessOnlyWitnessAccount) && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()) && (iter.second->setKeyPoolExternal.size() == 1))
+        if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()))
         {
-            // Refuse to erase last key in pool of WitnessOnly accounts as we need it for earnings payout.
-            return true;
+            allowErase = false;
+            break;
         }
     }
 
@@ -211,11 +211,18 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
-        iter.second->setKeyPoolExternal.erase(keyIndex);
-        iter.second->setKeyPoolInternal.erase(keyIndex);
+        if (!iter.second->IsFixedKeyPool())
+        {
+            iter.second->setKeyPoolExternal.erase(keyIndex);
+            iter.second->setKeyPoolInternal.erase(keyIndex);
+        }
     }
+
     //Remove from disk
-    return EraseIC(std::pair(std::string("pool"), staticPoolCache[id]));
+    if (allowErase)
+        return EraseIC(std::pair(std::string("pool"), staticPoolCache[id]));
+    else
+        return true;
 }
 
 bool CWalletDB::HasPool(CWallet* pwallet, const CKeyID& id)

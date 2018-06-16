@@ -247,7 +247,7 @@ public:
     virtual bool IsPoW2Witness() const { return m_Type == PoW2Witness || m_Type == WitnessOnlyWitnessAccount; }
 
     //! Account has a fixed keypool that should not remove the keys on use.
-    virtual bool IsFixedKeypool() const { return m_Type == WitnessOnlyWitnessAccount || m_Type == ImportedPrivateKeyAccount; }
+    virtual bool IsFixedKeyPool() const { return m_Type == WitnessOnlyWitnessAccount || m_Type == ImportedPrivateKeyAccount; }
 
     ADD_SERIALIZE_METHODS;
 

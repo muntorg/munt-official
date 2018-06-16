@@ -651,10 +651,8 @@ void CAccount::SetNull()
 
 CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
 {
-    if (m_Type == WitnessOnlyWitnessAccount)
-        throw std::runtime_error("GenerateNewKey called on a \"witness only\" witness account - this is invalid");
-    if (m_Type == ImportedPrivateKeyAccount)
-        throw std::runtime_error("GenerateNewKey called on a \"imported privatekey\" account - this is invalid");
+    if (IsFixedKeyPool())
+        throw std::runtime_error(strprintf("GenerateNewKey called on a \"%sy\" witness account - this is invalid", GetAccountTypeString(m_Type).c_str()));
 
     CKey secret;
     secret.MakeNewKey(true);
