@@ -186,11 +186,21 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool)
 
 bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id)
 {
+    int64_t keyIndex = staticPoolCache[id];
+    //fixme: (2.1) - Handle this in a way thats a bit more transparent to the rest of the code - this is a bit of hidden/gross behaviour that authors of other code will not expect.
+    for (auto iter : pwallet->mapAccounts)
+    {
+        if ((iter.second->m_Type == WitnessOnlyWitnessAccount) && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()) && (iter.second->setKeyPoolExternal.size() == 1))
+        {
+            // Refuse to erase last key in pool of WitnessOnly accounts as we need it for earnings payout.
+            return true;
+        }
+    }
+
     //fixme: (Post-2.1) (CBSU)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
-        int64_t keyIndex = staticPoolCache[id];
         iter.second->setKeyPoolExternal.erase(keyIndex);
         iter.second->setKeyPoolInternal.erase(keyIndex);
     }
