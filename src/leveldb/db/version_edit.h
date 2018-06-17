@@ -53,7 +53,7 @@ class VersionEdit {
     last_sequence_ = seq;
   }
   void SetCompactPointer(int level, const InternalKey& key) {
-    compact_pointers_.push_back(std::make_pair(level, key));
+    compact_pointers_.push_back(std::pair(level, key));
   }
 
   // Add the specified file at the specified number.
@@ -68,12 +68,12 @@ class VersionEdit {
     f.file_size = file_size;
     f.smallest = smallest;
     f.largest = largest;
-    new_files_.push_back(std::make_pair(level, f));
+    new_files_.push_back(std::pair(level, f));
   }
 
   // Delete the specified "file" from the specified "level".
   void DeleteFile(int level, uint64_t file) {
-    deleted_files_.insert(std::make_pair(level, file));
+    deleted_files_.insert(std::pair(level, file));
   }
 
   void EncodeTo(std::string* dst) const;

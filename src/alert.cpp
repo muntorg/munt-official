@@ -238,7 +238,7 @@ bool CAlert::ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThre
         }
 
         // Add to mapAlerts
-        mapAlerts.insert(std::make_pair(GetHash(), *this));
+        mapAlerts.insert(std::pair(GetHash(), *this));
         // Notify UI and -alertnotify if it applies to me
         if(AppliesToMe())
         {

@@ -122,7 +122,7 @@ public:
                 if (!cursor->GetValue(outCoin))
                     throw std::runtime_error("Error fetching record from witness cache.");
 
-                allCoins.emplace(std::make_pair(outPoint, outCoin));
+                allCoins.emplace(std::pair(outPoint, outCoin));
 
                 cursor->Next();
             }

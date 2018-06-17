@@ -286,7 +286,9 @@ public:
     /// Create options model
     void createOptionsModel(bool resetSettings);
     /// Create main window
-    void createWindow(const NetworkStyle *networkStyle);
+    void createWindow();
+    /// Create the "network style" object to handle styling differences between mainnet/testnet etc.
+    void createNetworkStyle(QString networkIDString);
 
     #ifdef LOG_ALL_QT_EVENTS
     bool logEvents = false;
@@ -336,6 +338,7 @@ private:
     WalletModel *walletModel = nullptr;
 #endif
     const GuldenProxyStyle* platformStyle = nullptr;
+    NetworkStyle* networkStyle = nullptr;
     QWidget* shutdownWindow = nullptr;
 
     // GULDEN - rescan code needs this to tell if we try shut down midway through a rescan.
@@ -368,6 +371,11 @@ GuldenApplication::~GuldenApplication()
 {
     window = nullptr;
     platformStyle = nullptr;
+    if (networkStyle)
+    {
+        delete networkStyle;
+        networkStyle =nullptr;
+    }
     shutdownWindow = nullptr;
 
     #ifdef ENABLE_WALLET
@@ -390,7 +398,7 @@ void GuldenApplication::createOptionsModel(bool resetSettings)
     optionsModel = new OptionsModel(NULL, resetSettings);
 }
 
-void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
+void GuldenApplication::createWindow()
 {
     window = new GUI(platformStyle, networkStyle, 0);
     connect( (QObject*)window->walletFrame, SIGNAL( loadWallet() ), this, SLOT( requestInitialize() ) );
@@ -402,6 +410,15 @@ void GuldenApplication::createWindow(const NetworkStyle *networkStyle)
     installEventFilter(guldenEventFilter);
 
     window->show();
+}
+
+void GuldenApplication::createNetworkStyle(QString networkIDString)
+{
+    networkStyle = const_cast<NetworkStyle*>(NetworkStyle::instantiate(networkIDString));
+    assert(networkStyle);
+
+    // Allow for separate UI settings for testnets
+    setApplicationName(IsArgSet("-windowtitle") ? QString::fromStdString(GetArg("-windowtitle", "")) : networkStyle->getAppName());
 }
 
 void GuldenApplication::parameterSetup()
@@ -669,10 +686,8 @@ int main(int argc, char *argv[])
     PaymentServer::ipcParseCommandLine(argc, argv);
 #endif
 
-    QScopedPointer<const NetworkStyle> networkStyle(NetworkStyle::instantiate(QString::fromStdString(Params().NetworkIDString())));
-    assert(!networkStyle.isNull());
-    // Allow for separate UI settings for testnets
-    QApplication::setApplicationName(IsArgSet("-windowtitle") ? QString::fromStdString(GetArg("-windowtitle", "")) : networkStyle->getAppName());
+    app->createNetworkStyle(QString::fromStdString(Params().NetworkIDString()));
+
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
@@ -736,7 +751,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        app->createWindow(networkStyle.data());
+        app->createWindow();
         #if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
         WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app->getMainWinId());
         #endif

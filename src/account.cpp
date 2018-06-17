@@ -59,6 +59,10 @@ std::string GetAccountTypeString(AccountType type)
             return "Mobile";
         case PoW2Witness:
             return "Witness";
+        case WitnessOnlyWitnessAccount:
+            return "Witness-only witness";
+        case ImportedPrivateKeyAccount:
+            return "Imported private key";
     }
     return "Regular";
 }
@@ -647,6 +651,9 @@ void CAccount::SetNull()
 
 CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
 {
+    if (IsFixedKeyPool())
+        throw std::runtime_error(strprintf("GenerateNewKey called on a \"%sy\" witness account - this is invalid", GetAccountTypeString(m_Type).c_str()));
+
     CKey secret;
     secret.MakeNewKey(true);
 
@@ -968,6 +975,21 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     {
         Db->EraseAccountLabel(getUUIDAsString(getUUID()));
         Db->WriteAccountLabel(getUUIDAsString(getUUID()), label);
+    }
+}
+
+CAmount CAccount::getCompounding() const
+{
+    return compoundEarnings;
+}
+
+void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
+{
+    compoundEarnings = compoundAmount_;
+    if (Db)
+    {
+        Db->EraseAccountCompoundingSettings(getUUIDAsString(getUUID()));
+        Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarnings);
     }
 }
 

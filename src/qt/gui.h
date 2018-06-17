@@ -71,7 +71,7 @@ public:
     static const QString DEFAULT_WALLET;
     static const std::string DEFAULT_UIPLATFORM;
 
-    explicit GUI(const QStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
+    explicit GUI(const QStyle *platformStyle, const NetworkStyle* networkStyle, QWidget *parent = 0);
     ~GUI();
 
     /** Set the client model.
@@ -119,6 +119,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event);
+    void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
     void showEvent(QShowEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
@@ -166,6 +167,8 @@ private:
 
     QSystemTrayIcon* trayIcon = nullptr;
     QMenu* trayIconMenu = nullptr;
+
+    const NetworkStyle* networkStyle = nullptr;
 
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
@@ -230,7 +233,7 @@ private:
     /** Create the toolbars */
     void createToolBars();
     /** Create system tray icon and notification */
-    void createTrayIcon(const NetworkStyle *networkStyle);
+    void createTrayIcon();
     /** Create system tray menu (or setup the dock menu) */
     void createTrayIconMenu();
 
@@ -256,6 +259,8 @@ public Q_SLOTS:
     void setNumConnections(int count);
     /** Set network state shown in the UI */
     void setNetworkActive(bool networkActive);
+    /** Update the window title (on testnet window title can contain dynamic content) */
+    void updateWindowTitle();
     /** Set number of blocks and last block date shown in the UI */
     void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
     /** Set number of headers and headers sync progress in the UI */

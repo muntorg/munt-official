@@ -268,30 +268,30 @@ bool testMnemonics()
 {
     std::vector<std::pair<SecureString, SecureString> > testVector;
 
-    testVector.push_back(std::make_pair("00000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"));
-    testVector.push_back(std::make_pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank yellow"));
-    testVector.push_back(std::make_pair("80808080808080808080808080808080", "letter advice cage absurd amount doctor acoustic avoid letter advice cage above"));
-    testVector.push_back(std::make_pair("ffffffffffffffffffffffffffffffff", "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong"));
-    testVector.push_back(std::make_pair("000000000000000000000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon agent"));
-    testVector.push_back(std::make_pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal will"));
-    testVector.push_back(std::make_pair("808080808080808080808080808080808080808080808080", "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter always"));
-    testVector.push_back(std::make_pair("ffffffffffffffffffffffffffffffffffffffffffffffff", "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo when"));
-    testVector.push_back(std::make_pair("0000000000000000000000000000000000000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art"));
-    testVector.push_back(std::make_pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth title"));
-    testVector.push_back(std::make_pair("8080808080808080808080808080808080808080808080808080808080808080",  "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic bless"));
-    testVector.push_back(std::make_pair("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote"));
-    testVector.push_back(std::make_pair("9e885d952ad362caeb4efe34a8e91bd2",  "ozone drill grab fiber curtain grace pudding thank cruise elder eight picnic"));
-    testVector.push_back(std::make_pair("6610b25967cdcca9d59875f5cb50b0ea75433311869e930b",  "gravity machine north sort system female filter attitude volume fold club stay feature office ecology stable narrow fog"));
-    testVector.push_back(std::make_pair("68a79eaca2324873eacc50cb9c6eca8cc68ea5d936f98787c60c7ebc74e6ce7c",  "hamster diagram private dutch cause delay private meat slide toddler razor book happy fancy gospel tennis maple dilemma loan word shrug inflict delay length"));
-    testVector.push_back(std::make_pair("c0ba5a8e914111210f2bd131f3d5e08d", "scheme spot photo card baby mountain device kick cradle pact join borrow"));
-    testVector.push_back(std::make_pair("6d9be1ee6ebd27a258115aad99b7317b9c8d28b6d76431c3", "horn tenant knee talent sponsor spell gate clip pulse soap slush warm silver nephew swap uncle crack brave"));
-    testVector.push_back(std::make_pair("9f6a2878b2520799a44ef18bc7df394e7061a224d2c33cd015b157d746869863",  "panda eyebrow bullet gorilla call smoke muffin taste mesh discover soft ostrich alcohol speed nation flash devote level hobby quick inner drive ghost inside"));
-    testVector.push_back(std::make_pair("23db8160a31d3e0dca3688ed941adbf3",  "cat swing flag economy stadium alone churn speed unique patch report train"));
-    testVector.push_back(std::make_pair("8197a4a47f0425faeaa69deebc05ca29c0a5b5cc76ceacc0",  "light rule cinnamon wrap drastic word pride squirrel upgrade then income fatal apart sustain crack supply proud access"));
-    testVector.push_back(std::make_pair("066dca1a2bb7e8a1db2832148ce9933eea0f3ac9548d793112d9a95c9407efad",  "all hour make first leader extend hole alien behind guard gospel lava path output census museum junior mass reopen famous sing advance salt reform"));
-    testVector.push_back(std::make_pair("f30f8c1da665478f49b001d94c5fc452", "vessel ladder alter error federal sibling chat ability sun glass valve picture"));
-    testVector.push_back(std::make_pair("c10ec20dc3cd9f652c7fac2f1230f7a3c828389a14392f05",  "scissors invite lock maple supreme raw rapid void congress muscle digital elegant little brisk hair mango congress clump"));
-    testVector.push_back(std::make_pair("f585c11aec520db57dd353c69554b21a89b20fb0650966fa0a9d6f74fd989d8f",  "void come effort suffer camp survey warrior heavy shoot primary clutch crush open amazing screen patrol group space point ten exist slush involve unfold"));
+    testVector.push_back(std::pair("00000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"));
+    testVector.push_back(std::pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank yellow"));
+    testVector.push_back(std::pair("80808080808080808080808080808080", "letter advice cage absurd amount doctor acoustic avoid letter advice cage above"));
+    testVector.push_back(std::pair("ffffffffffffffffffffffffffffffff", "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong"));
+    testVector.push_back(std::pair("000000000000000000000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon agent"));
+    testVector.push_back(std::pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal will"));
+    testVector.push_back(std::pair("808080808080808080808080808080808080808080808080", "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter always"));
+    testVector.push_back(std::pair("ffffffffffffffffffffffffffffffffffffffffffffffff", "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo when"));
+    testVector.push_back(std::pair("0000000000000000000000000000000000000000000000000000000000000000", "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art"));
+    testVector.push_back(std::pair("7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f", "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth title"));
+    testVector.push_back(std::pair("8080808080808080808080808080808080808080808080808080808080808080",  "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic bless"));
+    testVector.push_back(std::pair("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote"));
+    testVector.push_back(std::pair("9e885d952ad362caeb4efe34a8e91bd2",  "ozone drill grab fiber curtain grace pudding thank cruise elder eight picnic"));
+    testVector.push_back(std::pair("6610b25967cdcca9d59875f5cb50b0ea75433311869e930b",  "gravity machine north sort system female filter attitude volume fold club stay feature office ecology stable narrow fog"));
+    testVector.push_back(std::pair("68a79eaca2324873eacc50cb9c6eca8cc68ea5d936f98787c60c7ebc74e6ce7c",  "hamster diagram private dutch cause delay private meat slide toddler razor book happy fancy gospel tennis maple dilemma loan word shrug inflict delay length"));
+    testVector.push_back(std::pair("c0ba5a8e914111210f2bd131f3d5e08d", "scheme spot photo card baby mountain device kick cradle pact join borrow"));
+    testVector.push_back(std::pair("6d9be1ee6ebd27a258115aad99b7317b9c8d28b6d76431c3", "horn tenant knee talent sponsor spell gate clip pulse soap slush warm silver nephew swap uncle crack brave"));
+    testVector.push_back(std::pair("9f6a2878b2520799a44ef18bc7df394e7061a224d2c33cd015b157d746869863",  "panda eyebrow bullet gorilla call smoke muffin taste mesh discover soft ostrich alcohol speed nation flash devote level hobby quick inner drive ghost inside"));
+    testVector.push_back(std::pair("23db8160a31d3e0dca3688ed941adbf3",  "cat swing flag economy stadium alone churn speed unique patch report train"));
+    testVector.push_back(std::pair("8197a4a47f0425faeaa69deebc05ca29c0a5b5cc76ceacc0",  "light rule cinnamon wrap drastic word pride squirrel upgrade then income fatal apart sustain crack supply proud access"));
+    testVector.push_back(std::pair("066dca1a2bb7e8a1db2832148ce9933eea0f3ac9548d793112d9a95c9407efad",  "all hour make first leader extend hole alien behind guard gospel lava path output census museum junior mass reopen famous sing advance salt reform"));
+    testVector.push_back(std::pair("f30f8c1da665478f49b001d94c5fc452", "vessel ladder alter error federal sibling chat ability sun glass valve picture"));
+    testVector.push_back(std::pair("c10ec20dc3cd9f652c7fac2f1230f7a3c828389a14392f05",  "scissors invite lock maple supreme raw rapid void congress muscle digital elegant little brisk hair mango congress clump"));
+    testVector.push_back(std::pair("f585c11aec520db57dd353c69554b21a89b20fb0650966fa0a9d6f74fd989d8f",  "void come effort suffer camp survey warrior heavy shoot primary clutch crush open amazing screen patrol group space point ten exist slush involve unfold"));
 
     for(auto test : testVector)
     {

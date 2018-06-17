@@ -131,10 +131,12 @@ static void addFontFromResource(QString sFontResourceName)
     }
 }
 
-GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent)
+GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidget *parent)
 : QMainWindow(parent)
 , platformStyle(_platformStyle)
+, networkStyle(networkStyle_)
 {
+
     // Delete ourselves on close, application catches this and uses it as a signal to exit.
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -182,25 +184,18 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
 
     GUIUtil::restoreWindowGeometry("nWindow", QSize(960, 620), this);
 
-    QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
     enableWallet = WalletModel::isWalletEnabled();
 #endif // ENABLE_WALLET
-    if(enableWallet)
-    {
-        windowTitle += tr("Wallet");
-    } else {
-        windowTitle += tr("Node");
-    }
     enableFullUI = !GetBoolArg("-disableui", false);
-    windowTitle += " " + networkStyle->getTitleAddText();
+
 #ifndef Q_OS_MAC
     QApplication::setWindowIcon(networkStyle->getTrayAndWindowIcon());
     setWindowIcon(networkStyle->getTrayAndWindowIcon());
 #else
     MacDockIconHandler::instance()->setIcon(networkStyle->getAppIcon());
 #endif
-    setWindowTitle(IsArgSet("-windowtitle")?QString::fromStdString(GetArg("-windowtitle", "")):windowTitle);
+    updateWindowTitle();
 
 #if defined(Q_OS_MAC) && QT_VERSION < 0x050000
     // This property is not implemented in Qt 5. Setting it has no effect.
@@ -241,7 +236,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget
     createToolBars();
 
     // Create system tray icon and notification
-    createTrayIcon(networkStyle);
+    createTrayIcon();
 
     // Create status bar
     statusBar();
@@ -668,7 +663,7 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    //fixme: (2.0) This can be removed
+    //fixme: (2.1) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
     if (clientModel)
         clientModel->updatePoW2Display();
@@ -704,6 +699,12 @@ bool GUI::setCurrentWallet(const QString& name)
     connect( walletFrame->currentWalletView()->witnessDialogPage, SIGNAL(requestRenewWitness(CAccount*)), this, SLOT(requestRenewWitness(CAccount*)) );
     connect( walletFrame->currentWalletView()->sendCoinsPage, SIGNAL(notifyPaymentAccepted()), this, SLOT(handlePaymentAccepted()) );
 
+    // Update various widgets that require a wallet with their initial state.
+    if (accountSummaryWidget)
+        accountSummaryWidget->setActiveAccount(pactiveWallet->getActiveAccount());
+    // Force receive coins dialog to update with an address.
+    updateAccount(pactiveWallet->getActiveAccount());
+
     return ret;
 }
 
@@ -737,7 +738,7 @@ void GUI::setWalletActionsEnabled(bool enabled)
     openAction->setEnabled(enabled);
 }
 
-void GUI::createTrayIcon(const NetworkStyle *networkStyle)
+void GUI::createTrayIcon()
 {
     LogPrint(BCLog::QT, "GUI::createTrayIcon\n");
 
@@ -861,6 +862,27 @@ void GUI::showHelpMessageClicked()
     helpMessageDialog->show();
 }
 
+void GUI::changeEvent(QEvent *e)
+{
+    LogPrint(BCLog::QT, "GUI::changeEvent\n");
+
+    QMainWindow::changeEvent(e);
+#ifndef Q_OS_MAC // Ignored on Mac
+    if(e->type() == QEvent::WindowStateChange)
+    {
+        if(clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeToTray())
+        {
+            QWindowStateChangeEvent *wsevt = static_cast<QWindowStateChangeEvent*>(e);
+            if(!(wsevt->oldState() & Qt::WindowMinimized) && isMinimized())
+            {
+                QTimer::singleShot(0, this, SLOT(hide()));
+                e->ignore();
+            }
+        }
+    }
+#endif
+}
+
 #ifdef ENABLE_WALLET
 void GUI::openClicked()
 {
@@ -982,9 +1004,42 @@ void GUI::updateHeadersSyncProgressLabel(int current, int total)
         progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 * current / total, 'f', 1)));
 }
 
+void GUI::updateWindowTitle()
+{
+    QString windowTitle;
+
+    if (IsArgSet("-windowtitle"))
+    {
+        windowTitle = QString::fromStdString(GetArg("-windowtitle", ""));
+    }
+    else
+    {
+        windowTitle = tr(PACKAGE_NAME) + " - ";
+        if(enableWallet)
+        {
+            windowTitle += tr("Wallet");
+        }
+        else
+        {
+            windowTitle += tr("Node");
+        }
+    }
+
+    windowTitle += " " + networkStyle->getTitleAddText();
+
+
+    if (IsArgSet("-testnet"))
+        windowTitle += QString(" (Current chain tip - %1)").arg(chainActive.Tip() ? chainActive.Tip()->nHeight : 0);
+
+    setWindowTitle(windowTitle);
+}
+
 void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
+
+    if (IsArgSet("-testnet"))
+        updateWindowTitle();
 
     if (!clientModel)
         return;
@@ -1217,13 +1272,17 @@ void GUI::closeEvent(QCloseEvent *event)
     event->ignore();
     if (clientModel && clientModel->getOptionsModel())
     {
-        if((clientModel->getOptionsModel()->getDockOnClose() || clientModel->getOptionsModel()->getMinimizeToTray()))
+        if((clientModel->getOptionsModel()->getDockOnClose()))
         {
+            if (rpcConsole)
+                rpcConsole->close();
             QMainWindow::hide();
             return;
         }
         else if(clientModel->getOptionsModel()->getMinimizeOnClose())
         {
+            if (rpcConsole)
+                rpcConsole->close();
             QMainWindow::showMinimized();
             return;
         }

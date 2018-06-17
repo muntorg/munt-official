@@ -36,10 +36,10 @@ NocksSettings::NocksSettings( QObject* parent )
     connect( netManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( reportSslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
 
     // Some defaults - just in case server is temporarily unavailable.
-    exchangeLimits["BTC-NLG"] = std::make_pair("250.00000", "50000.00000");
-    exchangeLimits["NLG-BTC"] = std::make_pair("0.00060", "1.00000");
-    exchangeLimits["NLG-EUR"] = std::make_pair("0.01", "500.00");
-    exchangeLimits["EUR-NLG"] = std::make_pair("250.00000", "50000.00000");
+    exchangeLimits["BTC-NLG"] = std::pair("250.00000", "50000.00000");
+    exchangeLimits["NLG-BTC"] = std::pair("0.00060", "1.00000");
+    exchangeLimits["NLG-EUR"] = std::pair("0.01", "500.00");
+    exchangeLimits["EUR-NLG"] = std::pair("250.00000", "50000.00000");
 }
 
 NocksSettings::~NocksSettings()
@@ -157,7 +157,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
                 std::string amountMinimum = jsonObject.value( "amountMinimum" ).toString().toStdString();
                 std::string amountMaximum = jsonObject.value( "amountMaximum" ).toString().toStdString();
 
-                exchangeLimits[currencyPair] = std::make_pair(amountMinimum, amountMaximum);
+                exchangeLimits[currencyPair] = std::pair(amountMinimum, amountMaximum);
 
                 signalUpdates = true;
             }

@@ -1672,7 +1672,7 @@ std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo()
             }
             std::string addrName = pnode->GetAddrName();
             if (!addrName.empty()) {
-                mapConnectedByName[std::move(addrName)] = std::make_pair(pnode->fInbound, static_cast<const CService&>(pnode->addr));
+                mapConnectedByName[std::move(addrName)] = std::pair(pnode->fInbound, static_cast<const CService&>(pnode->addr));
             }
         }
     }
@@ -2598,8 +2598,8 @@ void CNode::AskFor(const CInv& inv)
     if (it != mapAlreadyAskedFor.end())
         mapAlreadyAskedFor.update(it, nRequestTime);
     else
-        mapAlreadyAskedFor.insert(std::make_pair(inv.hash, nRequestTime));
-    mapAskFor.insert(std::make_pair(nRequestTime, inv));
+        mapAlreadyAskedFor.insert(std::pair(inv.hash, nRequestTime));
+    mapAskFor.insert(std::pair(nRequestTime, inv));
 }
 
 bool CConnman::NodeFullyConnected(const CNode* pnode)

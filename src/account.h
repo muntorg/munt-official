@@ -43,17 +43,19 @@ class CKeyMetadata;
 
 enum AccountState
 {
-    Normal = 0,        // Standard account (or HD account)
-    Shadow = 1,        // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
-    ShadowChild = 2,   // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
-    Deleted = 3        // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
+    Normal = 0,                      // Standard account (or HD account)
+    Shadow = 1,                      // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
+    ShadowChild = 2,                 // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
+    Deleted = 3                      // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
 };
 
 enum AccountType
 {
-    Desktop = 0,       // Standard desktop account.
-    Mobi = 1,          // Mobile phone. (Android, iOS)
-    PoW2Witness = 2    // PoW2 witness account.
+    Desktop = 0,                     // Standard desktop account.
+    Mobi = 1,                        // Mobile phone. (Android, iOS)
+    PoW2Witness = 2,                 // PoW2 witness account.
+    WitnessOnlyWitnessAccount = 3,   // non-HD witness account without spending keys only witness keys.
+    ImportedPrivateKeyAccount = 4,   // non-HD account contains one or more imported private keys.
 };
 
 std::string GetAccountStateString(AccountState state);
@@ -234,9 +236,18 @@ public:
     //fixme: (2.1) (CLEANUP)
     virtual void GetKey([[maybe_unused]] CExtKey& childKey, [[maybe_unused]] int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
+
+    //! Account uses hierarchial deterministic key generation and not legacy (random) key generation.
     virtual bool IsHD() const {return false;};
+
+    //! Account is of the mobile type (linkable via qr)
     virtual bool IsMobi() const {return m_Type == Mobi;}
-    virtual bool IsPoW2Witness() const {return m_Type == PoW2Witness;}
+
+    //! Account is capable of performing witness operations.
+    virtual bool IsPoW2Witness() const { return m_Type == PoW2Witness || m_Type == WitnessOnlyWitnessAccount; }
+
+    //! Account has a fixed keypool that should not remove the keys on use.
+    virtual bool IsFixedKeyPool() const { return m_Type == WitnessOnlyWitnessAccount || m_Type == ImportedPrivateKeyAccount; }
 
     ADD_SERIALIZE_METHODS;
 
@@ -312,16 +323,26 @@ public:
     void AddChild(CAccount* childAccount);
 
     unsigned int GetKeyPoolSize();
+
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
+
+    //! Sets whether a witness account should compound earnings or not.
+    //! 0 sets compounding off.
+    //! If compoundAmount is positive - rewards up to amount compoundAmount are compounded and the remainder not.
+    //! If compoundAmount is negative - the first compoundAmount earnings are not compounded and the remainder is.
+    //! If the amount to be compounded exceeds network rules it will be truncated to the network maximum and the remainder will go to a non-compound output.
+    void setCompounding(CAmount compoundAmount, CWalletDB* Db);
+    CAmount getCompounding() const;
+
+    AccountStatus GetWarningState() { return nWarningState; };
+    void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
+
     boost::uuids::uuid getUUID() const;
     void setUUID(const std::string& stringUUID);
     boost::uuids::uuid getParentUUID() const;
 
     bool IsReadOnly() { return m_readOnly; };
-
-    AccountStatus GetWarningState() { return nWarningState; };
-    void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
 
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
@@ -339,6 +360,7 @@ protected:
     boost::uuids::uuid accountUUID;
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
+    CAmount compoundEarnings = 0;
     uint64_t earliestPossibleCreationTime;
 
     bool m_readOnly = false;

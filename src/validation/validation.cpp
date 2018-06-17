@@ -1171,7 +1171,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
         UpdateCoins(tx, view, i == 0 ? undoDummy : blockundo.vtxundo.back(), pindex->nHeight);
 
-        vPos.push_back(std::make_pair(tx.GetHash(), pos));
+        vPos.push_back(std::pair(tx.GetHash(), pos));
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
     }
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
@@ -1220,7 +1220,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 if (output.out.nValue > 0)
                     nValIn += output.out.nValue;
             }
-            //fixme: (2.0) (HIGH) don't increment nSubsidyWitness but only add it for below check - we must not allow fees to be compounded.
+
             nSubsidyWitness += nFeesPoW2Witness;
             if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitness)
             {
@@ -1379,7 +1379,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             std::vector<std::pair<int, const CBlockFileInfo*> > vFiles;
             vFiles.reserve(setDirtyFileInfo.size());
             for (std::set<int>::iterator it = setDirtyFileInfo.begin(); it != setDirtyFileInfo.end(); ) {
-                vFiles.push_back(std::make_pair(*it, &vinfoBlockFile[*it]));
+                vFiles.push_back(std::pair(*it, &vinfoBlockFile[*it]));
                 setDirtyFileInfo.erase(it++);
             }
             std::vector<const CBlockIndex*> vBlocks;
@@ -1732,7 +1732,7 @@ static CBlockIndex* FindMostWorkChain() {
                         // If we're missing data, then add back to mapBlocksUnlinked,
                         // so that if the block arrives in the future we can try adding
                         // to setBlockIndexCandidates again.
-                        mapBlocksUnlinked.insert(std::make_pair(pindexFailed->pprev, pindexFailed));
+                        mapBlocksUnlinked.insert(std::pair(pindexFailed->pprev, pindexFailed));
                     }
                     setBlockIndexCandidates.erase(pindexFailed);
                     pindexFailed = pindexFailed->pprev;
@@ -2113,7 +2113,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     // to avoid miners withholding blocks but broadcasting headers, to get a
     // competitive advantage.
     pindexNew->nSequenceId = 0;
-    BlockMap::iterator mi = mapBlockIndex.insert(std::make_pair(hash, pindexNew)).first;
+    BlockMap::iterator mi = mapBlockIndex.insert(std::pair(hash, pindexNew)).first;
     pindexNew->phashBlock = &((*mi).first);
     BlockMap::iterator miPrev = mapBlockIndex.find(block.hashPrevBlock);
     if (miPrev != mapBlockIndex.end())
@@ -2184,7 +2184,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
         }
     } else {
         if (pindexNew->pprev && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) {
-            mapBlocksUnlinked.insert(std::make_pair(pindexNew->pprev, pindexNew));
+            mapBlocksUnlinked.insert(std::pair(pindexNew->pprev, pindexNew));
         }
     }
 
@@ -2996,7 +2996,7 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
     CBlockIndex* pindexNew = new CBlockIndex();
     if (!pindexNew)
         throw std::runtime_error(std::string(__func__) + ": new CBlockIndex failed");
-    mi = mapBlockIndex.insert(std::make_pair(hash, pindexNew)).first;
+    mi = mapBlockIndex.insert(std::pair(hash, pindexNew)).first;
     pindexNew->phashBlock = &((*mi).first);
 
     return pindexNew;
@@ -3017,7 +3017,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
     {
         CBlockIndex* pindex = item.second;
-        vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
+        vSortedByHeight.push_back(std::pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool 
     {
@@ -3046,7 +3046,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
                     pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
                 } else {
                     pindex->nChainTx = 0;
-                    mapBlocksUnlinked.insert(std::make_pair(pindex->pprev, pindex));
+                    mapBlocksUnlinked.insert(std::pair(pindex->pprev, pindex));
                 }
             } else {
                 pindex->nChainTx = pindex->nTx;
@@ -3164,7 +3164,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
         {
             CBlockIndex* pindex = item.second;
-            vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
+            vSortedByHeight.push_back(std::pair(pindex->nHeight, pindex));
         }
         sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool { return a.first < b.first; });
 
@@ -3182,7 +3182,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
 
             if (blockpos.nFile >= 0)
             {
-                vDirtyFiles.push_back(std::make_pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+                vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
                 // Read block in, using old transaction format.
                 {
                     if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams.GetConsensus()))
@@ -3225,7 +3225,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
 
                 // Update the block index as the position of the block on disk has changed.
                 vDirtyBlocks.push_back(pindex);
-                vDirtyFiles.push_back(std::make_pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+                vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
 
                 if (pindex->nHeight == chainActive.Tip()->nHeight)
                 {
@@ -3585,7 +3585,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     LogPrint(BCLog::REINDEX, "%s: Out of order block %s, parent %s not known\n", __func__, hash.ToString(),
                             block.hashPrevBlock.ToString());
                     if (dbp)
-                        mapBlocksUnknownParent.insert(std::make_pair(block.hashPrevBlock, *dbp));
+                        mapBlocksUnknownParent.insert(std::pair(block.hashPrevBlock, *dbp));
                     continue;
                 }
 
@@ -3668,7 +3668,7 @@ void static CheckBlockIndex(const Consensus::Params& consensusParams)
     // Build forward-pointing map of the entire block tree.
     std::multimap<CBlockIndex*,CBlockIndex*> forward;
     for (BlockMap::iterator it = mapBlockIndex.begin(); it != mapBlockIndex.end(); it++) {
-        forward.insert(std::make_pair(it->second->pprev, it->second));
+        forward.insert(std::pair(it->second->pprev, it->second));
     }
 
     assert(forward.size() == mapBlockIndex.size());

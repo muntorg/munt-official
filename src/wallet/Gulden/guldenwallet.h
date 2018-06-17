@@ -58,7 +58,7 @@ public:
 
     //Members that are shared with CWallet.
     mutable CCriticalSection cs_wallet;
-    int64_t nTimeFirstKey;
+    uint64_t nTimeFirstKey = 0;
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
@@ -244,25 +244,38 @@ public:
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time);
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time);
 
-    virtual void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
-    virtual void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
-    virtual void deleteAccount(CAccount* account);
+    void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
+    void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
+    void deleteAccount(CAccount* account);
 
-    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
+    CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
+
+    //! Create a new legacy account. Legacy accounts are accounts that generate random keys in a keypool as required instead of generating keys deterministically.
     virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
-    virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
-    virtual void setActiveAccount(CAccount* newActiveAccount);
-    virtual CAccount* getActiveAccount();
-    virtual void setActiveSeed(CHDSeed* newActiveSeed);
-    virtual CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
-    virtual void DeleteSeed(CHDSeed* deleteSeed, bool purge);
-    virtual CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
-    virtual CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
-    virtual CHDSeed* getActiveSeed();
+    //! Parse the contents of a gulden "witness key" URL into an vector of  private key / birth date  pairs.
+    std::vector<std::pair<CKey, uint64_t>> ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL);
+
+    //! Import vector of  private key / birth date  pairs into an existing "witness only" account.
+    CAccount* CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates);
+
+    //! Create a new "witness only" account and import vector of  private key / birth date  pairs into it.
+    bool ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates);
+
+    //! Create a read-only HD account using an encoded public key.
+    CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
+
+    void setActiveAccount(CAccount* newActiveAccount);
+    CAccount* getActiveAccount();
+    void setActiveSeed(CHDSeed* newActiveSeed);
+    CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
+    void DeleteSeed(CHDSeed* deleteSeed, bool purge);
+    CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
+    CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
+    CHDSeed* getActiveSeed();
 
     //! for wallet upgrade
-    virtual void ForceRewriteKeys(CAccount& forAccount);
+    void ForceRewriteKeys(CAccount& forAccount);
 
     // The 'shadow pool thread' sets delay lock true if it had a backlog of work it wants to do on the unlocked wallet
     bool delayLock;

@@ -47,7 +47,6 @@ public:
 
     //! Set amount in Gulden.
     void setAmount(const CAmount& value);
-    void setAmount(const CAmount& value, int nLimit);
 
     /** Set single step in satoshis **/
     void setSingleStep(const CAmount& step);

@@ -380,18 +380,14 @@ CAmount GuldenAmountField::amount(const Currency currency) const
 
 void GuldenAmountField::setAmount(const CAmount& value)
 {
-    primaryAmountDisplay->setValue(value);
-}
-
-void GuldenAmountField::setAmount(const CAmount& value, int nLimit)
-{
-    CAmount finalValue;
-    GuldenUnits::parse(GuldenUnits::NLG, GuldenUnits::format(GuldenUnits::NLG, value, false, GuldenUnits::separatorAlways, nLimit), &finalValue);
-    if (finalValue > MAX_MONEY)
+    amountGulden = value;
+    updatePrimaryFromData();
+    if (ticker)
     {
-        finalValue = MAX_MONEY;
+        amountEuro = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Euro));
+        amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
+        updateAuxilaryFromData();
     }
-    primaryAmountDisplay->setValue(finalValue, nLimit);
 }
 
 void GuldenAmountField::setSingleStep(const CAmount& step)
@@ -415,8 +411,8 @@ void GuldenAmountField::setValid(bool valid)
 void GuldenAmountField::clear()
 {
     primaryAmountDisplay->clear();
-    firstAuxAmountDisplay->setText(QString("(€\u20090.00)"));
-    //unit->setCurrentIndex(0);
+    amountGulden = amountEuro = amountLocal = 0;
+    updateAuxilaryFromData();
 }
 
 void GuldenAmountField::setEnabled(bool fEnabled)
@@ -447,6 +443,8 @@ void GuldenAmountField::setOptionsModel(OptionsModel* optionsModel_)
 
         firstAuxAmountDisplay->setVisible(true);
         amountSeperator->setVisible(true);
+        amountEuro = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Euro));
+        amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
         updateAuxilaryFromData();
     }
 }

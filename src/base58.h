@@ -116,6 +116,7 @@ public:
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
+    bool IsValidWitness(const CChainParams& params) const;
     bool IsValidBitcoin() const;
 
     CGuldenAddress() {}
