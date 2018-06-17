@@ -1564,10 +1564,37 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
-static UniValue changekeyforwitnessaddress(const JSONRPCRequest& request)
+static UniValue changewitnesskey(const JSONRPCRequest& request)
 {
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "changewitnesskey \"address\" \n"
+            "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
+            "1. \"address\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "\nReturns the new witness address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("changewitnesskey", "")
+            + HelpExampleRpc("changewitnesskey", ""));
+
+    CGuldenAddress forAddress(request.params[0].get_str());
+    bool isValid = forAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+
     //fixme: (2.0) implement
-    return NullUniValue;
+    return "Not yet implemented, please check back in next release";
 }
 
 static UniValue splitwitnessaddress(const JSONRPCRequest& request)
@@ -1635,7 +1662,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"changekeyforwitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"changewitnesskey\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaccountkeys", "")
             + HelpExampleRpc("getwitnessaccountkeys", ""));
@@ -1704,7 +1731,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"changekeyforwitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"changewitnesskey\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaddresskeys", "")
             + HelpExampleRpc("getwitnessaddresskeys", ""));
@@ -1814,7 +1841,7 @@ static const CRPCCommand commands[] =
 
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
-    { "witness",                 "changekeyforwitnessaddress",      &changekeyforwitnessaddress,     true,    {} },
+    { "witness",                 "changewitnesskey",                &changewitnesskey,               true,    {"address"} },
     { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {} },
