@@ -276,7 +276,7 @@ void CWallet::importPrivKey(const CKey& privKey)
     }
 
     CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(_("Imported legacy"));
-    importPrivKeyIntoAccount(pAccount, pubkey, privKey, importKeyID, 1);
+    importPrivKeyIntoAccount(pAccount, privKey, importKeyID, 1);
 }
 
 void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
@@ -309,7 +309,7 @@ void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToIns
     LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
 }
 
-void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CPubKey& pubkey, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
+void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
 {
     assert(!targetAccount->IsHD());
 
