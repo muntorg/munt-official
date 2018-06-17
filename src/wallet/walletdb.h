@@ -187,9 +187,13 @@ public:
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
     bool EraseAccountLabel(const std::string& strUUID);
 
-    //! write the account compounding settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
+    //! Write the account compounding amount settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
     bool WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount);
     bool EraseAccountCompoundingSettings(const std::string& strUUID);
+
+    //! Write the account compounding script settings; used only by witness accounts, controls where the account should pay any non-compounding earnings it has to pay out.
+    bool WriteAccountNonCompoundWitnessEarningsScript(const std::string& strUUID, const CScript& earningsScript);
+    bool EraseAccountNonCompoundWitnessEarningsScript(const std::string& strUUID);
 
     //! write the seed (mnemonic / account index counter)
     bool WriteHDSeed(const CHDSeed& seed);
