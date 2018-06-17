@@ -1765,7 +1765,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
     forAccount->setCompounding(amount, &walletdb);
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), forAccount->getCompounding()));
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ValueFromAmount(forAccount->getCompounding())));
     return result;
 }
 
@@ -1809,7 +1809,7 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    return forAccount->getCompounding();
+    return ValueFromAmount(forAccount->getCompounding());
 }
 
 static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
