@@ -985,6 +985,7 @@ CAmount CAccount::getCompounding() const
 
 void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
+    //fixme: (2.1) Signal UI to update compound checkbox to reflect changes.
     compoundEarnings = compoundAmount_;
     if (Db)
     {
