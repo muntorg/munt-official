@@ -578,7 +578,6 @@ static UniValue changeaccountname(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-
     LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
     #else
     LOCK(cs_main);
@@ -1688,8 +1687,48 @@ static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
 
 static UniValue setwitnesscompound(const JSONRPCRequest& request)
 {
-    //fixme: (2.0) implement
-    return NullUniValue;
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "setwitnesscompound \"account\" \"amount\"\n"
+            "\nSet whether a witness account should compound or not.\n"
+            "\nCompounding is controlled as follows:\n"
+            "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessscript\" or a key in the account if \"setwitnessscript\" has not been called.\n"
+            "\n    2) When set to a positive number \"n\", earnings up until \"n\" will be compounded, and the remainder will be sent to the non-compound output (as describe in 1).\n"
+            "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
+            "\nIn all cases it is important to remember the following:\n"
+            "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
+            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\nArguments:\n"
+            "1. \"account\"        (string) The UUID or unique label of the account.\n"
+            "2. amount             (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setwitnesscompound \"My witness account\" 20", "")
+            + HelpExampleRpc("setwitnesscompound \"My witness account\" 20", ""));
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    CAmount amount = AmountFromValue(request.params[1]);
+
+    CWalletDB walletdb(*pwallet->dbw);
+    forAccount->setCompounding(amount, &walletdb);
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), forAccount->getCompounding()));
+    return result;
 }
 
 static UniValue setwitnessscript(const JSONRPCRequest& request)
@@ -1920,9 +1959,9 @@ static const CRPCCommand commands[] =
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
     { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
-    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {} },
-    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {} },
-    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {} },
+    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
+    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
     { "witness",                 "setwitnessgeneration",            &setwitnessgeneration,           true,    {} },
     { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
