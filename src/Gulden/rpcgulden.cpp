@@ -1701,7 +1701,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "setwitnesscompound \"account\" \"amount\"\n"
             "\nSet whether a witness account should compound or not.\n"
             "\nCompounding is controlled as follows:\n"
-            "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessscript\" or a key in the account if \"setwitnessscript\" has not been called.\n"
+            "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessgeneration\" or a key in the account if \"setwitnessgeneration\" has not been called.\n"
             "\n    2) When set to a positive number \"n\", earnings up until \"n\" will be compounded, and the remainder will be sent to the non-compound output (as describe in 1).\n"
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
@@ -1734,12 +1734,6 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
     return result;
 }
 
-static UniValue setwitnessscript(const JSONRPCRequest& request)
-{
-    //fixme: (2.0) implement
-    return NullUniValue;
-}
-
 static UniValue getwitnesscompound(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -1760,7 +1754,7 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturn the current amount set for the account.\n"
             "\nCompounding is controlled as follows:\n"
-            "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessscript\" or a key in the account if \"setwitnessscript\" has not been called.\n"
+            "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessgeneration\" or a key in the account if \"setwitnessgeneration\" has not been called.\n"
             "\n    2) When set to a positive number \"n\", earnings up until \"n\" will be compounded, and the remainder will be sent to the non-compound output (as describe in 1).\n"
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
@@ -1783,16 +1777,76 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
     return forAccount->getCompounding();
 }
 
-static UniValue setwitnessgeneration(const JSONRPCRequest& request)
+static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
 {
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "setwitnessoutputkey \"account\" \n"
+            "\nSet the output key into which all non-compound witness earnings will be paid.\n"
+            "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
+            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "\nReturns the address into which non-compound earning payments will occur.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    if (!forAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
+
     //fixme: (2.0) implement
-    return NullUniValue;
+    return "Not yet implemented, please check back in next release";
 }
 
-static UniValue getwitnessgeneration(const JSONRPCRequest& request)
+static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
 {
+     #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getwitnessoutputkey \"account\" \n"
+            "\nGet the output key into which all non-compound witness earnings will be paid.\n"
+            "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
+            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "\nReturns the current key into which non-compound earning payments will occur.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    if (!forAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
+
     //fixme: (2.0) implement
-    return NullUniValue;
+    return "Not yet implemented, please check back in next release";
 }
 
 static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
@@ -1824,6 +1878,9 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             + HelpExampleRpc("getwitnessaccountkeys", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
 
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error("Can only be used on a witness account.");
@@ -2002,10 +2059,10 @@ static const CRPCCommand commands[] =
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "setwitnessgeneration",            &setwitnessgeneration,           true,    {} },
-    { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
-    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
-    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
+    { "witness",                 "setwitnessoutputkey",             &setwitnessoutputkey,            true,    {"account"} },
+    { "witness",                 "getwitnessoutputkey",             &getwitnessoutputkey,            true,    {"account"} },
+    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
+    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
