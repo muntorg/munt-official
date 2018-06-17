@@ -1724,7 +1724,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    CAmount amount = AmountFromValue(request.params[1]);
+    CAmount amount = AmountFromValue(request.params[1], true);
 
     CWalletDB walletdb(*pwallet->dbw);
     forAccount->setCompounding(amount, &walletdb);
