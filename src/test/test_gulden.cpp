@@ -18,7 +18,7 @@
 #include "key.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
-#include "miner.h"
+#include "generation/miner.h"
 #include "net_processing.h"
 #include "pubkey.h"
 #include "random.h"

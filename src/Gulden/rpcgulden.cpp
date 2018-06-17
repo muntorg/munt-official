@@ -4,7 +4,7 @@
 // file COPYING
 
 #include "rpcgulden.h"
-#include "../miner.h"
+#include "generation/miner.h"
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
 #include "validation/validation.h"

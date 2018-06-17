@@ -16,7 +16,7 @@
 #include "consensus/tx_verify.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
-#include "miner.h"
+#include "generation/miner.h"
 #include "policy/policy.h"
 #include "pubkey.h"
 #include "script/standard.h"

@@ -136,7 +136,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   limitedmap.h \
   memusage.h \
   merkleblock.h \
-  miner.h \
+  generation\miner.h \
   net.h \
   net_processing.h \
   netaddress.h \
@@ -226,7 +226,7 @@ libgulden_server_a_SOURCES = \
   init.cpp \
   dbwrapper.cpp \
   merkleblock.cpp \
-  miner.cpp \
+  generation\miner.cpp \
   net.cpp \
   net_processing.cpp \
   noui.cpp \

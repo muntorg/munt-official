@@ -34,7 +34,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "key.h"
-#include "miner.h"
+#include "generation/miner.h"
 #include "netbase.h"
 #include "net.h"
 #include "net_processing.h"
