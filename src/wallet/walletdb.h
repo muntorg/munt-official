@@ -188,7 +188,7 @@ public:
     bool EraseAccountLabel(const std::string& strUUID);
 
     //! write the account compounding settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
-    bool WriteAccountCompoundingSettings(const std::string& strUUID, const bool shouldCompound);
+    bool WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount);
     bool EraseAccountCompoundingSettings(const std::string& strUUID);
 
     //! write the seed (mnemonic / account index counter)

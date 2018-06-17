@@ -978,18 +978,18 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     }
 }
 
-bool CAccount::isCompoundingEnabled() const
+CAmount CAccount::getCompounding() const
 {
-    return shouldCompoundEarnings;
+    return compoundEarnings;
 }
 
-void CAccount::setCompoundingEnabled(bool shouldCompoundEarnings_, CWalletDB* Db)
+void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
-    shouldCompoundEarnings = shouldCompoundEarnings_;
+    compoundEarnings = compoundAmount_;
     if (Db)
     {
         Db->EraseAccountCompoundingSettings(getUUIDAsString(getUUID()));
-        Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), shouldCompoundEarnings);
+        Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarnings);
     }
 }
 

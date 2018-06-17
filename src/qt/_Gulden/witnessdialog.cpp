@@ -17,6 +17,8 @@
 #include "optionsmodel.h"
 #include "wallet/wallet.h"
 
+#include "amount.h"
+
 #include <qwt_plot.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_legenditem.h>
@@ -352,7 +354,14 @@ void WitnessDialog::compoundEarningsCheckboxClicked()
         LOCK(pactiveWallet->cs_wallet);
 
         CWalletDB db(*pactiveWallet->dbw);
-        forAccount->setCompoundingEnabled(ui->compoundEarningsCheckBox->isChecked(), &db);
+        if (!ui->compoundEarningsCheckBox->isChecked())
+        {
+            forAccount->setCompounding(0, &db);
+        }
+        else
+        {
+            forAccount->setCompounding(MAX_MONEY, &db); // Attempt to compound as much as the network will allow.
+        }
     }
 }
 
@@ -726,7 +735,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             }
             else
             {
-                ui->compoundEarningsCheckBox->setChecked(forAccount->isCompoundingEnabled());
+                ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
                 uint64_t nTotalNetworkWeight = 0;
                 uint64_t nOurWeight = 0;

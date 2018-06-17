@@ -1211,11 +1211,11 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
 }
 
 
-static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, CAmount compoundTargetAmount, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
 {
     // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
     if (!bSegSigIsEnabled)
-        compoundWitnessEarnings = false;
+        compoundTargetAmount = 0;
 
     // First obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
     CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
@@ -1239,35 +1239,54 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     // If we are compounding then we need 2 outputs.
     // If we are compounding then we want only 1 output.
     // However if we are compounding and there are more fees than compouding rules allow; then the overflow needs to go in a second output so we need 2 outputs again.
-    CAmount witnessFeeOverflow = 0;
-    CAmount compoundWitnessBlockSubsidy = witnessBlockSubsidy;
-    if (compoundWitnessEarnings)
+    CAmount noncompoundWitnessBlockSubsidy = 0;
+    CAmount compoundWitnessBlockSubsidy = witnessBlockSubsidy + witnessFeeSubsidy;
+    if (compoundTargetAmount != 0)
     {
-        if (witnessFeeSubsidy <= compoundWitnessBlockSubsidy)
+        // Compound target is negative
+        // Pay the first '-compoundTargetAmount' of reward to non-compound output and compound the remainder.
+        if (compoundTargetAmount < 0)
         {
-            compoundWitnessBlockSubsidy += witnessFeeSubsidy;
-            witnessFeeOverflow = 0;
-        }
-        else
-        {
-            witnessFeeOverflow = witnessFeeSubsidy - compoundWitnessBlockSubsidy;
-            compoundWitnessBlockSubsidy *= 2;
-
-            //fixme: (DUST)
-            //Rudimentary dust prevention - in future possibly improve this.
-            if (witnessFeeOverflow < 1 * COIN)
+            noncompoundWitnessBlockSubsidy = -compoundTargetAmount;
+            if (noncompoundWitnessBlockSubsidy > compoundWitnessBlockSubsidy)
             {
-                witnessFeeOverflow += 1 * COIN;
-                compoundWitnessBlockSubsidy -= 1 * COIN;
+                noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
+                compoundWitnessBlockSubsidy = 0;
             }
+            else
+            {
+                compoundWitnessBlockSubsidy -= noncompoundWitnessBlockSubsidy;
+            }
+        }
+        // Compound target is positive
+        // Compound the first '-compoundTargetAmount' of reward and pay the remainder to non-compound.
+        else if (compoundWitnessBlockSubsidy > compoundTargetAmount)
+        {
+            noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy - compoundTargetAmount;
+            compoundWitnessBlockSubsidy = compoundTargetAmount;
+        }
+
+        // If we are compounding more than the network allows then reduce accordingly.
+        if (compoundWitnessBlockSubsidy > witnessBlockSubsidy*2)
+        {
+            noncompoundWitnessBlockSubsidy += compoundWitnessBlockSubsidy - witnessBlockSubsidy*2;
+            compoundWitnessBlockSubsidy = witnessBlockSubsidy*2;
+        }
+
+        //fixme: (DUST)
+        //Rudimentary dust prevention - in future possibly improve this.
+        if ((noncompoundWitnessBlockSubsidy > 0) && (noncompoundWitnessBlockSubsidy < 1 * COIN / 10))
+        {
+            noncompoundWitnessBlockSubsidy += 1 * COIN / 10;
+            compoundWitnessBlockSubsidy -= 1 * COIN / 10;
         }
     }
     else
     {
-        witnessFeeOverflow = compoundWitnessBlockSubsidy;
+        noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
         compoundWitnessBlockSubsidy = 0;
     }
-    coinbaseTx.vout.resize((witnessFeeOverflow == 0) ? 1 : 2);
+    coinbaseTx.vout.resize((noncompoundWitnessBlockSubsidy == 0) ? 1 : 2);
 
     // Finally create the output(s).
     if (bSegSigIsEnabled)
@@ -1286,7 +1305,7 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     }
     coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue + compoundWitnessBlockSubsidy;
 
-    if (witnessFeeOverflow > 0)
+    if (noncompoundWitnessBlockSubsidy > 0)
     {
         if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
         {
@@ -1301,7 +1320,7 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
             coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
             coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
         }
-        coinbaseTx.vout[1].nValue = witnessFeeOverflow;
+        coinbaseTx.vout[1].nValue = noncompoundWitnessBlockSubsidy;
     }
 }
 
@@ -1342,7 +1361,7 @@ static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex
     }
 
     // Output for subsidy and refresh witness address.
-    CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->isCompoundingEnabled(), bSegSigIsEnabled, nSelectedWitnessBlockHeight);
+    CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->getCompounding(), bSegSigIsEnabled, nSelectedWitnessBlockHeight);
 
     return coinbaseTx;
 }

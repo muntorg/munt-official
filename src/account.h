@@ -327,8 +327,13 @@ public:
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
 
-    bool isCompoundingEnabled() const;
-    void setCompoundingEnabled(bool shouldCompoundEarnings_, CWalletDB* Db);
+    //! Sets whether a witness account should compound earnings or not.
+    //! 0 sets compounding off.
+    //! If compoundAmount is positive - rewards up to amount compoundAmount are compounded and the remainder not.
+    //! If compoundAmount is negative - the first compoundAmount earnings are not compounded and the remainder is.
+    //! If the amount to be compounded exceeds network rules it will be truncated to the network maximum and the remainder will go to a non-compound output.
+    void setCompounding(CAmount compoundAmount, CWalletDB* Db);
+    CAmount getCompounding() const;
 
     AccountStatus GetWarningState() { return nWarningState; };
     void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
@@ -355,7 +360,7 @@ protected:
     boost::uuids::uuid accountUUID;
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
-    bool shouldCompoundEarnings = false;
+    CAmount compoundEarnings = 0;
     uint64_t earliestPossibleCreationTime;
 
     bool m_readOnly = false;

@@ -246,9 +246,9 @@ bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
     return EraseIC(std::pair(std::string("acclabel"), strUUID));
 }
 
-bool CWalletDB::WriteAccountCompoundingSettings(const std::string& strUUID, const bool shouldCompound)
+bool CWalletDB::WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount)
 {
-    return WriteIC(std::pair(std::string("acc_compound"), strUUID), shouldCompound);
+    return WriteIC(std::pair(std::string("acc_compound"), strUUID), compoundAmount);
 }
 
 bool CWalletDB::EraseAccountCompoundingSettings(const std::string& strUUID)
@@ -735,15 +735,15 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         else if (strType == "acc_compound")
         {
             std::string accountUUID;
-            bool shouldCompound;
+            CAmount compoundAmount;
 
             ssKey >> accountUUID;
-            ssValue >> shouldCompound;
+            ssValue >> compoundAmount;
 
             auto findIter = pwallet->mapAccounts.find(getUUIDFromString(accountUUID));
             if (findIter != pwallet->mapAccounts.end())
             {
-                findIter->second->setCompoundingEnabled(shouldCompound, nullptr);
+                findIter->second->setCompounding(compoundAmount, nullptr);
             }
         }
     } catch (...)
