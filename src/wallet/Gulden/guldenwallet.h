@@ -249,7 +249,9 @@ public:
     void deleteAccount(CAccount* account);
 
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
-    CAccount* GenerateNewLegacyAccount(std::string strAccount);
+
+    //! Create a new legacy account. Legacy accounts are accounts that generate random keys in a keypool as required instead of generating keys deterministically.
+    virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
 
     //! Parse the contents of a gulden "witness key" URL into an vector of  private key / birth date  pairs.
     std::vector<std::pair<CKey, uint64_t>> ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL);
