@@ -1884,8 +1884,16 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    UniValue result(UniValue::VOBJ);
+    if (!forAccount->hasNonCompoundRewardScript
+    {
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    }
+    else
+    {
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    }
+    return result;
 }
 
 static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
