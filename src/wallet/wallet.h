@@ -788,6 +788,7 @@ public:
     }
 
     void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
+    void GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
 
     unsigned int GetKeyPoolSize()
     {
