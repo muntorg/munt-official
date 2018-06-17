@@ -275,8 +275,13 @@ void CWallet::importPrivKey(const CKey& privKey)
         return;
     }
 
-    CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(_("Imported legacy"));
-    importPrivKeyIntoAccount(pAccount, privKey, importKeyID, 1);
+    CAccount* newAccount = new CAccount();
+    newAccount->m_Type = ImportedPrivateKeyAccount;
+
+    //fixme: (2.1) - Optionally take a key bith date here.
+    importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1);
+
+    pactiveWallet->addAccount(newAccount, _("Imported key"));
 }
 
 void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
