@@ -1584,8 +1584,8 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturns the new witness address.\n"
             "\nExamples:\n"
-            + HelpExampleCli("rotatewitnessaddress", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("rotatewitnessaddress", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
     CGuldenAddress forAddress(request.params[0].get_str());
     bool isValid = forAddress.IsValidWitness(Params());
@@ -1611,7 +1611,7 @@ static UniValue splitwitnessaddress(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "splitwitnessaddress \"address\" \n"
+            "splitwitnessaddress \"address\" \"amounts\" \n"
             "\nSplit a witness address into two seperate witness addresses, all details of the addresses remain identical other than a reduction in amounts.\n"
             "\nThis is useful in the event that an account has exceeded 1 percent of the network weight. \n"
             "1. \"address\"        (required) The unique UUID or label for the account.\n"
@@ -1623,8 +1623,8 @@ static UniValue splitwitnessaddress(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturns the new witness addresses.\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaddress", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "{10000, 5000, 5000}", "")
-            + HelpExampleRpc("splitwitnessaddress", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "{10000, 5000, 5000}", ""));
+            + HelpExampleCli("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", "")
+            + HelpExampleRpc("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", ""));
 
     CGuldenAddress forAddress(request.params[0].get_str());
     bool isValid = forAddress.IsValidWitness(Params());
@@ -1642,8 +1642,48 @@ static UniValue splitwitnessaddress(const JSONRPCRequest& request)
 
 static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
 {
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "mergewitnessaddresses \"addresses\" \n"
+            "\nMerge multiple witness addresses into a single one.\n"
+            "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaddress\".\n"
+            "\nThis is useful in the event that the network weight has risen significantly and an account that was previously split could now earn better as a single account. \n"
+            "1. \"addresses\"      (string, required) A json object with amounts for the new addresses\n"
+            "    {\n"
+            "      \"address\"     (string) The address that should be merged\n"
+            "      ,...\n"
+            "    }\n"
+            "\nResult:\n"
+            "\nReturns the new witness address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("mergewitnessaddresses {\"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\", \"2a8srWupARTwNnzBe67CrAejXYg4QwNvyEr2mQkbdTuD8BqUwL6rAEx2XTTvCo}\"", "")
+            + HelpExampleRpc("mergewitnessaddresses {\"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\", \"2a8srWupARTwNnzBe67CrAejXYg4QwNvyEr2mQkbdTuD8BqUwL6rAEx2XTTvCo}\"", ""));
+
+    UniValue mergeFrom = request.params[0].get_obj();
+    if (mergeFrom.getValues().size() < 2)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Merge command requires at least two inputs");
+
+    for(const auto& addressObj : mergeFrom.getValues())
+    {
+        CGuldenAddress forAddress(addressObj.get_str());
+        bool isValid = forAddress.IsValidWitness(Params());
+
+        if (!isValid)
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+    }
+
     //fixme: (2.0) implement
-    return NullUniValue;
+    return "Not yet implemented, please check back in next release";
 }
 
 static UniValue setwitnesscompound(const JSONRPCRequest& request)
@@ -1770,8 +1810,8 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
             "\nIf you believe your key is or may have been compromised use \"rotatewitnessaddress\" to rotate to a new witness key.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getwitnessaddresskeys", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("getwitnessaddresskeys", "2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
     CGuldenAddress forAddress(request.params[0].get_str());
     bool isValid = forAddress.IsValidWitness(Params());
