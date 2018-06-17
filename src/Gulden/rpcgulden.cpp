@@ -5,6 +5,7 @@
 
 #include "rpcgulden.h"
 #include "generation/miner.h"
+#include "generation/witness.h"
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
 #include "validation/validation.h"
@@ -1789,12 +1790,14 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3 )
         throw std::runtime_error(
-            "setwitnessrewardscript \"account\" \n"
+            "setwitnessrewardscript \"account\" \"address_or_script\" \"force_pubkey\" \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "1. \"account\"               (required) The unique UUID or label for the account.\n"
+            "2. \"pubkey_or_script\"      (required) An hex encoded script or public key.\n"
+            "3. \"force_pubkey\"          (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
             "\nReturns the address into which non-compound earning payments will occur.\n"
             "\nExamples:\n"
@@ -1809,8 +1812,44 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+
+    bool forcePubKey = false;
+    if (request.params.size() > 2)
+        forcePubKey = request.params[2].get_bool();
+
+    std::string pubKeyOrScript = request.params[1].get_str();
+    CScript scriptForNonCompoundPayments;
+    if (!IsHex(pubKeyOrScript))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
+
+    // Try public key first.
+    std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
+    CPubKey pubKey(data.begin(), data.end());
+    if (pubKey.IsFullyValid())
+    {
+        scriptForNonCompoundPayments = CScript() << ToByteVector(pubKey) << OP_CHECKSIG;
+    }
+    else
+    {
+        if (forcePubKey)
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid hex encoded public key");
+
+        // Not a public key so treat it as a script.
+        scriptForNonCompoundPayments = CScript(data.begin(), data.end());
+        if (!scriptForNonCompoundPayments.HasValidOps())
+        {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is hex encoded, but not a valid pubkey or script");
+        }
+    }
+
+    CWalletDB walletdb(*pwallet->dbw);
+    forAccount->setNonCompoundRewardScript(scriptForNonCompoundPayments, &walletdb);
+
+    witnessScriptsAreDirty = true;
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    return result;
 }
 
 static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
@@ -2059,7 +2098,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account"} },
+    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
