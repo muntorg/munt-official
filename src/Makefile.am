@@ -408,6 +408,7 @@ libgulden_util_a_SOURCES = \
 
 if GLIBC_BACK_COMPAT
 libgulden_util_a_SOURCES += compat/glibc_compat.cpp
+AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
 # cli: shared between Gulden-cli and Gulden
