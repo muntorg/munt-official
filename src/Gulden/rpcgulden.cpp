@@ -1741,7 +1741,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
     return witnessAccountKeys;
 }
 
-static UniValue importwitnessaccountkeys(const JSONRPCRequest& request)
+static UniValue importwitnesskeys(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1752,25 +1752,49 @@ static UniValue importwitnessaccountkeys(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 2)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
-            "importwitnessaccountkeys \"name\" \"encodedkey\" \n"
-            "\nCreate a new witness account with keys imported from an \"encodedkey\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
-            "1. \"name\"       (string) name/label of the new account.\n"
-            "2. \"encodedkey\" (string) Encoded string containing the extended public key for the account.\n"
+            "importwitnesskeys \"account\" \"encoded_key_url\" \"create_account\" \n"
+            "\nAdd keys imported from an \"encoded_key_url\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
+            "\nUses an existing account if \"create_account\" is false, otherwise creates a new one. \n"
+            "1. \"account\"         (string) name/label of the new account.\n"
+            "2. \"encoded_key_url\" (string) Encoded string containing the extended public key for the account.\n"
+            "3. \"create_account\"  (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
             "\nResult:\n"
-            "\nReturn the UUID of the new account.\n"
+            "\nReturn the UUID of account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("importwitnessaccountkeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", "")
-            + HelpExampleRpc("importwitnessaccountkeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", ""));
+            + HelpExampleCli("importwitnesskeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", "")
+            + HelpExampleRpc("importwitnesskeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    CAccount* account = pwallet->CreateWitnessOnlyWitnessAccount(request.params[0].get_str().c_str(), request.params[1].get_str().c_str());
+    bool shouldCreateAccount = false;
+    if (request.params.size() > 2)
+        shouldCreateAccount = request.params[2].get_bool();
 
-    if (!account)
-        throw std::runtime_error("Unable to create account.");
+    const auto& keysAndBirthDates = pwallet->ParseWitnessKeyURL(request.params[1].get_str().c_str());
+    if (keysAndBirthDates.empty())
+        throw std::runtime_error("Invalid encoded key URL");
+
+    CAccount* account = nullptr;
+    if (shouldCreateAccount)
+    {
+        account = AccountFromValue(pwallet, request.params[0], false);
+        if (!account)
+            throw std::runtime_error("Invalid account name or UUID");
+        if (account->m_Type != WitnessOnlyWitnessAccount)
+            throw std::runtime_error("Account is not a witness-only account");
+
+        if (!pwallet->ImportKeysIntoWitnessOnlyWitnessAccount(account, keysAndBirthDates))
+            throw std::runtime_error("Failed to import keys into account");
+    }
+    else
+    {
+        account = pwallet->CreateWitnessOnlyWitnessAccount(request.params[0].get_str().c_str(), keysAndBirthDates);
+        if (!account)
+            throw std::runtime_error("Failed to create witness-only witness account");
+    }
 
     //NB! No need to trigger a rescan CreateWitnessOnlyWitnessAccount already did this.
 
@@ -1799,7 +1823,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
-    { "witness",                 "importwitnessaccountkeys",        &importwitnessaccountkeys,       true,    {} },
+    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account" "encoded_key_url" "create_account"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"startheight", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"startheight", "count"} },
@@ -1821,7 +1845,7 @@ static const CRPCCommand commands[] =
     { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
     { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
     { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
-    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic or enckey", "type", "read only"} },
+    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_enckey", "type", "read_only"} },
     { "mnemonics",               "listseeds",                       &listseeds,                      true,    {} },
 };
 
