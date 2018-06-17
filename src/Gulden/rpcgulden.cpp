@@ -1319,9 +1319,9 @@ static UniValue importseed(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "importseed \"mnemonic or pubkey\" \"read only\" \n"
+            "importseed \"mnemonic_or_pubkey\" \"type\" \"is_read_only\" \n"
             "\nSet the currently active seed by UUID.\n"
-            "1. \"mnemonic or pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "1. \"mnemonic_or_pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
             "2. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
             "\nThe default is correct in almost all cases, only experts should work with the other types\n"
             "\nBIP44 - This is the standard Gulden seed type that should be used in almost all cases.\n"
@@ -1330,7 +1330,7 @@ static UniValue importseed(const JSONRPCRequest& request)
             "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
             "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
-            "3. \"read only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
+            "3. \"is_read_only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -2085,7 +2085,7 @@ static const CRPCCommand commands[] =
     { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
     { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
     { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
-    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_enckey", "type", "read_only"} },
+    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_pubkey", "type", "is_read_only"} },
     { "mnemonics",               "listseeds",                       &listseeds,                      true,    {} },
 };
 
