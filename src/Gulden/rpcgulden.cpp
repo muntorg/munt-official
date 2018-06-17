@@ -1426,7 +1426,7 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
                 rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
                 rec.push_back(Pair("label", accountPair.second->getLabel()));
                 rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
-                rec.push_back(Pair("type", ""));
+                rec.push_back(Pair("type", GetAccountTypeString(accountPair.second->m_Type)));
                 rec.push_back(Pair("HD_type", "legacy"));
                 allAccounts.push_back(rec);
             }
