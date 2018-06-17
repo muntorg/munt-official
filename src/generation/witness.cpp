@@ -274,6 +274,8 @@ struct CBlockIndexCacheComparator
 //fixme: (2.1) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
+bool witnessScriptsAreDirty = false;
+
 void static GuldenWitness()
 {
     LogPrintf("GuldenWitness started\n");
@@ -399,6 +401,10 @@ void static GuldenWitness()
                                 nStartingBlockWeight += 200;
 
                                 std::shared_ptr<CReserveKeyOrScript> coinbaseScript = nullptr;
+                                if (witnessScriptsAreDirty)
+                                {
+                                    reserveKeys.clear();
+                                }
                                 auto findIter = reserveKeys.find(selectedWitnessAccount->getUUID());
                                 if (findIter != reserveKeys.end())
                                 {
@@ -406,7 +412,7 @@ void static GuldenWitness()
                                 }
                                 else
                                 {
-                                    GetMainSignals().ScriptForMining(coinbaseScript, selectedWitnessAccount);
+                                    GetMainSignals().ScriptForWitnessing(coinbaseScript, selectedWitnessAccount);
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
                                 }
 
