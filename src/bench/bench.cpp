@@ -23,7 +23,7 @@ static double gettimedouble(void) {
 
 benchmark::BenchRunner::BenchRunner(std::string name, benchmark::BenchFunction func)
 {
-    benchmarks().insert(std::make_pair(name, func));
+    benchmarks().insert(std::pair(name, func));
 }
 
 void

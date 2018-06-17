@@ -42,6 +42,9 @@ AC_SUBST(LIBUNIVALUE_CURRENT)
 AC_SUBST(LIBUNIVALUE_REVISION)
 AC_SUBST(LIBUNIVALUE_AGE)
 
+dnl Require C++17 compiler (no GNU extensions)
+AX_CXX_COMPILE_STDCXX([17], [noext], [mandatory], [nodefault])
+
 LT_INIT
 LT_LANG([C++])
 

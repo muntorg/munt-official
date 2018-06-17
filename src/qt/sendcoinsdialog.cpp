@@ -443,13 +443,15 @@ void SendCoinsDialog::on_sendButton_clicked()
 
         if (!rcp.forexAddress.isEmpty())
         {
-            amount = "<b>" + GuldenUnits::format(GuldenUnits::NLG, rcp.forexAmount);
+            amount = "<b>";
             if (rcp.forexPaymentType == SendCoinsRecipient::PaymentType::IBANPayment)
             {
+                amount.append(GuldenUnits::format(GuldenUnits::NLG, rcp.forexAmount, false, GuldenUnits::separatorAlways, 2));
                 amount.append(" Euro");
             }
             else if(rcp.forexPaymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
             {
+                amount.append(GuldenUnits::format(GuldenUnits::NLG, rcp.forexAmount));
                 amount.append(" BTC");
             }
             amount.append(" (");
@@ -493,7 +495,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     {
         // append fee string if a fee is required
         questionString.append("<hr />");
-        questionString.append(GuldenUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
+        questionString.append(GuldenUnits::format(GuldenUnits::NLG, txFee, false, GuldenUnits::separatorAlways));
+        questionString.append(" NLG ");
         questionString.append(tr("added as transaction fee"));
 
         // append transaction size

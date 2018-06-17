@@ -65,6 +65,10 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
+    void plotGraphForAccount(CAccount* account, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip);
+
+    void updateAccountIndicators();
+
 Q_SIGNALS:
     void requestEmptyWitness();
     void requestFundWitness(CAccount* funderAccount);
@@ -72,9 +76,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateUnit(int nNewUnit_);
-    void plotGraphForAccount(CAccount* account, uint64_t nTotalNetworkWeightTip);
     void update();
     void numBlocksChanged(int,QDateTime,double,bool);
+    void compoundEarningsCheckboxClicked();
     void unitButtonClicked();
     void viewWitnessInfoClicked();
     void emptyWitnessClicked();

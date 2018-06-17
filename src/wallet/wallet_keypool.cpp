@@ -91,6 +91,10 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
         auto& account = accountPair.second;
         if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
         {
+            // If account uses a fixed keypool then never generate new keys to add to it.
+            if (account->IsFixedKeyPool())
+                continue;
+
             for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
             {
                 auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
@@ -141,7 +145,11 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         CWalletDB walletdb(*dbw);
 
         nIndex = *(keyPool.begin());
-        keyPool.erase(keyPool.begin());
+        // If account uses a fixed keypool then never remove keys from it.
+        if (!forAccount->IsFixedKeyPool())
+        {
+            keyPool.erase(keyPool.begin());
+        }
         if (!walletdb.ReadPool(nIndex, keypoolentry))
             throw std::runtime_error(std::string(__func__) + ": read failed");
         if (!forAccount->HaveKey(keypoolentry.vchPubKey.GetID()))
@@ -155,7 +163,7 @@ void CWallet::KeepKey(int64_t nIndex)
 {
     // Remove from key pool
     CWalletDB walletdb(*dbw);
-        walletdb.ErasePool(this, nIndex);
+    walletdb.ErasePool(this, nIndex);
     LogPrintf("keypool keep %d\n", nIndex);
 }
 
@@ -188,11 +196,15 @@ bool CWallet::GetKeyFromPool(CPubKey& result, CAccount* forAccount, int64_t keyC
         LOCK(cs_wallet);
         int64_t nIndex = 0;
         ReserveKeyFromKeyPool(nIndex, keypool, forAccount, keyChain);
-        if (nIndex == -1)
+        if (nIndex == -1 )
         {
-            if (IsLocked()) return false;
-            result = GenerateNewKey(*forAccount, keyChain);
-            return true;
+            // If account uses a fixed keypool then never generate keys for it.
+            if (!forAccount->IsFixedKeyPool())
+            {
+                if (IsLocked()) return false;
+                result = GenerateNewKey(*forAccount, keyChain);
+                return true;
+            }
         }
         KeepKey(nIndex);
         result = keypool.vchPubKey;
@@ -254,26 +266,65 @@ void CWallet::importPrivKey(const CKey& privKey)
     CPubKey pubkey = privKey.GetPubKey();
     assert(privKey.VerifyPubKey(pubkey));
 
-    CKeyID vchAddress = pubkey.GetID();
+    CKeyID importKeyID = pubkey.GetID();
 
     //Don't import an address that is already in wallet.
-    if (pactiveWallet->HaveKey(vchAddress))
+    if (pactiveWallet->HaveKey(importKeyID))
     {
         uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Wallet already contains key."), CClientUIInterface::MSG_ERROR);
         return;
     }
 
-    CAccount* pAccount = pactiveWallet->GenerateNewLegacyAccount(_("Imported legacy"));
-    pactiveWallet->MarkDirty();
-    pactiveWallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
+    CAccount* newAccount = new CAccount();
+    newAccount->m_Type = ImportedPrivateKeyAccount;
 
-    if (!pactiveWallet->AddKeyPubKey(privKey, pubkey, *pAccount, KEYCHAIN_EXTERNAL))
+    //fixme: (2.1) - Optionally take a key bith date here.
+    importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1);
+
+    pactiveWallet->addAccount(newAccount, _("Imported key"));
+}
+
+void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
+{
+    assert(!forAccount->IsHD());
+
+    LOCK(cs_wallet);
+    CWalletDB walletdb(*dbw);
+
+    //Find current unique highest key index across *all* keypools.
+    int64_t nIndex = 1;
+    for (auto accountPair : mapAccounts)
     {
-        uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Failed to add key to wallet."), CClientUIInterface::MSG_ERROR);
-        return;
+        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        {
+            auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
+            if (!keyPool.empty())
+                nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
+        }
     }
 
-    // Whenever a key is imported, we need to scan the whole chain - do so now
-    pactiveWallet->nTimeFirstKey = 1;
+    //fixme: (2.1) Add some key metadata here as well?
+
+    CPubKey pubKeyToInsert = privKeyToInsert.GetPubKey();
+    if (!AddKeyPubKey(privKeyToInsert, pubKeyToInsert, *forAccount, KEYCHAIN_EXTERNAL))
+        throw std::runtime_error("forceKeyIntoKeypool: AddKeyPubKey failed");
+    if (!walletdb.WritePool( ++nIndex, CKeyPool(pubKeyToInsert, getUUIDAsString(forAccount->getUUID()), KEYCHAIN_EXTERNAL ) ) )
+        throw std::runtime_error(std::string(__func__) + ": writing imported key failed");
+    forAccount->setKeyPoolExternal.insert(nIndex);
+    LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
+}
+
+void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
+{
+    assert(!targetAccount->IsHD());
+
+    pactiveWallet->MarkDirty();
+    pactiveWallet->mapKeyMetadata[importKeyID].nCreateTime = 1;
+
+    // Force key into the keypool
+    forceKeyIntoKeypool(targetAccount, privKey);
+
+    // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
+    pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
     boost::thread t(rescanThread); // thread runs free
 }

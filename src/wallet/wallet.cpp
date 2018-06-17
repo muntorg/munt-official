@@ -598,7 +598,7 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
 
 void CWallet::AddToSpends(const COutPoint& outpoint, const uint256& wtxid)
 {
-    mapTxSpends.insert(std::make_pair(outpoint, wtxid));
+    mapTxSpends.insert(std::pair(outpoint, wtxid));
 
     std::pair<TxSpends::iterator, TxSpends::iterator> range;
     range = mapTxSpends.equal_range(outpoint);
@@ -762,13 +762,13 @@ DBErrors CWallet::ReorderTransactions()
     for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
     {
         CWalletTx* wtx = &((*it).second);
-        txByTime.insert(std::make_pair(wtx->nTimeReceived, TxPair(wtx, (CAccountingEntry*)0)));
+        txByTime.insert(std::pair(wtx->nTimeReceived, TxPair(wtx, (CAccountingEntry*)0)));
     }
     std::list<CAccountingEntry> acentries;
     walletdb.ListAccountCreditDebit("", acentries);
     for(CAccountingEntry& entry : acentries)
     {
-        txByTime.insert(std::make_pair(entry.nTime, TxPair((CWalletTx*)0, &entry)));
+        txByTime.insert(std::pair(entry.nTime, TxPair((CWalletTx*)0, &entry)));
     }
 
     nOrderPosNext = 0;
@@ -898,7 +898,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     uint256 hash = wtxIn.GetHash();
 
     // Inserts only if not already there, returns tx inserted or tx found
-    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
+    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::pair(hash, wtxIn));
     CWalletTx& wtx = (*ret.first).second;
     if (wtx.strFromAccount.empty())
     {
@@ -917,7 +917,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     {
         wtx.nTimeReceived = GetAdjustedTime();
         wtx.nOrderPos = IncOrderPosNext(&walletdb);
-        wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
+        wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
         wtx.nTimeSmart = ComputeTimeSmart(wtx);
         AddToSpends(hash);
     }
@@ -982,7 +982,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     mapWallet[hash] = wtxIn;
     CWalletTx& wtx = mapWallet[hash];
     wtx.BindWallet(this);
-    wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
+    wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
     for (const CTxIn& txin : wtx.tx->vin) {
         auto it = mapWallet.find(txin.prevout.hash);
@@ -1342,7 +1342,7 @@ void CWallet::ReacceptWalletTransactions()
 
         //fixme: (2.0) (PoW2)
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
-            mapSorted.insert(std::make_pair(wtx.nOrderPos, &wtx));
+            mapSorted.insert(std::pair(wtx.nOrderPos, &wtx));
         }
     }
 
@@ -1450,7 +1450,7 @@ std::vector<uint256> CWallet::ResendWalletTransactionsBefore(int64_t nTime, CCon
         // Don't rebroadcast if newer than nTime:
         if (wtx.nTimeReceived > nTime)
             continue;
-        mapSorted.insert(std::make_pair(wtx.nTimeReceived, &wtx));
+        mapSorted.insert(std::pair(wtx.nTimeReceived, &wtx));
     }
     for(PAIRTYPE(const unsigned int, CWalletTx*)& item : mapSorted)
     {
@@ -1921,7 +1921,7 @@ bool CWallet::AddAccountingEntry(const CAccountingEntry& acentry, CWalletDB *pwa
 
     laccentries.push_back(acentry);
     CAccountingEntry & entry = laccentries.back();
-    wtxOrdered.insert(std::make_pair(entry.nOrderPos, TxPair((CWalletTx*)0, &entry)));
+    wtxOrdered.insert(std::pair(entry.nOrderPos, TxPair((CWalletTx*)0, &entry)));
 
     return true;
 }
@@ -2230,7 +2230,7 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 
 void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
-    //fixme: (2.0) - Allow defaultmining account to be seperately selected?
+    //fixme: (2.0) - Allow default mining account to be seperately selected?
     std::shared_ptr<CReserveKeyOrScript> rKey;
     if (forAccount)
     {
@@ -2457,7 +2457,7 @@ bool CWallet::AddDestData(const CTxDestination &dest, const std::string &key, co
     if (boost::get<CNoDestination>(&dest))
         return false;
 
-    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
+    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::pair(key, value));
     return CWalletDB(*dbw).WriteDestData(CGuldenAddress(dest).ToString(), key, value);
 }
 
@@ -2470,7 +2470,7 @@ bool CWallet::EraseDestData(const CTxDestination &dest, const std::string &key)
 
 bool CWallet::LoadDestData(const CTxDestination &dest, const std::string &key, const std::string &value)
 {
-    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::make_pair(key, value));
+    mapAddressBook[CGuldenAddress(dest).ToString()].destdata.insert(std::pair(key, value));
     return true;
 }
 

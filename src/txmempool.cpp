@@ -378,7 +378,7 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     // all the appropriate checks.
     LOCK(cs);
     indexed_transaction_set::iterator newit = mapTx.insert(entry).first;
-    mapLinks.insert(make_pair(newit, TxLinks()));
+    mapLinks.insert(std::pair(newit, TxLinks()));
 
     // Update transaction for any feeDelta created by PrioritiseTransaction
     // TODO: refactor so that the fee delta is calculated before inserting
@@ -399,7 +399,7 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     const CTransaction& tx = newit->GetTx();
     std::set<uint256> setParentTransactions;
     for (unsigned int i = 0; i < tx.vin.size(); i++) {
-        mapNextTx.insert(std::make_pair(&tx.vin[i].prevout, &tx));
+        mapNextTx.insert(std::pair(&tx.vin[i].prevout, &tx));
         setParentTransactions.insert(tx.vin[i].prevout.hash);
     }
     // Don't bother worrying about child transactions of this one.

@@ -8,6 +8,8 @@
 #include "account.h"
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
+#include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
+#include <boost/algorithm/string.hpp> // for split()
 #include <Gulden/mnemonic.h>
 #include "util.h"
 
@@ -653,7 +655,6 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
 CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive)
 {
-
     assert(state != AccountState::ShadowChild);
     assert(state != AccountState::Deleted);
     CAccountHD* newAccount = NULL;
@@ -707,6 +708,15 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
     //NB! We have to do this -after- we create the new shadow account, otherwise the shadow account ends up being the active account.
     addAccount(newAccount, strAccount, bMakeActive);
 
+    if (subType == AccountType::PoW2Witness)
+    {
+        newAccount->SetWarningState(AccountStatus::WitnessEmpty);
+    }
+    else
+    {
+        newAccount->SetWarningState(AccountStatus::Default);
+    }
+
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
     if( activeAccount ) //fixme: (2.1) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
         static_cast<CWallet*>(this)->TopUpKeyPool(1, 0, activeAccount);//We only assign the bare minimum addresses here - and let the background thread do the rest
@@ -717,6 +727,73 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
 CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
+    addAccount(newAccount, strAccount);
+
+    return newAccount;
+}
+
+bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
+{
+    if (!forAccount)
+        return false;
+    if (forAccount->m_Type != WitnessOnlyWitnessAccount)
+        return false;
+
+    for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
+    {
+        CPubKey pubWitnessKey = privateWitnessKey.GetPubKey();
+        CKeyID witnessKeyID = pubWitnessKey.GetID();
+        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(forAccount, privateWitnessKey, witnessKeyID, nKeyBirthDate);
+    }
+    return true;
+}
+
+std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
+{
+    if (!boost::starts_with(sEncodedPrivWitnessKeysURL, "gulden://witnesskeys?keys="))
+        throw std::runtime_error("Not a valid \"witness only\" witness account URI");
+
+    std::vector<SecureString> encodedPrivateWitnessKeyStrings;
+    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+26, sEncodedPrivWitnessKeysURL.end());
+    boost::split(encodedPrivateWitnessKeyStrings, encPrivWitnessKeyWithoutPrefix, boost::is_any_of(":"));
+
+    std::vector<std::pair<CKey, uint64_t>> privateWitnessKeys;
+    privateWitnessKeys.reserve(encodedPrivateWitnessKeyStrings.size());
+    for (const auto& encodedPrivateWitnessKeyString : encodedPrivateWitnessKeyStrings)
+    {
+        std::vector<SecureString> encodedPrivateWitnessKeyAndBirthDate;
+        boost::split(encodedPrivateWitnessKeyAndBirthDate, encodedPrivateWitnessKeyString, boost::is_any_of("#"));
+        if (encodedPrivateWitnessKeyAndBirthDate.size() > 2)
+            throw std::runtime_error("Not a valid Gulden private witness key/birthdate pair");
+
+        uint64_t nKeyBirthDate = 1;
+        if (encodedPrivateWitnessKeyAndBirthDate.size() == 2)
+            ParseUInt64(encodedPrivateWitnessKeyAndBirthDate[1].c_str(), &nKeyBirthDate);
+
+        try
+        {
+            CGuldenSecret secretPrivWitnessKey;
+            secretPrivWitnessKey.SetString(encodedPrivateWitnessKeyAndBirthDate[0].c_str());
+            privateWitnessKeys.emplace_back(secretPrivWitnessKey.GetKey(), nKeyBirthDate);
+        }
+        catch(...)
+        {
+            throw std::runtime_error("Not a valid Gulden private witness key");
+        }
+    }
+    return privateWitnessKeys;
+}
+
+CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
+{
+    CAccount* newAccount = NULL;
+
+    newAccount = new CAccount();
+    newAccount->m_Type = WitnessOnlyWitnessAccount;
+
+    ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates);
+
+    // Write new account
     addAccount(newAccount, strAccount);
 
     return newAccount;

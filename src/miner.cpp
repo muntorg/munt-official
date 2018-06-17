@@ -1211,14 +1211,11 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
 }
 
 
-
-
-
-static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool compoundWitnessEarnings, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, CAmount compoundTargetAmount, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
 {
     // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
     if (!bSegSigIsEnabled)
-        compoundWitnessEarnings = false;
+        compoundTargetAmount = 0;
 
     // First obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
     CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
@@ -1230,17 +1227,68 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     witnessDestination.lockFromBlock = witnessInput.lockFromBlock;
     witnessDestination.lockUntilBlock = witnessInput.lockUntilBlock;
     witnessDestination.failCount = witnessInput.failCount;
+
     // If this is the first time witnessing the lockFromBlock won't yet be filled in so fill it in now.
     if (witnessDestination.lockFromBlock == 0)
         witnessDestination.lockFromBlock = nSelectedWitnessBlockHeight;
+
     // If fail count is non-zero then we are allowed to decrement it by one every time we witness.
     if (witnessDestination.failCount > 0)
         witnessDestination.failCount = witnessDestination.failCount - 1;
 
-    // Finally create the output(s).
-    // If we are compounding then we add the subsidy to the witness output, otherwise we need a seperate output for the subsidy.
-    coinbaseTx.vout.resize(compoundWitnessEarnings?1:2);
+    // If we are compounding then we need 2 outputs.
+    // If we are compounding then we want only 1 output.
+    // However if we are compounding and there are more fees than compouding rules allow; then the overflow needs to go in a second output so we need 2 outputs again.
+    CAmount noncompoundWitnessBlockSubsidy = 0;
+    CAmount compoundWitnessBlockSubsidy = witnessBlockSubsidy + witnessFeeSubsidy;
+    if (compoundTargetAmount != 0)
+    {
+        // Compound target is negative
+        // Pay the first '-compoundTargetAmount' of reward to non-compound output and compound the remainder.
+        if (compoundTargetAmount < 0)
+        {
+            noncompoundWitnessBlockSubsidy = -compoundTargetAmount;
+            if (noncompoundWitnessBlockSubsidy > compoundWitnessBlockSubsidy)
+            {
+                noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
+                compoundWitnessBlockSubsidy = 0;
+            }
+            else
+            {
+                compoundWitnessBlockSubsidy -= noncompoundWitnessBlockSubsidy;
+            }
+        }
+        // Compound target is positive
+        // Compound the first '-compoundTargetAmount' of reward and pay the remainder to non-compound.
+        else if (compoundWitnessBlockSubsidy > compoundTargetAmount)
+        {
+            noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy - compoundTargetAmount;
+            compoundWitnessBlockSubsidy = compoundTargetAmount;
+        }
 
+        // If we are compounding more than the network allows then reduce accordingly.
+        if (compoundWitnessBlockSubsidy > witnessBlockSubsidy*2)
+        {
+            noncompoundWitnessBlockSubsidy += compoundWitnessBlockSubsidy - witnessBlockSubsidy*2;
+            compoundWitnessBlockSubsidy = witnessBlockSubsidy*2;
+        }
+
+        //fixme: (DUST)
+        //Rudimentary dust prevention - in future possibly improve this.
+        if ((noncompoundWitnessBlockSubsidy > 0) && (noncompoundWitnessBlockSubsidy < 1 * COIN / 10))
+        {
+            noncompoundWitnessBlockSubsidy += 1 * COIN / 10;
+            compoundWitnessBlockSubsidy -= 1 * COIN / 10;
+        }
+    }
+    else
+    {
+        noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
+        compoundWitnessBlockSubsidy = 0;
+    }
+    coinbaseTx.vout.resize((noncompoundWitnessBlockSubsidy == 0) ? 1 : 2);
+
+    // Finally create the output(s).
     if (bSegSigIsEnabled)
     {
         coinbaseTx.vout[0].SetType(CTxOutType::PoW2WitnessOutput);
@@ -1255,13 +1303,9 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
         coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[0].output.scriptPubKey = GetScriptForDestination(witnessDestination);
     }
-    coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue;
+    coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue + compoundWitnessBlockSubsidy;
 
-    if (compoundWitnessEarnings)
-    {
-        coinbaseTx.vout[0].nValue += witnessSubsidy;
-    }
-    else
+    if (noncompoundWitnessBlockSubsidy > 0)
     {
         if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
         {
@@ -1276,11 +1320,11 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
             coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
             coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
         }
-        coinbaseTx.vout[1].nValue = witnessSubsidy;
+        coinbaseTx.vout[1].nValue = noncompoundWitnessBlockSubsidy;
     }
 }
 
-static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, CAmount witnessSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
 {
     bool bSegSigIsEnabled = IsSegSigEnabled(pIndexPrev);
 
@@ -1316,11 +1360,8 @@ static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex
         }
     }
 
-    //fixme: (2.0) - Optionally compound here instead.
-    bool compoundWitnessEarnings = false;
-
     // Output for subsidy and refresh witness address.
-    CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, compoundWitnessEarnings, bSegSigIsEnabled, nSelectedWitnessBlockHeight);
+    CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->getCompounding(), bSegSigIsEnabled, nSelectedWitnessBlockHeight);
 
     return coinbaseTx;
 }
@@ -1435,7 +1476,8 @@ void static GuldenWitness()
                             continue;
 
                         boost::this_thread::interruption_point();
-                        CAmount witnessSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
+                        CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
+                        CAmount witnessFeesSubsidy = 0;
 
                         //fixme: (2.0) (POW2) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
@@ -1502,16 +1544,14 @@ void static GuldenWitness()
                                         {
                                             //fixme: (2.1) emplace_back for better performace?
                                             pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
-                                            //fixme: (2.0) (HIGH) do not include fees as part of witness subsidy if compounding.
-                                            witnessSubsidy += (pblocktemplate->vTxFees[i]);
+                                            witnessFeesSubsidy += (pblocktemplate->vTxFees[i]);
                                         }
                                     }
                                 }
 
 
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                //fixme: (2.0) (HIGH) do not include fees as part of witness subsidy if compounding.
-                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
+                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessBlockSubsidy, witnessFeesSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
 

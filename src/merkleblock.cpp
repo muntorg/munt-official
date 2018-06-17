@@ -25,7 +25,7 @@ CMerkleBlock::CMerkleBlock(const CBlock& block, CBloomFilter& filter)
         if (filter.IsRelevantAndUpdate(*block.vtx[i]))
         {
             vMatch.push_back(true);
-            vMatchedTxn.push_back(std::make_pair(i, hash));
+            vMatchedTxn.push_back(std::pair(i, hash));
         }
         else
             vMatch.push_back(false);

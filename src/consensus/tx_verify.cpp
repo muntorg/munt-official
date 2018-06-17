@@ -15,6 +15,7 @@
 #include "consensus/validation.h"
 #include "script/interpreter.h"
 #include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 
 // TODO remove the following dependencies
 #include "chain.h"
@@ -68,7 +69,7 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
     // Do not enforce sequence numbers as a relative lock time
     // unless we have been instructed to
     if (!fEnforceBIP68) {
-        return std::make_pair(nMinHeight, nMinTime);
+        return std::pair(nMinHeight, nMinTime);
     }
 
     for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++) {
@@ -118,7 +119,7 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
         }
     }
 
-    return std::make_pair(nMinHeight, nMinTime);
+    return std::pair(nMinHeight, nMinTime);
 }
 
 bool EvaluateSequenceLocks(const CBlockIndex& block, std::pair<int, int64_t> lockPair)
@@ -264,29 +265,14 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                 return state.DoS(10, false, REJECT_INVALID, strprintf("PoW2 witness output smaller than %d NLG not allowed.", nMinimumWitnessAmount));
 
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
-            if (witnessDetails.lockFromBlock == 0)
-            {
-                if (witnessDetails.lockUntilBlock - checkHeight < (576 * 30))
-                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
-            }
-            else
-            {
-                if (witnessDetails.lockUntilBlock - witnessDetails.lockFromBlock < (576 * 30))
-                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
-            }
-            if (witnessDetails.lockFromBlock == 0)
-            {
-                if (witnessDetails.lockUntilBlock - checkHeight > (3 * 365 * 576))
-                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
-            }
-            else
-            {
-                if (witnessDetails.lockUntilBlock - witnessDetails.lockFromBlock > (3 * 365 * 576))
-                    return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
-            }
-
             uint64_t nUnused1, nUnused2;
-            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2));
+            int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2);
+            if (nLockLengthInBlocks < (576 * 30))
+                return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for less than minimum of 1 month.");
+            if (nLockLengthInBlocks - checkHeight > (3 * 365 * 576))
+                return state.DoS(10, false, REJECT_INVALID, "PoW2 witness locked for greater than maximum of 3 years.");
+
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
             if (nWeight < nMinimumWitnessWeight)
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW2 witness has insufficient weight.");
@@ -296,13 +282,13 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             {
                 if (witnessDetails.lockFromBlock == 0)
                 {
-                    pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::make_pair(txout,std::move(witnessDetails))));
+                    pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
                 }
                 else
                 {
                     if (tx.IsPoW2WitnessCoinBase())
                     {
-                        pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::make_pair(txout, std::move(witnessDetails))));
+                        pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
                     }
                     else
                     {
@@ -312,14 +298,14 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                             if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
                             {
                                 bundle.bundleType = CWitnessTxBundle::WitnessTxType::SplitType;
-                                bundle.outputs.push_back(std::make_pair(txout, std::move(witnessDetails)));
+                                bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
                                 matchedExistingBundle = true;
                                 break;
                             }
                         }
                         if (!matchedExistingBundle)
                         {
-                            CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::make_pair(txout, std::move(witnessDetails)));
+                            CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::pair(txout, std::move(witnessDetails)));
                             pWitnessBundles->push_back(spendBundle);
                         }
                     }
@@ -608,29 +594,34 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     // Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to the current block height. Can only appear as a "witnesscoinbase" transaction.
                     if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
                     {
+                        if (bundle.outputs[0].first.nValue - prevOut.nValue > GetBlockSubsidyWitness(nInputHeight, Params().GetConsensus()))
+                        {
+                            return state.DoS(50, false, REJECT_INVALID, "witness-coinbase-compounding-too-much");
+                        }
+
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
                     else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
                     {
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RenewType;
                         break;
                     }
                     else if ( IsIncreaseBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
                     {
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::IncreaseType;
                         break;
                     }
                     else if ( IsChangeWitnessKeyBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
                     {
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType;
                         break;
                     }
@@ -650,18 +641,18 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 {
                     if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                         bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                     }
                     if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                        bundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                     }
                 }
                 if (!matchedExistingBundle)
                 {
                     //fixme: (2.0) (HIGH) ensure not still locked nLockFrom.
                     CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType);
-                    spendBundle.inputs.push_back(std::make_pair(prevOut, std::move(inputDetails)));
+                    spendBundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                     pWitnessBundles->push_back(spendBundle);
                 }
             }

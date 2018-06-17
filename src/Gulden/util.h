@@ -65,14 +65,19 @@ inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2W
     return txout;
 }
 
+inline bool IsPoW2WitnessLocked(const CTxOutPoW2Witness& witnessDetails, uint64_t nTipHeight)
+{
+    if (witnessDetails.lockUntilBlock >= nTipHeight)
+        return true;
+    return false;
+}
+
 inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
 {
     CTxOutPoW2Witness witnessDetails;
     if (!GetPow2WitnessOutput(out, witnessDetails))
         return false;
-    if (witnessDetails.lockUntilBlock >= nTipHeight)
-        return true;
-    return false;
+    return IsPoW2WitnessLocked(witnessDetails, nTipHeight);
 }
 
 #endif

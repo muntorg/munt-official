@@ -180,10 +180,17 @@ public:
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
 
-    //! write the account and account label - account label stored seperately to allow for easy changing.
+    //! write the account to the database, this excludes information like the label and compounding status which are written seperately to allow them to be changeable without rewriting the entire account.
+    bool WriteAccount(const std::string& strAccount, const CAccount* account);
+
+    //! write the account label
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
     bool EraseAccountLabel(const std::string& strUUID);
-    bool WriteAccount(const std::string& strAccount, const CAccount* account);
+
+    //! write the account compounding settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
+    bool WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount);
+    bool EraseAccountCompoundingSettings(const std::string& strUUID);
+
     //! write the seed (mnemonic / account index counter)
     bool WriteHDSeed(const CHDSeed& seed);
     bool DeleteHDSeed(const CHDSeed& seed);

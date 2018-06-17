@@ -1037,37 +1037,44 @@ static QString getAccountLabel(CAccount* account)
     QString accountName = QString::fromStdString( account->getLabel() );
     accountName = limitString(accountName, 26);
 
-    QString accountNamePrefix;
-    if ( account->IsMobi() )
+    QString accountNamePrefixIndicator; //Large prefix icon (e.g. building for witness, credit card for normal account)
+    QString accountNamePrefixIndicatorQualifier; //small superscript prefix icon in addition to large icon (e.g. warning icon for warning condition, lock for locked witness, eye for read only account)
+    if (account->IsReadOnly())
     {
-        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf10b");
+        accountNamePrefixIndicatorQualifier = GUIUtil::fontAwesomeLight("\uf06e"); // Eye
     }
-    else if ( account->IsPoW2Witness() )
+    if (account->IsMobi())
     {
-        if (account->GetWarningState() == AccountStatus::WitnessEmpty)
-            accountNamePrefix = GUIUtil::fontAwesomeLight("\uf19c");
-        else if (account->GetWarningState() == AccountStatus::WitnessPending)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf251")));
-        else if (account->GetWarningState() == AccountStatus::WitnessExpired)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(colourSpan("#c97676", superscriptSpan(GUIUtil::fontAwesomeSolid("\uf12a"))));
-        else if (account->GetWarningState() == AccountStatus::WitnessEnded)
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf11e")));
-        else
-            accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(superscriptSpan(GUIUtil::fontAwesomeSolid("\uf023")));
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf10b"); // Mobile phone
     }
-    else if ( !account->IsHD() )
+    else if (account->m_Type == ImportedPrivateKeyAccount)
     {
-        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf187");
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf084");
+    }
+    else if (account->IsPoW2Witness())
+    {
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf19c"); // Institutional building
+        if (account->m_Type == WitnessOnlyWitnessAccount)
+            accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf06e"); // Eye
+        switch (account->GetWarningState())
+        {
+            case AccountStatus::WitnessEmpty: break;
+            case AccountStatus::Default: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf023"); break; // Lock
+            case AccountStatus::WitnessPending: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf251"); break; // Hourglass
+            case AccountStatus::WitnessExpired: accountNamePrefixIndicatorQualifier += colourSpan("#c97676", GUIUtil::fontAwesomeSolid("\uf12a")); break; // Exclamation
+            case AccountStatus::WitnessEnded: accountNamePrefixIndicatorQualifier += GUIUtil::fontAwesomeSolid("\uf11e"); break; // Checkered flag
+        }
+    }
+    else if (!account->IsHD())
+    {
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf187"); // Archival box
     }
     else
     {
-        accountNamePrefix = GUIUtil::fontAwesomeLight("\uf09d");
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf09d"); // Credit card
     }
-    if ( account->IsReadOnly() )
-    {
-        //fixme: make small if existing prefix
-        accountNamePrefix += GUIUtil::fontAwesomeLight("\uf06e");
-    }
+
+    QString accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(accountNamePrefixIndicator).arg(superscriptSpan(accountNamePrefixIndicatorQualifier));
     accountName = QString("<table cellspacing=0 padding=0><tr><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
 
     return accountName;

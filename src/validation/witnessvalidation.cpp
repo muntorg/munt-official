@@ -240,7 +240,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
     static const arith_uint256 base = arith_uint256(100000000) * arith_uint256(100000000) * arith_uint256(100000000);
     #define BASE(x) (arith_uint256(x)*base)
     #define AI(x) arith_uint256(x)
-    return 100 + std::max(( ((BASE(1)/((BASE(nWeight)/AI(networkTotalWeight))))).GetLow64() * 5 ), (uint64_t)500);
+    return 100 + std::max(( ((BASE(1)/((BASE(nWeight)/AI(networkTotalWeight))))).GetLow64() * 10 ), (uint64_t)1000);
     #undef AI
     #undef BASE
 }

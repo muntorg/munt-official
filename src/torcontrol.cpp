@@ -262,7 +262,7 @@ static std::pair<std::string,std::string> SplitTorReplyLine(const std::string &s
     }
     if (ptr < s.size())
         ++ptr; // skip ' '
-    return make_pair(type, s.substr(ptr));
+    return std::pair(type, s.substr(ptr));
 }
 
 /** Parse reply arguments in the form 'METHODS=COOKIE,SAFECOOKIE COOKIEFILE=".../control_auth_cookie"'.
@@ -369,7 +369,7 @@ static std::pair<bool,std::string> ReadBinaryFile(const fs::path &filename, size
 {
     FILE *f = fsbridge::fopen(filename, "rb");
     if (f == NULL)
-        return std::make_pair(false,"");
+        return std::pair(false,"");
     std::string retval;
     char buffer[128];
     size_t n;
@@ -377,13 +377,13 @@ static std::pair<bool,std::string> ReadBinaryFile(const fs::path &filename, size
         // Check for reading errors so we don't return any data if we couldn't
         // read the entire file (or up to maxsize)
         if (ferror(f))
-            return std::make_pair(false,"");
+            return std::pair(false,"");
         retval.append(buffer, buffer+n);
         if (retval.size() > maxsize)
             break;
     }
     fclose(f);
-    return std::make_pair(true,retval);
+    return std::pair(true,retval);
 }
 
 /** Write contents of std::string to a file.

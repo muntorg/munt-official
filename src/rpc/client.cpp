@@ -147,7 +147,9 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "echojson", 9, "arg9" },
     { "setgenerate", 0, "generate" },
     { "setgenerate", 1, "genproclimit" },
-    { "importseed", 1, "read only" },
+    { "importseed", 1, "read_only" },
+    { "importwitnesskeys", 2, "importwitnesskeys" },
+    { "setwitnesscompound", 1, "amount" },
     { "getwitnessinfo", 1, "verbose" },
     { "sethashlimit", 0, "limit" },
     { "dumpdiffarray", 0, "height" },
@@ -169,10 +171,10 @@ public:
     CRPCConvertTable();
 
     bool convert(const std::string& method, int idx) {
-        return (members.count(std::make_pair(method, idx)) > 0);
+        return (members.count(std::pair(method, idx)) > 0);
     }
     bool convert(const std::string& method, const std::string& name) {
-        return (membersByName.count(std::make_pair(method, name)) > 0);
+        return (membersByName.count(std::pair(method, name)) > 0);
     }
 };
 
@@ -182,9 +184,9 @@ CRPCConvertTable::CRPCConvertTable()
         (sizeof(vRPCConvertParams) / sizeof(vRPCConvertParams[0]));
 
     for (unsigned int i = 0; i < n_elem; i++) {
-        members.insert(std::make_pair(vRPCConvertParams[i].methodName,
+        members.insert(std::pair(vRPCConvertParams[i].methodName,
                                       vRPCConvertParams[i].paramIdx));
-        membersByName.insert(std::make_pair(vRPCConvertParams[i].methodName,
+        membersByName.insert(std::pair(vRPCConvertParams[i].methodName,
                                             vRPCConvertParams[i].paramName));
     }
 }
