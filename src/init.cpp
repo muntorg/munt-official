@@ -35,6 +35,7 @@
 #include "httprpc.h"
 #include "key.h"
 #include "generation/miner.h"
+#include "generation/witness.h"
 #include "netbase.h"
 #include "net.h"
 #include "net_processing.h"
