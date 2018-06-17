@@ -1788,6 +1788,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
     { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
 
+    //fixme: (2.1) Many of these belong in accounts category as well.
+    //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
     { "witness",                 "changekeyforwitnessaddress",      &changekeyforwitnessaddress,     true,    {} },
     { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {} },
@@ -1795,9 +1797,9 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {} },
     { "witness",                 "setwitnessgeneration",            &setwitnessgeneration,           true,    {} },
     { "witness",                 "getwitnessgeneration",            &getwitnessgeneration,           true,    {} },
-    { "accounts",                "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
-    { "accounts",                "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
-    { "accounts",                "importwitnessaccountkeys",        &importwitnessaccountkeys,       true,    {} },
+    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {} },
+    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {} },
+    { "witness",                 "importwitnessaccountkeys",        &importwitnessaccountkeys,       true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"startheight", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"startheight", "count"} },
