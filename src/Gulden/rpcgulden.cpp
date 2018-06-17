@@ -1777,7 +1777,7 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
     return forAccount->getCompounding();
 }
 
-static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
+static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1791,15 +1791,15 @@ static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "setwitnessoutputkey \"account\" \n"
+            "setwitnessrewardscript \"account\" \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "\nReturns the address into which non-compound earning payments will occur.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
-            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -1813,7 +1813,7 @@ static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
     return "Not yet implemented, please check back in next release";
 }
 
-static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
+static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
 {
      #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1827,15 +1827,15 @@ static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessoutputkey \"account\" \n"
+            "getwitnessrewardscript \"account\" \n"
             "\nGet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "\nReturns the current key into which non-compound earning payments will occur.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
-            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -2059,8 +2059,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "setwitnessoutputkey",             &setwitnessoutputkey,            true,    {"account"} },
-    { "witness",                 "getwitnessoutputkey",             &getwitnessoutputkey,            true,    {"account"} },
+    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account"} },
+    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
