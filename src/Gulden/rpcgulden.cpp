@@ -1593,6 +1593,40 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     if (!isValid)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
 
+    
+    //fixme: (2.0) implement
+    return "Not yet implemented, please check back in next release";
+}
+
+static UniValue renewwitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "renewwitnessaddress \"address\" \n"
+            "\nRenew an expired witness address. \n"
+            "1. \"address\" (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "\nReturns the new witness address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("renewwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("renewwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    CGuldenAddress forAddress(request.params[0].get_str());
+    bool isValid = forAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+
     //fixme: (2.0) implement
     return "Not yet implemented, please check back in next release";
 }
@@ -2101,16 +2135,17 @@ static const CRPCCommand commands[] =
 
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
-    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
-    { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
-    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
-    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
-    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
-    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
+    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
+    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
+    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
+    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,           true,    {"address"} },
+    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
+    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
+    { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
