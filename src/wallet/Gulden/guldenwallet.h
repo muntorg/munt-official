@@ -244,26 +244,27 @@ public:
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time);
     virtual void RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time);
 
-    virtual void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
-    virtual void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
-    virtual void deleteAccount(CAccount* account);
+    void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
+    void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
+    void deleteAccount(CAccount* account);
 
-    virtual CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
-    virtual CAccount* GenerateNewLegacyAccount(std::string strAccount);
-    virtual CAccount* CreateWitnessOnlyWitnessAccount(std::string strAccount, SecureString encPrivWitnessKey);
-    virtual CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
+    CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
+    CAccount* GenerateNewLegacyAccount(std::string strAccount);
 
-    virtual void setActiveAccount(CAccount* newActiveAccount);
-    virtual CAccount* getActiveAccount();
-    virtual void setActiveSeed(CHDSeed* newActiveSeed);
-    virtual CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
-    virtual void DeleteSeed(CHDSeed* deleteSeed, bool purge);
-    virtual CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
-    virtual CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
-    virtual CHDSeed* getActiveSeed();
+    CAccount* GenerateNewLegacyAccount(std::string strAccount);
+    CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
+
+    void setActiveAccount(CAccount* newActiveAccount);
+    CAccount* getActiveAccount();
+    void setActiveSeed(CHDSeed* newActiveSeed);
+    CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
+    void DeleteSeed(CHDSeed* deleteSeed, bool purge);
+    CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
+    CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
+    CHDSeed* getActiveSeed();
 
     //! for wallet upgrade
-    virtual void ForceRewriteKeys(CAccount& forAccount);
+    void ForceRewriteKeys(CAccount& forAccount);
 
     // The 'shadow pool thread' sets delay lock true if it had a backlog of work it wants to do on the unlocked wallet
     bool delayLock;
