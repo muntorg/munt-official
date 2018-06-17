@@ -732,10 +732,24 @@ CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
     return newAccount;
 }
 
-CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, SecureString sEncodedPrivWitnessKeysURL)
+bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
 {
-    CAccount* newAccount = NULL;
+    if (!forAccount)
+        return false;
+    if (forAccount->m_Type != WitnessOnlyWitnessAccount)
+        return false;
 
+    for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
+    {
+        CPubKey pubWitnessKey = privateWitnessKey.GetPubKey();
+        CKeyID witnessKeyID = pubWitnessKey.GetID();
+        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(forAccount, privateWitnessKey, witnessKeyID, nKeyBirthDate);
+    }
+    return true;
+}
+
+std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
+{
     if (!boost::starts_with(sEncodedPrivWitnessKeysURL, "gulden://witnesskeys?keys="))
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
 
@@ -767,16 +781,17 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
             throw std::runtime_error("Not a valid Gulden private witness key");
         }
     }
+    return privateWitnessKeys;
+}
+
+CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
+{
+    CAccount* newAccount = NULL;
 
     newAccount = new CAccount();
     newAccount->m_Type = WitnessOnlyWitnessAccount;
 
-    for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeys)
-    {
-        CPubKey pubWitnessKey = privateWitnessKey.GetPubKey();
-        CKeyID witnessKeyID = pubWitnessKey.GetID();
-        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(newAccount, privateWitnessKey, witnessKeyID, nKeyBirthDate);
-    }
+    ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates);
 
     // Write new account
     addAccount(newAccount, strAccount);

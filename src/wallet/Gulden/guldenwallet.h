@@ -251,7 +251,16 @@ public:
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
     CAccount* GenerateNewLegacyAccount(std::string strAccount);
 
-    CAccount* GenerateNewLegacyAccount(std::string strAccount);
+    //! Parse the contents of a gulden "witness key" URL into an vector of  private key / birth date  pairs.
+    std::vector<std::pair<CKey, uint64_t>> ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL);
+
+    //! Import vector of  private key / birth date  pairs into an existing "witness only" account.
+    CAccount* CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates);
+
+    //! Create a new "witness only" account and import vector of  private key / birth date  pairs into it.
+    bool ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates);
+
+    //! Create a read-only HD account using an encoded public key.
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     void setActiveAccount(CAccount* newActiveAccount);
