@@ -1919,7 +1919,7 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
     UniValue result(UniValue::VOBJ);
-    if (!forAccount->hasNonCompoundRewardScript
+    if (!forAccount->hasNonCompoundRewardScript())
     {
         result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
     }
@@ -2142,7 +2142,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
-    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,           true,    {"address"} },
+    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"address"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
