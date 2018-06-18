@@ -1,0 +1,11 @@
+--- a/qtwebkit/Source/WebCore/Modules/webaudio/PeriodicWave.cpp
++++ b/qtwebkit/Source/WebCore/Modules/webaudio/PeriodicWave.cpp
+@@ -105,7 +105,7 @@
+ 
+     // Calculate the pitch range.
+     float ratio = fundamentalFrequency > 0 ? fundamentalFrequency / m_lowestFundamentalFrequency : 0.5;
+-    float centsAboveLowestFrequency = log2f(ratio) * 1200;
++    float centsAboveLowestFrequency = ratio * 1200;
+ 
+     // Add one to round-up to the next range just in time to truncate partials before aliasing occurs.
+     float pitchRange = 1 + centsAboveLowestFrequency / m_centsPerRange;
