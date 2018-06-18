@@ -1,5 +1,5 @@
---- qtwebkit/Source/WebCore/platform/graphics/ImageBuffer.cpp
-+++ qtwebkit/Source/WebCore/platform/graphics/ImageBuffer.cpp
+--- a/qtwebkit/Source/WebCore/platform/graphics/ImageBuffer.cpp
++++ b/qtwebkit/Source/WebCore/platform/graphics/ImageBuffer.cpp
 @@ -116,3 +116,69 @@
  }
  
@@ -57,7 +57,7 @@
 +
 +extern "C" float powf_old(float x, float y);
 +#ifdef __i386__
-+__asm(".symver powf_old,powf@GLIBC_2.1");
++__asm(".symver powf_old,powf@GLIBC_2.0");
 +#elif defined(__amd64__)
 +__asm(".symver powf_old,powf@GLIBC_2.2.5");
 +#elif defined(__arm__)

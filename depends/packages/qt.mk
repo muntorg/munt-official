@@ -30,7 +30,7 @@ $(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6
 $(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
 $(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
 
-$(package)_ldflags += "-Wl,--wrap=__divmoddi4 -Wl,--wrap=log2f -Wl,--wrap=powf"
+$(package)_ldflags += -Wl,--wrap=log2f -Wl,--wrap=powf
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
