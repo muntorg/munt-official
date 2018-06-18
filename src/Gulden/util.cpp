@@ -454,6 +454,11 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
     return (nUntilBlockOut + 1) - nFromBlockOut;
 }
 
+uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t tipHeight)
+{
+    return (lockUntilBlock < tipHeight) ? 0 : (lockUntilBlock - tipHeight) + 1;
+}
+
 int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
 {
     DO_BENCHMARK("WIT: GetPoW2Phase3ActivationTime", BCLog::BENCH|BCLog::WITNESS);
