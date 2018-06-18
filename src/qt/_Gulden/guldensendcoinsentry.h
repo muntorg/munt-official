@@ -85,6 +85,7 @@ private Q_SLOTS:
     void payAmountChanged();
     void nocksQuoteProcessed();
     void nocksTimeout();
+    void sendAllClicked();
 
 private:
     CAccount* targetWitnessAccount;
