@@ -19,6 +19,7 @@
 #include "fs.h"
 #include "primitives/transaction.h"
 #include "init.h"
+#include "validation/validation.h"
 #include "policy/policy.h"
 #include "protocol.h"
 #include "script/script.h"
@@ -271,12 +272,36 @@ QString formatGuldenURI(const SendCoinsRecipient &info)
     return ret;
 }
 
-bool isDust(const QString& address, const CAmount& amount)
+bool isDust(const QString& addressString, const CAmount& amount)
 {
-    CTxDestination dest = CGuldenAddress(address.toStdString()).Get();
-    CScript script = GetScriptForDestination(dest);
-    CTxOut txOut(amount, script);
-    return IsDust(txOut, ::dustRelayFee);
+    CGuldenAddress address(addressString.toStdString());
+    if (IsSegSigEnabled(chainActive.TipPrev()))
+    {
+        CKeyID idPrimary;
+        CKeyID idSecondary;
+        address.GetKeyID(idPrimary, &idSecondary);
+        if (address.IsValidWitness())
+        {
+            CTxOutPoW2Witness witnessOutput;
+            witnessOutput.witnessKeyID = idPrimary;
+            witnessOutput.spendingKeyID = idSecondary;
+            CTxOut txOut(amount, witnessOutput);
+            return IsDust(txOut, ::dustRelayFee);
+        }
+        else
+        {
+            CTxOutStandardKeyHash keyHashOutput(idPrimary);
+            CTxOut txOut(amount, keyHashOutput);
+            return IsDust(txOut, ::dustRelayFee);
+        }
+    }
+    else
+    {
+        CTxDestination dest = address.Get();
+        CScript script = GetScriptForDestination(dest);
+        CTxOut txOut(amount, script);
+        return IsDust(txOut, ::dustRelayFee);
+    }
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
