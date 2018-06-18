@@ -952,6 +952,8 @@ void WitnessDialog::updateAccountIndicators()
         }
     }
 
+    // If we don't yet have any active witness accounts then bypass the expensive GetWitnessInfo() calls.
+    // This should make syncing a lot faster for new wallets (for instance)
     bool haveAnyNonShadowWitnessAccounts = false;
     for ( const auto& [uuid, account] : pactiveWallet->mapAccounts )
     {
