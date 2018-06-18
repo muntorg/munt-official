@@ -114,9 +114,15 @@ public:
     bool Set(const CKeyID &id);
     bool Set(const CScriptID &id);
     bool Set(const CTxDestination &dest);
+
+    //! Returns whether the address represents a valid address (this includes witness addresses as well)
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
+
+    //! Returns whether the address represents a valid witness address as opposed to just a valid address.
     bool IsValidWitness(const CChainParams& params) const;
+
+    //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
     bool IsValidBitcoin() const;
 
     CGuldenAddress() {}
@@ -125,7 +131,12 @@ public:
     CGuldenAddress(const char* pszAddress) { SetString(pszAddress); }
 
     CTxDestination Get() const;
-    bool GetKeyID(CKeyID &keyID) const;
+
+    //! Returns the keyID associated with the address 
+    //! In the case of a witness address this is the 'witness key ID'
+    //! If 'pSecondaryKeyID' is passed in then this will be set to the 'spending key ID'
+    bool GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID=nullptr) const;
+
     bool IsScript() const;
 };
 
