@@ -140,6 +140,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         nTransactionScanProgressPercent = 0;
         ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent); // show rescan progress in GUI, if -rescan on startup
+        LogPrintf("Rescanning...\n");
         double dProgressStart = GuessVerificationProgress(chainParams.TxData(), pindex);
         double dProgressTip = GuessVerificationProgress(chainParams.TxData(), chainActive.Tip());
         while (pindex && !fAbortRescan)
@@ -182,5 +183,6 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         fScanningWallet = false;
     }
+    LogPrintf("Rescan done.\n");
     return ret;
 }
