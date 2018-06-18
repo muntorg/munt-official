@@ -774,17 +774,20 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 4)
         throw std::runtime_error(
-            "fundwitnessaccount \"fundingaccount\" \"witnessaccount\" \"amount\" \"time\" \n"
-            "Lock \"amount\" NLG in witness account \"witnessaccount\" for time period \"time\"\n"
-            "\"fundingaccount\" is the account from which the locked funds will be claimed.\n"
+            "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \n"
+            "Lock \"amount\" NLG in \"witness_account\" for time period \"time\"\n"
+            "\"funding_account\" is the account from which the locked funds will be claimed.\n"
             "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
             "\nArguments:\n"
-            "1. \"fundingaccount\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
-            "2. \"witnessaccount\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
-            "\"txid\"               (string) The transaction id.\n"
+            "[\n"
+            "     \"address\",       (string) The witness address that has been created \n"
+            "     \"txid\"           (string) The transaction id.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
@@ -920,10 +923,176 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
-    return wtx.GetHash().GetHex();
+    UniValue result(UniValue::VOBJ);
+    CTxDestination dest;
+    ExtractDestination(wtx.tx->vout[0], dest);
+    result.push_back(Pair(CGuldenAddress(dest).ToString(), wtx.GetHash().GetHex()));
+    return result;
 }
 
+static UniValue extendwitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
 
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 4)
+        throw std::runtime_error(
+            "extendwitnessaddress \"funding_account\" \"witness_address\" \"amount\" \"time\" \n"
+            "Change the currently locked amount and time period for \"witness_address\" to match the new \"amount\" ant time period \"time\"\n"
+            "Note the new amount must be ≥ the old amount, and the new time period must exceed the remaining lock period that is currently set on the account\n"
+            "\"funding_account\" is the account from which the locked funds will be claimed.\n"
+            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "\nArguments:\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "\nResult:\n"
+            "\"txid\"                (string) The transaction id.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
+            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
+
+    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (nPoW2TipPhase < 2)
+        throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], true);
+    if (!witnessAccount)
+        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
+    if (!witnessAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
+    if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
+        throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
+
+    // arg3 - amount
+    CAmount nAmount =  AmountFromValue(request.params[2]);
+    if (nAmount < nMinimumWitnessAmount*COIN)
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+
+    // arg4 - lock period.
+    // Calculate lock period based on suffix (if one is present) otherwise leave as is.
+    int nLockPeriodInBlocks = 0;
+    int nMultiplier = 1;
+    std::string sLockPeriodInBlocks = request.params[3].getValStr();
+    if (boost::algorithm::ends_with(sLockPeriodInBlocks, "y"))
+    {
+        nMultiplier = 365 * 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "m"))
+    {
+        nMultiplier = 30 * 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "w"))
+    {
+        nMultiplier = 7 * 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "d"))
+    {
+        nMultiplier = 576;
+        sLockPeriodInBlocks.pop_back();
+    }
+    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
+    {
+        nMultiplier = 1;
+        sLockPeriodInBlocks.pop_back();
+    }
+    if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
+    nLockPeriodInBlocks *=  nMultiplier;
+
+    if (nLockPeriodInBlocks > 3 * 365 * 576)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
+
+    if (nLockPeriodInBlocks < 30 * 576)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
+
+    // Add a small buffer to give us time to enter the blockchain
+    if (nLockPeriodInBlocks == 30 * 576)
+        nLockPeriodInBlocks += 50;
+
+    // Enforce minimum weight
+    int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
+    if (nWeight < nMinimumWitnessWeight)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+    }
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // Finally attempt to create and send the witness transaction.
+    CPoW2WitnessDestination destinationPoW2Witness;
+    destinationPoW2Witness.lockFromBlock = 0;
+    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
+    destinationPoW2Witness.failCount = 0;
+    {
+        CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+        CPubKey pubWitnessKey;
+        if (!keyWitness.GetReservedKey(pubWitnessKey))
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keyWitness.ReturnKey();
+        destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+    }
+    {
+        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
+        CReserveKeyOrScript keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
+        CPubKey pubSpendingKey;
+        if (!keySpending.GetReservedKey(pubSpendingKey))
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
+
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keySpending.ReturnKey();
+        destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
+    }
+
+    CAmount nFeeRequired;
+    std::string strError;
+    std::vector<CRecipient> vecSend;
+    int nChangePosRet = -1;
+
+    CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
+    vecSend.push_back(recipient);
+
+    CWalletTx wtx;
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(wtx, reservekey, g_connman.get(), state))
+    {
+        strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    return wtx.GetHash().GetHex();
+}
 
 static UniValue getactiveaccount(const JSONRPCRequest& request)
 {
@@ -1743,8 +1912,13 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
             "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
-            "1. \"account\"        (string) The UUID or unique label of the account.\n"
-            "2. amount             (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "1. \"account\"            (string) The UUID or unique label of the account.\n"
+            "2. amount               (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"           (string) The amount that has been set.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnesscompound \"My witness account\" 20", "")
             + HelpExampleRpc("setwitnesscompound \"My witness account\" 20", ""));
@@ -1833,7 +2007,10 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
             "2. \"pubkey_or_script\"      (required) An hex encoded script or public key.\n"
             "3. \"force_pubkey\"          (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
-            "\nReturns the address into which non-compound earning payments will occur.\n"
+            "[\n"
+            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"           (string) The amount that has been set.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
             + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
@@ -1905,7 +2082,10 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
             "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
-            "\nReturns the current key into which non-compound earning payments will occur.\n"
+            "[\n"
+            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
+            "     \"hex_script\"       (string) Hex encoded script that has been set.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
             + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
@@ -1921,7 +2101,7 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     if (!forAccount->hasNonCompoundRewardScript())
     {
-        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ""));
     }
     else
     {
@@ -2129,15 +2309,15 @@ static const CRPCCommand commands[] =
     { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
 
-    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"blockspecifier", "verbose"} },
-    { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
-    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
-
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
+    { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
+    { "witness",                 "extendwitnessaddress",            &extendwitnessaddress,           true,    {"funding_account", "witness_address", "amount", "time" } },
+    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time" } },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
+    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"blockspecifier", "verbose"} },
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },

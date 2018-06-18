@@ -688,7 +688,6 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
-    static CAccount* cachedForAccount = nullptr;
     // If SegSig is enabled then allow possibility of witness compounding.
     ui->compoundEarningsCheckBox->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
 
@@ -1125,6 +1124,8 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
     // Must not be a witness account itself.
     std::string sSubType = sourceModel()->data(index0, AccountTableModel::TypeRole).toString().toStdString();
     if (sSubType == GetAccountTypeString(AccountType::PoW2Witness))
+        return false;
+    if (sSubType == GetAccountTypeString(AccountType::WitnessOnlyWitnessAccount))
         return false;
 
     // Must have sufficient balance to fund the operation.
