@@ -688,7 +688,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             bool matchedOutput = false;
             CKeyID idPrimary;
             CKeyID idSecondary;
-            address.GetKeyID(idPrimary, *idSecondary);
+            address.GetKeyID(idPrimary, &idSecondary);
             switch(txout.output.nType)
             {
                 case CTxOutType::ScriptLegacyOutput:
