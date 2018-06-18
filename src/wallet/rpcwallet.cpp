@@ -194,49 +194,6 @@ UniValue getnewaddress(const JSONRPCRequest& request)
 }
 
 
-/*CGuldenAddress GetAccountAddress(CWallet* const pwallet, std::string strAccount, bool bForceNew=false)
-{
-    CPubKey pubKey;
-    if (!pwallet->GetAccountPubkey(pubKey, strAccount, bForceNew)) {
-        throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
-    }
-
-    return CGuldenAddress(pubKey.GetID());
-}
-
-UniValue getaccountaddress(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() != 1)
-        throw std::runtime_error(
-            "getaccountaddress \"account\"\n"
-            "\nDEPRECATED. Returns the current Gulden address for receiving payments to this account.\n"
-            "\nArguments:\n"
-            "1. \"account\"       (string, required) The account name for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
-            "\nResult:\n"
-            "\"address\"          (string) The account Gulden address\n"
-            "\nExamples:\n"
-            + HelpExampleCli("getaccountaddress", "")
-            + HelpExampleCli("getaccountaddress", "\"\"")
-            + HelpExampleCli("getaccountaddress", "\"myaccount\"")
-            + HelpExampleRpc("getaccountaddress", "\"myaccount\"")
-        );
-
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-
-    // Parse the account first so we don't generate a key if there's an error
-    std::string strAccount = AccountFromValue(request.params[0]);
-
-    UniValue ret(UniValue::VSTR);
-
-    ret = GetAccountAddress(pwallet, strAccount).ToString();
-    return ret;
-}*/
-
 UniValue getrawchangeaddress(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -284,53 +241,6 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
 
     return CGuldenAddress(keyID).ToString();
 }
-
-
-/*UniValue setaccount(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw std::runtime_error(
-            "setaccount \"address\" \"account\"\n"
-            "\nDEPRECATED. Sets the account associated with the given address.\n"
-            "\nArguments:\n"
-            "1. \"address\"         (string, required) The Gulden address to be associated with an account.\n"
-            "2. \"account\"         (string, required) The account to assign the address to.\n"
-            "\nExamples:\n"
-            + HelpExampleCli("setaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"tabby\"")
-            + HelpExampleRpc("setaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"tabby\"")
-        );
-
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-
-    CGuldenAddress address(request.params[0].get_str());
-    if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
-
-    std::string strAccount;
-    if (request.params.size() > 1)
-        strAccount = AccountFromValue(request.params[1]);
-
-    // Only add the account if the address is yours.
-    if (IsMine(*pwallet, address.Get())) {
-        // Detect when changing the account of an address that is the 'unused current key' of another account:
-        if (pwallet->mapAddressBook.count(address.ToString()))
-            std::string strOldAccount = pwallet->mapAddressBook[address.Get()].name;
-            if (address == GetAccountAddress(pwallet, strOldAccount)) {
-                GetAccountAddress(pwallet, strOldAccount, true);
-            }
-        }
-        pwallet->SetAddressBook(address.Get(), strAccount, "receive");
-    }
-    else
-        throw JSONRPCError(RPC_MISC_ERROR, "setaccount can only be used with own address");
-
-    return NullUniValue;
-}*/
 
 
 UniValue getaccount(const JSONRPCRequest& request)
@@ -817,65 +727,6 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
 }
 
 
-/*UniValue getreceivedbyaccount(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw std::runtime_error(
-            "getreceivedbyaccount \"account\" ( minconf )\n"
-            "\nDEPRECATED. Returns the total amount received by addresses with <account> in transactions with at least [minconf] confirmations.\n"
-            "\nArguments:\n"
-            "1. \"account\"      (string, required) The selected account, may be the default account using \"\".\n"
-            "2. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
-            "\nResult:\n"
-            "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
-            "\nExamples:\n"
-            "\nAmount received by the default account with at least 1 confirmation\n"
-            + HelpExampleCli("getreceivedbyaccount", "\"\"") +
-            "\nAmount received at the tabby account including unconfirmed amounts with zero confirmations\n"
-            + HelpExampleCli("getreceivedbyaccount", "\"tabby\" 0") +
-            "\nThe amount with at least 6 confirmation, very safe\n"
-            + HelpExampleCli("getreceivedbyaccount", "\"tabby\" 6") +
-            "\nAs a json rpc call\n"
-            + HelpExampleRpc("getreceivedbyaccount", "\"tabby\", 6")
-        );
-
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-
-    // Minimum confirmations
-    int nMinDepth = 1;
-    if (request.params.size() > 1)
-        nMinDepth = request.params[1].get_int();
-
-    // Get the set of pub keys assigned to account
-    std::string strAccount = AccountFromValue(request.params[0]);
-    std::set<CTxDestination> setAddress = pwallet->GetAccountAddresses(strAccount);
-
-    // Tally
-    CAmount nAmount = 0;
-    for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet) {
-        const CWalletTx& wtx = pairWtx.second;
-        if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
-            continue;
-
-        for(const CTxOut& txout : wtx.tx->vout)
-        {
-            CTxDestination address;
-            if (ExtractDestination(txout.scriptPubKey, address) && IsMine(*pwallet, address) && setAddress.count(address)) {
-                if (wtx.GetDepthInMainChain() >= nMinDepth)
-                    nAmount += txout.nValue;
-            }
-        }
-    }
-
-    return ValueFromAmount(nAmount);
-}*/
-
-
 UniValue getbalance(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1296,6 +1147,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
+    //fixme: (2.0)
     /*DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount;
@@ -2608,10 +2460,6 @@ UniValue getwalletinfo(const JSONRPCRequest& request)
         obj.push_back(Pair("unlocked_until", pwallet->nRelockTime));
     }
     obj.push_back(Pair("paytxfee",      ValueFromAmount(payTxFee.GetFeePerK())));
-    /*
-    if (!masterKeyID.IsNull())
-         obj.push_back(Pair("hdmasterkeyid", masterKeyID.GetHex()));
-    */
     return obj;
 }
 
@@ -3266,13 +3114,11 @@ static const CRPCCommand commands[] =
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true,   {"filename"} },
     { "wallet",             "encryptwallet",            &encryptwallet,            true,   {"passphrase"} },
-    //{ "wallet",             "getaccountaddress",        &getaccountaddress,        true,   {"account"} },
     { "wallet",             "getaccount",               &getaccount,               true,   {"address"} },
     { "wallet",             "getaddressesbyaccount",    &getaddressesbyaccount,    true,   {"account"} },
     { "wallet",             "getbalance",               &getbalance,               false,  {"account","minconf","include_watchonly"} },
     { "wallet",             "getnewaddress",            &getnewaddress,            true,   {"account"} },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,   {} },
-    //{ "wallet",             "getreceivedbyaccount",     &getreceivedbyaccount,     false,  {"account","minconf"} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false,  {"address","minconf"} },
     { "wallet",             "getrescanprogress",        &getrescanprogress,           false,  {} },
     { "wallet",             "gettransaction",           &gettransaction,           false,  {"txid","include_watchonly"} },
@@ -3300,7 +3146,6 @@ static const CRPCCommand commands[] =
     { "wallet",             "sendmany",                 &sendmany,                 false,  {"fromaccount","amounts","minconf","comment","subtractfeefrom"} },
     { "wallet",             "sendtoaddress",            &sendtoaddress,            false,  {"address","amount","comment","comment_to","subtractfeefromamount"} },
     { "wallet",             "sendtoaddressfromaccount", &sendtoaddressfromaccount, false,  {"fromaccount", "address", "amount", "comment", "comment-to", "subtractfeefromamount"} },
-    //{ "wallet",             "setaccount",               &setaccount,               true,   {"address","account"} },
     { "wallet",             "settxfee",                 &settxfee,                 true,   {"amount"} },
     { "wallet",             "signmessage",              &signmessage,              true,   {"address","message"} },
     { "wallet",             "walletlock",               &walletlock,               true,   {} },
