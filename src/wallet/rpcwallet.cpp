@@ -730,11 +730,12 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getreceivedbyaddress \"address\" ( minconf )\n"
             "\nReturns the total amount received by the given address in transactions with at least minconf confirmations.\n"
+            "\nNB! For witness addresses this will not return locked funds or earnings, but will return regular received funds that have been sent to either of the two address keys.\n"
             "\nArguments:\n"
-            "1. \"address\"         (string, required) The Gulden address for transactions.\n"
-            "2. minconf             (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
+            "1. \"address\"   (string, required) The Gulden address for transactions.\n"
+            "2. minconf         (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
-            "amount   (numeric) The total amount in " + CURRENCY_UNIT + " received at this address.\n"
+            "amount           (numeric) The total amount in " + CURRENCY_UNIT + " received at this address.\n"
             "\nExamples:\n"
             "\nThe amount from transactions with at least 1 confirmation\n"
             + HelpExampleCli("getreceivedbyaddress", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"") +
@@ -752,8 +753,10 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
     CGuldenAddress address = CGuldenAddress(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
-    if (!IsMine(*pwallet, scriptPubKey)) {
+
+    // Below check handles both script, standard key hash and witness cases
+    if (!IsMine(*pwallet, address.Get()))
+    {
         return ValueFromAmount(0);
     }
 
@@ -764,17 +767,50 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
 
     // Tally
     CAmount nAmount = 0;
-    for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet) {
+    for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet)
+    {
         const CWalletTx& wtx = pairWtx.second;
         if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
             continue;
 
-         //fixme: (2.0)
-        /*
         for(const CTxOut& txout : wtx.tx->vout)
-            if (txout.output.scriptPubKey == scriptPubKey)
-                if (wtx.GetDepthInMainChain() >= nMinDepth)
-                    nAmount += txout.nValue;*/
+        {
+            bool matchedOutput = false;
+            CKeyID idPrimary;
+            CKeyID idSecondary;
+            address.GetKeyID(idPrimary, *idSecondary);
+            switch(txout.output.nType)
+            {
+                case CTxOutType::ScriptLegacyOutput:
+                {
+                    if (txout.output.scriptPubKey == GetScriptForDestination(address.Get())) { matchedOutput = true; }; break;
+                }
+                case CTxOutType::StandardKeyHashOutput:
+                {
+                    bool primaryMatched = ((!idPrimary.IsNull()) && txout.output.standardKeyHash.keyID == idPrimary);
+                    bool secondaryMatched = ((!idSecondary.IsNull()) && txout.output.standardKeyHash.keyID == idSecondary);
+                    if (primaryMatched || secondaryMatched)
+                        matchedOutput = true;
+                    break;
+                }
+                //NB! The below test will not succeed except on a new witness account because PoW2WitnessOutput is always in coinbase
+                //Leaving the code here for clarity and possible future implementation.
+                #if 0
+                case CTxOutType::PoW2WitnessOutput:
+                {
+                    bool primaryMatched = ((!idPrimary.IsNull()) && txout.output.witnessDetails.witnessKeyID == idPrimary);
+                    bool secondaryMatched = ((!idSecondary.IsNull()) && txout.output.witnessDetails.spendingKeyID == idSecondary);
+                    if (primaryMatched || secondaryMatched)
+                        matchedOutput = true;
+                    break;
+                }
+                #else
+                case CTxOutType::PoW2WitnessOutput: break;
+                #endif
+            }
+            if (matchedOutput && wtx.GetDepthInMainChain() >= nMinDepth)
+                nAmount += txout.nValue;
+        }
     }
 
     return  ValueFromAmount(nAmount);
