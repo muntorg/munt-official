@@ -2395,6 +2395,8 @@ UniValue getrescanprogress(const JSONRPCRequest& request)
              "getrescanprogress\n"
             "\nGet progress of wallet rescan.\n"
             "\nExamples:\n"
+            "\nResult:\n"
+            "false|number        Returns false if no scan is in progress, otherwise returns a percentage.\n"
             + HelpExampleCli("getrescanprogress", "\"\"") +
             "\nAs a JSON-RPC call\n"
             + HelpExampleRpc("getrescanprogress", "")
