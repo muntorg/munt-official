@@ -377,10 +377,9 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size2a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
-        //fixme: (2.0) check for off by 1 error.
         /** Eliminate addresses that are within 100 blocks from lock period expiring, or whose lock period has expired. **/
         //LogPrint(BCLog::WITNESS, "Witness pool size3b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
-        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return !(details.lockUntilBlock - nMinAge >= nBlockHeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return (GetPoW2RemainingLockLengthInBlocks(details.lockUntilBlock, nBlockHeight) <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size3a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
