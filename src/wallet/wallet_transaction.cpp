@@ -323,7 +323,8 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                             return false;
                         }
 
-                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
+                        CTxOutStandardKeyHash standardKeyHashKeyID(vchPubKey.GetID());
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, standardKeyHashKeyID));
                     }
                     else
                     {
@@ -608,7 +609,8 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                             return false;
                         }
 
-                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
+                        CTxOutStandardKeyHash standardKeyHashKeyID(vchPubKey.GetID());
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, standardKeyHashKeyID));
                     }
                     else
                     {
