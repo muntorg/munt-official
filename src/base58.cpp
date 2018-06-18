@@ -279,6 +279,11 @@ bool CGuldenAddress::IsValid(const CChainParams& params) const
     return fCorrectSize && fKnownVersion;
 }
 
+bool CGuldenAddress::IsValidWitness() const
+{
+    return IsValidWitness(Params());
+}
+
 bool CGuldenAddress::IsValidWitness(const CChainParams& params) const
 {
     if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))

@@ -120,6 +120,7 @@ public:
     bool IsValid(const CChainParams &params) const;
 
     //! Returns whether the address represents a valid witness address as opposed to just a valid address.
+    bool IsValidWitness() const;
     bool IsValidWitness(const CChainParams& params) const;
 
     //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
