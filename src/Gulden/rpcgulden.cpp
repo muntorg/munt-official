@@ -1877,19 +1877,22 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "rotatewitnessaddress \"address\" \n"
             "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
             "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "\nResult:\n"
-            "\nReturns the new witness address.\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
             + HelpExampleRpc("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
-     // Basic sanity checks.
+    // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
     if (!IsSegSigEnabled(chainActive.Tip()))
@@ -2022,7 +2025,7 @@ static UniValue renewwitnessaddress(const JSONRPCRequest& request)
     return "Not yet implemented, please check back in next release";
 }
 
-static UniValue splitwitnessaddress(const JSONRPCRequest& request)
+static UniValue splitwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -2034,35 +2037,129 @@ static UniValue splitwitnessaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 2)
+    if (request.fHelp || request.params.size() != 3)
         throw std::runtime_error(
-            "splitwitnessaddress \"address\" \"amounts\" \n"
+            "splitwitnessaccount \"address\" \"amounts\" \n"
             "\nSplit a witness address into two seperate witness addresses, all details of the addresses remain identical other than a reduction in amounts.\n"
             "\nThis is useful in the event that an account has exceeded 1 percent of the network weight. \n"
-            "1. \"address\"        (required) The unique UUID or label for the account.\n"
-            "2. \"amounts\"        (string, required) A json object with amounts for the new addresses\n"
+            "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "3. \"amounts\"                (string, required) A json object with amounts for the new addresses\n"
             "    {\n"
-            "      \"amount\"      (numeric) The amount that should go in each new account\n"
+            "      \"amount\"              (numeric) The amount that should go in each new account\n"
             "      ,...\n"
             "    }\n"
             "\nResult:\n"
-            "\nReturns the new witness addresses.\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", "")
-            + HelpExampleRpc("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", ""));
+            + HelpExampleCli("splitwitnessaccount 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", "")
+            + HelpExampleRpc("splitwitnessaccount 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
-    bool isValid = forAddress.IsValidWitness(Params());
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.Tip()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
 
-    if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+    EnsureWalletIsUnlocked(pwallet);
 
-    UniValue splitInto = request.params[1].get_obj();
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    // arg3 - 'split' paramaters
+    UniValue splitInto = request.params[2].get_obj();
     if (splitInto.getValues().size() < 2)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Split command requires at least two outputs");
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    //fixme: (2.1) - Handle address
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account has too many witness outputs cannot split [%s].", request.params[1].get_str()));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    CAmount splitTotal=0;
+    std::vector<CAmount> splitAmounts;
+    for (const auto& unparsedSplitAmount : splitInto.getValues())
+    {
+        CAmount splitValue = AmountFromValue(unparsedSplitAmount);
+        splitTotal += splitValue;
+        splitAmounts.emplace_back(splitValue);
+    }
+
+    if (splitTotal != currentWitnessTxOut.nValue)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Split values don't match original value [%s] [%s]", ValueFromAmount(splitTotal).get_str(), ValueFromAmount(currentWitnessTxOut.nValue).get_str()));
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction splitWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(splitWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness outputs
+        for (const CAmount& splitAmount : splitAmounts)
+        {
+            CTxOut splitWitnessTxOutput;
+            splitWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+            // As we are splitting the amount, only the amount may change.
+            splitWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+            splitWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+            splitWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+            splitWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
+            splitWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+            splitWitnessTxOutput.nValue = splitAmount;
+            splitWitnessTransaction.vout.push_back(splitWitnessTxOutput);
+        }
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, splitWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(reservekey, splitWitnessTransaction, reasonForFail, &finalTransactionHash))
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
 }
 
 static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
@@ -2081,7 +2178,7 @@ static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
         throw std::runtime_error(
             "mergewitnessaddresses \"addresses\" \n"
             "\nMerge multiple witness addresses into a single one.\n"
-            "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaddress\".\n"
+            "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaccount\".\n"
             "\nThis is useful in the event that the network weight has risen significantly and an account that was previously split could now earn better as a single account. \n"
             "1. \"addresses\"      (string, required) A json object with amounts for the new addresses\n"
             "    {\n"
@@ -2349,7 +2446,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getwitnessaccountkeys \"account\" \n"
             "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
-            "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaddress\", this will include all of them \n"
+            "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaccount\", this will include all of them \n"
             "1. \"account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
@@ -2547,7 +2644,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"address"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
-    { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
+    { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account" "witness_account", "amounts"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
