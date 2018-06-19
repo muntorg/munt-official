@@ -11,7 +11,6 @@
 #include "validation/versionbitsvalidation.h"
 #include "validation/witnessvalidation.h"
 #include "versionbits.h"
-#include <boost/algorithm/string/predicate.hpp> // for starts_with() and ends_with()
 
 #include "txdb.h"
 
@@ -434,40 +433,6 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
     return nWeight.GetLow64();
 }
 
-uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
-{
-    uint64_t lockPeriodInBlocks = 0;
-    int nMultiplier = 1;
-    if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
-    {
-        nMultiplier = 365 * 576;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
-    {
-        nMultiplier = 30 * 576;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "w"))
-    {
-        nMultiplier = 7 * 576;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "d"))
-    {
-        nMultiplier = 576;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
-    {
-        nMultiplier = 1;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    if (!ParseUInt64(formattedLockPeriodSpecifier, &lockPeriodInBlocks))
-        return 0;
-    lockPeriodInBlocks *=  nMultiplier;
-    return lockPeriodInBlocks;
-}
 
 int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {

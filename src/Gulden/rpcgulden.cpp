@@ -855,6 +855,43 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
     return matchedOutputs;
 }
 
+//! Given a string specifier, calculate a lock length in blocks to match it. e.g. 1d -> 576; 5b -> 5; 1m -> 17280
+//! Returns 0 if specifier is invalid.
+uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
+{
+    uint64_t lockPeriodInBlocks = 0;
+    int nMultiplier = 1;
+    if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
+    {
+        nMultiplier = 365 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
+    {
+        nMultiplier = 30 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "w"))
+    {
+        nMultiplier = 7 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "d"))
+    {
+        nMultiplier = 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
+    {
+        nMultiplier = 1;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    if (!ParseUInt64(formattedLockPeriodSpecifier, &lockPeriodInBlocks))
+        return 0;
+    lockPeriodInBlocks *=  nMultiplier;
+    return lockPeriodInBlocks;
+}
+
 static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET

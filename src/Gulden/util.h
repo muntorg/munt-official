@@ -29,9 +29,6 @@ int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride
 
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
 
-//! Given a string specifier, calculate a lock length in blocks to match it. e.g. 1d -> 576; 5b -> 5; 1m -> 17280
-//! Returns 0 if specifier fails to parse.
-uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string& formattedLockPeriodSpecifier);
 
 //! Calculate how many blocks a witness transaction is locked for from an output
 //! Always use this helper instead of attempting to calculate directly - to avoid off by 1 errors.
