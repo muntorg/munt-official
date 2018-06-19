@@ -350,11 +350,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         sub.address = addressIn;
                     }
                     sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                    std:: string addressOut;
                     if (ExtractDestination(txout, address) && IsMine(*account, address))
                     {
                         // Received by Gulden Address
                         sub.type = TransactionRecord::RecvWithAddress;
-                        //sub.address = CGuldenAddress(address).ToString();
+                        addressOut = CGuldenAddress(address).ToString();
                     }
                     else
                     {
@@ -365,9 +366,11 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     if (wtx.IsPoW2WitnessCoinBase())
                     {
                         sub.type = TransactionRecord::GeneratedWitness;
+                        sub.address = addressOut;
                     }
                     else if (wtx.IsCoinBase())
                     {
+                        sub.address = addressOut;
                         // Generated
                         if (sub.credit == 20 * COIN && sub.debit == 0)
                         {
@@ -413,6 +416,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
             }
 
+            
             isminetype fAllToMe = ISMINE_SPENDABLE;
             std::vector<CTxOut> vNotToMe;
             for(const CTxOut& txout : outputs)
@@ -542,12 +546,22 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 //fixme: (2.1) (HIGH) - This can be displayed better...
                 CAmount nNetMixed = 0;
+                std::string outAddresses;
                 for (const CTxOut& txout : outputs)
                 {
                     isminetype mine = IsMine(*account, txout);
                     if (mine == ISMINE_SPENDABLE)
                     {
                         nNetMixed += txout.nValue;
+                    }
+
+                    CTxDestination address;
+                    if (ExtractDestination(txout, address))
+                    {
+                        // Sent to Gulden Address
+                        if (!outAddresses.empty())
+                            outAddresses += " ";
+                        outAddresses += CGuldenAddress(address).ToString();
                     }
                 }
                 for (const CTxIn& txin : inputs)
@@ -582,9 +596,11 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     if (wtx.IsPoW2WitnessCoinBase())
                     {
                         sub.type = TransactionRecord::GeneratedWitness;
+                        sub.address = outAddresses;
                     }
                     else if (wtx.IsCoinBase())
                     {
+                        sub.address = outAddresses;
                         if (sub.credit == 20 * COIN && sub.debit == 0)
                         {
                             sub.type = TransactionRecord::GeneratedWitness;
