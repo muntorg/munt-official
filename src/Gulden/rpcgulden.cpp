@@ -818,6 +818,42 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
 }
 
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    for (const auto& [outpoint, coin] : allWitnessCoins)
+    {
+        CTxDestination compareDestination;
+        bool fValidAddress = ExtractDestination(coin.out, compareDestination);
+
+        if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
+        {
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+        }
+    }
+    return matchedOutputs;
+}
+
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    for (const auto& [outpoint, coin] : allWitnessCoins)
+    {
+        if (IsMine(*forAccount, coin.out))
+        {
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+        }
+    }
+    return matchedOutputs;
+}
 
 static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 {
@@ -831,17 +867,19 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 4)
+    if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw std::runtime_error(
             "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \n"
-            "Lock \"amount\" NLG in \"witness_account\" for time period \"time\"\n"
-            "\"funding_account\" is the account from which the locked funds will be claimed.\n"
-            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "Lock \"amount\" NLG in \"witness_account\" for time period \"time\" using funds from \"funding_account\"\n"
+            "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
+            "It is highly recommended to rather use 'extendwitnessaddress' in this case which behaves more like what most people would expect.\n"
+            "By default this command will fail if an account already contains an existing funded address.\n"
             "\nArguments:\n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
             "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "5. force_multiple        (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
             "[\n"
             "     \"address\",       (string) The witness address that has been created \n"
@@ -859,6 +897,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (nPoW2TipPhase < 2)
         throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
 
+    EnsureWalletIsUnlocked(pwallet);
+
     // arg1 - 'from' account.
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
     if (!fundingAccount)
@@ -872,6 +912,17 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
     if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
         throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() > 0)
+    {
+        bool fAllowMultiple = false;
+        if (request.params.size() >= 5)
+            fAllowMultiple = request.params[5].get_bool();
+
+        if (!fAllowMultiple)
+            throw std::runtime_error("Account already has an active funded witness address. Perhaps you intended to 'extend' it? See: 'help extendwitnessaddress'");
+    }
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
@@ -901,8 +952,6 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
     }
-
-    EnsureWalletIsUnlocked(pwallet);
 
     // Finally attempt to create and send the witness transaction.
     CPoW2WitnessDestination destinationPoW2Witness;
@@ -960,27 +1009,6 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     ExtractDestination(wtx.tx->vout[0], dest);
     result.push_back(Pair(CGuldenAddress(dest).ToString(), wtx.GetHash().GetHex()));
     return result;
-}
-
-
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
-{
-    std::map<COutPoint, Coin> allWitnessCoins;
-    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
-        throw std::runtime_error("Failed to enumerate all witness coins.");
-
-    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
-    for (const auto& [outpoint, coin] : allWitnessCoins)
-    {
-        CTxDestination compareDestination;
-        bool fValidAddress = ExtractDestination(coin.out, compareDestination);
-
-        if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
-        {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
-        }
-    }
-    return matchedOutputs;
 }
 
 
@@ -2364,7 +2392,7 @@ static const CRPCCommand commands[] =
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
     { "witness",                 "extendwitnessaddress",            &extendwitnessaddress,           true,    {"funding_account", "witness_address", "amount", "time" } },
-    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time" } },
+    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time", "force_multiple" } },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
