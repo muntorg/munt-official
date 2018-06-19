@@ -372,7 +372,7 @@ void static GuldenWitness()
 
                     //Create new block
                     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
-                    if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, pParams))
+                    if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, chainparams))
                     {
                         boost::this_thread::interruption_point();
                         CGetWitnessInfo witnessInfo;

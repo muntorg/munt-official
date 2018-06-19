@@ -117,7 +117,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
             CBlockIndex* pindexNew = currentChain.Tip()->pprev;
             std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
             CBlock& block = *pblock;
-            if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams.GetConsensus()))
+            if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams))
                 return false;
             if (DisconnectBlock(block, currentChain.Tip(), coinView) != DISCONNECT_OK)
                 return false;
@@ -131,7 +131,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
         CBlockIndex* pindexNew = currentChain.Tip()->pprev;
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
         CBlock& block = *pblock;
-        if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams.GetConsensus()))
+        if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams))
             return false;
         if (DisconnectBlock(block, currentChain.Tip(), coinView) != DISCONNECT_OK)
             return false;
@@ -162,7 +162,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
             {
                 pblockConnect = std::make_shared<CBlock>();
                 CBlock& block = *pblockConnect;
-                if (!ReadBlockFromDisk(block, pindexConnect, chainparams.GetConsensus()))
+                if (!ReadBlockFromDisk(block, pindexConnect, chainparams))
                     return false;
             }
             bool rv = ConnectBlock(currentChain, pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams);
@@ -538,7 +538,7 @@ bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseI
     uint256 hashPrevPoWIndex;
 
     // Reconstruct header information of previous witness block from the coinbase of this PoW block.
-    if (!ReadBlockFromDisk(embeddedWitnessBlock, pindexPrev, chainParams.GetConsensus()))
+    if (!ReadBlockFromDisk(embeddedWitnessBlock, pindexPrev, chainParams))
         return false;
 
     embeddedWitnessBlock.witnessHeaderPoW2Sig.resize(65);

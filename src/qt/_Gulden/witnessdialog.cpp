@@ -755,7 +755,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                     {
                         LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
                         //fixme: (2.0) Error handling
-                        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+                        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
                             return;
                         if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
                             return;
@@ -984,7 +984,7 @@ void WitnessDialog::updateAccountIndicators()
         CGetWitnessInfo witnessInfo;
         CBlock block;
         //fixme: (2.0) Error handling.
-        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
             return;
         if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
             return;

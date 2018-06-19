@@ -154,7 +154,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
+static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const CChainParams& params, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -169,7 +169,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
     {
         LOCK(cs_main); // For ReadBlockFromDisk
-        if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, consensusParams))
+        if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, params))
             return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
     }
 
@@ -359,7 +359,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         if (pWitnessBlockToEmbed)
         {
             //NB! Modifies block version so must be called *after* ComputeBlockVersion and not before.
-            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, consensusParams, pWitnessBlockToEmbed, nParentPoW2Phase))
+            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, chainparams, pWitnessBlockToEmbed, nParentPoW2Phase))
                 return nullptr;
         }
     }
@@ -948,7 +948,7 @@ void static GuldenMiner(const CChainParams& chainparams)
                                 {
                                     std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
                                     LOCK(cs_main); // For ReadBlockFromDisk
-                                    if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params().GetConsensus()))
+                                    if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params()))
                                     {
                                         int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
                                         if (nWitnessCoinbaseIndex != -1)

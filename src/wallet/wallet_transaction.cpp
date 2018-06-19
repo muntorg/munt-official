@@ -800,7 +800,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
-    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
     {
         strError = "Error reading block from disk.";
         return false;

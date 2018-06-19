@@ -253,7 +253,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         CBlock block;
         {
             LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
-            if (!ReadBlockFromDisk(block, pTipIndex_, Params().GetConsensus()))
+            if (!ReadBlockFromDisk(block, pTipIndex_, Params()))
                 throw std::runtime_error("Could not load block to obtain PoW² information.");
         }
 
@@ -579,7 +579,7 @@ static UniValue dumptransactionstats(const JSONRPCRequest& request)
     {
         CBlock block;
         LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
-        if (ReadBlockFromDisk(block, pBlock, Params().GetConsensus()))
+        if (ReadBlockFromDisk(block, pBlock, Params()))
         {
             for (auto transaction : block.vtx)
             {
