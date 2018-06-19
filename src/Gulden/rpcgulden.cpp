@@ -930,6 +930,28 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     return result;
 }
 
+
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CWallet* pWallet, CGuldenAddress& searchAddress)
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    for (const auto& [outpoint, coin] : allWitnessCoins)
+    {
+        CTxDestination compareDestination;
+        bool fValidAddress = ExtractDestination(coin.out, compareDestination);
+
+        if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
+        {
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+        }
+    }
+    return matchedOutputs;
+}
+
+
 static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
