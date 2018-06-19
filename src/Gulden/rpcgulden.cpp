@@ -2221,7 +2221,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "setwitnesscompound \"account\" \"amount\"\n"
+            "setwitnesscompound \"witness_account\" \"amount\"\n"
             "\nSet whether a witness account should compound or not.\n"
             "\nCompounding is controlled as follows:\n"
             "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessgeneration\" or a key in the account if \"setwitnessgeneration\" has not been called.\n"
@@ -2231,12 +2231,12 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
             "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
-            "1. \"account\"            (string) The UUID or unique label of the account.\n"
-            "2. amount               (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
+            "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
             "\nResult:\n"
             "[\n"
-            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
-            "     \"amount\"           (string) The amount that has been set.\n"
+            "     \"account_uuid\",            (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"                   (string) The amount that has been set.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnesscompound \"My witness account\" 20", "")
@@ -2275,10 +2275,10 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnesscompound \"account\"\n"
+            "getwitnesscompound \"witness_address\"\n"
             "\nGet the current compound setting for an account.\n"
             "\nArguments:\n"
-            "1. \"account\"        (string) The UUID or unique label of the account.\n"
+            "1. \"witness_address\"        (string) The UUID or unique label of the account.\n"
             "\nResult:\n"
             "\nReturn the current amount set for the account.\n"
             "\nCompounding is controlled as follows:\n"
@@ -2319,16 +2319,16 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3 )
         throw std::runtime_error(
-            "setwitnessrewardscript \"account\" \"address_or_script\" \"force_pubkey\" \n"
+            "setwitnessrewardscript \"witness_account\" \"address_or_script\" \"force_pubkey\" \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"account\"               (required) The unique UUID or label for the account.\n"
-            "2. \"pubkey_or_script\"      (required) An hex encoded script or public key.\n"
-            "3. \"force_pubkey\"          (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
+            "3. \"force_pubkey\"           (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
             "[\n"
-            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
-            "     \"amount\"           (string) The amount that has been set.\n"
+            "     \"account_uuid\",        (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"               (string) The amount that has been set.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
@@ -2396,10 +2396,10 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessrewardscript \"account\" \n"
+            "getwitnessrewardscript \"witness_address\" \n"
             "\nGet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "1. \"witness_address\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "[\n"
             "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
@@ -2444,10 +2444,10 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessaccountkeys \"account\" \n"
+            "getwitnessaccountkeys \"witness_account\" \n"
             "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
             "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaccount\", this will include all of them \n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
@@ -2517,9 +2517,9 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessaddresskeys \"address\" \n"
+            "getwitnessaddresskeys \"witness_address\" \n"
             "\nGet the witness key of an HD address, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
-            "1. \"address\"        (required) The Gulden address for the witness key.\n"
+            "1. \"witness_address\"        (required) The Gulden address for the witness key.\n"
             "\nResult:\n"
             "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
@@ -2574,10 +2574,10 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
-            "importwitnesskeys \"account\" \"encoded_key_url\" \"create_account\" \n"
+            "importwitnesskeys \"witness_address\" \"encoded_key_url\" \"create_account\" \n"
             "\nAdd keys imported from an \"encoded_key_url\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
             "\nUses an existing account if \"create_account\" is false, otherwise creates a new one. \n"
-            "1. \"account\"         (string) name/label of the new account.\n"
+            "1. \"witness_address\"         (string) name/label of the new account.\n"
             "2. \"encoded_key_url\" (string) Encoded string containing the extended public key for the account.\n"
             "3. \"create_account\"  (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
             "\nResult:\n"
@@ -2633,18 +2633,18 @@ static const CRPCCommand commands[] =
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
     { "witness",                 "extendwitnessaddress",            &extendwitnessaddress,           true,    {"funding_account", "witness_address", "amount", "time" } },
     { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time", "force_multiple" } },
-    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
-    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
-    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
+    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"witness_account"} },
+    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"witness_address"} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_address"} },
     { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose"} },
-    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
-    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
-    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
+    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_address"} },
+    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"witness_address", "encoded_key_url", "create_account"} },
+    { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
-    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"address"} },
-    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
-    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
-    { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account" "witness_account", "amounts"} },
+    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"witness_address"} },
+    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
+    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
+    { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
