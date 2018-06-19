@@ -2942,9 +2942,14 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
     std::string strFailReason;
 
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[1], true);
-    if (!pwallet->FundTransaction(fundingAccount, tx, nFeeOut, changePosition, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl, reserveChangeKey)) {
+
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    if (!pwallet->FundTransaction(fundingAccount, tx, nFeeOut, changePosition, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl, reservekey)) {
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
     }
+
+    if (reserveChangeKey)
+        reservekey.KeepKey();
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("hex", EncodeHexTx(tx)));
