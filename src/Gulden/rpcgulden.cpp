@@ -857,7 +857,7 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
 
 //! Given a string specifier, calculate a lock length in blocks to match it. e.g. 1d -> 576; 5b -> 5; 1m -> 17280
 //! Returns 0 if specifier is invalid.
-uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
+static uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
 {
     uint64_t lockPeriodInBlocks = 0;
     int nMultiplier = 1;
@@ -1132,9 +1132,14 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     if (requestedLockPeriodInBlocks == 30 * 576)
         requestedLockPeriodInBlocks += 50;
 
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (COINBASE_MATURITY + 1)
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
     // Calculate existing lock period
     CTxOutPoW2Witness currentWitnessDetails;
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
     uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
     if (remainingLockDurationInBlocks == 0)
