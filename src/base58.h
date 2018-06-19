@@ -139,6 +139,8 @@ public:
     bool GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID=nullptr) const;
 
     bool IsScript() const;
+
+    bool operator==(const CGuldenAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
 };
 
 /**
