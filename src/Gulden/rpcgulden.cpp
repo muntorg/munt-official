@@ -34,6 +34,7 @@
 #include <Gulden/util.h>
 
 #include <consensus/validation.h>
+#include <consensus/consensus.h>
 #include "net.h"
 
 
@@ -1135,7 +1136,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (COINBASE_MATURITY + 1)
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (COINBASE_MATURITY) + 1)
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Calculate existing lock period
