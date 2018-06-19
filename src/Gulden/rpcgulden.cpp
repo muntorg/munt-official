@@ -880,37 +880,10 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
-    int nLockPeriodInBlocks = 0;
-    int nMultiplier = 1;
-    std::string sLockPeriodInBlocks = request.params[3].getValStr();
-    if (boost::algorithm::ends_with(sLockPeriodInBlocks, "y"))
-    {
-        nMultiplier = 365 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "m"))
-    {
-        nMultiplier = 30 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "w"))
-    {
-        nMultiplier = 7 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "d"))
-    {
-        nMultiplier = 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
-    {
-        nMultiplier = 1;
-        sLockPeriodInBlocks.pop_back();
-    }
-    if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
+    std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
+    int nLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    if (nLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
-    nLockPeriodInBlocks *=  nMultiplier;
 
     if (nLockPeriodInBlocks > 3 * 365 * 576)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
@@ -1079,37 +1052,10 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
-    uint64_t requestedLockPeriodInBlocks = 0;
-    uint64_t requestedMultiplier = 1;
-    std::string formattedLockPeriodInBlocks = request.params[3].getValStr();
-    if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "y"))
-    {
-        requestedMultiplier = 365 * 576;
-        formattedLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "m"))
-    {
-        requestedMultiplier = 30 * 576;
-        formattedLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "w"))
-    {
-        requestedMultiplier = 7 * 576;
-        formattedLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "d"))
-    {
-        requestedMultiplier = 576;
-        formattedLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "b"))
-    {
-        requestedMultiplier = 1;
-        formattedLockPeriodInBlocks.pop_back();
-    }
-    if (!ParseUInt64(formattedLockPeriodInBlocks, &requestedLockPeriodInBlocks))
+    std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
+    int requestedLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    if (requestedLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
-    requestedLockPeriodInBlocks *=  requestedMultiplier;
 
     if (requestedLockPeriodInBlocks > 3 * 365 * 576)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
