@@ -111,25 +111,31 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
                     subReceive.idx = -1;
-                    for (const auto& output : witnessBundle.outputs)
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
                     {
+                        (unused) witnessDetails;
                         for( const auto& accountPair : wallet->mapAccounts )
                         {
                             CAccount* account = accountPair.second;
-                            isminetype mine = IsMine(*account, output.first);
+                            isminetype mine = IsMine(*account, txOut);
                             if (mine)
                             {
+                                CTxDestination getAddress;
+                                if (ExtractDestination(txOut, getAddress))
+                                {
+                                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                                }
                                 subReceive.type = TransactionRecord::WitnessFundRecv;
                                 subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
                                 subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
-                                subReceive.credit = output.first.nValue;
+                                subReceive.credit = txOut.nValue;
                                 subReceive.debit = 0;
                                 subReceive.idx = parts.size(); // sequence number
                                 parts.append(subReceive);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
-                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == output.first;}));
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOut;}));
 
                                 break;
                             }
@@ -139,12 +145,21 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     if (subReceive.idx != -1)
                     {
-                        for( const auto& accountPair : wallet->mapAccounts )
+                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
-                            CAccount* account = accountPair.second;
+                            (unused) accountUUID;
                             isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
+                                CTxDestination getAddress;
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                if (parent != NULL)
+                                {
+                                    if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
+                                    {
+                                        subSend.address = CGuldenAddress(getAddress).ToString();
+                                    }
+                                }
                                 subSend.type = TransactionRecord::WitnessFundSend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -181,12 +196,17 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     subReceive.idx = -1;
                     for (const auto& output : outputs)
                     {
-                        for( const auto& accountPair : wallet->mapAccounts )
+                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
-                            CAccount* account = accountPair.second;
+                            (unused) accountUUID;
                             isminetype mine = IsMine(*account, output);
                             if (mine)
                             {
+                                CTxDestination getAddress;
+                                if (ExtractDestination(output, getAddress))
+                                {
+                                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                                }
                                 subReceive.type = TransactionRecord::WitnessEmptyRecv;
                                 subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
@@ -207,12 +227,21 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     if (subReceive.idx != -1)
                     {
-                        for( const auto& accountPair : wallet->mapAccounts )
+                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
-                            CAccount* account = accountPair.second;
+                            (unused) accountUUID;
                             isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                if (parent != NULL)
+                                {
+                                    CTxDestination getAddress;
+                                    if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
+                                    {
+                                        subSend.address = CGuldenAddress(getAddress).ToString();
+                                    }
+                                }
                                 subSend.type = TransactionRecord::WitnessEmptySend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -240,14 +269,20 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 case CWitnessTxBundle::WitnessTxType::RenewType:
                 {
                     TransactionRecord sub(hash, nTime);
-                    for (const auto& output : witnessBundle.outputs)
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
                     {
-                        for( const auto& accountPair : wallet->mapAccounts )
+                        (unused)witnessDetails;
+                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
-                            CAccount* account = accountPair.second;
-                            isminetype mine = IsMine(*account, output.first);
+                            (unused)accountUUID;
+                            isminetype mine = IsMine(*account, txOut);
                             if (mine)
                             {
+                                CTxDestination getAddress;
+                                if (ExtractDestination(txOut, getAddress))
+                                {
+                                    sub.address = CGuldenAddress(getAddress).ToString();
+                                }
                                 sub.type = TransactionRecord::WitnessRenew;
                                 sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
@@ -258,7 +293,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 parts.append(sub);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
-                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == output.first;}));
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOut;}));
                                 //fixme: (2.1) - Remove the inputs as well.
 
                                 break;
