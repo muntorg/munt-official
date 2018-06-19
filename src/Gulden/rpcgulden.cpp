@@ -281,6 +281,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         for (auto& iter : witInfo.allWitnessCoins)
         {
             bool fEligible = false;
+            uint64_t nAdjustedWeight = 0;
             {
                 auto poolIter = witInfo.witnessSelectionPoolFiltered.begin();
                 while (poolIter != witInfo.witnessSelectionPoolFiltered.end())
@@ -289,6 +290,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
+                            nAdjustedWeight = poolIter->nWeight;
                             fEligible = true;
                             break;
                         }
@@ -296,7 +298,6 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     ++poolIter;
                 }
             }
-            uint64_t nAdjustedWeight = 0;
             bool fExpired = false;
             {
                 auto poolIter = witInfo.witnessSelectionPoolUnfiltered.begin();
@@ -306,7 +307,6 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
-                            nAdjustedWeight = poolIter->nWeight;
                             if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeight))
                             {
                                 fExpired = true;
@@ -1047,7 +1047,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.Tip()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     // arg1 - 'from' account.
