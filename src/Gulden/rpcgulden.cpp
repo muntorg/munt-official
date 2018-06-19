@@ -33,6 +33,7 @@
 #include "primitives/transaction.h"
 
 #include <Gulden/util.h>
+#include "utilmoneystr.h"
 
 #include <consensus/validation.h>
 #include <consensus/consensus.h>
@@ -2090,7 +2091,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 3)
         throw std::runtime_error(
-            "splitwitnessaccount \"address\" \"amounts\" \n"
+            "splitwitnessaccount \"funding_account\" \"witness_account\" \"amounts\" \n"
             "\nSplit a witness address into two seperate witness addresses, all details of the addresses remain identical other than a reduction in amounts.\n"
             "\nThis is useful in the event that an account has exceeded 1 percent of the network weight. \n"
             "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
@@ -2102,12 +2103,12 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
             "    }\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\",                (string) The txid of the created transaction\n"
+            "     \"fee_amount\"           (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaccount 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", "")
-            + HelpExampleRpc("splitwitnessaccount 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", ""));
+            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", "")
+            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", ""));
 
     // Basic sanity checks.
     if (!pwallet)
@@ -2125,7 +2126,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     // arg2 - 'to' account.
     CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
     if (!fundingAccount)
-        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[1].get_str()));
 
     if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
     {
@@ -2133,8 +2134,8 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     }
 
     // arg3 - 'split' paramaters
-    UniValue splitInto = request.params[2].get_obj();
-    if (splitInto.getValues().size() < 2)
+    std::vector<UniValue> splitInto = request.params[2].getValues();
+    if (splitInto.size() < 2)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Split command requires at least two outputs");
 
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
@@ -2153,7 +2154,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
 
     CAmount splitTotal=0;
     std::vector<CAmount> splitAmounts;
-    for (const auto& unparsedSplitAmount : splitInto.getValues())
+    for (const auto& unparsedSplitAmount : splitInto)
     {
         CAmount splitValue = AmountFromValue(unparsedSplitAmount);
         splitTotal += splitValue;
@@ -2161,7 +2162,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     }
 
     if (splitTotal != currentWitnessTxOut.nValue)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Split values don't match original value [%s] [%s]", ValueFromAmount(splitTotal).get_str(), ValueFromAmount(currentWitnessTxOut.nValue).get_str()));
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Split values don't match original value [%s] [%s]", FormatMoney(splitTotal), FormatMoney(currentWitnessTxOut.nValue)));
 
     // Get the current witness details
     CTxOutPoW2Witness currentWitnessDetails;
