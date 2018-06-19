@@ -10,7 +10,7 @@
 #include <wallet/rpcwallet.h>
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
-
+#include <consensus/consensus.h>
 #include <boost/assign/list_of.hpp>
 
 #include "wallet/wallet.h"
@@ -970,7 +970,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
     std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
-    int nLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    uint64_t nLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
     if (nLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
@@ -1119,7 +1119,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
     std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
-    int requestedLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    uint64_t requestedLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
     if (requestedLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
@@ -1136,7 +1136,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (COINBASE_MATURITY) + 1)
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Calculate existing lock period
