@@ -129,7 +129,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "             \"address\": address                       (string) The address of the witness that has been selected for the current chain tip.\n"
             "             \"age\": n                                 (number) The age of the address (how long since it was last active in any way)\n"
             "             \"amount\": n                              (number) The amount that is locked in the address.\n"
-            "             \"weight\": n                              (number) The weight of the address.\n"
+            "             \"raw_weight\": n                          (number) The raw weight of the address before any adjustments.\n"
+            "             \"adjusted_weight\": n                     (number) The weight considered by the witness algorithm after adjustments.\n"
             "             \"expected_witness_period\": n             (number) The period that the network will allow this address to go without witnessing before it expires.\n"
             "             \"estimated_witness_period\": n            (number) The average period in which this address should earn a reward over time\n"
             "             \"last_active_block\": n                   (number) The last block in which this address was active.\n"
@@ -295,6 +296,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     ++poolIter;
                 }
             }
+            uint64_t nAdjustedWeight = 0;
             bool fExpired = false;
             {
                 auto poolIter = witInfo.witnessSelectionPoolUnfiltered.begin();
@@ -304,6 +306,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
+                            nAdjustedWeight = poolIter->nWeight;
                             if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeight))
                             {
                                 fExpired = true;
@@ -334,7 +337,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
             rec.push_back(Pair("age", nAge));
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
-            rec.push_back(Pair("weight", nRawWeight));
+            rec.push_back(Pair("raw_weight", nRawWeight));
+            rec.push_back(Pair("adjusted_weight", nAdjustedWeight));
             rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));

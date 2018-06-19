@@ -416,12 +416,12 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    uint64_t maxWeight = witnessInfo.nTotalWeight / 100;
+    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeight / 100;
     witnessInfo.nReducedTotalWeight = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
-        if (item.nWeight > maxWeight)
-            item.nWeight = maxWeight;
+        if (item.nWeight > witnessInfo.nMaxIndividualWeight)
+            item.nWeight = witnessInfo.nMaxIndividualWeight;
         witnessInfo.nReducedTotalWeight += item.nWeight;
         item.nCumulativeWeight = witnessInfo.nReducedTotalWeight;
     }
