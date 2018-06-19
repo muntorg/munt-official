@@ -80,17 +80,70 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
-            "getwitnessinfo \"blockspecifier\" verbose\n"
-            "\nReturns statistics and witness related info for a block:"
-            "\nNumber of witnesses."
-            "\nOverall network weight."
-            "\nCurrent phase of PoW2 activation.\n"
-            "\nAdditional information when verbose is on:"
-            "\nList of all witness addresses with individual weights.\n"
+            "getwitnessinfo \"block_specifier\" verbose\n"
+            "\nReturns witness related network info for a given block."
+            "\nWhen verbose is enabled returns additional statistics.\n"
             "\nArguments:\n"
-            "1. \"blockspecifier\" (string, optional, default=tip) The blockspecifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
-            "blockspecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
-            "2. verbose            (bool, optional, default=false) Display additional verbose information.\n"
+            "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
+            "\nSpecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
+            "2. verbose                 (bool, optional, default=false) Display additional verbose information.\n"
+            "\nResult:\n"
+            "[{\n"
+            "     \"pow2_phase\": n                                  (number) The number of the currently active pow2_phase.\n"
+            "     \"number_of_witnesses_raw\": n                     (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"number_of_witnesses_total\": n                   (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"number_of_witnesses_eligible\": n                (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_raw\": n                    (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_eligible_raw\": n,          (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_eligible_adjusted\": n,     (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"selected_witness_address\": address              (string) The address of the witness that has been selected for the current chain tip.\n"
+            "     \"witness_statistics\": {\n"
+            "         \"weight\": {                                  Weight statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address weight on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address weight on the network.\n"
+            "             \"mean\": n                                (number) The mean weight of all witness addresses.\n"
+            "             \"median\": n                              (number) The median weight of all witness addresses.\n"
+            "         }\n"
+            "         \"amount\": {                                  Amount statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address amount on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address amount on the network.\n"
+            "             \"mean\": n                                (number) The mean amount of all witness addresses.\n"
+            "             \"median\": n                              (number) The median amount of all witness addresses.\n"
+            "         }\n"
+            "         \"lock_period\": {                             Lock period statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address lock_period on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address lock_period on the network.\n"
+            "             \"mean\": n                                (number) The mean lock_period of all witness addresses.\n"
+            "             \"median\": n                              (number) The median lock_period of all witness addresses.\n"
+            "         }\n"
+            "         \"age\": {                                     Age statistics based on all witness addresses (age is how long an address has existed since it last performed an operation of some kind)\n"
+            "             \"largest\": n                             (number) The oldest address on the network.\n"
+            "             \"smallest\": n                            (number) The more recent address on the network.\n"
+            "             \"mean\": n                                (number) The mean age of all witness addresses.\n"
+            "             \"median\": n                              (number) The median age of all witness addresses.\n"
+            "         }\n"
+            "     }\n"
+            "     \"witness_address_list\": [                        List of all witness addresses on the network, with address specific information\n"
+            "         {\n"
+            "             \"type\": address_type                     (string) The type of address output used to create the address. Either SCRIPT or POW2WITNESS depending on whether SegSig was activated at the time of creation or not.\n"
+            "             \"address\": address                       (string) The address of the witness that has been selected for the current chain tip.\n"
+            "             \"age\": n                                 (number) The age of the address (how long since it was last active in any way)\n"
+            "             \"amount\": n                              (number) The amount that is locked in the address.\n"
+            "             \"weight\": n                              (number) The weight of the address.\n"
+            "             \"expected_witness_period\": n             (number) The period that the network will allow this address to go without witnessing before it expires.\n"
+            "             \"estimated_witness_period\": n            (number) The average period in which this address should earn a reward over time\n"
+            "             \"last_active_block\": n                   (number) The last block in which this address was active.\n"
+            "             \"lock_from_block\": n                     (number) The block where this address was originally locked.\n"
+            "             \"lock_until_block\": n                    (number) The block that this address will remain locked until.\n"
+            "             \"lock_period\": n                         (number) The complete length in time that this address will be locked for\n"
+            "             \"lock_period_expired\": n                 (boolean)true if the lock has expired (funds can be withdrawed)\n"
+            "             \"eligible_to_witness\": n                 (number) true if the address is eligible to witness.\n"
+            "             \"expired_from_inactivity\": n             (number) true if the network has expired (kicked off) this address due to it failing to witness in the expected period\n"
+            "             \"ismine_accountname\": n                  (string) If the address belongs to an account in this wallet, the name of the account.\n"
+            "         }\n"
+            "         ...\n"
+            "     ]\n"
+            "}]\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessinfo tip false", "")
             + HelpExampleCli("getwitnessinfo tip~2 true", "")
@@ -274,7 +327,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
             CAmount nValue = iter.second.out.nValue;
 
-            bool fLockPeriodExpired = nLockUntilBlock < pTipIndex_->nHeight;
+            bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
 
             UniValue rec(UniValue::VOBJ);
             rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
@@ -933,7 +986,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 }
 
 
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CWallet* pWallet, CGuldenAddress& searchAddress)
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
@@ -1005,7 +1058,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     if (!isValid)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
 
-    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(pwallet, witnessAddress);
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
     if (unspentWitnessOutputs.size() == 0)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
 
@@ -2374,7 +2427,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"blockspecifier", "verbose"} },
+    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose"} },
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
