@@ -135,7 +135,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 parts.append(subReceive);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
-                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOut;}));
+                                const auto& txOutRef = txOut;
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
 
                                 break;
                             }
@@ -293,7 +294,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 parts.append(sub);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
-                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOut;}));
+                                const auto& txOutRef = txOut;
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
                                 //fixme: (2.1) - Remove the inputs as well.
 
                                 break;
