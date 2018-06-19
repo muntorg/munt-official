@@ -29,6 +29,7 @@
 #include "txdb.h"
 #include "coins.h"
 #include "wallet/coincontrol.h"
+#include "wallet/wallet.h"
 #include "primitives/transaction.h"
 
 #include <Gulden/util.h>
@@ -1070,7 +1071,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "\"funding_account\" is the account from which the locked funds will be claimed.\n"
             "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
             "\nArguments:\n"
-            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
@@ -1092,7 +1093,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     // arg1 - 'from' account.
-    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
     if (!fundingAccount)
         throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
@@ -1173,6 +1174,15 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New weight [%d] does not exceed old weight [%d].", newWeight, oldWeight));
     }
 
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw JSONRPCError(RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot extend a witness-only account as spend key is required to do this.");
+    }
+
     //fixme: (2.1) factor this all out into a helper.
     // Finally attempt to create and send the witness transaction.
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
@@ -1186,7 +1196,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
         // Add new witness output
         CTxOut extendedWitnessTxOutput;
         extendedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-        // As we are extending the block we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        // As we are extending the address we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
         extendedWitnessTxOutput.output.witnessDetails.lockFromBlock = 0;
         extendedWitnessTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
         extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
@@ -1871,22 +1881,112 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
         throw std::runtime_error(
             "rotatewitnessaddress \"address\" \n"
             "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
-            "1. \"address\"        (required) The unique UUID or label for the account.\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "\nResult:\n"
             "\nReturns the new witness address.\n"
             "\nExamples:\n"
             + HelpExampleCli("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
             + HelpExampleRpc("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
-    bool isValid = forAddress.IsValidWitness(Params());
+     // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.Tip()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
 
-    
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    //fixme: (2.1) - Handle addres
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address has too many witness outputs cannot rotate [%s].", request.params[1].get_str()));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw JSONRPCError(RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        CTxOut rotatedWitnessTxOutput;
+        rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        {
+            CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+            CPubKey pubWitnessKey;
+            if (!keyWitness.GetReservedKey(pubWitnessKey))
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+            //We delibritely return the key here, so that if we fail we won't leak the key.
+            //The key will be marked as used when the transaction is accepted anyway.
+            keyWitness.ReturnKey();
+            rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
+        }
+        rotatedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
+        rotateWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, rotateWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
 }
 
 static UniValue renewwitnessaddress(const JSONRPCRequest& request)
@@ -2443,7 +2543,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
-    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
+    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
     { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"address"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"account", "pubkey_or_script", "force_pubkey"} },
