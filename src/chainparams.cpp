@@ -297,7 +297,7 @@ public:
             pchMessageStart[2] = (seedTimestamp >> 16) & 0xFF;
             pchMessageStart[3] = sTestnetParams[0];
 
-            LogPrintf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
+            LogPrintf("pchMessageStart (aka magic bytes). decimal:[%d %d %d %d] hex:[%08x %08x %08x %08x]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3], pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
         }
 
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
