@@ -1216,9 +1216,12 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     }
 
     uint256 finalTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &finalTransactionHash))
     {
-        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
     }
 
     UniValue result(UniValue::VOBJ);
@@ -1982,9 +1985,12 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     }
 
     uint256 finalTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
     {
-        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
     }
 
     UniValue result(UniValue::VOBJ);
@@ -1992,7 +1998,7 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     return result;
 }
 
-static UniValue renewwitnessaddress(const JSONRPCRequest& request)
+static UniValue renewwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -2004,25 +2010,70 @@ static UniValue renewwitnessaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "renewwitnessaddress \"address\" \n"
-            "\nRenew an expired witness address. \n"
-            "1. \"address\" (required) The unique UUID or label for the account.\n"
+            "renewwitnessaccount \"witness_account\" \n"
+            "\nRenew an expired witness account. \n"
+            "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
-            "\nReturns the new witness address.\n"
+            "[\n"
+            "     \"txid\",                   (string) The txid of the created transaction\n"
+            "     \"fee_amount\"              (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("renewwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("renewwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("renewwitnessaccount \"My account\" \"My witness account\"", "")
+            + HelpExampleRpc("renewwitnessaccount \"My account\" \"My witness account\"", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
-    bool isValid = forAddress.IsValidWitness(Params());
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.Tip()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
 
-    if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+    EnsureWalletIsUnlocked(pwallet);
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (2.1) - Share common code with GUI::requestRenewWitness
+    std::string strError;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+    CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
+    CAmount transactionFee;
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError))
+    {
+        throw std::runtime_error(strprintf("Failed to create renew transaction [%s]", strError.c_str()));
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+        {
+            throw std::runtime_error(strprintf("Failed to sign renew transaction [%s]", strError.c_str()));
+        }
+    }
+
+    // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
+    witnessAccount->SetWarningState(AccountStatus::WitnessPending);
+    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, witnessAccount);
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
 }
 
 static UniValue splitwitnessaccount(const JSONRPCRequest& request)
@@ -2152,9 +2203,12 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     }
 
     uint256 finalTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(reservekey, splitWitnessTransaction, reasonForFail, &finalTransactionHash))
     {
-        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, splitWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
     }
 
     UniValue result(UniValue::VOBJ);
@@ -2270,7 +2324,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
         mergeWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
         mergeWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
         mergeWitnessTxOutput.output.witnessDetails.failCount = totalFailCount;
-        mergeWitnessTxOutput.nValue = splitAmount;
+        mergeWitnessTxOutput.nValue = totalAmount;
         mergeWitnessTransaction.vout.push_back(mergeWitnessTxOutput);
 
         // Fund the additional amount in the transaction (including fees)
@@ -2284,9 +2338,12 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     }
 
     uint256 finalTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(reservekey, mergeWitnessTransaction, reasonForFail, &finalTransactionHash))
     {
-        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, mergeWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
     }
 
     UniValue result(UniValue::VOBJ);
@@ -2727,7 +2784,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"witness_address", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
-    { "witness",                 "renewwitnessaddress",             &renewwitnessaddress,            true,    {"witness_address"} },
+    { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
