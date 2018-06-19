@@ -28,6 +28,8 @@
 
 #include "txdb.h"
 #include "coins.h"
+#include "wallet/coincontrol.h"
+#include "primitives/transaction.h"
 
 #include <Gulden/util.h>
 
@@ -977,143 +979,176 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
-            "\"txid\"                (string) The transaction id.\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
 
-    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
-
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (nPoW2TipPhase < 2)
-        throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
+    if (IsSegSigEnabled(chainActive.Tip()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
 
     // arg1 - 'from' account.
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
     if (!fundingAccount)
         throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
-    // arg2 - 'to' account.
-    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], true);
-    if (!witnessAccount)
-        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
-    if (!witnessAccount->IsPoW2Witness())
-        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
-    if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
-        throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(pwallet, witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    //fixme: (2.1) - Handle addres
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address has too many witness outputs cannot extend [%s].", request.params[1].get_str()));
 
     // arg3 - amount
-    CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < nMinimumWitnessAmount*COIN)
+    CAmount requestedAmount =  AmountFromValue(request.params[2]);
+    if (requestedAmount < nMinimumWitnessAmount*COIN)
         throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
-    int nLockPeriodInBlocks = 0;
-    int nMultiplier = 1;
-    std::string sLockPeriodInBlocks = request.params[3].getValStr();
-    if (boost::algorithm::ends_with(sLockPeriodInBlocks, "y"))
+    uint64_t requestedLockPeriodInBlocks = 0;
+    uint64_t requestedMultiplier = 1;
+    std::string formattedLockPeriodInBlocks = request.params[3].getValStr();
+    if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "y"))
     {
-        nMultiplier = 365 * 576;
-        sLockPeriodInBlocks.pop_back();
+        requestedMultiplier = 365 * 576;
+        formattedLockPeriodInBlocks.pop_back();
     }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "m"))
+    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "m"))
     {
-        nMultiplier = 30 * 576;
-        sLockPeriodInBlocks.pop_back();
+        requestedMultiplier = 30 * 576;
+        formattedLockPeriodInBlocks.pop_back();
     }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "w"))
+    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "w"))
     {
-        nMultiplier = 7 * 576;
-        sLockPeriodInBlocks.pop_back();
+        requestedMultiplier = 7 * 576;
+        formattedLockPeriodInBlocks.pop_back();
     }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "d"))
+    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "d"))
     {
-        nMultiplier = 576;
-        sLockPeriodInBlocks.pop_back();
+        requestedMultiplier = 576;
+        formattedLockPeriodInBlocks.pop_back();
     }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
+    else if (boost::algorithm::ends_with(formattedLockPeriodInBlocks, "b"))
     {
-        nMultiplier = 1;
-        sLockPeriodInBlocks.pop_back();
+        requestedMultiplier = 1;
+        formattedLockPeriodInBlocks.pop_back();
     }
-    if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
+    if (!ParseUInt64(formattedLockPeriodInBlocks, &requestedLockPeriodInBlocks))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
-    nLockPeriodInBlocks *=  nMultiplier;
+    requestedLockPeriodInBlocks *=  requestedMultiplier;
 
-    if (nLockPeriodInBlocks > 3 * 365 * 576)
+    if (requestedLockPeriodInBlocks > 3 * 365 * 576)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (nLockPeriodInBlocks < 30 * 576)
+    if (requestedLockPeriodInBlocks < 30 * 576)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (nLockPeriodInBlocks == 30 * 576)
-        nLockPeriodInBlocks += 50;
+    if (requestedLockPeriodInBlocks == 30 * 576)
+        requestedLockPeriodInBlocks += 50;
+
+    // Calculate existing lock period
+    CTxOutPoW2Witness currentWitnessDetails;
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+    if (remainingLockDurationInBlocks == 0)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has already unlocked so cannot be extended.");
+    }
+
+    if (requestedLockPeriodInBlocks < remainingLockDurationInBlocks)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New lock period [%d] does not exceed remaining lock period [%d]", requestedLockPeriodInBlocks, remainingLockDurationInBlocks));
+    }
+
+    if (requestedAmount < currentWitnessTxOut.nValue)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New amount [%d] is smaller than current amount [%d]", requestedAmount, currentWitnessTxOut.nValue));
+    }
 
     // Enforce minimum weight
-    int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
-    if (nWeight < nMinimumWitnessWeight)
+    int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
+    if (newWeight < nMinimumWitnessWeight)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+    }
+
+    // Enforce new weight > old weight
+    uint64_t notUsed1, notUsed2;
+    int64_t oldWeight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
+    if (newWeight <= oldWeight)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New weight [%d] does not exceed old weight [%d].", newWeight, oldWeight));
     }
 
     EnsureWalletIsUnlocked(pwallet);
 
     // Finally attempt to create and send the witness transaction.
+    // As we are extending the block we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
     CPoW2WitnessDestination destinationPoW2Witness;
     destinationPoW2Witness.lockFromBlock = 0;
-    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
-    destinationPoW2Witness.failCount = 0;
-    {
-        CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
-        CPubKey pubWitnessKey;
-        if (!keyWitness.GetReservedKey(pubWitnessKey))
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
+    destinationPoW2Witness.failCount = currentWitnessDetails.failCount;
+    destinationPoW2Witness.spendingKey = currentWitnessDetails.spendingKeyID;
+    destinationPoW2Witness.witnessKey = currentWitnessDetails.witnessKeyID;
 
-        //We delibritely return the key here, so that if we fail we won't leak the key.
-        //The key will be marked as used when the transaction is accepted anyway.
-        keyWitness.ReturnKey();
-        destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
-    }
-    {
-        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
-        CReserveKeyOrScript keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
-        CPubKey pubSpendingKey;
-        if (!keySpending.GetReservedKey(pubSpendingKey))
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
-
-        //We delibritely return the key here, so that if we fail we won't leak the key.
-        //The key will be marked as used when the transaction is accepted anyway.
-        keySpending.ReturnKey();
-        destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
-    }
-
-    CAmount nFeeRequired;
-    std::string strError;
-    std::vector<CRecipient> vecSend;
-    int nChangePosRet = -1;
-
-    CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
-    vecSend.push_back(recipient);
-
-    CWalletTx wtx;
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
-    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    std::string reasonForFail;
+    CAmount transactionFee;
+
+    //fixme: (2.1) factor this all out into a helper.
+    CMutableTransaction extendWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
     {
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(extendWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        CTxOut extendedWitnessTxOutput;
+        CTxOutPoW2Witness witnessDestination;
+        extendedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
+        extendedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
+        extendedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+        extendedWitnessTxOutput.nValue = requestedAmount;
+        extendWitnessTransaction.vout.push_back(extendedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, extendWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
     }
 
-    CValidationState state;
-    if (!pwallet->CommitTransaction(wtx, reservekey, g_connman.get(), state))
+    uint256 finalTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &finalTransactionHash))
     {
-        strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
     }
 
-    return wtx.GetHash().GetHex();
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
 }
 
 static UniValue getactiveaccount(const JSONRPCRequest& request)
