@@ -1050,6 +1050,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     if (!IsSegSigEnabled(chainActive.Tip()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
+    EnsureWalletIsUnlocked(pwallet);
+
     // arg1 - 'from' account.
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
     if (!fundingAccount)
@@ -1154,22 +1156,11 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New weight [%d] does not exceed old weight [%d].", newWeight, oldWeight));
     }
 
-    EnsureWalletIsUnlocked(pwallet);
-
+    //fixme: (2.1) factor this all out into a helper.
     // Finally attempt to create and send the witness transaction.
-    // As we are extending the block we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
-    CPoW2WitnessDestination destinationPoW2Witness;
-    destinationPoW2Witness.lockFromBlock = 0;
-    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
-    destinationPoW2Witness.failCount = currentWitnessDetails.failCount;
-    destinationPoW2Witness.spendingKey = currentWitnessDetails.spendingKeyID;
-    destinationPoW2Witness.witnessKey = currentWitnessDetails.witnessKeyID;
-
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
     std::string reasonForFail;
     CAmount transactionFee;
-
-    //fixme: (2.1) factor this all out into a helper.
     CMutableTransaction extendWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
     {
         // Add the existing witness output as an input
@@ -1177,18 +1168,18 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 
         // Add new witness output
         CTxOut extendedWitnessTxOutput;
-        CTxOutPoW2Witness witnessDestination;
         extendedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-        extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
-        extendedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
-        extendedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
-        extendedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
-        extendedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+        // As we are extending the block we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        extendedWitnessTxOutput.output.witnessDetails.lockFromBlock = 0;
+        extendedWitnessTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
+        extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
         extendedWitnessTxOutput.nValue = requestedAmount;
         extendWitnessTransaction.vout.push_back(extendedWitnessTxOutput);
 
         // Fund the additional amount in the transaction (including fees)
-        int changeOutputPosition;
+        int changeOutputPosition = 1;
         std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
         CCoinControl coincontrol;
         if (!pwallet->FundTransaction(fundingAccount, extendWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
