@@ -270,6 +270,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 case CWitnessTxBundle::WitnessTxType::RenewType:
                 {
                     TransactionRecord sub(hash, nTime);
+                    CAmount totalAmountLocked = 0;
                     for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
                     {
                         (unused)witnessDetails;
@@ -279,6 +280,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = IsMine(*account, txOut);
                             if (mine)
                             {
+                                totalAmountLocked = txOut.nValue;
                                 CTxDestination getAddress;
                                 if (ExtractDestination(txOut, getAddress))
                                 {
@@ -289,8 +291,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
                                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
                                 sub.idx = parts.size(); // sequence number
-                                sub.credit = 0;
-                                sub.debit = nNet;
+                                subReceive.credit = totalAmountLocked;
+                                subReceive.debit = totalAmountLocked;
                                 parts.append(sub);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
