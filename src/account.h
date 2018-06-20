@@ -306,6 +306,7 @@ public:
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const override;
+    void GetKeys(std::set<CKeyID> &setAddressExternal, std::set<CKeyID> &setAddressInternal) const;
     virtual bool EncryptKeys(const CKeyingMaterial& vMasterKeyIn) override;
     virtual bool Encrypt(const CKeyingMaterial& vMasterKeyIn);
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;

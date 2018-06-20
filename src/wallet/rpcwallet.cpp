@@ -320,30 +320,46 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
 
     // Find all addresses that have the given account and are not in the key pool
-    std::set<CKeyID> setAddress;
-    fromAccount->GetKeys(setAddress);
+    std::set<CKeyID> setAddressExternal;
+    std::set<CKeyID> setAddressInternal;
+    fromAccount->GetKeys(setAddressExternal, setAddressInternal);
 
     CWalletDB walletdb(*pwallet->dbw);
-    for (const auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+    for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
     {
-        const auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal );
         CKeyPool keypoolentry;
-        for (const auto& keyIndex : keyPool)
+        auto& setAddresses = keyChain == KEYCHAIN_EXTERNAL ? setAddressExternal : setAddressInternal;
+        for (const auto& keyIndex : keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal)
         {
             if (!walletdb.ReadPool(keyIndex, keypoolentry))
                 throw std::runtime_error(std::string(__func__) + ": read failed");
 
-            if ( setAddress.find(keypoolentry.vchPubKey.GetID()) != setAddress.end() )
+            if (setAddresses.find(keypoolentry.vchPubKey.GetID()) != setAddresses.end())
             {
-                setAddress.erase(setAddress.find(keypoolentry.vchPubKey.GetID()));
+                setAddresses.erase(setAddresses.find(keypoolentry.vchPubKey.GetID()));
             }
         }
     }
 
     UniValue ret(UniValue::VARR);
-    for(const auto& key : setAddress)
+    // Enumerate witness addresses first
+    if (fromAccount->IsPoW2Witness() && !fromAccount->IsFixedKeyPool())
     {
-        ret.push_back(CGuldenAddress(key).ToString());
+        for (const auto& externalKey : setAddressExternal)
+        {
+            for (const auto& internalKey : setAddressInternal)
+            {
+                ret.push_back(CGuldenAddress(CPoW2WitnessDestination(externalKey, internalKey)).ToString());
+            }
+        }
+    }
+    // Then normal addresses
+    for(const auto& setAddresses : { setAddressExternal, setAddressInternal })
+    {
+        for(const auto& key : setAddresses)
+        {
+            ret.push_back(CGuldenAddress(key).ToString());
+        }
     }
     return ret;
 }

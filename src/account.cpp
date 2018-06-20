@@ -780,6 +780,12 @@ void CAccount::GetKeys(std::set<CKeyID> &setAddress) const
     setAddress.insert(setInternal.begin(), setInternal.end());
 }
 
+void CAccount::GetKeys(std::set<CKeyID> &setKeysExternal, std::set<CKeyID> &setKeysInternal) const
+{
+    externalKeyStore.GetKeys(setKeysExternal);
+    internalKeyStore.GetKeys(setKeysInternal);
+}
+
 bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
 {
     if (!externalKeyStore.EncryptKeys(vMasterKeyIn))
