@@ -433,6 +433,11 @@ void GUI::createActions()
     importPrivateKeyAction->setStatusTip(tr("Import a private key address"));
     importPrivateKeyAction->setCheckable(false);
 
+    importWitnessOnlyAccountAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf06e), tr("&Import witness"), this);
+    importWitnessOnlyAccountAction->setObjectName("action_import_witnessonly_account");
+    importWitnessOnlyAccountAction->setStatusTip(tr("Import a witness-only account"));
+    importWitnessOnlyAccountAction->setCheckable(false);
+
     rescanAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf002), tr("&Rescan transactions"), this);
     rescanAction->setObjectName("action_rescan");
     rescanAction->setStatusTip(tr("Rescan the blockchain looking for any missing transactions"));
@@ -508,6 +513,7 @@ void GUI::createActions()
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()));
     connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
+    connect(importWitnessOnlyAccountAction, SIGNAL(triggered()), this, SLOT(promptImportWitnessOnlyAccount()));
     connect(rescanAction, SIGNAL(triggered()), this, SLOT(promptRescan()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
@@ -569,6 +575,7 @@ void GUI::createMenuBar()
 
     QMenu* toolsMenu = appMenuBar->addMenu(tr("&Tools"));
     toolsMenu->setObjectName("menu_tools");
+    toolsMenu->addAction(importWitnessOnlyAccountAction);
     toolsMenu->addAction(importPrivateKeyAction);
     toolsMenu->addAction(rescanAction);
 

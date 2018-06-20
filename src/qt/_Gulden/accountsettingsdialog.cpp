@@ -29,8 +29,10 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
 
     // Setup object names for styling
     ui->buttonDone->setObjectName("doneButton");
+    ui->buttonCopy->setObjectName("copyButton");
     ui->buttonDeleteAccount->setObjectName("deleteButton");
     ui->frameAccountSettings->setObjectName("frameAccountSettings");
+    ui->addressQRContents->setObjectName("addressQRContents");
     setObjectName("dialogAccountSettings");
 
     // Zero out all margins so that we can handle whitespace in stylesheet instead.
@@ -41,16 +43,19 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
 
 
     // Hand cursor for clickable elements.
-    ui->buttonDeleteAccount->setCursor( Qt::PointingHandCursor );
-    ui->buttonDone->setCursor( Qt::PointingHandCursor );
+    ui->buttonDeleteAccount->setCursor(Qt::PointingHandCursor);
+    ui->buttonDone->setCursor(Qt::PointingHandCursor);
+    ui->buttonCopy->setCursor(Qt::PointingHandCursor);
 
     // Hide sync-with-mobile, we only show it for mobile accounts.
     ui->frameSyncWithMobile->setVisible(false);
 
+    ui->buttonCopy->setVisible(false);
 
     // Connect signals
-    connect(ui->buttonDeleteAccount, SIGNAL( clicked() ), this, SLOT( deleteAccount() ));
-    connect(ui->buttonDone, SIGNAL( clicked() ), this, SLOT( applyChanges() ));
+    connect(ui->buttonDeleteAccount, SIGNAL(clicked()), this, SLOT(deleteAccount()));
+    connect(ui->buttonDone, SIGNAL(clicked()), this, SLOT(applyChanges()));
+    connect(ui->buttonCopy, SIGNAL(clicked()), this, SLOT(copyQr()));
 
     // Set initial state.
     activeAccountChanged(_activeAccount);
@@ -88,6 +93,8 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
     }
     else if (account->IsPoW2Witness() && !account->IsFixedKeyPool())
     {
+        ui->frameSyncWithMobile->setVisible(true);
+
         ui->labelScanAccountQR->setText(tr("Scan QR with a witnessing device to link the device to your wallet"));
 
         ui->addressQRImage->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings."));
@@ -112,7 +119,9 @@ void AccountSettingsDialog::showSyncQr()
 {
     int64_t currentTime = activeAccount->getEarliestPossibleCreationTime();
 
-    LOCK(pactiveWallet->cs_wallet);
+    ui->buttonCopy->setVisible(true);
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
     std::string payoutAddress;
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
@@ -127,6 +136,7 @@ void AccountSettingsDialog::showSyncQr()
             payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
 
             QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
+            ui->addressQRContents->setVisible(false);
         }
         else if(activeAccount->IsPoW2Witness() && !activeAccount->IsFixedKeyPool())
         {
@@ -158,8 +168,10 @@ void AccountSettingsDialog::showSyncQr()
                     qrString = QString::fromStdString(witnessAccountKeys);
                 }
             }
+            ui->addressQRContents->setVisible(true);
         }
         ui->addressQRImage->setCode(qrString);
+        ui->addressQRContents->setText(qrString);
 
         disconnect(this, SLOT( showSyncQr() ));
     }
@@ -176,6 +188,12 @@ void AccountSettingsDialog::applyChanges()
         }
     }
     Q_EMIT dismissAccountSettings();
+}
+
+void AccountSettingsDialog::copyQr()
+{
+    QString copyText = ui->addressQRContents->text();
+    GUIUtil::setClipboard(copyText);
 }
 
 //fixme: (Post-2.1) - Make this configurable or more intelligent in some way?

@@ -641,6 +641,9 @@ public:
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
     unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
+    //! Import a witness-only account from a URL
+    void importWitnessOnlyAccountFromURL(const SecureString& sKey);
+
     void importPrivKey(const SecureString& sKey);
     void importPrivKey(const CKey& privKey);
     void importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);

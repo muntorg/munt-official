@@ -3,37 +3,34 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_QT_IMPORTPRIVKEYDIALOG_H
-#define GULDEN_QT_IMPORTPRIVKEYDIALOG_H
+#ifndef GULDEN_QT_IMPORTWITNESSDIALOG_H
+#define GULDEN_QT_IMPORTWITNESSDIALOG_H
 
 #include <QDialog>
 #include "support/allocators/secure.h"
 
 namespace Ui {
-    class ImportPrivKeyDialog;
+    class ImportWitnessDialog;
 }
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
 
-/** Dialog for importing a private key.
- */
-class ImportPrivKeyDialog : public QDialog
+//! Dialog for importing a witness-only URL.
+class ImportWitnessDialog : public QDialog
 {
     Q_OBJECT
-
 public:
-    explicit ImportPrivKeyDialog(QWidget *parent);
-    ~ImportPrivKeyDialog();
+    explicit ImportWitnessDialog(QWidget *parent);
+    virtual ~ImportWitnessDialog();
 
-    SecureString getPrivKey() const;
-
+    SecureString getWitnessURL() const;
 public Q_SLOTS:
     void accept();
 
 private:
 
-    Ui::ImportPrivKeyDialog *ui;
+    Ui::ImportWitnessDialog *ui;
 };
 
 #endif // GULDEN_QT_IMPORTPRIVKEYDIALOG_H

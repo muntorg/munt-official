@@ -61,6 +61,7 @@ qt/_Gulden/moc_welcomedialog.cpp \
 qt/_Gulden/moc_witnessdialog.cpp \
 qt/_Gulden/moc_exchangeratedialog.cpp \
 qt/_Gulden/moc_importprivkeydialog.cpp \
+qt/_Gulden/moc_importwitnessdialog.cpp \
 qt/_Gulden/moc_accounttablemodel.cpp
 
 GDN_FORMS = qt/_Gulden/forms/guldensendcoinsentry.ui \
@@ -73,7 +74,8 @@ qt/_Gulden/forms/backupdialog.ui \
 qt/_Gulden/forms/welcomedialog.ui \
 qt/_Gulden/forms/witnessdialog.ui \
 qt/_Gulden/forms/exchangeratedialog.ui \
-qt/_Gulden/forms/importprivkeydialog.ui
+qt/_Gulden/forms/importprivkeydialog.ui \
+qt/_Gulden/forms/importwitnessdialog.ui
 
 GDN_QT_H = qt/_Gulden/guldensendcoinsentry.h \
 qt/_Gulden/accountsummarywidget.h \
@@ -92,6 +94,7 @@ qt/_Gulden/welcomedialog.h \
 qt/_Gulden/witnessdialog.h \
 qt/_Gulden/exchangeratedialog.h \
 qt/_Gulden/importprivkeydialog.h \
+qt/_Gulden/importwitnessdialog.h \
 qt/_Gulden/accounttablemodel.h
 
 GDN_QT_SRCS = qt/_Gulden/guldensendcoinsentry.cpp \
@@ -111,6 +114,7 @@ qt/_Gulden/welcomedialog.cpp \
 qt/_Gulden/witnessdialog.cpp \
 qt/_Gulden/exchangeratedialog.cpp \
 qt/_Gulden/importprivkeydialog.cpp \
+qt/_Gulden/importwitnessdialog.cpp \
 qt/_Gulden/accounttablemodel.cpp
 
 GDN_RES_ICONS = qt/res/icons/connect0@2x.png \

@@ -155,6 +155,15 @@ void setupPrivKeyWidget(QValidatedLineEdit *widget, QWidget *parent)
     widget->setCheckValidator(new GuldenAddressCheckValidator(parent));
 }
 
+void setupGuldenURLEntryWidget(QValidatedLineEdit *widget, QWidget *parent)
+{
+    parent->setFocusProxy(widget);
+#if QT_VERSION >= 0x040700
+    widget->setPlaceholderText(QObject::tr("Enter a Gulden URL"));
+#endif
+    //fixme: (2.1) Implement validators here
+}
+
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 {
     QDoubleValidator *amountValidator = new QDoubleValidator(parent);
@@ -956,6 +965,7 @@ void centerWindowGeometry(const QString& strSetting, QWidget* widgetToCenter)
 
 void setClipboard(const QString& str)
 {
+    QApplication::clipboard()->clear();
     QApplication::clipboard()->setText(str, QClipboard::Clipboard);
     QApplication::clipboard()->setText(str, QClipboard::Selection);
 }

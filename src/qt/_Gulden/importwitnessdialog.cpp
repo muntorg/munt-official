@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "importprivkeydialog.h"
-#include <qt/_Gulden/forms/ui_importprivkeydialog.h>
+#include "importwitnessdialog.h"
+#include <qt/_Gulden/forms/ui_importwitnessdialog.h>
 
 #include "guiutil.h"
 #include "base58.h"
@@ -13,13 +13,13 @@
 #include <QPushButton>
 #include "_Gulden/GuldenGUI.h"
 
-ImportPrivKeyDialog::ImportPrivKeyDialog(QWidget *parent)
+ImportWitnessDialog::ImportWitnessDialog(QWidget *parent)
 : QDialog(parent)
-, ui(new Ui::ImportPrivKeyDialog)
+, ui(new Ui::ImportWitnessDialog)
 {
     ui->setupUi(this);
 
-    GUIUtil::setupPrivKeyWidget(ui->privKeyEdit, this);
+    GUIUtil::setupGuldenURLEntryWidget(ui->privKeyEdit, this);
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setCursor(Qt::PointingHandCursor);
@@ -40,17 +40,17 @@ ImportPrivKeyDialog::ImportPrivKeyDialog(QWidget *parent)
     setMinimumSize(300,200);
 }
 
-ImportPrivKeyDialog::~ImportPrivKeyDialog()
+ImportWitnessDialog::~ImportWitnessDialog()
 {
     delete ui;
 }
 
 
 
-void ImportPrivKeyDialog::accept()
+void ImportWitnessDialog::accept()
 {
-    CGuldenSecret vchSecret;
-    bool fGood = vchSecret.SetString(getPrivKey().c_str());
+    //fixme: (2.1) Improve this check.
+    bool fGood = ui->privKeyEdit->text().startsWith("gulden://witnesskeys?keys=");
 
     if (!fGood)
         return;
@@ -58,7 +58,7 @@ void ImportPrivKeyDialog::accept()
     QDialog::accept();
 }
 
-SecureString ImportPrivKeyDialog::getPrivKey() const
+SecureString ImportWitnessDialog::getWitnessURL() const
 {
     return ui->privKeyEdit->text().toStdString().c_str();
 }

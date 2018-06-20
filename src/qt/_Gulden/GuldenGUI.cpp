@@ -50,6 +50,7 @@
 #include <_Gulden/accountsummarywidget.h>
 #include <_Gulden/newaccountdialog.h>
 #include <_Gulden/importprivkeydialog.h>
+#include <_Gulden/importwitnessdialog.h>
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
 #include <_Gulden/witnessdialog.h>
@@ -1426,7 +1427,6 @@ void GUI::accountButtonPressed()
 }
 
 
-
 void GUI::promptImportPrivKey()
 {
     LogPrint(BCLog::QT, "GUI::promptImportPrivKey\n");
@@ -1435,6 +1435,17 @@ void GUI::promptImportPrivKey()
     if (dlg.exec())
     {
         pactiveWallet->importPrivKey(dlg.getPrivKey());
+    }
+}
+
+void GUI::promptImportWitnessOnlyAccount()
+{
+    LogPrint(BCLog::QT, "GUI::promptImportWitnessOnlyAccount\n");
+
+    ImportWitnessDialog dlg(this);
+    if (dlg.exec())
+    {
+        pactiveWallet->importWitnessOnlyAccountFromURL(dlg.getWitnessURL());
     }
 }
 
