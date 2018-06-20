@@ -291,8 +291,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
                                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
                                 sub.idx = parts.size(); // sequence number
-                                subReceive.credit = totalAmountLocked;
-                                subReceive.debit = totalAmountLocked;
+                                sub.credit = totalAmountLocked;
+                                sub.debit = totalAmountLocked;
                                 parts.append(sub);
 
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.

@@ -81,15 +81,16 @@ static UniValue sethashlimit(const JSONRPCRequest& request)
 
 static UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 2)
+    if (request.fHelp || request.params.size() > 3)
         throw std::runtime_error(
-            "getwitnessinfo \"block_specifier\" verbose\n"
+            "getwitnessinfo \"block_specifier\" verbose mine_only\n"
             "\nReturns witness related network info for a given block."
             "\nWhen verbose is enabled returns additional statistics.\n"
             "\nArguments:\n"
             "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
             "\nSpecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
-            "2. verbose                 (bool, optional, default=false) Display additional verbose information.\n"
+            "2. verbose                  (bool, optional, default=false) Display additional verbose information.\n"
+            "3. mine_only                (bool, optional, default=false) In verbose display only show account info for accounts belonging to this wallet.\n"
             "\nResult:\n"
             "[{\n"
             "     \"pow2_phase\": n                                  (number) The number of the currently active pow2_phase.\n"
@@ -162,6 +163,10 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     #else
     LOCK(cs_main);
     #endif
+
+    bool showMineOnly = false;
+    if (request.params.size() > 2)
+        showMineOnly = request.params[2].get_bool();
 
     int64_t nTotalWeightAll = 0;
     int64_t nNumWitnessAddressesAll = 0;
@@ -335,6 +340,10 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
             bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
 
+            #ifdef ENABLE_WALLET
+            std::string accountName = accountNameForAddress(*pwallet, address);
+            #endif
+
             UniValue rec(UniValue::VOBJ);
             rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
             rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
@@ -352,7 +361,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
             #ifdef ENABLE_WALLET
-            rec.push_back(Pair("ismine_accountname", accountNameForAddress(*pwallet, address)));
+            rec.push_back(Pair("ismine_accountname", accountName));
             #else
             rec.push_back(Pair("ismine_accountname", ""));
             #endif
@@ -361,6 +370,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             lockPeriodWeightStats(nLockPeriodInBlocks);
             witnessAmountStats(nValue);
             ageStats(nAge);
+
+            #ifdef ENABLE_WALLET
+            if (showMineOnly && accountName.empty())
+                continue;
+            #endif
 
             jsonAllWitnessAddresses.push_back(rec);
         }
@@ -2908,7 +2922,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"witness_account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"witness_address"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_account"} },
-    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose"} },
+    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose", "mine_only"} },
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account_name", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
