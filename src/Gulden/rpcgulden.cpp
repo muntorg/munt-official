@@ -2730,14 +2730,14 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getwitnessaccountkeys \"witness_account\" \n"
-            "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
+            "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnesskeys\" command.\n"
             "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaccount\", this will include all of them \n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
-            "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnesskeys\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaccountkeys", "")
             + HelpExampleRpc("getwitnessaccountkeys", ""));
@@ -2803,13 +2803,13 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getwitnessaddresskeys \"witness_address\" \n"
-            "\nGet the witness key of an HD address, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
+            "\nGet the witness key of an HD address, this can be used to import the account as a witness only account in another wallet via the \"importwitnesskeys\" command.\n"
             "1. \"witness_address\"        (required) The Gulden address for the witness key.\n"
             "\nResult:\n"
-            "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnesskeys\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
             + HelpExampleRpc("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
