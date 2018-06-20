@@ -1073,7 +1073,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
             "\nArguments:\n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
-            "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
@@ -1869,60 +1869,10 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
-static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
+static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs)
 {
-    #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
-        return NullUniValue;
-
-    if (request.fHelp || request.params.size() != 2)
-        throw std::runtime_error(
-            "rotatewitnessaddress \"address\" \n"
-            "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
-            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
-            "2. \"witness_address\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "\nResult:\n"
-            "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
-            "]\n"
-            "\nExamples:\n"
-            + HelpExampleCli("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
-
-    // Basic sanity checks.
-    if (!pwallet)
-        throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.TipPrev()))
-        throw std::runtime_error("Cannot use this command before segsig activates");
-
-    EnsureWalletIsUnlocked(pwallet);
-
-    // arg1 - 'from' account.
-    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!fundingAccount)
-        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
-
-    // arg2 - 'to' address.
-    CGuldenAddress witnessAddress(request.params[1].get_str());
-    bool isValid = witnessAddress.IsValidWitness(Params());
-
-    if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
-
-    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
-    if (unspentWitnessOutputs.size() == 0)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
-
-    //fixme: (2.1) - Handle addres
     if (unspentWitnessOutputs.size() > 1)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address has too many witness outputs cannot rotate [%s].", request.params[1].get_str()));
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
@@ -1997,6 +1947,117 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
     return result;
+}
+
+static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "rotatewitnessaddress \"funding_account\" \"witness_address\" \n"
+            "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs);
+}
+
+static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "rotatewitnessaccount \"funding_account\" \"witness_account\" \n"
+            "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' accoun t.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[01, false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs);
 }
 
 static UniValue renewwitnessaccount(const JSONRPCRequest& request)
@@ -2419,10 +2480,10 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnesscompound \"witness_address\"\n"
+            "getwitnesscompound \"witness_account\"\n"
             "\nGet the current compound setting for an account.\n"
             "\nArguments:\n"
-            "1. \"witness_address\"        (string) The UUID or unique label of the account.\n"
+            "1. \"witness_account\"        (string) The UUID or unique label of the account.\n"
             "\nResult:\n"
             "\nReturn the current amount set for the account.\n"
             "\nCompounding is controlled as follows:\n"
@@ -2540,10 +2601,10 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessrewardscript \"witness_address\" \n"
+            "getwitnessrewardscript \"witness_account\" \n"
             "\nGet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"witness_address\"        (required) The unique UUID or label for the account.\n"
+            "1. \"witness_account\"    (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "[\n"
             "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
@@ -2718,12 +2779,12 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
-            "importwitnesskeys \"witness_address\" \"encoded_key_url\" \"create_account\" \n"
+            "importwitnesskeys \"account_name\" \"encoded_key_url\" \"create_account\" \n"
             "\nAdd keys imported from an \"encoded_key_url\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
             "\nUses an existing account if \"create_account\" is false, otherwise creates a new one. \n"
-            "1. \"witness_address\"         (string) name/label of the new account.\n"
-            "2. \"encoded_key_url\" (string) Encoded string containing the extended public key for the account.\n"
-            "3. \"create_account\"  (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
+            "1. \"account_name\"            (string) name/label of the new account.\n"
+            "2. \"encoded_key_url\"         (string) Encoded string containing the extended public key for the account.\n"
+            "3. \"create_account\"          (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
             "\nResult:\n"
             "\nReturn the UUID of account.\n"
             "\nExamples:\n"
@@ -2779,12 +2840,13 @@ static const CRPCCommand commands[] =
     { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time", "force_multiple" } },
     { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"witness_account"} },
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"witness_address"} },
-    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_address"} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_account"} },
     { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose"} },
-    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_address"} },
-    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"witness_address", "encoded_key_url", "create_account"} },
+    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_account"} },
+    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account_name", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
+    { "witness",                 "rotatewitnessaccount",            &rotatewitnessaccount,           true,    {"funding_account", "witness_account"} },
     { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
