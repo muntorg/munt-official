@@ -1138,7 +1138,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Calculate existing lock period
@@ -1927,7 +1927,7 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Get the current witness details
@@ -2149,7 +2149,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     CAmount splitTotal=0;
@@ -2231,7 +2231,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "mergewitnessaccount \"addresses\" \n"
+            "mergewitnessaccount \"funding_account\" \"witness_account\"\n"
             "\nMerge multiple witness addresses into a single one.\n"
             "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaccount\".\n"
             "\nThis is useful in the event that the network weight has risen significantly and an account that was previously split could now earn better as a single account. \n"
@@ -2239,8 +2239,8 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
             "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\",                (string) The txid of the created transaction\n"
+            "     \"fee_amount\"           (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("mergewitnessaccount \"My account\" \"My witness account\"", "")
@@ -2280,7 +2280,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     for ( const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] : unspentWitnessOutputs )
     {
         //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY + 1))
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 
