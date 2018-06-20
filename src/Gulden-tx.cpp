@@ -792,6 +792,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             argv++;
         }
 
+        //fixme: (2.0) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
         //fixme: (2.0) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
         CMutableTransaction tx(1);
         int startArg;

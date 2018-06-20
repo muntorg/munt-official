@@ -279,6 +279,11 @@ bool CGuldenAddress::IsValid(const CChainParams& params) const
     return fCorrectSize && fKnownVersion;
 }
 
+bool CGuldenAddress::IsValidWitness() const
+{
+    return IsValidWitness(Params());
+}
+
 bool CGuldenAddress::IsValidWitness(const CChainParams& params) const
 {
     if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
@@ -312,15 +317,31 @@ CTxDestination CGuldenAddress::Get() const
         return CNoDestination();
 }
 
-//fixme: (2.0) Any instances where we might want to call this for POW2_WITNESS_ADDRESS? I think not but make sure.
-bool CGuldenAddress::GetKeyID(CKeyID& keyID) const
+bool CGuldenAddress::GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID) const
 {
-    if (!IsValid() || vchVersion != Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))
+    if (!IsValid())
         return false;
     uint160 id;
     memcpy(&id, &vchData[0], 20);
-    keyID = CKeyID(id);
-    return true;
+    if (vchVersion == Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))
+    {
+        keyID = CKeyID(id);
+        return true;
+    }
+    if (!IsValidWitness(Params()))
+        return false;
+    if (vchVersion == Params().Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
+    {
+        uint160 idWitnessKey;
+        memcpy(&idWitnessKey, &vchData[20], 20);
+        keyID = idWitnessKey;
+        if (pSecondaryKeyID)
+        {
+            *pSecondaryKeyID = id;
+        }
+        return true;
+    }
+    return false;
 }
 
 bool CGuldenAddress::IsScript() const

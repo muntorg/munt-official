@@ -75,7 +75,7 @@ CAccount* CWallet::FindAccountForTransaction(const CTxOut& out)
     return NULL;
 }
 
-bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl coinControl, bool keepReserveKey)
+bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl coinControl, CReserveKeyOrScript& reservekey)
 {
     std::vector<CRecipient> vecSend;
 
@@ -92,7 +92,6 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     for(const CTxIn& txin : tx.vin)
         coinControl.Select(txin.prevout);
 
-    CReserveKeyOrScript reservekey(this, fromAccount, KEYCHAIN_CHANGE);
     CWalletTx wtx;
     if (!CreateTransaction(fromAccount, vecSend, wtx, reservekey, nFeeRet, nChangePosInOut, strFailReason, &coinControl, false))
         return false;
@@ -118,10 +117,6 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
             }
         }
     }
-
-    // optionally keep the change output key
-    if (keepReserveKey)
-        reservekey.KeepKey();
 
     return true;
 }
@@ -323,7 +318,8 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                             return false;
                         }
 
-                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
+                        CTxOutStandardKeyHash standardKeyHashKeyID(vchPubKey.GetID());
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, standardKeyHashKeyID));
                     }
                     else
                     {
@@ -608,7 +604,8 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                             return false;
                         }
 
-                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, vchPubKey.GetID()));
+                        CTxOutStandardKeyHash standardKeyHashKeyID(vchPubKey.GetID());
+                        newTxOut = std::make_shared<CTxOut>(CTxOut(nChange, standardKeyHashKeyID));
                     }
                     else
                     {
@@ -803,7 +800,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
-    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params().GetConsensus()))
+    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
     {
         strError = "Error reading block from disk.";
         return false;
@@ -869,7 +866,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     return false;
 }
 
-bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError)
+bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut)
 {
     if (!SignTransaction(nullptr, tx, SignType::Spend))
     {
@@ -888,6 +885,9 @@ bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CM
         strError = "Unable to commit transaction";
         return false;
     }
+    if (pTransactionHashOut)
+        *pTransactionHashOut = wtxNew.GetHash();
+
     return true;
 }
 

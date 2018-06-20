@@ -8,12 +8,15 @@
 
 #include "account.h"
 #include "wallet/wallet.h"
+#include <validation/witnessvalidation.h>
 
 #include <QDialogButtonBox>
 #include <QDialog>
 #include <QPushButton>
 #include "gui.h"
 #include "walletmodel.h"
+
+#include <Gulden/util.h>
 
 AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
 : QFrame(parent)
@@ -26,8 +29,10 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
 
     // Setup object names for styling
     ui->buttonDone->setObjectName("doneButton");
+    ui->buttonCopy->setObjectName("copyButton");
     ui->buttonDeleteAccount->setObjectName("deleteButton");
     ui->frameAccountSettings->setObjectName("frameAccountSettings");
+    ui->addressQRContents->setObjectName("addressQRContents");
     setObjectName("dialogAccountSettings");
 
     // Zero out all margins so that we can handle whitespace in stylesheet instead.
@@ -38,16 +43,19 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
 
 
     // Hand cursor for clickable elements.
-    ui->buttonDeleteAccount->setCursor( Qt::PointingHandCursor );
-    ui->buttonDone->setCursor( Qt::PointingHandCursor );
+    ui->buttonDeleteAccount->setCursor(Qt::PointingHandCursor);
+    ui->buttonDone->setCursor(Qt::PointingHandCursor);
+    ui->buttonCopy->setCursor(Qt::PointingHandCursor);
 
     // Hide sync-with-mobile, we only show it for mobile accounts.
     ui->frameSyncWithMobile->setVisible(false);
 
+    ui->buttonCopy->setVisible(false);
 
     // Connect signals
-    connect(ui->buttonDeleteAccount, SIGNAL( clicked() ), this, SLOT( deleteAccount() ));
-    connect(ui->buttonDone, SIGNAL( clicked() ), this, SLOT( applyChanges() ));
+    connect(ui->buttonDeleteAccount, SIGNAL(clicked()), this, SLOT(deleteAccount()));
+    connect(ui->buttonDone, SIGNAL(clicked()), this, SLOT(applyChanges()));
+    connect(ui->buttonCopy, SIGNAL(clicked()), this, SLOT(copyQr()));
 
     // Set initial state.
     activeAccountChanged(_activeAccount);
@@ -78,8 +86,19 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
     {
         ui->frameSyncWithMobile->setVisible(true);
 
+        ui->labelScanAccountQR->setText(tr("Scan QR to connect to your mobile Gulden app"));
+
         ui->addressQRImage->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds."));
-        connect(ui->addressQRImage, SIGNAL( clicked() ), this, SLOT( showSyncQr() ));
+        connect(ui->addressQRImage, SIGNAL( clicked() ), this, SLOT( showSyncQr() ), Qt::UniqueConnection);
+    }
+    else if (account->IsPoW2Witness() && !account->IsFixedKeyPool())
+    {
+        ui->frameSyncWithMobile->setVisible(true);
+
+        ui->labelScanAccountQR->setText(tr("Scan QR with a witnessing device to link the device to your wallet"));
+
+        ui->addressQRImage->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings."));
+        connect(ui->addressQRImage, SIGNAL( clicked() ), this, SLOT( showSyncQr() ), Qt::UniqueConnection);
     }
     else
     {
@@ -100,19 +119,59 @@ void AccountSettingsDialog::showSyncQr()
 {
     int64_t currentTime = activeAccount->getEarliestPossibleCreationTime();
 
-    LOCK(pactiveWallet->cs_wallet);
+    ui->buttonCopy->setVisible(true);
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
     std::string payoutAddress;
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        CReserveKeyOrScript reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
-        CPubKey vchPubKey;
-        if (!reservekey.GetReservedKey(vchPubKey))
-            return;
-        payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
+        QString qrString;
+        if (activeAccount->IsMobi())
+        {
+            CReserveKeyOrScript reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
+            CPubKey vchPubKey;
+            if (!reservekey.GetReservedKey(vchPubKey))
+                return;
+            payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
 
-        QString qrString = QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
+            QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
+            ui->addressQRContents->setVisible(false);
+        }
+        else if(activeAccount->IsPoW2Witness() && !activeAccount->IsFixedKeyPool())
+        {
+            //fixme: (2.1) HIGH - seperate this and "getwitnessaccountkeys" (RPC) into a seperate helper function instead of duplicating code.
+            if (chainActive.Tip())
+            {
+                std::map<COutPoint, Coin> allWitnessCoins;
+                if (getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+                {
+                    std::string witnessAccountKeys = "";
+                    for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
+                    {
+                        (unused)witnessOutPoint;
+                        CTxOutPoW2Witness witnessDetails;
+                        GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
+                        if (activeAccount->HaveKey(witnessDetails.witnessKeyID))
+                        {
+                            CKey witnessPrivKey;
+                            if (activeAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
+                            {
+                                //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+                                witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", activeAccount->getEarliestPossibleCreationTime());
+                                witnessAccountKeys += ":";
+                            }
+                        }
+                    }
+                    witnessAccountKeys.pop_back();
+                    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+                    qrString = QString::fromStdString(witnessAccountKeys);
+                }
+            }
+            ui->addressQRContents->setVisible(true);
+        }
         ui->addressQRImage->setCode(qrString);
+        ui->addressQRContents->setText(qrString);
 
         disconnect(this, SLOT( showSyncQr() ));
     }
@@ -129,6 +188,12 @@ void AccountSettingsDialog::applyChanges()
         }
     }
     Q_EMIT dismissAccountSettings();
+}
+
+void AccountSettingsDialog::copyQr()
+{
+    QString copyText = ui->addressQRContents->text();
+    GUIUtil::setClipboard(copyText);
 }
 
 //fixme: (Post-2.1) - Make this configurable or more intelligent in some way?

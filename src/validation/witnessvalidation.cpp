@@ -117,7 +117,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
             CBlockIndex* pindexNew = currentChain.Tip()->pprev;
             std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
             CBlock& block = *pblock;
-            if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams.GetConsensus()))
+            if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams))
                 return false;
             if (DisconnectBlock(block, currentChain.Tip(), coinView) != DISCONNECT_OK)
                 return false;
@@ -131,7 +131,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
         CBlockIndex* pindexNew = currentChain.Tip()->pprev;
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
         CBlock& block = *pblock;
-        if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams.GetConsensus()))
+        if (!ReadBlockFromDisk(block, currentChain.Tip(), chainparams))
             return false;
         if (DisconnectBlock(block, currentChain.Tip(), coinView) != DISCONNECT_OK)
             return false;
@@ -162,7 +162,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
             {
                 pblockConnect = std::make_shared<CBlock>();
                 CBlock& block = *pblockConnect;
-                if (!ReadBlockFromDisk(block, pindexConnect, chainparams.GetConsensus()))
+                if (!ReadBlockFromDisk(block, pindexConnect, chainparams))
                     return false;
             }
             bool rv = ConnectBlock(currentChain, pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams);
@@ -377,10 +377,9 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size2a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
-        //fixme: (2.0) check for off by 1 error.
         /** Eliminate addresses that are within 100 blocks from lock period expiring, or whose lock period has expired. **/
         //LogPrint(BCLog::WITNESS, "Witness pool size3b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
-        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return !(details.lockUntilBlock - nMinAge >= nBlockHeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return (GetPoW2RemainingLockLengthInBlocks(details.lockUntilBlock, nBlockHeight) <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size3a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
@@ -417,12 +416,12 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    uint64_t maxWeight = witnessInfo.nTotalWeight / 100;
+    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeight / 100;
     witnessInfo.nReducedTotalWeight = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
-        if (item.nWeight > maxWeight)
-            item.nWeight = maxWeight;
+        if (item.nWeight > witnessInfo.nMaxIndividualWeight)
+            item.nWeight = witnessInfo.nMaxIndividualWeight;
         witnessInfo.nReducedTotalWeight += item.nWeight;
         item.nCumulativeWeight = witnessInfo.nReducedTotalWeight;
     }
@@ -539,7 +538,7 @@ bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseI
     uint256 hashPrevPoWIndex;
 
     // Reconstruct header information of previous witness block from the coinbase of this PoW block.
-    if (!ReadBlockFromDisk(embeddedWitnessBlock, pindexPrev, chainParams.GetConsensus()))
+    if (!ReadBlockFromDisk(embeddedWitnessBlock, pindexPrev, chainParams))
         return false;
 
     embeddedWitnessBlock.witnessHeaderPoW2Sig.resize(65);

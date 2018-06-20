@@ -295,7 +295,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                         bool matchedExistingBundle = false;
                         for (auto& bundle: *pWitnessBundles)
                         {
-                            if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
+                            if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
                             {
                                 bundle.bundleType = CWitnessTxBundle::WitnessTxType::SplitType;
                                 bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
@@ -478,7 +478,7 @@ inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputD
 /*
 * 6) Split, everything must stay the same, but input may be split into two identical outputs.
 * 1 input, multiple outputs.
-* Signed by witness key.
+* Signed by spending key.
 * Precondition - we must have already verified externally from here that the scriptwitness stack for the input is of size 2.
 */
 bool CWitnessTxBundle::IsValidSplitBundle()
@@ -512,9 +512,10 @@ bool CWitnessTxBundle::IsValidSplitBundle()
 }
 
 /*
-* 7) Merge, two identical (other than amount and failcount) inputs can be combined into one output. Everything should stay the same except amount and failcount which must match the combination of the two inputs in both cases.
+* 7) Merge, two identical (other than amount and failcount) inputs can be combined into one output.
+* Everything should stay the same except amount and failcount which must match the combination of the two inputs in both cases.
 * Multiple inputs, one output.
-* Signed by witness key.
+* Signed by spending key.
 * Precondition - we must have already verified externally from here that the scriptwitness stack for the input is of size 2.
 */
 bool CWitnessTxBundle::IsValidMergeBundle()
@@ -535,7 +536,7 @@ bool CWitnessTxBundle::IsValidMergeBundle()
             return false;
         if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
             return false;
-        if (inputDetails.failCount != outputDetails.failCount)
+        if (inputDetails.failCount > outputDetails.failCount)
             return false;
         if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
             return false;
@@ -639,13 +640,16 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 bool matchedExistingBundle = false;
                 for (auto& bundle : *pWitnessBundles)
                 {
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::MergeType;
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        matchedExistingBundle = true;
                     }
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        matchedExistingBundle = true;
                     }
                 }
                 if (!matchedExistingBundle)

@@ -331,6 +331,7 @@ public:
         return *phashBlock;
     }
 
+    //fixme: (2.1) All time related things should be unsigned.
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;

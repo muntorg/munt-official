@@ -1065,12 +1065,13 @@ static void RelayAddress(const CAddress& addr, bool fReachable, CConnman& connma
     connman.ForEachNodeThen(std::move(sortfunc), std::move(pushfunc));
 }
 
-void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
+void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     std::deque<CInv>::iterator it = pfrom->vRecvGetData.begin();
     std::vector<CInv> vNotFound;
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+    const Consensus::Params& consensusParams = params.GetConsensus();
     LOCK(cs_main); // Required for ReadBlockFromDisk.
 
     while (it != pfrom->vRecvGetData.end()) {
@@ -1161,7 +1162,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         } else {
                             // Send block from disk
                             std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
-                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
+                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, params))
                                 assert(!"cannot load pow2 block from disk");
                             pblock = pblockRead;
                         }
@@ -1173,7 +1174,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                         } else {
                             // Send block from disk
                             std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
-                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
+                            if (!ReadBlockFromDisk(*pblockRead, (*mi).second, params))
                                 assert(!"cannot load block from disk");
                             pblock = pblockRead;
                         }
@@ -1824,7 +1825,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
 
         pfrom->vRecvGetData.insert(pfrom->vRecvGetData.end(), vInv.begin(), vInv.end());
-        ProcessGetData(pfrom, chainparams.GetConsensus(), connman, interruptMsgProc);
+        ProcessGetData(pfrom, chainparams, connman, interruptMsgProc);
     }
 
 
@@ -1961,12 +1962,12 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             inv.type = State(pfrom->GetId())->fWantsCmpctWitness ? MSG_WITNESS_BLOCK : MSG_BLOCK;
             inv.hash = req.blockhash;
             pfrom->vRecvGetData.push_back(inv);
-            ProcessGetData(pfrom, chainparams.GetConsensus(), connman, interruptMsgProc);
+            ProcessGetData(pfrom, chainparams, connman, interruptMsgProc);
             return true;
         }
 
         CBlock block;
-        bool ret = ReadBlockFromDisk(block, it->second, chainparams.GetConsensus());
+        bool ret = ReadBlockFromDisk(block, it->second, chainparams);
 
         //fixme: (2.0) (HIGH) Work around assert we are getting here, ideally we should fix this.
         //assert(ret);
@@ -3131,7 +3132,7 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
     bool fMoreWork = false;
 
     if (!pfrom->vRecvGetData.empty())
-        ProcessGetData(pfrom, chainparams.GetConsensus(), connman, interruptMsgProc);
+        ProcessGetData(pfrom, chainparams, connman, interruptMsgProc);
 
     if (pfrom->fDisconnect)
         return false;
@@ -3514,7 +3515,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     }
                     if (!fGotBlockFromCache) {
                         CBlock block;
-                        bool ret = ReadBlockFromDisk(block, pBestIndex, consensusParams);
+                        bool ret = ReadBlockFromDisk(block, pBestIndex, Params());
                         assert(ret);
                         CBlockHeaderAndShortTxIDs cmpctblock(block, state.fWantsCmpctWitness);
                         connman.PushMessage(pto, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));

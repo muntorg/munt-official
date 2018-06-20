@@ -985,6 +985,7 @@ CAmount CAccount::getCompounding() const
 
 void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
+    //fixme: (2.1) Signal UI to update compound checkbox to reflect changes.
     compoundEarnings = compoundAmount_;
     if (Db)
     {
@@ -992,6 +993,27 @@ void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
         Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarnings);
     }
 }
+
+bool CAccount::hasNonCompoundRewardScript() const
+{
+    return !nonCompoundRewardScript.empty();
+}
+
+CScript CAccount::getNonCompoundRewardScript() const
+{
+    return nonCompoundRewardScript;
+}
+
+void CAccount::setNonCompoundRewardScript(const CScript& rewardScript, CWalletDB* Db)
+{
+    nonCompoundRewardScript = rewardScript;
+    if (Db)
+    {
+        Db->EraseAccountNonCompoundWitnessEarningsScript(getUUIDAsString(getUUID()));
+        Db->WriteAccountNonCompoundWitnessEarningsScript(getUUIDAsString(getUUID()), nonCompoundRewardScript);
+    }
+}
+
 
 boost::uuids::uuid CAccount::getUUID() const
 {

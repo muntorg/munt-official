@@ -4,12 +4,13 @@
 // file COPYING
 
 #include "rpcgulden.h"
-#include "../miner.h"
+#include "generation/miner.h"
+#include "generation/witness.h"
 #include <rpc/server.h>
 #include <wallet/rpcwallet.h>
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
-
+#include <consensus/consensus.h>
 #include <boost/assign/list_of.hpp>
 
 #include "wallet/wallet.h"
@@ -27,10 +28,15 @@
 
 #include "txdb.h"
 #include "coins.h"
+#include "wallet/coincontrol.h"
+#include "wallet/wallet.h"
+#include "primitives/transaction.h"
 
 #include <Gulden/util.h>
+#include "utilmoneystr.h"
 
 #include <consensus/validation.h>
+#include <consensus/consensus.h>
 #include "net.h"
 
 
@@ -75,19 +81,74 @@ static UniValue sethashlimit(const JSONRPCRequest& request)
 
 static UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 2)
+    if (request.fHelp || request.params.size() > 3)
         throw std::runtime_error(
-            "getwitnessinfo \"blockspecifier\" verbose\n"
-            "\nReturns statistics and witness related info for a block:"
-            "\nNumber of witnesses."
-            "\nOverall network weight."
-            "\nCurrent phase of PoW2 activation.\n"
-            "\nAdditional information when verbose is on:"
-            "\nList of all witness addresses with individual weights.\n"
+            "getwitnessinfo \"block_specifier\" verbose mine_only\n"
+            "\nReturns witness related network info for a given block."
+            "\nWhen verbose is enabled returns additional statistics.\n"
             "\nArguments:\n"
-            "1. \"blockspecifier\" (string, optional, default=tip) The blockspecifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
-            "blockspecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
-            "2. verbose            (bool, optional, default=false) Display additional verbose information.\n"
+            "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
+            "\nSpecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
+            "2. verbose                  (bool, optional, default=false) Display additional verbose information.\n"
+            "3. mine_only                (bool, optional, default=false) In verbose display only show account info for accounts belonging to this wallet.\n"
+            "\nResult:\n"
+            "[{\n"
+            "     \"pow2_phase\": n                                  (number) The number of the currently active pow2_phase.\n"
+            "     \"number_of_witnesses_raw\": n                     (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"number_of_witnesses_total\": n                   (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"number_of_witnesses_eligible\": n                (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_raw\": n                    (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_eligible_raw\": n,          (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"total_witness_weight_eligible_adjusted\": n,     (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"selected_witness_address\": address              (string) The address of the witness that has been selected for the current chain tip.\n"
+            "     \"witness_statistics\": {\n"
+            "         \"weight\": {                                  Weight statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address weight on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address weight on the network.\n"
+            "             \"mean\": n                                (number) The mean weight of all witness addresses.\n"
+            "             \"median\": n                              (number) The median weight of all witness addresses.\n"
+            "         }\n"
+            "         \"amount\": {                                  Amount statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address amount on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address amount on the network.\n"
+            "             \"mean\": n                                (number) The mean amount of all witness addresses.\n"
+            "             \"median\": n                              (number) The median amount of all witness addresses.\n"
+            "         }\n"
+            "         \"lock_period\": {                             Lock period statistics based on all witness addresses\n"
+            "             \"largest\": n                             (number) The largest single address lock_period on the network.\n"
+            "             \"smallest\": n                            (number) The smallest single address lock_period on the network.\n"
+            "             \"mean\": n                                (number) The mean lock_period of all witness addresses.\n"
+            "             \"median\": n                              (number) The median lock_period of all witness addresses.\n"
+            "         }\n"
+            "         \"age\": {                                     Age statistics based on all witness addresses (age is how long an address has existed since it last performed an operation of some kind)\n"
+            "             \"largest\": n                             (number) The oldest address on the network.\n"
+            "             \"smallest\": n                            (number) The more recent address on the network.\n"
+            "             \"mean\": n                                (number) The mean age of all witness addresses.\n"
+            "             \"median\": n                              (number) The median age of all witness addresses.\n"
+            "         }\n"
+            "     }\n"
+            "     \"witness_address_list\": [                        List of all witness addresses on the network, with address specific information\n"
+            "         {\n"
+            "             \"type\": address_type                     (string) The type of address output used to create the address. Either SCRIPT or POW2WITNESS depending on whether SegSig was activated at the time of creation or not.\n"
+            "             \"address\": address                       (string) The address of the witness that has been selected for the current chain tip.\n"
+            "             \"age\": n                                 (number) The age of the address (how long since it was last active in any way)\n"
+            "             \"amount\": n                              (number) The amount that is locked in the address.\n"
+            "             \"raw_weight\": n                          (number) The raw weight of the address before any adjustments.\n"
+            "             \"adjusted_weight\": n                     (number) The weight considered by the witness algorithm after adjustments.\n"
+            "             \"expected_witness_period\": n             (number) The period that the network will allow this address to go without witnessing before it expires.\n"
+            "             \"estimated_witness_period\": n            (number) The average period in which this address should earn a reward over time\n"
+            "             \"last_active_block\": n                   (number) The last block in which this address was active.\n"
+            "             \"lock_from_block\": n                     (number) The block where this address was originally locked.\n"
+            "             \"lock_until_block\": n                    (number) The block that this address will remain locked until.\n"
+            "             \"lock_period\": n                         (number) The complete length in time that this address will be locked for\n"
+            "             \"lock_period_expired\": n                 (boolean)true if the lock has expired (funds can be withdrawed)\n"
+            "             \"eligible_to_witness\": n                 (number) true if the address is eligible to witness.\n"
+            "             \"expired_from_inactivity\": n             (number) true if the network has expired (kicked off) this address due to it failing to witness in the expected period\n"
+            "             \"ismine_accountname\": n                  (string) If the address belongs to an account in this wallet, the name of the account.\n"
+            "         }\n"
+            "         ...\n"
+            "     ]\n"
+            "}]\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessinfo tip false", "")
             + HelpExampleCli("getwitnessinfo tip~2 true", "")
@@ -102,6 +163,10 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     #else
     LOCK(cs_main);
     #endif
+
+    bool showMineOnly = false;
+    if (request.params.size() > 2)
+        showMineOnly = request.params[2].get_bool();
 
     int64_t nTotalWeightAll = 0;
     int64_t nNumWitnessAddressesAll = 0;
@@ -196,7 +261,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         CBlock block;
         {
             LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
-            if (!ReadBlockFromDisk(block, pTipIndex_, Params().GetConsensus()))
+            if (!ReadBlockFromDisk(block, pTipIndex_, Params()))
                 throw std::runtime_error("Could not load block to obtain PoW² information.");
         }
 
@@ -224,6 +289,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         for (auto& iter : witInfo.allWitnessCoins)
         {
             bool fEligible = false;
+            uint64_t nAdjustedWeight = 0;
             {
                 auto poolIter = witInfo.witnessSelectionPoolFiltered.begin();
                 while (poolIter != witInfo.witnessSelectionPoolFiltered.end())
@@ -232,6 +298,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
+                            nAdjustedWeight = poolIter->nWeight;
                             fEligible = true;
                             break;
                         }
@@ -271,14 +338,19 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
             CAmount nValue = iter.second.out.nValue;
 
-            bool fLockPeriodExpired = nLockUntilBlock < pTipIndex_->nHeight;
+            bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
+
+            #ifdef ENABLE_WALLET
+            std::string accountName = accountNameForAddress(*pwallet, address);
+            #endif
 
             UniValue rec(UniValue::VOBJ);
             rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
             rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
             rec.push_back(Pair("age", nAge));
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
-            rec.push_back(Pair("weight", nRawWeight));
+            rec.push_back(Pair("raw_weight", nRawWeight));
+            rec.push_back(Pair("adjusted_weight", nAdjustedWeight));
             rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));
@@ -289,7 +361,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
             #ifdef ENABLE_WALLET
-            rec.push_back(Pair("ismine_accountname", accountNameForAddress(*pwallet, address)));
+            rec.push_back(Pair("ismine_accountname", accountName));
             #else
             rec.push_back(Pair("ismine_accountname", ""));
             #endif
@@ -298,6 +370,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             lockPeriodWeightStats(nLockPeriodInBlocks);
             witnessAmountStats(nValue);
             ageStats(nAge);
+
+            #ifdef ENABLE_WALLET
+            if (showMineOnly && accountName.empty())
+                continue;
+            #endif
 
             jsonAllWitnessAddresses.push_back(rec);
         }
@@ -519,7 +596,7 @@ static UniValue dumptransactionstats(const JSONRPCRequest& request)
     {
         CBlock block;
         LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
-        if (ReadBlockFromDisk(block, pBlock, Params().GetConsensus()))
+        if (ReadBlockFromDisk(block, pBlock, Params()))
         {
             for (auto transaction : block.vtx)
             {
@@ -758,6 +835,79 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
 }
 
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    for (const auto& [outpoint, coin] : allWitnessCoins)
+    {
+        CTxDestination compareDestination;
+        bool fValidAddress = ExtractDestination(coin.out, compareDestination);
+
+        if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
+        {
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+        }
+    }
+    return matchedOutputs;
+}
+
+static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
+{
+    std::map<COutPoint, Coin> allWitnessCoins;
+    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        throw std::runtime_error("Failed to enumerate all witness coins.");
+
+    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    for (const auto& [outpoint, coin] : allWitnessCoins)
+    {
+        if (IsMine(*forAccount, coin.out))
+        {
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+        }
+    }
+    return matchedOutputs;
+}
+
+//! Given a string specifier, calculate a lock length in blocks to match it. e.g. 1d -> 576; 5b -> 5; 1m -> 17280
+//! Returns 0 if specifier is invalid.
+static uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
+{
+    uint64_t lockPeriodInBlocks = 0;
+    int nMultiplier = 1;
+    if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
+    {
+        nMultiplier = 365 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
+    {
+        nMultiplier = 30 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "w"))
+    {
+        nMultiplier = 7 * 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "d"))
+    {
+        nMultiplier = 576;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
+    {
+        nMultiplier = 1;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    if (!ParseUInt64(formattedLockPeriodSpecifier, &lockPeriodInBlocks))
+        return 0;
+    lockPeriodInBlocks *=  nMultiplier;
+    return lockPeriodInBlocks;
+}
 
 static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 {
@@ -771,19 +921,24 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 4)
+    if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw std::runtime_error(
-            "fundwitnessaccount \"fundingaccount\" \"witnessaccount\" \"amount\" \"time\" \n"
-            "Lock \"amount\" NLG in witness account \"witnessaccount\" for time period \"time\"\n"
-            "\"fundingaccount\" is the account from which the locked funds will be claimed.\n"
-            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \n"
+            "Lock \"amount\" NLG in \"witness_account\" for time period \"time\" using funds from \"funding_account\"\n"
+            "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
+            "It is highly recommended to rather use 'extendwitnessaccount' in this case which behaves more like what most people would expect.\n"
+            "By default this command will fail if an account already contains an existing funded address.\n"
             "\nArguments:\n"
-            "1. \"fundingaccount\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
-            "2. \"witnessaccount\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "5. force_multiple        (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
-            "\"txid\"               (string) The transaction id.\n"
+            "[\n"
+            "     \"address\",       (string) The witness address that has been created \n"
+            "     \"txid\"           (string) The transaction id.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
@@ -795,6 +950,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw std::runtime_error("Cannot use command without an active wallet");
     if (nPoW2TipPhase < 2)
         throw std::runtime_error("Cannot fund witness accounts before phase 2 activates.");
+
+    EnsureWalletIsUnlocked(pwallet);
 
     // arg1 - 'from' account.
     CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], true);
@@ -810,6 +967,17 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
         throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
 
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() > 0)
+    {
+        bool fAllowMultiple = false;
+        if (request.params.size() >= 5)
+            fAllowMultiple = request.params[5].get_bool();
+
+        if (!fAllowMultiple)
+            throw std::runtime_error("Account already has an active funded witness address. Perhaps you intended to 'extend' it? See: 'help extendwitnessaccount'");
+    }
+
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
     if (nAmount < nMinimumWitnessAmount*COIN)
@@ -817,37 +985,10 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
-    int nLockPeriodInBlocks = 0;
-    int nMultiplier = 1;
-    std::string sLockPeriodInBlocks = request.params[3].getValStr();
-    if (boost::algorithm::ends_with(sLockPeriodInBlocks, "y"))
-    {
-        nMultiplier = 365 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "m"))
-    {
-        nMultiplier = 30 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "w"))
-    {
-        nMultiplier = 7 * 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "d"))
-    {
-        nMultiplier = 576;
-        sLockPeriodInBlocks.pop_back();
-    }
-    else if (boost::algorithm::ends_with(sLockPeriodInBlocks, "b"))
-    {
-        nMultiplier = 1;
-        sLockPeriodInBlocks.pop_back();
-    }
-    if (!ParseInt32(sLockPeriodInBlocks, &nLockPeriodInBlocks))
+    std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
+    uint64_t nLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    if (nLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
-    nLockPeriodInBlocks *=  nMultiplier;
 
     if (nLockPeriodInBlocks > 3 * 365 * 576)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
@@ -865,8 +1006,6 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
     }
-
-    EnsureWalletIsUnlocked(pwallet);
 
     // Finally attempt to create and send the witness transaction.
     CPoW2WitnessDestination destinationPoW2Witness;
@@ -919,10 +1058,257 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
-    return wtx.GetHash().GetHex();
+    UniValue result(UniValue::VOBJ);
+    CTxDestination dest;
+    ExtractDestination(wtx.tx->vout[0], dest);
+    result.push_back(Pair(CGuldenAddress(dest).ToString(), wtx.GetHash().GetHex()));
+    return result;
 }
 
+static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, const JSONRPCRequest& request)
+{
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address has too many witness outputs cannot extend "));
 
+    // arg3 - amount
+    CAmount requestedAmount =  AmountFromValue(request.params[2]);
+    if (requestedAmount < nMinimumWitnessAmount*COIN)
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+
+    // arg4 - lock period.
+    // Calculate lock period based on suffix (if one is present) otherwise leave as is.
+    std::string formattedLockPeriodSpecifier = request.params[3].getValStr();
+    uint64_t requestedLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    if (requestedLockPeriodInBlocks == 0)
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
+
+    if (requestedLockPeriodInBlocks > 3 * 365 * 576)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
+
+    if (requestedLockPeriodInBlocks < 30 * 576)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
+
+    // Add a small buffer to give us time to enter the blockchain
+    if (requestedLockPeriodInBlocks == 30 * 576)
+        requestedLockPeriodInBlocks += 50;
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Calculate existing lock period
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+    if (remainingLockDurationInBlocks == 0)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has already unlocked so cannot be extended.");
+    }
+
+    if (requestedLockPeriodInBlocks < remainingLockDurationInBlocks)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New lock period [%d] does not exceed remaining lock period [%d]", requestedLockPeriodInBlocks, remainingLockDurationInBlocks));
+    }
+
+    if (requestedAmount < currentWitnessTxOut.nValue)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New amount [%d] is smaller than current amount [%d]", requestedAmount, currentWitnessTxOut.nValue));
+    }
+
+    // Enforce minimum weight
+    int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
+    if (newWeight < nMinimumWitnessWeight)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+    }
+
+    // Enforce new weight > old weight
+    uint64_t notUsed1, notUsed2;
+    int64_t oldWeight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
+    if (newWeight <= oldWeight)
+    {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("New weight [%d] does not exceed old weight [%d].", newWeight, oldWeight));
+    }
+
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw JSONRPCError(RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot extend a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction extendWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(extendWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        CTxOut extendedWitnessTxOutput;
+        extendedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are extending the address we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        extendedWitnessTxOutput.output.witnessDetails.lockFromBlock = 0;
+        extendedWitnessTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
+        extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
+        extendedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        extendedWitnessTxOutput.nValue = requestedAmount;
+        extendWitnessTransaction.vout.push_back(extendedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, extendWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
+}
+
+static UniValue extendwitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 4)
+        throw std::runtime_error(
+            "extendwitnessaddress \"funding_account\" \"witness_address\" \"amount\" \"time\" \n"
+            "Change the currently locked amount and time period for \"witness_address\" to match the new \"amount\" ant time period \"time\"\n"
+            "Note the new amount must be ≥ the old amount, and the new time period must exceed the remaining lock period that is currently set on the account\n"
+            "\"funding_account\" is the account from which the locked funds will be claimed.\n"
+            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "\nArguments:\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
+            "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
+            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
+            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, request);
+}
+
+static UniValue extendwitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 4)
+        throw std::runtime_error(
+            "extendwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \n"
+            "Change the currently locked amount and time period for \"witness_account\" to match the new \"amount\" ant time period \"time\"\n"
+            "Note the new amount must be ≥ the old amount, and the new time period must exceed the remaining lock period that is currently set on the account\n"
+            "\"funding_account\" is the account from which the locked funds will be claimed.\n"
+            "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
+            "\nArguments:\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
+            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
+            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!witnessAccount)
+        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot extend a witness-only account as spend key is required to do this.");
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, request);
+}
 
 static UniValue getactiveaccount(const JSONRPCRequest& request)
 {
@@ -1319,9 +1705,9 @@ static UniValue importseed(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "importseed \"mnemonic or pubkey\" \"read only\" \n"
+            "importseed \"mnemonic_or_pubkey\" \"type\" \"is_read_only\" \n"
             "\nSet the currently active seed by UUID.\n"
-            "1. \"mnemonic or pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
+            "1. \"mnemonic_or_pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
             "2. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
             "\nThe default is correct in almost all cases, only experts should work with the other types\n"
             "\nBIP44 - This is the standard Gulden seed type that should be used in almost all cases.\n"
@@ -1330,7 +1716,7 @@ static UniValue importseed(const JSONRPCRequest& request)
             "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
             "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
-            "3. \"read only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
+            "3. \"is_read_only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -1426,7 +1812,7 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
                 rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
                 rec.push_back(Pair("label", accountPair.second->getLabel()));
                 rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
-                rec.push_back(Pair("type", ""));
+                rec.push_back(Pair("type", GetAccountTypeString(accountPair.second->m_Type)));
                 rec.push_back(Pair("HD_type", "legacy"));
                 allAccounts.push_back(rec);
             }
@@ -1563,6 +1949,86 @@ static UniValue listseeds(const JSONRPCRequest& request)
     return AllSeeds;
 }
 
+static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet)
+{
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw JSONRPCError(RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        CTxOut rotatedWitnessTxOutput;
+        rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        {
+            CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+            CPubKey pubWitnessKey;
+            if (!keyWitness.GetReservedKey(pubWitnessKey))
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+            //We delibritely return the key here, so that if we fail we won't leak the key.
+            //The key will be marked as used when the transaction is accepted anyway.
+            keyWitness.ReturnKey();
+            rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
+        }
+        rotatedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
+        rotateWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, rotateWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
+}
+
 static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -1575,28 +2041,49 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "rotatewitnessaddress \"address\" \n"
+            "rotatewitnessaddress \"funding_account\" \"witness_address\" \n"
             "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
-            "1. \"address\"        (required) The unique UUID or label for the account.\n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
             "\nResult:\n"
-            "\nReturns the new witness address.\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("rotatewitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
-    bool isValid = forAddress.IsValidWitness(Params());
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet);
 }
 
-static UniValue splitwitnessaddress(const JSONRPCRequest& request)
+static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1610,79 +2097,400 @@ static UniValue splitwitnessaddress(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "splitwitnessaddress \"address\" \"amounts\" \n"
-            "\nSplit a witness address into two seperate witness addresses, all details of the addresses remain identical other than a reduction in amounts.\n"
-            "\nThis is useful in the event that an account has exceeded 1 percent of the network weight. \n"
-            "1. \"address\"        (required) The unique UUID or label for the account.\n"
-            "2. \"amounts\"        (string, required) A json object with amounts for the new addresses\n"
-            "    {\n"
-            "      \"amount\"      (numeric) The amount that should go in each new account\n"
-            "      ,...\n"
-            "    }\n"
+            "rotatewitnessaccount \"funding_account\" \"witness_account\" \n"
+            "\nChange the \"witnessing key\" of a witness account, the wallet needs to be unlocked to do this, the \"spending key\" will remain unchanged. \n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "\nResult:\n"
-            "\nReturns the new witness addresses.\n"
+            "[\n"
+            "     \"txid\",          (string) The txid of the created transaction\n"
+            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", "")
-            + HelpExampleRpc("splitwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN {10000, 5000, 5000}", ""));
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
-    bool isValid = forAddress.IsValidWitness(Params());
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
 
-    if (!isValid)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+    EnsureWalletIsUnlocked(pwallet);
 
-    UniValue splitInto = request.params[1].get_obj();
-    if (splitInto.getValues().size() < 2)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Split command requires at least two outputs");
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
-}
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!witnessAccount)
+        throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
 
-static UniValue mergewitnessaddresses(const JSONRPCRequest& request)
-{
-    #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
-        return NullUniValue;
-
-    if (request.fHelp || request.params.size() != 2)
-        throw std::runtime_error(
-            "mergewitnessaddresses \"addresses\" \n"
-            "\nMerge multiple witness addresses into a single one.\n"
-            "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaddress\".\n"
-            "\nThis is useful in the event that the network weight has risen significantly and an account that was previously split could now earn better as a single account. \n"
-            "1. \"addresses\"      (string, required) A json object with amounts for the new addresses\n"
-            "    {\n"
-            "      \"address\"     (string) The address that should be merged\n"
-            "      ,...\n"
-            "    }\n"
-            "\nResult:\n"
-            "\nReturns the new witness address.\n"
-            "\nExamples:\n"
-            + HelpExampleCli("mergewitnessaddresses {\"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\", \"2a8srWupARTwNnzBe67CrAejXYg4QwNvyEr2mQkbdTuD8BqUwL6rAEx2XTTvCo}\"", "")
-            + HelpExampleRpc("mergewitnessaddresses {\"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\", \"2a8srWupARTwNnzBe67CrAejXYg4QwNvyEr2mQkbdTuD8BqUwL6rAEx2XTTvCo}\"", ""));
-
-    UniValue mergeFrom = request.params[0].get_obj();
-    if (mergeFrom.getValues().size() < 2)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Merge command requires at least two inputs");
-
-    for(const auto& addressObj : mergeFrom.getValues())
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
     {
-        CGuldenAddress forAddress(addressObj.get_str());
-        bool isValid = forAddress.IsValidWitness(Params());
-
-        if (!isValid)
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid witness address.");
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
     }
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet);
+}
+
+static UniValue renewwitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "renewwitnessaccount \"witness_account\" \n"
+            "\nRenew an expired witness account. \n"
+            "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",                   (string) The txid of the created transaction\n"
+            "     \"fee_amount\"              (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("renewwitnessaccount \"My account\" \"My witness account\"", "")
+            + HelpExampleRpc("renewwitnessaccount \"My account\" \"My witness account\"", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (2.1) - Share common code with GUI::requestRenewWitness
+    std::string strError;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+    CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
+    CAmount transactionFee;
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError))
+    {
+        throw std::runtime_error(strprintf("Failed to create renew transaction [%s]", strError.c_str()));
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+        {
+            throw std::runtime_error(strprintf("Failed to sign renew transaction [%s]", strError.c_str()));
+        }
+    }
+
+    // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
+    witnessAccount->SetWarningState(AccountStatus::WitnessPending);
+    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, witnessAccount);
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
+}
+
+static UniValue splitwitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 3)
+        throw std::runtime_error(
+            "splitwitnessaccount \"funding_account\" \"witness_account\" \"amounts\" \n"
+            "\nSplit a witness address into two seperate witness addresses, all details of the addresses remain identical other than a reduction in amounts.\n"
+            "\nThis is useful in the event that an account has exceeded 1 percent of the network weight. \n"
+            "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "3. \"amounts\"                (string, required) A json object with amounts for the new addresses\n"
+            "    {\n"
+            "      \"amount\"              (numeric) The amount that should go in each new account\n"
+            "      ,...\n"
+            "    }\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",                (string) The txid of the created transaction\n"
+            "     \"fee_amount\"           (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", "")
+            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[1].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    // arg3 - 'split' paramaters
+    std::vector<UniValue> splitInto = request.params[2].getValues();
+    if (splitInto.size() < 2)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Split command requires at least two outputs");
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    //fixme: (2.1) - Handle address
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account has too many witness outputs cannot split [%s].", request.params[1].get_str()));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    CAmount splitTotal=0;
+    std::vector<CAmount> splitAmounts;
+    for (const auto& unparsedSplitAmount : splitInto)
+    {
+        CAmount splitValue = AmountFromValue(unparsedSplitAmount);
+        splitTotal += splitValue;
+        splitAmounts.emplace_back(splitValue);
+    }
+
+    if (splitTotal != currentWitnessTxOut.nValue)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Split values don't match original value [%s] [%s]", FormatMoney(splitTotal), FormatMoney(currentWitnessTxOut.nValue)));
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction splitWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(splitWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness outputs
+        for (const CAmount& splitAmount : splitAmounts)
+        {
+            CTxOut splitWitnessTxOutput;
+            splitWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+            // As we are splitting the amount, only the amount may change.
+            splitWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+            splitWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+            splitWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+            splitWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
+            splitWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+            splitWitnessTxOutput.nValue = splitAmount;
+            splitWitnessTransaction.vout.push_back(splitWitnessTxOutput);
+        }
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, splitWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, splitWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
+}
+
+static UniValue mergewitnessaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "mergewitnessaccount \"funding_account\" \"witness_account\"\n"
+            "\nMerge multiple witness addresses into a single one.\n"
+            "\nAddresses must share identical characteristics other than \"amount\" and therefore this will usually only work on addresses that were created via \"splitwitnessaccount\".\n"
+            "\nThis is useful in the event that the network weight has risen significantly and an account that was previously split could now earn better as a single account. \n"
+            "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\",                (string) The txid of the created transaction\n"
+            "     \"fee_amount\"           (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("mergewitnessaccount \"My account\" \"My witness account\"", "")
+            + HelpExampleRpc("mergewitnessaccount \"My account\" \"My witness account\"", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' account.
+    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    if (unspentWitnessOutputs.size() == 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account only contains one witness output at least two are required to merge [%s].", request.params[1].get_str()));
+
+    // Check for immaturity
+    for ( const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] : unspentWitnessOutputs )
+    {
+        //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+            throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+    }
+
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction mergeWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    {
+        // Add all the existing witness outputs as inputs and sum the amounts / fail count.
+        uint64_t totalFailCount = currentWitnessDetails.failCount;
+        CAmount totalAmount = currentWitnessTxOut.nValue;
+        pwallet->AddTxInput(mergeWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+        for (int i = 1; i < unspentWitnessOutputs.size(); ++i)
+        {
+            const auto& [compareWitnessTxOut, compareWitnessHeight, compareWitnessOutpoint] = unspentWitnessOutputs[i];
+            CTxOutPoW2Witness compareWitnessDetails;
+            GetPow2WitnessOutput(compareWitnessTxOut, compareWitnessDetails);
+            if(    compareWitnessDetails.lockFromBlock != currentWitnessDetails.lockFromBlock
+                || compareWitnessDetails.lockUntilBlock != currentWitnessDetails.lockUntilBlock
+                || compareWitnessDetails.spendingKeyID != currentWitnessDetails.spendingKeyID
+                || compareWitnessDetails.witnessKeyID != currentWitnessDetails.witnessKeyID)
+            {
+                throw JSONRPCError(RPC_MISC_ERROR, "Not all inputs share identical witness characterstics, cannot merge.");
+            }
+            totalFailCount += compareWitnessDetails.failCount;
+            totalAmount += compareWitnessTxOut.nValue;
+            pwallet->AddTxInput(mergeWitnessTransaction, CInputCoin(compareWitnessOutpoint, compareWitnessTxOut), false);
+        }
+
+        CTxOut mergeWitnessTxOutput;
+        mergeWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are splitting the amount, only the amount may change and fail count must match the total of all accounts.
+        mergeWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        mergeWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        mergeWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        mergeWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
+        mergeWitnessTxOutput.output.witnessDetails.failCount = totalFailCount;
+        mergeWitnessTxOutput.nValue = totalAmount;
+        mergeWitnessTransaction.vout.push_back(mergeWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, mergeWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, mergeWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    return result;
 }
 
 static UniValue setwitnesscompound(const JSONRPCRequest& request)
@@ -1698,7 +2506,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "setwitnesscompound \"account\" \"amount\"\n"
+            "setwitnesscompound \"witness_account\" \"amount\"\n"
             "\nSet whether a witness account should compound or not.\n"
             "\nCompounding is controlled as follows:\n"
             "\n    1) When set to 0 no compounding will be done, all rewards will be sent to the non-compound output set by \"setwitnessgeneration\" or a key in the account if \"setwitnessgeneration\" has not been called.\n"
@@ -1708,8 +2516,13 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
             "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
-            "1. \"account\"        (string) The UUID or unique label of the account.\n"
-            "2. amount             (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
+            "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"account_uuid\",            (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"                   (string) The amount that has been set.\n"
+            "]\n"
             "\nExamples:\n"
             + HelpExampleCli("setwitnesscompound \"My witness account\" 20", "")
             + HelpExampleRpc("setwitnesscompound \"My witness account\" 20", ""));
@@ -1730,7 +2543,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
     forAccount->setCompounding(amount, &walletdb);
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), forAccount->getCompounding()));
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ValueFromAmount(forAccount->getCompounding())));
     return result;
 }
 
@@ -1747,10 +2560,10 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnesscompound \"account\"\n"
+            "getwitnesscompound \"witness_account\"\n"
             "\nGet the current compound setting for an account.\n"
             "\nArguments:\n"
-            "1. \"account\"        (string) The UUID or unique label of the account.\n"
+            "1. \"witness_account\"        (string) The UUID or unique label of the account.\n"
             "\nResult:\n"
             "\nReturn the current amount set for the account.\n"
             "\nCompounding is controlled as follows:\n"
@@ -1774,10 +2587,10 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    return forAccount->getCompounding();
+    return ValueFromAmount(forAccount->getCompounding());
 }
 
-static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
+static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1789,17 +2602,22 @@ static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3 )
         throw std::runtime_error(
-            "setwitnessoutputkey \"account\" \n"
+            "setwitnessrewardscript \"witness_account\" \"address_or_script\" \"force_pubkey\" \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
+            "3. \"force_pubkey\"           (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
-            "\nReturns the address into which non-compound earning payments will occur.\n"
+            "[\n"
+            "     \"account_uuid\",        (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"               (string) The amount that has been set.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
-            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -1809,11 +2627,47 @@ static UniValue setwitnessoutputkey(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+
+    bool forcePubKey = false;
+    if (request.params.size() > 2)
+        forcePubKey = request.params[2].get_bool();
+
+    std::string pubKeyOrScript = request.params[1].get_str();
+    CScript scriptForNonCompoundPayments;
+    if (!IsHex(pubKeyOrScript))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
+
+    // Try public key first.
+    std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
+    CPubKey pubKey(data.begin(), data.end());
+    if (pubKey.IsFullyValid())
+    {
+        scriptForNonCompoundPayments = CScript() << ToByteVector(pubKey) << OP_CHECKSIG;
+    }
+    else
+    {
+        if (forcePubKey)
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid hex encoded public key");
+
+        // Not a public key so treat it as a script.
+        scriptForNonCompoundPayments = CScript(data.begin(), data.end());
+        if (!scriptForNonCompoundPayments.HasValidOps())
+        {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is hex encoded, but not a valid pubkey or script");
+        }
+    }
+
+    CWalletDB walletdb(*pwallet->dbw);
+    forAccount->setNonCompoundRewardScript(scriptForNonCompoundPayments, &walletdb);
+
+    witnessScriptsAreDirty = true;
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    return result;
 }
 
-static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
+static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
 {
      #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1827,15 +2681,18 @@ static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessoutputkey \"account\" \n"
+            "getwitnessrewardscript \"witness_account\" \n"
             "\nGet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"getwitnesscompound\" for how to control compounding and additional information.\n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "1. \"witness_account\"    (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
-            "\nReturns the current key into which non-compound earning payments will occur.\n"
+            "[\n"
+            "     \"account_uuid\",    (string) The UUID of the account that has been modified.\n"
+            "     \"hex_script\"       (string) Hex encoded script that has been set.\n"
+            "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnessoutputkey \"my witness account\"", "")
-            + HelpExampleRpc("setwitnessoutputkey \"my witness account\"", ""));
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -1845,8 +2702,16 @@ static UniValue getwitnessoutputkey(const JSONRPCRequest& request)
     if (!forAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
 
-    //fixme: (2.0) implement
-    return "Not yet implemented, please check back in next release";
+    UniValue result(UniValue::VOBJ);
+    if (!forAccount->hasNonCompoundRewardScript())
+    {
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ""));
+    }
+    else
+    {
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    }
+    return result;
 }
 
 static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
@@ -1864,15 +2729,15 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessaccountkeys \"account\" \n"
-            "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
-            "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaddress\", this will include all of them \n"
-            "1. \"account\"        (required) The unique UUID or label for the account.\n"
+            "getwitnessaccountkeys \"witness_account\" \n"
+            "\nGet the witness keys of an HD account, this can be used to import the account as a witness only account in another wallet via the \"importwitnesskeys\" command.\n"
+            "\nA single account can theoretically contain multiple keys, if it has been split \"splitwitnessaccount\", this will include all of them \n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
-            "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nReturn the private witness keys as an encoded string, that can be used with the \"importwitnesskeys\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaccountkeys", "")
             + HelpExampleRpc("getwitnessaccountkeys", ""));
@@ -1937,14 +2802,14 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "getwitnessaddresskeys \"address\" \n"
-            "\nGet the witness key of an HD address, this can be used to import the account as a witness only account in another wallet via the \"importwitnessaccountkey\" command.\n"
-            "1. \"address\"        (required) The Gulden address for the witness key.\n"
+            "getwitnessaddresskeys \"witness_address\" \n"
+            "\nGet the witness key of an HD address, this can be used to import the account as a witness only account in another wallet via the \"importwitnesskeys\" command.\n"
+            "1. \"witness_address\"        (required) The Gulden address for the witness key.\n"
             "\nResult:\n"
-            "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnessaccountkey\" command.\n"
+            "\nReturn the private witness key as an encoded string, that can be used with the \"importwitnesskeys\" command.\n"
             "\nNB! The exported private key is only the \"witnessing\" key and not the \"spending\" key for the witness account.\n"
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
-            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaddress\" to rotate to a new witness key.\n"
+            "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
             + HelpExampleRpc("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
@@ -1994,12 +2859,12 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
-            "importwitnesskeys \"account\" \"encoded_key_url\" \"create_account\" \n"
+            "importwitnesskeys \"account_name\" \"encoded_key_url\" \"create_account\" \n"
             "\nAdd keys imported from an \"encoded_key_url\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
             "\nUses an existing account if \"create_account\" is false, otherwise creates a new one. \n"
-            "1. \"account\"         (string) name/label of the new account.\n"
-            "2. \"encoded_key_url\" (string) Encoded string containing the extended public key for the account.\n"
-            "3. \"create_account\"  (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
+            "1. \"account_name\"            (string) name/label of the new account.\n"
+            "2. \"encoded_key_url\"         (string) Encoded string containing the extended public key for the account.\n"
+            "3. \"create_account\"          (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
             "\nResult:\n"
             "\nReturn the UUID of account.\n"
             "\nExamples:\n"
@@ -2048,22 +2913,25 @@ static const CRPCCommand commands[] =
     { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
 
-    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"blockspecifier", "verbose"} },
-    { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
-    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"fundingaccountname", "witnessaccountname", "amount", "time" } },
-
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
-    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"address"} },
-    { "witness",                 "splitwitnessaddress",             &splitwitnessaddress,            true,    {"address", "amounts"} },
-    { "witness",                 "mergewitnessaddresses",           &mergewitnessaddresses,          true,    {"addresses"} },
-    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"account", "amount"} },
-    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"account"} },
-    { "witness",                 "setwitnessoutputkey",             &setwitnessoutputkey,            true,    {"account"} },
-    { "witness",                 "getwitnessoutputkey",             &getwitnessoutputkey,            true,    {"account"} },
-    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"account"} },
-    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"address"} },
-    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account", "encoded_key_url", "create_account"} },
+    { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
+    { "witness",                 "extendwitnessaccount",            &extendwitnessaccount,           true,    {"funding_account", "witness_account", "amount", "time" } },
+    { "witness",                 "extendwitnessaddress",            &extendwitnessaddress,           true,    {"funding_account", "witness_address", "amount", "time" } },
+    { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time", "force_multiple" } },
+    { "witness",                 "getwitnessaccountkeys",           &getwitnessaccountkeys,          true,    {"witness_account"} },
+    { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"witness_address"} },
+    { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_account"} },
+    { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose", "mine_only"} },
+    { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_account"} },
+    { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account_name", "encoded_key_url", "create_account"} },
+    { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
+    { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
+    { "witness",                 "rotatewitnessaccount",            &rotatewitnessaccount,           true,    {"funding_account", "witness_account"} },
+    { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
+    { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
+    { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
+    { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
@@ -2085,7 +2953,7 @@ static const CRPCCommand commands[] =
     { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
     { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
     { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
-    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_enckey", "type", "read_only"} },
+    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_pubkey", "type", "is_read_only"} },
     { "mnemonics",               "listseeds",                       &listseeds,                      true,    {} },
 };
 

@@ -381,13 +381,13 @@ CAmount GuldenAmountField::amount(const Currency currency) const
 void GuldenAmountField::setAmount(const CAmount& value)
 {
     amountGulden = value;
-    updatePrimaryFromData();
     if (ticker)
     {
         amountEuro = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Euro));
         amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
-        updateAuxilaryFromData();
     }
+    updatePrimaryFromData();
+    updateAuxilaryFromData();
 }
 
 void GuldenAmountField::setSingleStep(const CAmount& step)

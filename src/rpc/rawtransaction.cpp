@@ -166,7 +166,7 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
 
     CTransactionRef tx;
     uint256 hashBlock;
-    if (!GetTransaction(hash, tx, Params().GetConsensus(), hashBlock, true))
+    if (!GetTransaction(hash, tx, Params(), hashBlock, true))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string(fTxIndex ? "No such mempool or blockchain transaction"
             : "No such mempool transaction. Use -txindex to enable blockchain transaction queries") +
             ". Use gettransaction for wallet transactions.");
@@ -238,7 +238,7 @@ UniValue gettxoutproof(const JSONRPCRequest& request)
     if (pblockindex == NULL)
     {
         CTransactionRef tx;
-        if (!GetTransaction(oneTxid, tx, Params().GetConsensus(), hashBlock, false) || hashBlock.IsNull())
+        if (!GetTransaction(oneTxid, tx, Params(), hashBlock, false) || hashBlock.IsNull())
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction not yet in block");
         if (!mapBlockIndex.count(hashBlock))
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Transaction index corrupt");
@@ -246,7 +246,7 @@ UniValue gettxoutproof(const JSONRPCRequest& request)
     }
 
     CBlock block;
-    if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+    if(!ReadBlockFromDisk(block, pblockindex, Params()))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
 
     unsigned int ntxFound = 0;
@@ -345,7 +345,8 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
 
     CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
 
-    if (request.params.size() > 2 && !request.params[2].isNull()) {
+    if (request.params.size() > 2 && !request.params[2].isNull())
+    {
         int64_t nLockTime = request.params[2].get_int64();
         if (nLockTime < 0 || nLockTime > std::numeric_limits<uint32_t>::max())
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, locktime out of range");
@@ -354,7 +355,8 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
 
     bool rbfOptIn = request.params.size() > 3 ? request.params[3].isTrue() : false;
 
-    for (unsigned int idx = 0; idx < inputs.size(); idx++) {
+    for (unsigned int idx = 0; idx < inputs.size(); idx++)
+    {
         const UniValue& input = inputs[idx];
         const UniValue& o = input.get_obj();
 
@@ -371,11 +373,16 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         uint8_t nFlags = 0;
         if (IsOldTransactionVersion(rawTx.nVersion))
         {
-            if (rbfOptIn) {
+            if (rbfOptIn)
+            {
                 nSequence = MAX_BIP125_RBF_SEQUENCE;
-            } else if (rawTx.nLockTime) {
+            }
+            else if (rawTx.nLockTime)
+            {
                 nSequence = std::numeric_limits<uint32_t>::max() - 1;
-            } else {
+            }
+            else
+            {
                 nSequence = std::numeric_limits<uint32_t>::max();
             }
         }
@@ -390,11 +397,15 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
 
         // set the sequence number if passed in the parameters object
         const UniValue& sequenceObj = find_value(o, "sequence");
-        if (sequenceObj.isNum()) {
+        if (sequenceObj.isNum())
+        {
             int64_t seqNr64 = sequenceObj.get_int64();
-            if (seqNr64 < 0 || seqNr64 > std::numeric_limits<uint32_t>::max()) {
+            if (seqNr64 < 0 || seqNr64 > std::numeric_limits<uint32_t>::max())
+            {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, sequence number is out of range");
-            } else {
+            }
+            else
+            {
                 nSequence = (uint32_t)seqNr64;
             }
         }
@@ -406,14 +417,17 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
 
     std::set<CGuldenAddress> setAddress;
     std::vector<std::string> addrList = sendTo.getKeys();
-    for(const std::string& name_ : addrList) {
-
-        if (name_ == "data") {
+    for(const std::string& name_ : addrList)
+    {
+        if (name_ == "data")
+        {
             std::vector<unsigned char> data = ParseHexV(sendTo[name_].getValStr(),"Data");
 
             CTxOut out(0, CScript() << OP_RETURN << data);
             rawTx.vout.push_back(out);
-        } else {
+        }
+        else
+        {
             CGuldenAddress address(name_);
             if (!address.IsValid())
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+name_);
@@ -422,15 +436,27 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
             setAddress.insert(address);
 
-            CScript scriptPubKey = GetScriptForDestination(address.Get());
-            CAmount nAmount = AmountFromValue(sendTo[name_]);
-
-            CTxOut out(nAmount, scriptPubKey);
-            rawTx.vout.push_back(out);
+            if (IsOldTransactionVersion(rawTx.nVersion))
+            {
+                CKeyID keyID;
+                address.GetKeyID(keyID);
+                CTxOutStandardKeyHash keyHashForDestination(keyID);
+                CAmount nAmount = AmountFromValue(sendTo[name_]);
+                CTxOut out(nAmount, keyHashForDestination);
+                rawTx.vout.push_back(out);
+            }
+            else
+            {
+                CScript scriptPubKey = GetScriptForDestination(address.Get());
+                CAmount nAmount = AmountFromValue(sendTo[name_]);
+                CTxOut out(nAmount, scriptPubKey);
+                rawTx.vout.push_back(out);
+            }
         }
     }
 
-    if (request.params.size() > 3 && rbfOptIn != SignalsOptInRBF(rawTx)) {
+    if (request.params.size() > 3 && rbfOptIn != SignalsOptInRBF(rawTx))
+    {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter combination: Sequence number(s) contradict optintorbf option");
     }
 

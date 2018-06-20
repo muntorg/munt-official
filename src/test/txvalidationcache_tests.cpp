@@ -12,7 +12,7 @@
 #include "consensus/validation.h"
 #include "key.h"
 #include "validation/validation.h"
-#include "miner.h"
+#include "generation/miner.h"
 #include "pubkey.h"
 #include "txmempool.h"
 #include "random.h"

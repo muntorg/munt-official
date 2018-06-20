@@ -42,6 +42,7 @@ public Q_SLOTS:
     void applyChanges();
     void deleteAccount();
     void showSyncQr();
+    void copyQr();
 
 protected:
 

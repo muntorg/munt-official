@@ -641,6 +641,9 @@ public:
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
     unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
+    //! Import a witness-only account from a URL
+    void importWitnessOnlyAccountFromURL(const SecureString& sKey);
+
     void importPrivKey(const SecureString& sKey);
     void importPrivKey(const CKey& privKey);
     void importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);
@@ -678,13 +681,19 @@ public:
     CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID) const;
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
+    //! Fund a transaction that is otherwise already created
+    bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, CReserveKeyOrScript& reservekey);
+
+    //! Sign a transaction that is already fully populated/funded
+    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
+
+    //! Create a transaction that renews an expired witness account
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
+
     /**
      * Insert additional inputs into the transaction by
      * calling CreateTransaction();
      */
-    bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, bool keepReserveKey = true);
-    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
-
     void AddTxInput(CMutableTransaction& tx, const CInputCoin& inputCoin, bool rbf);
     void AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoins, bool rbf);
 
@@ -695,19 +704,14 @@ public:
      */
     bool CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
-    /**
-     * Add fee (and change if necessary) for a transaction that is otherwise already constructed.
-     * Used currently by the witnessing code to add the fee for a witness renewal transaction.
-     */
+
+    //! Used currently by the witnessing code to add the fee for a witness renewal transaction, and various other special operation transactions
     bool AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKeyOrScript& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl);
-    /**
-     * Renew a witness account that has expired.
-     */
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
+
     /**
      * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
      */
-    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError);
+    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut=nullptr);
 
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state);
 
@@ -788,6 +792,7 @@ public:
     }
 
     void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
+    void GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
 
     unsigned int GetKeyPoolSize()
     {

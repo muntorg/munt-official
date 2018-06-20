@@ -12,7 +12,6 @@
 #include "validation/witnessvalidation.h"
 #include "versionbits.h"
 
-
 #include "txdb.h"
 
 #include "primitives/transaction.h"
@@ -232,7 +231,7 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
             // We check whether this block has created any new witness address, if it has not then the phase can't possibly be any different than before.
             // NB! Even though this requires disk access it is still faster for -long- phase 2 chains because phase 3 check requires cloning the entire chain and performing several undos to the mempool each time.
             std::shared_ptr<CBlock> pCheckBlock(new CBlock);
-            if (!ReadBlockFromDisk(*pCheckBlock, pIndex, Params().GetConsensus()))
+            if (!ReadBlockFromDisk(*pCheckBlock, pIndex, Params()))
                 return false;
             bool containsAnyNewWitnessAddresses = false;
             for (const auto& transactionRef : pCheckBlock->vtx)
@@ -454,6 +453,11 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
     return (nUntilBlockOut + 1) - nFromBlockOut;
 }
 
+uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t tipHeight)
+{
+    return (lockUntilBlock < tipHeight) ? 0 : (lockUntilBlock - tipHeight) + 1;
+}
+
 int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
 {
     DO_BENCHMARK("WIT: GetPoW2Phase3ActivationTime", BCLog::BENCH|BCLog::WITNESS);
@@ -538,7 +542,7 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
     if (!mapBlockIndex.count(powHash))
     {
         std::shared_ptr<CBlock> pBlockPoW(new CBlock);
-        if (!ReadBlockFromDisk(*pBlockPoW, pIndex, Params().GetConsensus()))
+        if (!ReadBlockFromDisk(*pBlockPoW, pIndex, Params()))
             return nullptr;
 
         // Strip any witness information from the block we have been given to get back to the raw PoW block on which it was based.

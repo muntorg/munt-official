@@ -135,11 +135,13 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         // no need to read and scan block, if block was created before
         // our wallet birthday (as adjusted for block time variability)
-        while (pindex && nTimeFirstKey && (pindex->GetBlockTime() < (nTimeFirstKey - TIMESTAMP_WINDOW)))
+        // NB! nTimeFirstKey > TIMESTAMP_WINDOW check is important otherwise we overflow nTimeFirstKey
+        while (pindex && (nTimeFirstKey > TIMESTAMP_WINDOW) && (pindex->GetBlockTime() < (int64_t)(nTimeFirstKey - TIMESTAMP_WINDOW)))
             pindex = chainActive.Next(pindex);
 
         nTransactionScanProgressPercent = 0;
         ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent); // show rescan progress in GUI, if -rescan on startup
+        LogPrintf("Rescanning...\n");
         double dProgressStart = GuessVerificationProgress(chainParams.TxData(), pindex);
         double dProgressTip = GuessVerificationProgress(chainParams.TxData(), chainActive.Tip());
         while (pindex && !fAbortRescan)
@@ -148,7 +150,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
             LEAVE_CRITICAL_SECTION(cs_main)
             LEAVE_CRITICAL_SECTION(cs_wallet)
             double dProgress = GuessVerificationProgress(chainParams.TxData(), pindex);
-            int nTransactionScanProgressPercent = (int)(dProgress - dProgressStart) / (dProgressTip - dProgressStart) * 100;
+            nTransactionScanProgressPercent = (int)(dProgress - dProgressStart) / (dProgressTip - dProgressStart) * 100;
             nTransactionScanProgressPercent = std::max(1, std::min(99, nTransactionScanProgressPercent));
             if (pindex->nHeight % 100 == 0 && dProgressTip - dProgressStart > 0.0)
             {
@@ -165,7 +167,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
                 return ret;
 
             CBlock block;
-            if (ReadBlockFromDisk(block, pindex, Params().GetConsensus())) {
+            if (ReadBlockFromDisk(block, pindex, Params())) {
                 for (size_t posInBlock = 0; posInBlock < block.vtx.size(); ++posInBlock) {
                     AddToWalletIfInvolvingMe(block.vtx[posInBlock], pindex, posInBlock, fUpdate);
                 }
@@ -182,5 +184,6 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         fScanningWallet = false;
     }
+    LogPrintf("Rescan done.\n");
     return ret;
 }

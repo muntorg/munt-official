@@ -301,14 +301,9 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
 // CBlock and CBlockIndex
 //
 
-bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams)
+bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const CChainParams& params)
 {
-    if (!blockStore.ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
-        return false;
-    if (block.GetHashPoW2() != pindex->GetBlockHashPoW2())
-        return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
-                pindex->ToString(), pindex->GetBlockPos().ToString());
-    return true;
+    return blockStore.ReadBlockFromDisk(block, pindex->GetBlockPos(), params, pindex);
 }
 
 
@@ -1519,7 +1514,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     // Read block from disk.
     std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
     CBlock& block = *pblock;
-    if (!ReadBlockFromDisk(block, pindexDelete, chainparams.GetConsensus()))
+    if (!ReadBlockFromDisk(block, pindexDelete, chainparams))
         return AbortNode(state, "Failed to read block");
     // Apply the block atomically to the chain state.
     int64_t nStart = GetTimeMicros();
@@ -1643,7 +1638,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     std::shared_ptr<const CBlock> pthisBlock;
     if (!pblock) {
         std::shared_ptr<CBlock> pblockNew = std::make_shared<CBlock>();
-        if (!ReadBlockFromDisk(*pblockNew, pindexNew, chainparams.GetConsensus()))
+        if (!ReadBlockFromDisk(*pblockNew, pindexNew, chainparams))
             return AbortNode(state, "Failed to read block");
         pthisBlock = pblockNew;
     } else {
@@ -3185,7 +3180,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
                 vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
                 // Read block in, using old transaction format.
                 {
-                    if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams.GetConsensus()))
+                    if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams))
                         return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block at %s", blockpos.ToString());
                 }
 
@@ -3297,7 +3292,7 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
         }
         CBlock block;
         // check level 0: read from disk
-        if (!ReadBlockFromDisk(block, pindex, chainparams.GetConsensus()))
+        if (!ReadBlockFromDisk(block, pindex, chainparams))
             return error("VerifyDB(): *** ReadBlockFromDisk failed at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
         // check level 1: verify block validity
         if (nCheckLevel >= 1 && !CheckBlock(block, state, chainparams.GetConsensus()))
@@ -3340,7 +3335,7 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
             uiInterface.ShowProgress(_("Verifying blocks..."), std::max(1, std::min(99, 100 - (int)(((double)(chainActive.Height() - pindex->nHeight)) / (double)nCheckDepth * 50))));
             pindex = chainActive.Next(pindex);
             CBlock block;
-            if (!ReadBlockFromDisk(block, pindex, chainparams.GetConsensus()))
+            if (!ReadBlockFromDisk(block, pindex, chainparams))
                 return error("VerifyDB(): *** ReadBlockFromDisk failed at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
             if (!ConnectBlock(chainActive, block, state, pindex, coins, chainparams))
                 return error("VerifyDB(): *** found unconnectable block at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
@@ -3621,7 +3616,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                         std::shared_ptr<CBlock> pblockrecursive = std::make_shared<CBlock>();
                         {
                             LOCK(cs_main); // acquire cs_main here to protect ReadBlockFromDisk
-                            if (blockStore.ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
+                            if (blockStore.ReadBlockFromDisk(*pblockrecursive, it->second, chainparams))
                             {
                                 LogPrint(BCLog::REINDEX, "%s: Processing out of order child %s of %s\n", __func__, pblockrecursive->GetHashPoW2().ToString(),
                                         head.ToString());

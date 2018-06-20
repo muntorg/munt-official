@@ -37,15 +37,33 @@ public:
 };
 struct CGetWitnessInfo
 {
+    //! All unspent witness coins on the network
     std::map<COutPoint, Coin> allWitnessCoins;
+
+    //! All witness coins on the network that meet the basic criteria of minimum weight/amount
     std::vector<RouletteItem> witnessSelectionPoolUnfiltered;
+
+    //! All witness coins on the network that were considered eligible for the purpose of selecting the winner. (All contenders)
     std::vector<RouletteItem> witnessSelectionPoolFiltered;
+
+    //! Transaction output of the selected witness
     CTxOut selectedWitnessTransaction;
+
+    //! Coin object containing the output of the selected witness
     COutPoint selectedWitnessOutpoint;
+
+    //! Coin object containing the output of the selected witness
     Coin selectedWitnessCoin;
+
     uint64_t selectedWitnessBlockHeight = 0;
 
+    //! The total weight of all blocks considered for witnessing
     uint64_t nTotalWeight = 0;
+
+    //! The maximum individual weight that any single address was allowed before being reduced.
+    uint64_t nMaxIndividualWeight = 0;
+
+    //! The reduced total weight after applying the individual weight maximum
     uint64_t nReducedTotalWeight = 0;
 };
 

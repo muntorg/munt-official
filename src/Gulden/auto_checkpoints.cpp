@@ -233,7 +233,7 @@ namespace Checkpoints
             if (! (chainActive.Contains(pindexCheckpoint)) )
             {
                 CBlock* pblock = new CBlock();
-                if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams.GetConsensus()))
+                if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams))
                 {
                     return error("AcceptPendingSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
                 }
@@ -361,7 +361,7 @@ namespace Checkpoints
             // checkpoint block accepted but not yet in main chain
             LogPrintf("ResetSyncCheckpoint: SetBestChain to hardened checkpoint %s\n", hash.ToString().c_str());
             CBlock* pblock = new CBlock();
-            if (!ReadBlockFromDisk(*pblock,mapBlockIndex[hash], chainparams.GetConsensus()))
+            if (!ReadBlockFromDisk(*pblock,mapBlockIndex[hash], chainparams))
             {
                 return error("ResetSyncCheckpoint: ReadBlockFromDisk failed for hardened checkpoint %s", hash.ToString().c_str());
             }
@@ -562,7 +562,7 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& ch
     {
         // checkpoint chain received but not yet main chain
         CBlock* pblock = new CBlock();
-        if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams.GetConsensus()))
+        if (!ReadBlockFromDisk(*pblock, pindexCheckpoint, chainparams))
         {
             return error("ProcessSyncCheckpoint: ReadBlockFromDisk failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());
         }

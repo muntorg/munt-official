@@ -136,7 +136,9 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   limitedmap.h \
   memusage.h \
   merkleblock.h \
-  miner.h \
+  generation/miner.h \
+  generation/witness.h \
+  generation/generation.h \
   net.h \
   net_processing.h \
   netaddress.h \
@@ -226,7 +228,8 @@ libgulden_server_a_SOURCES = \
   init.cpp \
   dbwrapper.cpp \
   merkleblock.cpp \
-  miner.cpp \
+  generation/miner.cpp \
+  generation/witness.cpp \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
@@ -405,6 +408,7 @@ libgulden_util_a_SOURCES = \
 
 if GLIBC_BACK_COMPAT
 libgulden_util_a_SOURCES += compat/glibc_compat.cpp
+AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
 # cli: shared between Gulden-cli and Gulden

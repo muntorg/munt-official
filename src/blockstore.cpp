@@ -105,7 +105,7 @@ bool CBlockStore::WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, cons
     return true;
 }
 
-bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
+bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const CChainParams& params, const CBlockIndex* index)
 {
     DO_BENCHMARK("CBlockStore: ReadBlockFromDisk", BCLog::BENCH|BCLog::IO);
 
@@ -126,11 +126,27 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+    if (index && block.GetHashPoW2() != index->GetBlockHashPoW2())
+        return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
+                     index->ToString(), pos.ToString());
 
-    block.fPOWChecked = true;
+    bool fPOW_ok = false;
+    int lastCheckPointHeight = params.Checkpoints().mapCheckpoints.rbegin()->first;
+    if (index && (index->nStatus & BLOCK_VALID_HEADER) != 0 && index->nHeight < lastCheckPointHeight)
+    {
+        // block header data equals that in our index which is valid and below checkpoint height
+        // the expensive PoW check does not need be done
+        fPOW_ok = true;
+    }
+    else
+    {
+        fPOW_ok = CheckProofOfWork(block.GetPoWHash(), block.nBits, params.GetConsensus());
+    }
+
+    if (fPOW_ok)
+        block.fPOWChecked = true;
+    else
+        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
 }
