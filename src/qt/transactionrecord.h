@@ -90,7 +90,7 @@ public:
         WitnessFundRecv,
         WitnessEmptySend,
         WitnessEmptyRecv,
-        WitnessSplit,
+        WitnessSplitRecv,
         WitnessMerge,
         WitnessIncreaseRecv,
         WitnessIncreaseSend,

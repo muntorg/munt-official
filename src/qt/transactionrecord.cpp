@@ -397,7 +397,47 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::SplitType:
                 {
-                    int nImplement = 1;
+                    TransactionRecord subSend(hash, nTime);
+                    TransactionRecord subReceive(hash, nTime);
+                    CAmount totalAmountLocked = 0;
+                    subReceive.idx = -1;
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
+                                totalAmountLocked = txOut.nValue;
+                                CTxDestination getAddress;
+                                if (ExtractDestination(txOut, getAddress))
+                                {
+                                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                                }
+                                subReceive.type = TransactionRecord::WitnessSplitRecv;
+                                subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
+                                subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
+                                subReceive.credit = nCredit;
+                                subReceive.debit = nCredit;
+
+                                subReceive.idx = parts.size(); // sequence number
+                                parts.append(subReceive);
+
+                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
+                                const auto& txOutRef = txOut;
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
+
+                                break;
+                            }
+                        }
+                        if (subReceive.idx != -1)
+                            break;
+                    }
+                    //fixme: (2.1) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
+                    //It isn't 100% clear if/when we should show fees and when not.
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::MergeType:
