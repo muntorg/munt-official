@@ -91,7 +91,7 @@ public:
         WitnessEmptySend,
         WitnessEmptyRecv,
         WitnessSplitRecv,
-        WitnessMerge,
+        WitnessMergeRecv,
         WitnessIncreaseRecv,
         WitnessIncreaseSend,
         WitnessChangeKey,
