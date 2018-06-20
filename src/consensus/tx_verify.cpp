@@ -640,12 +640,13 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 bool matchedExistingBundle = false;
                 for (auto& bundle : *pWitnessBundles)
                 {
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::MergeType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
-                         matchedExistingBundle = true;
+                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::MergeType;
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        matchedExistingBundle = true;
                     }
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SplitType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         matchedExistingBundle = true;
