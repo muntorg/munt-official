@@ -58,6 +58,7 @@ If you are thinking about contributing toward the development of Gulden in some 
 * [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
+* [Accelerate testnet](./technical_documentation/accelerated_testnet.md)
 
 
 ### Community
