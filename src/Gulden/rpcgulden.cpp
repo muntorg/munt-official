@@ -1088,7 +1088,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     EnsureWalletIsUnlocked(pwallet);
@@ -1899,7 +1899,7 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     EnsureWalletIsUnlocked(pwallet);
@@ -2029,7 +2029,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     EnsureWalletIsUnlocked(pwallet);
@@ -2113,7 +2113,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     EnsureWalletIsUnlocked(pwallet);
@@ -2249,7 +2249,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     // Basic sanity checks.
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
-    if (!IsSegSigEnabled(chainActive.Tip()))
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
         throw std::runtime_error("Cannot use this command before segsig activates");
 
     EnsureWalletIsUnlocked(pwallet);
