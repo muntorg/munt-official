@@ -94,7 +94,7 @@ public:
         WitnessMergeRecv,
         WitnessIncreaseRecv,
         WitnessIncreaseSend,
-        WitnessChangeKey,
+        WitnessChangeKeyRecv,
         SendToAddress,
         SendToOther,
         RecvWithAddress,

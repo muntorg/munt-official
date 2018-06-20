@@ -427,6 +427,8 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Split locked funds");
     case TransactionRecord::WitnessMergeRecv:
         return tr("Merge locked funds");
+    case TransactionRecord::WitnessChangeKeyRecv:
+        return tr("Rotate witness key");
     case TransactionRecord::WitnessRenew:
         return tr("Renew witness account");
     case TransactionRecord::WitnessFundSend:
@@ -467,6 +469,8 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
             return GUIUtil::fontAwesomeRegular("\uf126");
         case TransactionRecord::WitnessMergeRecv:
             return GUIUtil::fontAwesomeRegular("\uf387");
+        case TransactionRecord::WitnessChangeKeyRecv:
+            return GUIUtil::fontAwesomeRegular("\uf084");
         case TransactionRecord::WitnessIncreaseSend:
             return GUIUtil::fontAwesomeRegular("\uf023");
         case TransactionRecord::WitnessIncreaseRecv:
@@ -515,6 +519,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                         return tr("Split locked funds: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::WitnessMergeRecv:
                         return tr("Merge locked funds: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    case TransactionRecord::WitnessChangeKeyRecv:
+                        return tr("Rotate witness key: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::WitnessEmptyRecv:
                         return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::SendToSelf:
@@ -578,6 +584,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         return tr("Split locked funds");
     case TransactionRecord::WitnessMergeRecv:
         return tr("Merge locked funds");
+    case TransactionRecord::WitnessChangeKeyRecv:
+        return tr("Rotate witness key");
     case TransactionRecord::WitnessIncreaseSend:
         return tr("Fund witness account extension");
     case TransactionRecord::WitnessEmptySend:
@@ -605,6 +613,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
         case TransactionRecord::WitnessIncreaseRecv:
         case TransactionRecord::WitnessSplitRecv:
         case TransactionRecord::WitnessMergeRecv:
+        case TransactionRecord::WitnessChangeKeyRecv:
         case TransactionRecord::WitnessRenew:
         case TransactionRecord::WitnessFundSend:
         case TransactionRecord::WitnessFundRecv:
