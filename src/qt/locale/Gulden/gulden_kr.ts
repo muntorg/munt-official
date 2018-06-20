@@ -12,11 +12,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
+        <source>Delete account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Delete account</source>
+        <source>Copy sync code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -24,8 +24,21 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -677,14 +690,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wallet</source>
-        <translation type="unfinished">지갑</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">노드</translation>
-    </message>
-    <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">개요(&amp;O)</translation>
     </message>
@@ -734,6 +739,14 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -868,6 +881,10 @@ The account will continue to be monitored and will be restored should it receive
         <source>%1 client</source>
         <translation type="unfinished">%1 클라이언트</translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">디버그 창</translation>
+    </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
@@ -889,6 +906,14 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Syncing Headers (%1%)...</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">지갑</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">노드</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -998,10 +1023,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Debug window</source>
-        <translation type="unfinished">디버그 창</translation>
-    </message>
 </context>
 <context>
     <name>GuldenAmountField</name>
@@ -1012,6 +1033,10 @@ The account will continue to be monitored and will be restored should it receive
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Receiving address</source>
         <translation type="unfinished"></translation>
@@ -1045,7 +1070,19 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1098,14 +1135,6 @@ The account will continue to be monitored and will be restored should it receive
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amount below minimum for IBAN payment.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1171,11 +1200,34 @@ Witness weight: %5</source>
         <translation type="unfinished">주소 편집</translation>
     </message>
     <message>
-        <source>Private key</source>
+        <source>Private &amp;key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Edit Address</source>
+        <translation type="unfinished">주소 편집</translation>
+    </message>
+    <message>
+        <source>W&amp;itness only URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a witness-only URL to import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1834,6 +1886,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Enter a private key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3070,6 +3126,26 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Fund witness account extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Renew witness account</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3098,6 +3174,22 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Extend locked funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unlock funds from: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3107,6 +3199,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3127,6 +3223,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Internal account movement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3477,6 +3577,10 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Compound earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation type="unfinished">정보</translation>
     </message>
@@ -3538,6 +3642,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3606,15 +3719,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>%1 months</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Account emptied</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

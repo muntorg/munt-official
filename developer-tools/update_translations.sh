@@ -8,7 +8,7 @@ cd src/qt/locale/Gulden
 rm *.po || true
 
 #Fetch onesky translations
-python ../../../../gulden-tools/translations/fetch_translations.py ${ONESKY_API_KEY}
+python ../../../../developer-tools/translations/fetch_translations.py ${ONESKY_API_KEY}
 
 #Update ts files from onesky translations
 for filename in *.po; do
@@ -24,7 +24,7 @@ lupdate ../../../../src -locations none -no-obsolete -ts `ls *.ts | grep -v src/
 #    lconvert -locations relative $filename -o `dirname ${filename}`/`basename ${filename} .ts`.po
 #done
 lconvert -locations relative gulden_en.ts -o `dirname gulden_en.ts`/`basename gulden_en .ts`.po
-python ../../../../gulden-tools/translations/push_translations.py ${ONESKY_API_KEY} || true
+python ../../../../developer-tools/translations/push_translations.py ${ONESKY_API_KEY} || true
 
 #Cleanup
 rm *.po || true

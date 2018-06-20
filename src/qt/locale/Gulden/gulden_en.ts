@@ -12,22 +12,35 @@
         <translation type="unfinished">Enter name of account.</translation>
     </message>
     <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR to connect to your mobile Gulden app</translation>
-    </message>
-    <message>
         <source>Delete account</source>
         <translation type="unfinished">Delete account</translation>
+    </message>
+    <message>
+        <source>Copy sync code</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Done</source>
         <translation type="unfinished">Done</translation>
     </message>
     <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation type="unfinished">Scan QR to connect to your mobile Gulden app</translation>
+    </message>
+    <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
         <translation type="unfinished">Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -679,14 +692,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Backup wallet</translation>
     </message>
     <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Wallet</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Node</translation>
-    </message>
-    <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Overview</translation>
     </message>
@@ -737,6 +742,14 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Import a private key address</source>
         <translation type="unfinished">Import a private key address</translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
@@ -898,6 +911,14 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Syncing Headers (%1%)...</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Wallet</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Node</translation>
+    </message>
+    <message>
         <source>Synchronizing with network...</source>
         <translation type="unfinished">Synchronizing with network...</translation>
     </message>
@@ -1019,6 +1040,10 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Receiving address</source>
         <translation type="unfinished">Receiving address</translation>
     </message>
@@ -1061,6 +1086,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation type="unfinished">The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
+    </message>
+    <message>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1181,12 +1210,35 @@ Witness weight: %5</translation>
         <translation type="unfinished">Edit Address</translation>
     </message>
     <message>
-        <source>Private key</source>
-        <translation type="unfinished">Private key</translation>
+        <source>Private &amp;key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
         <translation type="unfinished">Enter a private key to import</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancel</translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Edit Address</source>
+        <translation type="unfinished">Edit Address</translation>
+    </message>
+    <message>
+        <source>W&amp;itness only URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a witness-only URL to import</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ok</source>
@@ -1848,6 +1900,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Enter a private key</source>
         <translation type="unfinished">Enter a private key</translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -3096,6 +3152,26 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Witness reward</translation>
     </message>
     <message>
+        <source>Fund witness account extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Renew witness account</source>
         <translation type="unfinished">Renew witness account</translation>
     </message>
@@ -3124,6 +3200,22 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Lock funds from: %1</translation>
     </message>
     <message>
+        <source>Extend locked funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unlock funds from: %1</source>
         <translation type="unfinished">Unlock funds from: %1</translation>
     </message>
@@ -3134,6 +3226,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Fund witness account: %1</source>
         <translation type="unfinished">Fund witness account: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
@@ -3154,6 +3250,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Internal account movement</source>
         <translation type="unfinished">Internal account movement</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Complex transaction, view transaction details.</source>
@@ -3501,6 +3601,10 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <source>Projected earnings graph</source>
         <translation type="unfinished">Projected earnings graph</translation>
+    </message>
+    <message>
+        <source>Compound earnings</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Information</source>

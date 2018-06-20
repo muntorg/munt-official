@@ -12,20 +12,33 @@
         <translation type="unfinished">Entrez le nom du compte.</translation>
     </message>
     <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scannez QR pour vous connecter à votre application mobile Gulden.</translation>
-    </message>
-    <message>
         <source>Delete account</source>
         <translation type="unfinished">Supprimer le compte</translation>
+    </message>
+    <message>
+        <source>Copy sync code</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Done</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation type="unfinished">Scannez QR pour vous connecter à votre application mobile Gulden.</translation>
+    </message>
+    <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -678,14 +691,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation type="unfinished">Sauvegarder le portefeuille</translation>
     </message>
     <message>
-        <source>Wallet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Nœud</translation>
-    </message>
-    <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Vue d&apos;ensemble</translation>
     </message>
@@ -736,6 +741,14 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Import a private key address</source>
         <translation type="unfinished">Importer une clé privée</translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
@@ -869,6 +882,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <source>%1 client</source>
         <translation type="unfinished">Client %1</translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Fenêtre de débogage</translation>
+    </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
@@ -891,6 +908,14 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Syncing Headers (%1%)...</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Nœud</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -1003,10 +1028,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation type="unfinished">Une erreur fatale s&apos;est produite. Gulden ne peut plus continuer en toute sécurité et quittera.</translation>
     </message>
-    <message>
-        <source>Debug window</source>
-        <translation type="unfinished">Fenêtre de débogage</translation>
-    </message>
 </context>
 <context>
     <name>GuldenAmountField</name>
@@ -1017,6 +1038,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Receiving address</source>
         <translation type="unfinished">Adresse de réception</translation>
@@ -1050,8 +1075,20 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation type="unfinished">Avertissement : Ce poids dépasse 1% du poids actuel du réseau, c&apos;est fantastique pour contribuer à la sécurité du réseau mais non recommandé pour maximiser vos gains. Pour des gains maximaux, il serait généralement préférable de diviser vos fonds en deux comptes dans cette situation. Une exception est que si vous avez des raisons de croire que le poids du réseau est susceptible d&apos;augmenter considérablement à l&apos;avenir, veuillez demander d&apos;autres conseils avant de procéder si vous n&apos;êtes pas certain de la meilleure ligne de conduite à adopter.</translation>
     </message>
     <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation type="unfinished">Le montant que vous voulez envoyer dépasse votre solde, le montant a été automatiquement ajusté à la baisse pour correspondre à votre solde. Veuillez vous assurer que c&apos;est ce que vous voulez avant de procéder afin d&apos;éviter un paiement court de votre destinataire.</translation>
+    </message>
+    <message>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1108,14 +1145,6 @@ Witness weight: %5</source>
 Estimation des gains : %3 (%4% par mois)
 
 Poids du Witness : %5</translation>
-    </message>
-    <message>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
@@ -1180,12 +1209,35 @@ Poids du Witness : %5</translation>
         <translation type="unfinished">Modifier l&apos;adresse</translation>
     </message>
     <message>
-        <source>Private key</source>
-        <translation type="unfinished">Clé privée</translation>
+        <source>Private &amp;key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
         <translation type="unfinished">Pour importer entrez une clé privée</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuler</translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Edit Address</source>
+        <translation type="unfinished">Modifier l&apos;adresse</translation>
+    </message>
+    <message>
+        <source>W&amp;itness only URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a witness-only URL to import</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ok</source>
@@ -1846,6 +1898,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Enter a private key</source>
         <translation type="unfinished">Entrez une clé privée</translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -3094,6 +3150,26 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation type="unfinished">Récompense de witness</translation>
     </message>
     <message>
+        <source>Fund witness account extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Renew witness account</source>
         <translation type="unfinished">Renouveler le compte witness</translation>
     </message>
@@ -3122,6 +3198,22 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation type="unfinished">Verrouiller les fonds à partir de: %1</translation>
     </message>
     <message>
+        <source>Extend locked funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unlock funds from: %1</source>
         <translation type="unfinished">Débloquer les fonds de: %1</translation>
     </message>
@@ -3132,6 +3224,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Fund witness account: %1</source>
         <translation type="unfinished">Financement d&apos;un compte witness: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
@@ -3152,6 +3248,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Internal account movement</source>
         <translation type="unfinished">Mouvement du compte interne</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Complex transaction, view transaction details.</source>
@@ -3501,6 +3601,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation type="unfinished">Graphique des bénéfices projetés</translation>
     </message>
     <message>
+        <source>Compound earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation type="unfinished">Information</translation>
     </message>
@@ -3563,6 +3667,15 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
         <translation type="unfinished">Votre compte witness attend qu&apos;une transaction soit confirmée par le réseau avant qu&apos;il ne devienne actif, ce qui ne devrait prendre en moyenne que quelques minutes. Si cette page continue à s&apos;afficher pour une période plus longue que cette période, veuillez consulter l&apos;onglet des transactions et/ou demander de l&apos;aide.</translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change units</source>
@@ -3631,15 +3744,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>%1 months</source>
         <translation type="unfinished">%1 mois</translation>
-    </message>
-    <message>
-        <source>Account emptied</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
