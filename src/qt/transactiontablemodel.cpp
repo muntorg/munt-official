@@ -464,7 +464,7 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
         case TransactionRecord::WitnessEmptyRecv:
             return GUIUtil::fontAwesomeRegular("\uf09c");
         case TransactionRecord::WitnessSplitRecv:
-            return GUIUtil::fontAwesomeRegular("\uf24d");
+            return GUIUtil::fontAwesomeRegular("\uf126");
         case TransactionRecord::WitnessMergeRecv:
             return GUIUtil::fontAwesomeRegular("\uf387");
         case TransactionRecord::WitnessIncreaseSend:
