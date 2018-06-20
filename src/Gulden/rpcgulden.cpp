@@ -2874,6 +2874,8 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
+    EnsureWalletIsUnlocked(pwallet);
+
     bool shouldCreateAccount = false;
     if (request.params.size() > 2)
         shouldCreateAccount = request.params[2].get_bool();
