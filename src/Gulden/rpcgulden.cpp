@@ -89,8 +89,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
             "\nSpecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
-            "2. verbose                  (bool, optional, default=false) Display additional verbose information.\n"
-            "3. mine_only                (bool, optional, default=false) In verbose display only show account info for accounts belonging to this wallet.\n"
+            "2. verbose                  (boolean, optional, default=false) Display additional verbose information.\n"
+            "3. mine_only                (boolean, optional, default=false) In verbose display only show account info for accounts belonging to this wallet.\n"
             "\nResult:\n"
             "[{\n"
             "     \"pow2_phase\": n                                  (number) The number of the currently active pow2_phase.\n"
@@ -502,11 +502,11 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "dumpblockgaps  startheight count\n"
+            "dumpblockgaps  start_height count\n"
             "\nDump the block gaps for the last n blocks.\n"
             "\nArguments:\n"
-            "1. startheight     (numeric) Where to start dumping from, counting backwards from chaintip.\n"
-            "2. count           (numeric) The number of blocks to dump the block gaps of - going backwards from the startheight.\n"
+            "1. start_height     (numeric) Where to start dumping from, counting backwards from chaintip.\n"
+            "2. count           (numeric) The number of blocks to dump the block gaps of - going backwards from the start_height.\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpblockgaps 50", ""));
 
@@ -559,11 +559,11 @@ static UniValue dumptransactionstats(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "dumptransactionstats startheight count\n"
+            "dumptransactionstats start_height count\n"
             "\nDump the transaction stats for the last n blocks.\n"
             "\nArguments:\n"
-            "1. startheight     (numeric) Where to start dumping from, counting backwards from chaintip.\n"
-            "2. count           (numeric) The number of blocks to dump the block gaps of - going backwards from the startheight.\n"
+            "1. start_height     (numeric) Where to start dumping from, counting backwards from chaintip.\n"
+            "2. count           (numeric) The number of blocks to dump the block gaps of - going backwards from the start_height.\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpblockgaps 50", ""));
 
@@ -923,7 +923,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw std::runtime_error(
-            "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \n"
+            "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \"force_multiple\" \n"
             "Lock \"amount\" NLG in \"witness_account\" for time period \"time\" using funds from \"funding_account\"\n"
             "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
             "It is highly recommended to rather use 'extendwitnessaccount' in this case which behaves more like what most people would expect.\n"
@@ -1505,7 +1505,7 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
             "Returns a list of balances for all accounts in the wallet.\n"
             "\nArguments:\n"
             "1. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
-            "2. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
+            "2. include_watchonly (boolean, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
             "\nResult:\n"
             "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
             "\nExamples:\n"
@@ -1705,7 +1705,7 @@ static UniValue importseed(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "importseed \"mnemonic_or_pubkey\" \"type\" \"is_read_only\" \n"
+            "importseed \"mnemonic_or_pubkey\" \"type\" is_read_only \n"
             "\nSet the currently active seed by UUID.\n"
             "1. \"mnemonic_or_pubkey\"       (string) Specify the BIP44 mnemonic that will be used to generate the seed.\n"
             "2. \"type\"       (string, optional default=BIP44) Type of seed to create (BIP44; BIP44NH; BIP44E; BIP32; BIP32L)\n"
@@ -1716,7 +1716,7 @@ static UniValue importseed(const JSONRPCRequest& request)
             "\nBIP32 - Older HD standard that was used by our mobile wallets before 1.6.0, use this to import/recover old mobile recovery phrases.\n"
             "\nBIP32L - (Legacy) Even older HD standard that was used by our first android wallets, use this to import/recover very old mobile recovery phrases.\n"
             "\nIn the case of read only seeds a pubkey rather than a mnemonic is required.\n"
-            "3. \"is_read_only\"      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
+            "3. is_read_only      (boolean, optional, default=false) Account is a 'read only account' - type argument will be ignored and always set to BIP44NH in this case. Wallet will be rescanned for transactions.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
@@ -2160,8 +2160,8 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
             "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",                   (string) The txid of the created transaction\n"
-            "     \"fee_amount\"              (string) The fee that was paid.\n"
+            "     \"txid\",                (string) The txid of the created transaction\n"
+            "     \"fee_amount\"           (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("renewwitnessaccount \"My account\" \"My witness account\"", "")
@@ -2604,12 +2604,12 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3 )
         throw std::runtime_error(
-            "setwitnessrewardscript \"witness_account\" \"address_or_script\" \"force_pubkey\" \n"
+            "setwitnessrewardscript \"witness_account\" \"address_or_script\" force_pubkey \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "2. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
-            "3. \"force_pubkey\"           (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
+            "3. force_pubkey              (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
             "[\n"
             "     \"account_uuid\",        (string) The UUID of the account that has been modified.\n"
