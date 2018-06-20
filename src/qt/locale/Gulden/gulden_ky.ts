@@ -1194,7 +1194,7 @@ Witness weight: %5</source>
 <context>
     <name>ImportPrivKeyDialog</name>
     <message>
-        <source>Edit Address</source>
+        <source>Import private key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1217,7 +1217,7 @@ Witness weight: %5</source>
 <context>
     <name>ImportWitnessDialog</name>
     <message>
-        <source>Edit Address</source>
+        <source>Import witness from URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

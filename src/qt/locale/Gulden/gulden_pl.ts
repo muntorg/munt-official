@@ -1205,8 +1205,8 @@ Witness waga: %5</translation>
 <context>
     <name>ImportPrivKeyDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation type="unfinished">Zmień adres</translation>
+        <source>Import private key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Private &amp;key</source>
@@ -1228,8 +1228,8 @@ Witness waga: %5</translation>
 <context>
     <name>ImportWitnessDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation type="unfinished">Zmień adres</translation>
+        <source>Import witness from URL</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>W&amp;itness only URL</source>
