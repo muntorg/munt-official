@@ -162,6 +162,7 @@ private:
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
     QAction* importPrivateKeyAction = nullptr;
+    QAction* importWitnessOnlyAccountAction = nullptr;
     QAction* rescanAction = nullptr;
     QAction* currencyAction = nullptr;
 
@@ -354,6 +355,7 @@ private Q_SLOTS:
     void accountDeleted(CAccount* account);
     void accountButtonPressed();
     void promptImportPrivKey();
+    void promptImportWitnessOnlyAccount();
     void promptRescan();
     void gotoWebsite();
     void gotoNewAccountDialog();

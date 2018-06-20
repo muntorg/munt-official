@@ -10,6 +10,7 @@ $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
 $(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-xcb-include-order.patch
 $(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
+$(package)_patches+=strip_log2f.patch
 $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
@@ -29,6 +30,10 @@ $(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6
 $(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
 $(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
 
+$(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
+
+$(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
+$(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
@@ -171,6 +176,7 @@ define $(package)_preprocess_cmds
   patch -p1 < $($(package)_patch_dir)/fix-cocoahelpers-macos.patch && \
   patch -p1 < $($(package)_patch_dir)/qfixed-coretext.patch && \
   patch -p1 < $($(package)_patch_dir)/0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch && \
+  $($(package)_patch_glibc_compat) \
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \

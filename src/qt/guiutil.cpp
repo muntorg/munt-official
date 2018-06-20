@@ -19,6 +19,7 @@
 #include "fs.h"
 #include "primitives/transaction.h"
 #include "init.h"
+#include "validation/validation.h"
 #include "policy/policy.h"
 #include "protocol.h"
 #include "script/script.h"
@@ -154,6 +155,15 @@ void setupPrivKeyWidget(QValidatedLineEdit *widget, QWidget *parent)
     widget->setCheckValidator(new GuldenAddressCheckValidator(parent));
 }
 
+void setupGuldenURLEntryWidget(QValidatedLineEdit *widget, QWidget *parent)
+{
+    parent->setFocusProxy(widget);
+#if QT_VERSION >= 0x040700
+    widget->setPlaceholderText(QObject::tr("Enter a Gulden URL"));
+#endif
+    //fixme: (2.1) Implement validators here
+}
+
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 {
     QDoubleValidator *amountValidator = new QDoubleValidator(parent);
@@ -271,12 +281,36 @@ QString formatGuldenURI(const SendCoinsRecipient &info)
     return ret;
 }
 
-bool isDust(const QString& address, const CAmount& amount)
+bool isDust(const QString& addressString, const CAmount& amount)
 {
-    CTxDestination dest = CGuldenAddress(address.toStdString()).Get();
-    CScript script = GetScriptForDestination(dest);
-    CTxOut txOut(amount, script);
-    return IsDust(txOut, ::dustRelayFee);
+    CGuldenAddress address(addressString.toStdString());
+    if (IsSegSigEnabled(chainActive.TipPrev()))
+    {
+        CKeyID idPrimary;
+        CKeyID idSecondary;
+        address.GetKeyID(idPrimary, &idSecondary);
+        if (address.IsValidWitness())
+        {
+            CTxOutPoW2Witness witnessOutput;
+            witnessOutput.witnessKeyID = idPrimary;
+            witnessOutput.spendingKeyID = idSecondary;
+            CTxOut txOut(amount, witnessOutput);
+            return IsDust(txOut, ::dustRelayFee);
+        }
+        else
+        {
+            CTxOutStandardKeyHash keyHashOutput(idPrimary);
+            CTxOut txOut(amount, keyHashOutput);
+            return IsDust(txOut, ::dustRelayFee);
+        }
+    }
+    else
+    {
+        CTxDestination dest = address.Get();
+        CScript script = GetScriptForDestination(dest);
+        CTxOut txOut(amount, script);
+        return IsDust(txOut, ::dustRelayFee);
+    }
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
@@ -931,6 +965,7 @@ void centerWindowGeometry(const QString& strSetting, QWidget* widgetToCenter)
 
 void setClipboard(const QString& str)
 {
+    QApplication::clipboard()->clear();
     QApplication::clipboard()->setText(str, QClipboard::Clipboard);
     QApplication::clipboard()->setText(str, QClipboard::Selection);
 }

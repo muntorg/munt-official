@@ -476,7 +476,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -507,7 +507,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     margin-left: 0px;
     margin-right: 0px;
 }
-#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #accountCopyToClipboardButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed
+#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #accountCopyToClipboardButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed, #copyButton:pressed
 {
     color: ACCENT_COLOR_2;
 }
@@ -973,6 +973,12 @@ QToolTip
     color: ACCENT_COLOR_1;
 }
 
+#sendAll
+{
+    color: ACCENT_COLOR_1;
+    font-size: MINOR_LABEL_FONT_SIZE;
+}
+
 #newAccountName
 {
     margin-top: 30px;
@@ -1129,7 +1135,7 @@ QToolTip
     margin-top: 20px;
 }
 
-#accountAddress
+#accountAddress, #addressQRContents
 {
     margin: 0px;
     padding: 0px;

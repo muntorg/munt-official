@@ -335,6 +335,13 @@ public:
     void setCompounding(CAmount compoundAmount, CWalletDB* Db);
     CAmount getCompounding() const;
 
+    //! Sets a script that should be used to handle the portion of witnessing rewards not compounded via 'setCompounding'.
+    //! See 'setCompounding' for a description on how to control which rewards go where.
+    //! If no script is set the wallet will create a default one using a key from the accounts keypool, and fail if none are available (though this should never happen)
+    void setNonCompoundRewardScript(const CScript& rewardScript, CWalletDB* Db);
+    bool hasNonCompoundRewardScript() const;
+    CScript getNonCompoundRewardScript() const;
+
     AccountStatus GetWarningState() { return nWarningState; };
     void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
 
@@ -361,6 +368,7 @@ protected:
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
     CAmount compoundEarnings = 0;
+    CScript nonCompoundRewardScript;
     uint64_t earliestPossibleCreationTime;
 
     bool m_readOnly = false;

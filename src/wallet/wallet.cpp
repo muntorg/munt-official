@@ -2230,7 +2230,6 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 
 void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
-    //fixme: (2.0) - Allow default mining account to be seperately selected?
     std::shared_ptr<CReserveKeyOrScript> rKey;
     if (forAccount)
     {
@@ -2246,6 +2245,34 @@ void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, C
 
     script = rKey;
     script->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
+}
+
+void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
+{
+    std::shared_ptr<CReserveKeyOrScript> rKey;
+
+    // forAccount should never be null
+    if (!forAccount)
+        assert(0);
+
+    // If an explicit script has been set via RPC then use that, otherwise we just make a script from a key
+    if (forAccount->hasNonCompoundRewardScript())
+    {
+        rKey = std::make_shared<CReserveKeyOrScript>(nullptr, nullptr, KEYCHAIN_EXTERNAL);
+        rKey->reserveScript = forAccount->getNonCompoundRewardScript();
+    }
+    else
+    {
+        //fixme: (2.0) Alert user of error (alert notification probably best)
+        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
+
+        CPubKey pubkey;
+        if (!rKey->GetReservedKey(pubkey))
+            return;
+
+        rKey->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
+    }
+    script = rKey;
 }
 
 void CWallet::LockCoin(const COutPoint& output)

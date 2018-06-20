@@ -222,6 +222,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
     CGuldenAddress address(request.params[0].get_str());
     bool isValid = address.IsValid();
 
+    //fixme: (2.1) Add some segsig specific output here.
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("isvalid", isValid));
     if (isValid)

@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include "chain.h"
+#include "chainparams.h"
 #include "protocol.h" // For CMessageHeader::MessageStartChars
 #include "undo.h"
 
@@ -43,7 +44,14 @@ public:
 
 
     bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);
-    bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams);
+
+    /** Read block from disk and do basic verifiaction to guard against (disk) corruption.
+        If an index is given which is: BLOCK_VALID_HEADER validated, has height below last checkpoint then the
+        block SHA is checked against the index implying that the PoW will also be valid.
+        For all other cases the PoW will be actually computed and verified (note that this is a local
+        validation so not necessarily a stronger one as the above).
+    */
+    bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const CChainParams& params, const CBlockIndex* index = nullptr);
 
     bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart);
     bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock);

@@ -49,10 +49,13 @@ namespace GUIUtil
     // Return a monospace font
     QFont fixedPitchFont();
 
-    // Set up widgets for address and amounts
+    //! Set up widgets for address and amounts
     void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent);
     void setupPrivKeyWidget(QValidatedLineEdit *widget, QWidget *parent);
     void setupAmountWidget(QLineEdit *widget, QWidget *parent);
+
+    //! Set up widgets for Gulden URL entry
+    void setupGuldenURLEntryWidget(QValidatedLineEdit *widget, QWidget *parent);
 
     // Parse "Gulden:" URI into recipient object, return true on successful parsing
     bool parseGuldenURI(const QUrl &uri, SendCoinsRecipient *out);

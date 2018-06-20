@@ -649,6 +649,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
     payment.set_merchant_data(details.merchant_data());
     payment.add_transactions(transaction.data(), transaction.size());
 
+    //fixme: (2.1) re-write to use segsig transactions.
     // Create a new refund address, or re-use:
     QString account = tr("Refund from %1").arg(recipient.authenticatedMerchant);
     std::string strAccount = account.toStdString();

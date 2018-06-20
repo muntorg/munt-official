@@ -120,7 +120,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 95; 
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000004d7fd150cb5321b4");
+        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000000084a08786233bd0d1");
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x56bce924eb7613b6fd4ac859a06a13f7643817d6a593d19951ab293182a021cb"); //505000
@@ -201,13 +201,15 @@ public:
                 { 625000, uint256S("0x0d067e2b98621356f67c0d969c8dbccd62a6bea757a006a6640e42becfe54740")},
                 { 650000, uint256S("0x0fcd45353b44036efdabed53931b6a49db8f44fa91ede6be64189bccc5f2af53")},
                 { 675000, uint256S("0xed520161b5954c1a800497fe334e320bc481f2b103f78e8319a0db6cbbd2dcb1")},
-                { 700000, uint256S("0x7cdbb7bef28741aa682570703ca03cd77a6524011aed588fd0aabe5f0038f124")}
+                { 700000, uint256S("0x7cdbb7bef28741aa682570703ca03cd77a6524011aed588fd0aabe5f0038f124")},
+                { 750000, uint256S("0x22330a217c970fce0ac14f954793f0116df6931b1fd9f2c9e469884a71ef4d96")},
+
             }
         };
 
         chainTxData = ChainTxData{
-            1491810603, // * UNIX timestamp of last checkpoint block
-            1208446,    // * total number of transactions between genesis and last checkpoint
+            1527932637, // * UNIX timestamp of last checkpoint block
+            1917021,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -295,7 +297,7 @@ public:
             pchMessageStart[2] = (seedTimestamp >> 16) & 0xFF;
             pchMessageStart[3] = sTestnetParams[0];
 
-            LogPrintf("pchMessageStart [%d %d %d %d]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
+            LogPrintf("pchMessageStart (aka magic bytes). decimal:[%d %d %d %d] hex:[%08x %08x %08x %08x]\n", pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3], pchMessageStart[0], pchMessageStart[1], pchMessageStart[2], pchMessageStart[3]);
         }
 
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");

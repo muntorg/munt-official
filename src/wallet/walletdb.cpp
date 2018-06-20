@@ -256,6 +256,16 @@ bool CWalletDB::EraseAccountCompoundingSettings(const std::string& strUUID)
     return EraseIC(std::pair(std::string("acc_compound"), strUUID));
 }
 
+bool CWalletDB::WriteAccountNonCompoundWitnessEarningsScript(const std::string& strUUID, const CScript& earningsScript)
+{
+    return WriteIC(std::pair(std::string("acc_non_compound_wit_earn_script"), strUUID), *(const CScriptBase*)(&earningsScript));
+}
+
+bool CWalletDB::EraseAccountNonCompoundWitnessEarningsScript(const std::string& strUUID)
+{
+    return EraseIC(std::pair(std::string("acc_non_compound_wit_earn_script"), strUUID));
+}
+
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
 {
     if (account->IsHD())
@@ -744,6 +754,30 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             if (findIter != pwallet->mapAccounts.end())
             {
                 findIter->second->setCompounding(compoundAmount, nullptr);
+            }
+            else
+            {
+                strErr = "Error reading compound status for account";
+                return false;
+            }
+        }
+        else if (strType == "acc_non_compound_wit_earn_script")
+        {
+            std::string accountUUID;
+            CScript earningsScript;
+
+            ssKey >> accountUUID;
+            ssValue >> *(CScriptBase*)(&earningsScript);
+
+            auto findIter = pwallet->mapAccounts.find(getUUIDFromString(accountUUID));
+            if (findIter != pwallet->mapAccounts.end())
+            {
+                findIter->second->setNonCompoundRewardScript(earningsScript, nullptr);
+            }
+            else
+            {
+                strErr = "Error reading compound script for account";
+                return false;
             }
         }
     } catch (...)

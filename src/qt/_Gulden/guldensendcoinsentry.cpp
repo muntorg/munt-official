@@ -85,6 +85,8 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(payAmountChanged()));
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SIGNAL(valueChanged()));
 
+    connect(ui->sendAll, SIGNAL(clicked()), this, SLOT(sendAllClicked()));
+
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
 
@@ -460,16 +462,20 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    if (recipient.amount >= ( pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true) ))
+    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
+    if (recipient.amount >= balanceToCheck)
     {
         if (showWarningDialogs)
         {
-            QString message = tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
+            QString message = recipient.amount > balanceToCheck ?
+                        tr("The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.")
+                      : tr("The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.");
+
             QDialog* d = GUI::createDialog(this, message, tr("Okay"), "", 400, 180);
             d->exec();
         }
 
-        recipient.amount = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
+        recipient.amount = balanceToCheck;
         recipient.fSubtractFeeFromAmount = true;
     }
 
@@ -955,6 +961,13 @@ void GuldenSendCoinsEntry::nocksTimeout()
     {
         payInfoUpdateRequired();
     }
+}
+
+void GuldenSendCoinsEntry::sendAllClicked()
+{
+    //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
+    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true));
+    payInfoUpdateRequired();
 }
 
 void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)

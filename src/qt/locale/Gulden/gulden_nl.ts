@@ -12,16 +12,20 @@
         <translation type="unfinished">Voer naam in van account</translation>
     </message>
     <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR-code om te linken met je mobiele Gulden-app</translation>
-    </message>
-    <message>
         <source>Delete account</source>
         <translation type="unfinished">Verwijder account</translation>
     </message>
     <message>
+        <source>Copy sync code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Done</source>
         <translation type="unfinished">Klaar</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation type="unfinished">Scan QR-code om te linken met uw mobiele Gulden-app</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
@@ -29,8 +33,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished">Account is niet leeg. Maak eerst je Guldens over voor je deze account verwijderd.</translation>
+        <translation type="unfinished">Account is niet leeg. Maak eerst uw Guldens alvorens u dit account verwijdert.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -39,7 +52,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished">Weet je zeker dat je %1 van je accountlijst wil verwijderen? De adressen van deze account blijven actief.</translation>
+        <translation type="unfinished">Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -54,7 +67,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Locked funds: </source>
-        <translation type="unfinished">Geblokkeerde bedrag: </translation>
+        <translation type="unfinished">Geblokkeerd bedrag: </translation>
     </message>
     <message>
         <source>Funds awaiting confirmation: </source>
@@ -69,11 +82,11 @@ The account will continue to be monitored and will be restored should it receive
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation type="unfinished">Rechtsklik om een adres of label te bewerken.</translation>
+        <translation type="unfinished">Klik de rechtermuisknop om een adres of label te bewerken.</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation type="unfinished">&amp;Sluit</translation>
+        <translation type="unfinished">&amp;Sluiten</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -85,7 +98,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">Exporteer de data in de huidige tab naar een bestand</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Export</source>
@@ -101,7 +114,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation type="unfinished">Kopieer het huidig geselecteerde adres naar het klembord</translation>
+        <translation type="unfinished">Kopieer het geselecteerde adres naar het klembord</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -677,14 +690,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Wallet</source>
-        <translation type="unfinished">Portemonnee</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation type="unfinished">Knooppunt</translation>
-    </message>
-    <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Overzicht</translation>
     </message>
@@ -734,6 +739,14 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -868,6 +881,10 @@ The account will continue to be monitored and will be restored should it receive
         <source>%1 client</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debugvenster</translation>
+    </message>
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation type="unfinished">
@@ -890,6 +907,14 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Syncing Headers (%1%)...</source>
         <translation type="unfinished">Synchroniseer Headers (%1%)...</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Portemonnee</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Knooppunt</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -997,10 +1022,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation type="unfinished">Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
     </message>
-    <message>
-        <source>Debug window</source>
-        <translation type="unfinished">Debugvenster</translation>
-    </message>
 </context>
 <context>
     <name>GuldenAmountField</name>
@@ -1011,6 +1032,10 @@ The account will continue to be monitored and will be restored should it receive
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Receiving address</source>
         <translation type="unfinished">Ontvangstadres</translation>
@@ -1044,8 +1069,20 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
     </message>
     <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation type="unfinished">Het bedrag dat u wilt versturen is hoger dan uw saldo, dit bedrag wordt automatisch naar beneden bijgesteld om het overeen te laten komen met uw saldo. Zorg ervoor dat dit is wat u wilt voordat u verder gaat om zo te voorkomen dat u te weinig betaalt aan de ontvanger.</translation>
+    </message>
+    <message>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1102,14 +1139,6 @@ Witness weight: %5</source>
 Verwachtte verdiensten: %3 (%4 per maand)
 
 Witness gewicht: %5</translation>
-    </message>
-    <message>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
@@ -1170,16 +1199,39 @@ Witness gewicht: %5</translation>
 <context>
     <name>ImportPrivKeyDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation type="unfinished">Adres bewerken</translation>
+        <source>Import private key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Private key</source>
-        <translation type="unfinished">Prive sleutel</translation>
+        <source>Private &amp;key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
         <translation type="unfinished">Voer prive sleutel in om te importeren</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Oké</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Import witness from URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>W&amp;itness only URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a witness-only URL to import</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ok</source>
@@ -1561,11 +1613,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished">Verberg naar dok en sluit</translation>
+        <translation type="unfinished">Verberg op de werkbalk bij sluiten</translation>
     </message>
     <message>
         <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished">Verberg de applicatie naar het dok als het venster wordt gesloten. Als deze optie is ingeschakeld zal de applicatie wordt pas afgesloten als Sluit af in het menu is gekozen.</translation>
+        <translation type="unfinished">Verberg de applicatie naar de werkbalk als het venster wordt gesloten. Als deze optie is ingeschakeld zal de applicatie pas volledig worden afgesloten als u &apos;sluit af&apos; in het menu hebt gekozen.</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1840,6 +1892,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Enter a private key</source>
         <translation type="unfinished">voer een private sleutel in</translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2903,7 +2959,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Total credit</source>
-        <translation type="unfinished">Totaal credit</translation>
+        <translation type="unfinished">Totaal crediet</translation>
     </message>
     <message>
         <source>Total moved</source>
@@ -2915,7 +2971,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Net amount</source>
-        <translation type="unfinished">Netto bedrag</translation>
+        <translation type="unfinished">Nettobedrag</translation>
     </message>
     <message>
         <source>Message</source>
@@ -2935,7 +2991,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Output index</source>
-        <translation type="unfinished">Uitgangindex</translation>
+        <translation type="unfinished">Uitgangsindex</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -3072,7 +3128,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Payment to yourself</source>
-        <translation type="unfinished">Betaling aan uzelf</translation>
+        <translation type="unfinished">Betaling aan jezelf</translation>
     </message>
     <message>
         <source>Internal transfer</source>
@@ -3080,31 +3136,51 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished">Mining beloning</translation>
+        <translation type="unfinished">Mining-beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
-        <translation type="unfinished">Witness beloning</translation>
+        <translation type="unfinished">Witness-beloning</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Renew witness account</source>
-        <translation type="unfinished">Vernieuwen witness rekening</translation>
+        <translation type="unfinished">Vernieuwen witness-rekening</translation>
     </message>
     <message>
         <source>Fund witness account</source>
-        <translation type="unfinished">Vul witness rekening</translation>
+        <translation type="unfinished">Vul witness-rekening</translation>
     </message>
     <message>
         <source>Lock funds</source>
-        <translation type="unfinished">Blokkeer het bedrag</translation>
+        <translation type="unfinished">Blokkeer het saldo</translation>
     </message>
     <message>
         <source>Empty witness account</source>
-        <translation type="unfinished">Witness rekening legen</translation>
+        <translation type="unfinished">Leeg witness-rekening</translation>
     </message>
     <message>
         <source>Received from witness account</source>
-        <translation type="unfinished">Ontvangen van witness rekening</translation>
+        <translation type="unfinished">Ontvangen van witness-rekening</translation>
     </message>
     <message>
         <source>watch-only</source>
@@ -3112,11 +3188,27 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Lock funds from: %1</source>
-        <translation type="unfinished">Blokkeer het bedrag vanaf: %1</translation>
+        <translation type="unfinished">Blokkeer het saldo vanaf: %1</translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unlock funds from: %1</source>
-        <translation type="unfinished">Deblokkeer het bedrag vanaf: %1</translation>
+        <translation type="unfinished">Deblokkeer het saldo vanaf: %1</translation>
     </message>
     <message>
         <source>Internal transfer from: %1</source>
@@ -3124,11 +3216,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Fund witness account: %1</source>
-        <translation type="unfinished">Vul witness rekening: %1</translation>
+        <translation type="unfinished">Vul witness-rekening: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
-        <translation type="unfinished">Deblokkeer bedrag naar: %1</translation>
+        <translation type="unfinished">Deblokkeer het salso naar: %1</translation>
     </message>
     <message>
         <source>Internal transfer to: %1</source>
@@ -3147,8 +3243,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Verplaatsing interne account</translation>
     </message>
     <message>
+        <source>Extend locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished">Complexe transactie, bekijk transactie details</translation>
+        <translation type="unfinished">Complexe transactie, bekijk transactiedetails</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3156,7 +3256,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation type="unfinished">Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te laten zien.</translation>
+        <translation type="unfinished">Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
     </message>
     <message>
         <source>Date and time that the transaction was received.</source>
@@ -3168,7 +3268,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation type="unfinished">Al dan niet een alleen-bekijkbaar adres betrokken is in deze transactie.</translation>
+        <translation type="unfinished">Al dan niet een alleen-bekijkenadres betrokken is in deze transactie.</translation>
     </message>
     <message>
         <source>User-defined intent/purpose of the transaction.</source>
@@ -3180,7 +3280,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Amount removed from balance.</source>
-        <translation type="unfinished">Verwijderd van totaal bedrag</translation>
+        <translation type="unfinished">Bedrag verwijderd van saldo.</translation>
     </message>
 </context>
 <context>
@@ -3215,7 +3315,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>All transaction types</source>
-        <translation type="unfinished">Alle transactie types</translation>
+        <translation type="unfinished">Alle transactietypes</translation>
     </message>
     <message>
         <source>Received with</source>
@@ -3231,11 +3331,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Mining reward</source>
-        <translation type="unfinished">Mining beloning</translation>
+        <translation type="unfinished">Mining-beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
-        <translation type="unfinished">Witness beloning</translation>
+        <translation type="unfinished">Witness-beloning</translation>
     </message>
     <message>
         <source>Other</source>
@@ -3243,7 +3343,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Search label</source>
-        <translation type="unfinished">Zoek op Label</translation>
+        <translation type="unfinished">Zoek op label</translation>
     </message>
     <message>
         <source>Min amount</source>
@@ -3255,7 +3355,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Increase transaction fee</source>
-        <translation type="unfinished">Verhoog transactie fee</translation>
+        <translation type="unfinished">Verhoog transactiekosten</translation>
     </message>
     <message>
         <source>Copy address</source>
@@ -3275,11 +3375,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Copy raw transaction</source>
-        <translation type="unfinished">Kopieer ruwe transactie</translation>
+        <translation type="unfinished">Kopieer de ruwe transactie</translation>
     </message>
     <message>
         <source>Copy full transaction details</source>
-        <translation type="unfinished">Kopieer volledige transactie details</translation>
+        <translation type="unfinished">Kopieer alle transactiedetails</translation>
     </message>
     <message>
         <source>Edit label</source>
@@ -3291,7 +3391,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Export Transaction History</source>
-        <translation type="unfinished">Transactieverleden exporteren</translation>
+        <translation type="unfinished">Exporteer transactieverleden</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -3331,7 +3431,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Exporting Successful</source>
-        <translation type="unfinished">Export succesvol</translation>
+        <translation type="unfinished">Export is succesvol</translation>
     </message>
     <message>
         <source>The transaction history was successfully saved to %1.</source>
@@ -3354,31 +3454,31 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Fee bump error</source>
-        <translation type="unfinished">Fee verhoging fout</translation>
+        <translation type="unfinished">Transactiekostenverhogingsfout</translation>
     </message>
     <message>
         <source>Increasing transaction fee failed</source>
-        <translation type="unfinished">Verhoging van de transactie fee is mislukt</translation>
+        <translation type="unfinished">Verhogen transactiekosten is mislukt</translation>
     </message>
     <message>
         <source>Do you want to increase the fee?</source>
-        <translation type="unfinished">Wilt u de fee verhogen?</translation>
+        <translation type="unfinished">Wilt je de transactiekosten verhogen?</translation>
     </message>
     <message>
         <source>Current fee:</source>
-        <translation type="unfinished">Huidige fee:</translation>
+        <translation type="unfinished">Huidige transactiekosten:</translation>
     </message>
     <message>
         <source>Increase:</source>
-        <translation type="unfinished">Verhogen:</translation>
+        <translation type="unfinished">Verhoog:</translation>
     </message>
     <message>
         <source>New fee:</source>
-        <translation type="unfinished">Nieuwe fee:</translation>
+        <translation type="unfinished">Nieuwe transactiekosten:</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
-        <translation type="unfinished">Bevestig fee stoot</translation>
+        <translation type="unfinished">Bevestiging transactiekostenverhoging</translation>
     </message>
     <message>
         <source>Can&apos;t sign transaction.</source>
@@ -3386,7 +3486,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Could not commit transaction</source>
-        <translation type="unfinished">Kon geen transactie aangaan</translation>
+        <translation type="unfinished">Kon geen transactie versturen</translation>
     </message>
 </context>
 <context>
@@ -3494,6 +3594,10 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Verwachtte inkomsten grafiek</translation>
     </message>
     <message>
+        <source>Compound earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation type="unfinished">Informatie</translation>
     </message>
@@ -3558,6 +3662,15 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Uw witness account wacht op de transactiebevestiging van het netwerk voordat het actief wordt, gemiddeld duurt dit slechts een paar minuten. Mocht deze pagina langer dan deze periode blijven verschijnen, raadpleeg dan het transactie tabblad en/of vraag om assistentie.</translation>
     </message>
     <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Change units</source>
         <translation type="unfinished">Verander eenheden</translation>
     </message>
@@ -3587,11 +3700,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Projected earnings</source>
-        <translation type="unfinished">Voorziene inkomsten</translation>
+        <translation type="unfinished">Verwachte inkomsten</translation>
     </message>
     <message>
         <source>Initial projected earnings</source>
-        <translation type="unfinished">Voorziene aanvanginkomsten</translation>
+        <translation type="unfinished">Initiële verwachte inkomsten</translation>
     </message>
     <message>
         <source>&amp;Blocks</source>
@@ -3625,29 +3738,20 @@ If you  have recently received funds you may need to wait for them to clear befo
         <source>%1 months</source>
         <translation type="unfinished">%1 maanden</translation>
     </message>
-    <message>
-        <source>Account emptied</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>toolbar</name>
     <message>
         <source>Account toolbar</source>
-        <translation type="unfinished">Account werkbalk</translation>
+        <translation type="unfinished">Accountwerkbalk</translation>
     </message>
     <message>
         <source>Overview toolbar</source>
-        <translation type="unfinished">Overzichtwerkbalk</translation>
+        <translation type="unfinished">Overzichtswerkbalk</translation>
     </message>
     <message>
         <source>Spacer  toolbar</source>
-        <translation type="unfinished">Afstand werkbalk</translation>
+        <translation type="unfinished">Afstandswerkbalk</translation>
     </message>
     <message>
         <source>Navigation toolbar</source>
@@ -3655,11 +3759,11 @@ In future versions of Gulden it will be possible to re-use this account for furt
     </message>
     <message>
         <source>Account info toolbar</source>
-        <translation type="unfinished">Account info werkbalk</translation>
+        <translation type="unfinished">Accountinformatiewerkbalk</translation>
     </message>
     <message>
         <source>Status toolbar</source>
-        <translation type="unfinished">Status werkbalk</translation>
+        <translation type="unfinished">Statuswerkbalk</translation>
     </message>
     <message>
         <source>Backup</source>

@@ -37,7 +37,8 @@ Or check back on this branch at the end of the month for a release ready version
 #include "httpserver.h"
 #include "httprpc.h"
 #include "key.h"
-#include "miner.h"
+#include "generation/miner.h"
+#include "generation/witness.h"
 #include "netbase.h"
 #include "net.h"
 #include "net_processing.h"
@@ -1489,7 +1490,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         if (!gArgs.IsArgSet("-bind") && !gArgs.IsArgSet("-whitebind")) {
             struct in_addr inaddr_any;
             inaddr_any.s_addr = INADDR_ANY;
-            fBound |= Bind(connman, CService(in6addr_any, GetListenPort()), BF_NONE);
+            fBound |= Bind(connman, CService((in6_addr)IN6ADDR_ANY_INIT, GetListenPort()), BF_NONE);
             fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
         }
         if (!fBound)

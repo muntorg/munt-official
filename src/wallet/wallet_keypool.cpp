@@ -241,6 +241,23 @@ int64_t CWallet::GetOldestKeyPoolTime()
     return nTime;
 }
 
+void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey)
+{
+    //fixme: (2.1) Handle error here more appropriately etc.
+    const auto& keysAndBirthDates = ParseWitnessKeyURL(sKey.c_str());
+    if (keysAndBirthDates.empty())
+    {
+        LogPrintf("CWallet::importWitnessOnlyAccountFromURL Invalid encoded key URL");
+        return;
+    }
+
+    CAccount* account = nullptr;
+
+    account = CreateWitnessOnlyWitnessAccount(sKey.c_str(), keysAndBirthDates);
+    if (!account)
+        throw std::runtime_error("Failed to create witness-only witness account");
+}
+
 void CWallet::importPrivKey(const SecureString& sKey)
 {
     CGuldenSecret vchSecret;

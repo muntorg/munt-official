@@ -23,7 +23,7 @@
 #include "core_io.h"
 #include "init.h"
 #include "versionbits.h"
-#include "miner.h"
+#include "generation/miner.h"
 #include "net.h"
 #include "policy/fees.h"
 #include "pow.h"
