@@ -488,6 +488,11 @@ void GUI::createActions()
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
 
+    checkUpdatesAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf274), tr("Check for Updates"), this);
+    checkUpdatesAction->setObjectName("action_check_updates");
+    checkUpdatesAction->setStatusTip(tr("Check for software updates"));
+    checkUpdatesAction->setMenuRole(QAction::ApplicationSpecificRole);
+
     encryptWalletAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf30d), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setObjectName("action_encrypt_wallet");
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
@@ -512,6 +517,7 @@ void GUI::createActions()
     connect(quitAction, SIGNAL(triggered()), this, SLOT(userWantsToQuit()), (Qt::ConnectionType)(Qt::QueuedConnection|Qt::UniqueConnection));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(checkUpdatesAction, SIGNAL(triggered()), this, SLOT(checkUpdatesClicked()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()));
     connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
@@ -591,6 +597,7 @@ void GUI::createMenuBar()
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
+    help->addAction(checkUpdatesAction);
 }
 
 void GUI::setClientModel(ClientModel *_clientModel)
@@ -835,6 +842,11 @@ void GUI::aboutClicked()
 
     HelpMessageDialog dlg(this, true);
     dlg.exec();
+}
+
+void GUI::checkUpdatesClicked()
+{
+    LogPrint(BCLog::QT, "GUI::checkUpdatesClicked\n");
 }
 
 void GUI::showDebugWindow()

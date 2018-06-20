@@ -159,6 +159,7 @@ private:
     QAction* backupWalletAction = nullptr;
     QAction* changePassphraseAction = nullptr;
     QAction* aboutQtAction = nullptr;
+    QAction* checkUpdatesAction = nullptr;
     QAction* openRPCConsoleAction = nullptr;
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
@@ -322,6 +323,8 @@ private Q_SLOTS:
     void optionsClicked();
     /** Show about dialog */
     void aboutClicked();
+    /** Check for software update */
+    void checkUpdatesClicked();
     /** Show debug window */
     void showDebugWindow();
     /** Show debug window and set focus to the console */
