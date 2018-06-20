@@ -312,22 +312,102 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::IncreaseType:
                 {
-                    //fixme: (2.0) -  implement
+                    TransactionRecord subSend(hash, nTime);
+                    TransactionRecord subReceive(hash, nTime);
+                    CAmount totalAmountLocked = 0;
+                    subReceive.idx = -1;
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
+                                totalAmountLocked = txOut.nValue;
+                                CTxDestination getAddress;
+                                if (ExtractDestination(txOut, getAddress))
+                                {
+                                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                                }
+                                subReceive.type = TransactionRecord::WitnessIncreaseRecv;
+                                subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
+                                subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
+                                subReceive.credit = totalAmountLocked;
+                                subReceive.debit = 0;
+
+                                isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
+                                if (mine)
+                                {
+                                    const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                    if (parent != NULL)
+                                    {
+                                        subReceive.debit = parent->tx->vout[inputs[0].prevout.n].nValue;
+                                    }
+                                }
+
+                                subReceive.idx = parts.size(); // sequence number
+                                parts.append(subReceive);
+
+                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
+                                const auto& txOutRef = txOut;
+                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
+
+                                break;
+                            }
+                        }
+                        if (subReceive.idx != -1)
+                            break;
+                    }
+                    if (subReceive.idx != -1)
+                    {
+                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
+                        {
+                            (unused) accountUUID;
+                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[1]);
+                            if (mine)
+                            {
+                                CTxDestination getAddress;
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[1].prevout.hash);
+                                if (parent != NULL)
+                                {
+                                    if (ExtractDestination(parent->tx->vout[inputs[1].prevout.n], getAddress))
+                                    {
+                                        subSend.address = CGuldenAddress(getAddress).ToString();
+                                    }
+                                }
+                                subSend.type = TransactionRecord::WitnessIncreaseSend;
+                                subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                                subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
+                                subSend.actionAccountParentUUID = subSend.fromAccountParentUUID = account->getParentUUID();
+                                subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
+                                parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
+                                CAmount nTxFee = nDebit - wtx.tx->GetValueOut();
+                                subSend.credit = 0;
+                                subSend.debit = parts[subReceive.idx].credit - parts[subReceive.idx].debit + nTxFee;
+                                subSend.idx = parts.size(); // sequence number
+                                parts.append(subSend);
+                                break;
+                            }
+                        }
+                    }
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::SplitType:
                 {
-                    //fixme: (2.0) -  implement
+                    int nImplement = 1;
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::MergeType:
                 {
-                    //fixme: (2.0) -  implement
+                    int nImplement = 1;
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType:
                 {
-                    //fixme: (2.0) -  implement
+                    int nImplement = 1;
                 }
                 break;
             }

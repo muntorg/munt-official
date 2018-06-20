@@ -419,6 +419,10 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Mining reward");
     case TransactionRecord::GeneratedWitness:
         return tr("Witness reward");
+    case TransactionRecord::WitnessIncreaseSend:
+        return tr("Fund witness account extension");
+    case TransactionRecord::WitnessIncreaseRecv:
+        return tr("Extend witness account");
     case TransactionRecord::WitnessRenew:
         return tr("Renew witness account");
     case TransactionRecord::WitnessFundSend:
@@ -455,6 +459,10 @@ QString TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx)
         case TransactionRecord::WitnessEmptySend:
         case TransactionRecord::WitnessEmptyRecv:
             return GUIUtil::fontAwesomeRegular("\uf09c");
+        case TransactionRecord::WitnessIncreaseSend:
+            return GUIUtil::fontAwesomeRegular("\uf023");
+        case TransactionRecord::WitnessIncreaseRecv:
+            return GUIUtil::fontAwesomeRegular("\uf424");
         case TransactionRecord::WitnessRenew:
             return GUIUtil::fontAwesomeRegular("\uf2f9");
         case TransactionRecord::SendToSelf:
@@ -486,13 +494,15 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
             {
                 fromUUID = wtx->fromAccountParentUUID;
             }
-            //return tr("Self payment.");
+
             if (wallet->mapAccountLabels.count(fromUUID) != 0)
             {
                 switch(wtx->type)
                 {
                     case TransactionRecord::WitnessFundRecv:
                         return tr("Lock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    case TransactionRecord::WitnessIncreaseRecv:
+                        return tr("Extend locked funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::WitnessEmptyRecv:
                         return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::SendToSelf:
@@ -519,6 +529,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                 {
                     case TransactionRecord::WitnessFundSend:
                         return tr("Fund witness account: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
+                    case TransactionRecord::WitnessIncreaseSend:
+                        return tr("Fund witness account extension: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                     case TransactionRecord::WitnessEmptySend:
                         return tr("Unlock funds to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                     case TransactionRecord::SendToSelf:
@@ -548,6 +560,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         return tr("Paid to: %1").arg(QString::fromStdString(wtx->address) + watchAddress);
     case TransactionRecord::SendToSelf:
         return tr("Internal account movement");
+    case TransactionRecord::WitnessIncreaseRecv:
+        return tr("Extend locked funds");
+    case TransactionRecord::WitnessIncreaseSend:
+        return tr("Fund witness account extension");
     case TransactionRecord::WitnessEmptySend:
     case TransactionRecord::WitnessEmptyRecv:
     case TransactionRecord::WitnessFundRecv:
@@ -569,6 +585,8 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
         case TransactionRecord::SendToAddress:
         case TransactionRecord::Generated:
         case TransactionRecord::GeneratedWitness:
+        case TransactionRecord::WitnessIncreaseSend:
+        case TransactionRecord::WitnessIncreaseRecv:
         case TransactionRecord::WitnessRenew:
         case TransactionRecord::WitnessFundSend:
         case TransactionRecord::WitnessFundRecv:
