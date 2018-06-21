@@ -1348,7 +1348,6 @@ void CWallet::ReacceptWalletTransactions()
 
         int nDepth = wtx.GetDepthInMainChain();
 
-        //fixme: (2.0) (PoW2)
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
             mapSorted.insert(std::pair(wtx.nOrderPos, &wtx));
         }
@@ -2353,12 +2352,9 @@ public:
     }
 
     void operator()(const CScriptID &scriptId) {
-        //fixme: (2.0)
-        /*
         CScript script;
         if (keystore.GetCScript(scriptId, script))
             Process(script);
-        */
     }
 
     void operator()(const CPoW2WitnessDestination &dest) {
