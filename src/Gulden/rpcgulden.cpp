@@ -722,17 +722,23 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
 
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
+    bool forcePurge = false;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
         boost::uuids::uuid accountUUID = account->getUUID();
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
+        if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+        {
+            forcePurge = true;
+            balance = pwallet->GetBalance(account, false, true);
+        }
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
             throw std::runtime_error("Account not empty, please first empty your account before trying to delete it.");
         }
     }
 
-    pwallet->deleteAccount(account);
+    pwallet->deleteAccount(account, forcePurge);
     return true;
 }
 
@@ -2422,12 +2428,15 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     // Check for immaturity
     for ( const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] : unspentWitnessOutputs )
     {
+        (unused) currentWitnessTxOut;
+        (unused) currentWitnessOutpoint;
         //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
         if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused) currentWitnessHeight;
     // Get the current witness details
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
@@ -2446,6 +2455,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
         for (int i = 1; i < unspentWitnessOutputs.size(); ++i)
         {
             const auto& [compareWitnessTxOut, compareWitnessHeight, compareWitnessOutpoint] = unspentWitnessOutputs[i];
+            (unused) compareWitnessHeight;
             CTxOutPoW2Witness compareWitnessDetails;
             GetPow2WitnessOutput(compareWitnessTxOut, compareWitnessDetails);
             if(    compareWitnessDetails.lockFromBlock != currentWitnessDetails.lockFromBlock
@@ -2453,7 +2463,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
                 || compareWitnessDetails.spendingKeyID != currentWitnessDetails.spendingKeyID
                 || compareWitnessDetails.witnessKeyID != currentWitnessDetails.witnessKeyID)
             {
-                throw JSONRPCError(RPC_MISC_ERROR, "Not all inputs share identical witness characterstics, cannot merge.");
+                throw JSONRPCError(RPC_MISC_ERROR, "Not all inputs share identical witness characteristics, cannot merge.");
             }
             totalFailCount += compareWitnessDetails.failCount;
             totalAmount += compareWitnessTxOut.nValue;
