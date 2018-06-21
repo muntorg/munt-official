@@ -411,6 +411,9 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
 
 void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
 {
+    //fixme: (2.1) - If we are trying to delete the last remaining account we should return false
+    //As this may leave the wallet in an invalid state.
+    //Alternatively we must make sure that the wallet can handle having 0 accounts in it.
     if (shouldPurge)
     {
         if (account->IsHD())
@@ -436,6 +439,17 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
             throw std::runtime_error("erasing account failed");
         }
 
+        // Wipe our keypool
+        {
+            for(int64_t nIndex : account->setKeyPoolInternal)
+                db.ErasePool(pactiveWallet, nIndex);
+            for(int64_t nIndex : account->setKeyPoolExternal)
+                db.ErasePool(pactiveWallet, nIndex);
+
+            account->setKeyPoolInternal.clear();
+            account->setKeyPoolExternal.clear();
+        }
+
         // Wipe all the keys as well
         {
             std::set<CKeyID> setAddress;
@@ -454,8 +468,18 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
                 }
             }
         }
+
         mapAccountLabels.erase(mapAccountLabels.find(account->getUUID()));
         mapAccounts.erase(mapAccounts.find(account->getUUID()));
+
+        // Make sure we are no longer the active account
+        if(getActiveAccount()->getUUID() == account->getUUID())
+        {
+            if (mapAccounts.size() > 0)
+            {
+                setActiveAccount(mapAccounts.begin()->second);
+            }
+        }
 
         //fixme: (2.1) - this leaks until program exit
         //We can't easily delete the account as other places may still be referencing it...
