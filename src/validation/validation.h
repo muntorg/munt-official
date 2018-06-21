@@ -400,7 +400,6 @@ public:
     ScriptError GetScriptError() const { return error; }
 };
 
-
 /** Functions for disk access for blocks */
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const CChainParams& params);
 
