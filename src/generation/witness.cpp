@@ -9,6 +9,7 @@
 
 #include "net.h"
 
+#include "alert.h"
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"
@@ -75,11 +76,21 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
 
     CKey key;
     if (!pactiveWallet->GetKey(witnessKeyID, key))
-        assert(0);
+    {
+        std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+        CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf(strErrorMessage);
+        return false;
+    }
 
     // Do not allow uncompressed keys.
     if (!key.IsCompressed())
-        assert(0);
+    {
+        std::string strErrorMessage = strprintf("Invalid witness key - uncompressed keys not allowed: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+        CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf(strErrorMessage);
+        return false;
+    }
 
     //fixme: (2.0) - Anything else to serialise here? Add the block height maybe? probably overkill.
     uint256 hash = pBlock->GetHashPoW2();
@@ -92,19 +103,29 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
-            assert(0);
+        {
+            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf(strErrorMessage);
+            return false;
+        }
     }
     else
     {
         if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
-            assert(0);
+        {
+            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf(strErrorMessage);
+            return false;
+        }
     }
 
     return true;
 }
 
 
-static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, CAmount compoundTargetAmount, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, CAmount compoundTargetAmount, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
 {
     // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
     if (!bSegSigIsEnabled)
@@ -205,7 +226,11 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
             coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
             CPubKey addressPubKey;
             if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
-                assert(0); //fixme: (2.1) error handling - we are unlikely to run into an error here but if we do then handle it better.
+            {
+                CAlert::Notify(strprintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0), true, true);
+                LogPrintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness");
+                return false;
+            }
             coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
         }
         else
@@ -215,9 +240,11 @@ static void CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
         }
         coinbaseTx.vout[1].nValue = noncompoundWitnessBlockSubsidy;
     }
+
+    return true;
 }
 
-static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
 {
     bool bSegSigIsEnabled = IsSegSigEnabled(pIndexPrev);
 
@@ -248,15 +275,19 @@ static CMutableTransaction CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex
         LOCK(pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness))
         {
-            //fixme: (2.0) error handling
-            assert(0);
+            CAlert::Notify(strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0), true, true);
+            return std::pair(false, coinbaseTx);
         }
     }
 
     // Output for subsidy and refresh witness address.
-    CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->getCompounding(), bSegSigIsEnabled, nSelectedWitnessBlockHeight);
+    if (!CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->getCompounding(), bSegSigIsEnabled, nSelectedWitnessBlockHeight))
+    {
+        // Error message already handled inside function
+        return std::pair(false, coinbaseTx);
+    }
 
-    return coinbaseTx;
+    return std::pair(true, coinbaseTx);
 }
 
 struct CBlockIndexCacheComparator
@@ -461,32 +492,35 @@ void static GuldenWitness()
 
 
                                 /** Populate witness coinbase placeholder with real information now that we have it **/
-                                CMutableTransaction coinbaseTx = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessBlockSubsidy, witnessFeesSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
-                                pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
-
-
-                                /** Set witness specific block header information **/
-                                //testme: (GULDEN) (POW2) (2.0)
+                                const auto& [result, coinbaseTx] = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessBlockSubsidy, witnessFeesSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
+                                if (result)
                                 {
-                                    // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
-                                    pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);
-
-                                    // Second witness timestamp gets added to the block as an additional time source to the miner timestamp.
-                                    // Witness timestamp must exceed median of previous mined timestamps.
-                                    pWitnessBlock->nTimePoW2Witness = std::max(candidateIter->GetMedianTimePastPoW()+1, GetAdjustedTime());
-
-                                    // Set witness merkle hash.
-                                    pWitnessBlock->hashMerkleRootPoW2Witness = BlockMerkleRoot(pWitnessBlock->vtx.begin()+nWitnessCoinbaseIndex, pWitnessBlock->vtx.end());
-                                }
+                                    pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
 
 
-                                /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
-                                if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
-                                {
-                                    LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
-                                    ProcessBlockFound(pWitnessBlock, chainparams);
-                                    coinbaseScript->keepScriptOnDestroy();
-                                    continue;
+                                    /** Set witness specific block header information **/
+                                    //testme: (GULDEN) (POW2) (2.0)
+                                    {
+                                        // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
+                                        pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);
+
+                                        // Second witness timestamp gets added to the block as an additional time source to the miner timestamp.
+                                        // Witness timestamp must exceed median of previous mined timestamps.
+                                        pWitnessBlock->nTimePoW2Witness = std::max(candidateIter->GetMedianTimePastPoW()+1, GetAdjustedTime());
+
+                                        // Set witness merkle hash.
+                                        pWitnessBlock->hashMerkleRootPoW2Witness = BlockMerkleRoot(pWitnessBlock->vtx.begin()+nWitnessCoinbaseIndex, pWitnessBlock->vtx.end());
+                                    }
+
+
+                                    /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
+                                    if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
+                                    {
+                                        LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
+                                        ProcessBlockFound(pWitnessBlock, chainparams);
+                                        coinbaseScript->keepScriptOnDestroy();
+                                        continue;
+                                    }
                                 }
                             }
                         }
