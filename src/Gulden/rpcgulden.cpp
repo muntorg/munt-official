@@ -706,7 +706,7 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "deleteaccount \"account\" (force)\n"
+            "deleteaccount \"account\" \"force\"\n"
             "\nDelete an account.\n"
             "\nArguments:\n"
             "1. \"account\"        (string) The UUID or unique label of the account.\n"
@@ -723,13 +723,14 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
     bool forcePurge = false;
+    if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+        forcePurge = true;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
         boost::uuids::uuid accountUUID = account->getUUID();
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
         if (account->IsPoW2Witness() && account->IsFixedKeyPool())
         {
-            forcePurge = true;
             balance = pwallet->GetBalance(account, false, true);
         }
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
