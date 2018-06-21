@@ -12,6 +12,7 @@
 #include <boost/algorithm/string.hpp> // for split()
 #include <Gulden/mnemonic.h>
 #include "util.h"
+#include <validation/validation.h>
 
 bool fShowChildAccountsSeperately = false;
 
@@ -408,31 +409,85 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
         NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
 }
 
-void CGuldenWallet::deleteAccount(CAccount* account)
+void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
 {
-    std::string newLabel = account->getLabel();
-    if (newLabel.find(_("[Restored]")) != std::string::npos)
+    if (shouldPurge)
     {
-        newLabel = newLabel.replace(newLabel.find(_("[Restored]")), _("[Restored]").length(), _("[Deleted]"));
+        if (account->IsHD())
+            assert(0);
+
+        LOCK2(cs_main, cs_wallet);
+
+        CWalletDB db(*dbw);
+        if (!db.EraseAccount(getUUIDAsString(account->getUUID()), account))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountLabel(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountCompoundingSettings(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountNonCompoundWitnessEarningsScript(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+
+        // Wipe all the keys as well
+        {
+            std::set<CKeyID> setAddress;
+            account->GetKeys(setAddress);
+
+            for (const auto& keyID : setAddress)
+            {
+                CPubKey pubKey;
+                if (!GetPubKey(keyID, pubKey))
+                {
+                    LogPrintf("deleteAccount: Failed to get pubkey\n");
+                }
+                else
+                {
+                    db.EraseKey(pubKey);
+                }
+            }
+        }
+        mapAccountLabels.erase(mapAccountLabels.find(account->getUUID()));
+        mapAccounts.erase(mapAccounts.find(account->getUUID()));
+
+        //fixme: (2.1) - this leaks until program exit
+        //We can't easily delete the account as other places may still be referencing it...
+        // Let UI handle deletion [hide account etc.] (we can't actually delete the account pointer because of this so we leak)
+        NotifyAccountDeleted(static_cast<CWallet*>(this), account);
     }
     else
     {
-        newLabel = newLabel + " " + _("[Deleted]");
-    }
-
-    {
-        LOCK(cs_wallet);
-
-        CWalletDB db(*dbw);
-        account->setLabel(newLabel, &db);
-        account->m_State = AccountState::Deleted;
-        mapAccountLabels[account->getUUID()] = newLabel;
-        if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
+        std::string newLabel = account->getLabel();
+        if (newLabel.find(_("[Restored]")) != std::string::npos)
         {
-            throw std::runtime_error("Writing account failed");
+            newLabel = newLabel.replace(newLabel.find(_("[Restored]")), _("[Restored]").length(), _("[Deleted]"));
         }
+        else
+        {
+            newLabel = newLabel + " " + _("[Deleted]");
+        }
+
+        {
+            LOCK(cs_wallet);
+
+            CWalletDB db(*dbw);
+            account->setLabel(newLabel, &db);
+            account->m_State = AccountState::Deleted;
+            mapAccountLabels[account->getUUID()] = newLabel;
+            if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
+            {
+                throw std::runtime_error("Writing account failed");
+            }
+        }
+        NotifyAccountDeleted(static_cast<CWallet*>(this), account);
     }
-    NotifyAccountDeleted(static_cast<CWallet*>(this), account);
 }
 
 void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bool bMakeActive)
