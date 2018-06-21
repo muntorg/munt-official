@@ -387,7 +387,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         //fixme: (2.1) Check if 'spend unconfirmed' is checked or not.
         if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) >= currentTransaction.getTotalTransactionAmount())
         {
-            prepareStatus = model->prepareTransaction(account, currentTransaction, ctrl);
+            prepareStatus = model->prepareTransaction(account, currentTransaction, &ctrl);
             if (prepareStatus.status == WalletModel::OK)
             {
                 allFailed = false;
