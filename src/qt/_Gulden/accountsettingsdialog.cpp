@@ -204,6 +204,10 @@ void AccountSettingsDialog::deleteAccount()
     {
         boost::uuids::uuid accountUUID = activeAccount->getUUID();
         CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        if (activeAccount->IsPoW2Witness() && activeAccount->IsFixedKeyPool())
+        {
+            balance = pactiveWallet->GetBalance(activeAccount, false, true); 
+        }
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {
             QString message = tr("Account not empty, please first empty your account before trying to delete it.");
@@ -212,12 +216,22 @@ void AccountSettingsDialog::deleteAccount()
         }
         else
         {
-            QString message = tr("Are you sure you want to delete %1 from your account list?\nThe account will continue to be monitored and will be restored should it receive new funds in future.").arg( QString::fromStdString(activeAccount->getLabel()) );
+            bool shouldPurge = false;
+            QString message;
+            if (activeAccount->IsPoW2Witness() && activeAccount->IsFixedKeyPool())
+            {
+                shouldPurge = true;
+                message = tr("Are you sure you want to delete %1 from your account list?\n").arg( QString::fromStdString(activeAccount->getLabel()) );
+            }
+            else
+            {
+                message = tr("Are you sure you want to delete %1 from your account list?\nThe account will continue to be monitored and will be restored should it receive new funds in future.").arg( QString::fromStdString(activeAccount->getLabel()) );
+            }
             QDialog* d = GUI::createDialog(this, message, tr("Delete account"), tr("Cancel"), 400, 180);
             int result = d->exec();
             if(result == QDialog::Accepted)
             {
-                pactiveWallet->deleteAccount(activeAccount);
+                pactiveWallet->deleteAccount(activeAccount, shouldPurge);
             }
         }
     }
