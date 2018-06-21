@@ -266,6 +266,10 @@ public:
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     void setActiveAccount(CAccount* newActiveAccount);
+
+    //! Find the first account that is not deleted/shadow etc. and set it as active
+    void setAnyActiveAccount();
+
     CAccount* getActiveAccount();
     void setActiveSeed(CHDSeed* newActiveSeed);
     CHDSeed* GenerateHDSeed(CHDSeed::SeedType);

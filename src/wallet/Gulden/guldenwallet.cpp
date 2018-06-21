@@ -477,7 +477,7 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
         {
             if (mapAccounts.size() > 0)
             {
-                setActiveAccount(mapAccounts.begin()->second);
+                setAnyActiveAccount();
             }
         }
 
@@ -547,6 +547,19 @@ void CGuldenWallet::setActiveAccount(CAccount* newActiveAccount)
         walletdb.WritePrimaryAccount(activeAccount);
 
         NotifyActiveAccountChanged(static_cast<CWallet*>(this), newActiveAccount);
+    }
+}
+
+void CGuldenWallet::setAnyActiveAccount()
+{
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused)accountUUID;
+        if (account->m_State == AccountState::Normal)
+        {
+            setActiveAccount(account);
+            return;
+        }
     }
 }
 
