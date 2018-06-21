@@ -465,19 +465,32 @@ bool CWallet::Verify()
 
     uiInterface.InitMessage(_("Verifying wallet(s)..."));
 
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        if (boost::filesystem::path(walletFile).filename() != walletFile) {
+    for (const std::string& walletFile : gArgs.GetArgs("-wallet"))
+    {
+        if (boost::filesystem::path(walletFile).filename() != walletFile)
+        {
             return InitError(_("-wallet parameter must only specify a filename (not a path)"));
-        } else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
+        }
+        else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile)
+        {
             return InitError(_("Invalid characters in -wallet filename"));
         }
 
+        // Check file permissions.
+        {
+            std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
+            if (!testPerms.is_open())
+                return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+        }
+
         std::string strError;
-        if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError)) {
+        if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError))
+        {
             return InitError(strError);
         }
 
-        if (GetBoolArg("-salvagewallet", false)) {
+        if (GetBoolArg("-salvagewallet", false))
+        {
             // Recover readable keypairs:
             CWallet dummyWallet;
             std::string backup_filename;
@@ -488,22 +501,16 @@ bool CWallet::Verify()
 
         std::string strWarning;
         bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
-        if (!strWarning.empty()) {
+        if (!strWarning.empty())
+        {
             InitWarning(strWarning);
         }
-        if (!dbV) {
+        if (!dbV)
+        {
             InitError(strError);
             return false;
         }
     }
-
-    //fixme: (2.0) (MERGE)
-    // Check file permissions.
-    /*{
-        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
-        if (!testPerms.is_open())
-            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
-    }*/
 
     return true;
 }
