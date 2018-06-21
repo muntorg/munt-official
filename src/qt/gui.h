@@ -178,6 +178,9 @@ private:
     AccountSummaryWidget* accountSummaryWidget = nullptr;
 
     QToolBar* accountBar = nullptr;
+    QToolBar* warningBar = nullptr;
+    QLabel* warningBarLabel = nullptr;
+    ClickableLabel* warningBarClose = nullptr;
     QToolBar* guldenBar = nullptr;
     QToolBar* spacerBarL = nullptr;
     QToolBar* spacerBarR = nullptr;
@@ -278,8 +281,11 @@ public Q_SLOTS:
 
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
-    /* UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc. */
+    //! UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc.
     void userWantsToQuit();
+
+    //! Call this to dismiss the UI warning that is currently showing
+    void dismissUIWarning();
 
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.
@@ -337,6 +343,9 @@ private Q_SLOTS:
 
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString &title, int nProgress);
+
+    //! Display an internal wallet warning to user.
+    void showUIAlert(const QString& alertMessage);
 
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);

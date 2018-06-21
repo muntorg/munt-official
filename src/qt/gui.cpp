@@ -293,7 +293,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     statusBar()->addPermanentWidget(frameBlocks);
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
-    this->installEventFilter(this);
+    installEventFilter(this);
 
     // Initially wallet actions should be disabled
     setWalletActionsEnabled(false);
@@ -617,6 +617,8 @@ void GUI::setClientModel(ClientModel *_clientModel)
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         // Show progress dialog
         connect(_clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        // Show warning alerts
+        connect(_clientModel, SIGNAL(alert(QString)), this, SLOT(showUIAlert(QString)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
         if (rpcConsole)
             rpcConsole->setClientModel(_clientModel);
@@ -1319,6 +1321,10 @@ void GUI::userWantsToQuit()
     }
 }
 
+void GUI::dismissUIWarning()
+{
+    warningBar->setVisible(false);
+}
 
 void GUI::showEvent([[maybe_unused]] QShowEvent* event)
 {
@@ -1517,6 +1523,15 @@ void GUI::showProgress(const QString &title, int nProgress)
         }
     }
 }
+
+void GUI::showUIAlert(const QString& alertMessage)
+{
+    LogPrint(BCLog::QT, "GUI::showUIAlert\n");
+
+    warningBarLabel->setText(GUIUtil::fontAwesomeSolid("\uf071") + alertMessage);
+    warningBar->setVisible(true);
+}
+
 
 void GUI::setTrayIconVisible(bool fHideTrayIcon)
 {
