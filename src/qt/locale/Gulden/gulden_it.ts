@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Copy sync code</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Copia il codice di sincronizzazione</translation>
     </message>
     <message>
         <source>Done</source>
@@ -34,12 +34,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Scansiona il QR con un dispositivo per collegare il dispositivo al tuo portafoglio</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Clicca qui per rendere visibile il codice QR.
+ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo codice QR in quanto altrimenti potrebbe essere utilizzato per guadagnare per tuo conto e rubare i tuoi guadagni.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -51,12 +52,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
 </context>
 <context>
@@ -212,11 +218,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -542,7 +548,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
-        <translation type="unfinished">Modifica l&apos;indirizzo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Label</source>
@@ -562,11 +568,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>New receiving address</source>
@@ -655,7 +661,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -1037,7 +1043,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tutti</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1068,16 +1074,28 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">L&apos;importo supera il massimo per il pagamento IBAN</translation>
     </message>
     <message>
         <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importo inferiore al minimo per il pagamento IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1085,7 +1103,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">L&apos;importo che si desidera inviare è uguale al saldo, verrà regolato per la commissione di transazione. Si prega di assicurarsi che questo sia ciò che si desidera prima di procedere per evitare il pagamento a breve del destinatario.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1101,7 +1119,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Save</source>
@@ -1124,10 +1142,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1 month</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1 months</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1141,7 +1155,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Richiederà approssimativamente %1 Gulden incluso il costo del servizio IBAN</translation>
     </message>
 </context>
 <context>
@@ -1203,7 +1217,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Private &amp;key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chiave privata</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
@@ -1211,11 +1225,11 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
 </context>
 <context>
@@ -1234,11 +1248,11 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
 </context>
 <context>
@@ -1349,7 +1363,7 @@ Witness weight: %5</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -1751,7 +1765,7 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Save</source>
@@ -1895,7 +1909,7 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     </message>
     <message>
         <source>Enter a Gulden URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inserisci indirizzo URL Gulden</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2318,7 +2332,7 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Close</source>
@@ -2727,7 +2741,7 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>PoW2 is not yet active, please wait for activation and try again.</source>
@@ -3152,11 +3166,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Split locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dividere i fondi bloccati</translation>
     </message>
     <message>
         <source>Merge locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unisci i fondi bloccati</translation>
     </message>
     <message>
         <source>Rotate witness key</source>
@@ -3211,6 +3225,18 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3231,23 +3257,11 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Extend locked funds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3564,7 +3578,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Proceed with invalid phrase</source>

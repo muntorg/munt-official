@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Copy sync code</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skopiuj kod synchronizacji</translation>
     </message>
     <message>
         <source>Done</source>
@@ -34,12 +34,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zeskanuj QR kod za pomocą witnessing urządzenia , aby połączyć urządzenie z portfelem</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kliknij tutaj, aby kod QR był widoczny.
+OSTRZEŻENIE: upewnij się, że jesteś jedyną osobą, która widzi ten kod QR, ponieważ w przeciwnym razie może zostać wykorzystana do zarabiania w twoim imieniu i kradzieży twoich zarobków  witness .</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -48,6 +49,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Okay</source>
         <translation type="unfinished">Dobrze</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
@@ -743,11 +749,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Import witness</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Importuj witness</translation>
     </message>
     <message>
         <source>Import a witness-only account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importuj tylko konto witness</translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
@@ -1040,7 +1046,7 @@ The account will continue to be monitored and will be restored should it receive
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wszystko</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1071,16 +1077,28 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Zablokuj fundusze dla:</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation type="unfinished">1 miesiąc</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation type="unfinished">Ostrzeżenie: ta waga przekracza 1% aktualnej masy sieci, co jest fantastyczne ponieważ przyczynia się do bezpieczeństwa sieci, ale nie jest zalecane do maksymalizacji zarobków. Aby uzyskać maksymalne zarobki, zwykle lepiej jest podzielić środki na dwa konta w tej sytuacji. Wyjątkiem jest sytuacja, gdy masz powody sądzić że waga sieci prawdopodobnie wzrośnie znacznie w przyszłości, jeśli nie masz pewności co do najlepszego sposobu działania proszę zasięgnij porady zanim przejdziesz dalej.</translation>
     </message>
     <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kwota przekracza maksimum dla płatności IBAN.</translation>
     </message>
     <message>
         <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kwota poniżej minimum dla płatności IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1088,7 +1106,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kwota, którą chcesz wysłać, równa się saldu, zostanie skorygowana o opłatę transakcyjną. Upewnij się, że to jest to, czego chcesz, zanim podejmiesz próbę uniknięcia krótkiej płatności swojego odbiorcy.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1127,10 +1145,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">%1 lat</translation>
     </message>
     <message>
-        <source>1 month</source>
-        <translation type="unfinished">1 miesiąc</translation>
-    </message>
-    <message>
         <source>%1 months</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1148,7 +1162,7 @@ Witness waga: %5</translation>
     </message>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wymaga około %1 Gulden, w tym opłaty za usługę IBAN</translation>
     </message>
 </context>
 <context>
@@ -1206,11 +1220,11 @@ Witness waga: %5</translation>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Import private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">importuj klucz prywatny</translation>
     </message>
     <message>
         <source>Private &amp;key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Prywatny &amp;klucz</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
@@ -1229,15 +1243,15 @@ Witness waga: %5</translation>
     <name>ImportWitnessDialog</name>
     <message>
         <source>Import witness from URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importuj witness  z adresu URL</translation>
     </message>
     <message>
         <source>W&amp;itness only URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">W&amp;itness typu URL</translation>
     </message>
     <message>
         <source>Enter a witness-only URL to import</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wprowadź witness URL przeznaczony tylko do zaimportowania</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -1903,7 +1917,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Enter a Gulden URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wprowadź adres URL Guldena</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -3165,23 +3179,23 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
     <message>
         <source>Fund witness account extension</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Funduszu konta witness rozszerzenie</translation>
     </message>
     <message>
         <source>Extend witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rozszerz konto witness</translation>
     </message>
     <message>
         <source>Split locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Podziel zablokowane fundusze</translation>
     </message>
     <message>
         <source>Merge locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Połącz zablokowane fundusze</translation>
     </message>
     <message>
         <source>Rotate witness key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Obróć witness klucz</translation>
     </message>
     <message>
         <source>Renew witness account</source>
@@ -3213,23 +3227,35 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
     <message>
         <source>Extend locked funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rozszerz zablokowane środki z: %1</translation>
     </message>
     <message>
         <source>Split locked funds: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Podziel zablokowane fundusze: %1</translation>
     </message>
     <message>
         <source>Merge locked funds: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Połącz zablokowane fundusze: %1</translation>
     </message>
     <message>
         <source>Rotate witness key: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Obróć  witness klucz: %1</translation>
     </message>
     <message>
         <source>Unlock funds from: %1</source>
         <translation type="unfinished">Odblokuj środki od: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished">Zapłacono dla: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished">Płatność z: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished">Skomplikowana transakcja, wyświetl szczegóły  transakcji.</translation>
     </message>
     <message>
         <source>Internal transfer from: %1</source>
@@ -3241,7 +3267,7 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
     <message>
         <source>Fund witness account extension: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fundusz, konto witness rozszerzenie: %1</translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
@@ -3252,24 +3278,12 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation type="unfinished">Przelew wewnętrzny do: %1</translation>
     </message>
     <message>
-        <source>Payment from: %1</source>
-        <translation type="unfinished">Płatność z: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation type="unfinished">Zapłacono dla: %1</translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation type="unfinished">Ruch konta wewnętrznego</translation>
     </message>
     <message>
         <source>Extend locked funds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished">Skomplikowana transakcja, wyświetl szczegóły  transakcji.</translation>
+        <translation type="unfinished">Przedłużać zablokowane fundusze</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3616,7 +3630,7 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
     <message>
         <source>Compound earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Złożone zarobki</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3684,12 +3698,13 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
     <message>
         <source>Account emptied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konto zostało opróżnione</translation>
     </message>
     <message>
         <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
 In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Twoje konto witness zakończyło witnessing, a wszystkie środki zostały opróżnione. Twoje zarobki i transakcje pozostaną tutaj do wyświetlenia, ale nie możesz dalej korzystać z konta. Jeśli chcesz być witness ponownie, utwórz nowe konto aby to zrobić.
+W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do dalszego witnessing.</translation>
     </message>
     <message>
         <source>Change units</source>

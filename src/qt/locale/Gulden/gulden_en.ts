@@ -53,6 +53,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation type="unfinished">Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</translation>
@@ -1073,6 +1078,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished">Lock funds for:</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation type="unfinished">1 month</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation type="unfinished">Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
@@ -1127,10 +1144,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>%1 years</source>
         <translation type="unfinished">%1 years</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation type="unfinished">1 month</translation>
     </message>
     <message>
         <source>%1 months</source>
@@ -1208,7 +1221,7 @@ Witness weight: %5</translation>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Import private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Import private key</translation>
     </message>
     <message>
         <source>Private &amp;key</source>
@@ -1231,7 +1244,7 @@ Witness weight: %5</translation>
     <name>ImportWitnessDialog</name>
     <message>
         <source>Import witness from URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Import witness from URL</translation>
     </message>
     <message>
         <source>W&amp;itness only URL</source>
@@ -3221,6 +3234,18 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Unlock funds from: %1</translation>
     </message>
     <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished">Paid to: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished">Payment from: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished">Complex transaction, view transaction details.</translation>
+    </message>
+    <message>
         <source>Internal transfer from: %1</source>
         <translation type="unfinished">Internal transfer from: %1</translation>
     </message>
@@ -3241,24 +3266,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished">Internal transfer to: %1</translation>
     </message>
     <message>
-        <source>Payment from: %1</source>
-        <translation type="unfinished">Payment from: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation type="unfinished">Paid to: %1</translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation type="unfinished">Internal account movement</translation>
     </message>
     <message>
         <source>Extend locked funds</source>
         <translation type="unfinished">Extend locked funds</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished">Complex transaction, view transaction details.</translation>
     </message>
     <message>
         <source>(no label)</source>
