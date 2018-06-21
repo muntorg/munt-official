@@ -13,6 +13,7 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
+#include "alert.h"
 #include "base58.h"
 #include "checkpoints.h"
 #include "chain.h"
@@ -2241,7 +2242,10 @@ void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, C
     }
     CPubKey pubkey;
     if (!rKey->GetReservedKey(pubkey))
+    {
+        CAlert::Notify("Failed to obtain reward key for mining account.", true, true);
         return;
+    }
 
     script = rKey;
     script->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
@@ -2253,7 +2257,10 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
 
     // forAccount should never be null
     if (!forAccount)
-        assert(0);
+    {
+        CAlert::Notify("Failed to obtain reward key for witness account, invalid account.", true, true);
+        return;
+    }
 
     // If an explicit script has been set via RPC then use that, otherwise we just make a script from a key
     if (forAccount->hasNonCompoundRewardScript())
@@ -2263,12 +2270,14 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
     }
     else
     {
-        //fixme: (2.0) Alert user of error (alert notification probably best)
         rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
 
         CPubKey pubkey;
         if (!rKey->GetReservedKey(pubkey))
+        {
+            CAlert::Notify("Failed to obtain reward key for witness account.", true, true);
             return;
+        }
 
         rKey->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
     }

@@ -77,18 +77,18 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     CKey key;
     if (!pactiveWallet->GetKey(witnessKeyID, key))
     {
-        std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+        std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf(strErrorMessage);
+        LogPrintf(strErrorMessage.c_str());
         return false;
     }
 
     // Do not allow uncompressed keys.
     if (!key.IsCompressed())
     {
-        std::string strErrorMessage = strprintf("Invalid witness key - uncompressed keys not allowed: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+        std::string strErrorMessage = strprintf("Invalid witness key - uncompressed keys not allowed: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf(strErrorMessage);
+        LogPrintf(strErrorMessage.c_str());
         return false;
     }
 
@@ -104,9 +104,9 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
         {
-            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf(strErrorMessage);
+            LogPrintf(strErrorMessage.c_str());
             return false;
         }
     }
@@ -114,9 +114,9 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
         {
-            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf(strErrorMessage);
+            LogPrintf(strErrorMessage.c_str());
             return false;
         }
     }
@@ -227,7 +227,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
             CPubKey addressPubKey;
             if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
             {
-                CAlert::Notify(strprintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0), true, true);
+                CAlert::Notify(strprintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0), true, true);
                 LogPrintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness");
                 return false;
             }
@@ -444,6 +444,10 @@ void static GuldenWitness()
                                 else
                                 {
                                     GetMainSignals().ScriptForWitnessing(coinbaseScript, selectedWitnessAccount);
+                                    // Don't attempt to witness if we have nowhere to pay the rewards.
+                                    // ScriptForWitnessing will have alerted the user.
+                                    if (coinbaseScript == nullptr)
+                                        continue;
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
                                 }
 
