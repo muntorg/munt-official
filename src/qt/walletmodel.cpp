@@ -820,7 +820,6 @@ CAccount* WalletModel::getActiveAccount()
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(CAccount* forAccount, std::map<QString, std::vector<COutput> >& mapCoins) const
 {
-    //fixme: (2.0) (ACCOUNTS)
     for (auto& group : wallet->ListCoins(forAccount)) {
         auto& resultGroup = mapCoins[QString::fromStdString(CGuldenAddress(group.first).ToString())];
         for (auto& coin : group.second) {

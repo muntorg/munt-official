@@ -348,8 +348,8 @@ void static GuldenWitness()
             }
             int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev, chainparams, chainActive);
 
-            //fixme: (2.0) Shorter sleep here?
-            //Or ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
+            //fixme: (2.1)
+            //Ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
             MilliSleep(100);
 
             // Check for stop or if block needs to be rebuilt
@@ -408,9 +408,13 @@ void static GuldenWitness()
                         boost::this_thread::interruption_point();
                         CGetWitnessInfo witnessInfo;
 
-                        //fixme: (2.0) Error handling
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
+                        {
+                            std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n Witnessing may be temporarily disabled.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf(strErrorMessage.c_str());
                             continue;
+                        }
 
                         boost::this_thread::interruption_point();
                         CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
