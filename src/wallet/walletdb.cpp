@@ -274,6 +274,13 @@ bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* acco
       return WriteIC(std::pair(std::string("accleg"), strAccount), *account);
 }
 
+bool CWalletDB::EraseAccount(const std::string& strAccount, const CAccount* account)
+{
+    if (account->IsHD())
+      return EraseIC(std::pair(std::string("acchd"), strAccount));
+    else
+      return EraseIC(std::pair(std::string("accleg"), strAccount));
+}
 
 bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry)
 {

@@ -182,6 +182,8 @@ public:
 
     //! write the account to the database, this excludes information like the label and compounding status which are written seperately to allow them to be changeable without rewriting the entire account.
     bool WriteAccount(const std::string& strAccount, const CAccount* account);
+    //! Wipe the acount from the database, note it's necessary to also erase the label and other info manually.
+    bool EraseAccount(const std::string& strAccount, const CAccount* account);
 
     //! write the account label
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
