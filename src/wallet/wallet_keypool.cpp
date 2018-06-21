@@ -253,7 +253,7 @@ void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey)
 
     CAccount* account = nullptr;
 
-    account = CreateWitnessOnlyWitnessAccount(sKey.c_str(), keysAndBirthDates);
+    account = CreateWitnessOnlyWitnessAccount("Imported witness", keysAndBirthDates);
     if (!account)
         throw std::runtime_error("Failed to create witness-only witness account");
 }
