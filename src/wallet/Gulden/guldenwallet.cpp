@@ -441,10 +441,11 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
 
         // Wipe our keypool
         {
+            bool forceErase = true;
             for(int64_t nIndex : account->setKeyPoolInternal)
-                db.ErasePool(pactiveWallet, nIndex);
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
             for(int64_t nIndex : account->setKeyPoolExternal)
-                db.ErasePool(pactiveWallet, nIndex);
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
 
             account->setKeyPoolInternal.clear();
             account->setKeyPoolExternal.clear();
