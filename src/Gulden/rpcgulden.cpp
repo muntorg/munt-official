@@ -151,9 +151,13 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "     ]\n"
             "}]\n"
             "\nExamples:\n"
+            "\nBasic witness info for current chain tip\n"
             + HelpExampleCli("getwitnessinfo tip false", "")
+            + "\nExtended witness info for the block two blocks before tip\n"
             + HelpExampleCli("getwitnessinfo tip~2 true", "")
+            + "\nExtended witness info for block 400000\n"
             + HelpExampleCli("getwitnessinfo 400000 true", "")
+            + "\nExtended witness info for block with hash 8383d8e9999ade8ad0c9f84e7816afec3b9e4855341f678bb0fdc3af46ee6f31\n"
             + HelpExampleCli("getwitnessinfo \"8383d8e9999ade8ad0c9f84e7816afec3b9e4855341f678bb0fdc3af46ee6f31\" true", ""));
 
     #ifdef ENABLE_WALLET
@@ -164,10 +168,6 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     #else
     LOCK(cs_main);
     #endif
-
-    bool showMineOnly = false;
-    if (request.params.size() > 2)
-        showMineOnly = request.params[2].get_bool();
 
     int64_t nTotalWeightAll = 0;
     int64_t nNumWitnessAddressesAll = 0;
@@ -181,6 +181,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     CBlockIndex* pTipIndex = nullptr;
     bool fVerbose = false;
+    bool showMineOnly = false;
     if (request.params.size() > 0)
     {
         std::string sTipHash = request.params[0].get_str();
@@ -229,10 +230,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (request.params.size() == 2)
-    {
-        fVerbose = request.params[1].get_bool() ? true : false;
-    }
+    if (request.params.size() >= 2)
+        fVerbose = request.params[1].get_bool();
+
+    if (request.params.size() > 2)
+        showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
     CCloneChain tempChain = chainActive.Clone(pTipIndex, pTipIndex_);
