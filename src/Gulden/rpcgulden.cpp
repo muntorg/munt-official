@@ -675,8 +675,8 @@ static UniValue changeaccountname(const JSONRPCRequest& request)
             "\nReturn the final label for the account. Note this may be different from the given label in the case of duplicates.\n"
             "\nActive account is used as the default for all commands that take an optional account argument.\n"
             "\nExamples:\n"
-            + HelpExampleCli("changeaccountname", "")
-            + HelpExampleRpc("changeaccountname", ""));
+            + HelpExampleCli("changeaccountname \"My witness account\" \"Charity donations\"", "")
+            + HelpExampleRpc("changeaccountname \"My witness account\" \"Charity donations\"", ""));
 
 
 
@@ -712,8 +712,8 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
             "1. \"account\"        (string) The UUID or unique label of the account.\n"
             "2. \"force\"          (string) Specify string force to force deletion of a non-empty account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("deleteaccount", "")
-            + HelpExampleRpc("deleteaccount", ""));
+            + HelpExampleCli("deleteaccount \"My account\"", "")
+            + HelpExampleRpc("deleteaccount \"My account\"", ""));
 
 
 
@@ -792,8 +792,8 @@ static UniValue createaccount(const JSONRPCRequest& request)
             "1. \"name\"       (string) Specify the label for the account.\n"
             "2. \"type\"       (string, optional) Type of account to create (HD; Mobile; Legacy; Witness)\n"
             "\nExamples:\n"
-            + HelpExampleCli("createaccount", "")
-            + HelpExampleRpc("createaccount", ""));
+            + HelpExampleCli("createaccount \"My new account\"", "")
+            + HelpExampleRpc("createaccount \"My new account\"", ""));
 
 
 
@@ -832,8 +832,8 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"name\"       (string) Specify the label for the account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("createwitnessaccount", "")
-            + HelpExampleRpc("createwitnessaccount", ""));
+            + HelpExampleCli("createwitnessaccount \"My 3y savings\"", "")
+            + HelpExampleRpc("createwitnessaccount \"My 3y savings\"", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
@@ -1013,7 +1013,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
     if (nWeight < nMinimumWitnessWeight)
     {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
 
     // Finally attempt to create and send the witness transaction.
@@ -1113,7 +1113,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
     uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
     if (remainingLockDurationInBlocks == 0)
     {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has already unlocked so cannot be extended.");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has already unlocked so cannot be extended.");
     }
 
     if (requestedLockPeriodInBlocks < remainingLockDurationInBlocks)
@@ -1130,7 +1130,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
     int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
     if (newWeight < nMinimumWitnessWeight)
     {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW2 witness has insufficient weight.");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
 
     // Enforce new weight > old weight
@@ -1226,8 +1226,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "     \"fee_amount\"     (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
-            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
+            + HelpExampleCli("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"50000\" \"2y\"", "")
+            + HelpExampleRpc("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"50000\" \"2y\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
@@ -1286,8 +1286,8 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\"     (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", "")
-            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"10000\" \"2y\"", ""));
+            + HelpExampleCli("extendwitnessaccount \"My account\" \"My witness account\" \"50000\" \"2y\"", "")
+            + HelpExampleRpc("extendwitnessaccount \"My account\" \"My witness account\" \"50000\" \"2y\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
@@ -1372,8 +1372,8 @@ static UniValue getreadonlyaccount(const JSONRPCRequest& request)
             "\nReturn the public key as an encoded string, that can be used with the \"importreadonlyaccount\" command.\n"
             "\nNB! it is important to be careful with and protect access to this public key as if it is compromised it can compromise security of your entire wallet, in cases where one or more child private keys are also compromised.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getreadonlyaccount", "")
-            + HelpExampleRpc("getreadonlyaccount", ""));
+            + HelpExampleCli("getreadonlyaccount \"My account\"", "")
+            + HelpExampleRpc("getreadonlyaccount \"My account\"", ""));
 
 
 
@@ -1413,8 +1413,8 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturn the UUID of the new account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", "")
-            + HelpExampleRpc("importreadonlyaccount \"watcher\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", ""));
+            + HelpExampleCli("importreadonlyaccount \"Watch account\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", "")
+            + HelpExampleRpc("importreadonlyaccount \"Watch account\" \"dd3tNdQ8A4KqYvYVvXzGEU7ChdNye9RdTixnLSFqpQHG-2Rakbbkn7GDUTdD6wtSd5KV5PnCFgQt3FPc8eYkMonRM\"", ""));
 
 
 
@@ -1486,8 +1486,8 @@ static UniValue setactiveaccount(const JSONRPCRequest& request)
             "\nSet the currently active account based on name or uuid.\n"
             "1. \"account\"        (string, required) The unique UUID or label for the account or \"\" for the active account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setactiveaccount", "")
-            + HelpExampleRpc("setactiveaccount", ""));
+            + HelpExampleCli("setactiveaccount \"My account\"", "")
+            + HelpExampleRpc("setactiveaccount \"My account\"", ""));
 
 
 
@@ -1598,8 +1598,8 @@ static UniValue setactiveseed(const JSONRPCRequest& request)
             "setactiveseed \n"
             "\nSet the currently active seed by UUID.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setactiveseed", "")
-            + HelpExampleRpc("setactiveseed", ""));
+            + HelpExampleCli("setactiveseed \"827f0000-0300-0000-0000-000000000000\"", "")
+            + HelpExampleRpc("setactiveseed \"827f0000-0300-0000-0000-000000000000\"", ""));
 
 
 
@@ -1683,8 +1683,8 @@ static UniValue deleteseed(const JSONRPCRequest& request)
             "\nResult:\n"
             "\ntrue on success.\n"
             "\nExamples:\n"
-            + HelpExampleCli("deleteseed", "")
-            + HelpExampleRpc("deleteseed", ""));
+            + HelpExampleCli("deleteseed \"827f0000-0300-0000-0000-000000000000\"", "")
+            + HelpExampleRpc("deleteseed \"827f0000-0300-0000-0000-000000000000\"", ""));
 
 
 
@@ -1729,8 +1729,8 @@ static UniValue importseed(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturn the UUID of the new seed.\n"
             "\nExamples:\n"
-            + HelpExampleCli("importseed", "")
-            + HelpExampleRpc("importseed", ""));
+            + HelpExampleCli("importseed \"green cliff good ghost orange charge cancel blue group interest walk yellow\"", "")
+            + HelpExampleRpc("importseed \"green cliff good ghost orange charge cancel blue group interest walk yellow\"", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
@@ -1771,7 +1771,7 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
-            "listaccounts ( forseed )\n"
+            "listaccounts \"seed\" \"state\"\n"
             "\nArguments:\n"
             "1. \"seed\"        (string, optional) The unique UUID for the seed that we want accounts of.\n"
             "2. \"state\"       (string, optional, default=Normal) The state of account to list, options are: Normal, Deleted, Shadow, ShadowChild. \"*\" or \"\" to list all account states.\n"
@@ -1779,8 +1779,8 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
             "\nReturn the UUID and label for all wallet accounts.\n"
             "\nNote UUID is guaranteed to be unique while label is not.\n"
             "\nExamples:\n"
-            + HelpExampleCli("listaccounts", "")
-            + HelpExampleRpc("listaccounts", ""));
+            + HelpExampleCli("listaccounts \"827f0000-0300-0000-0000-000000000000\"", "")
+            + HelpExampleRpc("listaccounts \"827f0000-0300-0000-0000-000000000000\"", ""));
 
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1867,8 +1867,8 @@ static UniValue getmnemonicfromseed(const JSONRPCRequest& request)
             "\nReturn the mnemonic as a string.\n"
             "\nNote it is important to ensure that nobody gets access to this mnemonic or all funds in accounts made from the seed can be compromised.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getmnemonicfromseed", "")
-            + HelpExampleRpc("getmnemonicfromseed", ""));
+            + HelpExampleCli("getmnemonicfromseed \"827f0000-0300-0000-0000-000000000000\"", "")
+            + HelpExampleRpc("getmnemonicfromseed \"827f0000-0300-0000-0000-000000000000\"", ""));
 
 
     if (!pwallet)
@@ -1903,8 +1903,8 @@ static UniValue getreadonlyseed(const JSONRPCRequest& request)
             "\nReturn the public key as a string.\n"
             "\nNote it is important to be careful with and protect access to this public key as if it is compromised it can weaken security in cases where private keys are also compromised.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getreadonlyseed", "")
-            + HelpExampleRpc("getreadonlyseed", ""));
+            + HelpExampleCli("getreadonlyseed \"827f0000-0300-0000-0000-000000000000\"", "")
+            + HelpExampleRpc("getreadonlyseed \"827f0000-0300-0000-0000-000000000000\"", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
@@ -2116,8 +2116,8 @@ static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\"     (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("rotatewitnessaddress \"My account\" \"My witness account\"", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" \"My witness account\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
@@ -2629,8 +2629,8 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
             "     \"amount\"               (string) The amount that has been set.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnessrewardscript \"my witness account\"", "")
-            + HelpExampleRpc("setwitnessrewardscript \"my witness account\"", ""));
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\" \"Vb5YMjiTA9BUYi9zPToKg3wAAdrpHNp1V2hSBVHpgLMm9sPojhnX\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\" \"Vb5YMjiTA9BUYi9zPToKg3wAAdrpHNp1V2hSBVHpgLMm9sPojhnX\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -2752,8 +2752,8 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
             "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getwitnessaccountkeys", "")
-            + HelpExampleRpc("getwitnessaccountkeys", ""));
+            + HelpExampleCli("getwitnessaccountkeys \"My witness account\"", "")
+            + HelpExampleRpc("getwitnessaccountkeys \"My witness account\"", ""));
 
     CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
 
@@ -2824,8 +2824,8 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             "\nIf the \"witness\" key is compromised your funds will remain completely safe however the attacker will be able to use the key to claim your earnings.\n"
             "\nIf you believe your key is or may have been compromised use \"rotatewitnessaccount\" to rotate to a new witness key.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
-            + HelpExampleRpc("getwitnessaddresskeys 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+            + HelpExampleCli("getwitnessaddresskeys \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\"", "")
+            + HelpExampleRpc("getwitnessaddresskeys \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\"", ""));
 
     CGuldenAddress forAddress(request.params[0].get_str());
     bool isValid = forAddress.IsValidWitness(Params());
