@@ -1,2231 +1,3795 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="it_IT">
-    <extra-po-header-language>it</extra-po-header-language>
-    <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
-    <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-21 14:13+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-21 14:13+0000</extra-po-header-pot_creation_date>
-    <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
-    <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,Language,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name></name>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Change name of account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Copy sync code</source>
-        <comment>AccountSettingsDialog|</comment>
-        <translation>Copia il codice di sincronizzazione</translation>
+        <translation type="unfinished">Copia il codice di sincronizzazione</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <comment>AccountSettingsDialog|</comment>
-        <translation>Scansiona il QR con un dispositivo per collegare il dispositivo al tuo portafoglio</translation>
+        <translation type="unfinished">Scansiona il QR con un dispositivo per collegare il dispositivo al tuo portafoglio</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <comment>AccountSettingsDialog|</comment>
-        <translation>Clicca qui per rendere visibile il codice QR.
+        <translation type="unfinished">Clicca qui per rendere visibile il codice QR.
 ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo codice QR in quanto altrimenti potrebbe essere utilizzato per guadagnare per tuo conto e rubare i tuoi guadagni.</translation>
     </message>
     <message>
-        <source>Debug window</source>
-        <comment>GUI|</comment>
-        <translation>Finestra di debug</translation>
+        <source>Please fund the witness account first.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Debug window</source>
-        <comment>RPCConsole|</comment>
-        <translation>Finestra di debug</translation>
+        <source>Account not empty, please first empty your account before trying to delete it.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All</source>
-        <comment>GuldenSendCoinsEntry|</comment>
-        <translation>Tutti</translation>
+        <source>Okay</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <comment>GuldenSendCoinsEntry|</comment>
-        <translation>L&apos;importo supera il massimo per il pagamento IBAN</translation>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount below minimum for IBAN payment.</source>
-        <comment>GuldenSendCoinsEntry|</comment>
-        <translation>Importo inferiore al minimo per il pagamento IBAN.</translation>
-    </message>
-    <message>
-        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <comment>GuldenSendCoinsEntry|</comment>
-        <translation>L&apos;importo che si desidera inviare è uguale al saldo, verrà regolato per la commissione di transazione. Si prega di assicurarsi che questo sia ciò che si desidera prima di procedere per evitare il pagamento a breve del destinatario.</translation>
-    </message>
-    <message>
-        <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <comment>GuldenSendCoinsEntry|</comment>
-        <translation>Richiederà approssimativamente %1 Gulden incluso il costo del servizio IBAN</translation>
-    </message>
-    <message>
-        <source>Private &amp;key</source>
-        <comment>ImportPrivKeyDialog|</comment>
-        <translation>Chiave privata</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <comment>ImportWitnessDialog|</comment>
-        <translation>Modifica indirizzo</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <comment>EditAddressDialog|</comment>
-        <translation>Modifica l&apos;indirizzo</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <comment>ImportPrivKeyDialog|</comment>
-        <translation>Modifica l&apos;indirizzo</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <comment>ImportWitnessDialog|</comment>
-        <translation>ok</translation>
+        <source>Are you sure you want to delete %1 from your account list?
+The account will continue to be monitored and will be restored should it receive new funds in future.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
-        <comment>ImportWitnessDialog|</comment>
-        <translation>Cancella</translation>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Total funds: </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enter a Gulden URL</source>
-        <comment>QObject|</comment>
-        <translation>Inserisci indirizzo URL Gulden</translation>
+        <source>Locked funds: </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Split locked funds</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>Dividere i fondi bloccati</translation>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Merge locked funds</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>Unisci i fondi bloccati</translation>
+        <source>Spendable funds: </source>
+        <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Fare clic con il tasto destro del mouse per modificare l&apos;indirizzo o l&apos;etichettadefault</translation>
+        <translation type="unfinished">Fare clic con il tasto destro del mouse per modificare l&apos;indirizzo o l&apos;etichettadefault</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <comment>AddressBookPage|</comment>
-        <translation>C&amp;hiudi</translation>
+        <translation type="unfinished">C&amp;hiudi</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Rimuove dalla lista l&apos;indirizzo attualmente selezionato</translation>
+        <translation type="unfinished">Rimuove dalla lista l&apos;indirizzo attualmente selezionato</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Elimina</translation>
+        <translation type="unfinished">&amp;Elimina</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Esporta su file i dati contenuti nella tabella corrente</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <comment>WalletView|</comment>
-        <translation>Esporta su file i dati contenuti nella tabella corrente</translation>
+        <translation type="unfinished">Esporta su file i dati contenuti nella tabella corrente</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Esporta</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <comment>WalletView|</comment>
-        <translation>&amp;Esporta</translation>
+        <translation type="unfinished">&amp;Esporta</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Crea un nuovo indirizzo</translation>
+        <translation type="unfinished">Crea un nuovo indirizzo</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Nuovo</translation>
+        <translation type="unfinished">&amp;Nuovo</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Copia negli appunti l&apos;indirizzo attualmente selezionato</translation>
+        <translation type="unfinished">Copia negli appunti l&apos;indirizzo attualmente selezionato</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Copia</translation>
+        <translation type="unfinished">&amp;Copia</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Scegli l&apos;indirizzo a cui inviare bitcoin</translation>
+        <translation type="unfinished">Scegli l&apos;indirizzo a cui inviare bitcoin</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Scegli l&apos;indirizzo con cui ricevere bitcoin</translation>
+        <translation type="unfinished">Scegli l&apos;indirizzo con cui ricevere bitcoin</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Sc&amp;egli</translation>
+        <translation type="unfinished">Sc&amp;egli</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Indirizzi d&apos;invio</translation>
+        <translation type="unfinished">Indirizzi d&apos;invio</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Indirizzi di ricezione</translation>
+        <translation type="unfinished">Indirizzi di ricezione</translation>
+    </message>
+    <message>
+        <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Copia l&apos;indirizzo</translation>
+        <translation type="unfinished">&amp;Copia l&apos;indirizzo</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Copia &amp;l&apos;etichetta</translation>
+        <translation type="unfinished">Copia &amp;l&apos;etichetta</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <comment>AddressBookPage|</comment>
-        <translation>&amp;Modifica</translation>
+        <translation type="unfinished">&amp;Modifica</translation>
     </message>
     <message>
         <source>Export Address List</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Esporta Lista Indirizzi</translation>
+        <translation type="unfinished">Esporta Lista Indirizzi</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Testo CSV (*.csv)</translation>
-    </message>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <comment>TransactionView|</comment>
-        <translation>Testo CSV (*.csv)</translation>
+        <translation type="unfinished">Testo CSV (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Esportazione Fallita</translation>
-    </message>
-    <message>
-        <source>Exporting Failed</source>
-        <comment>TransactionView|</comment>
-        <translation>Esportazione Fallita</translation>
+        <translation type="unfinished">Esportazione Fallita</translation>
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <comment>AddressBookPage|</comment>
-        <translation>Si è verificato un errore tentando di salvare la lista degli indirizzi su %1. Si prega di riprovare.</translation>
+        <translation type="unfinished">Si è verificato un errore tentando di salvare la lista degli indirizzi su %1. Si prega di riprovare.</translation>
     </message>
+</context>
+<context>
+    <name>AddressTableModel</name>
     <message>
         <source>Label</source>
-        <comment>AddressTableModel|</comment>
-        <translation>Etichetta</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Etichetta</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <comment>RecentRequestsTableModel|</comment>
-        <translation>Etichetta</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <comment>TransactionView|</comment>
-        <translation>Etichetta</translation>
+        <translation type="unfinished">Etichetta</translation>
     </message>
     <message>
         <source>Address</source>
-        <comment>AddressTableModel|</comment>
-        <translation>Indirizzo</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Indirizzo</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <comment>TransactionView|</comment>
-        <translation>Indirizzo</translation>
+        <translation type="unfinished">Indirizzo</translation>
     </message>
     <message>
         <source>(no label)</source>
-        <comment>AddressTableModel|</comment>
-        <translation>(nessuna etichetta)</translation>
+        <translation type="unfinished">(nessuna etichetta)</translation>
     </message>
-    <message>
-        <source>(no label)</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>(nessuna etichetta)</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <comment>RecentRequestsTableModel|</comment>
-        <translation>(nessuna etichetta)</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>(nessuna etichetta)</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>(nessuna etichetta)</translation>
-    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
     <message>
         <source>Passphrase Dialog</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Finestra passphrase</translation>
+        <translation type="unfinished">Finestra passphrase</translation>
     </message>
     <message>
         <source>Enter passphrase</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Inserisci la passphrase</translation>
+        <translation type="unfinished">Inserisci la passphrase</translation>
     </message>
     <message>
         <source>New passphrase</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Nuova passphrase</translation>
+        <translation type="unfinished">Nuova passphrase</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Ripeti la nuova passphrase</translation>
+        <translation type="unfinished">Ripeti la nuova passphrase</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Inserisci la nuova passphrase per il portamonete.&lt;br/&gt;Si consiglia di utilizzare &lt;b&gt;almeno dieci caratteri casuali&lt;/b&gt; oppure &lt;b&gt;otto o più parole&lt;/b&gt;.</translation>
+        <translation type="unfinished">Inserisci la nuova passphrase per il portamonete.&lt;br/&gt;Si consiglia di utilizzare &lt;b&gt;almeno dieci caratteri casuali&lt;/b&gt; oppure &lt;b&gt;otto o più parole&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Encrypt wallet</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Cifra il portamonete</translation>
+        <translation type="unfinished">Cifra il portamonete</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Questa operazione necessita della passphrase per sbloccare il portamonete.</translation>
+        <translation type="unfinished">Questa operazione necessita della passphrase per sbloccare il portamonete.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Sblocca il portamonete</translation>
+        <translation type="unfinished">Sblocca il portamonete</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Quest&apos;operazione necessita della passphrase per decifrare il portamonete,</translation>
+        <translation type="unfinished">Quest&apos;operazione necessita della passphrase per decifrare il portamonete,</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Decifra il portamonete</translation>
+        <translation type="unfinished">Decifra il portamonete</translation>
     </message>
     <message>
         <source>Change passphrase</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Cambia la passphrase</translation>
+        <translation type="unfinished">Cambia la passphrase</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Inserisci la vecchia e la nuova passphrase per il portamonete.</translation>
+        <translation type="unfinished">Inserisci la vecchia e la nuova passphrase per il portamonete.</translation>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Conferma la cifratura del portamonete</translation>
+        <translation type="unfinished">Conferma la cifratura del portamonete</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Si è sicuri di voler cifrare il portamonete?</translation>
+        <translation type="unfinished">Si è sicuri di voler cifrare il portamonete?</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Portamonete cifrato</translation>
+        <translation type="unfinished">Portamonete cifrato</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Il processo di crittografia del tuo portafogli è fallito</translation>
+        <translation type="unfinished">Il processo di crittografia del tuo portafogli è fallito</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>Sbloccaggio del portafoglio fallito</translation>
+        <translation type="unfinished">Sbloccaggio del portafoglio fallito</translation>
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <comment>AskPassphraseDialog|</comment>
-        <translation>La frase inserita per decrittografare il tuo portafoglio è incorretta</translation>
+        <translation type="unfinished">La frase inserita per decrittografare il tuo portafoglio è incorretta</translation>
     </message>
     <message>
+        <source>Wallet decryption failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Backup phrase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
         <source>IP/Netmask</source>
-        <comment>BanTableModel|</comment>
-        <translation>IP/Netmask</translation>
+        <translation type="unfinished">IP/Netmask</translation>
     </message>
     <message>
         <source>Banned Until</source>
-        <comment>BanTableModel|</comment>
-        <translation>Bannato fino a</translation>
+        <translation type="unfinished">Bannato fino a</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation type="unfinished">&amp;Salva Immagine...</translation>
     </message>
     <message>
-        <source>Wallet</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Portamonete</translation>
+        <source>&amp;Copy Image</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Node</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Nodo</translation>
+        <source>Error encoding URI into QR Code.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Overview</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Sintesi</translation>
+        <source>Save QR Code</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Overview</source>
-        <comment>GuldenGUI|</comment>
-        <translation>&amp;Sintesi</translation>
+        <source>PNG Image (*.png)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <source>Network Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Coin Selection</source>
+        <translation type="unfinished">Selezione Input</translation>
     </message>
     <message>
-        <source>Show general overview of wallet</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra lo stato generale del portamonete</translation>
+        <source>Quantity:</source>
+        <translation type="unfinished">Quantità:</translation>
     </message>
     <message>
-        <source>&amp;Send</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Invia</translation>
+        <source>Bytes:</source>
+        <translation type="unfinished">Byte:</translation>
     </message>
     <message>
-        <source>&amp;Receive</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Ricevi</translation>
+        <source>Amount:</source>
+        <translation type="unfinished">Importo:</translation>
     </message>
     <message>
-        <source>&amp;Transactions</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Transazioni</translation>
+        <source>Dust:</source>
+        <translation type="unfinished">Trascurabile:</translation>
     </message>
     <message>
-        <source>Browse transaction history</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra la cronologia delle transazioni</translation>
+        <source>Fee:</source>
+        <translation type="unfinished">Commissione:</translation>
     </message>
     <message>
-        <source>E&amp;xit</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Esci</translation>
+        <source>After Fee:</source>
+        <translation type="unfinished">Dopo Commissione:</translation>
     </message>
     <message>
-        <source>Quit application</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Chiudi applicazione</translation>
+        <source>Change:</source>
+        <translation type="unfinished">Resto:</translation>
     </message>
     <message>
-        <source>&amp;About %1</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Informazioni su %1</translation>
+        <source>(un)select all</source>
+        <translation type="unfinished">(de)seleziona tutto</translation>
     </message>
     <message>
-        <source>Show information about %1</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra informazioni su %1</translation>
+        <source>Tree mode</source>
+        <translation type="unfinished">Modalità Albero</translation>
     </message>
     <message>
-        <source>About &amp;Qt</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Informazioni su &amp;Qt</translation>
+        <source>List mode</source>
+        <translation type="unfinished">Modalità Lista</translation>
     </message>
     <message>
-        <source>Show information about Qt</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra le informazioni su Qt</translation>
+        <source>Amount</source>
+        <translation type="unfinished">Importo</translation>
     </message>
     <message>
-        <source>&amp;Options...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Opzioni...</translation>
+        <source>Received with label</source>
+        <translation type="unfinished">Ricevuto con l&apos;etichetta</translation>
     </message>
     <message>
-        <source>Modify configuration options for %1</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Modifica le opzioni di configurazione per %1</translation>
+        <source>Received with address</source>
+        <translation type="unfinished">Ricevuto con l&apos;indirizzo</translation>
     </message>
     <message>
-        <source>&amp;Show / Hide</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Mostra / Nascondi</translation>
+        <source>Date</source>
+        <translation type="unfinished">Data</translation>
     </message>
     <message>
-        <source>Show or hide the main Window</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra o nascondi la Finestra principale</translation>
+        <source>Confirmations</source>
+        <translation type="unfinished">Conferme</translation>
     </message>
     <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Cifra il portamonete...</translation>
+        <source>Confirmed</source>
+        <translation type="unfinished">Confermato</translation>
     </message>
     <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Cifra le chiavi private che appartengono al tuo portamonete</translation>
+        <source>Copy address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Backup Wallet...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Backup portamonete...</translation>
+        <source>Copy label</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Backup wallet to another location</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Effettua il backup del portamonete</translation>
+        <source>Copy amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Change Passphrase...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Cambia passphrase...</translation>
+        <source>Copy transaction ID</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Cambia la passphrase utilizzata per la cifratura del portamonete</translation>
+        <source>Lock unspent</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sign &amp;message...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Firma &amp;messaggio...</translation>
+        <source>Unlock unspent</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Verify message...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Verifica messaggio...</translation>
+        <source>Copy quantity</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Debug window</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Finestra di &amp;debug</translation>
+        <source>Copy fee</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open debugging and diagnostic console</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Apri la console di debugging e diagnostica</translation>
+        <source>Copy after fee</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Indirizzi d&apos;invio...</translation>
+        <source>Copy bytes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra la lista degli indirizzi di invio utilizzati</translation>
+        <source>Copy dust</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Receiving addresses...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Indirizzi di &amp;ricezione...</translation>
+        <source>Copy change</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Mostra la lista degli indirizzi di ricezione utilizzati</translation>
+        <source>(%1 locked)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open &amp;URI...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Apri &amp;URI...</translation>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Command-line options</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Opzioni della riga di &amp;comando</translation>
+        <source>no</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;File</translation>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Settings</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Impostazioni</translation>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Help</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>&amp;Aiuto</translation>
+        <source>(no label)</source>
+        <translation type="unfinished">(nessuna etichetta)</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>Edit Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Etichetta</translation>
+    </message>
+    <message>
+        <source>The label associated with this address list entry</source>
+        <translation type="unfinished">L&apos;etichetta associata con questa voce della lista degli indirizzi</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Indirizzo</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation type="unfinished">L&apos;indirizzo associato con questa voce della lista degli indirizzi. Può essere modificato solo per gli indirizzi d&apos;invio.</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+    <message>
+        <source>New receiving address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ExchangeRateDialog</name>
+    <message>
+        <source>Select currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FreespaceChecker</name>
+    <message>
+        <source>A new data directory will be created.</source>
+        <translation type="unfinished">Sarà creata una nuova cartella dati.</translation>
+    </message>
+    <message>
+        <source>name</source>
+        <translation type="unfinished">nome</translation>
+    </message>
+    <message>
+        <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
+        <translation type="unfinished">Cartella già esistente. Aggiungi %1 se intendi creare qui una nuova cartella.</translation>
+    </message>
+    <message>
+        <source>Path already exists, and is not a directory.</source>
+        <translation type="unfinished">Il percorso è già esistente e non è una cartella.</translation>
+    </message>
+    <message>
+        <source>Cannot create data directory here.</source>
+        <translation type="unfinished">Impossibile creare una cartella dati qui.</translation>
+    </message>
+</context>
+<context>
+    <name>GUI</name>
+    <message>
+        <source>Pending confirmation: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pending maturity: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Renewing witness account will incur a transaction fee: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+    <message>
+        <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning toolbar</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Tabs toolbar</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Barra degli strumenti</translation>
+        <translation type="unfinished">Barra degli strumenti</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change wallet password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation type="unfinished">&amp;Sintesi</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation type="unfinished">Mostra lo stato generale del portamonete</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Invia</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation type="unfinished">&amp;Ricevi</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation type="unfinished">&amp;Transazioni</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation type="unfinished">Mostra la cronologia delle transazioni</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation type="unfinished">&amp;Mostra / Nascondi</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation type="unfinished">Mostra o nascondi la Finestra principale</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">Apri &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Backup portamonete...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation type="unfinished">Effettua il backup del portamonete</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Indirizzi d&apos;invio...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation type="unfinished">Mostra la lista degli indirizzi di invio utilizzati</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">Indirizzi di &amp;ricezione...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation type="unfinished">Mostra la lista degli indirizzi di ricezione utilizzati</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation type="unfinished">&amp;Esci</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation type="unfinished">Chiudi applicazione</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">Finestra di &amp;debug</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation type="unfinished">Apri la console di debugging e diagnostica</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">Opzioni della riga di &amp;comando</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;Informazioni su %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation type="unfinished">Mostra informazioni su %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation type="unfinished">Informazioni su &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation type="unfinished">Mostra le informazioni su Qt</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Cifra il portamonete...</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation type="unfinished">Cifra le chiavi private che appartengono al tuo portamonete</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">&amp;Cambia passphrase...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation type="unfinished">Cambia la passphrase utilizzata per la cifratura del portamonete</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Opzioni...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation type="unfinished">Modifica le opzioni di configurazione per %1</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the local currency that is used to display estimates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">&amp;File</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished">&amp;Impostazioni</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished">&amp;Aiuto</translation>
     </message>
     <message>
         <source>%1 client</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>%1 client</translation>
+        <translation type="unfinished">%1 client</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Finestra di debug</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Gulden network</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Portamonete</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation type="unfinished">Nodo</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Sincronizzazione con la rete in corso...</translation>
+        <translation type="unfinished">Sincronizzazione con la rete in corso...</translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Indicizzando i blocchi su disco...</translation>
+        <translation type="unfinished">Indicizzando i blocchi su disco...</translation>
     </message>
     <message>
         <source>Processing blocks on disk...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Processando i blocchi su disco...</translation>
+        <translation type="unfinished">Processando i blocchi su disco...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Re-indicizzazione blocchi su disco...</translation>
+        <translation type="unfinished">Re-indicizzazione blocchi su disco...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>
+        <translation type="unfinished">
             <numerusform>Elaborato %n blocco dello storico transazioni.</numerusform>
             <numerusform>Elaborati %n blocchi dello storico transazioni.</numerusform>
         </translation>
     </message>
     <message>
         <source>Up to date</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Aggiornato</translation>
+        <translation type="unfinished">Aggiornato</translation>
     </message>
     <message>
         <source>%1 behind</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Indietro di %1</translation>
+        <translation type="unfinished">Indietro di %1</translation>
+    </message>
+    <message>
+        <source>Catching up... %1% complete.&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Errore</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <comment>Intro|</comment>
-        <translation>Errore</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Errore</translation>
+        <translation type="unfinished">Errore</translation>
     </message>
     <message>
         <source>Warning</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Attenzione</translation>
+        <translation type="unfinished">Attenzione</translation>
     </message>
     <message>
         <source>Information</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Informazioni</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <comment>WitnessDialog|</comment>
-        <translation>Informazioni</translation>
+        <translation type="unfinished">Informazioni</translation>
     </message>
     <message>
         <source>Date: %1
 </source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Data: %1
+        <translation type="unfinished">Data: %1
 </translation>
+    </message>
+    <message>
+        <source>Received: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent: %1
+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Type: %1
 </source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Tipo: %1
+        <translation type="unfinished">Tipo: %1
 </translation>
     </message>
     <message>
         <source>Label: %1
 </source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Etichetta: %1
+        <translation type="unfinished">Etichetta: %1
 </translation>
     </message>
     <message>
         <source>Address: %1
 </source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Indirizzo: %1
+        <translation type="unfinished">Indirizzo: %1
 </translation>
     </message>
     <message>
+        <source>Sent funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incoming funds%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Il portamonete è &lt;b&gt;cifrato&lt;/b&gt; ed attualmente &lt;b&gt;sbloccato&lt;/b&gt;</translation>
+        <translation type="unfinished">Il portamonete è &lt;b&gt;cifrato&lt;/b&gt; ed attualmente &lt;b&gt;sbloccato&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <comment>BitcoinGUI|</comment>
-        <translation>Il portamonete è &lt;b&gt;cifrato&lt;/b&gt; ed attualmente &lt;b&gt;bloccato&lt;/b&gt;</translation>
+        <translation type="unfinished">Il portamonete è &lt;b&gt;cifrato&lt;/b&gt; ed attualmente &lt;b&gt;bloccato&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>&amp;Save Image...</source>
-        <comment>ClickableQRImage|</comment>
-        <translation>&amp;Salva Immagine...</translation>
+        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GuldenSendCoinsEntry</name>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Tutti</translation>
     </message>
     <message>
-        <source>&amp;Save Image...</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>&amp;Salva Immagine...</translation>
+        <source>Receiving address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Coin Selection</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Selezione Input</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Quantity:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Quantità:</translation>
+        <source>Enter label</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Quantity:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Quantità:</translation>
+        <source>Add to address book</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Byte:</translation>
+        <source>Address book</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Byte:</translation>
+        <source>My accounts</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Importo:</translation>
+        <source>Lock funds for:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Importo:</translation>
+        <source>1 month</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dust:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Trascurabile:</translation>
+        <source>3 years</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dust:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Trascurabile:</translation>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fee:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Commissione:</translation>
+        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fee:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Commissione:</translation>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation type="unfinished">L&apos;importo supera il massimo per il pagamento IBAN</translation>
     </message>
     <message>
-        <source>After Fee:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Dopo Commissione:</translation>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation type="unfinished">Importo inferiore al minimo per il pagamento IBAN.</translation>
     </message>
     <message>
-        <source>After Fee:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Dopo Commissione:</translation>
+        <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Change:</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Resto:</translation>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation type="unfinished">L&apos;importo che si desidera inviare è uguale al saldo, verrà regolato per la commissione di transazione. Si prega di assicurarsi che questo sia ciò che si desidera prima di procedere per evitare il pagamento a breve del destinatario.</translation>
     </message>
     <message>
-        <source>Change:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Resto:</translation>
+        <source>Okay</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>(un)select all</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>(de)seleziona tutto</translation>
+        <source>Are you sure you want to delete %1 from the address book?</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Tree mode</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Modalità Albero</translation>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>List mode</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Modalità Lista</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Importo</translation>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount</source>
-        <comment>QObject|</comment>
-        <translation>Importo</translation>
+        <source>A minimum amount of 5000 is required.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Importo</translation>
+        <source>A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount</source>
-        <comment>TransactionDesc|</comment>
-        <translation>Importo</translation>
+        <source>1 year</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Received with label</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Ricevuto con l&apos;etichetta</translation>
+        <source>%1 years</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Received with address</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Ricevuto con l&apos;indirizzo</translation>
+        <source>%1 months</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Date</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Data</translation>
+        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+
+Estimated earnings: %3 (%4% per month)
+
+Witness weight: %5</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Date</source>
-        <comment>RecentRequestsTableModel|</comment>
-        <translation>Data</translation>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation type="unfinished">Richiederà approssimativamente %1 Gulden incluso il costo del servizio IBAN</translation>
     </message>
-    <message>
-        <source>Date</source>
-        <comment>TransactionDesc|</comment>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <comment>TransactionView|</comment>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Conferme</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <comment>CoinControlDialog|</comment>
-        <translation>Confermato</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <comment>TransactionView|</comment>
-        <translation>Confermato</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <comment>EditAddressDialog|</comment>
-        <translation>&amp;Etichetta</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <comment>EditAddressDialog|</comment>
-        <translation>L&apos;etichetta associata con questa voce della lista degli indirizzi</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <comment>EditAddressDialog|</comment>
-        <translation>&amp;Indirizzo</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <comment>EditAddressDialog|</comment>
-        <translation>L&apos;indirizzo associato con questa voce della lista degli indirizzi. Può essere modificato solo per gli indirizzi d&apos;invio.</translation>
-    </message>
-    <message>
-        <source>A new data directory will be created.</source>
-        <comment>FreespaceChecker|</comment>
-        <translation>Sarà creata una nuova cartella dati.</translation>
-    </message>
-    <message>
-        <source>name</source>
-        <comment>FreespaceChecker|</comment>
-        <translation>nome</translation>
-    </message>
-    <message>
-        <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <comment>FreespaceChecker|</comment>
-        <translation>Cartella già esistente. Aggiungi %1 se intendi creare qui una nuova cartella.</translation>
-    </message>
-    <message>
-        <source>Path already exists, and is not a directory.</source>
-        <comment>FreespaceChecker|</comment>
-        <translation>Il percorso è già esistente e non è una cartella.</translation>
-    </message>
-    <message>
-        <source>Cannot create data directory here.</source>
-        <comment>FreespaceChecker|</comment>
-        <translation>Impossibile creare una cartella dati qui.</translation>
-    </message>
+</context>
+<context>
+    <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>versione</translation>
+        <translation type="unfinished">versione</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>(%1-bit)</translation>
+        <translation type="unfinished">(%1-bit)</translation>
     </message>
     <message>
         <source>About %1</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Informazioni %1</translation>
+        <translation type="unfinished">Informazioni %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Opzioni della riga di comando</translation>
+        <translation type="unfinished">Opzioni della riga di comando</translation>
     </message>
     <message>
         <source>Usage:</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Utilizzo:</translation>
+        <translation type="unfinished">Utilizzo:</translation>
     </message>
     <message>
         <source>command-line options</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>opzioni della riga di comando</translation>
+        <translation type="unfinished">opzioni della riga di comando</translation>
     </message>
     <message>
         <source>UI Options:</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Opzioni interfaccia:</translation>
+        <translation type="unfinished">Opzioni interfaccia:</translation>
     </message>
     <message>
         <source>Choose data directory on startup (default: %u)</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Seleziona la directory dei dati all&apos;avvio (default: %u)</translation>
+        <translation type="unfinished">Seleziona la directory dei dati all&apos;avvio (default: %u)</translation>
     </message>
     <message>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Imposta la lingua, ad esempio &quot;it_IT&quot; (default: locale di sistema)</translation>
+        <translation type="unfinished">Imposta la lingua, ad esempio &quot;it_IT&quot; (default: locale di sistema)</translation>
     </message>
     <message>
         <source>Start minimized</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Avvia ridotto a icona</translation>
+        <translation type="unfinished">Avvia ridotto a icona</translation>
     </message>
     <message>
         <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Imposta un certificato SSL root per le richieste di pagamento (default: -system-)</translation>
+        <translation type="unfinished">Imposta un certificato SSL root per le richieste di pagamento (default: -system-)</translation>
     </message>
     <message>
         <source>Reset all settings changed in the GUI</source>
-        <comment>HelpMessageDialog|</comment>
-        <translation>Reimposta tutti i campi dell&apos;interfaccia grafica</translation>
+        <translation type="unfinished">Reimposta tutti i campi dell&apos;interfaccia grafica</translation>
+    </message>
+</context>
+<context>
+    <name>ImportPrivKeyDialog</name>
+    <message>
+        <source>Import private key</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Private &amp;key</source>
+        <translation type="unfinished">Chiave privata</translation>
+    </message>
+    <message>
+        <source>Enter a private key to import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Import witness from URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>W&amp;itness only URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a witness-only URL to import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+</context>
+<context>
+    <name>Intro</name>
+    <message>
         <source>Welcome</source>
-        <comment>Intro|</comment>
-        <translation>Benvenuto</translation>
+        <translation type="unfinished">Benvenuto</translation>
     </message>
     <message>
         <source>Welcome to %1.</source>
-        <comment>Intro|</comment>
-        <translation>Benvenuto su %1.</translation>
+        <translation type="unfinished">Benvenuto su %1.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <comment>Intro|</comment>
-        <translation>Dato che questa è la prima volta che il programma viene lanciato, puoi scegliere dove %1 salverà i suoi dati.</translation>
+        <translation type="unfinished">Dato che questa è la prima volta che il programma viene lanciato, puoi scegliere dove %1 salverà i suoi dati.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
-        <comment>Intro|</comment>
-        <translation>Usa la cartella dati predefinita</translation>
+        <translation type="unfinished">Usa la cartella dati predefinita</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
-        <comment>Intro|</comment>
-        <translation>Usa una cartella dati personalizzata:</translation>
+        <translation type="unfinished">Usa una cartella dati personalizzata:</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Gulden block chain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
-        <comment>Intro|</comment>
-        <translation>Errore: La cartella dati &quot;%1&quot; specificata non può essere creata.</translation>
+        <translation type="unfinished">Errore: La cartella dati &quot;%1&quot; specificata non può essere creata.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errore</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <comment>Intro|</comment>
-        <translation>
+        <translation type="unfinished">
             <numerusform>(di %nGB richiesti)</numerusform>
             <numerusform>(%n GB richiesti)</numerusform>
         </translation>
     </message>
+</context>
+<context>
+    <name>ModalOverlay</name>
     <message>
         <source>Form</source>
-        <comment>ModalOverlay|</comment>
-        <translation>Modulo</translation>
+        <translation type="unfinished">Modulo</translation>
     </message>
     <message>
-        <source>Form</source>
-        <comment>OverviewPage|</comment>
-        <translation>Modulo</translation>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <comment>ModalOverlay|</comment>
-        <translation>Ora del blocco più recente</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <comment>RPCConsole|</comment>
-        <translation>Ora del blocco più recente</translation>
+        <source>Progress</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Hide</source>
-        <comment>ModalOverlay|</comment>
-        <translation>Nascondi</translation>
+        <translation type="unfinished">Nascondi</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Nascondi</translation>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>Enter name of account.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+    <message>
+        <source> Connect to mobile Gulden app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transactional account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
-        <comment>OpenURIDialog|</comment>
-        <translation>Apri URI</translation>
+        <translation type="unfinished">Apri URI</translation>
     </message>
     <message>
         <source>Open payment request from URI or file</source>
-        <comment>OpenURIDialog|</comment>
-        <translation>Apri richiesta di pagamento da URI o file</translation>
+        <translation type="unfinished">Apri richiesta di pagamento da URI o file</translation>
     </message>
     <message>
         <source>URI:</source>
-        <comment>OpenURIDialog|</comment>
-        <translation>URI:</translation>
+        <translation type="unfinished">URI:</translation>
     </message>
     <message>
         <source>Select payment request file</source>
-        <comment>OpenURIDialog|</comment>
-        <translation>Seleziona il file di richiesta di pagamento</translation>
+        <translation type="unfinished">Seleziona il file di richiesta di pagamento</translation>
     </message>
     <message>
+        <source>Select payment request file to open</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OptionsDialog</name>
+    <message>
         <source>Options</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Opzioni</translation>
+        <translation type="unfinished">Opzioni</translation>
     </message>
     <message>
         <source>&amp;Main</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Principale</translation>
+        <translation type="unfinished">&amp;Principale</translation>
     </message>
     <message>
         <source>Automatically start %1 after logging in to the system.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Avvia automaticamente %1 una volta effettuato l&apos;accesso al sistema.</translation>
+        <translation type="unfinished">Avvia automaticamente %1 una volta effettuato l&apos;accesso al sistema.</translation>
     </message>
     <message>
         <source>&amp;Start %1 on system login</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Start %1 all&apos;accesso al sistema</translation>
+        <translation type="unfinished">&amp;Start %1 all&apos;accesso al sistema</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Dimensione della cache del &amp;database.</translation>
+        <translation type="unfinished">Dimensione della cache del &amp;database.</translation>
     </message>
     <message>
         <source>MB</source>
-        <comment>OptionsDialog|</comment>
-        <translation>MB</translation>
+        <translation type="unfinished">MB</translation>
     </message>
     <message>
         <source>Number of script &amp;verification threads</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Numero di thread di &amp;verifica degli script </translation>
+        <translation type="unfinished">Numero di thread di &amp;verifica degli script </translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <comment>OptionsDialog|</comment>
-        <translation>(0 = automatico, &lt;0 = lascia questo numero di core liberi)</translation>
+        <translation type="unfinished">(0 = automatico, &lt;0 = lascia questo numero di core liberi)</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Port&amp;amonete</translation>
+        <translation type="unfinished">Port&amp;amonete</translation>
     </message>
     <message>
         <source>Expert</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Esperti</translation>
+        <translation type="unfinished">Esperti</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Specifica se le funzionalita di coin control saranno visualizzate.</translation>
+        <translation type="unfinished">Specifica se le funzionalita di coin control saranno visualizzate.</translation>
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Abilita le funzionalità di coin &amp;control</translation>
+        <translation type="unfinished">Abilita le funzionalità di coin &amp;control</translation>
     </message>
     <message>
         <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Disabilitando l&apos;uso di resti non confermati, il resto di una transazione non potrà essere speso fino a quando non avrà ottenuto almeno una conferma. Questa impostazione influisce inoltre sul calcolo del saldo.</translation>
+        <translation type="unfinished">Disabilitando l&apos;uso di resti non confermati, il resto di una transazione non potrà essere speso fino a quando non avrà ottenuto almeno una conferma. Questa impostazione influisce inoltre sul calcolo del saldo.</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Spendi resti non confermati</translation>
+        <translation type="unfinished">&amp;Spendi resti non confermati</translation>
     </message>
     <message>
         <source>&amp;Network</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Rete</translation>
+        <translation type="unfinished">Rete</translation>
+    </message>
+    <message>
+        <source>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Mappa le porte tramite &amp;UPnP</translation>
+        <translation type="unfinished">Mappa le porte tramite &amp;UPnP</translation>
     </message>
     <message>
         <source>Accept connections from outside</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Accetta connessioni provenienti dall&apos;esterno</translation>
+        <translation type="unfinished">Accetta connessioni provenienti dall&apos;esterno</translation>
     </message>
     <message>
         <source>Allow incoming connections</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Permetti connessioni in ingresso</translation>
+        <translation type="unfinished">Permetti connessioni in ingresso</translation>
+    </message>
+    <message>
+        <source>Connect to the Gulden network through a SOCKS5 proxy.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Connessione attraverso proxy SOCKS5 (proxy predefinito):</translation>
+        <translation type="unfinished">&amp;Connessione attraverso proxy SOCKS5 (proxy predefinito):</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;IP del proxy:</translation>
+        <translation type="unfinished">&amp;IP del proxy:</translation>
     </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Indirizzo IP del proxy (ad es. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+        <translation type="unfinished">Indirizzo IP del proxy (ad es. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Porta:</translation>
+        <translation type="unfinished">&amp;Porta:</translation>
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Porta del proxy (ad es. 9050)</translation>
+        <translation type="unfinished">Porta del proxy (ad es. 9050)</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Utilizzata per connettersi attraverso:</translation>
+        <translation type="unfinished">Utilizzata per connettersi attraverso:</translation>
     </message>
     <message>
         <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Mostra se la proxy SOCKS5 fornita viene utilizzata per raggiungere i peers attraverso questo tipo di rete.</translation>
+        <translation type="unfinished">Mostra se la proxy SOCKS5 fornita viene utilizzata per raggiungere i peers attraverso questo tipo di rete.</translation>
     </message>
     <message>
         <source>IPv4</source>
-        <comment>OptionsDialog|</comment>
-        <translation>IPv4</translation>
+        <translation type="unfinished">IPv4</translation>
     </message>
     <message>
         <source>IPv6</source>
-        <comment>OptionsDialog|</comment>
-        <translation>IPv6</translation>
+        <translation type="unfinished">IPv6</translation>
     </message>
     <message>
         <source>Tor</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Tor</translation>
+        <translation type="unfinished">Tor</translation>
+    </message>
+    <message>
+        <source>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Usa un proxy SOCKS5 separato per connettersi ai peers attraverso Tor:</translation>
+        <translation type="unfinished">Usa un proxy SOCKS5 separato per connettersi ai peers attraverso Tor:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Finestra</translation>
+        <translation type="unfinished">&amp;Finestra</translation>
     </message>
     <message>
         <source>&amp;Hide the icon from the system tray.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Nascondi l&apos;icona nella barra delle applicazioni.</translation>
+        <translation type="unfinished">&amp;Nascondi l&apos;icona nella barra delle applicazioni.</translation>
     </message>
     <message>
         <source>Hide tray icon</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Nascondi l&apos;icona della barra applicazioni</translation>
+        <translation type="unfinished">Nascondi l&apos;icona della barra applicazioni</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Mostra solo nella tray bar quando si riduce ad icona.</translation>
+        <translation type="unfinished">Mostra solo nella tray bar quando si riduce ad icona.</translation>
     </message>
     <message>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Minimizza nella tray bar invece che sulla barra delle applicazioni</translation>
+        <translation type="unfinished">&amp;Minimizza nella tray bar invece che sulla barra delle applicazioni</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Riduci ad icona invece di uscire dall&apos;applicazione quando la finestra viene chiusa. Attivando questa opzione l&apos;applicazione terminerà solo dopo aver selezionato Esci dal menu File.</translation>
+        <translation type="unfinished">Riduci ad icona invece di uscire dall&apos;applicazione quando la finestra viene chiusa. Attivando questa opzione l&apos;applicazione terminerà solo dopo aver selezionato Esci dal menu File.</translation>
     </message>
     <message>
         <source>M&amp;inimize on close</source>
-        <comment>OptionsDialog|</comment>
-        <translation>M&amp;inimizza alla chiusura</translation>
+        <translation type="unfinished">M&amp;inimizza alla chiusura</translation>
     </message>
     <message>
         <source>&amp;Display</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Mostra</translation>
+        <translation type="unfinished">&amp;Mostra</translation>
     </message>
     <message>
         <source>User Interface &amp;language:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Lingua Interfaccia Utente:</translation>
+        <translation type="unfinished">&amp;Lingua Interfaccia Utente:</translation>
     </message>
     <message>
         <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>La lingua dell&apos;interfaccia utente può essere impostata qui. L&apos;impostazione avrà effetto dopo il riavvio %1.</translation>
+        <translation type="unfinished">La lingua dell&apos;interfaccia utente può essere impostata qui. L&apos;impostazione avrà effetto dopo il riavvio %1.</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Unità di misura con cui visualizzare gli importi:</translation>
+        <translation type="unfinished">&amp;Unità di misura con cui visualizzare gli importi:</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Scegli l&apos;unità di suddivisione predefinita da utilizzare per l&apos;interfaccia e per l&apos;invio di bitcoin.</translation>
+        <translation type="unfinished">Scegli l&apos;unità di suddivisione predefinita da utilizzare per l&apos;interfaccia e per l&apos;invio di bitcoin.</translation>
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>URL di terze parti (ad es. un block explorer) che appaiono nella tabella delle transazioni come voci nel menu contestuale. &quot;%s&quot; nell&apos;URL è sostituito dall&apos;hash della transazione.
+        <translation type="unfinished">URL di terze parti (ad es. un block explorer) che appaiono nella tabella delle transazioni come voci nel menu contestuale. &quot;%s&quot; nell&apos;URL è sostituito dall&apos;hash della transazione.
 Per specificare più URL separarli con una barra verticale &quot;|&quot;.</translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
-        <comment>OptionsDialog|</comment>
-        <translation>URL di transazione di terze parti</translation>
+        <translation type="unfinished">URL di transazione di terze parti</translation>
     </message>
     <message>
         <source>Active command-line options that override above options:</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Opzioni della riga di comando attive che sostituiscono i settaggi sopra elencati:</translation>
+        <translation type="unfinished">Opzioni della riga di comando attive che sostituiscono i settaggi sopra elencati:</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Cancella</translation>
+        <translation type="unfinished">&amp;Cancella</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Reimposta tutte le opzioni del client allo stato predefinito.</translation>
+        <translation type="unfinished">Reimposta tutte le opzioni del client allo stato predefinito.</translation>
     </message>
     <message>
         <source>&amp;Reset Options</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;Ripristina Opzioni</translation>
+        <translation type="unfinished">&amp;Ripristina Opzioni</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <comment>OptionsDialog|</comment>
-        <translation>&amp;OK</translation>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
         <source>default</source>
-        <comment>OptionsDialog|</comment>
-        <translation>predefinito</translation>
+        <translation type="unfinished">predefinito</translation>
+    </message>
+    <message>
+        <source>H&amp;ide to dock on close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Confirm options reset</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Conferma ripristino opzioni</translation>
+        <translation type="unfinished">Conferma ripristino opzioni</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>È necessario un riavvio del client per applicare le modifiche.</translation>
+        <translation type="unfinished">È necessario un riavvio del client per applicare le modifiche.</translation>
     </message>
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Il client sarà arrestato. Si desidera procedere?</translation>
+        <translation type="unfinished">Il client sarà arrestato. Si desidera procedere?</translation>
+    </message>
+    <message>
+        <source>Configuration options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errore</translation>
+    </message>
+    <message>
+        <source>The configuration file could not be opened.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>Questa modifica richiede un riavvio del client.</translation>
+        <translation type="unfinished">Questa modifica richiede un riavvio del client.</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
-        <comment>OptionsDialog|</comment>
-        <translation>L&apos;indirizzo proxy che hai fornito non è valido.</translation>
+        <translation type="unfinished">L&apos;indirizzo proxy che hai fornito non è valido.</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Modulo</translation>
     </message>
     <message>
         <source>Balances</source>
-        <comment>OverviewPage|</comment>
-        <translation>Saldo</translation>
+        <translation type="unfinished">Saldo</translation>
+    </message>
+    <message>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unconfirmed transactions to watch-only addresses</source>
-        <comment>OverviewPage|</comment>
-        <translation>Transazioni non confermate su indirizzi di sola lettura</translation>
+        <translation type="unfinished">Transazioni non confermate su indirizzi di sola lettura</translation>
     </message>
     <message>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <comment>OverviewPage|</comment>
-        <translation>Totale delle transazioni in corso di conferma e che non sono ancora conteggiate nel saldo spendibile</translation>
+        <translation type="unfinished">Totale delle transazioni in corso di conferma e che non sono ancora conteggiate nel saldo spendibile</translation>
     </message>
     <message>
         <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <comment>OverviewPage|</comment>
-        <translation>Importo generato dal mining su indirizzi di sola lettura e non ancora maturato</translation>
+        <translation type="unfinished">Importo generato dal mining su indirizzi di sola lettura e non ancora maturato</translation>
     </message>
     <message>
         <source>Total:</source>
-        <comment>OverviewPage|</comment>
-        <translation>Totale:</translation>
+        <translation type="unfinished">Totale:</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>
-        <comment>OverviewPage|</comment>
-        <translation>Importo generato dal mining e non ancora maturato</translation>
+        <translation type="unfinished">Importo generato dal mining e non ancora maturato</translation>
     </message>
     <message>
         <source>Immature:</source>
-        <comment>OverviewPage|</comment>
-        <translation>Immaturo:</translation>
+        <translation type="unfinished">Immaturo:</translation>
     </message>
     <message>
         <source>Your current total balance</source>
-        <comment>OverviewPage|</comment>
-        <translation>Il tuo saldo totale attuale</translation>
+        <translation type="unfinished">Il tuo saldo totale attuale</translation>
     </message>
     <message>
         <source>Current total balance in watch-only addresses</source>
-        <comment>OverviewPage|</comment>
-        <translation>Saldo corrente totale negli indirizzi di sola lettura</translation>
+        <translation type="unfinished">Saldo corrente totale negli indirizzi di sola lettura</translation>
     </message>
     <message>
         <source>Watch-only:</source>
-        <comment>OverviewPage|</comment>
-        <translation>Sola lettura:</translation>
+        <translation type="unfinished">Sola lettura:</translation>
     </message>
     <message>
         <source>Available:</source>
-        <comment>OverviewPage|</comment>
-        <translation>Disponibile:</translation>
+        <translation type="unfinished">Disponibile:</translation>
     </message>
     <message>
         <source>Your current spendable balance</source>
-        <comment>OverviewPage|</comment>
-        <translation>Il tuo saldo spendibile attuale</translation>
+        <translation type="unfinished">Il tuo saldo spendibile attuale</translation>
     </message>
     <message>
         <source>Your current balance in watch-only addresses</source>
-        <comment>OverviewPage|</comment>
-        <translation>Il tuo saldo attuale negli indirizzi di sola lettura</translation>
+        <translation type="unfinished">Il tuo saldo attuale negli indirizzi di sola lettura</translation>
     </message>
     <message>
         <source>Pending:</source>
-        <comment>OverviewPage|</comment>
-        <translation>In attesa:</translation>
+        <translation type="unfinished">In attesa:</translation>
     </message>
     <message>
         <source>Spendable:</source>
-        <comment>OverviewPage|</comment>
-        <translation>Spendibile:</translation>
+        <translation type="unfinished">Spendibile:</translation>
     </message>
     <message>
         <source>Recent transactions</source>
-        <comment>OverviewPage|</comment>
-        <translation>Transazioni recenti</translation>
+        <translation type="unfinished">Transazioni recenti</translation>
+    </message>
+</context>
+<context>
+    <name>PasswordModifyDialog</name>
+    <message>
+        <source>Change password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter old password.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter new password.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Repeat new password.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PaymentServer</name>
+    <message>
+        <source>Payment request error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot start gulden: click-to-pay handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request fetch URL is invalid: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment address %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URI cannot be parsed! This can be caused by an invalid Gulden address or malformed URI parameters.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request file handling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request rejected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request network doesn&apos;t match client network.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unverified payment requests to custom payment scripts are unsupported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Requested payment amount of %1 is too small (considered dust).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refund from %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error communicating with %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request cannot be parsed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bad response from server %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network request error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment acknowledged</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PeerTableModel</name>
+    <message>
+        <source>NodeId</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Node/Service</source>
-        <comment>PeerTableModel|</comment>
-        <translation>Nodo/Servizio</translation>
+        <translation type="unfinished">Nodo/Servizio</translation>
     </message>
     <message>
         <source>User Agent</source>
-        <comment>PeerTableModel|</comment>
-        <translation>User Agent</translation>
+        <translation type="unfinished">User Agent</translation>
     </message>
     <message>
-        <source>User Agent</source>
-        <comment>RPCConsole|</comment>
-        <translation>User Agent</translation>
+        <source>Ping</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlotMouseTracker</name>
+    <message>
+        <source>Initial expected earnings:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Earnings to date:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Future earnings forecast:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Enter an address (e.g. %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a private key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation type="unfinished">Inserisci indirizzo URL Gulden</translation>
     </message>
     <message>
         <source>%1 d</source>
-        <comment>QObject|</comment>
-        <translation>%1 d</translation>
+        <translation type="unfinished">%1 d</translation>
     </message>
     <message>
         <source>%1 h</source>
-        <comment>QObject|</comment>
-        <translation>%1 h</translation>
+        <translation type="unfinished">%1 h</translation>
     </message>
     <message>
         <source>%1 m</source>
-        <comment>QObject|</comment>
-        <translation>%1 m</translation>
+        <translation type="unfinished">%1 m</translation>
     </message>
     <message>
         <source>%1 s</source>
-        <comment>QObject|</comment>
-        <translation>%1 s</translation>
+        <translation type="unfinished">%1 s</translation>
     </message>
     <message>
         <source>None</source>
-        <comment>QObject|</comment>
-        <translation>Nessuno</translation>
+        <translation type="unfinished">Nessuno</translation>
     </message>
     <message>
         <source>N/A</source>
-        <comment>QObject|</comment>
-        <translation>N/D</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <comment>RPCConsole|</comment>
-        <translation>N/D</translation>
+        <translation type="unfinished">N/D</translation>
     </message>
     <message>
         <source>%1 ms</source>
-        <comment>QObject|</comment>
-        <translation>%1 ms</translation>
+        <translation type="unfinished">%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
-        <comment>QObject|</comment>
-        <translation>%1 e %2</translation>
+        <translation type="unfinished">%1 e %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Importo</translation>
+    </message>
+</context>
+<context>
+    <name>QObject::QObject</name>
+    <message>
+        <source>Error: Specified data directory &quot;%1&quot; does not exist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1. Only use key=value syntax.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Finestra di debug</translation>
     </message>
     <message>
         <source>&amp;Information</source>
-        <comment>RPCConsole|</comment>
-        <translation>&amp;Informazioni</translation>
+        <translation type="unfinished">&amp;Informazioni</translation>
     </message>
     <message>
         <source>General</source>
-        <comment>RPCConsole|</comment>
-        <translation>Generale</translation>
+        <translation type="unfinished">Generale</translation>
     </message>
     <message>
         <source>Client version</source>
-        <comment>RPCConsole|</comment>
-        <translation>Versione client</translation>
+        <translation type="unfinished">Versione client</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation type="unfinished">N/D</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation type="unfinished">User Agent</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
-        <comment>RPCConsole|</comment>
-        <translation>Versione BerkeleyDB in uso</translation>
+        <translation type="unfinished">Versione BerkeleyDB in uso</translation>
     </message>
     <message>
         <source>Datadir</source>
-        <comment>RPCConsole|</comment>
-        <translation>Datadir</translation>
+        <translation type="unfinished">Datadir</translation>
     </message>
     <message>
         <source>Startup time</source>
-        <comment>RPCConsole|</comment>
-        <translation>Ora di avvio</translation>
+        <translation type="unfinished">Ora di avvio</translation>
     </message>
     <message>
         <source>Network</source>
-        <comment>RPCConsole|</comment>
-        <translation>Rete</translation>
+        <translation type="unfinished">Rete</translation>
     </message>
     <message>
         <source>Name</source>
-        <comment>RPCConsole|</comment>
-        <translation>Nome</translation>
+        <translation type="unfinished">Nome</translation>
     </message>
     <message>
         <source>Number of connections</source>
-        <comment>RPCConsole|</comment>
-        <translation>Numero di connessioni</translation>
+        <translation type="unfinished">Numero di connessioni</translation>
     </message>
     <message>
         <source>Block chain</source>
-        <comment>RPCConsole|</comment>
-        <translation>Block chain</translation>
+        <translation type="unfinished">Block chain</translation>
     </message>
     <message>
         <source>Current number of blocks</source>
-        <comment>RPCConsole|</comment>
-        <translation>Numero attuale di blocchi</translation>
+        <translation type="unfinished">Numero attuale di blocchi</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation type="unfinished">Ora del blocco più recente</translation>
     </message>
     <message>
         <source>Memory Pool</source>
-        <comment>RPCConsole|</comment>
-        <translation>Memory Pool</translation>
+        <translation type="unfinished">Memory Pool</translation>
     </message>
     <message>
         <source>Current number of transactions</source>
-        <comment>RPCConsole|</comment>
-        <translation>Numero attuale di transazioni</translation>
+        <translation type="unfinished">Numero attuale di transazioni</translation>
     </message>
     <message>
         <source>Memory usage</source>
-        <comment>RPCConsole|</comment>
-        <translation>Utilizzo memoria</translation>
+        <translation type="unfinished">Utilizzo memoria</translation>
     </message>
     <message>
         <source>Debug log file</source>
-        <comment>RPCConsole|</comment>
-        <translation>File log del Debug</translation>
+        <translation type="unfinished">File log del Debug</translation>
     </message>
     <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <comment>RPCConsole|</comment>
-        <translation>Apri il file log del debug di %1 dalla cartella dati attuale. Può richiedere alcuni secondi per file di log di grandi dimensioni.</translation>
+        <translation type="unfinished">Apri il file log del debug di %1 dalla cartella dati attuale. Può richiedere alcuni secondi per file di log di grandi dimensioni.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <comment>RPCConsole|</comment>
-        <translation>&amp;Apri</translation>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Console</source>
-        <comment>RPCConsole|</comment>
-        <translation>&amp;Console</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <comment>RPCConsole|</comment>
-        <translation>Riduci dimensioni font.</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <comment>RPCConsole|</comment>
-        <translation>Aumenta dimensioni font</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <comment>RPCConsole|</comment>
-        <translation>Cancella console</translation>
+        <translation type="unfinished">&amp;Console</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
-        <comment>RPCConsole|</comment>
-        <translation>&amp;Traffico di Rete</translation>
+        <translation type="unfinished">&amp;Traffico di Rete</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Totals</source>
-        <comment>RPCConsole|</comment>
-        <translation>Totali</translation>
+        <translation type="unfinished">Totali</translation>
     </message>
     <message>
         <source>Received</source>
-        <comment>RPCConsole|</comment>
-        <translation>Ricevuto</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>Ricevuto</translation>
+        <translation type="unfinished">Ricevuto</translation>
     </message>
     <message>
         <source>Sent</source>
-        <comment>RPCConsole|</comment>
-        <translation>Inviato</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <comment>TransactionTableModel|</comment>
-        <translation>Inviato</translation>
+        <translation type="unfinished">Inviato</translation>
     </message>
     <message>
         <source>&amp;Peers</source>
-        <comment>RPCConsole|</comment>
-        <translation>&amp;Peer</translation>
+        <translation type="unfinished">&amp;Peer</translation>
     </message>
     <message>
         <source>Banned peers</source>
-        <comment>RPCConsole|</comment>
-        <translation>Peers bannati</translation>
+        <translation type="unfinished">Peers bannati</translation>
     </message>
     <message>
         <source>Select a peer to view detailed information.</source>
-        <comment>RPCConsole|</comment>
-        <translation>Seleziona un peer per visualizzare informazioni più dettagliate.</translation>
+        <translation type="unfinished">Seleziona un peer per visualizzare informazioni più dettagliate.</translation>
     </message>
     <message>
         <source>Whitelisted</source>
-        <comment>RPCConsole|</comment>
-        <translation>Whitelisted/sicuri</translation>
+        <translation type="unfinished">Whitelisted/sicuri</translation>
     </message>
     <message>
         <source>Direction</source>
-        <comment>RPCConsole|</comment>
-        <translation>Direzione</translation>
+        <translation type="unfinished">Direzione</translation>
     </message>
     <message>
         <source>Version</source>
-        <comment>RPCConsole|</comment>
-        <translation>Versione</translation>
+        <translation type="unfinished">Versione</translation>
     </message>
     <message>
         <source>Services</source>
-        <comment>RPCConsole|</comment>
-        <translation>Servizi</translation>
+        <translation type="unfinished">Servizi</translation>
     </message>
     <message>
         <source>Starting Block</source>
-        <comment>RPCConsole|</comment>
-        <translation>Blocco di partenza</translation>
+        <translation type="unfinished">Blocco di partenza</translation>
     </message>
     <message>
         <source>Synced Headers</source>
-        <comment>RPCConsole|</comment>
-        <translation>Headers sincronizzati</translation>
+        <translation type="unfinished">Headers sincronizzati</translation>
     </message>
     <message>
         <source>Synced Blocks</source>
-        <comment>RPCConsole|</comment>
-        <translation>Blocchi sincronizzati</translation>
+        <translation type="unfinished">Blocchi sincronizzati</translation>
     </message>
     <message>
         <source>Ban Score</source>
-        <comment>RPCConsole|</comment>
-        <translation>Punteggio di Ban</translation>
+        <translation type="unfinished">Punteggio di Ban</translation>
     </message>
     <message>
         <source>Connection Time</source>
-        <comment>RPCConsole|</comment>
-        <translation>Tempo di Connessione</translation>
+        <translation type="unfinished">Tempo di Connessione</translation>
     </message>
     <message>
         <source>Last Send</source>
-        <comment>RPCConsole|</comment>
-        <translation>Ultimo Invio</translation>
+        <translation type="unfinished">Ultimo Invio</translation>
     </message>
     <message>
         <source>Last Receive</source>
-        <comment>RPCConsole|</comment>
-        <translation>Ultima Ricezione</translation>
+        <translation type="unfinished">Ultima Ricezione</translation>
     </message>
     <message>
         <source>Ping Time</source>
-        <comment>RPCConsole|</comment>
-        <translation>Tempo di Ping</translation>
+        <translation type="unfinished">Tempo di Ping</translation>
     </message>
     <message>
         <source>The duration of a currently outstanding ping.</source>
-        <comment>RPCConsole|</comment>
-        <translation>La durata di un ping attualmente in corso.</translation>
+        <translation type="unfinished">La durata di un ping attualmente in corso.</translation>
     </message>
     <message>
         <source>Ping Wait</source>
-        <comment>RPCConsole|</comment>
-        <translation>Attesa ping</translation>
+        <translation type="unfinished">Attesa ping</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Offset</source>
-        <comment>RPCConsole|</comment>
-        <translation>Scarto Temporale</translation>
+        <translation type="unfinished">Scarto Temporale</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1 &amp;hour</source>
-        <comment>RPCConsole|</comment>
-        <translation>1 &amp;ora</translation>
+        <translation type="unfinished">1 &amp;ora</translation>
     </message>
     <message>
         <source>1 &amp;day</source>
-        <comment>RPCConsole|</comment>
-        <translation>1 &amp;giorno</translation>
+        <translation type="unfinished">1 &amp;giorno</translation>
     </message>
     <message>
         <source>1 &amp;week</source>
-        <comment>RPCConsole|</comment>
-        <translation>1 &amp;settimana</translation>
+        <translation type="unfinished">1 &amp;settimana</translation>
     </message>
     <message>
         <source>1 &amp;year</source>
-        <comment>RPCConsole|</comment>
-        <translation>1 &amp;anno</translation>
+        <translation type="unfinished">1 &amp;anno</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
-        <comment>RPCConsole|</comment>
-        <translation>Benvenuto nella console RPC di %1.</translation>
+        <translation type="unfinished">Benvenuto nella console RPC di %1.</translation>
+    </message>
+    <message>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <comment>RPCConsole|</comment>
-        <translation>Scrivi &lt;b&gt;help&lt;/b&gt; per un riassunto dei comandi disponibili.</translation>
+        <translation type="unfinished">Scrivi &lt;b&gt;help&lt;/b&gt; per un riassunto dei comandi disponibili.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>In:</source>
-        <comment>RPCConsole|</comment>
-        <translation>Entrata:</translation>
+        <translation type="unfinished">Entrata:</translation>
     </message>
     <message>
         <source>Out:</source>
-        <comment>RPCConsole|</comment>
-        <translation>Uscita:</translation>
+        <translation type="unfinished">Uscita:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 B</source>
-        <comment>RPCConsole|</comment>
-        <translation>%1 B</translation>
+        <translation type="unfinished">%1 B</translation>
     </message>
     <message>
         <source>%1 KB</source>
-        <comment>RPCConsole|</comment>
-        <translation>%1 KB</translation>
+        <translation type="unfinished">%1 KB</translation>
     </message>
     <message>
         <source>%1 MB</source>
-        <comment>RPCConsole|</comment>
-        <translation>%1 MB</translation>
+        <translation type="unfinished">%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>
-        <comment>RPCConsole|</comment>
-        <translation>%1 GB</translation>
+        <translation type="unfinished">%1 GB</translation>
     </message>
     <message>
         <source>(node id: %1)</source>
-        <comment>RPCConsole|</comment>
-        <translation>(id nodo: %1)</translation>
+        <translation type="unfinished">(id nodo: %1)</translation>
     </message>
     <message>
         <source>via %1</source>
-        <comment>RPCConsole|</comment>
-        <translation>via %1</translation>
+        <translation type="unfinished">via %1</translation>
     </message>
     <message>
         <source>never</source>
-        <comment>RPCConsole|</comment>
-        <translation>mai</translation>
+        <translation type="unfinished">mai</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <comment>RPCConsole|</comment>
-        <translation>In entrata</translation>
+        <translation type="unfinished">In entrata</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <comment>RPCConsole|</comment>
-        <translation>In uscita</translation>
+        <translation type="unfinished">In uscita</translation>
     </message>
     <message>
         <source>Yes</source>
-        <comment>RPCConsole|</comment>
-        <translation>Si</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Si</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <comment>SendConfirmationDialog|</comment>
-        <translation>Si</translation>
+        <translation type="unfinished">Si</translation>
     </message>
     <message>
         <source>No</source>
-        <comment>RPCConsole|</comment>
-        <translation>No</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>No</translation>
+        <translation type="unfinished">No</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <comment>RPCConsole|</comment>
-        <translation>Sconosciuto</translation>
+        <translation type="unfinished">Sconosciuto</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>My receiving address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Riutilizza uno degli indirizzi di ricezione generati in precedenza. Riutilizzare un indirizzo comporta problemi di sicurezza e privacy. Non selezionare questa opzione a meno che non si stia rigenerando una richiesta di pagamento creata in precedenza.</translation>
+        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>R&amp;iusa un indirizzo di ricezione (non raccomandato)</translation>
+        <source>Enter label</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Message:</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>&amp;Messaggio:</translation>
+        <source>Request %1 Gulden</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Un&apos;etichetta opzionale da associare al nuovo indirizzo di ricezione.</translation>
+        <source>Payment request URI</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Usa questo modulo per richiedere pagamenti. Tutti i campi sono &lt;b&gt;opzionali&lt;/b&gt;.</translation>
+        <source>QR code</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>&amp;Etichetta:</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>&amp;Etichetta:</translation>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Un importo opzionale da associare alla richiesta. Lasciare vuoto o a zero per non richiedere un importo specifico.</translation>
+        <source>Copy address to clipboard</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Amount:</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>&amp;Importo:</translation>
+        <source>Save QR as image</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Request payment</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>&amp;Richiedi pagamento</translation>
+        <source>Request payment</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear all fields of the form.</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Cancellare tutti i campi del modulo.</translation>
+        <source>Generate request</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear all fields of the form.</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Cancellare tutti i campi del modulo.</translation>
+        <source>New request</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Cancella</translation>
+        <source>Buy Gulden</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Requested payments history</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Cronologia pagamenti richiesti</translation>
+        <source>Buy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Mostra la richiesta selezionata (produce lo stesso effetto di un doppio click su una voce)</translation>
+        <source>Choose amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Mostra</translation>
+        <source>1000</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove the selected entries from the list</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Rimuovi le voci selezionate dalla lista</translation>
+        <source>€ 10.00</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove</source>
-        <comment>ReceiveCoinsDialog|</comment>
-        <translation>Rimuovi</translation>
+        <source></source>
+        <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>2500</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>€ 25.00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>€ 50.00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter email address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Did you buy for more than 40 Gulden in the past week?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Si</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">No</translation>
+    </message>
+    <message>
+        <source>Request 10 000 Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy request to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Request Gulden</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for the label.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading the buy page, please check your connection and try again later.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
     <message>
         <source>QR Code</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Codice QR</translation>
+        <translation type="unfinished">Codice QR</translation>
     </message>
     <message>
         <source>Copy &amp;URI</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Copia &amp;URI</translation>
+        <translation type="unfinished">Copia &amp;URI</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
-        <comment>ReceiveRequestDialog|</comment>
-        <translation>Copia &amp;Indirizzo</translation>
+        <translation type="unfinished">Copia &amp;Indirizzo</translation>
     </message>
     <message>
-        <source>Send Coins</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Invia Bitcoin</translation>
+        <source>&amp;Save Image...</source>
+        <translation type="unfinished">&amp;Salva Immagine...</translation>
     </message>
     <message>
+        <source>Request payment to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Indirizzo</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Importo</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Etichetta</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Data</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Etichetta</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation type="unfinished">(nessuna etichetta)</translation>
+    </message>
+    <message>
+        <source>(no message)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(no amount requested)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
         <source>Send Coins</source>
-        <comment>WalletModel|</comment>
-        <translation>Invia Bitcoin</translation>
+        <translation type="unfinished">Invia Bitcoin</translation>
     </message>
     <message>
         <source>Coin Control Features</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Funzionalità di Coin Control</translation>
+        <translation type="unfinished">Funzionalità di Coin Control</translation>
     </message>
     <message>
         <source>Inputs...</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Input...</translation>
+        <translation type="unfinished">Input...</translation>
     </message>
     <message>
         <source>automatically selected</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>selezionato automaticamente</translation>
+        <translation type="unfinished">selezionato automaticamente</translation>
     </message>
     <message>
         <source>Insufficient funds!</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Fondi insufficienti!</translation>
+        <translation type="unfinished">Fondi insufficienti!</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation type="unfinished">Quantità:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation type="unfinished">Byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Importo:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation type="unfinished">Trascurabile:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation type="unfinished">Commissione:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation type="unfinished">Dopo Commissione:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation type="unfinished">Resto:</translation>
     </message>
     <message>
         <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>In caso di abilitazione con indirizzo vuoto o non valido, il resto sarà inviato ad un nuovo indirizzo generato appositamente.</translation>
+        <translation type="unfinished">In caso di abilitazione con indirizzo vuoto o non valido, il resto sarà inviato ad un nuovo indirizzo generato appositamente.</translation>
     </message>
     <message>
         <source>Custom change address</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Personalizza indirizzo di resto</translation>
+        <translation type="unfinished">Personalizza indirizzo di resto</translation>
     </message>
     <message>
         <source>Transaction Fee:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Commissione di Transazione:</translation>
+        <translation type="unfinished">Commissione di Transazione:</translation>
     </message>
     <message>
         <source>Choose...</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Scegli...</translation>
+        <translation type="unfinished">Scegli...</translation>
+    </message>
+    <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>collapse fee-settings</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>minimizza le impostazioni di commissione</translation>
+        <translation type="unfinished">minimizza le impostazioni di commissione</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished">Nascondi</translation>
     </message>
     <message>
         <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Se la commissione personalizzata è impostata su 1000 satoshi e la transazione è di soli 250 byte, allora &quot;per kilobyte&quot; paga solo 250 satoshi di commissione, mentre &quot;somma almeno&quot; paga 1000 satoshi. Per transazioni più grandi di un kilobyte, entrambe le opzioni pagano al kilobyte.</translation>
+        <translation type="unfinished">Se la commissione personalizzata è impostata su 1000 satoshi e la transazione è di soli 250 byte, allora &quot;per kilobyte&quot; paga solo 250 satoshi di commissione, mentre &quot;somma almeno&quot; paga 1000 satoshi. Per transazioni più grandi di un kilobyte, entrambe le opzioni pagano al kilobyte.</translation>
     </message>
     <message>
         <source>per kilobyte</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>per kilobyte</translation>
+        <translation type="unfinished">per kilobyte</translation>
+    </message>
+    <message>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>(leggi il suggerimento)</translation>
+        <translation type="unfinished">(leggi il suggerimento)</translation>
     </message>
     <message>
         <source>Recommended:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Raccomandata:</translation>
+        <translation type="unfinished">Raccomandata:</translation>
     </message>
     <message>
         <source>Custom:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Personalizzata:</translation>
+        <translation type="unfinished">Personalizzata:</translation>
     </message>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>(Commissione intelligente non ancora inizializzata. Normalmente richiede un&apos;attesa di alcuni blocchi...)</translation>
+        <translation type="unfinished">(Commissione intelligente non ancora inizializzata. Normalmente richiede un&apos;attesa di alcuni blocchi...)</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>normal</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>normale</translation>
+        <translation type="unfinished">normale</translation>
     </message>
     <message>
         <source>fast</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>veloce</translation>
+        <translation type="unfinished">veloce</translation>
+    </message>
+    <message>
+        <source>Request Replace-By-Fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Confirm the send action</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Conferma l&apos;azione di invio</translation>
+        <translation type="unfinished">Conferma l&apos;azione di invio</translation>
     </message>
     <message>
         <source>S&amp;end</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>&amp;Invia</translation>
+        <translation type="unfinished">&amp;Invia</translation>
+    </message>
+    <message>
+        <source>Clear all fields of the form.</source>
+        <translation type="unfinished">Cancellare tutti i campi del modulo.</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Cancella &amp;tutto</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Cancella &amp;Tutto</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Invia simultaneamente a più beneficiari</translation>
+        <translation type="unfinished">Invia simultaneamente a più beneficiari</translation>
     </message>
     <message>
         <source>Add &amp;Recipient</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>&amp;Aggiungi beneficiario</translation>
+        <translation type="unfinished">&amp;Aggiungi beneficiario</translation>
     </message>
     <message>
         <source>Balance:</source>
-        <comment>SendCoinsDialog|</comment>
-        <translation>Saldo:</translation>
+        <translation type="unfinished">Saldo:</translation>
     </message>
     <message>
-        <source>This is a normal payment.</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Questo è un normale pagamento.</translation>
+        <source>Copy quantity</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pay &amp;To:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Paga &amp;a:</translation>
+        <source>Copy amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose previously used address</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Scegli un indirizzo usato precedentemente</translation>
+        <source>Copy fee</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose previously used address</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Scegli un indirizzo usato precedentemente</translation>
+        <source>Copy after fee</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Alt+A</translation>
+        <source>Copy bytes</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Alt+A</translation>
+        <source>Copy dust</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paste address from clipboard</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Incollare l&apos;indirizzo dagli appunti</translation>
+        <source>Copy change</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paste address from clipboard</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Incolla l&apos;indirizzo dagli appunti</translation>
+        <source>%1 to %2</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Alt+P</translation>
+        <source>Are you sure you want to send?</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Alt+P</translation>
+        <source>added as transaction fee</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove this entry</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Rimuovi questa voce</translation>
+        <source>Total Amount</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Inserisci un&apos;etichetta per questo indirizzo per aggiungerlo alla lista degli indirizzi utilizzati</translation>
+        <source>This transaction signals replaceability (optin-RBF).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A&amp;mount:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>&amp;Importo:</translation>
+        <source>Send</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>S&amp;ottrae la commissione dall&apos;importo</translation>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
     </message>
     <message>
-        <source>Message:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Messaggio:</translation>
+        <source>PoW² is not yet active, please wait for activation and try again.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This is an unauthenticated payment request.</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Questa è una richiesta di pagamento non autenticata.</translation>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pay To:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Pagare a:</translation>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Memo:</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Memo:</translation>
+        <source>The amount exceeds your balance.
+If you  have recently received funds you may need to wait for them to clear before spending them.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This is an authenticated payment request.</source>
-        <comment>SendCoinsEntry|</comment>
-        <translation>Questa è una richiesta di pagamento autenticata.</translation>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction was rejected with the following reason: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nocks request failed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n block(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Pay only the required fee of %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Warning: Invalid Gulden address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation type="unfinished">(nessuna etichetta)</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Si</translation>
+    </message>
+</context>
+<context>
+    <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
-        <comment>ShutdownWindow|</comment>
-        <translation>Arresto di %1 in corso...</translation>
+        <translation type="unfinished">Arresto di %1 in corso...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
-        <comment>ShutdownWindow|</comment>
-        <translation>Non spegnere il computer fino a quando questa finestra non si sarà chiusa.</translation>
+        <translation type="unfinished">Non spegnere il computer fino a quando questa finestra non si sarà chiusa.</translation>
     </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Firme - Firma / Verifica un messaggio</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>&amp;Firma Messaggio</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Inserisci qui il messaggio che vuoi firmare</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Firma</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Copia la firma corrente nella clipboard</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Firma &amp;Messaggio</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Reimposta tutti i campi della firma messaggio</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>&amp;Verifica Messaggio</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Per verificare il messaggio inserire l&apos;indirizzo del firmatario, il messaggio e la firma nei campi sottostanti, assicurandosi di copiare esattamente anche ritorni a capo, spazi, tabulazioni, etc.. Si raccomanda di non lasciarsi fuorviare dalla firma a leggere più di quanto non sia riportato nel testo del messaggio stesso, in modo da evitare di cadere vittima di attacchi di tipo man-in-the-middle. Si ricorda che la verifica della firma dimostra soltanto che il firmatario può ricevere pagamenti con l&apos;indirizzo corrispondente, non prova l&apos;invio di alcuna transazione.</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Verifica &amp;Messaggio</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <comment>SignVerifyMessageDialog|</comment>
-        <translation>Reimposta tutti i campi della verifica messaggio</translation>
-    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
     <message>
         <source>KB/s</source>
-        <comment>TrafficGraphWidget|</comment>
-        <translation>KB/s</translation>
+        <translation type="unfinished">KB/s</translation>
     </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Data</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total moved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Importo</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
     <message>
         <source>This pane shows a detailed description of the transaction</source>
-        <comment>TransactionDescDialog|</comment>
-        <translation>Questo pannello mostra una descrizione dettagliata della transazione</translation>
+        <translation type="unfinished">Questo pannello mostra una descrizione dettagliata della transazione</translation>
     </message>
     <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <comment>UnitDisplayStatusBarControl|</comment>
-        <translation>Unità con cui visualizzare gli importi. Clicca per selezionare un&apos;altra unità.</translation>
+        <source>Details for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Data</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation type="unfinished">Ricevuto</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation type="unfinished">Inviato</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation type="unfinished">Dividere i fondi bloccati</translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation type="unfinished">Unisci i fondi bloccati</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal account movement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation type="unfinished">(nessuna etichetta)</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <source>All dates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All transaction types</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abandon transaction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase transaction fee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy raw transaction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy full transaction details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show transaction details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export Transaction History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation type="unfinished">Testo CSV (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation type="unfinished">Confermato</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Data</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Etichetta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Indirizzo</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation type="unfinished">Esportazione Fallita</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exporting Successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation type="unfinished">Invia Bitcoin</translation>
+    </message>
+    <message>
+        <source>Fee bump error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increasing transaction fee failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to increase the fee?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current fee:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm fee bump</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t sign transaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not commit transaction</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation type="unfinished">&amp;Esporta</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wallet Data (*.dat)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup Successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The wallet data was successfully saved to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WelcomeDialog</name>
+    <message>
+        <source>New wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I wrote it down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recover wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter a recovery phrase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+    <message>
+        <source>Proceed with invalid phrase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generating wallet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I understand</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDialog</name>
+    <message>
+        <source>To begin witnessing, select an account from which to lock funds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Projected earnings graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compound earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Informazioni</translation>
+    </message>
+    <message>
+        <source>n/a</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock time remaining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locked until</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Required earnings frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Estimated earnings frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inactive witness account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waiting for confirmation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change units</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fund account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Renew account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Earnings to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Projected earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initial projected earnings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Weeks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Months</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 weeks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Account toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spacer  toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Account info toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
