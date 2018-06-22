@@ -1445,7 +1445,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
             // fixme: (2.1) We can remove
             // Bypass invalid warnings for phase 4 activation 
-            if (bit == Consensus::DEPLOYMENT_POW)
+            if (bit == chainParams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit)
                 continue;
             if (state == THRESHOLD_ACTIVE || state == THRESHOLD_LOCKED_IN)
             {
