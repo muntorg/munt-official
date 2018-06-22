@@ -814,16 +814,67 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
         return NullUniValue;
     }
 
-    if (request.fHelp || request.params.size() > 0)
+    if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
-                "getunconfirmedbalance\n"
+                "getunconfirmedbalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
                 "Returns the server's total unconfirmed balance\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    return ValueFromAmount(pwallet->GetUnconfirmedBalance());
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount));
 }
 
+UniValue getimmaturebalance(const JSONRPCRequest &request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+                "getimmaturebalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "Returns the server's total immature balance\n");
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount));
+}
+
+UniValue getlockedbalance(const JSONRPCRequest &request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+                "getlockedbalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "Returns the server's total locked balance\n");
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetBalance(nullptr, true, true) - pwallet->GetBalance(nullptr, false, true));
+}
 
 UniValue movecmd(const JSONRPCRequest& request)
 {
@@ -3133,7 +3184,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "abortrescan",              &abortrescan,              false,  {} },
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       true,   {"nrequired","keys","account"} },
     { "wallet",             "backupwallet",             &backupwallet,             true,   {"destination"} },
-    //{ "wallet",             "bumpfee",                  &bumpfee,                  true,   {"txid", "options"} },
+    //{ "wallet",             "bumpfee",                  &bumpfee,                true,   {"txid", "options"} },
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true,   {"filename"} },
     { "wallet",             "encryptwallet",            &encryptwallet,            true,   {"passphrase"} },
@@ -3143,9 +3194,11 @@ static const CRPCCommand commands[] =
     { "wallet",             "getnewaddress",            &getnewaddress,            true,   {"account"} },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,   {} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false,  {"address","minconf"} },
-    { "wallet",             "getrescanprogress",        &getrescanprogress,           false,  {} },
+    { "wallet",             "getrescanprogress",        &getrescanprogress,        false,  {} },
     { "wallet",             "gettransaction",           &gettransaction,           false,  {"txid","include_watchonly"} },
     { "wallet",             "getunconfirmedbalance",    &getunconfirmedbalance,    false,  {} },
+    { "wallet",             "getimmaturebalance",       &getimmaturebalance,       false,  {} },
+    { "wallet",             "getlockedbalance",         &getlockedbalance,         false,  {} },
     { "wallet",             "getwalletinfo",            &getwalletinfo,            false,  {} },
     { "wallet",             "importmulti",              &importmulti,              true,   {"account","requests","options"} },
     { "wallet",             "importprivkey",            &importprivkey,            true,   {"privkey","label","rescan"} },
