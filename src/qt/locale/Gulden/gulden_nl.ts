@@ -44,7 +44,7 @@ WAARSCHUWING: zorg dat jij de enige persoon bent die deze QR-code kan zien omdat
     </message>
     <message>
         <source>Please fund the witness account first.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eerst vul witness-rekening.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -57,7 +57,8 @@ WAARSCHUWING: zorg dat jij de enige persoon bent die deze QR-code kan zien omdat
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Weet je zeker dat je %1 wil verwijderen uit het adresboek?
+</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
@@ -673,7 +674,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Warning toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Waarschuwing</translation>
     </message>
     <message>
         <source>Tabs toolbar</source>
@@ -749,7 +750,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Import key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Sleutel importeren</translation>
     </message>
     <message>
         <source>Import a private key address</source>
@@ -1084,11 +1085,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>3 years</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">3 jaren</translation>
     </message>
     <message>
         <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De Guldens zijn geblokkeerd gedurende 30 dagen (%1 maand). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de blokkeringsperiode. Verwachtte verdiensten: %3 (%4 per maand) Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
@@ -2753,7 +2754,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>PoW² is not yet active, please wait for activation and try again.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PoW² is nog niet actief, wacht op activering en probeer het opnieuw.</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>

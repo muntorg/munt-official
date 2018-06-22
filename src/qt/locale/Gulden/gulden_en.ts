@@ -45,7 +45,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Please fund the witness account first.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Please fund the witness account first.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -2762,7 +2762,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>PoW² is not yet active, please wait for activation and try again.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PoW² is not yet active, please wait for activation and try again.</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
