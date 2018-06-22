@@ -12,6 +12,8 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
+#include "alert.h"
+
 #include "validation/validation.h"
 #include "net.h"
 #include "scheduler.h"
@@ -252,10 +254,7 @@ void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey)
     }
 
     CAccount* account = nullptr;
-
     account = CreateWitnessOnlyWitnessAccount("Imported witness", keysAndBirthDates);
-    if (!account)
-        throw std::runtime_error("Failed to create witness-only witness account");
 }
 
 void CWallet::importPrivKey(const SecureString& sKey)
@@ -288,7 +287,9 @@ void CWallet::importPrivKey(const CKey& privKey)
     //Don't import an address that is already in wallet.
     if (pactiveWallet->HaveKey(importKeyID))
     {
-        uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Wallet already contains key."), CClientUIInterface::MSG_ERROR);
+        std::string strErrorMessage = _("Error importing private key") + "\n" + _("Wallet already contains key.");
+        LogPrintf(strErrorMessage.c_str());
+        CAlert::Notify(strErrorMessage, true, true);
         return;
     }
 
@@ -296,14 +297,25 @@ void CWallet::importPrivKey(const CKey& privKey)
     newAccount->m_Type = ImportedPrivateKeyAccount;
 
     //fixme: (2.1) - Optionally take a key bith date here.
-    importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1);
+    if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
+    {
+        //Error messages aleady handled internally by importPrivKeyIntoAccount.
+        //fixme: (2.1) we should delete the account in this scenario.
+        return;
+    }
 
     pactiveWallet->addAccount(newAccount, _("Imported key"));
 }
 
-void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
+bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
 {
-    assert(!forAccount->IsHD());
+    if (forAccount->IsHD())
+    {
+        std::string strError = "forceKeyIntoKeypool called on an HD account. Please contact a developer and let them know what you were doing at the time so that they can look into the issue.";
+        LogPrintf(strError.c_str());
+        CAlert::Notify(strError, true, true);
+        return false;
+    }
 
     LOCK(cs_wallet);
     CWalletDB walletdb(*dbw);
@@ -324,14 +336,24 @@ void CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToIns
 
     CPubKey pubKeyToInsert = privKeyToInsert.GetPubKey();
     if (!AddKeyPubKey(privKeyToInsert, pubKeyToInsert, *forAccount, KEYCHAIN_EXTERNAL))
-        throw std::runtime_error("forceKeyIntoKeypool: AddKeyPubKey failed");
+    {
+        std::string strError = "Failed to add public key, perhaps it already exists in another account.";
+        LogPrintf(strError.c_str());
+        CAlert::Notify(strError, true, true);
+        return false;
+    }
     if (!walletdb.WritePool( ++nIndex, CKeyPool(pubKeyToInsert, getUUIDAsString(forAccount->getUUID()), KEYCHAIN_EXTERNAL ) ) )
-        throw std::runtime_error(std::string(__func__) + ": writing imported key failed");
+    {
+        std::string strError = "Failed to write key to pool. Please contact a developer and let them know what you were doing at the time so that they can look into the issue.";
+        LogPrintf(strError.c_str());
+        CAlert::Notify(strError, true, true);
+        return false;
+    }
     forAccount->setKeyPoolExternal.insert(nIndex);
     LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
 }
 
-void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
+bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
 {
     assert(!targetAccount->IsHD());
 
@@ -339,7 +361,10 @@ void CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& priv
     pactiveWallet->mapKeyMetadata[importKeyID].nCreateTime = 1;
 
     // Force key into the keypool
-    forceKeyIntoKeypool(targetAccount, privKey);
+    if (!forceKeyIntoKeypool(targetAccount, privKey))
+    {
+        return false;
+    }
 
     // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
     pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);

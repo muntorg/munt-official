@@ -5,6 +5,7 @@
 
 #include "wallet/wallet.h"
 #include "policy/fees.h"
+#include "alert.h"
 #include "account.h"
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
@@ -827,8 +828,21 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
 {
     if (!forAccount)
         return false;
+
     if (forAccount->m_Type != WitnessOnlyWitnessAccount)
         return false;
+
+    //Don't import an address that is already in wallet.
+    for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
+    {
+        if (static_cast<CWallet*>(this)->HaveKey(privateWitnessKey.GetPubKey().GetID()))
+        {
+            std::string strErrorMessage = _("Error importing private key") + "\n" + _("Wallet already contains key.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+            return false;
+        }
+    }
 
     for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
     {
@@ -882,12 +896,18 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
     newAccount = new CAccount();
     newAccount->m_Type = WitnessOnlyWitnessAccount;
 
-    ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates);
+    if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates))
+    {
+        // Write new account
+        addAccount(newAccount, strAccount);
 
-    // Write new account
-    addAccount(newAccount, strAccount);
-
-    return newAccount;
+        return newAccount;
+    }
+    else
+    {
+        delete newAccount;
+        return nullptr;
+    }
 }
 
 CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)

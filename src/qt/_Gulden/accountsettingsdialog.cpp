@@ -174,6 +174,8 @@ void AccountSettingsDialog::showSyncQr()
                         ui->addressQRContents->setText(tr("Please fund the witness account first."));
                         ui->addressQRContents->setVisible(true);
                         ui->addressQRImage->setVisible(false);
+                        disconnect(this, SLOT(showSyncQr()));
+                        return;
                     }
                 }
             }
@@ -182,7 +184,7 @@ void AccountSettingsDialog::showSyncQr()
         ui->addressQRImage->setCode(qrString);
         ui->addressQRContents->setText(qrString);
 
-        disconnect(this, SLOT( showSyncQr() ));
+        disconnect(this, SLOT(showSyncQr()));
     }
 }
 
