@@ -134,7 +134,7 @@ bool GuldenAppManager::daemonise()
     }
     #else
     fprintf(stderr, "Error: -daemon is not supported on this operating system\n");
-    return false
+    return false;
     #endif
 }
 
