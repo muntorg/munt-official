@@ -2361,7 +2361,18 @@ public:
     void operator()(const CScriptID &scriptId) {
         CScript script;
         if (keystore.GetCScript(scriptId, script))
-            Process(script);
+        {
+            txnouttype type;
+            std::vector<CTxDestination> vDest;
+            int nRequired;
+            if (ExtractDestinations(script, type, vDest, nRequired))
+            {
+                for (const CTxDestination &dest : vDest)
+                {
+                    boost::apply_visitor(*this, dest);
+                }
+            }
+        }
     }
 
     void operator()(const CPoW2WitnessDestination &dest) {
