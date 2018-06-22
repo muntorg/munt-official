@@ -476,11 +476,18 @@ bool CWallet::Verify()
             return InitError(_("Invalid characters in -wallet filename"));
         }
 
-        // Check file permissions.
+        // Check file permissions by opening or creating file.
         {
-            std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
-            if (!testPerms.is_open())
-                return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+            bool alreadyExists = fs::exists(GetDataDir() / walletFile);
+            {
+                std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
+                if (!testPerms.is_open())
+                    return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+            }
+            if (!alreadyExists)
+            {
+                fs::remove(GetDataDir() / walletFile);
+            }
         }
 
         std::string strError;
