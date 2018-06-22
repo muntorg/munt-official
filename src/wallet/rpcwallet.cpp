@@ -1041,7 +1041,7 @@ UniValue sendmany(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 5)
         throw std::runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" [\"address_or_account\",...] )\n"
+            "sendmany \"fromaccount\" {\"address_or_account\":amount,...} ( minconf \"comment\" [\"address_or_account\",...] )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
@@ -1106,7 +1106,8 @@ UniValue sendmany(const JSONRPCRequest& request)
     {
         CGuldenAddress address(name_);
 
-        CAccount* toAccount = AccountFromValue(pwallet, name_, false);
+        CAccount* toAccount;
+        try{ toAccount = AccountFromValue(pwallet, name_, false); } catch(...) {}
         if (toAccount)
         {
             CReserveKeyOrScript receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
