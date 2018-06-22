@@ -202,7 +202,7 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
-        //fixme: (2.0) Use new isminecache caching
+        //fixme: (2.1) Use accountIsMineCache
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
             isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
@@ -223,7 +223,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     LOCK(wallet.cs_wallet);
 
     isminetype ret = isminetype::ISMINE_NO;
-    //fixme: (2.0) Use new isminecache caching
+    //fixme: (2.1) Use accountIsMineCache
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -247,19 +247,18 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
         (unused)accountUUID;
-        auto iter = account->isminecache.find(outHash);
-        if (iter != account->isminecache.end())
+        if (account->accountIsMineCache.contains(outHash))
         {
-            if (iter->second > ret)
-                ret = iter->second;
+            isminetype cachedValue = account->accountIsMineCache.get(outHash);
+            if (cachedValue > ret)
+                ret = cachedValue;
         }
         else
         {
             isminetype temp = IsMine(*account, out);
             if (temp > ret)
                 ret = temp;
-            //fixme: (2.0) keep trimmed by MRU
-            account->isminecache[outHash] = ret;
+            account->accountIsMineCache.insert(outHash, ret);
         }
         // No need to keep going through the remaining accounts at this point.
         if (ret >= ISMINE_SPENDABLE)
@@ -274,19 +273,18 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
     for (const auto& txout : tx.tx->vout)
     {
         uint256 outHash = txout.output.GetHash();
-        auto iter = forAccount->isminecache.find(outHash);
-        if (iter != forAccount->isminecache.end())
+        if (forAccount->accountIsMineCache.contains(outHash))
         {
-            if (iter->second > ret)
-                ret = iter->second;
+            isminetype cachedValue = forAccount->accountIsMineCache.get(outHash);
+            if (cachedValue > ret)
+                ret = cachedValue;
         }
         else
         {
             isminetype temp = IsMine(*forAccount, txout);
             if (temp > ret)
                 ret = temp;
-            //fixme: (2.0) keep trimmed by MRU
-            forAccount->isminecache[outHash] = ret;
+            forAccount->accountIsMineCache.insert(outHash, ret);
         }
         // No need to keep going through the remaining outputs at this point.
         if (ret > isminetype::ISMINE_NO)

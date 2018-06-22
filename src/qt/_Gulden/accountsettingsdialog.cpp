@@ -126,7 +126,7 @@ void AccountSettingsDialog::showSyncQr()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        QString qrString;
+        QString qrString = "";
         if (activeAccount->IsMobi())
         {
             CReserveKeyOrScript reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
@@ -163,9 +163,18 @@ void AccountSettingsDialog::showSyncQr()
                             }
                         }
                     }
-                    witnessAccountKeys.pop_back();
-                    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
-                    qrString = QString::fromStdString(witnessAccountKeys);
+                    if (!witnessAccountKeys.empty())
+                    {
+                        witnessAccountKeys.pop_back();
+                        witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+                        qrString = QString::fromStdString(witnessAccountKeys);
+                    }
+                    else
+                    {
+                        ui->addressQRContents->setText(tr("Please fund the witness account first."));
+                        ui->addressQRContents->setVisible(true);
+                        ui->addressQRImage->setVisible(false);
+                    }
                 }
             }
             ui->addressQRContents->setVisible(true);
