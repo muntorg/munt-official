@@ -2913,7 +2913,8 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
     }
     else
     {
-        account = pwallet->CreateWitnessOnlyWitnessAccount(request.params[0], keysAndBirthDates);
+        std::string requestedAccountName = request.params[0].get_str();
+        account = pwallet->CreateWitnessOnlyWitnessAccount(requestedAccountName, keysAndBirthDates);
         if (!account)
             throw std::runtime_error("Failed to create witness-only witness account");
     }
