@@ -351,6 +351,7 @@ bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToIns
     }
     forAccount->setKeyPoolExternal.insert(nIndex);
     LogPrintf("keypool [%s:external] added imported key %d, size=%u\n", forAccount->getLabel(), nIndex, forAccount->setKeyPoolExternal.size());
+    return true;
 }
 
 bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
@@ -369,4 +370,6 @@ bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& priv
     // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
     pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
     boost::thread t(rescanThread); // thread runs free
+
+    return true;
 }
