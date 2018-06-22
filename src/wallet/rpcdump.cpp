@@ -616,8 +616,8 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     CKeyID keyID;
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
-    CKey vchSecret;
 
+    CKey vchSecret;
     for(const auto& accountIter : pwallet->mapAccounts)
     {
         if (accountIter.second->HaveKey(keyID))
@@ -629,8 +629,13 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
                     throw JSONRPCError(RPC_INTERNAL_ERROR, "Please pass the correct HDConsent option in order to proceed.");
                 }
             }
+            if (!accountIter.second->GetKey(keyID, vchSecret))
+            {
+                throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
+            }
         }
     }
+
     return CGuldenSecret(vchSecret).ToString();
 }
 
