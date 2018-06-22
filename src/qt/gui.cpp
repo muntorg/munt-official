@@ -1047,8 +1047,14 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
 
-    if (IsArgSet("-testnet"))
-        updateWindowTitle();
+    // Prevent window title updates freezing UI by coming in too fast.
+    static bool fIsTestNet = IsArgSet("-testnet");
+    if (fIsTestNet)
+    {
+        static uint64_t lastUpdate = GetTimeMillis();
+        if (GetTimeMillis() - lastUpdate > 5000)
+            updateWindowTitle();
+    }
 
     if (!clientModel)
         return;
