@@ -1163,7 +1163,7 @@
         <string>Confirm the send action</string>
        </property>
        <property name="text">
-        <string>S&amp;end</string>
+        <string notr="true">Send</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -1185,7 +1185,7 @@
         <string>Clear all fields of the form.</string>
        </property>
        <property name="text">
-        <string>Clear &amp;All</string>
+        <string notr="true">Clear</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -1198,7 +1198,7 @@
         <string>Send to multiple recipients at once</string>
        </property>
        <property name="text">
-        <string>Add &amp;Recipient</string>
+        <string notr="true">Add</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>

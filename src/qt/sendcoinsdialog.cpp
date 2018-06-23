@@ -128,14 +128,14 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
 
     ui->horizontalLayout->removeWidget(ui->sendButton);
     QPushButton* editButton = new QPushButton();
-    editButton->setText("&Edit");
+    editButton->setText(tr("&Edit"));
     editButton->setObjectName("editButton");
     ui->horizontalLayout->addWidget(editButton);
     ui->horizontalLayout->addWidget(ui->sendButton);
 
     ui->sendButton->setIcon(QIcon());
     ui->clearButton->setIcon(QIcon());
-    ui->clearButton->setText("&Clear");
+    ui->clearButton->setText(tr("&Clear"));
     ui->clearButton->setMinimumSize(QSize(0, 0));
     ui->sendButton->setMinimumSize(QSize(0, 0));
 
@@ -150,7 +150,7 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     ui->verticalLayout->insertWidget(2, horizontalLine);
 
     QPushButton* deleteButton = new QPushButton();
-    deleteButton->setText("&Delete");
+    deleteButton->setText(tr("&Delete"));
     deleteButton->setObjectName("deleteButton");
     ui->horizontalLayout->insertWidget(0, deleteButton);
 
