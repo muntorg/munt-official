@@ -478,7 +478,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
             "sendtoaddressfromaccount \"account\" \"guldenaddress\" amount ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
-            "\nSend an amount to a given address using the currently active account. If you want to use a specific account then use sendtoaddressfromaccount instead\n"
+            "\nSend an amount to \"guldenaddress\" using \"account\"\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
             "1. \"fromaccount\"  (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
