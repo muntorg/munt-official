@@ -542,7 +542,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
     }
 
-    //fixme: (2.0) This is a bit broken - use nOurWeight etc.
+    //fixme: (2.1) This is a bit broken - use nOurWeight etc.
     // Fill in the remaining time on the 'actual earnings' curve with a forecast.
     int nXGeneratedForecast = 0;
     if (infoForAccount.generatedPoints.size() > 0)
@@ -599,71 +599,81 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
     // Populate stats table with info
     {
-        ui->labelWeightValue->setText(witnessInfoForAccount.nOurWeight<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nOurWeight));
-        ui->labelLockedFromValue->setText(witnessInfoForAccount.originDate.isNull() ? tr("n/a") : witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm"));
-        if (!chainActive.Tip())
-        {
-            ui->labelLockedUntilValue->setText( tr("n/a") );
-        }
-        else
+        QString lastEarningsDateLabel = tr("n/a");
+        QString earningsToDateLabel = lastEarningsDateLabel;
+        QString networkWeightLabel = lastEarningsDateLabel;
+        QString lockDurationLabel = lastEarningsDateLabel;
+        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
+        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
+        QString lockTimeRemainingLabel = lastEarningsDateLabel;
+        QString labelWeightValue = lastEarningsDateLabel;
+        QString lockedUntilValue = lastEarningsDateLabel;
+        QString lockedFromValue = lastEarningsDateLabel;
+
+        if (witnessInfoForAccount.nOurWeight > 0)
+            labelWeightValue = QString::number(witnessInfoForAccount.nOurWeight);
+        if (!witnessInfoForAccount.originDate.isNull())
+            lockedFromValue = witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm");
+        if (chainActive.Tip())
         {
             QDateTime lockedUntilDate;
             lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
             lockedUntilDate = lockedUntilDate.addSecs(witnessInfoForAccount.nLockBlocksRemaining*150);
-            ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
+            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
         }
-        ui->labelLastEarningsDateValue->setText(witnessInfoForAccount.lastEarningsDate.isNull() ? tr("n/a") : witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm"));
-        ui->labelWitnessEarningsValue->setText(witnessInfoForAccount.generatedPoints.size() == 0 ? tr("n/a") : QString::number(witnessInfoForAccount.nEarningsToDate));
 
-        ui->labelNetworkWeightValue->setText(witnessInfoForAccount.nTotalNetworkWeightTip<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nTotalNetworkWeightTip));
-        switch (witnessInfoForAccount.scale)
+        if (!witnessInfoForAccount.lastEarningsDate.isNull())
+            lastEarningsDateLabel = witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
+        if (witnessInfoForAccount.generatedPoints.size() != 0)
+            earningsToDateLabel = QString::number(witnessInfoForAccount.nEarningsToDate);
+        if (witnessInfoForAccount.nTotalNetworkWeightTip > 0)
+            networkWeightLabel = QString::number(witnessInfoForAccount.nTotalNetworkWeightTip);
+
+        //fixme: (2.1) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //Ideally this should be improved.
+        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
         {
-            case GraphScale::Blocks:
-                ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nWitnessLength)));
-                ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod)));
-                ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod)));
-                ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining)));
-                break;
-            case GraphScale::Days:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
-            case GraphScale::Weeks:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/7.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/7.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
-            case GraphScale::Months:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/30.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/30.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
+            QString formatStr;
+            double divideBy=1;
+            switch (witnessInfoForAccount.scale)
+            {
+                case GraphScale::Blocks:
+                    formatStr = tr("%1 blocks");
+                    divideBy = 1;
+                    break;
+                case GraphScale::Days:
+                    formatStr = tr("%1 days");
+                    divideBy = 576;
+                    break;
+                case GraphScale::Weeks:
+                    formatStr = tr("%1 weeks");
+                    divideBy = 576*7;
+                    break;
+                case GraphScale::Months:
+                    formatStr = tr("%1 weeks");
+                    divideBy = 576*30;
+                    break;
+            }
+            if (witnessInfoForAccount.nWitnessLength > 0)
+                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy));
+            if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy));
+            if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy));
+            if (witnessInfoForAccount.nLockBlocksRemaining > 0)
+                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy));
         }
+
+        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
+        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
+        ui->labelNetworkWeightValue->setText(networkWeightLabel);
+        ui->labelLockDurationValue->setText(lockDurationLabel);
+        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
+        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
+        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
+        ui->labelWeightValue->setText(labelWeightValue);
+        ui->labelLockedFromValue->setText(lockedFromValue);
+        ui->labelLockedUntilValue->setText(lockedUntilValue);
     }
 }
 
