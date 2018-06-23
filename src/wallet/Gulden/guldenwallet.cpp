@@ -875,16 +875,25 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
         if (encodedPrivateWitnessKeyAndBirthDate.size() == 2)
             ParseUInt64(encodedPrivateWitnessKeyAndBirthDate[1].c_str(), &nKeyBirthDate);
 
+        bool keyError = false;
         try
         {
             CGuldenSecret secretPrivWitnessKey;
             secretPrivWitnessKey.SetString(encodedPrivateWitnessKeyAndBirthDate[0].c_str());
-            privateWitnessKeys.emplace_back(secretPrivWitnessKey.GetKey(), nKeyBirthDate);
+            if (secretPrivWitnessKey.IsValid())
+            {
+                privateWitnessKeys.emplace_back(secretPrivWitnessKey.GetKey(), nKeyBirthDate);
+            }
+            else
+            {
+                keyError = true;
+            }
         }
         catch(...)
         {
-            throw std::runtime_error("Not a valid Gulden private witness key");
+            keyError = true;
         }
+        throw std::runtime_error("Not a valid Gulden private witness key");
     }
     return privateWitnessKeys;
 }
