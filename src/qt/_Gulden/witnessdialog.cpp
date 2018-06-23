@@ -382,60 +382,46 @@ void WitnessDialog::updateUnit(int nNewUnit_)
     doUpdate(true);
 }
 
-static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale)
+// We assign all earnings to the next fixed point interval.
+// e.g. if we are 2 days into week 1 the earning goes to the end of week one.
+// The exception being when (roundToFixedPoint) is passed in - which is used to plot the current point in time
+// In which case we assign to that exact point instead
+static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale, bool roundToFixedPoint)
 {
+    double nXF=nX;
+    double fDaysModified = nDays;
+    if (IsArgSet("-testnet"))
+    {
+        fDaysModified = (nX - nOriginBlock)/576.0;
+    }
+
+    //fixme: (2.1) These various week/month calculations are all very imprecise; they should probably be based on an actual calendar instead.
     switch (nScale)
     {
         case GraphScale::Blocks:
-            nX -= nOriginBlock;
+            nXF -= nOriginBlock;
             break;
         case GraphScale::Days:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-            }
-            else
-            {
-                nX = nDays;
-            }
+            nXF = fDaysModified;
             break;
         case GraphScale::Weeks:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-                nX /= 7;
-                ++nX;
-            }
-            else
-            {
-                //fixme: (2.0)
-                nX = nDays/7;
-            }
+            nXF = fDaysModified/7;
             break;
         case GraphScale::Months:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-                nX /= 30;
-                ++nX;
-            }
-            else
-            {
-                //fixme: (2.0)
-                nX = nDays/30;
-            }
+            nXF = fDaysModified/30;
             break;
     }
-    pointMap[nX] += nY;
+    nX = std::floor(nXF)+1;
+    if (roundToFixedPoint)
+        pointMap[nX] += nY;
+    else
+        pointMap[nXF] += nY;
 }
 
 void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
 {
-    std::map<CAmount, CAmount> pointMapForecast; pointMapForecast[0] = 0;
-    std::map<CAmount, CAmount> pointMapGenerated;
+    std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
+    std::map<double, CAmount> pointMapGenerated;
 
     CTxOutPoW2Witness witnessDetails;
 
@@ -505,7 +491,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
                     infoForAccount.nEarningsToDate += nY;
                     uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
-                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
+                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
                 }
             }
         }
@@ -518,7 +504,8 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         uint64_t nY = pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
-        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
+        pointMapGenerated.erase(--pointMapGenerated.end());
+        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
     }
 
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
@@ -531,7 +518,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     {
         unsigned int nX = i;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
-        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale);
+        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
     // Populate the 'expected earnings' curve
