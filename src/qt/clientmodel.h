@@ -121,6 +121,9 @@ Q_SIGNALS:
     //! Fired when a message should be reported to the user
     void message(const QString &title, const QString &message, unsigned int style);
 
+    //! Fired when an alert should be reported to the user
+    void alert(const QString& alertMessage);
+
     // Show progress dialog e.g. for verifychain
     void showProgress(const QString &title, int nProgress);
 
@@ -128,7 +131,13 @@ public Q_SLOTS:
     void updateTimer();
     void updateNumConnections(int numConnections);
     void updateNetworkActive(bool networkActive);
+
+    //! Status bar 'alerts' like sync status messages etc.
     void updateAlert(const QString &hash, int status);
+
+    //! UI alerts for wallet errors.
+    void updateUIAlert(const QString& alertMessage);
+
     void updateBanlist();
 };
 

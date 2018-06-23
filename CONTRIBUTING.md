@@ -15,7 +15,12 @@ Code contributions are always welcome, simply submit a pull request for it to be
 
 Keep your pull requests as clean as possible, don't mix multiple issues into one request, don't make unnecesssary formatting or name changes that make the patch larger than it needs to be, these can rather be split into multiple requests.
 
-View [the developer guidelines](./doc/developer_guidelines.md) for basic code style standards andsuggestions.
+View [the developer guidelines](./doc/developer_guidelines.md) for basic code style standards and suggestions.
+
+Testing
+---------------------------
+
+Read here about our [testnet](./technical_documentation/accelerated_testnet.md) which includes a testbed for merchant integration and join the community on slack for further communication/assistance.
 
 
 Localisation/Translation

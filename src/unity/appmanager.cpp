@@ -45,7 +45,7 @@ void GuldenAppManager::initialize()
 {
     std::thread([=]
     {
-        RenameThread("Gulden-initialise");
+        //RenameThread("Gulden-initialise");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         try
         {
@@ -116,11 +116,36 @@ void GuldenAppManager::shutdown()
     #endif
 }
 
+bool GuldenAppManager::daemonise()
+{
+    #if HAVE_DECL_DAEMON
+    {
+        // Daemonize - don't chdir (1), do close FDs (0)
+        bool managedToDeamonise = (daemon(1, 0) != -1);
+
+        if (!managedToDeamonise)
+        {
+            fprintf(stderr, "Error: daemon() failed: %s\n", strerror(errno));
+        }
+
+        // Create a new shutdownThread
+        shutdownThread();
+        return managedToDeamonise;
+    }
+    #else
+    fprintf(stderr, "Error: -daemon is not supported on this operating system\n");
+    return false;
+    #endif
+}
+
 void GuldenAppManager::shutdownThread()
 {
     #ifndef WIN32
-    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd))
-       assert(0);
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd) == -1)
+    {
+        LogPrintf("shutdown thread: Failed to create socket pair\n");
+        assert(0);
+    }
     #endif
 
     std::thread([=]

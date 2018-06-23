@@ -251,22 +251,33 @@ bool CAlert::ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThre
     return true;
 }
 
-void
-CAlert::Notify(const std::string& strMessage, bool fThread)
+void CAlert::Notify(const std::string& strMessage, bool fThread, bool fUI)
 {
+    bool notifyCallback = true;
     std::string strCmd = GetArg("-alertnotify", "");
-    if (strCmd.empty()) return;
+    if (strCmd.empty())
+        notifyCallback = false;
+
+    if (!fUI && !notifyCallback)
+        return;
 
     // Alert text should be plain ascii coming from a trusted source, but to
     // be safe we first strip anything not in safeChars, then add single quotes around
     // the whole string before passing it to the shell:
     std::string singleQuote("'");
-    std::string safeStatus = SanitizeString(strMessage);
-    safeStatus = singleQuote+safeStatus+singleQuote;
-    boost::replace_all(strCmd, "%s", safeStatus);
+    std::string safeStatusCallback = SanitizeString(strMessage);
+    safeStatusCallback = singleQuote+safeStatusCallback+singleQuote;
+    boost::replace_all(strCmd, "%s", safeStatusCallback);
 
-    if (fThread)
-        boost::thread t(runCommand, strCmd); // thread runs free
-    else
-        runCommand(strCmd);
+    if (fUI)
+    {
+        uiInterface.NotifyUIAlertChanged(strMessage);
+    }
+    if (notifyCallback)
+    {
+        if (fThread)
+            boost::thread t(runCommand, strCmd); // thread runs free
+        else
+            runCommand(strCmd);
+    }
 }

@@ -631,8 +631,8 @@ uint32_t CAccountHD::getIndex()
     return m_nIndex;
 }
 
-
 CAccount::CAccount()
+: accountIsMineCache(5000, 2000)
 {
     SetNull();
     //Start at current time and go backwards as we find transactions.
@@ -778,6 +778,12 @@ void CAccount::GetKeys(std::set<CKeyID> &setAddress) const
     setAddress.clear();
     setAddress.insert(setExternal.begin(), setExternal.end());
     setAddress.insert(setInternal.begin(), setInternal.end());
+}
+
+void CAccount::GetKeys(std::set<CKeyID> &setKeysExternal, std::set<CKeyID> &setKeysInternal) const
+{
+    externalKeyStore.GetKeys(setKeysExternal);
+    internalKeyStore.GetKeys(setKeysInternal);
 }
 
 bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)

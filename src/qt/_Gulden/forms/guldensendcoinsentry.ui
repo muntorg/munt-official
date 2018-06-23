@@ -368,7 +368,7 @@
          <item>
           <widget class="QLabel" name="pow2LockFundsSliderMinLabel">
            <property name="text">
-            <string notr="true">1 month</string>
+            <string>1 month</string>
            </property>
            <property name="indent">
             <number>0</number>
@@ -412,7 +412,7 @@
          <item>
           <widget class="QLabel" name="pow2LockFundsSliderMaxLabel">
            <property name="text">
-            <string notr="true">3 years</string>
+            <string>3 years</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>
@@ -427,7 +427,7 @@
        <item>
         <widget class="QLabel" name="pow2LockFundsInfoLabel">
          <property name="text">
-          <string notr="true">Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</string>
+          <string>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

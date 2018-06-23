@@ -187,7 +187,6 @@ void ClientModel::updateAlert(const QString &hash, int status)
 {
     // Show error message notification for new alert
     if(status == CT_NEW)
-
     {
         uint256 hash_256;
         hash_256.SetHex(hash.toStdString());
@@ -198,6 +197,11 @@ void ClientModel::updateAlert(const QString &hash, int status)
         }
     }
     Q_EMIT alertsChanged(getStatusBarWarnings());
+}
+
+void ClientModel::updateUIAlert(const QString& alertMessage)
+{
+    Q_EMIT alert(alertMessage);
 }
 
 bool ClientModel::inInitialBlockDownload() const
@@ -304,6 +308,12 @@ static void NotifyAlertChanged(ClientModel *clientmodel, const uint256 &hash, Ch
     QMetaObject::invokeMethod(clientmodel, "updateAlert", Qt::QueuedConnection, Q_ARG(QString, QString::fromStdString(hash.GetHex())), Q_ARG(int, status));
 }
 
+static void NotifyUIAlertChanged(ClientModel *clientmodel, const std::string& alertMessage)
+{
+    QMetaObject::invokeMethod(clientmodel, "updateUIAlert", Qt::QueuedConnection, Q_ARG(QString, QString::fromStdString(alertMessage)));
+}
+
+
 static void NotifyNetworkActiveChanged(ClientModel *clientmodel, bool networkActive)
 {
     QMetaObject::invokeMethod(clientmodel, "updateNetworkActive", Qt::QueuedConnection,
@@ -373,6 +383,7 @@ void ClientModel::subscribeToCoreSignals()
     uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(NotifyNumConnectionsChanged, this, _1));
     uiInterface.NotifyNetworkActiveChanged.connect(boost::bind(NotifyNetworkActiveChanged, this, _1));
     uiInterface.NotifyAlertChanged.connect(boost::bind(NotifyAlertChanged, this, _1, _2));
+    uiInterface.NotifyUIAlertChanged.connect(boost::bind(NotifyUIAlertChanged, this, _1));
     uiInterface.BannedListChanged.connect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.connect(boost::bind(BlockTipChanged, this, _1, _2, true));
@@ -389,6 +400,7 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(NotifyNumConnectionsChanged, this, _1));
     uiInterface.NotifyNetworkActiveChanged.disconnect(boost::bind(NotifyNetworkActiveChanged, this, _1));
     uiInterface.NotifyAlertChanged.disconnect(boost::bind(NotifyAlertChanged, this, _1, _2));
+    uiInterface.NotifyUIAlertChanged.disconnect(boost::bind(NotifyUIAlertChanged, this, _1));
     uiInterface.BannedListChanged.disconnect(boost::bind(BannedListChanged, this));
     uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));

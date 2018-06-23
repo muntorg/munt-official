@@ -22,6 +22,10 @@ const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_B
         /*.gbt_force =*/ true,
     },
     {
+        /*.name =*/ "csv",
+        /*.gbt_force =*/ true,
+    },
+    {
         /*.name =*/ "PoW² - phase 2",
         /*.gbt_force =*/ true,
     },
@@ -190,10 +194,19 @@ private:
 protected:
     int64_t BeginTime(const Consensus::Params& params) const
     {
-        //fixme: (2.1) We can remove this for 2.1
+        //fixme: (2.1) We can remove this after phase 4 activation.
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
+            // Mainnet - 1 month from phase 3 activation
+            if (IsArgSet("-testnet"))
+            {
+                360 * params.nPowTargetSpacing;
+            }
+            else
+            {
+                nActivationTime += 2629746;
+            }
             return nActivationTime;
         }
 

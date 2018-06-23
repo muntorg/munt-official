@@ -58,6 +58,7 @@ If you are thinking about contributing toward the development of Gulden in some 
 * [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
+* [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
 
 
 ### Community
@@ -104,6 +105,3 @@ If you are sure you need to build the software yourself, please read the [build 
 |DNS Seed 3|seed.gulden.network||
 |DNS Seed 4|rotterdam.gulden.network||
 |DNS Seed 5|seed.gulden.blue||
-
-### Official testnet settings
--testnet=C1511943855:60 -addnode=64.137.191.5 -addnode=64.137.228.95 -addnode=64.137.228.88 -addnode=64.137.228.46

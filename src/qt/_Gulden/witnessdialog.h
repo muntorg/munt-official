@@ -13,6 +13,8 @@
 #include <QFrame>
 #include <QDateTime>
 #include <qwt_plot_picker.h>
+#include "optionsmodel.h"
+
 
 class QMenu;
 class QStyle;
@@ -54,6 +56,30 @@ private:
     uint64_t nAmount;
 };
 
+struct WitnessInfoForAccount
+{
+    uint64_t nOurWeight = 0;
+    uint64_t nTotalNetworkWeightTip = 0;
+    uint64_t nWitnessLength = 0;
+    uint64_t nExpectedWitnessBlockPeriod = 0;
+    uint64_t nEstimatedWitnessBlockPeriod = 0;
+    uint64_t nLockBlocksRemaining = 0;
+    int64_t nOriginNetworkWeight = 0;
+    uint64_t nOriginBlock = 0;
+    uint64_t nOriginWeight = 0;
+    uint64_t nOriginLength = 0;
+    uint64_t nEarningsToDate = 0;
+    CAmount nTotal1 = 0;
+    CAmount nTotal2 = 0;
+    int nXForecast = 0;
+    GraphScale scale = GraphScale::Blocks;
+    QPolygonF forecastedPoints;
+    QPolygonF generatedPoints;
+    QPolygonF generatedPointsForecast;
+    QDateTime originDate;
+    QDateTime lastEarningsDate;
+};
+
 class WitnessDialog : public QFrame
 {
     Q_OBJECT
@@ -65,6 +91,7 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
+    void GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount);
     void plotGraphForAccount(CAccount* account, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip);
 
     void updateAccountIndicators();

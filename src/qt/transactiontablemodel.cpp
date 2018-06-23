@@ -523,9 +523,30 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                         return tr("Rotate witness key: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::WitnessEmptyRecv:
                         return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
+                    case TransactionRecord::Generated:
+                        return tr("Mining reward");
+                    case TransactionRecord::GeneratedWitness:
+                        return tr("Witness reward");
+                    case TransactionRecord::WitnessRenew:
+                        return tr("Renew witness account");
+                    case TransactionRecord::WitnessFundSend:
+                    case TransactionRecord::WitnessEmptySend:
+                    case TransactionRecord::WitnessIncreaseSend:
+                        return tr("Fund witness account extension");
+                    case TransactionRecord::SendToAddress:
+                        return tr("Paid to: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
+                    case TransactionRecord::SendToOther:
+                        return tr("Paid to: %1").arg(QString::fromStdString(wtx->address) + watchAddress);
+                    case TransactionRecord::RecvWithAddress:
+                        return tr("Payment from: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
+                    case TransactionRecord::RecvFromOther:
+                        return QString::fromStdString(wtx->address) + watchAddress;
+                    case TransactionRecord::Other:
+                        return tr("Complex transaction, view transaction details.") + watchAddress;
+                        break; //We should never reach these - bottom of function will handle them
                     case TransactionRecord::SendToSelf:
                         break; // Fall through to bottom of function where this is handled.
-                    default:
+                    case TransactionRecord::InternalTransfer:
                         return tr("Internal transfer from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                 }
             }
@@ -553,7 +574,21 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                         return tr("Unlock funds to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                     case TransactionRecord::SendToSelf:
                         break; // Fall through to bottom of function where this is handled.
-                    default:
+                    case TransactionRecord::Generated:
+                    case TransactionRecord::GeneratedWitness:
+                    case TransactionRecord::WitnessRenew:
+                    case TransactionRecord::WitnessFundRecv:
+                    case TransactionRecord::WitnessEmptyRecv:
+                    case TransactionRecord::WitnessSplitRecv:
+                    case TransactionRecord::WitnessMergeRecv:
+                    case TransactionRecord::WitnessIncreaseRecv:
+                    case TransactionRecord::WitnessChangeKeyRecv:
+                    case TransactionRecord::SendToAddress:
+                    case TransactionRecord::SendToOther:
+                    case TransactionRecord::Other:
+                    case TransactionRecord::RecvWithAddress:
+                    case TransactionRecord::RecvFromOther:
+                    case TransactionRecord::InternalTransfer:
                         return tr("Internal transfer to: %1").arg(QString::fromStdString(wallet->mapAccountLabels[receiveUUID]));
                 }
             }
@@ -562,40 +597,40 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
 
     switch(wtx->type)
     {
-    case TransactionRecord::RecvFromOther:
-        return QString::fromStdString(wtx->address) + watchAddress;
-    case TransactionRecord::RecvWithAddress:
-        return tr("Payment from: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
-    case TransactionRecord::Generated:
-        return tr("Mining reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
-    case TransactionRecord::GeneratedWitness:
-        return tr("Witness reward") /*: + lookupAddress(wtx->address, tooltip) + watchAddress*/;
-    case TransactionRecord::WitnessRenew:
-        return tr("Renew witness account");
-    case TransactionRecord::SendToAddress:
-        return tr("Paid to: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
-    case TransactionRecord::SendToOther:
-        return tr("Paid to: %1").arg(QString::fromStdString(wtx->address) + watchAddress);
-    case TransactionRecord::SendToSelf:
-        return tr("Internal account movement");
-    case TransactionRecord::WitnessIncreaseRecv:
-        return tr("Extend locked funds");
-    case TransactionRecord::WitnessSplitRecv:
-        return tr("Split locked funds");
-    case TransactionRecord::WitnessMergeRecv:
-        return tr("Merge locked funds");
-    case TransactionRecord::WitnessChangeKeyRecv:
-        return tr("Rotate witness key");
-    case TransactionRecord::WitnessIncreaseSend:
-        return tr("Fund witness account extension");
-    case TransactionRecord::WitnessEmptySend:
-    case TransactionRecord::WitnessEmptyRecv:
-    case TransactionRecord::WitnessFundRecv:
-    case TransactionRecord::WitnessFundSend:
-    case TransactionRecord::InternalTransfer:
-        return "";//Already  handled above this switch
-    case TransactionRecord::Other:
-        return tr("Complex transaction, view transaction details.") + watchAddress;
+        case TransactionRecord::RecvFromOther:
+            return QString::fromStdString(wtx->address) + watchAddress;
+        case TransactionRecord::RecvWithAddress:
+            return tr("Payment from: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
+        case TransactionRecord::Generated:
+            return tr("Mining reward");
+        case TransactionRecord::GeneratedWitness:
+            return tr("Witness reward");
+        case TransactionRecord::WitnessRenew:
+            return tr("Renew witness account");
+        case TransactionRecord::SendToAddress:
+            return tr("Paid to: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
+        case TransactionRecord::SendToOther:
+            return tr("Paid to: %1").arg(QString::fromStdString(wtx->address) + watchAddress);
+        case TransactionRecord::SendToSelf:
+            return tr("Internal account movement");
+        case TransactionRecord::WitnessIncreaseRecv:
+            return tr("Extend locked funds");
+        case TransactionRecord::WitnessSplitRecv:
+            return tr("Split locked funds");
+        case TransactionRecord::WitnessMergeRecv:
+            return tr("Merge locked funds");
+        case TransactionRecord::WitnessChangeKeyRecv:
+            return tr("Rotate witness key");
+        case TransactionRecord::WitnessIncreaseSend:
+            return tr("Fund witness account extension");
+        case TransactionRecord::WitnessEmptySend:
+        case TransactionRecord::WitnessEmptyRecv:
+        case TransactionRecord::WitnessFundRecv:
+        case TransactionRecord::WitnessFundSend:
+        case TransactionRecord::InternalTransfer:
+            return "";//Already  handled above this switch
+        case TransactionRecord::Other:
+            return tr("Complex transaction, view transaction details.") + watchAddress;
     }
     return "";
 }
@@ -606,7 +641,9 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     switch(wtx->type)
     {
         case TransactionRecord::RecvWithAddress:
+        case TransactionRecord::RecvFromOther:
         case TransactionRecord::SendToAddress:
+        case TransactionRecord::SendToOther:
         case TransactionRecord::Generated:
         case TransactionRecord::GeneratedWitness:
         case TransactionRecord::WitnessIncreaseSend:
@@ -621,9 +658,8 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
         case TransactionRecord::WitnessEmptyRecv:
         case TransactionRecord::SendToSelf:
         case TransactionRecord::InternalTransfer:
+        case TransactionRecord::Other:
             return COLOR_BAREADDRESS;
-        default:
-            break;
     }
     return QVariant();
 }

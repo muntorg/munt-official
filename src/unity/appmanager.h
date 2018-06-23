@@ -25,17 +25,21 @@
 class GuldenAppManager
 {
 public:
-    //NB! Only initialise once, afterwards refer to by gApp static instance.
+    //! NB! Only initialise once, afterwards refer to by gApp static instance.
     GuldenAppManager();
     ~GuldenAppManager();
     static GuldenAppManager* gApp;
 
-    //NB! This runs in a detached thread
+    //! NB! This runs in a detached thread
     void initialize();
 
-    //NB! This signals, in a sigterm safe way, to shutdownThread that it should start the shutdown process.
-    //All actual work takes places inside shutdownThread which is a detached thread
+    //! NB! This signals, in a sigterm safe way, to shutdownThread that it should start the shutdown process.
+    //! All actual work takes places inside shutdownThread which is a detached thread
     void shutdown();
+
+    //! This places the app in a daemonised state.
+    //! NB! Always call this before calling initialise.
+    bool daemonise();
 
     std::atomic<bool> fShutDownHasBeenInitiated;
 
@@ -50,7 +54,6 @@ public:
 private:
     std::mutex appManagerInitShutDownMutex;
     #ifdef WIN32
-    bool shouldTerminate = false;
     std::condition_variable sigtermCv;
     #else
     int sigtermFd[2];

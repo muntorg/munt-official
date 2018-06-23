@@ -42,11 +42,20 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Please fund the witness account first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Okay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -662,6 +671,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Warning toolbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Tabs toolbar</source>
         <translation type="unfinished">ბარათების პანელი</translation>
     </message>
@@ -1064,6 +1077,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1117,10 +1142,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>%1 years</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1 month</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2725,7 +2746,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>PoW2 is not yet active, please wait for activation and try again.</source>
+        <source>PoW² is not yet active, please wait for activation and try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3206,6 +3227,18 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Internal transfer from: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3226,23 +3259,11 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Payment from: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Extend locked funds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

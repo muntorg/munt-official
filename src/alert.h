@@ -109,7 +109,10 @@ public:
     bool RelayTo(CNode* pnode) const;
     bool CheckSignature(const std::vector<unsigned char>& alertKey) const;
     bool ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThread = true); // fThread means run -alertnotify in a free-running thread
-    static void Notify(const std::string& strMessage, bool fThread);
+
+    //! Notify the user via a callback that something is wrong
+    //! When fUI is true also notify via UI (If UI is open)
+    static void Notify(const std::string& strMessage, bool fThread, bool fUI = false);
 
     /*
      * Get copy of (active) alert object by hash. Returns a null alert if it is not found.
