@@ -72,31 +72,6 @@ static void WaitForShutdown()
 
 static void handlePostInitMain()
 {
-    //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
-    //Also shouldn't this happen earlier in the init process?
-    // Make sure only a single Gulden process is using the data directory.
-    fs::path pathLockFile = GetDataDir() / ".lock";
-    FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
-    if (file) fclose(file);
-
-    try
-    {
-        static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
-        if (!lock.try_lock())
-        {
-            fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
-            exitStatus = EXIT_FAILURE;
-            GuldenAppManager::gApp->shutdown();
-            return;
-        }
-    }
-    catch(const boost::interprocess::interprocess_exception& e)
-    {
-        fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
-        exitStatus = EXIT_FAILURE;
-        GuldenAppManager::gApp->shutdown();
-        return;
-    }
 }
 
 static void handleAppInitResult(bool bResult)
@@ -202,6 +177,35 @@ static void AppInit(int argc, char* argv[])
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
+
+        //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
+        // NB! This has to happen before we deamonise
+        // Make sure only a single Gulden process is using the data directory.
+        {
+            fs::path pathLockFile = GetDataDir() / ".lock";
+            FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
+            if (file)
+                fclose(file);
+
+            try
+            {
+                static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
+                if (!lock.try_lock())
+                {
+                    fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+                    exitStatus = EXIT_FAILURE;
+                    GuldenAppManager::gApp->shutdown();
+                    return;
+                }
+            }
+            catch(const boost::interprocess::interprocess_exception& e)
+            {
+                fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+                exitStatus = EXIT_FAILURE;
+                GuldenAppManager::gApp->shutdown();
+                return;
+            }
+        }
 
         if (GetBoolArg("-daemon", false))
         {
