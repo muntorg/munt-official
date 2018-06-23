@@ -1307,7 +1307,7 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     background: none;
 }
 
-#newAccountName[valid=false], #lineEditNewPasswordRepeat[valid=false], #lineEditNewPassword[valid=false], #lineEditOldPassword[valid=false]
+#newAccountName[valid=false], #lineEditNewPasswordRepeat[valid=false], #lineEditNewPassword[valid=false], #lineEditOldPassword[valid=false], #pow2LockFundsInfoLabel[valid=false]
 {
     background-color: COLOR_VALIDATION_FAILED;
 }

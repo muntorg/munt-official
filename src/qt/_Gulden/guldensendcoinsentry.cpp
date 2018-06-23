@@ -290,8 +290,7 @@ void GuldenSendCoinsEntry::myAccountsSelectionChanged()
         CAccount* pAccount = pactiveWallet->mapAccounts[accountUUID];
         if ( pAccount->IsPoW2Witness() )
         {
-            ui->sendCoinsRecipientStack->setCurrentIndex(1);
-            witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
+            gotoWitnessTab(pAccount);
         }
     }
 
@@ -331,7 +330,6 @@ void GuldenSendCoinsEntry::deleteClicked()
     Q_EMIT removeEntry(this);
 }
 
-//fixme: (2.0) - enforce minimum weight for pow2.
 bool GuldenSendCoinsEntry::validate()
 {
     cancelNocksQuote();
@@ -348,6 +346,17 @@ bool GuldenSendCoinsEntry::validate()
 
     ui->payAmount->setValid(true);
     clearPayInfo();
+
+    if (isPoW2WitnessCreation())
+    {
+        int nDays = ui->pow2LockFundsSlider->value();
+        int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*576);
+        if (nOurWeight <= 10000)
+        {
+            ui->pow2LockFundsInfoLabel->setProperty("valid", false);
+            return false;
+        }
+    }
 
     SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
@@ -799,6 +808,7 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
 void GuldenSendCoinsEntry::gotoWitnessTab(CAccount* targetAccount)
 {
     targetWitnessAccount = targetAccount;
+    witnessSliderValueChanged(0);
     ui->sendCoinsRecipientStack->setCurrentIndex(1);
 }
 
@@ -832,6 +842,8 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 #define WITNESS_SUBSIDY 20
 void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
+    ui->pow2LockFundsInfoLabel->setProperty("valid", true);
+
     //fixme: (2.0) (POW2) (CLEANUP)
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
@@ -842,16 +854,14 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
         return;
     }
 
-    //fixme: (2.0) (HIGH) - warn if weight exceeds 1%.
     int nDays = newValue;
     float fMonths = newValue/30.0;
     float fYears = newValue/365.0;
     int nEarnings = 0;
 
-
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
-    //fixme: (2.0) (HIGH)
+    //fixme: (2.0) (RELEASE)
     int64_t nNetworkWeight = 239990000;
 
 
