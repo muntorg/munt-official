@@ -68,7 +68,23 @@ QMenu::separator
 }
 
 
+#warning_tool_bar
+{
+    background-color: #FCF8E1;
+    border: #FAEBCA solid 1px;
+    height: 40px;
+    padding: 10px;
+}
 
+#warning_tool_bar_label
+{
+    margin-left: 30px;
+}
+
+#warning_tool_bar_close_button
+{
+    margin-right: 30px;
+}
 
 #forexError, #pow2WeightExceedsMaxPercentWarning, #labelExpiredWitnessAccount
 {
@@ -254,6 +270,17 @@ GUI > QToolBar > QToolButton:hover
 GUI > QToolBar > QToolButton:checked
 {
     color: #000;
+}
+
+#warningOverlayHeading
+{
+    color: #e02121;
+    margin-bottom: 18px;
+}
+
+#warningOverlayContent
+{
+    background-color: white;
 }
 
 #gulden_bar > QToolButton

@@ -246,7 +246,7 @@ public:
 
     void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
     void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
-    void deleteAccount(CAccount* account);
+    void deleteAccount(CAccount* account, bool shouldPurge=false);
 
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
 
@@ -266,6 +266,10 @@ public:
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     void setActiveAccount(CAccount* newActiveAccount);
+
+    //! Find the first account that is not deleted/shadow etc. and set it as active
+    void setAnyActiveAccount();
+
     CAccount* getActiveAccount();
     void setActiveSeed(CHDSeed* newActiveSeed);
     CHDSeed* GenerateHDSeed(CHDSeed::SeedType);

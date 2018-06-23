@@ -17,9 +17,12 @@
 #include "pow.h"
 #include "uint256.h"
 
+#include <Gulden/util.h>
 #include <stdint.h>
 
 #include <boost/thread.hpp>
+
+#include <validation/witnessvalidation.h> //For ppow2witTip (remove in future)
 
 static const char DB_COIN = 'C';
 static const char DB_COINS = 'c';
@@ -452,36 +455,50 @@ bool CCoinsViewDB::Upgrade() {
         LogPrintf("Upgrading database to be segsig compatible...\n");
         CDBBatch batch(db);
         size_t batch_size = 1 << 24;
-        while (pcursor->Valid()) {
+        while (pcursor->Valid())
+        {
             boost::this_thread::interruption_point();
             std::pair<unsigned char, uint256> key;
-            if (pcursor->GetKey(key) && key.first == DB_COINS) {
+            if (pcursor->GetKey(key) && key.first == DB_COINS)
+            {
                 CCoins old_coins;
-                if (!pcursor->GetValueLegacy(old_coins)) {
+                if (!pcursor->GetValueLegacy(old_coins))
+                {
                     return error("%s: cannot parse CCoins record", __func__);
                 }
                 COutPoint outpoint(key.second, 0);
-                for (size_t i = 0; i < old_coins.vout.size(); ++i) {
-                    if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable()) {
+                for (size_t i = 0; i < old_coins.vout.size(); ++i)
+                {
+                    if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable())
+                    {
                         Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase, false);
                         outpoint.n = i;
                         CoinEntry entry(&outpoint);
                         batch.Write(entry, newcoin);
+
+                        if ( IsPow2WitnessOutput(newcoin.out) )
+                        {
+                            ppow2witTip->AddCoin(outpoint, Coin(newcoin.out, newcoin.nHeight, newcoin.fCoinBase, newcoin.fSegSig), false);
+                        }
                     }
                 }
                 batch.Erase(key);
-                if (batch.SizeEstimate() > batch_size) {
+                if (batch.SizeEstimate() > batch_size)
+                {
                     db.WriteBatch(batch);
                     batch.Clear();
                 }
                 pcursor->Next();
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
         nCurrentVersion = 1;
         batch.Write(DB_VERSION, nCurrentVersion);
         db.WriteBatch(batch);
+        ppow2witTip->Flush();
     }
     return true;
 }

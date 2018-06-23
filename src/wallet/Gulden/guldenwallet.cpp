@@ -5,6 +5,7 @@
 
 #include "wallet/wallet.h"
 #include "policy/fees.h"
+#include "alert.h"
 #include "account.h"
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
@@ -12,6 +13,7 @@
 #include <boost/algorithm/string.hpp> // for split()
 #include <Gulden/mnemonic.h>
 #include "util.h"
+#include <validation/validation.h>
 
 bool fShowChildAccountsSeperately = false;
 
@@ -201,7 +203,7 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
-        //fixme: (2.0) Use new isminecache caching
+        //fixme: (2.1) Use accountIsMineCache
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
             isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
@@ -222,7 +224,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     LOCK(wallet.cs_wallet);
 
     isminetype ret = isminetype::ISMINE_NO;
-    //fixme: (2.0) Use new isminecache caching
+    //fixme: (2.1) Use accountIsMineCache
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -246,19 +248,18 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
         (unused)accountUUID;
-        auto iter = account->isminecache.find(outHash);
-        if (iter != account->isminecache.end())
+        if (account->accountIsMineCache.contains(outHash))
         {
-            if (iter->second > ret)
-                ret = iter->second;
+            isminetype cachedValue = account->accountIsMineCache.get(outHash);
+            if (cachedValue > ret)
+                ret = cachedValue;
         }
         else
         {
             isminetype temp = IsMine(*account, out);
             if (temp > ret)
                 ret = temp;
-            //fixme: (2.0) keep trimmed by MRU
-            account->isminecache[outHash] = ret;
+            account->accountIsMineCache.insert(outHash, ret);
         }
         // No need to keep going through the remaining accounts at this point.
         if (ret >= ISMINE_SPENDABLE)
@@ -273,19 +274,18 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
     for (const auto& txout : tx.tx->vout)
     {
         uint256 outHash = txout.output.GetHash();
-        auto iter = forAccount->isminecache.find(outHash);
-        if (iter != forAccount->isminecache.end())
+        if (forAccount->accountIsMineCache.contains(outHash))
         {
-            if (iter->second > ret)
-                ret = iter->second;
+            isminetype cachedValue = forAccount->accountIsMineCache.get(outHash);
+            if (cachedValue > ret)
+                ret = cachedValue;
         }
         else
         {
             isminetype temp = IsMine(*forAccount, txout);
             if (temp > ret)
                 ret = temp;
-            //fixme: (2.0) keep trimmed by MRU
-            forAccount->isminecache[outHash] = ret;
+            forAccount->accountIsMineCache.insert(outHash, ret);
         }
         // No need to keep going through the remaining outputs at this point.
         if (ret > isminetype::ISMINE_NO)
@@ -408,31 +408,110 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
         NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
 }
 
-void CGuldenWallet::deleteAccount(CAccount* account)
+void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
 {
-    std::string newLabel = account->getLabel();
-    if (newLabel.find(_("[Restored]")) != std::string::npos)
+    //fixme: (2.1) - If we are trying to delete the last remaining account we should return false
+    //As this may leave the wallet in an invalid state.
+    //Alternatively we must make sure that the wallet can handle having 0 accounts in it.
+    if (shouldPurge)
     {
-        newLabel = newLabel.replace(newLabel.find(_("[Restored]")), _("[Restored]").length(), _("[Deleted]"));
+        if (account->IsHD())
+            assert(0);
+
+        LOCK2(cs_main, cs_wallet);
+
+        CWalletDB db(*dbw);
+        if (!db.EraseAccount(getUUIDAsString(account->getUUID()), account))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountLabel(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountCompoundingSettings(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+        if (!db.EraseAccountNonCompoundWitnessEarningsScript(getUUIDAsString(account->getUUID())))
+        {
+            throw std::runtime_error("erasing account failed");
+        }
+
+        // Wipe our keypool
+        {
+            bool forceErase = true;
+            for(int64_t nIndex : account->setKeyPoolInternal)
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
+            for(int64_t nIndex : account->setKeyPoolExternal)
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
+
+            account->setKeyPoolInternal.clear();
+            account->setKeyPoolExternal.clear();
+        }
+
+        // Wipe all the keys as well
+        {
+            std::set<CKeyID> setAddress;
+            account->GetKeys(setAddress);
+
+            for (const auto& keyID : setAddress)
+            {
+                CPubKey pubKey;
+                if (!GetPubKey(keyID, pubKey))
+                {
+                    LogPrintf("deleteAccount: Failed to get pubkey\n");
+                }
+                else
+                {
+                    db.EraseKey(pubKey);
+                }
+            }
+        }
+
+        mapAccountLabels.erase(mapAccountLabels.find(account->getUUID()));
+        mapAccounts.erase(mapAccounts.find(account->getUUID()));
+
+        // Make sure we are no longer the active account
+        if(getActiveAccount()->getUUID() == account->getUUID())
+        {
+            if (mapAccounts.size() > 0)
+            {
+                setAnyActiveAccount();
+            }
+        }
+
+        //fixme: (2.1) - this leaks until program exit
+        //We can't easily delete the account as other places may still be referencing it...
+        // Let UI handle deletion [hide account etc.] (we can't actually delete the account pointer because of this so we leak)
+        NotifyAccountDeleted(static_cast<CWallet*>(this), account);
     }
     else
     {
-        newLabel = newLabel + " " + _("[Deleted]");
-    }
-
-    {
-        LOCK(cs_wallet);
-
-        CWalletDB db(*dbw);
-        account->setLabel(newLabel, &db);
-        account->m_State = AccountState::Deleted;
-        mapAccountLabels[account->getUUID()] = newLabel;
-        if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
+        std::string newLabel = account->getLabel();
+        if (newLabel.find(_("[Restored]")) != std::string::npos)
         {
-            throw std::runtime_error("Writing account failed");
+            newLabel = newLabel.replace(newLabel.find(_("[Restored]")), _("[Restored]").length(), _("[Deleted]"));
         }
+        else
+        {
+            newLabel = newLabel + " " + _("[Deleted]");
+        }
+
+        {
+            LOCK(cs_wallet);
+
+            CWalletDB db(*dbw);
+            account->setLabel(newLabel, &db);
+            account->m_State = AccountState::Deleted;
+            mapAccountLabels[account->getUUID()] = newLabel;
+            if (!db.WriteAccount(getUUIDAsString(account->getUUID()), account))
+            {
+                throw std::runtime_error("Writing account failed");
+            }
+        }
+        NotifyAccountDeleted(static_cast<CWallet*>(this), account);
     }
-    NotifyAccountDeleted(static_cast<CWallet*>(this), account);
 }
 
 void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bool bMakeActive)
@@ -468,6 +547,19 @@ void CGuldenWallet::setActiveAccount(CAccount* newActiveAccount)
         walletdb.WritePrimaryAccount(activeAccount);
 
         NotifyActiveAccountChanged(static_cast<CWallet*>(this), newActiveAccount);
+    }
+}
+
+void CGuldenWallet::setAnyActiveAccount()
+{
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused)accountUUID;
+        if (account->m_State == AccountState::Normal)
+        {
+            setActiveAccount(account);
+            return;
+        }
     }
 }
 
@@ -736,8 +828,21 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
 {
     if (!forAccount)
         return false;
+
     if (forAccount->m_Type != WitnessOnlyWitnessAccount)
         return false;
+
+    //Don't import an address that is already in wallet.
+    for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
+    {
+        if (static_cast<CWallet*>(this)->HaveKey(privateWitnessKey.GetPubKey().GetID()))
+        {
+            std::string strErrorMessage = _("Error importing private key") + "\n" + _("Wallet already contains key.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+            return false;
+        }
+    }
 
     for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
     {
@@ -770,16 +875,25 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
         if (encodedPrivateWitnessKeyAndBirthDate.size() == 2)
             ParseUInt64(encodedPrivateWitnessKeyAndBirthDate[1].c_str(), &nKeyBirthDate);
 
+        bool keyError = false;
         try
         {
             CGuldenSecret secretPrivWitnessKey;
             secretPrivWitnessKey.SetString(encodedPrivateWitnessKeyAndBirthDate[0].c_str());
-            privateWitnessKeys.emplace_back(secretPrivWitnessKey.GetKey(), nKeyBirthDate);
+            if (secretPrivWitnessKey.IsValid())
+            {
+                privateWitnessKeys.emplace_back(secretPrivWitnessKey.GetKey(), nKeyBirthDate);
+            }
+            else
+            {
+                keyError = true;
+            }
         }
         catch(...)
         {
-            throw std::runtime_error("Not a valid Gulden private witness key");
+            keyError = true;
         }
+        throw std::runtime_error("Not a valid Gulden private witness key");
     }
     return privateWitnessKeys;
 }
@@ -791,12 +905,18 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
     newAccount = new CAccount();
     newAccount->m_Type = WitnessOnlyWitnessAccount;
 
-    ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates);
+    if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates))
+    {
+        // Write new account
+        addAccount(newAccount, strAccount);
 
-    // Write new account
-    addAccount(newAccount, strAccount);
-
-    return newAccount;
+        return newAccount;
+    }
+    else
+    {
+        delete newAccount;
+        return nullptr;
+    }
 }
 
 CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)

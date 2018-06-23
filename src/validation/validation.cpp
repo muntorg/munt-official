@@ -308,24 +308,8 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const CChainPar
 
 
 CBlockIndex *pindexBestForkTip = NULL, *pindexBestForkBase = NULL;
-#if 0
-static void AlertNotify(const std::string& strMessage)
-{
-    uiInterface.NotifyAlertChanged();
-    std::string strCmd = GetArg("-alertnotify", "");
-    if (strCmd.empty()) return;
 
-    // Alert text should be plain ascii coming from a trusted source, but to
-    // be safe we first strip anything not in safeChars, then add single quotes around
-    // the whole string before passing it to the shell:
-    std::string singleQuote("'");
-    std::string safeStatus = SanitizeString(strMessage);
-    safeStatus = singleQuote+safeStatus+singleQuote;
-    boost::replace_all(strCmd, "%s", safeStatus);
 
-    boost::thread t(runCommand, strCmd); // thread runs free
-}
-#endif
 static void CheckForkWarningConditions()
 {
     AssertLockHeld(cs_main);
@@ -1434,9 +1418,9 @@ static void DoWarning(const std::string& strWarning)
 {
     static bool fWarned = false;
     SetMiscWarning(strWarning);
-    if (!fWarned) {
-        //fixme: (2.0) (MERGE)
-        //AlertNotify(strWarning);
+    if (!fWarned)
+    {
+        CAlert::Notify(strWarning, true, true);
         fWarned = true;
     }
 }
@@ -1455,14 +1439,23 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
     {
         int nUpgraded = 0;
         const CBlockIndex* pindex = chainActive.Tip();
-        for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++) {
+        for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++)
+        {
             WarningBitsConditionChecker checker(bit);
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
-            if (state == THRESHOLD_ACTIVE || state == THRESHOLD_LOCKED_IN) {
+            // fixme: (2.1) We can remove
+            // Bypass invalid warnings for phase 4 activation 
+            if (bit == chainParams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit)
+                continue;
+            if (state == THRESHOLD_ACTIVE || state == THRESHOLD_LOCKED_IN)
+            {
                 const std::string strWarning = strprintf(_("Warning: unknown new rules activated (versionbit %i)"), bit);
-                if (state == THRESHOLD_ACTIVE) {
+                if (state == THRESHOLD_ACTIVE)
+                {
                     DoWarning(strWarning);
-                } else {
+                }
+                else
+                {
                     warningMessages.push_back(strWarning);
                 }
             }

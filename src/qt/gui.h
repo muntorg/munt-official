@@ -40,7 +40,8 @@ class SendCoinsRecipient;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
-class ModalOverlay;
+class SyncOverlay;
+class WarningOverlay;
 class AccountSummaryWidget;
 class QLabel;
 class QMainWindow;
@@ -174,7 +175,8 @@ private:
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
-    ModalOverlay* modalOverlay = nullptr;
+    SyncOverlay* syncOverlay = nullptr;
+    WarningOverlay* warningOverlay = nullptr;
     AccountSummaryWidget* accountSummaryWidget = nullptr;
 
     QToolBar* accountBar = nullptr;
@@ -278,7 +280,7 @@ public Q_SLOTS:
 
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
-    /* UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc. */
+    //! UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc.
     void userWantsToQuit();
 
 #ifdef ENABLE_WALLET
@@ -338,13 +340,16 @@ private Q_SLOTS:
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString &title, int nProgress);
 
+    //! Display an internal wallet warning to user.
+    void showUIAlert(const QString& alertMessage);
+
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);
 
     /** Toggle networking */
     void toggleNetworkActive();
 
-    void showModalOverlay();
+    void showSyncOverlay();
 
     //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
     void activeAccountChanged(CAccount* account);

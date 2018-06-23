@@ -305,9 +305,10 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
+                    //fixme: (COINCONTROL)
+                    //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     if (!IsOldTransactionVersion(txNew.nVersion))
                     {
-                        //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
                         CPubKey vchPubKey;
                         bool ret;
@@ -590,10 +591,11 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 const CAmount nChange = nValueSelected - nFeeOut;
                 if (nChange > 0)
                 {
+                    //fixme: (COINCONTROL)
+                    //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
                     if (!IsOldTransactionVersion(txNew.nVersion))
                     {
-                        //fixme: (2.0) (COINCONTROL) - coin control could still produce script in this instance.
                         // Reserve a new key pair from key pool
                         CPubKey vchPubKey;
                         bool ret;
@@ -798,6 +800,9 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
+    //fixme: (COINCONTORL)
+    CCoinControl coinControl;
+
     CGetWitnessInfo witnessInfo;
     CBlock block;
     if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
@@ -851,9 +856,8 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 tx.vout.push_back(renewedWitnessTxOutput);
 
                 // Add fee input and change output
-                //fixme: (2.0) coincontrol
                 std::string sFailReason;
-                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, nullptr))
+                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
                 {
                     strError = "Unable to add fee";
                     return false;

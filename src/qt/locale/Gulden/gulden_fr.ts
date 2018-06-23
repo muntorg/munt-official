@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Copy sync code</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Copier code de synchronisation</translation>
     </message>
     <message>
         <source>Done</source>
@@ -34,11 +34,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Scannez QR avec un dispositif de &quot;witnessing&quot; pour relier l&apos;appareil à votre porte-monnaie.</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation type="unfinished">Cliquez ici pour rendre le code QR visible.
+AVERTISSEMENT : veuillez vous assurer que vous êtes la seule personne qui peut voir ce code QR, sinon il pourrait être utilisé pour gagner en votre nom et voler vos gains de &quot;witness&quot;</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -48,6 +53,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>Okay</source>
         <translation type="unfinished">D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation type="unfinished">Êtes-vous sûr de vouloir supprimer %1 du votre liste de compte</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
@@ -663,6 +673,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation type="unfinished">Les fonds dans ce compte sont actuellement bloqués pour witnessing et ne peuvent pas être transférés, veuillez attendre jusqu&apos;à ce que la serrure expire ou que les gains s&apos;accumulent avant d&apos;essayer à nouveau.</translation>
     </message>
     <message>
+        <source>Warning toolbar</source>
+        <translation type="unfinished">Barre d&apos;outils des Avertissement</translation>
+    </message>
+    <message>
         <source>Tabs toolbar</source>
         <translation type="unfinished">Barre d&apos;outils des onglets</translation>
     </message>
@@ -744,11 +758,11 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>&amp;Import witness</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Importer witness</translation>
     </message>
     <message>
         <source>Import a witness-only account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importer un compte de witness seulement</translation>
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
@@ -1040,7 +1054,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tous</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1071,16 +1085,28 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation type="unfinished">Verrouiller les fonds pour:</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation type="unfinished">1 mois</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation type="unfinished">3 ans</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation type="unfinished">Les fonds seront bloqués pendant 30 jours (1 mois) avec un gain estimé à 0, mais il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant toute la durée de la période de blocage.</translation>
+    </message>
+    <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation type="unfinished">Avertissement : Ce poids dépasse 1% du poids actuel du réseau, c&apos;est fantastique pour contribuer à la sécurité du réseau mais non recommandé pour maximiser vos gains. Pour des gains maximaux, il serait généralement préférable de diviser vos fonds en deux comptes dans cette situation. Une exception est que si vous avez des raisons de croire que le poids du réseau est susceptible d&apos;augmenter considérablement à l&apos;avenir, veuillez demander d&apos;autres conseils avant de procéder si vous n&apos;êtes pas certain de la meilleure ligne de conduite à adopter.</translation>
     </message>
     <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le montant dépasse le maximum pour le paiement IBAN.</translation>
     </message>
     <message>
         <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Montant inférieur au minimum pour le paiement IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1088,7 +1114,7 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
     <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le montant que vous voulez envoyer est égal à votre solde, il sera ajusté pour les frais de transaction. Veuillez vous assurer que c&apos;est ce que vous voulez avant de procéder afin d&apos;éviter un paiement court de votre destinataire.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -1127,10 +1153,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation type="unfinished">%1 ans</translation>
     </message>
     <message>
-        <source>1 month</source>
-        <translation type="unfinished">1 mois</translation>
-    </message>
-    <message>
         <source>%1 months</source>
         <translation type="unfinished">%1 mois</translation>
     </message>
@@ -1148,7 +1170,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nécessite environ %1 Gulden, y compris les frais de service IBAN.</translation>
     </message>
 </context>
 <context>
@@ -1206,11 +1228,11 @@ Poids du Witness : %5</translation>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Import private key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">importer une clé privée</translation>
     </message>
     <message>
         <source>Private &amp;key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Clé privée</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
@@ -1229,15 +1251,15 @@ Poids du Witness : %5</translation>
     <name>ImportWitnessDialog</name>
     <message>
         <source>Import witness from URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Importer un compte de witness seulement</translation>
     </message>
     <message>
         <source>W&amp;itness only URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">URL compte de witness seulement</translation>
     </message>
     <message>
         <source>Enter a witness-only URL to import</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entrez un compte de witness seulement</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -1619,11 +1641,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Se cacher pour s&apos;amarrer à la fermeture</translation>
     </message>
     <message>
         <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Masquer l&apos;application sur la station d&apos;accueil lorsque la fenêtre est fermée. Lorsque cette option est activée, l&apos;application ne sera fermée qu&apos;après avoir sélectionné Fermer dans le menu.</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1901,7 +1923,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Enter a Gulden URL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entrez un URL Gulden</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2736,8 +2758,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation type="unfinished">Annuler</translation>
     </message>
     <message>
-        <source>PoW2 is not yet active, please wait for activation and try again.</source>
-        <translation type="unfinished">PoW2 n&apos;est pas encore actif, veuillez attendre l&apos;activation et réessayer.</translation>
+        <source>PoW² is not yet active, please wait for activation and try again.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -3151,23 +3173,23 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Fund witness account extension</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Financement d&apos;un compte witness prolongation</translation>
     </message>
     <message>
         <source>Extend witness account</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Prolonger le compte des witness</translation>
     </message>
     <message>
         <source>Split locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fractionnement des fonds bloqués</translation>
     </message>
     <message>
         <source>Merge locked funds</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fusionner les fonds bloqués</translation>
     </message>
     <message>
         <source>Rotate witness key</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tourner la clé du witness</translation>
     </message>
     <message>
         <source>Renew witness account</source>
@@ -3199,23 +3221,35 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Extend locked funds from: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Prolonger les fonds bloqués à partir de : %1</translation>
     </message>
     <message>
         <source>Split locked funds: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fractionnement des fonds bloqués: %1</translation>
     </message>
     <message>
         <source>Merge locked funds: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fusionner les fonds bloqués: %1</translation>
     </message>
     <message>
         <source>Rotate witness key: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tourner la clé du witness: %1</translation>
     </message>
     <message>
         <source>Unlock funds from: %1</source>
         <translation type="unfinished">Débloquer les fonds de: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation type="unfinished">Payé à: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation type="unfinished">Paiement à partir de: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation type="unfinished">Transaction complexe, voir les détails de la transaction.</translation>
     </message>
     <message>
         <source>Internal transfer from: %1</source>
@@ -3227,7 +3261,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Fund witness account extension: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Financement d&apos;un compte witness prolongation: %1</translation>
     </message>
     <message>
         <source>Unlock funds to: %1</source>
@@ -3238,24 +3272,12 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation type="unfinished">Transfert interne à: %1</translation>
     </message>
     <message>
-        <source>Payment from: %1</source>
-        <translation type="unfinished">Paiement à partir de: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation type="unfinished">Payé à: %1</translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation type="unfinished">Mouvement du compte interne</translation>
     </message>
     <message>
         <source>Extend locked funds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished">Transaction complexe, voir les détails de la transaction.</translation>
+        <translation type="unfinished">Prolonger les fonds bloqués</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3602,7 +3624,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Compound earnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gains composés</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3670,12 +3692,13 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Account emptied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Compte vidé</translation>
     </message>
     <message>
         <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
 In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Votre compte witness est terminé witnessing et tous les fonds ont été vidés. Vos gains et vos transactions restent ici pour que vous puissiez les consulter, mais vous ne pouvez plus utiliser le compte. Si vous souhaitez witnessr à nouveau, veuillez créer un nouveau compte pour le faire.
+Dans les versions futures de Gulden, il sera possible de réutiliser ce compte pour d&apos;autres witnessing.</translation>
     </message>
     <message>
         <source>Change units</source>

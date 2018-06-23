@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ModalOverlay</class>
- <widget class="ModalOverlay" name="ModalOverlay">
+ <class>SyncOverlay</class>
+ <widget class="SyncOverlay" name="SyncOverlay">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
@@ -86,13 +89,16 @@ QLabel { color: rgb(40,40,40);  }</string>
              <item>
               <widget class="QLabel" name="infoText">
                <property name="text">
-                <string>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</string>
+                <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Placeholder text&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="textFormat">
                 <enum>Qt::RichText</enum>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>
+               </property>
+               <property name="indent">
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -128,21 +134,11 @@ QLabel { color: rgb(40,40,40);  }</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayoutSync" stretch="0,1">
+            <layout class="QHBoxLayout" name="horizontalLayoutSync" stretch="0">
              <item>
               <widget class="QLabel" name="percentageProgress">
                <property name="text">
                 <string notr="true">~</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QProgressBar" name="progressBar">
-               <property name="value">
-                <number>24</number>
-               </property>
-               <property name="format">
-                <string/>
                </property>
               </widget>
              </item>
@@ -190,9 +186,9 @@ QLabel { color: rgb(40,40,40);  }</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ModalOverlay</class>
+   <class>SyncOverlay</class>
    <extends>QWidget</extends>
-   <header>modaloverlay.h</header>
+   <header>syncoverlay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

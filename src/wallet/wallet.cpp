@@ -13,6 +13,7 @@
 #include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
+#include "alert.h"
 #include "base58.h"
 #include "checkpoints.h"
 #include "chain.h"
@@ -464,19 +465,39 @@ bool CWallet::Verify()
 
     uiInterface.InitMessage(_("Verifying wallet(s)..."));
 
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        if (boost::filesystem::path(walletFile).filename() != walletFile) {
+    for (const std::string& walletFile : gArgs.GetArgs("-wallet"))
+    {
+        if (boost::filesystem::path(walletFile).filename() != walletFile)
+        {
             return InitError(_("-wallet parameter must only specify a filename (not a path)"));
-        } else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
+        }
+        else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile)
+        {
             return InitError(_("Invalid characters in -wallet filename"));
         }
 
+        // Check file permissions by opening or creating file.
+        {
+            bool alreadyExists = fs::exists(GetDataDir() / walletFile);
+            {
+                std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
+                if (!testPerms.is_open())
+                    return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
+            }
+            if (!alreadyExists)
+            {
+                fs::remove(GetDataDir() / walletFile);
+            }
+        }
+
         std::string strError;
-        if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError)) {
+        if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError))
+        {
             return InitError(strError);
         }
 
-        if (GetBoolArg("-salvagewallet", false)) {
+        if (GetBoolArg("-salvagewallet", false))
+        {
             // Recover readable keypairs:
             CWallet dummyWallet;
             std::string backup_filename;
@@ -487,22 +508,16 @@ bool CWallet::Verify()
 
         std::string strWarning;
         bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
-        if (!strWarning.empty()) {
+        if (!strWarning.empty())
+        {
             InitWarning(strWarning);
         }
-        if (!dbV) {
+        if (!dbV)
+        {
             InitError(strError);
             return false;
         }
     }
-
-    //fixme: (2.0) (MERGE)
-    // Check file permissions.
-    /*{
-        std::fstream testPerms((GetDataDir() / walletFile).string(), std::ios::in | std::ios::out | std::ios::app);
-        if (!testPerms.is_open())
-            return InitError(strprintf(_("%s may be read only or have permissions that deny access to the current user, please correct this and try again."), walletFile));
-    }*/
 
     return true;
 }
@@ -1340,7 +1355,6 @@ void CWallet::ReacceptWalletTransactions()
 
         int nDepth = wtx.GetDepthInMainChain();
 
-        //fixme: (2.0) (PoW2)
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
             mapSorted.insert(std::pair(wtx.nOrderPos, &wtx));
         }
@@ -2241,7 +2255,10 @@ void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, C
     }
     CPubKey pubkey;
     if (!rKey->GetReservedKey(pubkey))
+    {
+        CAlert::Notify("Failed to obtain reward key for mining account.", true, true);
         return;
+    }
 
     script = rKey;
     script->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
@@ -2253,7 +2270,10 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
 
     // forAccount should never be null
     if (!forAccount)
-        assert(0);
+    {
+        CAlert::Notify("Failed to obtain reward key for witness account, invalid account.", true, true);
+        return;
+    }
 
     // If an explicit script has been set via RPC then use that, otherwise we just make a script from a key
     if (forAccount->hasNonCompoundRewardScript())
@@ -2263,12 +2283,14 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
     }
     else
     {
-        //fixme: (2.0) Alert user of error (alert notification probably best)
         rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
 
         CPubKey pubkey;
         if (!rKey->GetReservedKey(pubkey))
+        {
+            CAlert::Notify("Failed to obtain reward key for witness account.", true, true);
             return;
+        }
 
         rKey->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
     }
@@ -2337,12 +2359,20 @@ public:
     }
 
     void operator()(const CScriptID &scriptId) {
-        //fixme: (2.0)
-        /*
         CScript script;
         if (keystore.GetCScript(scriptId, script))
-            Process(script);
-        */
+        {
+            txnouttype type;
+            std::vector<CTxDestination> vDest;
+            int nRequired;
+            if (ExtractDestinations(script, type, vDest, nRequired))
+            {
+                for (const CTxDestination &dest : vDest)
+                {
+                    boost::apply_visitor(*this, dest);
+                }
+            }
+        }
     }
 
     void operator()(const CPoW2WitnessDestination &dest) {

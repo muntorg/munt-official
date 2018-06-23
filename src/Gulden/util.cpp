@@ -15,6 +15,7 @@
 #include "txdb.h"
 
 #include "primitives/transaction.h"
+#include <LRUCache/LRUCache11.hpp>
 
 
 static bool alreadyInRescan = false;
@@ -488,8 +489,8 @@ int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride
     return std::numeric_limits<int64_t>::max();
 }
 
-#include <LRUCache/LRUCache11.hpp>
-typedef lru11::Cache<uint256, std::pair<int64_t, int64_t>, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, std::pair<int64_t, int64_t>>>::iterator, BlockHasher>> BlockWeightCache;
+typedef std::pair<int64_t, int64_t> NumAndWeight;
+typedef lru11::Cache<uint256, NumAndWeight, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, NumAndWeight>>::iterator, BlockHasher>> BlockWeightCache;
 BlockWeightCache networkWeightCache(1000,500);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride)
 {

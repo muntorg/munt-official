@@ -139,10 +139,7 @@ bool HaveRequiredPeerUpgradePercent(int nRequiredProtoVersion, unsigned int nReq
     // Insufficient peers to determine.
     if (vstats.size() < 3)
     {
-        if (IsArgSet("-testnet"))
-            return true;
-
-        return false;
+        return true;
     }
 
     int nUpgradeCount = 0;

@@ -320,30 +320,46 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
 
     // Find all addresses that have the given account and are not in the key pool
-    std::set<CKeyID> setAddress;
-    fromAccount->GetKeys(setAddress);
+    std::set<CKeyID> setAddressExternal;
+    std::set<CKeyID> setAddressInternal;
+    fromAccount->GetKeys(setAddressExternal, setAddressInternal);
 
     CWalletDB walletdb(*pwallet->dbw);
-    for (const auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+    for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
     {
-        const auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal );
         CKeyPool keypoolentry;
-        for (const auto& keyIndex : keyPool)
+        auto& setAddresses = keyChain == KEYCHAIN_EXTERNAL ? setAddressExternal : setAddressInternal;
+        for (const auto& keyIndex : keyChain == KEYCHAIN_EXTERNAL ? fromAccount->setKeyPoolExternal : fromAccount->setKeyPoolInternal)
         {
             if (!walletdb.ReadPool(keyIndex, keypoolentry))
                 throw std::runtime_error(std::string(__func__) + ": read failed");
 
-            if ( setAddress.find(keypoolentry.vchPubKey.GetID()) != setAddress.end() )
+            if (setAddresses.find(keypoolentry.vchPubKey.GetID()) != setAddresses.end())
             {
-                setAddress.erase(setAddress.find(keypoolentry.vchPubKey.GetID()));
+                setAddresses.erase(setAddresses.find(keypoolentry.vchPubKey.GetID()));
             }
         }
     }
 
     UniValue ret(UniValue::VARR);
-    for(const auto& key : setAddress)
+    // Enumerate witness addresses first
+    if (fromAccount->IsPoW2Witness() && !fromAccount->IsFixedKeyPool())
     {
-        ret.push_back(CGuldenAddress(key).ToString());
+        for (const auto& externalKey : setAddressExternal)
+        {
+            for (const auto& internalKey : setAddressInternal)
+            {
+                ret.push_back(CGuldenAddress(CPoW2WitnessDestination(externalKey, internalKey)).ToString());
+            }
+        }
+    }
+    // Then normal addresses
+    for(const auto& setAddresses : { setAddressExternal, setAddressInternal })
+    {
+        for(const auto& key : setAddresses)
+        {
+            ret.push_back(CGuldenAddress(key).ToString());
+        }
     }
     return ret;
 }
@@ -798,16 +814,67 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
         return NullUniValue;
     }
 
-    if (request.fHelp || request.params.size() > 0)
+    if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
-                "getunconfirmedbalance\n"
+                "getunconfirmedbalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
                 "Returns the server's total unconfirmed balance\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    return ValueFromAmount(pwallet->GetUnconfirmedBalance());
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount));
 }
 
+UniValue getimmaturebalance(const JSONRPCRequest &request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+                "getimmaturebalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "Returns the server's total immature balance\n");
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount));
+}
+
+UniValue getlockedbalance(const JSONRPCRequest &request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+                "getlockedbalance \"for_account\"\n"
+                "\nArguments:\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "Returns the server's total locked balance\n");
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
+
+    return ValueFromAmount(pwallet->GetBalance(nullptr, true, true) - pwallet->GetBalance(nullptr, false, true));
+}
 
 UniValue movecmd(const JSONRPCRequest& request)
 {
@@ -974,7 +1041,7 @@ UniValue sendmany(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 5)
         throw std::runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" [\"address_or_account\",...] )\n"
+            "sendmany \"fromaccount\" {\"address_or_account\":amount,...} ( minconf \"comment\" [\"address_or_account\",...] )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
@@ -1039,7 +1106,8 @@ UniValue sendmany(const JSONRPCRequest& request)
     {
         CGuldenAddress address(name_);
 
-        CAccount* toAccount = AccountFromValue(pwallet, name_, false);
+        CAccount* toAccount;
+        try{ toAccount = AccountFromValue(pwallet, name_, false); } catch(...) {}
         if (toAccount)
         {
             CReserveKeyOrScript receiveKey(pwallet, toAccount, KEYCHAIN_EXTERNAL);
@@ -3117,7 +3185,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "abortrescan",              &abortrescan,              false,  {} },
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       true,   {"nrequired","keys","account"} },
     { "wallet",             "backupwallet",             &backupwallet,             true,   {"destination"} },
-    //{ "wallet",             "bumpfee",                  &bumpfee,                  true,   {"txid", "options"} },
+    //{ "wallet",             "bumpfee",                  &bumpfee,                true,   {"txid", "options"} },
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true,   {"filename"} },
     { "wallet",             "encryptwallet",            &encryptwallet,            true,   {"passphrase"} },
@@ -3127,9 +3195,11 @@ static const CRPCCommand commands[] =
     { "wallet",             "getnewaddress",            &getnewaddress,            true,   {"account"} },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,   {} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false,  {"address","minconf"} },
-    { "wallet",             "getrescanprogress",        &getrescanprogress,           false,  {} },
+    { "wallet",             "getrescanprogress",        &getrescanprogress,        false,  {} },
     { "wallet",             "gettransaction",           &gettransaction,           false,  {"txid","include_watchonly"} },
     { "wallet",             "getunconfirmedbalance",    &getunconfirmedbalance,    false,  {} },
+    { "wallet",             "getimmaturebalance",       &getimmaturebalance,       false,  {} },
+    { "wallet",             "getlockedbalance",         &getlockedbalance,         false,  {} },
     { "wallet",             "getwalletinfo",            &getwalletinfo,            false,  {} },
     { "wallet",             "importmulti",              &importmulti,              true,   {"account","requests","options"} },
     { "wallet",             "importprivkey",            &importprivkey,            true,   {"privkey","label","rescan"} },

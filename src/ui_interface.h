@@ -13,6 +13,7 @@
 #ifndef GULDEN_UI_INTERFACE_H
 #define GULDEN_UI_INTERFACE_H
 
+
 #include <stdint.h>
 #include <string>
 
@@ -99,6 +100,9 @@ public:
      * Status bar alerts changed.
      */
     boost::signals2::signal<void (const uint256 &hash, ChangeType status)> NotifyAlertChanged;
+
+    //! Alert for user (top of UI) changed.
+    boost::signals2::signal<void (const std::string& alertMessage)> NotifyUIAlertChanged;
 
     /** A wallet has been loaded. */
     boost::signals2::signal<void (CWallet* wallet)> LoadWallet;

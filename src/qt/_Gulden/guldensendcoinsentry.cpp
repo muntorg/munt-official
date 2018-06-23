@@ -6,9 +6,11 @@
 #include "guldensendcoinsentry.h"
 #include "_Gulden/forms/ui_guldensendcoinsentry.h"
 
+#include "accounttablemodel.h"
 #include "addressbookpage.h"
 #include "addresstablemodel.h"
-#include "accounttablemodel.h"
+#include "alert.h"
+
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "nocksrequest.h"
@@ -489,7 +491,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
-            //fixme: (2.0) Better error handling
+            std::string strErrorMessage = strprintf("Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf(strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -501,7 +505,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
         {
-            //fixme: (2.0) Better error handling
+            std::string strErrorMessage = strprintf("Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf(strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -555,7 +561,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {
-                            //fixme: (2.0) Better error handling
+                            std::string strErrorMessage = strprintf("Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf(strErrorMessage.c_str());
                             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
                             recipient.address = QString("error");
                             return recipient;

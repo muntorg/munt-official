@@ -113,29 +113,6 @@ static void handleAppInitResult(bool bResult)
 
 static bool handlePreInitMain()
 {
-    if (GetBoolArg("-daemon", false))
-    {
-        #if HAVE_DECL_DAEMON
-        {
-            fprintf(stdout, "Gulden server starting\n");
-
-            // Daemonize
-            // don't chdir (1), do close FDs (0)
-            if (daemon(1, 0))
-            {
-                fprintf(stderr, "Error: daemon() failed: %s\n", strerror(errno));
-                exitStatus = EXIT_FAILURE;
-                return false;
-            }
-        }
-        #else
-        {
-            fprintf(stderr, "Error: -daemon is not supported on this operating system\n");
-            exitStatus = EXIT_FAILURE;
-            return false;
-        }
-        #endif // HAVE_DECL_DAEMON
-    }
     return true;
 }
 
@@ -225,6 +202,17 @@ static void AppInit(int argc, char* argv[])
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
+
+        if (GetBoolArg("-daemon", false))
+        {
+            fprintf(stdout, "Gulden server starting\n");
+            if (!GuldenAppManager::gApp->daemonise())
+            {
+                LogPrintf("Failed to daemonise\n");
+                exitStatus = EXIT_FAILURE;
+                return;
+            }
+        }
 
         appManager.initialize();
     }

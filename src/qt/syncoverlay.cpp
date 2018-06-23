@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "modaloverlay.h"
-#include "ui_modaloverlay.h"
+#include "syncoverlay.h"
+#include "ui_syncoverlay.h"
 
 #include "guiutil.h"
 
@@ -22,13 +22,13 @@
 #include "_Gulden/GuldenGUI.h"
 #include "validation/validation.h"
 
-ModalOverlay::ModalOverlay(QWidget *parent) :
-QWidget(parent),
-ui(new Ui::ModalOverlay),
-bestHeaderHeight(0),
-bestHeaderDate(QDateTime()),
-layerIsVisible(false),
-userClosed(false)
+SyncOverlay::SyncOverlay(QWidget *parent)
+: QWidget(parent)
+, ui(new Ui::SyncOverlay)
+, bestHeaderHeight(0)
+, bestHeaderDate(QDateTime())
+, layerIsVisible(false)
+, userClosed(false)
 {
     ui->setupUi(this);
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(closeClicked()));
@@ -61,8 +61,6 @@ userClosed(false)
     ui->percentageProgress->setContentsMargins(0,0,0,0);
     ui->percentageProgress->setIndent(0);
 
-    ui->progressBar->setVisible(false);
-
     ui->bgWidget->setStyleSheet("");
     ui->contentWidget->setStyleSheet("");
 
@@ -73,25 +71,25 @@ userClosed(false)
     ui->verticalLayout->setStretch(1, 0);
     ui->verticalLayout->setStretch(2, 0);
 
-    if (IsInitialBlockDownload())
+    if (chainActive.Tip() && chainActive.Tip()->nHeight > 5000)
     {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
+        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
     }
     else
     {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
+        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
     }
 
     ui->formLayout->setLabelAlignment(Qt::AlignLeft);
     ui->formLayout->setHorizontalSpacing(0);
 }
 
-ModalOverlay::~ModalOverlay()
+SyncOverlay::~SyncOverlay()
 {
     delete ui;
 }
 
-bool ModalOverlay::eventFilter(QObject * obj, QEvent * ev) {
+bool SyncOverlay::eventFilter(QObject * obj, QEvent * ev) {
     if (obj == parent()) {
         if (ev->type() == QEvent::Resize) {
             QResizeEvent * rev = static_cast<QResizeEvent*>(ev);
@@ -108,7 +106,7 @@ bool ModalOverlay::eventFilter(QObject * obj, QEvent * ev) {
 }
 
 //! Tracks parent widget changes
-bool ModalOverlay::event(QEvent* ev) {
+bool SyncOverlay::event(QEvent* ev) {
     if (ev->type() == QEvent::ParentAboutToChange) {
         if (parent()) parent()->removeEventFilter(this);
     }
@@ -121,7 +119,7 @@ bool ModalOverlay::event(QEvent* ev) {
     return QWidget::event(ev);
 }
 
-void ModalOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
+void SyncOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
 {
     if (count > bestHeaderHeight) {
         bestHeaderHeight = count;
@@ -135,23 +133,22 @@ void ModalOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
     }
 }
 
-void ModalOverlay::tipUpdate([[maybe_unused]] int count, [[maybe_unused]] const QDateTime& blockDate, double nSyncProgress)
+void SyncOverlay::tipUpdate([[maybe_unused]] int count, [[maybe_unused]] const QDateTime& blockDate, double nSyncProgress)
 {
     QDateTime currentDate = QDateTime::currentDateTime();
 
     // show the percentage of blocks done
     ui->percentageProgress->setText(QString::number(nSyncProgress*100, 'f', 2)+"%");
-    ui->progressBar->setValue(nSyncProgress*100);
 }
 
-void ModalOverlay::toggleVisibility()
+void SyncOverlay::toggleVisibility()
 {
     showHide(layerIsVisible, true);
     if (!layerIsVisible)
         userClosed = true;
 }
 
-void ModalOverlay::showHide(bool hide, bool userRequested)
+void SyncOverlay::showHide(bool hide, bool userRequested)
 {
     if ( (layerIsVisible && !hide) || (!layerIsVisible && hide) || (!hide && userClosed && !userRequested))
         return;
@@ -170,7 +167,7 @@ void ModalOverlay::showHide(bool hide, bool userRequested)
     layerIsVisible = !hide;
 }
 
-void ModalOverlay::closeClicked()
+void SyncOverlay::closeClicked()
 {
     showHide(true);
     userClosed = true;

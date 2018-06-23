@@ -14,6 +14,7 @@
 #include "script/ismine.h"
 #include "wallet/crypter.h"
 #include "account.h"
+#include <validation/validation.h>
 
 #include <algorithm>
 #include <map>
@@ -29,6 +30,7 @@
 #include <boost/uuid/string_generator.hpp>
 #include <boost/uuid/nil_generator.hpp>
 
+#include <LRUCache/LRUCache11.hpp>
 
 #define KEYCHAIN_EXTERNAL 0
 #define KEYCHAIN_CHANGE 1
@@ -221,6 +223,8 @@ protected:
 };
 
 
+typedef lru11::Cache<uint256, isminetype, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, isminetype>>::iterator, BlockHasher>> IsMineLRUCache;
+
 /** 
  * Account information.
  * Stored in wallet with key "acc"+string account name.
@@ -306,6 +310,7 @@ public:
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const override;
+    void GetKeys(std::set<CKeyID> &setAddressExternal, std::set<CKeyID> &setAddressInternal) const;
     virtual bool EncryptKeys(const CKeyingMaterial& vMasterKeyIn) override;
     virtual bool Encrypt(const CKeyingMaterial& vMasterKeyIn);
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;
@@ -356,7 +361,9 @@ public:
     mutable CCriticalSection cs_keypool;
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
-    mutable std::map<uint256, isminetype> isminecache;
+    //fixme: (2.1) Possibly like a bloom/cuckoo cache for this instead
+    //Also consider persisting cache to disk across runs
+    mutable IsMineLRUCache accountIsMineCache;
     AccountState m_State;
     AccountType m_Type;
 

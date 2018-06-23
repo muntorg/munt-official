@@ -14,7 +14,6 @@
 #include "random.h"
 #include "walletmodel.h"
 #include "clientmodel.h"
-#include "optionsmodel.h"
 #include "wallet/wallet.h"
 
 #include "amount.h"
@@ -433,28 +432,12 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& poin
     pointMap[nX] += nY;
 }
 
-void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
+void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount\n");
-
-    DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
-
-    if(!filter || !model)
-        return;
-
-    GraphScale scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
-
     std::map<CAmount, CAmount> pointMapForecast; pointMapForecast[0] = 0;
     std::map<CAmount, CAmount> pointMapGenerated;
 
     CTxOutPoW2Witness witnessDetails;
-    QDateTime lastEarningsDate;
-    QDateTime originDate;
-    int64_t nOriginNetworkWeight = 0;
-    uint64_t nOriginBlock = 0;
-    uint64_t nOriginWeight = 0;
-    uint64_t nOriginLength = 0;
-    uint64_t nEarningsToDate = 0;
 
     // fixme: (2.1) Make this work for multiple 'origin' blocks.
     // Iterate the transaction history and extract all 'origin' block details.
@@ -472,15 +455,15 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
             if ( (nType >= TransactionRecord::WitnessFundRecv) )
             {
                 //fixme (2.1) - (multiple witnesses in single account etc.)
-                if (nOriginBlock == 0)
+                if (infoForAccount.nOriginBlock == 0)
                 {
-                    originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
-                    nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
+                    infoForAccount.originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
+                    infoForAccount.nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
 
                     // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
-                    CBlockIndex* sampleWeightIndex = chainActive[nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? nOriginBlock : nOriginBlock+100];
+                    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
                     int64_t nUnused1;
-                    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, nOriginNetworkWeight, chainActive))
+                    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
                     {
                         //fixme: (2.0) Error handling
                         return;
@@ -505,8 +488,8 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                             if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
                             {
                                 uint64_t nUnused1, nUnused2;
-                                nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], nOriginBlock, nUnused1, nUnused2);
-                                nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), nOriginLength);
+                                infoForAccount.nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], infoForAccount.nOriginBlock, nUnused1, nUnused2);
+                                infoForAccount.nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), infoForAccount.nOriginLength);
                                 break;
                             }
                         }
@@ -518,11 +501,11 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                 int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
                 if (nX > 0)
                 {
-                    lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
+                    infoForAccount.lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
-                    nEarningsToDate += nY;
-                    uint64_t nDays = originDate.daysTo(lastEarningsDate);
-                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
+                    infoForAccount.nEarningsToDate += nY;
+                    uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
+                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
                 }
             }
         }
@@ -534,145 +517,166 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
     {
         uint64_t nY = pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
-        uint64_t nDays = originDate.daysTo(tipTime);
-        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, nOriginBlock, nX, nY, nDays, scale);
+        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
+        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
     }
 
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
-    uint64_t nWitnessLength = nOriginLength;
-    if (nOriginNetworkWeight == 0)
-        nOriginNetworkWeight = nStartingWitnessNetworkWeightEstimate;
-    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(nOriginWeight, nOriginNetworkWeight);
+    infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
+    if (infoForAccount.nOriginNetworkWeight == 0)
+        infoForAccount.nOriginNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
     pointMapForecast[0] = 0;
-    for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
+    for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
-        uint64_t nDays = originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
-        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, scale);
+        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
+        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale);
     }
 
     // Populate the 'expected earnings' curve
-    CAmount nTotal1 = 0;
-    int nXForecast = 0;
-    QPolygonF forecastedPoints;
     for (const auto& pointIter : pointMapForecast)
     {
-        nTotal1 += pointIter.second;
-        nXForecast = pointIter.first;
-        forecastedPoints << QPointF(nXForecast, nTotal1);
+        infoForAccount.nTotal1 += pointIter.second;
+        infoForAccount.nXForecast = pointIter.first;
+        infoForAccount.forecastedPoints << QPointF(infoForAccount.nXForecast, infoForAccount.nTotal1);
     }
-    expectedEarningsCurve->setSamples( forecastedPoints );
-    ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, nXForecast);
 
     // Populate the 'actual earnings' curve.
-    CAmount nTotal2 = 0;
     int nXGenerated = 0;
-    QPolygonF generatedPoints;
     for (const auto& pointIter : pointMapGenerated)
     {
-        nTotal2 += pointIter.second;
+        infoForAccount.nTotal2 += pointIter.second;
         nXGenerated = pointIter.first;
-        generatedPoints << QPointF(pointIter.first, nTotal2);
+        infoForAccount.generatedPoints << QPointF(pointIter.first, infoForAccount.nTotal2);
     }
-    if (generatedPoints.size() > 1)
+    if (infoForAccount.generatedPoints.size() > 1)
     {
-        generatedPoints.back().setY(nEarningsToDate);
+        (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
     }
-    currentEarningsCurveShadow->setSamples( generatedPoints );
-    currentEarningsCurve->setSamples( generatedPoints );
 
     //fixme: (2.0) This is a bit broken - use nOurWeight etc.
     // Fill in the remaining time on the 'actual earnings' curve with a forecast.
-    QPolygonF generatedPointsForecast;
-    if (generatedPoints.size() > 0)
+    int nXGeneratedForecast = 0;
+    if (infoForAccount.generatedPoints.size() > 0)
     {
-        generatedPointsForecast << generatedPoints.back();
+        infoForAccount.generatedPointsForecast << infoForAccount.generatedPoints.back();
         for (const auto& pointIter : pointMapForecast)
         {
-            nXForecast = pointIter.first;
-            if (nXForecast > nXGenerated)
+            nXGeneratedForecast = pointIter.first;
+            if (nXGeneratedForecast > nXGenerated)
             {
-                nTotal2 += pointIter.second;
-                generatedPointsForecast << QPointF(nXForecast, nTotal2);
+                infoForAccount.nTotal2 += pointIter.second;
+                infoForAccount.generatedPointsForecast << QPointF(nXGeneratedForecast, infoForAccount.nTotal2);
             }
         }
     }
-    currentEarningsCurveForecastShadow->setSamples( generatedPointsForecast );
-    currentEarningsCurveForecast->setSamples( generatedPointsForecast );
 
+    infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
+    infoForAccount.nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
+    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
 
-    ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(nTotal1, nTotal2));
-    ui->witnessEarningsPlot->replot();
+    return;
+}
 
+void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
+{
+    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount\n");
 
-    // Update all the info labels with values calculated above.
-    uint64_t nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
-    ui->labelWeightValue->setText(nOurWeight<=0 ? tr("n/a") : QString::number(nOurWeight));
-    ui->labelLockedFromValue->setText(originDate.isNull() ? tr("n/a") : originDate.toString("dd/MM/yy hh:mm"));
-    if (!chainActive.Tip())
+    DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
+
+    if(!filter || !model)
+        return;
+
+    // Calculate all the account info
+    WitnessInfoForAccount witnessInfoForAccount;
     {
-        ui->labelLockedUntilValue->setText( tr("n/a") );
+        witnessInfoForAccount.nOurWeight = nOurWeight;
+        witnessInfoForAccount.nTotalNetworkWeightTip = nTotalNetworkWeightTip;
+        witnessInfoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
+        GetWitnessInfoForAccount(forAccount, witnessInfoForAccount);
     }
-    else
-    {
-        QDateTime lockedUntilDate;
-        lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
-        lockedUntilDate = lockedUntilDate.addSecs(nLockBlocksRemaining*150);
-        ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
-    }
-    ui->labelLastEarningsDateValue->setText(lastEarningsDate.isNull() ? tr("n/a") : lastEarningsDate.toString("dd/MM/yy hh:mm"));
-    ui->labelWitnessEarningsValue->setText(generatedPoints.size() == 0 ? tr("n/a") : QString::number(nEarningsToDate));
 
-    uint64_t nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(nOurWeight, nTotalNetworkWeightTip);
-    uint64_t nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(nOurWeight, nTotalNetworkWeightTip);
-    ui->labelNetworkWeightValue->setText(nTotalNetworkWeightTip<=0 ? tr("n/a") : QString::number(nTotalNetworkWeightTip));
-    switch (scale)
+    // Populate graph with info
     {
-        case GraphScale::Blocks:
-            ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nWitnessLength)));
-            ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nExpectedWitnessBlockPeriod)));
-            ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nEstimatedWitnessBlockPeriod)));
-            ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(nLockBlocksRemaining)));
-            break;
-        case GraphScale::Days:
-            if (IsArgSet("-testnet"))
-            {
-                ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nWitnessLength/576.0, 'f', 2)));
-                ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nExpectedWitnessBlockPeriod/576.0, 'f', 2)));
-                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0, 'f', 2)));
-                ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(nLockBlocksRemaining/576.0, 'f', 2)));
-            }
-            else
-            {
-                //fixme: (2.0) - Implement
-            }
-            break;
-        case GraphScale::Weeks:
-            if (IsArgSet("-testnet"))
-            {
-                ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nWitnessLength/576.0/7.0, 'f', 2)));
-                ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nExpectedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(nLockBlocksRemaining/576.0/7.0, 'f', 2)));
-            }
-            else
-            {
-                //fixme: (2.0) - Implement
-            }
-            break;
-        case GraphScale::Months:
-            if (IsArgSet("-testnet"))
-            {
-                ui->labelLockDurationValue->setText(nWitnessLength <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nWitnessLength/576.0/30.0, 'f', 2)));
-                ui->labelExpectedEarningsDurationValue->setText(nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nExpectedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                ui->labelEstimatedEarningsDurationValue->setText(nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nEstimatedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                ui->labelLockTimeRemainingValue->setText(nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(nLockBlocksRemaining/576.0/30.0, 'f', 2)));
-            }
-            else
-            {
-                //fixme: (2.0) - Implement
-            }
-            break;
+        expectedEarningsCurve->setSamples( witnessInfoForAccount.forecastedPoints );
+        currentEarningsCurveShadow->setSamples( witnessInfoForAccount.generatedPoints );
+        currentEarningsCurve->setSamples( witnessInfoForAccount.generatedPoints );
+        currentEarningsCurveForecastShadow->setSamples( witnessInfoForAccount.generatedPointsForecast );
+        currentEarningsCurveForecast->setSamples( witnessInfoForAccount.generatedPointsForecast );
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, witnessInfoForAccount.nXForecast);
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(witnessInfoForAccount.nTotal1, witnessInfoForAccount.nTotal2));
+        ui->witnessEarningsPlot->replot();
+    }
+
+
+    // Populate stats table with info
+    {
+        ui->labelWeightValue->setText(witnessInfoForAccount.nOurWeight<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nOurWeight));
+        ui->labelLockedFromValue->setText(witnessInfoForAccount.originDate.isNull() ? tr("n/a") : witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm"));
+        if (!chainActive.Tip())
+        {
+            ui->labelLockedUntilValue->setText( tr("n/a") );
+        }
+        else
+        {
+            QDateTime lockedUntilDate;
+            lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
+            lockedUntilDate = lockedUntilDate.addSecs(witnessInfoForAccount.nLockBlocksRemaining*150);
+            ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
+        }
+        ui->labelLastEarningsDateValue->setText(witnessInfoForAccount.lastEarningsDate.isNull() ? tr("n/a") : witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm"));
+        ui->labelWitnessEarningsValue->setText(witnessInfoForAccount.generatedPoints.size() == 0 ? tr("n/a") : QString::number(witnessInfoForAccount.nEarningsToDate));
+
+        ui->labelNetworkWeightValue->setText(witnessInfoForAccount.nTotalNetworkWeightTip<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nTotalNetworkWeightTip));
+        switch (witnessInfoForAccount.scale)
+        {
+            case GraphScale::Blocks:
+                ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nWitnessLength)));
+                ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod)));
+                ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod)));
+                ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining)));
+                break;
+            case GraphScale::Days:
+                if (IsArgSet("-testnet"))
+                {
+                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0, 'f', 2)));
+                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0, 'f', 2)));
+                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0, 'f', 2)));
+                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0, 'f', 2)));
+                }
+                else
+                {
+                    //fixme: (2.0) - Implement
+                }
+                break;
+            case GraphScale::Weeks:
+                if (IsArgSet("-testnet"))
+                {
+                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/7.0, 'f', 2)));
+                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
+                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
+                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/7.0, 'f', 2)));
+                }
+                else
+                {
+                    //fixme: (2.0) - Implement
+                }
+                break;
+            case GraphScale::Months:
+                if (IsArgSet("-testnet"))
+                {
+                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/30.0, 'f', 2)));
+                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
+                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
+                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/30.0, 'f', 2)));
+                }
+                else
+                {
+                    //fixme: (2.0) - Implement
+                }
+                break;
+        }
     }
 }
 

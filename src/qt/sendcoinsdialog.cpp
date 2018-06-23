@@ -353,13 +353,16 @@ void SendCoinsDialog::on_sendButton_clicked()
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
 
-    //fixme: (2.0) (MERGE) (LOOKATTHIS)
     // Always use a CCoinControl instance, use the CoinControlDialog instance if CoinControl has been enabled
-    //CCoinControl ctrl;
-    //if (model->getOptionsModel()->getCoinControlFeatures())
-    //    ctrl = *CoinControlDialog::coinControl;
-    //if (ui->radioSmartFee->isChecked())
-    //    ctrl.nConfirmTarget = ui->sliderSmartFee->maximum() - ui->sliderSmartFee->value() + 2;
+    CCoinControl ctrl;
+
+    //fixme: (COINCONTROL)
+    #if 0
+    if (model->getOptionsModel()->getCoinControlFeatures())
+        ctrl = *CoinControlDialog::coinControl;
+    if (ui->radioSmartFee->isChecked())
+        ctrl.nConfirmTarget = ui->sliderSmartFee->maximum() - ui->sliderSmartFee->value() + 2;
+    #endif
 
 
     CAccount* forAccount = model->getActiveAccount();
@@ -384,10 +387,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         //fixme: (2.1) Check if 'spend unconfirmed' is checked or not.
         if ((model->getBalance(account) + model->getUnconfirmedBalance(account)) >= currentTransaction.getTotalTransactionAmount())
         {
-            if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-                prepareStatus = model->prepareTransaction(account, currentTransaction, CoinControlDialog::coinControl);
-            else
-                prepareStatus = model->prepareTransaction(account, currentTransaction);
+            prepareStatus = model->prepareTransaction(account, currentTransaction, &ctrl);
             if (prepareStatus.status == WalletModel::OK)
             {
                 allFailed = false;
@@ -415,13 +415,13 @@ void SendCoinsDialog::on_sendButton_clicked()
         prepareStatus.status =  WalletModel::AmountExceedsBalance;
     }
 
-    //fixme: (2.0) (MERGE)
-    //ctrl.signalRbf = ui->optInRBF->isChecked();
-
+    //fixme: (RBF)
+    #if 0
+    ctrl.signalRbf = ui->optInRBF->isChecked();
+    #endif
 
     // process prepareStatus and on error generate message shown to user
-    processSendCoinsReturn(prepareStatus,
-        GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
+    processSendCoinsReturn(prepareStatus, GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
 
     if(prepareStatus.status != WalletModel::OK) {
         fNewRecipientAllowed = true;
@@ -763,7 +763,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
     switch(sendCoinsReturn.status)
     {
     case WalletModel::PoW2NotActive:
-        msgParams.first = tr("PoW2 is not yet active, please wait for activation and try again.");
+        msgParams.first = tr("PoW² is not yet active, please wait for activation and try again.");
         break;
     case WalletModel::InvalidAddress:
         msgParams.first = tr("The recipient address is not valid. Please recheck.");
