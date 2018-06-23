@@ -939,11 +939,12 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
             "It is highly recommended to rather use 'extendwitnessaccount' in this case which behaves more like what most people would expect.\n"
             "By default this command will fail if an account already contains an existing funded address.\n"
+            "Note that this command is not currently calendar aware, it performs simplistic conversion i.e. 1 month is 30 days. This may change in future.\n"
             "\nArguments:\n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
             "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "5. force_multiple        (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
             "[\n"
@@ -951,7 +952,12 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "     \"txid\"           (string) The transaction id.\n"
             "]\n"
             "\nExamples:\n"
+            "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
+            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2m\"", "")
+            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
     int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
