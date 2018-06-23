@@ -1171,7 +1171,7 @@ void WitnessDialog::setModel(WalletModel* _model)
             WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
             proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
             proxyFilterByBalanceFund->setDynamicSortFilter(true);
-            proxyFilterByBalanceFund->setAmount(nMinimumWitnessAmount * COIN);
+            proxyFilterByBalanceFund->setAmount((nMinimumWitnessAmount*COIN));
 
             QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
             proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);

@@ -997,7 +997,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < nMinimumWitnessAmount*COIN)
+    if (nAmount < (nMinimumWitnessAmount*COIN))
         throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.
@@ -1089,7 +1089,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < nMinimumWitnessAmount*COIN)
+    if (requestedAmount < (nMinimumWitnessAmount*COIN))
         throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.

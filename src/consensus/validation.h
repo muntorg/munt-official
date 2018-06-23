@@ -21,6 +21,7 @@ static const int nMinimumParticipationAge = 100;    // This forces an attacker t
 static const int nMaximumParticipationAge = 210240; // Witnesses will essentially be required to download and parse the utxo for this many blocks back from current tip.
                                                     // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.
                                                     // Currently set at - 1 year (365 days * 576 blocks).
+//fixme: (2.0) (RELEASE)
 static const int nStartingWitnessNetworkWeightEstimate = 10000000;
 
 /** "reject" message codes */
