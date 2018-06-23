@@ -40,7 +40,7 @@ class SendCoinsRecipient;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
-class ModalOverlay;
+class SyncOverlay;
 class AccountSummaryWidget;
 class QLabel;
 class QMainWindow;
@@ -174,7 +174,7 @@ private:
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
-    ModalOverlay* modalOverlay = nullptr;
+    SyncOverlay* syncOverlay = nullptr;
     AccountSummaryWidget* accountSummaryWidget = nullptr;
 
     QToolBar* accountBar = nullptr;
@@ -353,7 +353,7 @@ private Q_SLOTS:
     /** Toggle networking */
     void toggleNetworkActive();
 
-    void showModalOverlay();
+    void showSyncOverlay();
 
     //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
     void activeAccountChanged(CAccount* account);

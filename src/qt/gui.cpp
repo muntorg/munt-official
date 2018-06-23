@@ -20,7 +20,7 @@
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
-#include "modaloverlay.h"
+#include "syncoverlay.h"
 #include "networkstyle.h"
 #include "notificator.h"
 #include "openuridialog.h"
@@ -304,12 +304,12 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
 
     doPostInit();
-    modalOverlay = new ModalOverlay(this->centralWidget());
+    syncOverlay = new SyncOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
     if(enableWallet && enableFullUI) {
-        connect(walletFrame, SIGNAL(requestedSyncWarningInfo()), this, SLOT(showModalOverlay()));
-        connect(labelBlocksIcon, SIGNAL(clicked(QPoint)), this, SLOT(showModalOverlay()));
-        connect(progressBar, SIGNAL(clicked(QPoint)), this, SLOT(showModalOverlay()));
+        connect(walletFrame, SIGNAL(requestedSyncWarningInfo()), this, SLOT(showSyncOverlay()));
+        connect(labelBlocksIcon, SIGNAL(clicked(QPoint)), this, SLOT(showSyncOverlay()));
+        connect(progressBar, SIGNAL(clicked(QPoint)), this, SLOT(showSyncOverlay()));
     }
 #endif
 }
@@ -606,7 +606,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
 
         // Keep up to date with client
         updateNetworkState();
-        modalOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
+        syncOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
         setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL), false);
 
         connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
@@ -1061,12 +1061,12 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 
     double nSyncProgress = std::min(1.0, (double)count / clientModel->getProbableHeight());
 
-    if (modalOverlay)
+    if (syncOverlay)
     {
         if (header)
-            modalOverlay->setKnownBestHeight(count, blockDate);
+            syncOverlay->setKnownBestHeight(count, blockDate);
         else
-            modalOverlay->tipUpdate(count, blockDate, nSyncProgress);
+            syncOverlay->tipUpdate(count, blockDate, nSyncProgress);
     }
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
@@ -1124,7 +1124,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         if(walletFrame)
         {
             walletFrame->showOutOfSyncWarning(false);
-            modalOverlay->showHide(true, true);
+            syncOverlay->showHide(true, true);
         }
 #endif // ENABLE_WALLET
 
@@ -1157,7 +1157,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         if(walletFrame)
         {
             walletFrame->showOutOfSyncWarning(true);
-            modalOverlay->showHide();
+            syncOverlay->showHide();
         }
 #endif // ENABLE_WALLET
 
@@ -1185,8 +1185,8 @@ void GUI::setNumHeaders(int current, int total)
     if (!clientModel)
         return;
 
-    if (modalOverlay)
-        modalOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
+    if (syncOverlay)
+        syncOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
     statusBar()->clearMessage();
@@ -1549,12 +1549,12 @@ void GUI::setTrayIconVisible(bool fHideTrayIcon)
     }
 }
 
-void GUI::showModalOverlay()
+void GUI::showSyncOverlay()
 {
-    LogPrint(BCLog::QT, "GUI::showModalOverlay\n");
+    LogPrint(BCLog::QT, "GUI::showSyncOverlay\n");
 
-    if (modalOverlay && (progressBar->isVisible() || modalOverlay->isLayerVisible()))
-        modalOverlay->toggleVisibility();
+    if (syncOverlay && (progressBar->isVisible() || syncOverlay->isLayerVisible()))
+        syncOverlay->toggleVisibility();
 }
 
 static bool ThreadSafeMessageBox(GUI *gui, const std::string& message, const std::string& caption, unsigned int style)

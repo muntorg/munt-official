@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_QT_MODALOVERLAY_H
-#define GULDEN_QT_MODALOVERLAY_H
+#ifndef GULDEN_QT_SYNCOVERLAY_H
+#define GULDEN_QT_SYNCOVERLAY_H
 
 #include <QDateTime>
 #include <QWidget>
@@ -19,17 +19,17 @@
 static constexpr int HEADER_HEIGHT_DELTA_SYNC = 24;
 
 namespace Ui {
-    class ModalOverlay;
+    class SyncOverlay;
 }
 
 /** Modal overlay to display information about the chain-sync state */
-class ModalOverlay : public QWidget
+class SyncOverlay : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ModalOverlay(QWidget *parent);
-    ~ModalOverlay();
+    explicit SyncOverlay(QWidget *parent);
+    ~SyncOverlay();
 
 public Q_SLOTS:
     void tipUpdate(int count, const QDateTime& blockDate, double nSyncProgress);
@@ -46,11 +46,11 @@ protected:
     bool event(QEvent* ev);
 
 private:
-    Ui::ModalOverlay *ui;
+    Ui::SyncOverlay *ui;
     int bestHeaderHeight; //best known height (based on the headers)
     QDateTime bestHeaderDate;
     bool layerIsVisible;
     bool userClosed;
 };
 
-#endif // GULDEN_QT_MODALOVERLAY_H
+#endif
