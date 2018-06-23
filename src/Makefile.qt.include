@@ -213,6 +213,7 @@ QT_FORMS_UI = \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
   qt/forms/syncoverlay.ui \
+  qt/forms/warningoverlay.ui \
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
@@ -243,6 +244,7 @@ QT_MOC_CPP = \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
   qt/moc_syncoverlay.cpp \
+  qt/moc_warningoverlay.cpp \
   qt/moc_notificator.cpp \
   qt/moc_openuridialog.cpp \
   qt/moc_optionsdialog.cpp \
@@ -312,6 +314,7 @@ GULDEN_QT_H = \
   qt/macdockiconhandler.h \
   qt/macnotificationhandler.h \
   qt/syncoverlay.h \
+  qt/warningoverlay.h \
   qt/networkstyle.h \
   qt/notificator.h \
   qt/openuridialog.h \
@@ -369,6 +372,7 @@ GULDEN_QT_BASE_CPP = \
   qt/qfonticon/qfonticon.cpp \
   qt/intro.cpp \
   qt/syncoverlay.cpp \
+  qt/warningoverlay.cpp \
   qt/networkstyle.cpp \
   qt/notificator.cpp \
   qt/optionsdialog.cpp \

@@ -340,50 +340,6 @@ void GUI::createToolBars()
     if (!walletFrame)
         return;
 
-    warningBar = addToolBar(tr("Warning toolbar"));
-    warningBar->setObjectName("warning_tool_bar");
-    warningBar->setMovable(false);
-    warningBar->setVisible(false);
-    {
-        QFrame* warningBarFrame = new QFrame(this);
-        warningBarFrame->setObjectName("warning_tool_bar_frame");
-        QHBoxLayout* layoutWarningBarFrame = new QHBoxLayout;
-        layoutWarningBarFrame->setObjectName("warning_tool_bar_frame_layout");
-        warningBarFrame->setLayout(layoutWarningBarFrame);
-        warningBarFrame->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-        warningBar->addWidget(warningBarFrame);
-        warningBarFrame->setContentsMargins(0, 0, 0, 0);
-        layoutWarningBarFrame->setSpacing(0);
-        layoutWarningBarFrame->setContentsMargins(0, 0, 0, 0);
-
-        warningBarLabel = new QLabel(this);
-        warningBarLabel->setObjectName("warning_tool_bar_label");
-        warningBarLabel->setTextFormat(Qt::RichText);
-        layoutWarningBarFrame->addWidget(warningBarLabel);
-        warningBarLabel->setContentsMargins(0, 0, 0, 0);
-        warningBarLabel->setIndent(0);
-
-        //Spacer to fill width
-        {
-            QWidget* spacerMid = new QWidget( warningBarFrame );
-            spacerMid->setObjectName("warning_tool_bar_mid_spacer");
-            spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-            layoutWarningBarFrame->addWidget(spacerMid);
-        }
-
-        ClickableLabel* warningBarCloseButton = new ClickableLabel(warningBarFrame);
-        warningBarCloseButton->setTextFormat(Qt::RichText);
-        warningBarCloseButton->setText(GUIUtil::fontAwesomeSolid("\uf057"));
-        warningBarCloseButton->setObjectName( "warning_tool_bar_close_button" );
-        warningBarCloseButton->setCursor (Qt::PointingHandCursor);
-        layoutWarningBarFrame->addWidget( warningBarCloseButton );
-        warningBarCloseButton->setContentsMargins(0, 0, 0, 0);
-        warningBarCloseButton->setIndent(0);
-
-        connect(warningBarCloseButton, SIGNAL(clicked()), this, SLOT(dismissUIWarning()));
-    }
-    addToolBarBreak();
-
     QToolBar* toolbar = addToolBar(tr("Tabs toolbar"));
     toolbar->setMovable(false);
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);

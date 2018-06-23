@@ -61,8 +61,6 @@ SyncOverlay::SyncOverlay(QWidget *parent)
     ui->percentageProgress->setContentsMargins(0,0,0,0);
     ui->percentageProgress->setIndent(0);
 
-    ui->progressBar->setVisible(false);
-
     ui->bgWidget->setStyleSheet("");
     ui->contentWidget->setStyleSheet("");
 
@@ -141,7 +139,6 @@ void SyncOverlay::tipUpdate([[maybe_unused]] int count, [[maybe_unused]] const Q
 
     // show the percentage of blocks done
     ui->percentageProgress->setText(QString::number(nSyncProgress*100, 'f', 2)+"%");
-    ui->progressBar->setValue(nSyncProgress*100);
 }
 
 void SyncOverlay::toggleVisibility()

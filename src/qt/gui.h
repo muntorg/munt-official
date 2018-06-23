@@ -41,6 +41,7 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class SyncOverlay;
+class WarningOverlay;
 class AccountSummaryWidget;
 class QLabel;
 class QMainWindow;
@@ -175,12 +176,10 @@ private:
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
     SyncOverlay* syncOverlay = nullptr;
+    WarningOverlay* warningOverlay = nullptr;
     AccountSummaryWidget* accountSummaryWidget = nullptr;
 
     QToolBar* accountBar = nullptr;
-    QToolBar* warningBar = nullptr;
-    QLabel* warningBarLabel = nullptr;
-    ClickableLabel* warningBarClose = nullptr;
     QToolBar* guldenBar = nullptr;
     QToolBar* spacerBarL = nullptr;
     QToolBar* spacerBarR = nullptr;
@@ -283,9 +282,6 @@ public Q_SLOTS:
 
     //! UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc.
     void userWantsToQuit();
-
-    //! Call this to dismiss the UI warning that is currently showing
-    void dismissUIWarning();
 
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.

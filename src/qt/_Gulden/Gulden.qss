@@ -272,6 +272,17 @@ GUI > QToolBar > QToolButton:checked
     color: #000;
 }
 
+#warningOverlayHeading
+{
+    color: #e02121;
+    margin-bottom: 18px;
+}
+
+#warningOverlayContent
+{
+    background-color: white;
+}
+
 #gulden_bar > QToolButton
 {
     height: 44px;

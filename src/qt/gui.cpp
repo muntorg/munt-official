@@ -21,6 +21,7 @@
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "syncoverlay.h"
+#include "warningoverlay.h"
 #include "networkstyle.h"
 #include "notificator.h"
 #include "openuridialog.h"
@@ -305,6 +306,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
 
     doPostInit();
     syncOverlay = new SyncOverlay(this->centralWidget());
+    warningOverlay = new WarningOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
     if(enableWallet && enableFullUI) {
         connect(walletFrame, SIGNAL(requestedSyncWarningInfo()), this, SLOT(showSyncOverlay()));
@@ -1053,7 +1055,10 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
     {
         static uint64_t lastUpdate = GetTimeMillis();
         if (GetTimeMillis() - lastUpdate > 5000)
+        {
             updateWindowTitle();
+            lastUpdate = GetTimeMillis();
+        }
     }
 
     if (!clientModel)
@@ -1063,10 +1068,19 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
 
     if (syncOverlay)
     {
-        if (header)
-            syncOverlay->setKnownBestHeight(count, blockDate);
-        else
-            syncOverlay->tipUpdate(count, blockDate, nSyncProgress);
+        static uint64_t lastUpdate = GetTimeMillis();
+        if (GetTimeMillis() - lastUpdate > 1000)
+        {
+            if (header)
+            {
+                syncOverlay->setKnownBestHeight(count, blockDate);
+            }
+            else
+            {
+                syncOverlay->tipUpdate(count, blockDate, nSyncProgress);
+            }
+            lastUpdate = GetTimeMillis();
+        }
     }
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
@@ -1327,10 +1341,6 @@ void GUI::userWantsToQuit()
     }
 }
 
-void GUI::dismissUIWarning()
-{
-    warningBar->setVisible(false);
-}
 
 void GUI::showEvent([[maybe_unused]] QShowEvent* event)
 {
@@ -1534,8 +1544,12 @@ void GUI::showUIAlert(const QString& alertMessage)
 {
     LogPrint(BCLog::QT, "GUI::showUIAlert\n");
 
-    warningBarLabel->setText(GUIUtil::fontAwesomeSolid("\uf071") + alertMessage);
-    warningBar->setVisible(true);
+    // Hide the sync overlay if it is showing.
+    syncOverlay->showHide(true, false);
+
+    // Show the warning overlay
+    warningOverlay->setWarning(GUIUtil::fontAwesomeSolid("\uf071"), tr("Warning"), alertMessage);
+    warningOverlay->showHide(false, false);
 }
 
 
