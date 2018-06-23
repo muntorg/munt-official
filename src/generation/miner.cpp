@@ -15,6 +15,7 @@
 
 #include "net.h"
 
+#include "alert.h"
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"
@@ -191,7 +192,6 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
         out.nValue = 0;
         out.output.scriptPubKey.resize(143); // 1 + 5 + 137
         out.output.scriptPubKey[0] = OP_RETURN;
-        //testme: (HIGH) (PoW2) (2.0) - is an OP_PUSH required here?
         // 0x506f57c2b2 = PoW²
         out.output.scriptPubKey[1] = 0x50;
         out.output.scriptPubKey[2] = 0x6f;
@@ -801,6 +801,158 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     return true;
 }
 
+//fixme: (2.0) (POW2) - Implement this also for RPC mining.
+CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed)
+{
+    if (!pIndexParent)
+        return nullptr;
+    pWitnessBlockToEmbed = nullptr;
+
+    // If PoW2 witnessing is active.
+    // Phase 3 - We always mine on the last PoW block for which we have a witness.
+    // This is always tip~1
+    // In the case where the current tip is a witness block, we want to embed the witness block and mine on top of the previous PoW block. (new chain tip)
+    // In the case where the current tip is a PoW block we want to mine on top of the PoW block that came before it. (competing chain tip to the current one - in case there is no witness for the current one)
+    // Phase 4 - We always mine on the last witnessed block.
+    // Tip if last mined block was a witness block. (Mining new chain tip)
+    // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
+    //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
+    int nPoW2PhaseGreatGrandParent = pIndexParent->pprev && pIndexParent->pprev->pprev ? GetPoW2Phase(pIndexParent->pprev->pprev, Params(), chainActive) : 1;
+    int nPoW2PhaseGrandParent = pIndexParent->pprev ? GetPoW2Phase(pIndexParent->pprev, Params(), chainActive) : 1;
+    boost::this_thread::interruption_point();
+
+    if (nPoW2PhaseGrandParent >= 3)
+    {
+        if (pIndexParent->nVersionPoW2Witness != 0)
+        {
+            if (nPoW2PhaseGrandParent == 3)
+            {
+                LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
+                pWitnessBlockToEmbed = pIndexParent;
+                pIndexParent = GetPoWBlockForPoSBlock(pIndexParent);
+
+                if (!pIndexParent)
+                {
+                    strError = "Error in GuldenMiner: mining stalled, unable to read the witness block we intend to embed.";
+                }
+                return nullptr;
+            }
+        }
+        else
+        {
+            if (nPoW2PhaseGreatGrandParent >= 3)
+            {
+                // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
+                bool tryHighLevelCandidate = false;
+                auto candidateIters = GetTopLevelWitnessOrphans(pIndexParent->nHeight);
+                for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
+                {
+                    if (nPoW2PhaseGreatGrandParent >= 4)
+                    {
+                        if ((*candidateIter)->nVersionPoW2Witness != 0)
+                        {
+                            pIndexParent = *candidateIter;
+                            tryHighLevelCandidate = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
+                        CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
+                        if (pParentPoW)
+                        {
+                            if (nPoW2PhaseGrandParent == 3)
+                                pWitnessBlockToEmbed = *candidateIter;
+                            pIndexParent = pParentPoW;
+                            tryHighLevelCandidate = true;
+                            break;
+                        }
+                    }
+                }
+
+                // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
+                if (!tryHighLevelCandidate && nPoW2PhaseGrandParent >= 4)
+                {
+                    pIndexParent = pIndexParent->pprev;
+                }
+                else if (!tryHighLevelCandidate)
+                {
+                    int nCount=0;
+                    while (pIndexParent->pprev && ++nCount < 10)
+                    {
+                        // Grab the witness from our index.
+                        pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pIndexParent->pprev->nHeight, pIndexParent->pprev->GetBlockHashLegacy(), pIndexParent->pprev->GetBlockHashLegacy());
+
+                        //We don't have it in our index - try extract it from the tip in which we have already embedded it.
+                        if (!pWitnessBlockToEmbed)
+                        {
+                            std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
+                            LOCK(cs_main); // For ReadBlockFromDisk
+                            if (ReadBlockFromDisk(*pBlockPoWParent.get(), pIndexParent, Params()))
+                            {
+                                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
+                                if (nWitnessCoinbaseIndex != -1)
+                                {
+                                    std::shared_ptr<CBlock> embeddedWitnessBlock(new CBlock);
+                                    if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pIndexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, *embeddedWitnessBlock.get()))
+                                    {
+                                        uint256 hashPoW2Witness = embeddedWitnessBlock->GetHashPoW2();
+                                        if (mapBlockIndex.count(hashPoW2Witness) > 0)
+                                        {
+                                            pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr))
+                                            {
+                                                if (mapBlockIndex.count(hashPoW2Witness) > 0)
+                                                {
+                                                    pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (!pWitnessBlockToEmbed)
+                        {
+                            pIndexParent = pIndexParent->pprev;
+                            continue;
+                        }
+                    }
+                    if (!pWitnessBlockToEmbed)
+                    {
+                        strError = "Error in GuldenMiner: mining stalled, unable to locate suitable witness block to embed.\n";
+                        return nullptr;
+                    }
+                    if (pIndexParent->nHeight != pWitnessBlockToEmbed->nHeight)
+                        pIndexParent = pIndexParent->pprev;
+                }
+            }
+            else
+            {
+                pIndexParent = pIndexParent->pprev;
+                pWitnessBlockToEmbed = nullptr;
+            }
+        }
+    }
+
+    if (nPoW2PhaseGreatGrandParent >= 4)
+    {
+        if (pIndexParent->nVersionPoW2Witness == 0)
+        {
+            strError = "Error in GuldenMiner: mining stalled, unable to locate suitable witness tip on which to build.\n";
+            return nullptr;
+        }
+    }
+
+    return pIndexParent;
+}
+
 double dBestHashesPerSec = 0.0;
 double dHashesPerSec = 0.0;
 int64_t nHPSTimerStart = 0;
@@ -869,152 +1021,18 @@ void static GuldenMiner(const CChainParams& chainparams)
 
             boost::this_thread::interruption_point();
 
-            //fixme: (2.0) (POW2) - Implement this also for RPC mining.
-            // If PoW2 witnessing is active.
-            // Phase 3 - We always mine on the last PoW block for which we have a witness.
-            // This is always tip~1
-            // In the case where the current tip is a witness block, we want to embed the witness block and mine on top of the previous PoW block. (new chain tip)
-            // In the case where the current tip is a PoW block we want to mine on top of the PoW block that came before it. (competing chain tip to the current one - in case there is no witness for the current one)
-            // Phase 4 - We always mine on the last witnessed block.
-            // Tip if last mined block was a witness block. (Mining new chain tip)
-            // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
-            //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
-            int nPoW2PhaseGreatGrandParent = pindexParent->pprev && pindexParent->pprev->pprev ? GetPoW2Phase(pindexParent->pprev->pprev, Params(), chainActive) : 1;
-            int nPoW2PhaseGrandParent = pindexParent->pprev ? GetPoW2Phase(pindexParent->pprev, Params(), chainActive) : 1;
-            boost::this_thread::interruption_point();
-
+            std::string strError = "";
             CBlockIndex* pWitnessBlockToEmbed = nullptr;
-
-            if (nPoW2PhaseGrandParent >= 3)
+            pindexParent = FindMiningTip(pindexParent, chainparams, strError, pWitnessBlockToEmbed);
+            if (!pindexParent)
             {
-                if (pindexParent->nVersionPoW2Witness != 0)
+                if (GetTimeMillis() - nUpdateTimeStart > 5000)
                 {
-                    if (nPoW2PhaseGrandParent == 3)
-                    {
-                        LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
-                        pWitnessBlockToEmbed = pindexParent;
-                        pindexParent = GetPoWBlockForPoSBlock(pindexParent);
-                        assert(pindexParent);
-                    }
+                    CAlert::Notify(strError.c_str(), true, true);
+                    LogPrintf("%s\n", strError.c_str());
+                    dHashesPerSec = 0;
                 }
-                else
-                {
-                    if (nPoW2PhaseGreatGrandParent >= 3)
-                    {
-                        // See if there are higher level witness blocks with less work (delta diff drop) - if there are then we mine those first to try build a new larger chain.
-                        bool tryHighLevelCandidate = false;
-                        auto candidateIters = GetTopLevelWitnessOrphans(pindexParent->nHeight);
-                        for (auto candidateIter = candidateIters.rbegin(); candidateIter != candidateIters.rend(); ++candidateIter )
-                        {
-                            if (nPoW2PhaseGreatGrandParent >= 4)
-                            {
-                                if ((*candidateIter)->nVersionPoW2Witness != 0)
-                                {
-                                    pindexParent = *candidateIter;
-                                    tryHighLevelCandidate = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                LOCK(cs_main); // Required for GetPoWBlockForPoSBlock
-                                CBlockIndex* pParentPoW = GetPoWBlockForPoSBlock(*candidateIter);
-                                if (pParentPoW)
-                                {
-                                    if (nPoW2PhaseGrandParent == 3)
-                                        pWitnessBlockToEmbed = *candidateIter;
-                                    pindexParent = pParentPoW;
-                                    tryHighLevelCandidate = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // No higher level blocks - chain might be stalled; absent witness(es); so drop further back in the history and try mine a different chain.
-                        if (!tryHighLevelCandidate && nPoW2PhaseGrandParent >= 4)
-                        {
-                            pindexParent = pindexParent->pprev;
-                        }
-                        else if (!tryHighLevelCandidate)
-                        {
-                            int nCount=0;
-                            while (pindexParent->pprev && ++nCount < 10)
-                            {
-                                // Grab the witness from our index.
-                                pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pindexParent->pprev->nHeight, pindexParent->pprev->GetBlockHashLegacy(), pindexParent->pprev->GetBlockHashLegacy());
-
-                                //We don't have it in our index - try extract it from the tip in which we have already embedded it.
-                                if (!pWitnessBlockToEmbed)
-                                {
-                                    std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
-                                    LOCK(cs_main); // For ReadBlockFromDisk
-                                    if (ReadBlockFromDisk(*pBlockPoWParent.get(), pindexParent, Params()))
-                                    {
-                                        int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
-                                        if (nWitnessCoinbaseIndex != -1)
-                                        {
-                                            std::shared_ptr<CBlock> embeddedWitnessBlock(new CBlock);
-                                            if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pindexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, *embeddedWitnessBlock.get()))
-                                            {
-                                                uint256 hashPoW2Witness = embeddedWitnessBlock->GetHashPoW2();
-                                                if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                                {
-                                                    pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                                    break;
-                                                }
-                                                else
-                                                {
-                                                    if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr))
-                                                    {
-                                                        if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                                        {
-                                                            pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (!pWitnessBlockToEmbed)
-                                {
-                                    pindexParent = pindexParent->pprev;
-                                    continue;
-                                }
-                            }
-                            if (!pWitnessBlockToEmbed)
-                            {
-                                if (GetTimeMillis() - nUpdateTimeStart > 5000)
-                                {
-                                    LogPrintf("Error in GuldenMiner: mining stalled, unable to locate suitable witness block to embed.\n");
-                                    dHashesPerSec = 0;
-                                }
-                                continue;
-                            }
-                            if (pindexParent->nHeight != pWitnessBlockToEmbed->nHeight)
-                                pindexParent = pindexParent->pprev;
-                        }
-                    }
-                    else
-                    {
-                        pindexParent = pindexParent->pprev;
-                        pWitnessBlockToEmbed = nullptr;
-                    }
-                }
-            }
-
-            if (nPoW2PhaseGreatGrandParent >= 4)
-            {
-                if (pindexParent->nVersionPoW2Witness == 0)
-                {
-                    if (GetTimeMillis() - nUpdateTimeStart > 5000)
-                    {
-                        dHashesPerSec = 0;
-                        LogPrintf("Error in GuldenMiner: mining stalled, unable to locate suitable witness tip on which to build.\n");
-                    }
-                    continue;
-                }
+                continue;
             }
 
             std::unique_ptr<CBlockTemplate> pblocktemplate;
