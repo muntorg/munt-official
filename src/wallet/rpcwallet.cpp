@@ -1114,7 +1114,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     {
         CGuldenAddress address(name_);
 
-        CAccount* toAccount;
+        CAccount* toAccount = nullptr;
         try{ toAccount = AccountFromValue(pwallet, name_, false); } catch(...) {}
         if (toAccount)
         {
