@@ -890,7 +890,7 @@ UniValue movecmd(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"fromaccount\"   (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
             "2. \"toaccount\"     (string, required) The UUID or unique label of the account to move funds to. May be the currently active account using \"\".\n"
-            "3. \"amount\"        (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
+            "3. amount           (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
             "4. \"minconf\"       (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"       (string, optional) An optional comment, stored in the wallet only.\n"
             "\nResult:\n"
@@ -923,7 +923,15 @@ UniValue movecmd(const JSONRPCRequest& request)
 
     bool subtractFeeFromAmount = false;
     boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
-    CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    CAmount nBalance = 0;
+    if (fromAccount->IsPoW2Witness())
+    {
+        nBalance = pwallet->GetBalance(fromAccount, false, true);
+    }
+    else
+    {
+        nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    }
     CAmount nAmount = 0;
     if (request.params[2].getValStr() == "-1")
     {
