@@ -1272,8 +1272,10 @@ void GUI::resizeEvent(QResizeEvent* event)
 
     QMainWindow::resizeEvent(event);
 
+    //fixme: (2.1) This is a locate setting. For English everything fits in 960 but for Dutch it needs more space...
+    // Other languages may in turn be different.
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
-    bool restrictedHorizontalSpace = (event->size().width() < 940) ? true : false;
+    bool restrictedHorizontalSpace = (event->size().width() < 980) ? true : false;
     if (accountSummaryWidget)
         accountSummaryWidget->showForexBalance(!restrictedHorizontalSpace);
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->receiveCoinsPage)
