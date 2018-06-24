@@ -1738,7 +1738,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
 
-    //fixme: (2.0) - ensure activation
     if (chainparams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout != 0) {
         // Only advertise witness capabilities if they have a reasonable start time.
         // This allows us to have the code merged without a defined softfork, by setting its
