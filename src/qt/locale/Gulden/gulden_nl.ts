@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-23 16:48+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-23 16:48+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 07:17+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 07:17+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -3885,7 +3885,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation>Om te beginnen met witnessing, selecteert u een account van waaruit Gulden te vergrendelen:</translation>
+        <translation>Om te beginnen met witnessing, selecteert u een account van waaruit Gulden worden vastgezet:</translation>
     </message>
     <message>
         <source>Projected earnings graph</source>
@@ -3913,11 +3913,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Last earnings</source>
-        <translation>Laatste verdiensten</translation>
+        <translation>Laatst beloning</translation>
     </message>
     <message>
         <source>Earnings</source>
-        <translation>Verdiensten</translation>
+        <translation>Beloning</translation>
     </message>
     <message>
         <source>Lock duration</source>
@@ -3925,7 +3925,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Required earnings frequency</source>
-        <translation>Benodigde inkomsten frequentie</translation>
+        <translation>Benodigde belonings frequentie</translation>
     </message>
     <message>
         <source>Weight</source>
@@ -3933,11 +3933,11 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Estimated earnings frequency</source>
-        <translation>Geschatte inkomsten frequentie</translation>
+        <translation>Geschatte belonings frequentie</translation>
     </message>
     <message>
         <source>Network weight</source>
-        <translation>Network gewicht</translation>
+        <translation>Netwerk gewicht</translation>
     </message>
     <message>
         <source>Inactive witness account</source>
@@ -3983,7 +3983,7 @@ In toekomstige versies van Gulden zal het mogelijk zijn om deze rekening te herg
     </message>
     <message>
         <source>Fund account</source>
-        <translation>Vul de account</translation>
+        <translation>Vul het account</translation>
     </message>
     <message>
         <source>Renew account</source>
