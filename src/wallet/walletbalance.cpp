@@ -382,6 +382,15 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
     return nTotal;
 }
 
+CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildren)
+{
+    //fixme: (2.1) This can probably be drastically improved.
+    CAmount balance = GetBalance(forAccount, true, includeChildren) - GetBalance(forAccount, false, includeChildren);
+    CAmount balanceUnconfirmed = GetUnconfirmedBalance(forAccount, true, includeChildren) - GetUnconfirmedBalance(forAccount, false, includeChildren);
+    CAmount immatureBalance = GetImmatureBalance(forAccount, true, includeChildren) - GetImmatureBalance(forAccount, false, includeChildren);
+    return balance + balanceUnconfirmed + immatureBalance;
+}
+
 CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
