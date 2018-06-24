@@ -117,13 +117,24 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
+    //fixme: (2.1) Forbid "*" as an account name to prevent clash with this.
+    if (strAccountUUIDOrLabel == "*")
+        return nullptr;
+
     if (strAccountUUIDOrLabel.empty())
     {
-        if (!pwallet->getActiveAccount())
+        if (useDefaultIfEmpty)
         {
-            throw std::runtime_error("No account identifier passed, and no active account selected, please select an active account or pass a valid identifier.");
+            if (!pwallet->getActiveAccount())
+            {
+                throw std::runtime_error("No account identifier passed, and no active account selected, please select an active account or pass a valid identifier.");
+            }
+            return pwallet->getActiveAccount();
         }
-        return pwallet->getActiveAccount();
+        else
+        {
+            return nullptr;
+        }
     }
 
     CAccount* foundAccount = NULL;
