@@ -392,7 +392,7 @@ CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildr
     CAmount balanceImmatureExcludingLocked;
     CAmount balanceImmatureLocked;
     CAmount balanceLocked;
-    GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked);
+    GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, forAccount, includeChildren);
     return balanceLocked;
 }
 
