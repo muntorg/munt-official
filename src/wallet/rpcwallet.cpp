@@ -838,7 +838,7 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
     if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount));
+    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount, false, true));
 }
 
 UniValue getimmaturebalance(const JSONRPCRequest &request)
@@ -861,7 +861,7 @@ UniValue getimmaturebalance(const JSONRPCRequest &request)
     if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount));
+    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount, false, true));
 }
 
 UniValue getlockedbalance(const JSONRPCRequest &request)
@@ -876,7 +876,7 @@ UniValue getlockedbalance(const JSONRPCRequest &request)
                 "getlockedbalance \"for_account\"\n"
                 "\nArguments:\n"
                 "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
-                "Returns the server's total locked balance\n");
+                "Returns the server's total locked balance (inclusive of immature and unconfirmed transactions)\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
@@ -884,7 +884,7 @@ UniValue getlockedbalance(const JSONRPCRequest &request)
     if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetBalance(nullptr, true, true) - pwallet->GetBalance(nullptr, false, true));
+    return ValueFromAmount(pwallet->GetLockedBalance(forAccount, true));
 }
 
 UniValue movecmd(const JSONRPCRequest& request)
