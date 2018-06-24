@@ -38,8 +38,8 @@ public:
     void showOutOfSyncWarning(bool fShow);
 
 public Q_SLOTS:
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
@@ -49,12 +49,13 @@ private:
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-    CAmount currentBalance;
-    CAmount currentUnconfirmedBalance;
-    CAmount currentImmatureBalance;
-    CAmount currentWatchOnlyBalance;
-    CAmount currentWatchUnconfBalance;
-    CAmount currentWatchImmatureBalance;
+    CAmount currentAvailableBalance = -1;
+    CAmount currentUnconfirmedBalance = -1;
+    CAmount currentImmatureBalance = -1;
+    CAmount currentWatchOnlyBalance = -1;
+    CAmount currentWatchUnconfBalance = -1;
+    CAmount currentWatchImmatureBalance = -1;
+    CAmount currentLockedBalance = -1;
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;

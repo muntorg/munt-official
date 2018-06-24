@@ -42,7 +42,7 @@ public:
     void setBalance(CAmount balanceNLG);
 
 public Q_SLOTS:
-    void balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void balanceChanged(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
 
 private:
     CurrencyTicker* m_ticker;

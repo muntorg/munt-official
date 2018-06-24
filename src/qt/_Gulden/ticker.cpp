@@ -87,9 +87,9 @@ void CurrencyTableModel::setBalance(CAmount balanceNLG)
     m_balanceNLG = balanceNLG;
 }
 
-void CurrencyTableModel::balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
+void CurrencyTableModel::balanceChanged(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance)
 {
-    setBalance(balance + unconfirmedBalance + immatureBalance);
+    setBalance(availableBalance + unconfirmedBalance + immatureBalance);
     //fixme: (2.1) Only emit if data actually changes.
     Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(rowCount()-1, columnCount()-1, QModelIndex()));
 }
