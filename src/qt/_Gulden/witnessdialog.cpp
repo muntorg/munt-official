@@ -825,7 +825,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                                 if (bAnyExpired)
                                 {
                                     // If the full account balance is spendable than show an "empty account" button otherwise an "empty earnings" button.
-                                    if ((pactiveWallet->GetLockedBalance(forAccount, true, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
+                                    if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
                                         stateEmptyWitnessButton2 = true;
                                     else
                                         stateWithdrawEarningsButton2 = true;
@@ -854,7 +854,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             }
                             else
                             {
-                                if ((pactiveWallet->GetLockedBalance(forAccount, true, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
+                                if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
                                     stateEmptyWitnessButton = true;
                                 else
                                     stateWithdrawEarningsButton = true;

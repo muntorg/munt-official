@@ -834,8 +834,14 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
     return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount, false, true));
@@ -857,8 +863,14 @@ UniValue getimmaturebalance(const JSONRPCRequest &request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
     return ValueFromAmount(pwallet->GetImmatureBalance(forAccount, false, true));
@@ -880,8 +892,14 @@ UniValue getlockedbalance(const JSONRPCRequest &request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
     return ValueFromAmount(pwallet->GetLockedBalance(forAccount, true));
