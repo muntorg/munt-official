@@ -3223,7 +3223,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="+531"/>
+        <location line="-367"/>
+        <source>&amp;Delete</source>
+        <translation>&amp;Delete</translation>
+    </message>
+    <message>
+        <location line="-22"/>
+        <source>&amp;Edit</source>
+        <translation>&amp;Edit</translation>
+    </message>
+    <message>
+        <location line="+920"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -3298,22 +3308,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+54"/>
-        <source>&amp;Edit</source>
-        <translation type="unfinished">&amp;Edit</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>&amp;Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+15"/>
-        <source>&amp;Delete</source>
-        <translation type="unfinished">&amp;Delete</translation>
-    </message>
-    <message>
-        <location line="+367"/>
+        <location line="+443"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
@@ -3328,8 +3323,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Payment request expired.</translation>
     </message>
     <message>
+        <location line="-657"/>
+        <source>&amp;Clear</source>
+        <translation>&amp;Clear</translation>
+    </message>
+    <message>
         <location filename="../../forms/sendcoinsdialog.ui" line="-749"/>
-        <location filename="../../sendcoinsdialog.cpp" line="+13"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+670"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>

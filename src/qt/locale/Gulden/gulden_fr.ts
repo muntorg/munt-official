@@ -4,8 +4,8 @@
     <extra-po-header-language>fr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:20+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:20+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 07:48+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 07:48+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -1322,6 +1322,14 @@ Poids du Witness : %5</translation>
         <translation>Annuler</translation>
     </message>
     <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Supprimer</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Éditer</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(aucune étiquette)</translation>
     </message>
@@ -1392,6 +1400,10 @@ Poids du Witness : %5</translation>
     <message>
         <source>Payment request expired.</source>
         <translation>La demande de paiement a expiré</translation>
+    </message>
+    <message>
+        <source>&amp;Clear</source>
+        <translation>&amp;Nettoyer</translation>
     </message>
     <message>
         <source>Send Coins</source>
