@@ -831,8 +831,8 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                 if (!pIndexParent)
                 {
                     strError = "Error in GuldenMiner: mining stalled, unable to read the witness block we intend to embed.";
+                    return nullptr;
                 }
-                return nullptr;
             }
         }
         else
