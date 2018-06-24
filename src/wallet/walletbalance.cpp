@@ -161,7 +161,7 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount)
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+    if (!IsCoinBase() || GetBlocksToMaturity() == 0 || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
@@ -197,7 +197,7 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+    if (!IsCoinBase() || GetBlocksToMaturity() == 0 || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && immatureCreditCachedIncludingLockedWitnesses.find(forAccount) != immatureCreditCachedIncludingLockedWitnesses.end())
