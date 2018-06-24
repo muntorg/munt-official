@@ -65,14 +65,7 @@ SyncOverlay::SyncOverlay(QWidget *parent)
     ui->verticalLayout->setStretch(1, 0);
     ui->verticalLayout->setStretch(2, 0);
 
-    if (chainActive.Tip() && chainActive.Tip()->nHeight > 5000)
-    {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
-    }
-    else
-    {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
-    }
+    ui->infoText->setText("");
 }
 
 SyncOverlay::~SyncOverlay()
@@ -112,8 +105,21 @@ bool SyncOverlay::event(QEvent* ev) {
 
 void SyncOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
 {
-    (unused) count;
     (unused) blockDate;
+    static bool doOnceOnly = true;
+    if (doOnceOnly)
+    {
+        int messageChangeThreshold = IsArgSet("-testnet") ? 1000 : 5000;
+        if (chainActive.Tip() && chainActive.Tip()->nHeight > messageChangeThreshold)
+        {
+            ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
+        }
+        else
+        {
+            ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
+        }
+        doOnceOnly = false;
+    }
 }
 
 void SyncOverlay::tipUpdate(int count, const QDateTime& blockDate, double nSyncProgress)
