@@ -1000,8 +1000,13 @@ void static GuldenMiner(const CChainParams& chainparams)
                 // Busy-wait for the network to come online so we don't waste time mining on an obsolete chain. In regtest mode we expect to fly solo.
                 while (true)
                 {
-                    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0 && !IsInitialBlockDownload())
-                        break;
+                    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
+                    {
+                        if (IsArgSet("-testnet") || !IsInitialBlockDownload())
+                        {
+                            break;
+                        }
+                    }
                     MilliSleep(1000);
                 }
             }
