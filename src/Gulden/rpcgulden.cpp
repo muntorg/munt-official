@@ -95,11 +95,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "[{\n"
             "     \"pow2_phase\": n                                  (number) The number of the currently active pow2_phase.\n"
             "     \"number_of_witnesses_raw\": n                     (number) The total number of funded witness addresses in existence on the network.\n"
-            "     \"number_of_witnesses_total\": n                   (number) The total number of funded witness addresses in existence on the network.\n"
-            "     \"number_of_witnesses_eligible\": n                (number) The total number of funded witness addresses in existence on the network.\n"
-            "     \"total_witness_weight_raw\": n                    (number) The total number of funded witness addresses in existence on the network.\n"
-            "     \"total_witness_weight_eligible_raw\": n,          (number) The total number of funded witness addresses in existence on the network.\n"
-            "     \"total_witness_weight_eligible_adjusted\": n,     (number) The total number of funded witness addresses in existence on the network.\n"
+            "     \"number_of_witnesses_total\": n                   (number) The total number of funded witness addresses in existence on the network which pass basic restrictions to witness like minimum weight.\n"
+            "     \"number_of_witnesses_eligible\": n                (number) The total number of witness addresses on the network which were considered eligible candidates to witness for this block.\n"
+            "     \"total_witness_weight_raw\": n                    (number) The total weight of all witness addresses that were part of \"number_of_witnesses_total\".\n"
+            "     \"total_witness_weight_eligible_raw\": n,          (number) The total weight of all witness addresses that were part of \"number_of_witnesses_eligible\".\n"
+            "     \"total_witness_weight_eligible_adjusted\": n,     (number) The adjusted weight (after applying maximum weight restrictions) of all witness addresses that were part of \"number_of_witnesses_eligible\".\n"
             "     \"selected_witness_address\": address              (string) The address of the witness that has been selected for the current chain tip.\n"
             "     \"witness_statistics\": {\n"
             "         \"weight\": {                                  Weight statistics based on all witness addresses\n"
@@ -939,19 +939,25 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
             "It is highly recommended to rather use 'extendwitnessaccount' in this case which behaves more like what most people would expect.\n"
             "By default this command will fail if an account already contains an existing funded address.\n"
+            "Note that this command is not currently calendar aware, it performs simplistic conversion i.e. 1 month is 30 days. This may change in future.\n"
             "\nArguments:\n"
-            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
-            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
-            "5. force_multiple        (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
+            "1. \"funding_account\"      (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
+            "2. \"witness_account\"      (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"               (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"                 (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "5. force_multiple         (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
             "[\n"
-            "     \"address\",       (string) The witness address that has been created \n"
-            "     \"txid\"           (string) The transaction id.\n"
+            "     \"address\":\"address\", (string) The witness address that has been created \n"
+            "     \"txid\":\"txid\"        (string) The transaction id.\n"
             "]\n"
             "\nExamples:\n"
+            "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
+            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2m\"", "")
+            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
     int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
@@ -991,7 +997,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < nMinimumWitnessAmount*COIN)
+    if (nAmount < (nMinimumWitnessAmount*COIN))
         throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.
@@ -1072,7 +1078,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     CTxDestination dest;
     ExtractDestination(wtx.tx->vout[0], dest);
-    result.push_back(Pair(CGuldenAddress(dest).ToString(), wtx.GetHash().GetHex()));
+    result.push_back(Pair("address",CGuldenAddress(dest).ToString()));
+    result.push_back(Pair("txid", wtx.GetHash().GetHex()));
     return result;
 }
 
@@ -1083,7 +1090,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < nMinimumWitnessAmount*COIN)
+    if (requestedAmount < (nMinimumWitnessAmount*COIN))
         throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
 
     // arg4 - lock period.
@@ -1194,7 +1201,8 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
     }
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    result.push_back(Pair("txid", finalTransactionHash.GetHex()));
+    result.push_back(Pair("fee_amount", ValueFromAmount(transactionFee)));
     return result;
 }
 
@@ -1224,8 +1232,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"50000\" \"2y\"", "")
@@ -1278,14 +1286,14 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "\"funding_account\" is the account from which the locked funds will be claimed.\n"
             "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
             "\nArguments:\n"
-            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
-            "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "1. \"funding_account\" (string, required) The unique UUID or label for the account from which money will be removed.\n"
+            "2. \"witness_account\" (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
+            "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\":\"txid\",  (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n  (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("extendwitnessaccount \"My account\" \"My witness account\" \"50000\" \"2y\"", "")
@@ -2036,7 +2044,8 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
     }
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    result.push_back(Pair("txid", finalTransactionHash.GetHex()));
+    result.push_back(Pair("fee_amount", ValueFromAmount(transactionFee)));
     return result;
 }
 
@@ -2060,8 +2069,8 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
             "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
@@ -2114,8 +2123,8 @@ static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
             "2. \"witness_account\"  (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "\nResult:\n"
             "[\n"
-            "     \"txid\",          (string) The txid of the created transaction\n"
-            "     \"fee_amount\"     (string) The fee that was paid.\n"
+            "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("rotatewitnessaddress \"My account\" \"My witness account\"", "")
@@ -2172,7 +2181,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "[\n"
             "     \"txid\",                (string) The txid of the created transaction\n"
-            "     \"fee_amount\"           (string) The fee that was paid.\n"
+            "     \"fee_amount\"           (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("renewwitnessaccount \"My account\" \"My witness account\"", "")
@@ -2256,7 +2265,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "[\n"
             "     \"txid\",                (string) The txid of the created transaction\n"
-            "     \"fee_amount\"           (string) The fee that was paid.\n"
+            "     \"fee_amount\"           (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", "")
@@ -2392,7 +2401,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "[\n"
             "     \"txid\",                (string) The txid of the created transaction\n"
-            "     \"fee_amount\"           (string) The fee that was paid.\n"
+            "     \"fee_amount\"           (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("mergewitnessaccount \"My account\" \"My witness account\"", "")

@@ -115,16 +115,25 @@ void AccountSummaryWidget::showForexBalance(bool showForexBalance_)
 
 void AccountSummaryWidget::balanceChanged()
 {
+    //fixme: (2.1) Double check how we want to display this.
     if (pactiveWallet && m_account)
     {
-        m_accountBalance = pactiveWallet->GetBalance(m_account, true, true);
-        CAmount immatureBalance = pactiveWallet->GetImmatureBalance(m_account);
-        m_accountBalance += immatureBalance;
-        m_accountBalanceImmatureOrUnconfirmed = pactiveWallet->GetUnconfirmedBalance(m_account, true) + immatureBalance;
-        if (m_account->IsPoW2Witness())
-            m_accountBalanceLocked = m_accountBalance - pactiveWallet->GetBalance(m_account, false, true); 
-        else
-            m_accountBalanceLocked = 0;
+        //fixme: (2.1) rather cache this somewhere central where it can be shared with e.g. the witness dialog?
+        CAmount balanceAvailableIncludingLocked;
+        CAmount balanceAvailableExcludingLocked;
+        CAmount balanceAvailableLocked;
+        CAmount balanceUnconfirmedIncludingLocked;
+        CAmount balanceUnconfirmedExcludingLocked;
+        CAmount balanceUnconfirmedLocked;
+        CAmount balanceImmatureIncludingLocked;
+        CAmount balanceImmatureExcludingLocked;
+        CAmount balanceImmatureLocked;
+        CAmount balanceLocked;
+        pactiveWallet->GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, m_accountBalanceLocked, m_account, true);
+
+        m_accountBalance = balanceAvailableIncludingLocked + balanceUnconfirmedIncludingLocked + balanceImmatureIncludingLocked;
+        m_accountBalanceLocked = balanceLocked;
+        m_accountBalanceImmatureOrUnconfirmed = balanceUnconfirmedExcludingLocked + balanceImmatureExcludingLocked;
         updateExchangeRates();
     }
 }

@@ -382,60 +382,46 @@ void WitnessDialog::updateUnit(int nNewUnit_)
     doUpdate(true);
 }
 
-static void AddPointToMapWithAdjustedTimePeriod(std::map<CAmount, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale)
+// We assign all earnings to the next fixed point interval.
+// e.g. if we are 2 days into week 1 the earning goes to the end of week one.
+// The exception being when (roundToFixedPoint) is passed in - which is used to plot the current point in time
+// In which case we assign to that exact point instead
+static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& pointMap, uint64_t nOriginBlock, uint64_t nX, uint64_t nY, uint64_t nDays, int nScale, bool roundToFixedPoint)
 {
+    double nXF=nX;
+    double fDaysModified = nDays;
+    if (IsArgSet("-testnet"))
+    {
+        fDaysModified = (nX - nOriginBlock)/576.0;
+    }
+
+    //fixme: (2.1) These various week/month calculations are all very imprecise; they should probably be based on an actual calendar instead.
     switch (nScale)
     {
         case GraphScale::Blocks:
-            nX -= nOriginBlock;
+            nXF -= nOriginBlock;
             break;
         case GraphScale::Days:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-            }
-            else
-            {
-                nX = nDays;
-            }
+            nXF = fDaysModified;
             break;
         case GraphScale::Weeks:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-                nX /= 7;
-                ++nX;
-            }
-            else
-            {
-                //fixme: (2.0)
-                nX = nDays/7;
-            }
+            nXF = fDaysModified/7;
             break;
         case GraphScale::Months:
-            if (IsArgSet("-testnet"))
-            {
-                nX -= nOriginBlock;
-                nX /= 576;
-                nX /= 30;
-                ++nX;
-            }
-            else
-            {
-                //fixme: (2.0)
-                nX = nDays/30;
-            }
+            nXF = fDaysModified/30;
             break;
     }
-    pointMap[nX] += nY;
+    nX = std::floor(nXF)+1;
+    if (roundToFixedPoint)
+        pointMap[nX] += nY;
+    else
+        pointMap[nXF] += nY;
 }
 
 void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
 {
-    std::map<CAmount, CAmount> pointMapForecast; pointMapForecast[0] = 0;
-    std::map<CAmount, CAmount> pointMapGenerated;
+    std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
+    std::map<double, CAmount> pointMapGenerated;
 
     CTxOutPoW2Witness witnessDetails;
 
@@ -505,7 +491,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
                     infoForAccount.nEarningsToDate += nY;
                     uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
-                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
+                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
                 }
             }
         }
@@ -518,7 +504,8 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         uint64_t nY = pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
-        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale);
+        pointMapGenerated.erase(--pointMapGenerated.end());
+        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
     }
 
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
@@ -531,7 +518,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     {
         unsigned int nX = i;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
-        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale);
+        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
     // Populate the 'expected earnings' curve
@@ -555,7 +542,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
     }
 
-    //fixme: (2.0) This is a bit broken - use nOurWeight etc.
+    //fixme: (2.1) This is a bit broken - use nOurWeight etc.
     // Fill in the remaining time on the 'actual earnings' curve with a forecast.
     int nXGeneratedForecast = 0;
     if (infoForAccount.generatedPoints.size() > 0)
@@ -612,71 +599,81 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
     // Populate stats table with info
     {
-        ui->labelWeightValue->setText(witnessInfoForAccount.nOurWeight<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nOurWeight));
-        ui->labelLockedFromValue->setText(witnessInfoForAccount.originDate.isNull() ? tr("n/a") : witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm"));
-        if (!chainActive.Tip())
-        {
-            ui->labelLockedUntilValue->setText( tr("n/a") );
-        }
-        else
+        QString lastEarningsDateLabel = tr("n/a");
+        QString earningsToDateLabel = lastEarningsDateLabel;
+        QString networkWeightLabel = lastEarningsDateLabel;
+        QString lockDurationLabel = lastEarningsDateLabel;
+        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
+        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
+        QString lockTimeRemainingLabel = lastEarningsDateLabel;
+        QString labelWeightValue = lastEarningsDateLabel;
+        QString lockedUntilValue = lastEarningsDateLabel;
+        QString lockedFromValue = lastEarningsDateLabel;
+
+        if (witnessInfoForAccount.nOurWeight > 0)
+            labelWeightValue = QString::number(witnessInfoForAccount.nOurWeight);
+        if (!witnessInfoForAccount.originDate.isNull())
+            lockedFromValue = witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm");
+        if (chainActive.Tip())
         {
             QDateTime lockedUntilDate;
             lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
             lockedUntilDate = lockedUntilDate.addSecs(witnessInfoForAccount.nLockBlocksRemaining*150);
-            ui->labelLockedUntilValue->setText(lockedUntilDate.toString("dd/MM/yy hh:mm"));
+            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
         }
-        ui->labelLastEarningsDateValue->setText(witnessInfoForAccount.lastEarningsDate.isNull() ? tr("n/a") : witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm"));
-        ui->labelWitnessEarningsValue->setText(witnessInfoForAccount.generatedPoints.size() == 0 ? tr("n/a") : QString::number(witnessInfoForAccount.nEarningsToDate));
 
-        ui->labelNetworkWeightValue->setText(witnessInfoForAccount.nTotalNetworkWeightTip<=0 ? tr("n/a") : QString::number(witnessInfoForAccount.nTotalNetworkWeightTip));
-        switch (witnessInfoForAccount.scale)
+        if (!witnessInfoForAccount.lastEarningsDate.isNull())
+            lastEarningsDateLabel = witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
+        if (witnessInfoForAccount.generatedPoints.size() != 0)
+            earningsToDateLabel = QString::number(witnessInfoForAccount.nEarningsToDate);
+        if (witnessInfoForAccount.nTotalNetworkWeightTip > 0)
+            networkWeightLabel = QString::number(witnessInfoForAccount.nTotalNetworkWeightTip);
+
+        //fixme: (2.1) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //Ideally this should be improved.
+        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
         {
-            case GraphScale::Blocks:
-                ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nWitnessLength)));
-                ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod)));
-                ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod)));
-                ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 blocks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining)));
-                break;
-            case GraphScale::Days:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 days").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
-            case GraphScale::Weeks:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/7.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/7.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 weeks").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/7.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
-            case GraphScale::Months:
-                if (IsArgSet("-testnet"))
-                {
-                    ui->labelLockDurationValue->setText(witnessInfoForAccount.nWitnessLength <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nWitnessLength/576.0/30.0, 'f', 2)));
-                    ui->labelExpectedEarningsDurationValue->setText(witnessInfoForAccount.nExpectedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                    ui->labelEstimatedEarningsDurationValue->setText(witnessInfoForAccount.nEstimatedWitnessBlockPeriod <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/576.0/30.0, 'f', 2)));
-                    ui->labelLockTimeRemainingValue->setText(witnessInfoForAccount.nLockBlocksRemaining <= 0 ? tr("n/a") : tr("%1 months").arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/576.0/30.0, 'f', 2)));
-                }
-                else
-                {
-                    //fixme: (2.0) - Implement
-                }
-                break;
+            QString formatStr;
+            double divideBy=1;
+            switch (witnessInfoForAccount.scale)
+            {
+                case GraphScale::Blocks:
+                    formatStr = tr("%1 blocks");
+                    divideBy = 1;
+                    break;
+                case GraphScale::Days:
+                    formatStr = tr("%1 days");
+                    divideBy = 576;
+                    break;
+                case GraphScale::Weeks:
+                    formatStr = tr("%1 weeks");
+                    divideBy = 576*7;
+                    break;
+                case GraphScale::Months:
+                    formatStr = tr("%1 months");
+                    divideBy = 576*30;
+                    break;
+            }
+            if (witnessInfoForAccount.nWitnessLength > 0)
+                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy));
+            if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy));
+            if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy));
+            if (witnessInfoForAccount.nLockBlocksRemaining > 0)
+                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy));
         }
+
+        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
+        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
+        ui->labelNetworkWeightValue->setText(networkWeightLabel);
+        ui->labelLockDurationValue->setText(lockDurationLabel);
+        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
+        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
+        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
+        ui->labelWeightValue->setText(labelWeightValue);
+        ui->labelLockedFromValue->setText(lockedFromValue);
+        ui->labelLockedUntilValue->setText(lockedUntilValue);
     }
 }
 
@@ -799,7 +796,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                     else
                     {
                         // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
-                        if (pactiveWallet->GetBalance(forAccount, true, true) > 0 || pactiveWallet->GetImmatureBalance(forAccount) > 0)
+                        if ((pactiveWallet->GetBalance(forAccount, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
                         {
                             stateFundWitnessButton = false;
                             if (bAnyFinished)
@@ -828,7 +825,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                                 if (bAnyExpired)
                                 {
                                     // If the full account balance is spendable than show an "empty account" button otherwise an "empty earnings" button.
-                                    if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true) && pactiveWallet->GetImmatureBalance(forAccount) == 0)
+                                    if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
                                         stateEmptyWitnessButton2 = true;
                                     else
                                         stateWithdrawEarningsButton2 = true;
@@ -857,7 +854,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             }
                             else
                             {
-                                if (pactiveWallet->GetBalance(forAccount, true, true) == pactiveWallet->GetBalance(forAccount, false, true) && pactiveWallet->GetImmatureBalance(forAccount) == 0)
+                                if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
                                     stateEmptyWitnessButton = true;
                                 else
                                     stateWithdrawEarningsButton = true;
@@ -915,6 +912,9 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         if (cachedIndexForAccount && cachedIndexForAccount == forAccount && cachedIndex == setIndex)
         {
             setIndex = (WitnessDialogStates)ui->witnessDialogStackedWidget->currentIndex();
+            // Prevent these two buttons from flipping as well.
+            stateUnitButton = ui->unitButton->isVisible();
+            stateViewWitnessGraphButton = ui->viewWitnessGraphButton->isVisible();
         }
         else
         {
@@ -1174,7 +1174,7 @@ void WitnessDialog::setModel(WalletModel* _model)
             WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
             proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
             proxyFilterByBalanceFund->setDynamicSortFilter(true);
-            proxyFilterByBalanceFund->setAmount(nMinimumWitnessAmount * COIN);
+            proxyFilterByBalanceFund->setAmount((nMinimumWitnessAmount*COIN));
 
             QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
             proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);

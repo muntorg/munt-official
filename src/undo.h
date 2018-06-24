@@ -87,9 +87,9 @@ public:
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}
 };
 
-//fixme: (2.0)
-static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 41;
-//static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
+//fixme: (2.1) This can potentially be improved.
+//6 is the lower bound for the size of a SegSign txin
+static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 6; // TODO: merge with similar definition in undo.h.
 
 /** Undo information for a CTransaction */
 class CTxUndo

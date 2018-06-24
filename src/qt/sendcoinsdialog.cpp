@@ -128,14 +128,14 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
 
     ui->horizontalLayout->removeWidget(ui->sendButton);
     QPushButton* editButton = new QPushButton();
-    editButton->setText("&Edit");
+    editButton->setText(tr("&Edit"));
     editButton->setObjectName("editButton");
     ui->horizontalLayout->addWidget(editButton);
     ui->horizontalLayout->addWidget(ui->sendButton);
 
     ui->sendButton->setIcon(QIcon());
     ui->clearButton->setIcon(QIcon());
-    ui->clearButton->setText("&Clear");
+    ui->clearButton->setText(tr("&Clear"));
     ui->clearButton->setMinimumSize(QSize(0, 0));
     ui->sendButton->setMinimumSize(QSize(0, 0));
 
@@ -150,7 +150,7 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     ui->verticalLayout->insertWidget(2, horizontalLine);
 
     QPushButton* deleteButton = new QPushButton();
-    deleteButton->setText("&Delete");
+    deleteButton->setText(tr("&Delete"));
     deleteButton->setObjectName("deleteButton");
     ui->horizontalLayout->insertWidget(0, deleteButton);
 
@@ -193,7 +193,7 @@ void SendCoinsDialog::setModel(WalletModel *_model)
 
         setBalance(_model->getBalance(), _model->getUnconfirmedBalance(), _model->getImmatureBalance(),
                    _model->getWatchBalance(), _model->getWatchUnconfirmedBalance(), _model->getWatchImmatureBalance());
-        connect(_model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
+        connect(_model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
         connect(_model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         updateDisplayUnit();
 
@@ -714,7 +714,7 @@ bool SendCoinsDialog::handlePaymentRequest(const SendCoinsRecipient &rv)
     return true;
 }
 
-void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+void SendCoinsDialog::setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                                  const CAmount& watchBalance, const CAmount& watchUnconfirmedBalance, const CAmount& watchImmatureBalance)
 {
     (unused)unconfirmedBalance;
@@ -725,7 +725,7 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
 
     if(model && model->getOptionsModel())
     {
-        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
+        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), availableBalance));
     }
 }
 

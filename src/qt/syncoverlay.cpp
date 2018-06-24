@@ -55,12 +55,6 @@ SyncOverlay::SyncOverlay(QWidget *parent)
     ui->closeButton->setContentsMargins(0,0,0,0);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
 
-    ui->labelSyncDone->setContentsMargins(0,0,0,0);
-    ui->labelSyncDone->setIndent(0);
-
-    ui->percentageProgress->setContentsMargins(0,0,0,0);
-    ui->percentageProgress->setIndent(0);
-
     ui->bgWidget->setStyleSheet("");
     ui->contentWidget->setStyleSheet("");
 
@@ -71,17 +65,7 @@ SyncOverlay::SyncOverlay(QWidget *parent)
     ui->verticalLayout->setStretch(1, 0);
     ui->verticalLayout->setStretch(2, 0);
 
-    if (chainActive.Tip() && chainActive.Tip()->nHeight > 5000)
-    {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
-    }
-    else
-    {
-        ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
-    }
-
-    ui->formLayout->setLabelAlignment(Qt::AlignLeft);
-    ui->formLayout->setHorizontalSpacing(0);
+    ui->infoText->setText("");
 }
 
 SyncOverlay::~SyncOverlay()
@@ -121,24 +105,28 @@ bool SyncOverlay::event(QEvent* ev) {
 
 void SyncOverlay::setKnownBestHeight(int count, const QDateTime& blockDate)
 {
-    if (count > bestHeaderHeight) {
-        bestHeaderHeight = count;
-        bestHeaderDate = blockDate;
-        //We use a bit of hackery to not have the progress sit on 0% whens syncing headers.
-        //fixme: (2.1)
-        if (ui->percentageProgress->text() == "0.00%")
+    (unused) blockDate;
+    static bool doOnceOnly = true;
+    if (doOnceOnly)
+    {
+        int messageChangeThreshold = IsArgSet("-testnet") ? 1000 : 5000;
+        if (chainActive.Tip() && chainActive.Tip()->nHeight > messageChangeThreshold)
         {
-            ui->percentageProgress->setText(QString::number((count/50000)/100, 'f', 2)+"%");
+            ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
         }
+        else
+        {
+            ui->infoText->setText(tr("<br/><br/><b>Notice</b><br/><br/>Your wallet is now synchronizing with the Gulden network for the first time.<br/>Once your wallet has finished synchronizing, your balance and recent transactions will be visible."));
+        }
+        doOnceOnly = false;
     }
 }
 
-void SyncOverlay::tipUpdate([[maybe_unused]] int count, [[maybe_unused]] const QDateTime& blockDate, double nSyncProgress)
+void SyncOverlay::tipUpdate(int count, const QDateTime& blockDate, double nSyncProgress)
 {
-    QDateTime currentDate = QDateTime::currentDateTime();
-
-    // show the percentage of blocks done
-    ui->percentageProgress->setText(QString::number(nSyncProgress*100, 'f', 2)+"%");
+    (unused) count;
+    (unused) blockDate;
+    (unused) nSyncProgress;
 }
 
 void SyncOverlay::toggleVisibility()

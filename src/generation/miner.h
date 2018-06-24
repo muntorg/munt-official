@@ -51,7 +51,6 @@ struct CBlockTemplate
     CBlock block;
     std::vector<CAmount> vTxFees;
     std::vector<int64_t> vTxSigOpsCost;
-    std::vector<unsigned char> vchCoinbaseCommitment;
 };
 
 // Container for tracking updates to ancestor feerate as we include (parent)
@@ -151,6 +150,10 @@ struct update_for_parent_inclusion
 
     CTxMemPool::txiter iter;
 };
+
+//! Find the block in the chain on which PoW miners should be building.
+//! This is no longer necessarily the tip, as the tip could be unwitnessed.
+CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed);
 
 /** Run the miner threads */
 void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams);

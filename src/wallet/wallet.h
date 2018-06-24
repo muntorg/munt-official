@@ -672,9 +672,11 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
-    CAmount GetBalance(const CAccount* forAccount = NULL, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
-    CAmount GetUnconfirmedBalance(const CAccount* forAccount = NULL, bool includeChildren=false) const;
-    CAmount GetImmatureBalance(const CAccount* forAccount = NULL) const;
+    void GetBalances(CAmount& balanceAvailableIncludingLocked, CAmount& balanceAvailableExcludingLocked, CAmount& balanceAvailableLocked, CAmount& balanceUnconfirmedIncludingLocked, CAmount& balanceUnconfirmedExcludingLocked, CAmount& balanceUnconfirmedLocked, CAmount& balanceImmatureIncludingLocked, CAmount& balanceImmatureExcludingLocked, CAmount& balanceImmatureLocked, CAmount& balanceLocked, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
+    CAmount GetBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
+    CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
+    CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
+    CAmount GetImmatureBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;

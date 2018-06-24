@@ -169,23 +169,24 @@ void GUI::handlePaymentAccepted()
     refreshTabVisibilities();
 }
 
-void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
+void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance)
 {
     LogPrint(BCLog::QT, "GUI::setBalance\n");
     if (ShutdownRequested())
         return;
 
-    balanceCached = balance;
+    availableBalanceCached = availableBalance;
     unconfirmedBalanceCached = unconfirmedBalance;
     immatureBalanceCached = immatureBalance;
     watchOnlyBalanceCached = watchOnlyBalance;
     watchUnconfBalanceCached = watchUnconfBalance;
     watchImmatureBalanceCached = watchImmatureBalance;
+    lockedBalanceCached = lockedBalance;
 
     if (!labelBalance || !labelBalanceForex)
         return;
 
-    CAmount displayBalance = balance + unconfirmedBalance + immatureBalance;
+    CAmount displayBalance = availableBalance + unconfirmedBalance + immatureBalance;
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
     if (displayBalance > 0 && optionsModel)
     {
@@ -214,17 +215,10 @@ void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, 
     labelBalance->setToolTip("");
     if (immatureBalance>0 || unconfirmedBalance>0)
     {
-        QString toolTip;
-        if (unconfirmedBalance > 0)
-        {
-            toolTip += tr("Pending confirmation: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, unconfirmedBalance, false, GuldenUnits::separatorStandard, 2));
-        }
-        if (immatureBalance > 0)
-        {
-            if (!toolTip.isEmpty())
-                toolTip += "\n";
-            toolTip += tr("Pending maturity: %1").arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, immatureBalance, false, GuldenUnits::separatorStandard, 2));
-        }
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, lockedBalance, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, unconfirmedBalance + immatureBalance, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, availableBalance, false, GuldenUnits::separatorStandard, 2));
         labelBalance->setToolTip(toolTip);
     }
 }
@@ -232,7 +226,7 @@ void GUI::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, 
 void GUI::updateExchangeRates()
 {
     LogPrint(BCLog::QT, "GUI::updateExchangeRates\n");
-    setBalance(balanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached);
+    setBalance(availableBalanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached, lockedBalanceCached);
 }
 
 void GUI::requestRenewWitness(CAccount* funderAccount)
@@ -1718,7 +1712,7 @@ void GUI::showExchangeRateDialog()
     {
         CurrencyTableModel* currencyTabelmodel = ticker->GetCurrencyTableModel();
         currencyTabelmodel->setBalance( walletFrame->currentWalletView()->walletModel->getBalance() );
-        connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), currencyTabelmodel , SLOT( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+        connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), currencyTabelmodel , SLOT( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         dialogExchangeRate = new ExchangeRateDialog( platformStyle, this, currencyTabelmodel );
         dialogExchangeRate->setOptionsModel( optionsModel );
     }
