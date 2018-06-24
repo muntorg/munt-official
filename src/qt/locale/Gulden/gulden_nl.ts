@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 11:51+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 11:51+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:21+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:21+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -3372,6 +3372,81 @@ In toekomstige versies van Gulden zal het mogelijk zijn om deze rekening te herg
     <message>
         <source>%1 weeks</source>
         <translation>%1 weken</translation>
+    </message>
+</context>
+<context>
+    <name>Gulden</name>
+    <message>
+        <source>Done loading</source>
+        <translation>Laden gereed</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Fout bij lezen database, app sluit af.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Ongeldige of geen genesis blok gevonden. Verkeerde datadirectory voor netwerk?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Legacy account</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>P2P adressen laden...</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Banlijst laden...</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Blokindex laden...</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Laden portemonnee...</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Mijn account</translation>
+    </message>
+    <message>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Ontgrendelen portemonnee noodzakelijk voor upgrade</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Alle transacties worden uit de wallet verwijderd...</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Opschonen blockstore...</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Herladen blokindex...</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Herscannen...</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>Blokken terugspoelen...</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Starten netwerk threads...</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Blokindex upgraden...</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Blokken verifiëren....</translation>
     </message>
 </context>
 <context>

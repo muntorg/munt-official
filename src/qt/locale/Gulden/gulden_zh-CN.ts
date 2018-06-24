@@ -4,8 +4,8 @@
     <extra-po-header-language>zh_CN</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:55+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:55+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:30+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:30+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>导出当前分页里的数据到文件</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>导出(&amp;E)</translation>
@@ -239,10 +235,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>导出交易历史</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>观察地址(Watch-only) </translation>
     </message>
     <message>
         <source>ID</source>
@@ -576,12 +568,12 @@
         <translation>复制找零金额</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>隐藏</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>付款请求已过期。</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>隐藏</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -660,24 +652,12 @@
         <translation>确认发送货币</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>发送(&amp;E)</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>清除此表单的所有字段。</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>清除所有(&amp;A)</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>一次发送给多个接收者</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>添加收款人(&amp;R)</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -694,14 +674,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>已添加交易费</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>总金额 %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>或</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1255,101 +1227,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>复制标签</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>复制金额</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>否</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>清除</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>请求付款的历史</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>显示选中的请求 (双击也可以显示)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>显示</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>从列表中移除选中的条目</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>移除</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI 太长，请试着精简标签或消息文本。</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>复制URI</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>复制消息</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>重复使用以前用过的接收地址。重用地址有安全和隐私方面的隐患。除非是为重复生成同一项支付请求，否则请不要这样做。</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>重用现有的接收地址（不推荐）</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>消息(&amp;M)：</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>可为新建的收款地址添加一个标签。</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>使用此表单要求付款。所有字段都是&lt;b&gt;可选&lt;/b&gt;。</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>标签(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>可选的请求金额。留空或填零为不要求具体金额。</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>总额(&amp;A)：</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>请求付款(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>清除此表单的所有字段。</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1401,13 +1278,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>编辑地址</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1428,262 +1298,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>无法在此创建数据目录。</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>分页工具栏</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>概况(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>显示钱包概况</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>发送(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>接收(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>交易记录(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>查看交易历史</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>显示 / 隐藏(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>显示或隐藏主窗口</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>打开 &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>备份钱包(&amp;B)...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>备份钱包到其他文件夹</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>正在发送地址(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>显示用过的发送地址和标签的列表</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>正在接收地址(&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>显示用过的接收地址和标签的列表</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>退出(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>退出程序</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>消息签名(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>验证消息(&amp;V)...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>调试窗口(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>打开调试和诊断控制台</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>命令行选项(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>关于 %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>显示 %1 相关信息</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>关于Qt(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>显示 Qt 相关信息</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>加密钱包(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>对钱包中的私钥加密</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>更改密码(&amp;C)...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>更改钱包加密口令</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>选项(&amp;O)...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>修改%1配置选项</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>文件(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>设置(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>帮助(&amp;H)</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 客戶</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>点击禁用网络活动。</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>网络活动已禁用。</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>点击重新开启网络活动。</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>钱包</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>节点</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>正在与网络同步...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>正在为数据块建立索引...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>正在处理数据块...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>正在为数据块重建索引...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>正在连接到节点……</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>已处理 %n 个交易历史数据块。</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>已是最新</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>落后 %1 </translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>信息</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>日期: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>类型: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>标签: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>地址: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;解锁&lt;/b&gt;状态</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;锁定&lt;/b&gt;状态</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>概况(&amp;O)</translation>
     </message>
 </context>
 <context>
@@ -1765,24 +1379,8 @@
         <translation>调试日志文件</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>打开(&amp;O)</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>控制台(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>缩小文字</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>放大文字</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>清空控制台</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2303,42 +1901,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>表单</translation>
+        <source>Open URI</source>
+        <translation>打开 URI</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>进度</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>打开来自URI或文件的付款请求 </translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>每小时进度增加</translation>
+        <source>URI:</source>
+        <translation>URI: </translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>正在计算</translation>
+        <source>Select payment request file</source>
+        <translation>选择付款请求文件 </translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>预计剩余同步时间</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>隐藏</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>剩余区块数量</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>上一数据块时间</translation>
+        <source>Select payment request file to open</source>
+        <translation>选择要打开的付款请求文件</translation>
     </message>
 </context>
 <context>
@@ -2410,29 +1992,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>最近交易记录</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>打开 URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>打开来自URI或文件的付款请求 </translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI: </translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>选择付款请求文件 </translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>选择要打开的付款请求文件</translation>
     </message>
 </context>
 <context>
@@ -2553,6 +2112,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI 太长，请试着精简标签或消息文本。</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2564,196 +2138,6 @@
     <message>
         <source>Send Coins</source>
         <translation>发送比特币</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>标签(&amp;L)：</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>这是笔正常的支付。</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>付给(&amp;T)：</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>选择以前用过的地址</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>从剪贴板粘贴地址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>移除此项</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>请为此地址输入一个标签以将它加入用过的地址列表</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>金额(&amp;M)</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>从金额中减去交易费(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>消息：</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>这是一个未经验证的支付请求。</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>支付给:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>便条：</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>这是一个已经验证的支付请求。</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>为这个地址输入一个标签，以便将它添加到您的地址簿</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>清除所有(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>选择以前用过的地址</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>从剪贴板粘贴地址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>签名 - 为消息签名/验证签名消息</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>签名消息(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>请输入您要发送的签名消息</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>签名</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>复制当前签名至剪切板</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>消息签名(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>清空所有签名消息栏</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>验证消息(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>请在下面输入接收者地址、消息（确保换行符、空格符、制表符等完全相同）和签名以验证消息。请仔细核对签名信息，以提防中间人攻击。请注意，这只是证明接收方签名的地址，它不能证明任何交易！</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>验证消息签名(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>清空所有验证消息栏</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>单击“签名消息“产生签名。</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>输入的地址非法。</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>请检查地址后重试。</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>输入的地址没有关联的公私钥对。</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>钱包解锁动作取消。</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>找不到输入地址关联的私钥。</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>消息签名失败。</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>消息已签名。</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>签名无法解码。</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>请检查签名后重试。</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>签名与消息摘要不匹配。</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>消息验证失败。</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>消息验证成功。</translation>
     </message>
 </context>
 <context>
@@ -2779,13 +2163,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>当前面板显示了交易的详细信息</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>金额单位。单击选择别的单位。</translation>
     </message>
 </context>
 </TS>

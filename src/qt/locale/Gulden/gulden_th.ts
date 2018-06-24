@@ -4,8 +4,8 @@
     <extra-po-header-language>th</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:54+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:54+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:29+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:29+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -65,10 +65,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>ส่งออกข้อมูลที่อยู่ในแท็บไปที่ไฟล์</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;ส่งออก</translation>
@@ -288,13 +284,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>แก้ไขที่อยู่</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -315,246 +304,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>ไม่สามารถสร้างไดเร็กทอรี่ข้อมูลที่นี่</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>แถบเครื่องมือ</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;ภาพรวม</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>แสดงภาพรวมทั่วไปของกระเป๋าเงิน</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;ส่ง</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;รับ</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;การทำรายการ</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>เรียกดูประวัติการทำธุรกรรม</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;แสดง / ซ่อน</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>แสดง หรือ ซ่อน หน้าหลัก</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>เปิด &amp;URI</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;สำรองกระเป๋าเงิน...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>สำรอง กระเป๋าเงินไปยัง ที่เก็บอื่น</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;ที่เก็บเงิน ที่จะส่ง bitcoin</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>แสดงรายการ ที่เก็บเงินที่จะส่ง bitcoin ออก และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;ที่เก็บเงิน ที่จะรับ bitcoin</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>แสดงรายการ ที่เก็บเงินที่จะรับ bitcoin เข้า และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;ออก</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>ออกจากโปรแกรม</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>เซ็นต์ชื่อด้วย &amp;ข้อความ...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;ยืนยันข้อความ...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;หน้าต่าง Debug</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>เปิด แผลงควบคุม debugging และ diagnostic</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;ตัวเลือก Command-line</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;เกี่ยวกับ %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>แสดงข้อมูล เกี่ยวกับ %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>เกี่ยวกับ &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>แสดงข้อมูล เกี่ยวกับ Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;กระเป๋าเงินเข้ารหัส</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>เข้ารหัส private keys/ รหัสส่วนตัว สำหรับกระเป๋าเงินของท่าน</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;เปลี่ยนรหัสผ่าน...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>เปลี่ยนรหัสผ่านที่ใช้สำหรับการเข้ารหัสกระเป๋าเงิน</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;ตัวเลือก...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>ปรับปรุง ข้อมูลการตั้งค่าตัวเลือก สำหรับ %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;ไฟล์</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;การตั้งค่า</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;ช่วยเหลือ</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 ลูกค้า</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>กระเป๋าเงิน</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Node/โหนด</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>กำลังทำข้อมูลให้ตรงกันกับเครือข่าย ...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>การกำลังสร้างดัชนีของบล็อก ในดิสก์...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>กำลังดำเนินการกับบล็อกในดิสก์...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>กำลังทำดัชนี ที่เก็บบล็อก ใหม่ ในดิสก์...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>%n บล็อกในประวัติรายการ ได้รับการดำเนินการเรียบร้อยแล้ว</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>ทันสมัย</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 ตามหลัง</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>ข้อผิดพลาด</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>คำเตือน</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>ข้อมูล</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>วันที่: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>ชนิด: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>ป้ายชื่อ: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>ที่อยู่: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>ระเป๋าเงินถูก &lt;b&gt;เข้ารหัส&lt;/b&gt; และในขณะนี้ &lt;b&gt;ปลดล็อคแล้ว&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>กระเป๋าเงินถูก &lt;b&gt;เข้ารหัส&lt;/b&gt; และในปัจจุบัน &lt;b&gt;ล็อค &lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;ภาพรวม</translation>
     </message>
 </context>
 <context>
@@ -818,20 +567,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>รูป</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>รูป</translation>
-    </message>
-</context>
-<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -851,24 +586,17 @@
     </message>
 </context>
 <context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>รูป</translation>
+    </message>
+</context>
+<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>ส่งเหรียญ</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;ชื่อ:</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;ชื่อ:</translation>
     </message>
 </context>
 </TS>

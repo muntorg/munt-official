@@ -4,8 +4,8 @@
     <extra-po-header-language>sq</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:53+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:53+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:29+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:29+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -81,13 +81,6 @@
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <translation>Gabim gjatë ruajtjes së listës së adresave në %1. Ju lutem provoni prapë.</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksporto të dhënat e skedës korrente në një skedar</translation>
     </message>
 </context>
 <context>
@@ -456,119 +449,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Ndrysho Adresën</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
         <translation>emri</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Shiriti i mjeteve</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Përmbledhje</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Trego një përmbledhje te përgjithshme të portofolit</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Dergo</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Merr</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaksionet</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Shfleto historinë e transaksioneve</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Shfaq / Fsheh</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Duke marr adresen</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Mbyllni aplikacionin</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Ndrysho frazkalimin e përdorur per enkriptimin e portofolit</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opsione</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Skedar</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Konfigurimet</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Ndihmë</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Portofol</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Duke u sinkronizuar me rrjetin...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>I azhornuar</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 Pas</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Problem</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informacion</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Portofoli po &lt;b&gt; enkriptohet&lt;/b&gt; dhe është &lt;b&gt; i ç&apos;kyçur&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Portofoli po &lt;b&gt; enkriptohet&lt;/b&gt; dhe është &lt;b&gt; i kyçur&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Përmbledhje</translation>
     </message>
 </context>
 <context>
@@ -612,13 +496,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Formilarë</translation>
-    </message>
-</context>
-<context>
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
@@ -632,10 +509,6 @@
         <translation>Informacion</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Hap</translation>
-    </message>
-    <message>
         <source>never</source>
         <translation>asnjehere</translation>
     </message>
@@ -645,75 +518,10 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Clear</source>
-        <translation>Pastro</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiketë:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Shuma:</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Dërgo Monedha</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiketë:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Paguaj &amp;drejt:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Ngjit nga memorja e sistemit</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Sh&amp;uma:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Paguaj drejt:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Krijoni një etiketë për këtë adresë që t&apos;ja shtoni librit të adresave</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Ngjit nga memorja e sistemit</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
 </context>
 <context>

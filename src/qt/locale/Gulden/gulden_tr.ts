@@ -4,8 +4,8 @@
     <extra-po-header-language>tr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:54+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:54+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:29+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:29+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Mevcut sekmedeki verileri bir dosyaya aktar</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Dışarı aktar</translation>
@@ -239,10 +235,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>İşlem Tarihçesini Dışarı Aktar</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Sadece izlenen</translation>
     </message>
     <message>
         <source>ID</source>
@@ -576,12 +568,12 @@
         <translation>Para üstünü kopyala</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Gizle</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Ödeme talebinin geçerlilik süresi bitti.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Gizle</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -664,24 +656,12 @@
         <translation>Yollama etkinliğini teyit ediniz</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>G&amp;önder</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Formdaki tüm alanları temizle.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Tümünü &amp;temizle</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Birçok alıcıya aynı anda gönder</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;Alıcı ekle</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -698,14 +678,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>işlem ücreti olarak eklendi</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Toplam Tutar %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>veya</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1261,101 +1233,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Etiket kopyala</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Tutarı kopyala</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Evet</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Hayır</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Temizle</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Talep edilen ödemelerin tarihçesi</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Seçilen talebi göster (bir unsura çift tıklamakla aynı anlama gelir)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Göster</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Seçilen unsurları listeden kaldır</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Kaldır</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Sonuç URI çok uzun, etiket ya da ileti metnini kısaltmayı deneyiniz.</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>URI&apos;yi kopyala</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>İletiyi kopyala</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Daha önce kullanılmış bir alım adresini kullan. Adresleri tekrar kullanmak güvenlik ve gizlilik sorunları doğurur. Bunu, daha önce yaptığınız bir talebi tekrar oluşturmak durumu dışında kullanmayınız.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Hâlihazırda bulunan bir alım adresini kullan (önerilmez)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;İleti:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Yeni alım adresi ile ilişkili, seçiminize dayalı etiket.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Ödeme talep etmek için bu formu kullanın. Tüm alanlar &lt;b&gt;seçime dayalıdır&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiket:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Seçiminize dayalı talep edilecek tutar. Belli bir tutar talep etmemek için bunu boş bırakın veya sıfır değerini kullanın.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Tutar:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>Ödeme &amp;talep et</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Formdaki tüm alanları temizle.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1407,13 +1284,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Adresi düzenle</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1434,266 +1304,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Burada veri klasörü oluşturulamaz.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Sekme araç çubuğu</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Genel bakış</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Cüzdana genel bakışı göster</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Gönder</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Al</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;İşlemler</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>İşlem geçmişine gözat</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Göster / Gizle</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Ana pencereyi göster ya da gizle</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&amp;URI Aç...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Cüzdanı &amp;Yedekle...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Cüzdanı diğer bir konumda yedekle</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Gönderme adresleri...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Kullanılmış gönderme adresleri ve etiketlerin listesini göster</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Alma adresleri...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Kullanılmış alım adresleri ve etiketlerin listesini göster</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Ç&amp;ık</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Uygulamadan çık</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;İleti imzala...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>İletiyi &amp;kontrol et...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Hata ayıklama penceresi</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Hata ayıklama ve teşhis penceresini aç</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Komut satırı seçenekleri</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>%1 &amp;Hakkında</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>%1 hakkında bilgi göster</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt Hakkında</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Qt hakkında bilgi göster</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Cüzdanı &amp;Şifrele...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Cüzdanınıza ait özel anahtarları şifreleyin</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Parolayı &amp;Değiştir...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Cüzdan şifrelemesi için kullanılan parolayı değiştir</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Seçenekler...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>%1 için yapılandırma ayarlarını değiştir</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Dosya</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Ayarlar</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Yardım</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 istemci</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Ağ etkinliğini devre dışı bırakmak için tıklayın.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>Ağ etkinliği devre dışı bırakılmış.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Ağ etkinliğini yeniden etkinleştirmek için tıklayın.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation>Üstbilgiler Senkronize Ediliyor (%1%)...</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Cüzdan</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Düğüm</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Ağ ile senkronize ediliyor...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Bloklar diske indeksleniyor...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Bloklar diske işleniyor...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Diskteki bloklar yeniden indeksleniyor...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>Eşlere bağlanılıyor...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Muamele tarihçesinden %n blok işlendi.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Güncel</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 geride</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Hata</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Uyarı</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Bilgi</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Tarih: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tür: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etiket: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adres: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Cüzdan &lt;b&gt;şifrelenmiştir&lt;/b&gt; ve şu anda &lt;b&gt;kilidi açıktır&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Cüzdan &lt;b&gt;şifrelenmiştir&lt;/b&gt; ve şu anda &lt;b&gt;kilitlidir&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Genel bakış</translation>
     </message>
 </context>
 <context>
@@ -1779,24 +1389,8 @@
         <translation>Güncel veri klasöründen %1 hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Aç</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>Font boyutunu küçült</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>Yazıtipi boyutunu büyült</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Konsolu temizle</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2316,46 +1910,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Form</translation>
+        <source>Open URI</source>
+        <translation>URI Aç</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>İlerleme</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Dosyadan veya URI&apos;den ödeme talebi aç</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>Saat başı ilerleme artışı</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>hesaplanıyor...</translation>
+        <source>Select payment request file</source>
+        <translation>Ödeme talebi dosyasını seç</translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>Senkronize edilene kadar kalan tahmini süre</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Gizle</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Bilinmeyen. Üstbilgiler Senkronize Ediliyor (%1)...</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>Kalan blok sayısı</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>Bilinmiyor...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Son blok zamanı</translation>
+        <source>Select payment request file to open</source>
+        <translation>Açılacak ödeme talebi dosyasını seç</translation>
     </message>
 </context>
 <context>
@@ -2427,29 +2001,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>Son işlemler</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI Aç</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Dosyadan veya URI&apos;den ödeme talebi aç</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Ödeme talebi dosyasını seç</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Açılacak ödeme talebi dosyasını seç</translation>
     </message>
 </context>
 <context>
@@ -2570,6 +2121,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Evet</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Hayır</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Sonuç URI çok uzun, etiket ya da ileti metnini kısaltmayı deneyiniz.</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2581,196 +2147,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Bitcoini Gönder</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiket:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Bu, normal bir ödemedir.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>&amp;Şu adrese öde:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Önceden kullanılmış adres seç</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Panodan adres yapıştır</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Bu ögeyi kaldır</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Kullanılmış adres listesine eklemek için bu adrese bir etiket girin</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>T&amp;utar:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>Ücreti tutardan düş</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>İleti:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Bu, kimliği doğrulanmamış bir ödeme talebidir.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Şu adrese öde:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Not:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Bu, kimliği doğrulanmış bir ödeme talebidir.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Adres defterinize eklemek için bu adrese bir etiket giriniz</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Tümünü &amp;temizle</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Önceden kullanılmış adres seç</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Panodan adres yapıştır</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>İmzalar - İleti İmzala / Kontrol et</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>İleti &amp;imzala</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>İmzalamak istediğiniz iletiyi burada giriniz</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>İmza</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Güncel imzayı sistem panosuna kopyala</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>&amp;İletiyi imzala</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Tüm ileti alanlarını sıfırla</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>İletiyi &amp;kontrol et</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>Alıcının adresini, iletiyi (satır sonları, boşluklar, sekmeler vs. karakterleri tam olarak kopyaladığınızdan emin olunuz) ve imzayı aşağıya giriniz. Bir ortadaki adam saldırısı tarafından kandırılmaya engel olmak için imzadan, imzalı iletinin içeriğini aşan bir anlam çıkarmamaya dikkat ediniz. Bunun sadece imzalayan tarafın adres ile alım yapabildiğini ispatladığını ve herhangi bir işlemin gönderi tarafını kanıtlayamayacağını unutmayınız!</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;İletiyi kontrol et</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Tüm ileti kontrolü alanlarını sıfırla</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>İmzayı oluşturmak için &quot;İletiyi İmzala&quot;ya tıklayın</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Girilen adres geçersizdir.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Lütfen adresi kontrol edip tekrar deneyiniz.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>Girilen adres herhangi bir anahtara işaret etmemektedir.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Cüzdan kilidinin açılması iptal edildi.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Girilen adres için özel anahtar mevcut değildir.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>İleti imzalaması başarısız oldu.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>İleti imzalandı.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>İmzanın kodu çözülemedi.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Lütfen imzayı kontrol edip tekrar deneyiniz.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>İmza iletinin özeti ile eşleşmedi.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>İleti doğrulaması başarısız oldu.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>İleti doğrulandı.</translation>
     </message>
 </context>
 <context>
@@ -2800,13 +2176,6 @@
     <message>
         <source>Details for %1</source>
         <translation>%1 için ayrıntılar</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Tutarı göstermek için birim. Başka bir birim seçmek için tıklayınız.</translation>
     </message>
 </context>
 </TS>

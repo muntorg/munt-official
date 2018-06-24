@@ -4,8 +4,8 @@
     <extra-po-header-language>sr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:53+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:53+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:29+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:29+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -64,13 +64,6 @@
     </message>
 </context>
 <context>
-    <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksportuj podatke iz izabrane kartice u fajl</translation>
-    </message>
-</context>
-<context>
     <name>AskPassphraseDialog</name>
     <message>
         <source>Enter passphrase</source>
@@ -117,10 +110,6 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Потврди акцију слања</translation>
-    </message>
-    <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Пошаљи</translation>
     </message>
 </context>
 <context>
@@ -193,119 +182,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Измени адресу</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Трака са картицама</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Општи преглед</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Погледајте општи преглед новчаника</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Пошаљи</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Трансакције</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Претражите историјат трансакција</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup новчаника</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>I&amp;zlaz</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Напустите програм</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>О &amp;Qt-у</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Прегледајте информације о Qt-у</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Шифровање новчаника...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Промени &amp;лозинку...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Мењање лозинке којом се шифрује новчаник</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>П&amp;оставке...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Фајл</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Подешавања</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>П&amp;омоћ</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>новчаник</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Синхронизација са мрежом у току...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Ажурно</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Greška</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Новчаник јс &lt;b&gt;шифрован&lt;/b&gt; и тренутно &lt;b&gt;откључан&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Новчаник јс &lt;b&gt;шифрован&lt;/b&gt; и тренутно &lt;b&gt;закључан&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Општи преглед</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -347,13 +223,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
-</context>
-<context>
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
@@ -381,22 +250,6 @@
         <source>No</source>
         <translation>Ne</translation>
     </message>
-    <message>
-        <source>Show</source>
-        <translation>Prikaži</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Poruka:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Етикета</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Iznos:</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -410,40 +263,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Слање новца</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Етикета</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+П</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Iznos:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Poruka:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+П</translation>
     </message>
 </context>
 <context>

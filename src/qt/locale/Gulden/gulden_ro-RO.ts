@@ -4,8 +4,8 @@
     <extra-po-header-language>ro_RO</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:52+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:52+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:28+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:28+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exportă datele din tab-ul curent într-un fişier</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Exportă</translation>
@@ -288,24 +284,12 @@
         <translation>Confirmă operaţiunea de trimitere</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Trimit&amp;e</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Şterge toate cîmpurile formularului.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Curăţă to&amp;ate</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Trimite simultan către mai mulţi destinatari</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Adaugă destinata&amp;r</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -419,13 +403,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Editează adresa</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -446,224 +423,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Nu se poate crea un dosar de date aici.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Bara de unelte</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Imagine de ansamblu</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Arată o stare generală de ansamblu a portofelului</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>Trimite</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>P&amp;rimeşte</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Tranzacţii</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Răsfoire istoric tranzacţii</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>Arată/Ascunde</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Arată sau ascunde fereastra principală</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Deschide &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Face o copie de siguranţă a portofelului...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Creează o copie de rezervă a portofelului într-o locaţie diferită</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adrese de trimitere...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Arată lista de adrese trimise şi etichetele folosite.</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adrese de p&amp;rimire...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Arată lista de adrese pentru primire şi etichetele</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Ieşire</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Închide aplicaţia</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Semnează &amp;mesaj...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Verifică mesaj...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>Fereastra de &amp;depanare</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Deschide consola de depanare şi diagnosticare</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Opţiuni linie de &amp;comandă</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Despre &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Arată informaţii despre Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Cript&amp;ează portofelul...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Criptează cheile private ale portofelului dvs.</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>S&amp;chimbă parola...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Schimbă fraza de acces folosită pentru criptarea portofelului</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opţiuni...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fişier</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Setări</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>A&amp;jutor</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Portofel</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Nod</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Se sincronizează cu reţeaua...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Se reindexează blocurile pe disc...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>S-a procesat %n bloc din istoricul tranzacţiilor.</numerusform>
-            <numerusform>S-au procesat %n blocuri din istoricul tranzacţiilor.</numerusform>
-            <numerusform>S-au procesat %n de blocuri din istoricul tranzacţiilor.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Actualizat</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 în urmă</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Eroare</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Avertisment</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informaţie</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Data: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tip: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etichetă: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresă: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; iar în momentul de faţă este &lt;b&gt;deblocat&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; iar în momentul de faţă este &lt;b&gt;blocat&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Imagine de ansamblu</translation>
     </message>
 </context>
 <context>
@@ -737,16 +496,8 @@
         <translation>Fişier jurnal depanare</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Deschide</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consolă</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Curăţă consola</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1174,18 +925,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Form</translation>
+        <source>Open URI</source>
+        <translation>Deschide URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Ascunde</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Deschideţi cerere de plată prin intermediul adresei URI sau a fişierului</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Data ultimului bloc</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Selectaţi fişierul cerere de plată</translation>
     </message>
 </context>
 <context>
@@ -1260,25 +1015,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Deschide URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Deschideţi cerere de plată prin intermediul adresei URI sau a fişierului</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Selectaţi fişierul cerere de plată</translation>
-    </message>
-</context>
-<context>
     <name>PeerTableModel</name>
     <message>
         <source>Node/Service</source>
@@ -1299,70 +1035,6 @@
         <source>No</source>
         <translation>Nu</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>Curăţă</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Istoricul plăţilor cerute</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Arată cererea selectată (acelaşi lucru ca şi dublu-clic pe o înregistrare)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Arată</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Înlătură intrările selectate din listă</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Înlătură</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Refoloseşte una din adresele de primire folosite anterior. Refolosirea adreselor poate crea probleme de securitate şi confidenţialitate. Nu folosiţi această opţiune decît dacă o cerere de regenerare a plăţii a fost făcută anterior.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>R&amp;efoloseşte o adresă de primire (nu este recomandat)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Mesaj:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>O etichetă opţională de asociat cu adresa de primire.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Foloseşte acest formular pentru a solicita plăţi. Toate cîmpurile sînt &lt;b&gt;opţionale&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etichetă:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>O sumă opţională de cerut. Lăsaţi gol sau zero pentru a nu cere o sumă anume.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Sum&amp;a:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Cerere plată</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Curăţă toate cîmpurile formularului.</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -1376,124 +1048,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Trimite monede</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etichetă:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Aceasta este o tranzacţie normală.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Plăteşte că&amp;tre:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Alegeţi adrese folosite anterior</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Lipeşte adresa din clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Înlătură această intrare</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Introduceţi eticheta pentru ca această adresa să fie introdusă în lista de adrese folosite</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Su&amp;mă:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Mesaj:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Plăteşte către:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Curăţă to&amp;ate</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Alegeţi adrese folosite anterior</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Lipeşte adresa copiată din clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Semnaturi - Semnează/verifică un mesaj</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Semnează mesaj</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Introduceţi mesajul pe care vreţi să-l semnaţi, aici</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Semnătură</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Copiază semnatura curentă în clipboard-ul sistemului</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Semnează &amp;mesaj</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Resetează toate cîmpurile mesajelor semnate</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Verifică mesaj</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Verifică &amp;mesaj</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Resetează toate cîmpurile mesajelor semnate</translation>
     </message>
 </context>
 <context>
@@ -1519,13 +1073,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>Acest panou arată o descriere detaliată a tranzacţiei</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Unitatea în care sînt arătate sumele. Faceţi clic pentru a selecta o altă unitate.</translation>
     </message>
 </context>
 </TS>

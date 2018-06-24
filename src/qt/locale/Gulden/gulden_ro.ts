@@ -4,8 +4,8 @@
     <extra-po-header-language>ro</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:52+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:52+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:28+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:28+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exportă datele din tabul curent in fisier</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>Exportă</translation>
@@ -263,13 +259,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Modifică adresa</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
@@ -278,180 +267,6 @@
     <message>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
         <translation>Directoriul există deja. Adaugă %1 dacă ai intenționat să creezi aici un directoriu nou.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Arată o prezentare generală a portofelului.</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Trimite</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Primește</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Tranzacții</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Navighează în istoricul tranzacțiilor</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Arată/Ascunde</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Arată sau ascunde fereastra principală</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Deschide &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup portofel</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Fă o copie de rezervă a portofelului într-o altă locație</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Trimite adresele...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Primește adresele...</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Părăsește aplicația</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Semnează &amp;mesajul...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Verifică mesajul...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Fereastra pentru depanare</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Pornește consola pentru depanare si diagnoză</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Despre &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Arată informații despre Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Criptează portofelul...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Criptează cheile private care aparțin portofelului tău.</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Schimbă parola...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Schimbă parola folosită pentru criptarea portofelului</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opțiuni...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fișier</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Setări</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Ajutor</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Portofel</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Nod</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Se sincronizează cu rețeaua</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Actual</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 în urmă</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Eroare</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Atenționare</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informație</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Data: %1</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tip: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etichetă: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresa: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; și în prezent &lt;b&gt;deblocat&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; și în prezent &lt;b&gt;blocat&lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -483,10 +298,6 @@
     <message>
         <source>Number of connections</source>
         <translation>Numărul de conexiuni</translation>
-    </message>
-    <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Deschide</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -732,18 +543,6 @@
     <message>
         <source>No</source>
         <translation>Nu</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Arată</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Elimină</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Mesaj:</translation>
     </message>
 </context>
 <context>

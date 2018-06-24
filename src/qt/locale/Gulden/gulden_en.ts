@@ -91,7 +91,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+146"/>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+153"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -808,7 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+252"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+246"/>
         <location line="+22"/>
         <location line="+35"/>
         <source>Okay</source>
@@ -820,17 +820,27 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-40"/>
-        <source>Pending confirmation: %1</source>
-        <translation>Pending confirmation: %1</translation>
+        <location line="-36"/>
+        <source>Total funds: </source>
+        <translation type="unfinished">Total funds: </translation>
     </message>
     <message>
-        <location line="+6"/>
-        <source>Pending maturity: %1</source>
-        <translation>Pending maturity: %1</translation>
+        <location line="+1"/>
+        <source>Locked funds: </source>
+        <translation type="unfinished">Locked funds: </translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="+1"/>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished">Funds awaiting confirmation: </translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Spendable funds: </source>
+        <translation type="unfinished">Spendable funds: </translation>
+    </message>
+    <message>
+        <location line="+29"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -1519,8 +1529,8 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <location line="+45"/>
-        <source>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</source>
-        <translation>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</translation>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+23"/>
@@ -4524,7 +4534,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+384"/>
+        <location filename="../../walletmodel.cpp" line="+408"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>

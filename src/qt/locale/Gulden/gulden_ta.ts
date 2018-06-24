@@ -4,8 +4,8 @@
     <extra-po-header-language>ta</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:54+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:54+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 17:29+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 17:29+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -191,10 +191,6 @@
         <translation>வேகமாக</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;அனுப்பு</translation>
-    </message>
-    <message>
         <source>Balance:</source>
         <translation>மீதி:</translation>
     </message>
@@ -264,114 +260,6 @@
     <message>
         <source>name</source>
         <translation>பெயர்</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;கண்ணோட்டம்</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;அனுப்பு</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;பெறு</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;பரிவர்த்தனைகள்</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;காட்டு/மறை</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&amp;URI-ஐ திற</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;வெளியேறு</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>விலகு</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;செய்தியை சரிசெய்...</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt-ஐ பற்றி</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;என்க்ரிப்ட் பணப்பை...</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;விருப்பங்கள்...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;கோப்பு</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;அமைப்பு</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;உதவி</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>பணப்பை</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 பின்னால்</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>தவறு</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>எச்சரிக்கை</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>தகவல்</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>தேதி: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>வகை: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>முகவரி: %1
-</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;கண்ணோட்டம்</translation>
     </message>
 </context>
 <context>
@@ -456,14 +344,14 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>படிவம்</translation>
+        <source>Open URI</source>
+        <translation>URI-ஐ திற</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>மறை</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -491,17 +379,6 @@
     <message>
         <source>Pending:</source>
         <translation>நிலுவையில்:</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI-ஐ திற</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -544,10 +421,6 @@
     <message>
         <source>Memory usage</source>
         <translation>நினைவக பயன்பாடு</translation>
-    </message>
-    <message>
-        <source>&amp;Open</source>
-        <translation>&amp;திற</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -652,74 +525,12 @@
         <source>No</source>
         <translation>மறு</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>நீக்கு</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>காண்பி</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>நீக்கு</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;செய்தி:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;சிட்டை:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;தொகை:</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
         <translation>ஆம்</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;சிட்டை:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;தொகை:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>செய்தி:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>கையொப்பம்</translation>
     </message>
 </context>
 <context>
