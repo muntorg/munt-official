@@ -415,7 +415,7 @@ void GUI::createToolBars()
 
         accountBar->addWidget( scrollArea );
 
-        QVBoxLayout* vbox = new QVBoxLayout();
+        QVBoxLayout* vbox = new QVBoxLayout(accountScrollArea);
         vbox->setObjectName("account_scroll_area_frame");
         vbox->setSpacing(0);
         vbox->setContentsMargins( 0, 0, 0, 0 );
@@ -453,9 +453,9 @@ void GUI::createToolBars()
 
     // We place all the widgets for this action bar inside a frame of fixed width - otherwise the sizing comes out wrong
     {
-        balanceContainer = new QFrame();
+        balanceContainer = new QFrame(this);
         balanceContainer->setObjectName("balance_container");
-        QHBoxLayout* layoutBalance = new QHBoxLayout;
+        QHBoxLayout* layoutBalance = new QHBoxLayout(balanceContainer);
         layoutBalance->setObjectName("balance_layout");
         balanceContainer->setLayout(layoutBalance);
         balanceContainer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -467,7 +467,7 @@ void GUI::createToolBars()
 
         //Left margin
         {
-            QWidget* spacerL = new QWidget();
+            QWidget* spacerL = new QWidget(this);
             spacerL->setObjectName("gulden_bar_left_margin");
             spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerL );
@@ -482,7 +482,7 @@ void GUI::createToolBars()
 
         // Use spacer to push balance label to the right
         {
-            QWidget* spacerMid = new QWidget();
+            QWidget* spacerMid = new QWidget(this);
             spacerMid->setObjectName("layout_balance_mid_spacer");
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerMid );
@@ -503,7 +503,7 @@ void GUI::createToolBars()
 
         //Right margin
         {
-            QWidget* spacerR = new QWidget();
+            QWidget* spacerR = new QWidget(this);
             spacerR->setObjectName("gulden_bar_right_margin");
             spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerR );
@@ -523,7 +523,7 @@ void GUI::createToolBars()
     spacerBarL->setMovable( false );
     //Spacer to fill width
     {
-        QWidget* spacerL = new QWidget();
+        QWidget* spacerL = new QWidget(this);
         spacerL->setObjectName( "spacer_bar_left_spacer" );
         spacerL->setMinimumWidth( 40 );
         spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -596,7 +596,7 @@ void GUI::createToolBars()
 
     //Spacer to fill width
     {
-        QWidget* spacerR = new QWidget();
+        QWidget* spacerR = new QWidget(this);
         spacerR->setObjectName("navigation_bar_right_spacer");
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         //Delibritely large amount - to push the next toolbar as far right as possible.
@@ -643,7 +643,7 @@ void GUI::createToolBars()
     spacerBarR->setMovable( false );
     //Spacer to fill width
     {
-        QWidget* spacerR = new QWidget();
+        QWidget* spacerR = new QWidget(this);
         spacerR->setObjectName("spacer_bar_right_spacer");
         spacerR->setMinimumWidth( 40 );
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
