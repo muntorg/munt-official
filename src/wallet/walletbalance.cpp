@@ -212,12 +212,9 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
             const CTxOut &txout = tx->vout[i];
             if (!forAccount || IsMine(*forAccount, txout))
             {
-                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
-                {
-                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-                    if (!MoneyRange(nCredit))
-                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
-                }
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
             }
         }
     }
@@ -385,10 +382,16 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
 CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildren)
 {
     //fixme: (2.1) This can probably be drastically improved.
-    CAmount balance = GetBalance(forAccount, true, includeChildren) - GetBalance(forAccount, false, includeChildren);
-    CAmount balanceUnconfirmed = GetUnconfirmedBalance(forAccount, true, includeChildren) - GetUnconfirmedBalance(forAccount, false, includeChildren);
-    CAmount immatureBalance = GetImmatureBalance(forAccount, true, includeChildren) - GetImmatureBalance(forAccount, false, includeChildren);
-    return balance + balanceUnconfirmed + immatureBalance;
+    CAmount balanceWithLocked = GetBalance(forAccount, true, includeChildren);
+    CAmount balanceExcludingLocked = GetBalance(forAccount, false, includeChildren);
+    CAmount balanceLocked = balanceWithLocked - balanceExcludingLocked;
+    CAmount balanceUnconfirmedWithLocked = GetUnconfirmedBalance(forAccount, true, includeChildren);
+    CAmount balanceUnconfirmedExcludingLocked = GetUnconfirmedBalance(forAccount, false, includeChildren);
+    CAmount balanceUnconfirmed = balanceUnconfirmedWithLocked - balanceUnconfirmedExcludingLocked;
+    CAmount balanceImmatureWithLocked = GetImmatureBalance(forAccount, true, includeChildren);
+    CAmount balanceImmatureExcludingLocked = GetImmatureBalance(forAccount, false, includeChildren);
+    CAmount balanceImmature = balanceImmatureWithLocked - balanceImmatureExcludingLocked;
+    return balanceLocked + balanceUnconfirmed + balanceImmature;
 }
 
 CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
