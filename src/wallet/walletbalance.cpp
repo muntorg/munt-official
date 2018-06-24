@@ -152,17 +152,79 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount) c
     return credit;
 }
 
+//fixme: (2.1) As the cache is -after- some of the checks and the calls after the checks are basically the same as for normal getcredit
+//Is there any point to immatureCreditCached, or can we just share the getcredit cache and always call the tests.
+//NB! We must always call the tests as obviously they change so can't be cached.
 CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount) const
 {
-    if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
-    {
-        if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
-            return immatureCreditCached[forAccount];
-        immatureCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
+    if (pwallet == 0)
+        return 0;
+
+    // Must wait until coinbase is safely deep enough in the chain before valuing it
+    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+        return 0;
+
+    if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
         return immatureCreditCached[forAccount];
+
+    CAmount nCredit = 0;
+    uint256 hashTx = GetHash();
+    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    {
+        if (!pwallet->IsSpent(hashTx, i))
+        {
+            const CTxOut &txout = tx->vout[i];
+            if (!forAccount || IsMine(*forAccount, txout))
+            {
+                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                {
+                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                    if (!MoneyRange(nCredit))
+                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                }
+            }
+        }
     }
 
-    return 0;
+    immatureCreditCached[forAccount] = nCredit;
+
+    return nCredit;
+}
+
+CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount) const
+{
+    if (pwallet == 0)
+        return 0;
+
+    // Must wait until coinbase is safely deep enough in the chain before valuing it
+    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+        return 0;
+
+    if (fUseCache && immatureCreditCachedIncludingLockedWitnesses.find(forAccount) != immatureCreditCachedIncludingLockedWitnesses.end())
+        return immatureCreditCachedIncludingLockedWitnesses[forAccount];
+
+    CAmount nCredit = 0;
+    uint256 hashTx = GetHash();
+    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    {
+        if (!pwallet->IsSpent(hashTx, i))
+        {
+            const CTxOut &txout = tx->vout[i];
+            if (!forAccount || IsMine(*forAccount, txout))
+            {
+                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                {
+                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                    if (!MoneyRange(nCredit))
+                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                }
+            }
+        }
+    }
+
+    immatureCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
+
+    return nCredit;
 }
 
 CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount) const
@@ -320,7 +382,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
     return nTotal;
 }
 
-CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeChildren) const
+CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -332,7 +394,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeC
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
-                    nTotal += pcoin->GetAvailableCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
             }
         }
     }
@@ -343,14 +405,14 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeC
             const auto& childAccount = accountItem.second;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
-                nTotal += GetUnconfirmedBalance(childAccount, false);
+                nTotal += GetUnconfirmedBalance(childAccount, includePoW2LockedWitnesses, false);
             }
         }
     }
     return nTotal;
 }
 
-CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
+CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -360,7 +422,18 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount) const
             const CWalletTx* pcoin = &(*it).second;
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
-                nTotal += pcoin->GetImmatureCredit(true, forAccount);
+                nTotal += includePoW2LockedWitnesses ? pcoin->GetImmatureCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetImmatureCredit(true, forAccount);
+            }
+        }
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nTotal += GetImmatureBalance(childAccount, includePoW2LockedWitnesses, false);
             }
         }
     }
