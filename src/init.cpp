@@ -1471,34 +1471,47 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     fDiscover = GetBoolArg("-discover", true);
     fRelayTxes = !GetBoolArg("-blocksonly", DEFAULT_BLOCKSONLY);
 
-    if (fListen) {
-        bool fBound = false;
-        if (gArgs.IsArgSet("-bind")) {
-            for(const std::string& strBind : gArgs.GetArgs("-bind")) {
-                CService addrBind;
-                if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
-                    return InitError(ResolveErrMsg("bind", strBind));
-                fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR));
+    //fixme: (2.1) Improve exception handling here
+    try
+    {
+        if (fListen)
+        {
+            bool fBound = false;
+            if (gArgs.IsArgSet("-bind")) {
+                for(const std::string& strBind : gArgs.GetArgs("-bind"))
+                {
+                    CService addrBind;
+                    if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
+                        return InitError(ResolveErrMsg("bind", strBind));
+                    fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR));
+                }
             }
-        }
-        if (gArgs.IsArgSet("-whitebind")) {
-            for(const std::string& strBind : gArgs.GetArgs("-whitebind")) {
-                CService addrBind;
-                if (!Lookup(strBind.c_str(), addrBind, 0, false))
-                    return InitError(ResolveErrMsg("whitebind", strBind));
-                if (addrBind.GetPort() == 0)
-                    return InitError(strprintf(errortr("Need to specify a port with -whitebind: '%s'"), strBind));
-                fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR | BF_WHITELIST));
+            if (gArgs.IsArgSet("-whitebind"))
+            {
+                for(const std::string& strBind : gArgs.GetArgs("-whitebind"))
+                {
+                    CService addrBind;
+                    if (!Lookup(strBind.c_str(), addrBind, 0, false))
+                        return InitError(ResolveErrMsg("whitebind", strBind));
+                    if (addrBind.GetPort() == 0)
+                        return InitError(strprintf(errortr("Need to specify a port with -whitebind: '%s'"), strBind));
+                    fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR | BF_WHITELIST));
+                }
             }
+            if (!gArgs.IsArgSet("-bind") && !gArgs.IsArgSet("-whitebind"))
+            {
+                struct in_addr inaddr_any;
+                inaddr_any.s_addr = INADDR_ANY;
+                fBound |= Bind(connman, CService((in6_addr)IN6ADDR_ANY_INIT, GetListenPort()), BF_NONE);
+                fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
+            }
+            if (!fBound)
+                return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
         }
-        if (!gArgs.IsArgSet("-bind") && !gArgs.IsArgSet("-whitebind")) {
-            struct in_addr inaddr_any;
-            inaddr_any.s_addr = INADDR_ANY;
-            fBound |= Bind(connman, CService((in6_addr)IN6ADDR_ANY_INIT, GetListenPort()), BF_NONE);
-            fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
-        }
-        if (!fBound)
-            return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
+    }
+    catch(...)
+    {
+        return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
     }
 
     if (gArgs.IsArgSet("-externalip")) {
