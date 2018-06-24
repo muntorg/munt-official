@@ -2794,12 +2794,12 @@ UniValue listunspentforaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 6)
         throw std::runtime_error(
-            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
+            "listunspentforaccount \"account\" ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
             "\nReturns array of unspent transaction outputs\n"
             "with between minconf and maxconf (inclusive) confirmations.\n"
             "Optionally filter to only include txouts paid to specified addresses.\n"
             "\nArguments:\n"
-            "1. account\n"
+            "1. account          (string) Account UUID or label. If empty the active account is used.\n"
             "2. minconf          (numeric, optional, default=1) The minimum confirmations to filter\n"
             "3. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter\n"
             "4. \"addresses\"      (string) A json array of Gulden addresses to filter\n"
