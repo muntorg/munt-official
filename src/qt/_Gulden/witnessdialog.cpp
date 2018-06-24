@@ -650,7 +650,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                     divideBy = 576*7;
                     break;
                 case GraphScale::Months:
-                    formatStr = tr("%1 weeks");
+                    formatStr = tr("%1 months");
                     divideBy = 576*30;
                     break;
             }
