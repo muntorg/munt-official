@@ -475,7 +475,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
+    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
     if (recipient.amount >= balanceToCheck)
     {
         if (showWarningDialogs)
@@ -1014,7 +1014,7 @@ void GuldenSendCoinsEntry::nocksTimeout()
 void GuldenSendCoinsEntry::sendAllClicked()
 {
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true));
+    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
 }
 
