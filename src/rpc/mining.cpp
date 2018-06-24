@@ -45,6 +45,7 @@
 #endif
 #include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
+#include <validation/witnessvalidation.h>
 
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
@@ -564,13 +565,53 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 return "duplicate-inconclusive";
             }
 
-            CBlockIndex* const pindexPrev = chainActive.Tip();
-            // TestBlockValidity only supports blocks built on the current Tip
-            //fixme: (2.0) (PHASE3) (POW2)
-            if (block.hashPrevBlock != pindexPrev->GetBlockHashLegacy())
+            // Phase 3 onward no longer necessarily mine on the chain tip
+            // We use 'FindMiningTip' to find the block that we should be mining on
+            // Then run 'TestBlockValidity' on a clone chain to check the result.
+            std::string strError;
+            CBlockIndex* pWitnessBlockToEmbed = nullptr;
+            CBlockIndex* pIndexMiningTip = FindMiningTip(chainActive.Tip(), Params(), strError, pWitnessBlockToEmbed);
+
+            if (block.hashPrevBlock != pIndexMiningTip->GetBlockHashPoW2())
                 return "inconclusive-not-best-prevblk";
+
             CValidationState state;
-            TestBlockValidity(chainActive, state, Params(), block, pindexPrev, false, true);
+            {
+                CCoinsViewCache viewNew(pcoinsTip);
+                CBlockIndex* pindexPrev_ = nullptr;
+                CCloneChain tempChain = chainActive.Clone(pIndexMiningTip, pindexPrev_);
+                //fixme: (2.0) error handling.
+                assert(pindexPrev_);
+                ForceActivateChain(pindexPrev_, nullptr, state, Params(), tempChain, viewNew);
+
+                TestBlockValidity(tempChain, state, Params(), block, pindexPrev_, false, true, &viewNew);
+            }
+
+            //fixme: (2.1) - We can remove this after phase 4 activates
+            //fixme: (2.0) - Implement if needed
+            /*if (pWitnessBlockToEmbed)
+            {
+                CBlock PoWParent;
+                if (!ReadBlockFromDisk(PoWParent, pIndexParent, Params()))
+                {
+                    
+                }
+                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(PoWParent);
+                if (nWitnessCoinbaseIndex == -1)
+                {
+                    return "missing-phase3-embedded-witness-coinbase";
+                }
+                else
+                {
+                    //fixme: (2.0.x) - If performance issues this can be sped up.
+                    //We have pWitnessBlockToEmbed so just access this directly.
+                    if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
+                    {
+                        return "invalid-phase3-embedded-witness-coinbase";
+                    }
+                }
+            }*/
+
             return BIP22ValidationResult(state);
         }
 
@@ -672,37 +713,44 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
     }
 
-    //fixme: (2.0)
-    bool fSupportsSegwit = true;
-
     // Update block
-    static CBlockIndex* pindexPrev;
+    static CBlockIndex* pindexPrevChainTip=nullptr;
+    static CBlockIndex* pindexPrev=nullptr;
     static std::unique_ptr<CBlockTemplate> pblocktemplate;
-    // Cache whether the last invocation was with segwit support, to avoid returning
-    // a segwit-block to a non-segwit caller.
-    static bool fLastTemplateSupportsSegwit = true;
-    if (forceBlockUpdate || pindexPrev != chainActive.Tip() ||
-        (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5) ||
-        fLastTemplateSupportsSegwit != fSupportsSegwit)
+    if (forceBlockUpdate || pindexPrevChainTip != chainActive.Tip() || (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
     {
         // Clear pindexPrev so future calls make a new block, despite any failures from here on
         pindexPrev = nullptr;
+        pindexPrevChainTip = nullptr;
+
+         // Phase 3 onward no longer necessarily mine on the chain tip
+        // We use 'FindMiningTip' to find the block that we should be mining on
+        // Then run 'TestBlockValidity' on a clone chain to check the result.
+        std::string strError;
+        CBlockIndex* pWitnessBlockToEmbed = nullptr;
+        CBlockIndex* pIndexMiningTip = FindMiningTip(chainActive.Tip(), Params(), strError, pWitnessBlockToEmbed);
+
+        if (!pIndexMiningTip)
+        {
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Failed to determine chain tip");
+        }
 
         // Store the pindexBest used before CreateNewBlock, to avoid races
         nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
-        CBlockIndex* pindexPrevNew = chainActive.Tip();
+        CBlockIndex* pindexPrevNew = pIndexMiningTip;
+        CBlockIndex* pChainActiveTipNew = chainActive.Tip();
         nStart = GetTime();
-        fLastTemplateSupportsSegwit = fSupportsSegwit;
 
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(chainActive.Tip(), reservedScript, fSupportsSegwit);
+        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
         // Need to update only after we know CreateNewBlock succeeded
         pindexPrev = pindexPrevNew;
+        pindexPrevChainTip = pChainActiveTipNew;
     }
     CBlock* pblock = &pblocktemplate->block; // pointer for convenience
     const Consensus::Params& consensusParams = Params().GetConsensus();
@@ -710,9 +758,6 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     // Update nTime
     UpdateTime(pblock, consensusParams, pindexPrev);
     pblock->nNonce = 0;
-
-    // NOTE: If at some point we support pre-segwit miners post-segwit-activation, this needs to take segwit support into consideration
-    const bool fPreSegWit = (chainActive.Tip() == NULL) || (GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive) >= 4);
 
     UniValue aCaps(UniValue::VARR); aCaps.push_back("proposal");
 
@@ -830,19 +875,14 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("noncerange", "00000000ffffffff"));
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;
     result.push_back(Pair("sigoplimit", nSigOpLimit));
-    if (fPreSegWit) {
-        result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_BASE_SIZE));
-    } else {
-        result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SERIALIZED_SIZE));
-        result.push_back(Pair("weightlimit", (int64_t)MAX_BLOCK_WEIGHT));
-    }
+
+    //fixme: (2.1) Double check this doesn't result in miners mining smaller blocks or anything strange
+    result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SERIALIZED_SIZE));
+    result.push_back(Pair("weightlimit", (int64_t)MAX_BLOCK_WEIGHT));
+
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
-
-    if (!pblocktemplate->vchCoinbaseCommitment.empty() && fSupportsSegwit) {
-        result.push_back(Pair("default_witness_commitment", HexStr(pblocktemplate->vchCoinbaseCommitment.begin(), pblocktemplate->vchCoinbaseCommitment.end())));
-    }
 
     return result;
 }
