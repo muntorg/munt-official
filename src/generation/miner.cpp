@@ -349,8 +349,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
-    //fixme: (2.0) (SEGSIG)
-    //pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
     pblocktemplate->vTxFees[0] = -nFees;
 
     // From second 'active' phase 3 block (second block whose parent is phase 3) - embed the PoW2 witness. First doesn't have a witness to embed.
@@ -801,7 +799,6 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     return true;
 }
 
-//fixme: (2.0) (POW2) - Implement this also for RPC mining.
 CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed)
 {
     if (!pIndexParent)
