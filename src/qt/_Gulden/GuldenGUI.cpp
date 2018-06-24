@@ -186,11 +186,15 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
     if (!labelBalance || !labelBalanceForex)
         return;
 
-    CAmount displayBalance = availableBalance + unconfirmedBalance + immatureBalance;
-    labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
-    if (displayBalance > 0 && optionsModel)
+    CAmount displayBalanceAvailable = availableBalanceCached;
+    CAmount displayBalanceLocked = lockedBalanceCached;
+    CAmount displayBalanceImmatureOrUnconfirmed = immatureBalanceCached + unconfirmedBalanceCached;
+    CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
+
+    labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+    if (displayBalanceTotal > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
+        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -199,13 +203,13 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
         labelBalanceForex->setVisible(false);
     }
 
-    if (accountScrollArea && displayBalance > 999999 * COIN && sideBarWidth != sideBarWidthExtended)
+    if (accountScrollArea && displayBalanceTotal > 999999 * COIN && sideBarWidth != sideBarWidthExtended)
     {
         sideBarWidth = sideBarWidthExtended;
         doApplyStyleSheet();
         resizeToolBarsGulden();
     }
-    else if (accountScrollArea && displayBalance < 999999 * COIN && sideBarWidth == sideBarWidthExtended)
+    else if (accountScrollArea && displayBalanceTotal < 999999 * COIN && sideBarWidth == sideBarWidthExtended)
     {
         sideBarWidth = sideBarWidthNormal;
         doApplyStyleSheet();
@@ -215,10 +219,10 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
     labelBalance->setToolTip("");
     if (immatureBalance>0 || unconfirmedBalance>0)
     {
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, lockedBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, unconfirmedBalance + immatureBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, availableBalance, false, GuldenUnits::separatorStandard, 2));
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
         labelBalance->setToolTip(toolTip);
     }
 }
@@ -488,7 +492,7 @@ void GUI::createToolBars()
             layoutBalance->addWidget( spacerMid );
         }
 
-        labelBalance = new ClickableLabel( this );
+        labelBalance = new ClickableLabel( balanceContainer );
         labelBalance->setObjectName( "gulden_label_balance" );
         labelBalance->setText( "" );
         layoutBalance->addWidget( labelBalance );

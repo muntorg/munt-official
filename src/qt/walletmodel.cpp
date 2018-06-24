@@ -223,9 +223,9 @@ void WalletModel::checkBalanceChanged()
 
     if (cachedAvailableBalance != balanceAvailableIncludingLocked || cachedUnconfirmedBalance != balanceUnconfirmedIncludingLocked || cachedImmatureBalance != balanceImmatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balanceLocked)
     {
-        cachedAvailableBalance = balanceAvailableIncludingLocked;
-        cachedUnconfirmedBalance = balanceUnconfirmedIncludingLocked;
-        cachedImmatureBalance = balanceImmatureIncludingLocked;
+        cachedAvailableBalance = balanceAvailableExcludingLocked;
+        cachedUnconfirmedBalance = balanceUnconfirmedExcludingLocked;
+        cachedImmatureBalance = balanceImmatureExcludingLocked;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
