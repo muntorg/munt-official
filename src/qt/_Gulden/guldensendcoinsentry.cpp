@@ -29,6 +29,8 @@
 
 #include "gui.h"
 #include "validation/validation.h"//chainActive
+#include "validation/witnessvalidation.h"
+#include <consensus/validation.h>
 #include "Gulden/util.h"
 
 GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget *parent) :
@@ -290,8 +292,7 @@ void GuldenSendCoinsEntry::myAccountsSelectionChanged()
         CAccount* pAccount = pactiveWallet->mapAccounts[accountUUID];
         if ( pAccount->IsPoW2Witness() )
         {
-            ui->sendCoinsRecipientStack->setCurrentIndex(1);
-            witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
+            gotoWitnessTab(pAccount);
         }
     }
 
@@ -331,7 +332,6 @@ void GuldenSendCoinsEntry::deleteClicked()
     Q_EMIT removeEntry(this);
 }
 
-//fixme: (2.0) - enforce minimum weight for pow2.
 bool GuldenSendCoinsEntry::validate()
 {
     cancelNocksQuote();
@@ -349,15 +349,26 @@ bool GuldenSendCoinsEntry::validate()
     ui->payAmount->setValid(true);
     clearPayInfo();
 
+    if (isPoW2WitnessCreation())
+    {
+        int nDays = ui->pow2LockFundsSlider->value();
+        int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*576);
+        if (ui->payAmount->amount() < (nMinimumWitnessAmount*COIN) || nOurWeight <= nMinimumWitnessWeight)
+        {
+            setValid(ui->pow2LockFundsInfoLabel, false);
+            return false;
+        }
+    }
+
     SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
     {
-        ui->receivingAddress->setProperty("valid", false);
+        setValid(ui->receivingAddress, false);
         retval = false;
     }
     else
     {
-        ui->receivingAddress->setProperty("valid", true);
+        setValid(ui->receivingAddress, false);
 
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
@@ -464,7 +475,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true);
+    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
     if (recipient.amount >= balanceToCheck)
     {
         if (showWarningDialogs)
@@ -799,6 +810,7 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
 void GuldenSendCoinsEntry::gotoWitnessTab(CAccount* targetAccount)
 {
     targetWitnessAccount = targetAccount;
+    witnessSliderValueChanged(0);
     ui->sendCoinsRecipientStack->setCurrentIndex(1);
 }
 
@@ -832,32 +844,60 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 #define WITNESS_SUBSIDY 20
 void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
+    setValid(ui->pow2LockFundsInfoLabel, true);
+
     //fixme: (2.0) (POW2) (CLEANUP)
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
-    if (nAmount < CAmount(500000000000))
+    if (nAmount < CAmount(nMinimumWitnessAmount*COIN))
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of 5000 is required."));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(nMinimumWitnessAmount));
         return;
     }
 
-    //fixme: (2.0) (HIGH) - warn if weight exceeds 1%.
     int nDays = newValue;
     float fMonths = newValue/30.0;
     float fYears = newValue/365.0;
     int nEarnings = 0;
 
-
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
-    //fixme: (2.0) (HIGH)
-    int64_t nNetworkWeight = 239990000;
-
-
-    if (nOurWeight < 10000)
+    static int64_t nNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+    if (chainActive.Tip())
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.").arg(nOurWeight));
+        static uint64_t lastUpdate = GetTimeMillis();
+        // Only check this once a minute, no need to be constantly updating.
+        if (GetTimeMillis() - lastUpdate > 60000)
+        {
+            lastUpdate = GetTimeMillis();
+            if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
+            {
+                CGetWitnessInfo witnessInfo;
+                CBlock block;
+                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+                {
+                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
+                    LogPrintf(strErrorMessage.c_str());
+                    CAlert::Notify(strErrorMessage, true, true);
+                    return;
+                }
+                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                {
+                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
+                    LogPrintf(strErrorMessage.c_str());
+                    CAlert::Notify(strErrorMessage, true, true);
+                    return;
+                }
+                nNetworkWeight = witnessInfo.nTotalWeight;
+            }
+        }
+    }
+
+
+    if (nOurWeight < nMinimumWitnessWeight)
+    {
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(nMinimumWitnessWeight).arg(nOurWeight));
         return;
     }
 
@@ -974,7 +1014,7 @@ void GuldenSendCoinsEntry::nocksTimeout()
 void GuldenSendCoinsEntry::sendAllClicked()
 {
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), true));
+    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
 }
 

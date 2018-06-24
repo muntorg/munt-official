@@ -52,15 +52,11 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
 : QObject(parent)
 , wallet(_wallet)
 , optionsModel(_optionsModel)
-, addressTableModel(0)
-, accountTableModel(0)
-, transactionTableModel(0)
-, recentRequestsTableModel(0)
-, cachedBalance(0)
-, cachedUnconfirmedBalance(0)
-, cachedImmatureBalance(0)
+, addressTableModel(nullptr)
+, accountTableModel(nullptr)
+, transactionTableModel(nullptr)
+, recentRequestsTableModel(nullptr)
 , cachedEncryptionStatus(Unencrypted)
-, cachedNumBlocks(0)
 , patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$")
 {
     fHaveWatchOnly = wallet->HaveWatchOnly();
@@ -94,7 +90,9 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
     {
         return wallet->GetAvailableBalance(coinControl);
     }*/
-    if (wallet)
+    if (cachedAvailableBalance != -1)
+        return cachedAvailableBalance;
+    else if (wallet)
         return wallet->GetBalance(forAccount, true, false);
     else
         return 0;
@@ -102,7 +100,9 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
 
 CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 {
-    if (wallet)
+    if (cachedUnconfirmedBalance != -1)
+        return cachedUnconfirmedBalance;
+    else if (wallet)
         return wallet->GetUnconfirmedBalance(forAccount);
     else
         return 0;
@@ -110,7 +110,9 @@ CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 
 CAmount WalletModel::getImmatureBalance() const
 {
-    if (wallet)
+    if (cachedImmatureBalance != -1)
+        return cachedImmatureBalance;
+    else if (wallet)
         return wallet->GetImmatureBalance();
     else
         return 0;
@@ -131,7 +133,9 @@ CAmount WalletModel::getWatchBalance() const
 
 CAmount WalletModel::getWatchUnconfirmedBalance() const
 {
-    if (wallet)
+    if (cachedWatchUnconfBalance != -1)
+        return cachedWatchUnconfBalance;
+    else if (wallet)
         return wallet->GetUnconfirmedWatchOnlyBalance();
     else
         return 0;
@@ -139,8 +143,20 @@ CAmount WalletModel::getWatchUnconfirmedBalance() const
 
 CAmount WalletModel::getWatchImmatureBalance() const
 {
-    if (wallet)
+    if (cachedWatchImmatureBalance != -1)
+        return cachedWatchImmatureBalance;
+    else if (wallet)
         return wallet->GetImmatureWatchOnlyBalance();
+    else
+        return 0;
+}
+
+CAmount WalletModel::getLockedBalance() const
+{
+    if (cachedLockedBalance != -1)
+        return cachedLockedBalance;
+    else if (wallet)
+        return wallet->GetLockedBalance();
     else
         return 0;
 }
@@ -183,9 +199,18 @@ void WalletModel::pollBalanceChanged()
 
 void WalletModel::checkBalanceChanged()
 {
-    CAmount newBalance = getBalance();
-    CAmount newUnconfirmedBalance = getUnconfirmedBalance();
-    CAmount newImmatureBalance = getImmatureBalance();
+    CAmount balanceAvailableIncludingLocked;
+    CAmount balanceAvailableExcludingLocked;
+    CAmount balanceAvailableLocked;
+    CAmount balanceUnconfirmedIncludingLocked;
+    CAmount balanceUnconfirmedExcludingLocked;
+    CAmount balanceUnconfirmedLocked;
+    CAmount balanceImmatureIncludingLocked;
+    CAmount balanceImmatureExcludingLocked;
+    CAmount balanceImmatureLocked;
+    CAmount balanceLocked;
+    wallet->GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, nullptr, true);
+
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
     CAmount newWatchImmatureBalance = 0;
@@ -196,17 +221,16 @@ void WalletModel::checkBalanceChanged()
         newWatchImmatureBalance = getWatchImmatureBalance();
     }
 
-    if(cachedBalance != newBalance || cachedUnconfirmedBalance != newUnconfirmedBalance || cachedImmatureBalance != newImmatureBalance ||
-        cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance)
+    if (cachedAvailableBalance != balanceAvailableIncludingLocked || cachedUnconfirmedBalance != balanceUnconfirmedIncludingLocked || cachedImmatureBalance != balanceImmatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balanceLocked)
     {
-        cachedBalance = newBalance;
-        cachedUnconfirmedBalance = newUnconfirmedBalance;
-        cachedImmatureBalance = newImmatureBalance;
+        cachedAvailableBalance = balanceAvailableIncludingLocked;
+        cachedUnconfirmedBalance = balanceUnconfirmedIncludingLocked;
+        cachedImmatureBalance = balanceImmatureIncludingLocked;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        Q_EMIT balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance,
-                            newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
+        cachedLockedBalance = balanceLocked;
+        Q_EMIT balanceChanged(cachedAvailableBalance, cachedUnconfirmedBalance, cachedImmatureBalance, cachedWatchOnlyBalance, cachedWatchUnconfBalance, cachedWatchImmatureBalance, cachedLockedBalance);
     }
 }
 

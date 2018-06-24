@@ -117,13 +117,24 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
+    //fixme: (2.1) Forbid "*" as an account name to prevent clash with this.
+    if (strAccountUUIDOrLabel == "*")
+        return nullptr;
+
     if (strAccountUUIDOrLabel.empty())
     {
-        if (!pwallet->getActiveAccount())
+        if (useDefaultIfEmpty)
         {
-            throw std::runtime_error("No account identifier passed, and no active account selected, please select an active account or pass a valid identifier.");
+            if (!pwallet->getActiveAccount())
+            {
+                throw std::runtime_error("No account identifier passed, and no active account selected, please select an active account or pass a valid identifier.");
+            }
+            return pwallet->getActiveAccount();
         }
-        return pwallet->getActiveAccount();
+        else
+        {
+            return nullptr;
+        }
     }
 
     CAccount* foundAccount = NULL;
@@ -478,7 +489,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
             "sendtoaddressfromaccount \"account\" \"guldenaddress\" amount ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
-            "\nSend an amount to a given address using the currently active account. If you want to use a specific account then use sendtoaddressfromaccount instead\n"
+            "\nSend an amount to \"guldenaddress\" using \"account\"\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
             "1. \"fromaccount\"  (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
@@ -494,10 +505,10 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtoaddress", "\"My account\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1")
-            + HelpExampleCli("sendtoaddress", "\"\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"donation\" \"seans outpost\"")
-            + HelpExampleCli("sendtoaddress", "\"My account\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"\" \"\" true")
-            + HelpExampleRpc("sendtoaddress", "\"\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
+            + HelpExampleCli("sendtoaddressfromaccount", "\"My account\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1")
+            + HelpExampleCli("sendtoaddressfromaccount", "\"\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"donation\" \"seans outpost\"")
+            + HelpExampleCli("sendtoaddressfromaccount", "\"My account\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"\" \"\" true")
+            + HelpExampleRpc("sendtoaddressfromaccount", "\"\" \"GM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
         );
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
@@ -823,11 +834,17 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        forAccount = AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount));
+    return ValueFromAmount(pwallet->GetUnconfirmedBalance(forAccount, false, true));
 }
 
 UniValue getimmaturebalance(const JSONRPCRequest &request)
@@ -846,11 +863,17 @@ UniValue getimmaturebalance(const JSONRPCRequest &request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        forAccount = AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount));
+    return ValueFromAmount(pwallet->GetImmatureBalance(forAccount, false, true));
 }
 
 UniValue getlockedbalance(const JSONRPCRequest &request)
@@ -865,15 +888,21 @@ UniValue getlockedbalance(const JSONRPCRequest &request)
                 "getlockedbalance \"for_account\"\n"
                 "\nArguments:\n"
                 "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
-                "Returns the server's total locked balance\n");
+                "Returns the server's total locked balance (inclusive of immature and unconfirmed transactions)\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
-    if (!forAccount && !request.params[0].get_str().empty() && request.params[0].get_str() != std::string("*"))
+    CAccount* forAccount = nullptr;
+    std::string accountSpecifier = "";
+    if (request.params.size() > 0)
+    {
+        accountSpecifier = request.params[0].get_str();
+        forAccount = AccountFromValue(pwallet, request.params[0], false);
+    }
+    if (!forAccount && !accountSpecifier.empty() && accountSpecifier != std::string("*"))
         throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid account label or UUID"));
 
-    return ValueFromAmount(pwallet->GetBalance(nullptr, true, true) - pwallet->GetBalance(nullptr, false, true));
+    return ValueFromAmount(pwallet->GetLockedBalance(forAccount, true));
 }
 
 UniValue movecmd(const JSONRPCRequest& request)
@@ -890,7 +919,7 @@ UniValue movecmd(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"fromaccount\"   (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
             "2. \"toaccount\"     (string, required) The UUID or unique label of the account to move funds to. May be the currently active account using \"\".\n"
-            "3. \"amount\"        (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
+            "3. amount           (numeric) Quantity of " + CURRENCY_UNIT + " to move between accounts, -1 to move all available funds (based on min depth).\n"
             "4. \"minconf\"       (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"       (string, optional) An optional comment, stored in the wallet only.\n"
             "\nResult:\n"
@@ -923,7 +952,15 @@ UniValue movecmd(const JSONRPCRequest& request)
 
     bool subtractFeeFromAmount = false;
     boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
-    CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    CAmount nBalance = 0;
+    if (fromAccount->IsPoW2Witness())
+    {
+        nBalance = pwallet->GetBalance(fromAccount, false, true);
+    }
+    else
+    {
+        nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    }
     CAmount nAmount = 0;
     if (request.params[2].getValStr() == "-1")
     {
@@ -1106,7 +1143,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     {
         CGuldenAddress address(name_);
 
-        CAccount* toAccount;
+        CAccount* toAccount = nullptr;
         try{ toAccount = AccountFromValue(pwallet, name_, false); } catch(...) {}
         if (toAccount)
         {
@@ -1215,7 +1252,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
-    //fixme: (2.0)
+    //fixme: (2.1)
     /*DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount;
@@ -2775,12 +2812,12 @@ UniValue listunspentforaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 6)
         throw std::runtime_error(
-            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
+            "listunspentforaccount \"account\" ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
             "\nReturns array of unspent transaction outputs\n"
             "with between minconf and maxconf (inclusive) confirmations.\n"
             "Optionally filter to only include txouts paid to specified addresses.\n"
             "\nArguments:\n"
-            "1. account\n"
+            "1. account          (string) Account UUID or label. If empty the active account is used.\n"
             "2. minconf          (numeric, optional, default=1) The minimum confirmations to filter\n"
             "3. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter\n"
             "4. \"addresses\"      (string) A json array of Gulden addresses to filter\n"

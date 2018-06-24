@@ -237,7 +237,6 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     return ret;
 }
 
-//fixme: (2.0) (High) invalidate ismine cache when doing actions like importkey (anything that rescans?)
 isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
@@ -893,7 +892,10 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
         {
             keyError = true;
         }
-        throw std::runtime_error("Not a valid Gulden private witness key");
+        if (keyError)
+        {
+            throw std::runtime_error("Not a valid Gulden private witness key");
+        }
     }
     return privateWitnessKeys;
 }

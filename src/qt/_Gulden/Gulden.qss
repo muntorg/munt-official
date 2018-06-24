@@ -1312,4 +1312,9 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     background-color: COLOR_VALIDATION_FAILED;
 }
 
+#pow2LockFundsInfoLabel[valid=false]
+{
+    color: COLOR_VALIDATION_FAILED;
+}
+
 

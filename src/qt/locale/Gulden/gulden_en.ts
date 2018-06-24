@@ -4,3803 +4,4972 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <location filename="../../_Gulden/forms/accountsettingsdialog.ui" line="+76"/>
         <source>Change name of account</source>
-        <translation type="unfinished">Change name of account</translation>
+        <translation>Change name of account</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Enter name of account.</source>
-        <translation type="unfinished">Enter name of account.</translation>
+        <translation>Enter name of account.</translation>
     </message>
     <message>
+        <location line="+119"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+241"/>
         <source>Delete account</source>
-        <translation type="unfinished">Delete account</translation>
+        <translation>Delete account</translation>
     </message>
     <message>
+        <location line="+20"/>
         <source>Copy sync code</source>
-        <translation type="unfinished">Copy sync code</translation>
+        <translation>Copy sync code</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Done</source>
-        <translation type="unfinished">Done</translation>
+        <translation>Done</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-152"/>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR to connect to your mobile Gulden app</translation>
+        <translation>Scan QR to connect to your mobile Gulden app</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Click here to make QR code visible.
+        <translation>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation type="unfinished">Scan QR with a witnessing device to link the device to your wallet</translation>
+        <translation>Scan QR with a witnessing device to link the device to your wallet</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <translation type="unfinished">Click here to make QR code visible.
+        <translation>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</translation>
     </message>
     <message>
+        <location line="+74"/>
         <source>Please fund the witness account first.</source>
-        <translation type="unfinished">Please fund the witness account first.</translation>
+        <translation>Please fund the witness account first.</translation>
     </message>
     <message>
+        <location line="+50"/>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation type="unfinished">Account not empty, please first empty your account before trying to delete it.</translation>
+        <translation>Account not empty, please first empty your account before trying to delete it.</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Are you sure you want to delete %1 from your account list?
 </source>
-        <translation type="unfinished">Are you sure you want to delete %1 from your account list?
+        <translation>Are you sure you want to delete %1 from your account list?
 </translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation type="unfinished">Are you sure you want to delete %1 from your account list?
+        <translation>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
 </context>
 <context>
     <name>AccountSummaryWidget</name>
     <message>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+153"/>
         <source>Total funds: </source>
-        <translation type="unfinished">Total funds: </translation>
+        <translation>Total funds: </translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Locked funds: </source>
-        <translation type="unfinished">Locked funds: </translation>
+        <translation>Locked funds: </translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Funds awaiting confirmation: </source>
-        <translation type="unfinished">Funds awaiting confirmation: </translation>
+        <translation>Funds awaiting confirmation: </translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Spendable funds: </source>
-        <translation type="unfinished">Spendable funds: </translation>
+        <translation>Spendable funds: </translation>
     </message>
 </context>
 <context>
     <name>AddressBookPage</name>
     <message>
+        <location filename="../../forms/addressbookpage.ui" line="+45"/>
         <source>Right-click to edit address or label</source>
-        <translation type="unfinished">Right-click to edit address or label</translation>
+        <translation>Right-click to edit address or label</translation>
     </message>
     <message>
+        <location line="+36"/>
         <source>C&amp;lose</source>
-        <translation type="unfinished">C&amp;lose</translation>
+        <translation>C&amp;lose</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Delete the currently selected address from the list</source>
-        <translation type="unfinished">Delete the currently selected address from the list</translation>
+        <translation>Delete the currently selected address from the list</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished">&amp;Delete</translation>
+        <translation>&amp;Delete</translation>
     </message>
     <message>
+        <location line="+26"/>
         <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">Export the data in the current tab to a file</translation>
+        <translation>Export the data in the current tab to a file</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Export</source>
-        <translation type="unfinished">&amp;Export</translation>
+        <translation>&amp;Export</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Create a new address</source>
-        <translation type="unfinished">Create a new address</translation>
+        <translation>Create a new address</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;New</source>
-        <translation type="unfinished">&amp;New</translation>
+        <translation>&amp;New</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation type="unfinished">Copy the currently selected address to the system clipboard</translation>
+        <translation>Copy the currently selected address to the system clipboard</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Copy</source>
-        <translation type="unfinished">&amp;Copy</translation>
+        <translation>&amp;Copy</translation>
     </message>
     <message>
+        <location filename="../../addressbookpage.cpp" line="+72"/>
         <source>Choose the address to send coins to</source>
-        <translation type="unfinished">Choose the address to send coins to</translation>
+        <translation>Choose the address to send coins to</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Choose the address to receive coins with</source>
-        <translation type="unfinished">Choose the address to receive coins with</translation>
+        <translation>Choose the address to receive coins with</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>C&amp;hoose</source>
-        <translation type="unfinished">C&amp;hoose</translation>
+        <translation>C&amp;hoose</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Sending addresses</source>
-        <translation type="unfinished">Sending addresses</translation>
+        <translation>Sending addresses</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Receiving addresses</source>
-        <translation type="unfinished">Receiving addresses</translation>
+        <translation>Receiving addresses</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</translation>
+        <translation>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation type="unfinished">These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</translation>
+        <translation>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>&amp;Copy Address</source>
-        <translation type="unfinished">&amp;Copy Address</translation>
+        <translation>&amp;Copy Address</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Copy &amp;Label</source>
-        <translation type="unfinished">Copy &amp;Label</translation>
+        <translation>Copy &amp;Label</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished">&amp;Edit</translation>
+        <translation>&amp;Edit</translation>
     </message>
     <message>
+        <location line="+195"/>
         <source>Export Address List</source>
-        <translation type="unfinished">Export Address List</translation>
+        <translation>Export Address List</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished">Comma separated file (*.csv)</translation>
+        <translation>Comma separated file (*.csv)</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Exporting Failed</source>
-        <translation type="unfinished">Exporting Failed</translation>
+        <translation>Exporting Failed</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation type="unfinished">There was an error trying to save the address list to %1. Please try again.</translation>
+        <translation>There was an error trying to save the address list to %1. Please try again.</translation>
     </message>
 </context>
 <context>
     <name>AddressTableModel</name>
     <message>
+        <location filename="../../addresstablemodel.cpp" line="+177"/>
         <source>Label</source>
-        <translation type="unfinished">Label</translation>
+        <translation>Label</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Address</source>
-        <translation type="unfinished">Address</translation>
+        <translation>Address</translation>
     </message>
     <message>
+        <location line="+37"/>
         <source>(no label)</source>
-        <translation type="unfinished">(no label)</translation>
+        <translation>(no label)</translation>
     </message>
 </context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
-        <source>Passphrase Dialog</source>
-        <translation type="unfinished">Passphrase Dialog</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation type="unfinished">Enter passphrase</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation type="unfinished">New passphrase</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation type="unfinished">Repeat new passphrase</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
+        <location filename="../../askpassphrasedialog.cpp" line="+50"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location filename="../../forms/askpassphrasedialog.ui" line="+26"/>
+        <source>Passphrase Dialog</source>
+        <translation>Passphrase Dialog</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>Enter passphrase</source>
+        <translation>Enter passphrase</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>New passphrase</source>
+        <translation>New passphrase</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Repeat new passphrase</source>
+        <translation>Repeat new passphrase</translation>
+    </message>
+    <message>
+        <location filename="../../askpassphrasedialog.cpp" line="-3"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location line="+24"/>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</translation>
+        <translation>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Encrypt wallet</source>
-        <translation type="unfinished">Encrypt wallet</translation>
+        <translation>Encrypt wallet</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation type="unfinished">This operation needs your wallet passphrase to unlock the wallet.</translation>
+        <translation>This operation needs your wallet passphrase to unlock the wallet.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>Unlock wallet</source>
-        <translation type="unfinished">Unlock wallet</translation>
+        <translation>Unlock wallet</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation type="unfinished">This operation needs your wallet passphrase to decrypt the wallet.</translation>
+        <translation>This operation needs your wallet passphrase to decrypt the wallet.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>Decrypt wallet</source>
-        <translation type="unfinished">Decrypt wallet</translation>
+        <translation>Decrypt wallet</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Change passphrase</source>
-        <translation type="unfinished">Change passphrase</translation>
+        <translation>Change passphrase</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation type="unfinished">Enter the old passphrase and new passphrase to the wallet.</translation>
+        <translation>Enter the old passphrase and new passphrase to the wallet.</translation>
     </message>
     <message>
+        <location line="+46"/>
         <source>Confirm wallet encryption</source>
-        <translation type="unfinished">Confirm wallet encryption</translation>
+        <translation>Confirm wallet encryption</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
-        <translation type="unfinished">Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</translation>
+        <translation>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation type="unfinished">Are you sure you wish to encrypt your wallet?</translation>
+        <translation>Are you sure you wish to encrypt your wallet?</translation>
     </message>
     <message>
+        <location line="+9"/>
+        <location line="+58"/>
         <source>Wallet encrypted</source>
-        <translation type="unfinished">Wallet encrypted</translation>
+        <translation>Wallet encrypted</translation>
     </message>
     <message>
+        <location line="-56"/>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</translation>
+        <translation>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation type="unfinished">IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</translation>
+        <translation>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</translation>
     </message>
     <message>
+        <location line="+9"/>
+        <location line="+7"/>
+        <location line="+42"/>
+        <location line="+6"/>
         <source>Wallet encryption failed</source>
-        <translation type="unfinished">Wallet encryption failed</translation>
+        <translation>Wallet encryption failed</translation>
     </message>
     <message>
+        <location line="-54"/>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation type="unfinished">Wallet encryption failed due to an internal error. Your wallet was not encrypted.</translation>
+        <translation>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</translation>
     </message>
     <message>
+        <location line="+7"/>
+        <location line="+48"/>
         <source>The supplied passphrases do not match.</source>
-        <translation type="unfinished">The supplied passphrases do not match.</translation>
+        <translation>The supplied passphrases do not match.</translation>
     </message>
     <message>
+        <location line="-37"/>
         <source>Wallet unlock failed</source>
-        <translation type="unfinished">Wallet unlock failed</translation>
+        <translation>Wallet unlock failed</translation>
     </message>
     <message>
+        <location line="+1"/>
+        <location line="+11"/>
+        <location line="+19"/>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation type="unfinished">The passphrase entered for the wallet decryption was incorrect.</translation>
+        <translation>The passphrase entered for the wallet decryption was incorrect.</translation>
     </message>
     <message>
+        <location line="-20"/>
         <source>Wallet decryption failed</source>
-        <translation type="unfinished">Wallet decryption failed</translation>
+        <translation>Wallet decryption failed</translation>
     </message>
     <message>
+        <location line="+14"/>
         <source>Wallet passphrase was successfully changed.</source>
-        <translation type="unfinished">Wallet passphrase was successfully changed.</translation>
+        <translation>Wallet passphrase was successfully changed.</translation>
     </message>
     <message>
+        <location line="+47"/>
+        <location line="+24"/>
         <source>Warning: The Caps Lock key is on!</source>
-        <translation type="unfinished">Warning: The Caps Lock key is on!</translation>
+        <translation>Warning: The Caps Lock key is on!</translation>
     </message>
 </context>
 <context>
     <name>BackupDialog</name>
     <message>
-        <source>Backup phrase</source>
-        <translation type="unfinished">Backup phrase</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation type="unfinished">Show backup phrase</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation type="unfinished">It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/forms/backupdialog.ui" line="+141"/>
         <source>Done</source>
-        <translation type="unfinished">Done</translation>
+        <translation>Done</translation>
     </message>
     <message>
+        <location line="-83"/>
+        <source>Backup phrase</source>
+        <translation>Backup phrase</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <location line="+97"/>
+        <source>Show backup phrase</source>
+        <translation>Show backup phrase</translation>
+    </message>
+    <message>
+        <location line="-68"/>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</translation>
+    </message>
+    <message>
+        <location line="+61"/>
         <source>Save to file</source>
-        <translation type="unfinished">Save to file</translation>
+        <translation>Save to file</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/backupdialog.cpp" line="+58"/>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
+        <translation>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished">Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
+        <translation>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>No recovery phrases present for this wallet.</source>
-        <translation type="unfinished">No recovery phrases present for this wallet.</translation>
+        <translation>No recovery phrases present for this wallet.</translation>
     </message>
     <message>
+        <location line="+15"/>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation type="unfinished">Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</translation>
+        <translation>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</translation>
     </message>
 </context>
 <context>
     <name>BanTableModel</name>
     <message>
+        <location filename="../../bantablemodel.cpp" line="+89"/>
         <source>IP/Netmask</source>
-        <translation type="unfinished">IP/Netmask</translation>
+        <translation>IP/Netmask</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Banned Until</source>
-        <translation type="unfinished">Banned Until</translation>
+        <translation>Banned Until</translation>
     </message>
 </context>
 <context>
     <name>ClickableQRImage</name>
     <message>
+        <location filename="../../_Gulden/clickableqrimage.cpp" line="+26"/>
         <source>&amp;Save Image...</source>
-        <translation type="unfinished">&amp;Save Image...</translation>
+        <translation>&amp;Save Image...</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>&amp;Copy Image</source>
-        <translation type="unfinished">&amp;Copy Image</translation>
+        <translation>&amp;Copy Image</translation>
     </message>
     <message>
+        <location line="+28"/>
         <source>Error encoding URI into QR Code.</source>
-        <translation type="unfinished">Error encoding URI into QR Code.</translation>
+        <translation>Error encoding URI into QR Code.</translation>
     </message>
     <message>
+        <location line="+49"/>
         <source>Save QR Code</source>
-        <translation type="unfinished">Save QR Code</translation>
+        <translation>Save QR Code</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>PNG Image (*.png)</source>
-        <translation type="unfinished">PNG Image (*.png)</translation>
+        <translation>PNG Image (*.png)</translation>
     </message>
 </context>
 <context>
     <name>ClientModel</name>
     <message>
+        <location filename="../../clientmodel.cpp" line="+196"/>
         <source>Network Alert</source>
-        <translation type="unfinished">Network Alert</translation>
+        <translation>Network Alert</translation>
     </message>
 </context>
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Coin Selection</source>
-        <translation type="unfinished">Coin Selection</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation type="unfinished">Quantity:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation type="unfinished">Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation type="unfinished">Amount:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation type="unfinished">Dust:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation type="unfinished">Fee:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation type="unfinished">After Fee:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation type="unfinished">Change:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation type="unfinished">(un)select all</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation type="unfinished">Tree mode</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation type="unfinished">List mode</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation type="unfinished">Amount</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation type="unfinished">Received with label</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation type="unfinished">Received with address</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation type="unfinished">Date</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation type="unfinished">Confirmations</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation type="unfinished">Confirmed</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation type="unfinished">Copy address</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Copy label</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Copy amount</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation type="unfinished">Copy transaction ID</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation type="unfinished">Lock unspent</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation type="unfinished">Unlock unspent</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation type="unfinished">Copy quantity</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation type="unfinished">Copy fee</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation type="unfinished">Copy after fee</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation type="unfinished">Copy bytes</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation type="unfinished">Copy dust</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation type="unfinished">Copy change</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation type="unfinished">(%1 locked)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation type="unfinished">yes</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation type="unfinished">no</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation type="unfinished">This label turns red if any recipient receives an amount smaller than the current dust threshold.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation type="unfinished">Can vary +/- %1 satoshi(s) per input.</translation>
-    </message>
-    <message>
+        <location filename="../../coincontroldialog.cpp" line="+656"/>
+        <location line="+52"/>
         <source>(no label)</source>
-        <translation type="unfinished">(no label)</translation>
+        <translation>(no label)</translation>
     </message>
     <message>
+        <location filename="../../forms/coincontroldialog.ui" line="+14"/>
+        <source>Coin Selection</source>
+        <translation>Coin Selection</translation>
+    </message>
+    <message>
+        <location line="+34"/>
+        <source>Quantity:</source>
+        <translation>Quantity:</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>Amount:</source>
+        <translation>Amount:</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>Dust:</source>
+        <translation>Dust:</translation>
+    </message>
+    <message>
+        <location line="+48"/>
+        <source>Fee:</source>
+        <translation>Fee:</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>After Fee:</source>
+        <translation>After Fee:</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>Change:</source>
+        <translation>Change:</translation>
+    </message>
+    <message>
+        <location line="+56"/>
+        <source>(un)select all</source>
+        <translation>(un)select all</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Tree mode</source>
+        <translation>Tree mode</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>List mode</source>
+        <translation>List mode</translation>
+    </message>
+    <message>
+        <location line="+56"/>
+        <source>Amount</source>
+        <translation>Amount</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Received with label</source>
+        <translation>Received with label</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Received with address</source>
+        <translation>Received with address</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Confirmations</source>
+        <translation>Confirmations</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Confirmed</source>
+        <translation>Confirmed</translation>
+    </message>
+    <message>
+        <location filename="../../coincontroldialog.cpp" line="-644"/>
+        <source>Copy address</source>
+        <translation>Copy address</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy label</source>
+        <translation>Copy label</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+31"/>
+        <source>Copy amount</source>
+        <translation>Copy amount</translation>
+    </message>
+    <message>
+        <location line="-29"/>
+        <source>Copy transaction ID</source>
+        <translation>Copy transaction ID</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Lock unspent</source>
+        <translation>Lock unspent</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Unlock unspent</source>
+        <translation>Unlock unspent</translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>Copy quantity</source>
+        <translation>Copy quantity</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Copy fee</source>
+        <translation>Copy fee</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy after fee</source>
+        <translation>Copy after fee</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy bytes</source>
+        <translation>Copy bytes</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy dust</source>
+        <translation>Copy dust</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy change</source>
+        <translation>Copy change</translation>
+    </message>
+    <message>
+        <location line="+326"/>
+        <source>(%1 locked)</source>
+        <translation>(%1 locked)</translation>
+    </message>
+    <message>
+        <location line="+156"/>
+        <source>yes</source>
+        <translation>yes</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>This label turns red if any recipient receives an amount smaller than the current dust threshold.</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Can vary +/- %1 satoshi(s) per input.</translation>
+    </message>
+    <message>
+        <location line="+87"/>
         <source>change from %1 (%2)</source>
-        <translation type="unfinished">change from %1 (%2)</translation>
+        <translation>change from %1 (%2)</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>(change)</source>
-        <translation type="unfinished">(change)</translation>
+        <translation>(change)</translation>
     </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation type="unfinished">Edit Address</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation type="unfinished">&amp;Label</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation type="unfinished">The label associated with this address list entry</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation type="unfinished">&amp;Address</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation type="unfinished">The address associated with this address list entry. This can only be modified for sending addresses.</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
+        <location filename="../../editaddressdialog.cpp" line="+37"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location line="-3"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="../../forms/editaddressdialog.ui" line="+14"/>
+        <source>Edit Address</source>
+        <translation>Edit Address</translation>
+    </message>
+    <message>
+        <location line="+26"/>
+        <source>&amp;Label</source>
+        <translation>&amp;Label</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>The label associated with this address list entry</source>
+        <translation>The label associated with this address list entry</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>&amp;Address</source>
+        <translation>&amp;Address</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>The address associated with this address list entry. This can only be modified for sending addresses.</translation>
+    </message>
+    <message>
+        <location filename="../../editaddressdialog.cpp" line="+21"/>
         <source>New receiving address</source>
-        <translation type="unfinished">New receiving address</translation>
+        <translation>New receiving address</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>New sending address</source>
-        <translation type="unfinished">New sending address</translation>
+        <translation>New sending address</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Edit receiving address</source>
-        <translation type="unfinished">Edit receiving address</translation>
+        <translation>Edit receiving address</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Edit sending address</source>
-        <translation type="unfinished">Edit sending address</translation>
+        <translation>Edit sending address</translation>
     </message>
     <message>
+        <location line="+71"/>
         <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
-        <translation type="unfinished">The entered address &quot;%1&quot; is not a valid Gulden address.</translation>
+        <translation>The entered address &quot;%1&quot; is not a valid Gulden address.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation type="unfinished">The entered address &quot;%1&quot; is already in the address book.</translation>
+        <translation>The entered address &quot;%1&quot; is already in the address book.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>Could not unlock wallet.</source>
-        <translation type="unfinished">Could not unlock wallet.</translation>
+        <translation>Could not unlock wallet.</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>New key generation failed.</source>
-        <translation type="unfinished">New key generation failed.</translation>
+        <translation>New key generation failed.</translation>
     </message>
 </context>
 <context>
     <name>ExchangeRateDialog</name>
     <message>
+        <location filename="../../_Gulden/forms/exchangeratedialog.ui" line="+20"/>
         <source>Select currency</source>
-        <translation type="unfinished">Select currency</translation>
+        <translation>Select currency</translation>
     </message>
 </context>
 <context>
     <name>FreespaceChecker</name>
     <message>
+        <location filename="../../intro.cpp" line="+83"/>
         <source>A new data directory will be created.</source>
-        <translation type="unfinished">A new data directory will be created.</translation>
+        <translation>A new data directory will be created.</translation>
     </message>
     <message>
+        <location line="+22"/>
         <source>name</source>
-        <translation type="unfinished">name</translation>
+        <translation>name</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <translation type="unfinished">Directory already exists. Add %1 if you intend to create a new directory here.</translation>
+        <translation>Directory already exists. Add %1 if you intend to create a new directory here.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Path already exists, and is not a directory.</source>
-        <translation type="unfinished">Path already exists, and is not a directory.</translation>
+        <translation>Path already exists, and is not a directory.</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Cannot create data directory here.</source>
-        <translation type="unfinished">Cannot create data directory here.</translation>
+        <translation>Cannot create data directory here.</translation>
     </message>
 </context>
 <context>
     <name>GUI</name>
     <message>
-        <source>Pending confirmation: %1</source>
-        <translation type="unfinished">Pending confirmation: %1</translation>
-    </message>
-    <message>
-        <source>Pending maturity: %1</source>
-        <translation type="unfinished">Pending maturity: %1</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+246"/>
+        <location line="+22"/>
+        <location line="+35"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
     <message>
-        <source>Renewing witness account will incur a transaction fee: </source>
-        <translation type="unfinished">Renewing witness account will incur a transaction fee: </translation>
-    </message>
-    <message>
-        <source>Send</source>
-        <translation type="unfinished">Send</translation>
-    </message>
-    <message>
+        <location line="-49"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location line="-36"/>
+        <source>Total funds: </source>
+        <translation type="unfinished">Total funds: </translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Locked funds: </source>
+        <translation type="unfinished">Locked funds: </translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Funds awaiting confirmation: </source>
+        <translation type="unfinished">Funds awaiting confirmation: </translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Spendable funds: </source>
+        <translation type="unfinished">Spendable funds: </translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Renewing witness account will incur a transaction fee: </source>
+        <translation>Renewing witness account will incur a transaction fee: </translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Send</source>
+        <translation>Send</translation>
+    </message>
+    <message>
+        <location line="+48"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
-        <translation type="unfinished">The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
+        <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
     <message>
-        <source>Warning toolbar</source>
-        <translation type="unfinished">Warning toolbar</translation>
-    </message>
-    <message>
+        <location line="+35"/>
         <source>Tabs toolbar</source>
-        <translation type="unfinished">Tabs toolbar</translation>
+        <translation>Tabs toolbar</translation>
     </message>
     <message>
+        <location line="+41"/>
         <source>My accounts</source>
-        <translation type="unfinished">My accounts</translation>
+        <translation>My accounts</translation>
     </message>
     <message>
+        <location line="+51"/>
         <source>Add account</source>
-        <translation type="unfinished">Add account</translation>
+        <translation>Add account</translation>
     </message>
     <message>
+        <location line="+125"/>
         <source>&amp;Password</source>
-        <translation type="unfinished">&amp;Password</translation>
+        <translation>&amp;Password</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Change wallet password</source>
-        <translation type="unfinished">Change wallet password</translation>
+        <translation>Change wallet password</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>&amp;Backup</source>
-        <translation type="unfinished">&amp;Backup</translation>
+        <translation>&amp;Backup</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Backup wallet</source>
-        <translation type="unfinished">Backup wallet</translation>
+        <translation>Backup wallet</translation>
     </message>
     <message>
+        <location filename="../../gui.cpp" line="+362"/>
+        <location line="+6"/>
         <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;Overview</translation>
+        <translation>&amp;Overview</translation>
     </message>
     <message>
+        <location line="-4"/>
         <source>View statistics and information for witness account.</source>
-        <translation type="unfinished">View statistics and information for witness account.</translation>
+        <translation>View statistics and information for witness account.</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Show general overview of wallet</source>
-        <translation type="unfinished">Show general overview of wallet</translation>
+        <translation>Show general overview of wallet</translation>
     </message>
     <message>
+        <location line="+6"/>
+        <location line="+8"/>
         <source>&amp;Send</source>
-        <translation type="unfinished">&amp;Send</translation>
+        <translation>&amp;Send</translation>
     </message>
     <message>
+        <location line="-6"/>
         <source>Send coins to a Gulden address</source>
-        <translation type="unfinished">Send coins to a Gulden address</translation>
+        <translation>Send coins to a Gulden address</translation>
     </message>
     <message>
+        <location line="+11"/>
+        <location line="+8"/>
         <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;Receive</translation>
+        <translation>&amp;Receive</translation>
     </message>
     <message>
+        <location line="-6"/>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation type="unfinished">Request payments (generates QR codes and gulden: URIs)</translation>
+        <translation>Request payments (generates QR codes and gulden: URIs)</translation>
     </message>
     <message>
+        <location line="+11"/>
         <source>&amp;Transactions</source>
-        <translation type="unfinished">&amp;Transactions</translation>
+        <translation>&amp;Transactions</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Browse transaction history</source>
-        <translation type="unfinished">Browse transaction history</translation>
+        <translation>Browse transaction history</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>&amp;Show / Hide</source>
-        <translation type="unfinished">&amp;Show / Hide</translation>
+        <translation>&amp;Show / Hide</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Show or hide the main Window</source>
-        <translation type="unfinished">Show or hide the main Window</translation>
+        <translation>Show or hide the main Window</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Import key</source>
-        <translation type="unfinished">&amp;Import key</translation>
+        <translation>&amp;Import key</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Import a private key address</source>
-        <translation type="unfinished">Import a private key address</translation>
+        <translation>Import a private key address</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Import witness</source>
-        <translation type="unfinished">&amp;Import witness</translation>
+        <translation>&amp;Import witness</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Import a witness-only account</source>
-        <translation type="unfinished">Import a witness-only account</translation>
+        <translation>Import a witness-only account</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Rescan transactions</source>
-        <translation type="unfinished">&amp;Rescan transactions</translation>
+        <translation>&amp;Rescan transactions</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation type="unfinished">Rescan the blockchain looking for any missing transactions</translation>
+        <translation>Rescan the blockchain looking for any missing transactions</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Open &amp;URI...</source>
-        <translation type="unfinished">Open &amp;URI...</translation>
+        <translation>Open &amp;URI...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Open a gulden: URI or payment request</source>
-        <translation type="unfinished">Open a gulden: URI or payment request</translation>
+        <translation>Open a gulden: URI or payment request</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Backup Wallet...</source>
-        <translation type="unfinished">&amp;Backup Wallet...</translation>
+        <translation>&amp;Backup Wallet...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Backup wallet to another location</source>
-        <translation type="unfinished">Backup wallet to another location</translation>
+        <translation>Backup wallet to another location</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Sending addresses...</translation>
+        <translation>&amp;Sending addresses...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">Show the list of used sending addresses and labels</translation>
+        <translation>Show the list of used sending addresses and labels</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">&amp;Receiving addresses...</translation>
+        <translation>&amp;Receiving addresses...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">Show the list of used receiving addresses and labels</translation>
+        <translation>Show the list of used receiving addresses and labels</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>E&amp;xit</source>
-        <translation type="unfinished">E&amp;xit</translation>
+        <translation>E&amp;xit</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Quit application</source>
-        <translation type="unfinished">Quit application</translation>
+        <translation>Quit application</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>&amp;Debug window</source>
-        <translation type="unfinished">&amp;Debug window</translation>
+        <translation>&amp;Debug window</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Open debugging and diagnostic console</source>
-        <translation type="unfinished">Open debugging and diagnostic console</translation>
+        <translation>Open debugging and diagnostic console</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Command-line options</source>
-        <translation type="unfinished">&amp;Command-line options</translation>
+        <translation>&amp;Command-line options</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation type="unfinished">Show the %1 help message to get a list with possible Gulden command-line options</translation>
+        <translation>Show the %1 help message to get a list with possible Gulden command-line options</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;About %1</source>
-        <translation type="unfinished">&amp;About %1</translation>
+        <translation>&amp;About %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Show information about %1</source>
-        <translation type="unfinished">Show information about %1</translation>
+        <translation>Show information about %1</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>About &amp;Qt</source>
-        <translation type="unfinished">About &amp;Qt</translation>
+        <translation>About &amp;Qt</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Show information about Qt</source>
-        <translation type="unfinished">Show information about Qt</translation>
+        <translation>Show information about Qt</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Encrypt Wallet...</source>
-        <translation type="unfinished">&amp;Encrypt Wallet...</translation>
+        <translation>&amp;Encrypt Wallet...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Encrypt the private keys that belong to your wallet</source>
-        <translation type="unfinished">Encrypt the private keys that belong to your wallet</translation>
+        <translation>Encrypt the private keys that belong to your wallet</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>&amp;Change Passphrase...</source>
-        <translation type="unfinished">&amp;Change Passphrase...</translation>
+        <translation>&amp;Change Passphrase...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Change the passphrase used for wallet encryption</source>
-        <translation type="unfinished">Change the passphrase used for wallet encryption</translation>
+        <translation>Change the passphrase used for wallet encryption</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Options...</source>
-        <translation type="unfinished">&amp;Options...</translation>
+        <translation>&amp;Options...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Modify configuration options for %1</source>
-        <translation type="unfinished">Modify configuration options for %1</translation>
+        <translation>Modify configuration options for %1</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>&amp;Select currency</source>
-        <translation type="unfinished">&amp;Select currency</translation>
+        <translation>&amp;Select currency</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Change the local currency that is used to display estimates</source>
-        <translation type="unfinished">Change the local currency that is used to display estimates</translation>
+        <translation>Change the local currency that is used to display estimates</translation>
     </message>
     <message>
+        <location line="+46"/>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;File</translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Settings</translation>
+        <translation>&amp;Settings</translation>
     </message>
     <message>
+        <location line="+11"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished">&amp;Tools</translation>
+        <translation>&amp;Tools</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Help</translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
+        <location line="+174"/>
         <source>%1 client</source>
-        <translation type="unfinished">%1 client</translation>
+        <translation>%1 client</translation>
     </message>
     <message>
+        <location line="+90"/>
         <source>Debug window</source>
-        <translation type="unfinished">Debug window</translation>
+        <translation>Debug window</translation>
     </message>
     <message numerus="yes">
+        <location line="+135"/>
         <source>%n active connection(s) to Gulden network</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n active connection(s) to Gulden network</numerusform>
             <numerusform>%n active connection(s) to Gulden network</numerusform>
         </translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Click to disable network activity.</source>
-        <translation type="unfinished">Click to disable network activity.</translation>
+        <translation>Click to disable network activity.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Network activity disabled.</source>
-        <translation type="unfinished">Network activity disabled.</translation>
+        <translation>Network activity disabled.</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Click to enable network activity again.</source>
-        <translation type="unfinished">Click to enable network activity again.</translation>
+        <translation>Click to enable network activity again.</translation>
     </message>
     <message>
+        <location line="+30"/>
         <source>Syncing Headers (%1%)...</source>
-        <translation type="unfinished">Syncing Headers (%1%)...</translation>
+        <translation>Syncing Headers (%1%)...</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Wallet</source>
-        <translation type="unfinished">Wallet</translation>
+        <translation>Wallet</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Node</source>
-        <translation type="unfinished">Node</translation>
+        <translation>Node</translation>
     </message>
     <message>
+        <location line="+60"/>
         <source>Synchronizing with network...</source>
-        <translation type="unfinished">Synchronizing with network...</translation>
+        <translation>Synchronizing with network...</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Indexing blocks on disk...</source>
-        <translation type="unfinished">Indexing blocks on disk...</translation>
+        <translation>Indexing blocks on disk...</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Processing blocks on disk...</source>
-        <translation type="unfinished">Processing blocks on disk...</translation>
+        <translation>Processing blocks on disk...</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Reindexing blocks on disk...</source>
-        <translation type="unfinished">Reindexing blocks on disk...</translation>
+        <translation>Reindexing blocks on disk...</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Connecting to peers...</source>
-        <translation type="unfinished">Connecting to peers...</translation>
+        <translation>Connecting to peers...</translation>
     </message>
     <message numerus="yes">
+        <location line="+9"/>
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Processed %n block(s) of transaction history.</numerusform>
             <numerusform>Processed %n block(s) of transaction history.</numerusform>
         </translation>
     </message>
     <message>
+        <location line="+14"/>
         <source>Up to date</source>
-        <translation type="unfinished">Up to date</translation>
+        <translation>Up to date</translation>
     </message>
     <message>
+        <location line="+21"/>
         <source>%1 behind</source>
-        <translation type="unfinished">%1 behind</translation>
+        <translation>%1 behind</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation type="unfinished">Catching up... %1% complete.&lt;br&gt;</translation>
+        <translation>Catching up... %1% complete.&lt;br&gt;</translation>
     </message>
     <message>
+        <location line="+24"/>
         <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation type="unfinished">Transactions and balances will not be accurate or correct until synchronisation is complete.</translation>
+        <translation>Transactions and balances will not be accurate or correct until synchronisation is complete.</translation>
     </message>
     <message>
+        <location line="+45"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Error</translation>
     </message>
     <message>
+        <location line="+3"/>
+        <location line="+321"/>
         <source>Warning</source>
-        <translation type="unfinished">Warning</translation>
+        <translation>Warning</translation>
     </message>
     <message>
+        <location line="-318"/>
         <source>Information</source>
-        <translation type="unfinished">Information</translation>
+        <translation>Information</translation>
     </message>
     <message>
+        <location line="+128"/>
         <source>Date: %1
 </source>
-        <translation type="unfinished">Date: %1
+        <translation>Date: %1
 </translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Received: %1
 </source>
-        <translation type="unfinished">Received: %1
+        <translation>Received: %1
 </translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Sent: %1
 </source>
-        <translation type="unfinished">Sent: %1
+        <translation>Sent: %1
 </translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Type: %1
 </source>
-        <translation type="unfinished">Type: %1
+        <translation>Type: %1
 </translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Label: %1
 </source>
-        <translation type="unfinished">Label: %1
+        <translation>Label: %1
 </translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Address: %1
 </source>
-        <translation type="unfinished">Address: %1
+        <translation>Address: %1
 </translation>
     </message>
     <message>
+        <location line="+18"/>
         <source>Sent funds%1</source>
-        <translation type="unfinished">Sent funds%1</translation>
+        <translation>Sent funds%1</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Incoming funds%1</source>
-        <translation type="unfinished">Incoming funds%1</translation>
+        <translation>Incoming funds%1</translation>
     </message>
     <message>
+        <location line="+75"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</translation>
+        <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</translation>
     </message>
     <message>
+        <location line="+8"/>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation type="unfinished">Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
+        <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
     <message>
+        <location filename="../../gulden.cpp" line="+562"/>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation type="unfinished">A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
+        <translation>A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
+    </message>
+</context>
+<context>
+    <name>Gulden</name>
+    <message>
+        <location filename="../../guldenstrings.cpp" line="+10"/>
+        <source>Done loading</source>
+        <translation>Done loading</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Error reading from database, shutting down.</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Incorrect or no genesis block found. Wrong datadir for network?</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Legacy account</source>
+        <translation>Legacy account</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading P2P addresses...</source>
+        <translation>Loading P2P addresses...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading banlist...</source>
+        <translation>Loading banlist...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading block index...</source>
+        <translation>Loading block index...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading wallet...</source>
+        <translation>Loading wallet...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>My account</source>
+        <translation>My account</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Wallet unlock required for wallet upgrade</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Zapping all transactions from wallet...</translation>
+    </message>
+    <message>
+        <location line="-8"/>
+        <source>Pruning blockstore...</source>
+        <translation>Pruning blockstore...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Reloading block index...</source>
+        <translation>Reloading block index...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rescanning...</source>
+        <translation>Rescanning...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rewinding blocks...</source>
+        <translation>Rewinding blocks...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Starting network threads...</source>
+        <translation>Starting network threads...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Upgrading block index...</source>
+        <translation>Upgrading block index...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Verifying blocks...</source>
+        <translation>Verifying blocks...</translation>
     </message>
 </context>
 <context>
     <name>GuldenAmountField</name>
     <message>
+        <location filename="../../amountfield.cpp" line="+308"/>
         <source>Gulden</source>
-        <translation type="unfinished">Gulden</translation>
+        <translation>Gulden</translation>
     </message>
 </context>
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <source>All</source>
-        <translation type="unfinished">All</translation>
-    </message>
-    <message>
-        <source>Receiving address</source>
-        <translation type="unfinished">Receiving address</translation>
-    </message>
-    <message>
-        <source>Enter receiving address (Gulden, IBAN)</source>
-        <translation type="unfinished">Enter receiving address (Gulden, IBAN)</translation>
-    </message>
-    <message>
-        <source>Enter label</source>
-        <translation type="unfinished">Enter label</translation>
-    </message>
-    <message>
-        <source>Add to address book</source>
-        <translation type="unfinished">Add to address book</translation>
-    </message>
-    <message>
-        <source>Address book</source>
-        <translation type="unfinished">Address book</translation>
-    </message>
-    <message>
-        <source>My accounts</source>
-        <translation type="unfinished">My accounts</translation>
-    </message>
-    <message>
-        <source>Lock funds for:</source>
-        <translation type="unfinished">Lock funds for:</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation type="unfinished">1 month</translation>
-    </message>
-    <message>
-        <source>3 years</source>
-        <translation type="unfinished">3 years</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
-        <translation type="unfinished">Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</translation>
-    </message>
-    <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation type="unfinished">Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
-    </message>
-    <message>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation type="unfinished">Amount exceeds maximum for IBAN payment.</translation>
-    </message>
-    <message>
-        <source>Amount below minimum for IBAN payment.</source>
-        <translation type="unfinished">Amount below minimum for IBAN payment.</translation>
-    </message>
-    <message>
-        <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished">The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
-    </message>
-    <message>
-        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation type="unfinished">The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+487"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
     <message>
-        <source>Are you sure you want to delete %1 from the address book?</source>
-        <translation type="unfinished">Are you sure you want to delete %1 from the address book?</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished">Delete</translation>
-    </message>
-    <message>
+        <location line="+241"/>
+        <location line="+66"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+254"/>
+        <source>My accounts</source>
+        <translation>My accounts</translation>
+    </message>
+    <message>
+        <location line="-202"/>
+        <source>All</source>
+        <translation>All</translation>
+    </message>
+    <message>
+        <location line="+42"/>
+        <source>Receiving address</source>
+        <translation>Receiving address</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Enter receiving address (Gulden, IBAN)</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Enter label</source>
+        <translation>Enter label</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Add to address book</source>
+        <translation>Add to address book</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Address book</source>
+        <translation>Address book</translation>
+    </message>
+    <message>
+        <location line="+173"/>
+        <source>Lock funds for:</source>
+        <translation>Lock funds for:</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+135"/>
+        <source>1 month</source>
+        <translation>1 month</translation>
+    </message>
+    <message>
+        <location line="+44"/>
+        <source>3 years</source>
+        <translation>3 years</translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
+        <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-537"/>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Amount exceeds maximum for IBAN payment.</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Amount below minimum for IBAN payment.</translation>
+    </message>
+    <message>
+        <location line="+85"/>
+        <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
+        <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
+    </message>
+    <message>
+        <location line="+242"/>
+        <source>Are you sure you want to delete %1 from the address book?</source>
+        <translation>Are you sure you want to delete %1 from the address book?</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Delete</source>
+        <translation>Delete</translation>
+    </message>
+    <message>
+        <location line="+62"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Save</translation>
     </message>
     <message>
-        <source>A minimum amount of 5000 is required.</source>
-        <translation type="unfinished">A minimum amount of 5000 is required.</translation>
+        <location line="+65"/>
+        <source>A minimum amount of %1 is required.</source>
+        <translation>A minimum amount of %1 is required.</translation>
     </message>
     <message>
-        <source>A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</source>
-        <translation type="unfinished">A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</translation>
+        <location line="+45"/>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>1 year</source>
-        <translation type="unfinished">1 year</translation>
+        <translation>1 year</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>%1 years</source>
-        <translation type="unfinished">%1 years</translation>
+        <translation>%1 years</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>%1 months</source>
-        <translation type="unfinished">%1 months</translation>
+        <translation>%1 months</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
 
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</source>
-        <translation type="unfinished">Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+        <translation>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
 
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</translation>
     </message>
     <message>
+        <location line="+56"/>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation type="unfinished">Will require approximately %1 Gulden including IBAN service fee</translation>
+        <translation>Will require approximately %1 Gulden including IBAN service fee</translation>
     </message>
 </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
+        <location filename="../../utilitydialog.cpp" line="+49"/>
         <source>version</source>
-        <translation type="unfinished">version</translation>
+        <translation>version</translation>
     </message>
     <message>
+        <location line="+5"/>
+        <location line="+2"/>
         <source>(%1-bit)</source>
-        <translation type="unfinished">(%1-bit)</translation>
+        <translation>(%1-bit)</translation>
     </message>
     <message>
+        <location line="+5"/>
         <source>About %1</source>
-        <translation type="unfinished">About %1</translation>
+        <translation>About %1</translation>
     </message>
     <message>
+        <location line="+19"/>
         <source>Command-line options</source>
-        <translation type="unfinished">Command-line options</translation>
+        <translation>Command-line options</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Usage:</source>
-        <translation type="unfinished">Usage:</translation>
+        <translation>Usage:</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>command-line options</source>
-        <translation type="unfinished">command-line options</translation>
+        <translation>command-line options</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>UI Options:</source>
-        <translation type="unfinished">UI Options:</translation>
+        <translation>UI Options:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Choose data directory on startup (default: %u)</source>
-        <translation type="unfinished">Choose data directory on startup (default: %u)</translation>
+        <translation>Choose data directory on startup (default: %u)</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation type="unfinished">Set language, for example &quot;de_DE&quot; (default: system locale)</translation>
+        <translation>Set language, for example &quot;de_DE&quot; (default: system locale)</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Start minimized</source>
-        <translation type="unfinished">Start minimized</translation>
+        <translation>Start minimized</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation type="unfinished">Set SSL root certificates for payment request (default: -system-)</translation>
+        <translation>Set SSL root certificates for payment request (default: -system-)</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Reset all settings changed in the GUI</source>
-        <translation type="unfinished">Reset all settings changed in the GUI</translation>
+        <translation>Reset all settings changed in the GUI</translation>
     </message>
 </context>
 <context>
     <name>ImportPrivKeyDialog</name>
     <message>
-        <source>Import private key</source>
-        <translation type="unfinished">Import private key</translation>
-    </message>
-    <message>
-        <source>Private &amp;key</source>
-        <translation type="unfinished">Private &amp;key</translation>
-    </message>
-    <message>
-        <source>Enter a private key to import</source>
-        <translation type="unfinished">Enter a private key to import</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/importprivkeydialog.cpp" line="+27"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/importprivkeydialog.ui" line="+14"/>
+        <source>Import private key</source>
+        <translation>Import private key</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>Private &amp;key</source>
+        <translation>Private &amp;key</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Enter a private key to import</source>
+        <translation>Enter a private key to import</translation>
     </message>
 </context>
 <context>
     <name>ImportWitnessDialog</name>
     <message>
-        <source>Import witness from URL</source>
-        <translation type="unfinished">Import witness from URL</translation>
-    </message>
-    <message>
-        <source>W&amp;itness only URL</source>
-        <translation type="unfinished">W&amp;itness only URL</translation>
-    </message>
-    <message>
-        <source>Enter a witness-only URL to import</source>
-        <translation type="unfinished">Enter a witness-only URL to import</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/importwitnessdialog.cpp" line="+27"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/importwitnessdialog.ui" line="+14"/>
+        <source>Import witness from URL</source>
+        <translation>Import witness from URL</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>W&amp;itness only URL</source>
+        <translation>W&amp;itness only URL</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Enter a witness-only URL to import</source>
+        <translation>Enter a witness-only URL to import</translation>
     </message>
 </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>Welcome</source>
-        <translation type="unfinished">Welcome</translation>
-    </message>
-    <message>
-        <source>Welcome to %1.</source>
-        <translation type="unfinished">Welcome to %1.</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation type="unfinished">As this is the first time the program is launched, you can choose where %1 will store its data.</translation>
-    </message>
-    <message>
-        <source>Use the default data directory</source>
-        <translation type="unfinished">Use the default data directory</translation>
-    </message>
-    <message>
-        <source>Use a custom data directory:</source>
-        <translation type="unfinished">Use a custom data directory:</translation>
-    </message>
-    <message>
-        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation type="unfinished">When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</translation>
-    </message>
-    <message>
-        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
-        <translation type="unfinished">This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</translation>
-    </message>
-    <message>
-        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
-        <translation type="unfinished">If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</translation>
-    </message>
-    <message>
-        <source>Gulden</source>
-        <translation type="unfinished">Gulden</translation>
-    </message>
-    <message>
-        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
-        <translation type="unfinished">At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
-    </message>
-    <message>
-        <source>Approximately %1 GB of data will be stored in this directory.</source>
-        <translation type="unfinished">Approximately %1 GB of data will be stored in this directory.</translation>
-    </message>
-    <message>
-        <source>%1 will download and store a copy of the Gulden block chain.</source>
-        <translation type="unfinished">%1 will download and store a copy of the Gulden block chain.</translation>
-    </message>
-    <message>
-        <source>The wallet will also be stored in this directory.</source>
-        <translation type="unfinished">The wallet will also be stored in this directory.</translation>
-    </message>
-    <message>
-        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
-        <translation type="unfinished">Error: Specified data directory &quot;%1&quot; cannot be created.</translation>
-    </message>
-    <message>
+        <location filename="../../intro.cpp" line="+137"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location line="-117"/>
+        <source>Gulden</source>
+        <translation>Gulden</translation>
+    </message>
+    <message>
+        <location filename="../../forms/intro.ui" line="+14"/>
+        <source>Welcome</source>
+        <translation>Welcome</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Welcome to %1.</source>
+        <translation>Welcome to %1.</translation>
+    </message>
+    <message>
+        <location line="+26"/>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>As this is the first time the program is launched, you can choose where %1 will store its data.</translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Use the default data directory</source>
+        <translation>Use the default data directory</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Use a custom data directory:</source>
+        <translation>Use a custom data directory:</translation>
+    </message>
+    <message>
+        <location line="+133"/>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</translation>
+    </message>
+    <message>
+        <location filename="../../intro.cpp" line="+6"/>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>Approximately %1 GB of data will be stored in this directory.</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>%1 will download and store a copy of the Gulden block chain.</source>
+        <translation>%1 will download and store a copy of the Gulden block chain.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>The wallet will also be stored in this directory.</translation>
+    </message>
+    <message>
+        <location line="+70"/>
+        <source>Error: Specified data directory &quot;%1&quot; cannot be created.</source>
+        <translation>Error: Specified data directory &quot;%1&quot; cannot be created.</translation>
     </message>
     <message numerus="yes">
+        <location line="+35"/>
         <source>%n GB of free space available</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n GB of free space available</numerusform>
             <numerusform>%n GB of free space available</numerusform>
         </translation>
     </message>
     <message numerus="yes">
+        <location line="+3"/>
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>(of %n GB needed)</numerusform>
             <numerusform>(of %n GB needed)</numerusform>
         </translation>
-    </message>
-</context>
-<context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation type="unfinished">Form</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
-    </message>
-    <message>
-        <source>Progress</source>
-        <translation type="unfinished">Progress</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation type="unfinished">Hide</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation type="unfinished">&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
     </message>
 </context>
 <context>
     <name>NewAccountDialog</name>
     <message>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="+63"/>
         <source>Enter name of account.</source>
-        <translation type="unfinished">Enter name of account.</translation>
+        <translation>Enter name of account.</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
-    </message>
-    <message>
-        <source> Connect to mobile Gulden app</source>
-        <translation type="unfinished"> Connect to mobile Gulden app</translation>
-    </message>
-    <message>
+        <location line="+62"/>
+        <location line="+100"/>
         <source>Done</source>
-        <translation type="unfinished">Done</translation>
+        <translation>Done</translation>
     </message>
     <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation type="unfinished">Scan QR to connect your mobile Gulden app</translation>
-    </message>
-    <message>
-        <source>Transactional account</source>
-        <translation type="unfinished">Transactional account</translation>
-    </message>
-    <message>
-        <source>Witness account</source>
-        <translation type="unfinished">Witness account</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="+91"/>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation type="unfinished">Click here to make QR code visible.
+        <translation>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="-127"/>
+        <location line="+107"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location line="-87"/>
+        <source> Connect to mobile Gulden app</source>
+        <translation> Connect to mobile Gulden app</translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Scan QR to connect your mobile Gulden app</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="-30"/>
+        <source>Transactional account</source>
+        <translation>Transactional account</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Witness account</source>
+        <translation>Witness account</translation>
     </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
+        <location filename="../../forms/openuridialog.ui" line="+14"/>
         <source>Open URI</source>
-        <translation type="unfinished">Open URI</translation>
+        <translation>Open URI</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Open payment request from URI or file</source>
-        <translation type="unfinished">Open payment request from URI or file</translation>
+        <translation>Open payment request from URI or file</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>URI:</source>
-        <translation type="unfinished">URI:</translation>
+        <translation>URI:</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Select payment request file</source>
-        <translation type="unfinished">Select payment request file</translation>
+        <translation>Select payment request file</translation>
     </message>
     <message>
+        <location filename="../../openuridialog.cpp" line="+54"/>
         <source>Select payment request file to open</source>
-        <translation type="unfinished">Select payment request file to open</translation>
+        <translation>Select payment request file to open</translation>
     </message>
 </context>
 <context>
     <name>OptionsDialog</name>
     <message>
-        <source>Options</source>
-        <translation type="unfinished">Options</translation>
-    </message>
-    <message>
-        <source>&amp;Main</source>
-        <translation type="unfinished">&amp;Main</translation>
-    </message>
-    <message>
-        <source>Automatically start %1 after logging in to the system.</source>
-        <translation type="unfinished">Automatically start %1 after logging in to the system.</translation>
-    </message>
-    <message>
-        <source>&amp;Start %1 on system login</source>
-        <translation type="unfinished">&amp;Start %1 on system login</translation>
-    </message>
-    <message>
-        <source>Size of &amp;database cache</source>
-        <translation type="unfinished">Size of &amp;database cache</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="unfinished">MB</translation>
-    </message>
-    <message>
-        <source>Number of script &amp;verification threads</source>
-        <translation type="unfinished">Number of script &amp;verification threads</translation>
-    </message>
-    <message>
-        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <translation type="unfinished">(0 = auto, &lt;0 = leave that many cores free)</translation>
-    </message>
-    <message>
-        <source>W&amp;allet</source>
-        <translation type="unfinished">W&amp;allet</translation>
-    </message>
-    <message>
-        <source>Expert</source>
-        <translation type="unfinished">Expert</translation>
-    </message>
-    <message>
-        <source>Whether to show coin control features or not.</source>
-        <translation type="unfinished">Whether to show coin control features or not.</translation>
-    </message>
-    <message>
-        <source>Enable coin &amp;control features</source>
-        <translation type="unfinished">Enable coin &amp;control features</translation>
-    </message>
-    <message>
-        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
-        <translation type="unfinished">If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</translation>
-    </message>
-    <message>
-        <source>&amp;Spend unconfirmed change</source>
-        <translation type="unfinished">&amp;Spend unconfirmed change</translation>
-    </message>
-    <message>
-        <source>&amp;Network</source>
-        <translation type="unfinished">&amp;Network</translation>
-    </message>
-    <message>
-        <source>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation type="unfinished">Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</translation>
-    </message>
-    <message>
-        <source>Map port using &amp;UPnP</source>
-        <translation type="unfinished">Map port using &amp;UPnP</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside</source>
-        <translation type="unfinished">Accept connections from outside</translation>
-    </message>
-    <message>
-        <source>Allow incoming connections</source>
-        <translation type="unfinished">Allow incoming connections</translation>
-    </message>
-    <message>
-        <source>Connect to the Gulden network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Connect to the Gulden network through a SOCKS5 proxy.</translation>
-    </message>
-    <message>
-        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
-        <translation type="unfinished">&amp;Connect through SOCKS5 proxy (default proxy):</translation>
-    </message>
-    <message>
-        <source>Proxy &amp;IP:</source>
-        <translation type="unfinished">Proxy &amp;IP:</translation>
-    </message>
-    <message>
-        <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
-        <translation type="unfinished">IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
-    </message>
-    <message>
-        <source>&amp;Port:</source>
-        <translation type="unfinished">&amp;Port:</translation>
-    </message>
-    <message>
-        <source>Port of the proxy (e.g. 9050)</source>
-        <translation type="unfinished">Port of the proxy (e.g. 9050)</translation>
-    </message>
-    <message>
-        <source>Used for reaching peers via:</source>
-        <translation type="unfinished">Used for reaching peers via:</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation type="unfinished">Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation type="unfinished">IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation type="unfinished">IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation type="unfinished">Tor</translation>
-    </message>
-    <message>
-        <source>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation type="unfinished">Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation type="unfinished">Use separate SOCKS5 proxy to reach peers via Tor hidden services:</translation>
-    </message>
-    <message>
-        <source>&amp;Window</source>
-        <translation type="unfinished">&amp;Window</translation>
-    </message>
-    <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation type="unfinished">&amp;Hide the icon from the system tray.</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation type="unfinished">Hide tray icon</translation>
-    </message>
-    <message>
-        <source>Show only a tray icon after minimizing the window.</source>
-        <translation type="unfinished">Show only a tray icon after minimizing the window.</translation>
-    </message>
-    <message>
-        <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation type="unfinished">&amp;Minimize to the tray instead of the taskbar</translation>
-    </message>
-    <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished">Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
-    </message>
-    <message>
-        <source>M&amp;inimize on close</source>
-        <translation type="unfinished">M&amp;inimize on close</translation>
-    </message>
-    <message>
-        <source>&amp;Display</source>
-        <translation type="unfinished">&amp;Display</translation>
-    </message>
-    <message>
-        <source>User Interface &amp;language:</source>
-        <translation type="unfinished">User Interface &amp;language:</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
-        <translation type="unfinished">The user interface language can be set here. This setting will take effect after restarting %1.</translation>
-    </message>
-    <message>
-        <source>&amp;Unit to show amounts in:</source>
-        <translation type="unfinished">&amp;Unit to show amounts in:</translation>
-    </message>
-    <message>
-        <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">Choose the default subdivision unit to show in the interface and when sending coins.</translation>
-    </message>
-    <message>
-        <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation type="unfinished">Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</translation>
-    </message>
-    <message>
-        <source>Third party transaction URLs</source>
-        <translation type="unfinished">Third party transaction URLs</translation>
-    </message>
-    <message>
-        <source>Active command-line options that override above options:</source>
-        <translation type="unfinished">Active command-line options that override above options:</translation>
-    </message>
-    <message>
-        <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Cancel</translation>
-    </message>
-    <message>
-        <source>Reset all client options to default.</source>
-        <translation type="unfinished">Reset all client options to default.</translation>
-    </message>
-    <message>
-        <source>&amp;Reset Options</source>
-        <translation type="unfinished">&amp;Reset Options</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="unfinished">&amp;OK</translation>
-    </message>
-    <message>
-        <source>default</source>
-        <translation type="unfinished">default</translation>
-    </message>
-    <message>
-        <source>H&amp;ide to dock on close</source>
-        <translation type="unfinished">H&amp;ide to dock on close</translation>
-    </message>
-    <message>
-        <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished">Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
-    </message>
-    <message>
-        <source>Confirm options reset</source>
-        <translation type="unfinished">Confirm options reset</translation>
-    </message>
-    <message>
-        <source>Client restart required to activate changes.</source>
-        <translation type="unfinished">Client restart required to activate changes.</translation>
-    </message>
-    <message>
-        <source>Client will be shut down. Do you want to proceed?</source>
-        <translation type="unfinished">Client will be shut down. Do you want to proceed?</translation>
-    </message>
-    <message>
-        <source>Configuration options</source>
-        <translation type="unfinished">Configuration options</translation>
-    </message>
-    <message>
-        <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
-        <translation type="unfinished">The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</translation>
-    </message>
-    <message>
+        <location filename="../../optionsdialog.cpp" line="+287"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Error</translation>
     </message>
     <message>
+        <location filename="../../forms/optionsdialog.ui" line="+14"/>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>&amp;Main</source>
+        <translation>&amp;Main</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Automatically start %1 after logging in to the system.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Start %1 on system login</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Size of &amp;database cache</source>
+        <translation>Size of &amp;database cache</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>MB</source>
+        <translation>MB</translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Number of script &amp;verification threads</source>
+        <translation>Number of script &amp;verification threads</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
+        <translation>(0 = auto, &lt;0 = leave that many cores free)</translation>
+    </message>
+    <message>
+        <location line="+36"/>
+        <source>W&amp;allet</source>
+        <translation>W&amp;allet</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Expert</source>
+        <translation>Expert</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>Whether to show coin control features or not.</source>
+        <translation>Whether to show coin control features or not.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Enable coin &amp;control features</source>
+        <translation>Enable coin &amp;control features</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
+        <translation>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Spend unconfirmed change</source>
+        <translation>&amp;Spend unconfirmed change</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>&amp;Network</source>
+        <translation>&amp;Network</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Map port using &amp;UPnP</source>
+        <translation>Map port using &amp;UPnP</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Accept connections from outside</source>
+        <translation>Accept connections from outside</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Allow incoming connections</source>
+        <translation>Allow incoming connections</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Connect to the Gulden network through a SOCKS5 proxy.</source>
+        <translation>Connect to the Gulden network through a SOCKS5 proxy.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
+        <translation>&amp;Connect through SOCKS5 proxy (default proxy):</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+187"/>
+        <source>Proxy &amp;IP:</source>
+        <translation>Proxy &amp;IP:</translation>
+    </message>
+    <message>
+        <location line="-162"/>
+        <location line="+187"/>
+        <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
+        <translation>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <location line="-180"/>
+        <location line="+187"/>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <location line="-162"/>
+        <location line="+187"/>
+        <source>Port of the proxy (e.g. 9050)</source>
+        <translation>Port of the proxy (e.g. 9050)</translation>
+    </message>
+    <message>
+        <location line="-163"/>
+        <source>Used for reaching peers via:</source>
+        <translation>Used for reaching peers via:</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</translation>
+    </message>
+    <message>
+        <location line="-36"/>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</translation>
+    </message>
+    <message>
+        <location line="+102"/>
+        <source>&amp;Window</source>
+        <translation>&amp;Window</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>&amp;Hide the icon from the system tray.</source>
+        <translation>&amp;Hide the icon from the system tray.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Hide tray icon</source>
+        <translation>Hide tray icon</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Show only a tray icon after minimizing the window.</source>
+        <translation>Show only a tray icon after minimizing the window.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>&amp;Minimize to the tray instead of the taskbar</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>M&amp;inimize on close</source>
+        <translation>M&amp;inimize on close</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>&amp;Display</source>
+        <translation>&amp;Display</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>User Interface &amp;language:</source>
+        <translation>User Interface &amp;language:</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>The user interface language can be set here. This setting will take effect after restarting %1.</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>&amp;Unit to show amounts in:</source>
+        <translation>&amp;Unit to show amounts in:</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
+        <translation>Choose the default subdivision unit to show in the interface and when sending coins.</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <location line="+13"/>
+        <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</translation>
+    </message>
+    <message>
+        <location line="-10"/>
+        <source>Third party transaction URLs</source>
+        <translation>Third party transaction URLs</translation>
+    </message>
+    <message>
+        <location line="+41"/>
+        <source>Active command-line options that override above options:</source>
+        <translation>Active command-line options that override above options:</translation>
+    </message>
+    <message>
+        <location line="+46"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Cancel</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Reset all client options to default.</source>
+        <translation>Reset all client options to default.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Reset Options</source>
+        <translation>&amp;Reset Options</translation>
+    </message>
+    <message>
+        <location line="+64"/>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <location filename="../../optionsdialog.cpp" line="-180"/>
+        <source>default</source>
+        <translation>default</translation>
+    </message>
+    <message>
+        <location line="+39"/>
+        <source>H&amp;ide to dock on close</source>
+        <translation>H&amp;ide to dock on close</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation>Hide the application to the dock when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
+    </message>
+    <message>
+        <location line="+118"/>
+        <source>Confirm options reset</source>
+        <translation>Confirm options reset</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+55"/>
+        <source>Client restart required to activate changes.</source>
+        <translation>Client restart required to activate changes.</translation>
+    </message>
+    <message>
+        <location line="-55"/>
+        <source>Client will be shut down. Do you want to proceed?</source>
+        <translation>Client will be shut down. Do you want to proceed?</translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Configuration options</source>
+        <translation>Configuration options</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
+        <translation>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>The configuration file could not be opened.</source>
-        <translation type="unfinished">The configuration file could not be opened.</translation>
+        <translation>The configuration file could not be opened.</translation>
     </message>
     <message>
+        <location line="+38"/>
         <source>This change would require a client restart.</source>
-        <translation type="unfinished">This change would require a client restart.</translation>
+        <translation>This change would require a client restart.</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>The supplied proxy address is invalid.</source>
-        <translation type="unfinished">The supplied proxy address is invalid.</translation>
+        <translation>The supplied proxy address is invalid.</translation>
     </message>
 </context>
 <context>
     <name>OverviewPage</name>
     <message>
+        <location filename="../../forms/overviewpage.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
+        <location line="+46"/>
         <source>Balances</source>
-        <translation type="unfinished">Balances</translation>
+        <translation>Balances</translation>
     </message>
     <message>
+        <location line="+16"/>
+        <location line="+375"/>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</translation>
+        <translation>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</translation>
     </message>
     <message>
+        <location line="-333"/>
         <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation type="unfinished">Unconfirmed transactions to watch-only addresses</translation>
+        <translation>Unconfirmed transactions to watch-only addresses</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation type="unfinished">Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</translation>
+        <translation>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation type="unfinished">Mined balance in watch-only addresses that has not yet matured</translation>
+        <translation>Mined balance in watch-only addresses that has not yet matured</translation>
     </message>
     <message>
+        <location line="+42"/>
         <source>Total:</source>
-        <translation type="unfinished">Total:</translation>
+        <translation>Total:</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Mined balance that has not yet matured</source>
-        <translation type="unfinished">Mined balance that has not yet matured</translation>
+        <translation>Mined balance that has not yet matured</translation>
     </message>
     <message>
+        <location line="+29"/>
         <source>Immature:</source>
-        <translation type="unfinished">Immature:</translation>
+        <translation>Immature:</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Your current total balance</source>
-        <translation type="unfinished">Your current total balance</translation>
+        <translation>Your current total balance</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>Current total balance in watch-only addresses</source>
-        <translation type="unfinished">Current total balance in watch-only addresses</translation>
+        <translation>Current total balance in watch-only addresses</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Watch-only:</source>
-        <translation type="unfinished">Watch-only:</translation>
+        <translation>Watch-only:</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Available:</source>
-        <translation type="unfinished">Available:</translation>
+        <translation>Available:</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Your current spendable balance</source>
-        <translation type="unfinished">Your current spendable balance</translation>
+        <translation>Your current spendable balance</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>Your current balance in watch-only addresses</source>
-        <translation type="unfinished">Your current balance in watch-only addresses</translation>
+        <translation>Your current balance in watch-only addresses</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Pending:</source>
-        <translation type="unfinished">Pending:</translation>
+        <translation>Pending:</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Spendable:</source>
-        <translation type="unfinished">Spendable:</translation>
+        <translation>Spendable:</translation>
     </message>
     <message>
+        <location line="+49"/>
         <source>Recent transactions</source>
-        <translation type="unfinished">Recent transactions</translation>
+        <translation>Recent transactions</translation>
     </message>
 </context>
 <context>
     <name>PasswordModifyDialog</name>
     <message>
-        <source>Change password</source>
-        <translation type="unfinished">Change password</translation>
-    </message>
-    <message>
-        <source>Enter old password.</source>
-        <translation type="unfinished">Enter old password.</translation>
-    </message>
-    <message>
-        <source>Enter new password.</source>
-        <translation type="unfinished">Enter new password.</translation>
-    </message>
-    <message>
-        <source>Repeat new password.</source>
-        <translation type="unfinished">Repeat new password.</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/forms/passwordmodifydialog.ui" line="+159"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location line="+20"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location line="-121"/>
+        <source>Change password</source>
+        <translation>Change password</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <location line="+15"/>
+        <source>Enter old password.</source>
+        <translation>Enter old password.</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <location line="+15"/>
+        <source>Enter new password.</source>
+        <translation>Enter new password.</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <location line="+12"/>
+        <source>Repeat new password.</source>
+        <translation>Repeat new password.</translation>
     </message>
 </context>
 <context>
     <name>PaymentServer</name>
     <message>
+        <location filename="../../paymentserver.cpp" line="+339"/>
+        <location line="+217"/>
+        <location line="+42"/>
+        <location line="+115"/>
+        <location line="+14"/>
+        <location line="+18"/>
         <source>Payment request error</source>
-        <translation type="unfinished">Payment request error</translation>
+        <translation>Payment request error</translation>
     </message>
     <message>
+        <location line="-405"/>
         <source>Cannot start gulden: click-to-pay handler</source>
-        <translation type="unfinished">Cannot start gulden: click-to-pay handler</translation>
+        <translation>Cannot start gulden: click-to-pay handler</translation>
     </message>
     <message>
+        <location line="+104"/>
+        <location line="+14"/>
+        <location line="+7"/>
         <source>URI handling</source>
-        <translation type="unfinished">URI handling</translation>
+        <translation>URI handling</translation>
     </message>
     <message>
+        <location line="-20"/>
         <source>Payment request fetch URL is invalid: %1</source>
-        <translation type="unfinished">Payment request fetch URL is invalid: %1</translation>
+        <translation>Payment request fetch URL is invalid: %1</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Invalid payment address %1</source>
-        <translation type="unfinished">Invalid payment address %1</translation>
+        <translation>Invalid payment address %1</translation>
     </message>
     <message>
+        <location line="+8"/>
         <source>URI cannot be parsed! This can be caused by an invalid Gulden address or malformed URI parameters.</source>
-        <translation type="unfinished">URI cannot be parsed! This can be caused by an invalid Gulden address or malformed URI parameters.</translation>
+        <translation>URI cannot be parsed! This can be caused by an invalid Gulden address or malformed URI parameters.</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Payment request file handling</source>
-        <translation type="unfinished">Payment request file handling</translation>
+        <translation>Payment request file handling</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
-        <translation type="unfinished">Payment request file cannot be read! This can be caused by an invalid payment request file.</translation>
+        <translation>Payment request file cannot be read! This can be caused by an invalid payment request file.</translation>
     </message>
     <message>
+        <location line="+61"/>
+        <location line="+9"/>
+        <location line="+31"/>
+        <location line="+10"/>
+        <location line="+17"/>
+        <location line="+90"/>
         <source>Payment request rejected</source>
-        <translation type="unfinished">Payment request rejected</translation>
+        <translation>Payment request rejected</translation>
     </message>
     <message>
+        <location line="-157"/>
         <source>Payment request network doesn&apos;t match client network.</source>
-        <translation type="unfinished">Payment request network doesn&apos;t match client network.</translation>
+        <translation>Payment request network doesn&apos;t match client network.</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>Payment request expired.</source>
-        <translation type="unfinished">Payment request expired.</translation>
+        <translation>Payment request expired.</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Payment request is not initialized.</source>
-        <translation type="unfinished">Payment request is not initialized.</translation>
+        <translation>Payment request is not initialized.</translation>
     </message>
     <message>
+        <location line="+26"/>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
-        <translation type="unfinished">Unverified payment requests to custom payment scripts are unsupported.</translation>
+        <translation>Unverified payment requests to custom payment scripts are unsupported.</translation>
     </message>
     <message>
+        <location line="+9"/>
+        <location line="+17"/>
         <source>Invalid payment request.</source>
-        <translation type="unfinished">Invalid payment request.</translation>
+        <translation>Invalid payment request.</translation>
     </message>
     <message>
+        <location line="-10"/>
         <source>Requested payment amount of %1 is too small (considered dust).</source>
-        <translation type="unfinished">Requested payment amount of %1 is too small (considered dust).</translation>
+        <translation>Requested payment amount of %1 is too small (considered dust).</translation>
     </message>
     <message>
+        <location line="+56"/>
         <source>Refund from %1</source>
-        <translation type="unfinished">Refund from %1</translation>
+        <translation>Refund from %1</translation>
     </message>
     <message>
+        <location line="+45"/>
         <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
-        <translation type="unfinished">Payment request %1 is too large (%2 bytes, allowed %3 bytes).</translation>
+        <translation>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>Error communicating with %1: %2</source>
-        <translation type="unfinished">Error communicating with %1: %2</translation>
+        <translation>Error communicating with %1: %2</translation>
     </message>
     <message>
+        <location line="+20"/>
         <source>Payment request cannot be parsed!</source>
-        <translation type="unfinished">Payment request cannot be parsed!</translation>
+        <translation>Payment request cannot be parsed!</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Bad response from server %1</source>
-        <translation type="unfinished">Bad response from server %1</translation>
+        <translation>Bad response from server %1</translation>
     </message>
     <message>
+        <location line="+22"/>
         <source>Network request error</source>
-        <translation type="unfinished">Network request error</translation>
+        <translation>Network request error</translation>
     </message>
     <message>
+        <location line="+11"/>
         <source>Payment acknowledged</source>
-        <translation type="unfinished">Payment acknowledged</translation>
+        <translation>Payment acknowledged</translation>
     </message>
 </context>
 <context>
     <name>PeerTableModel</name>
     <message>
+        <location filename="../../peertablemodel.cpp" line="+117"/>
         <source>NodeId</source>
-        <translation type="unfinished">NodeId</translation>
+        <translation>NodeId</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Node/Service</source>
-        <translation type="unfinished">Node/Service</translation>
+        <translation>Node/Service</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>User Agent</source>
-        <translation type="unfinished">User Agent</translation>
+        <translation>User Agent</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Ping</source>
-        <translation type="unfinished">Ping</translation>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
     <name>PlotMouseTracker</name>
     <message>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+82"/>
         <source>Initial expected earnings:</source>
-        <translation type="unfinished">Initial expected earnings:</translation>
+        <translation>Initial expected earnings:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Earnings to date:</source>
-        <translation type="unfinished">Earnings to date:</translation>
+        <translation>Earnings to date:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Future earnings forecast:</source>
-        <translation type="unfinished">Future earnings forecast:</translation>
+        <translation>Future earnings forecast:</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>Enter an address (e.g. %1)</source>
-        <translation type="unfinished">Enter an address (e.g. %1)</translation>
-    </message>
-    <message>
-        <source>Enter a private key</source>
-        <translation type="unfinished">Enter a private key</translation>
-    </message>
-    <message>
-        <source>Enter a Gulden URL</source>
-        <translation type="unfinished">Enter a Gulden URL</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation type="unfinished">%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation type="unfinished">%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation type="unfinished">%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation type="unfinished">%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished">None</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation type="unfinished">N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation type="unfinished">%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n second(s)</numerusform>
-            <numerusform>%n second(s)</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n minute(s)</numerusform>
-            <numerusform>%n minute(s)</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n hour(s)</numerusform>
-            <numerusform>%n hour(s)</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n day(s)</numerusform>
-            <numerusform>%n day(s)</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n week(s)</numerusform>
-            <numerusform>%n week(s)</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation type="unfinished">%1 and %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n year(s)</numerusform>
-            <numerusform>%n year(s)</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation type="unfinished">%1 didn&apos;t yet exit safely...</translation>
-    </message>
-    <message>
+        <location filename="../../units.cpp" line="+188"/>
         <source>Amount</source>
-        <translation type="unfinished">Amount</translation>
+        <translation>Amount</translation>
+    </message>
+    <message>
+        <location filename="../../guiutil.cpp" line="+138"/>
+        <source>Enter an address (e.g. %1)</source>
+        <translation>Enter an address (e.g. %1)</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Enter a private key</source>
+        <translation>Enter a private key</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Enter a Gulden URL</source>
+        <translation>Enter a Gulden URL</translation>
+    </message>
+    <message>
+        <location line="+830"/>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+50"/>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <location line="-10"/>
+        <source>None</source>
+        <translation>None</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <location line="+18"/>
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n second(s)</numerusform>
+            <numerusform>%n second(s)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location line="+4"/>
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minute(s)</numerusform>
+            <numerusform>%n minute(s)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location line="+4"/>
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n hour(s)</numerusform>
+            <numerusform>%n hour(s)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location line="+4"/>
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n day(s)</numerusform>
+            <numerusform>%n day(s)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location line="+4"/>
+        <location line="+6"/>
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n week(s)</numerusform>
+            <numerusform>%n week(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>%1 and %2</source>
+        <translation>%1 and %2</translation>
+    </message>
+    <message numerus="yes">
+        <location line="+0"/>
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n year(s)</numerusform>
+            <numerusform>%n year(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../../gulden.cpp" line="+194"/>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 didn&apos;t yet exit safely...</translation>
     </message>
 </context>
 <context>
     <name>QObject::QObject</name>
     <message>
+        <location line="-96"/>
         <source>Error: Specified data directory &quot;%1&quot; does not exist.</source>
-        <translation type="unfinished">Error: Specified data directory &quot;%1&quot; does not exist.</translation>
+        <translation>Error: Specified data directory &quot;%1&quot; does not exist.</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Error: Cannot parse configuration file: %1. Only use key=value syntax.</source>
-        <translation type="unfinished">Error: Cannot parse configuration file: %1. Only use key=value syntax.</translation>
+        <translation>Error: Cannot parse configuration file: %1. Only use key=value syntax.</translation>
     </message>
     <message>
+        <location line="+14"/>
         <source>Error: %1</source>
-        <translation type="unfinished">Error: %1</translation>
+        <translation>Error: %1</translation>
     </message>
 </context>
 <context>
     <name>RPCConsole</name>
     <message>
+        <location filename="../../forms/debugwindow.ui" line="+14"/>
         <source>Debug window</source>
-        <translation type="unfinished">Debug window</translation>
+        <translation>Debug window</translation>
     </message>
     <message>
-        <source>&amp;Information</source>
-        <translation type="unfinished">&amp;Information</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="unfinished">General</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation type="unfinished">Client version</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation type="unfinished">N/A</translation>
-    </message>
-    <message>
+        <location line="+55"/>
+        <location line="+958"/>
         <source>User Agent</source>
-        <translation type="unfinished">User Agent</translation>
+        <translation>User Agent</translation>
     </message>
     <message>
+        <location line="-971"/>
+        <location line="+26"/>
+        <location line="+26"/>
+        <location line="+23"/>
+        <location line="+26"/>
+        <location line="+36"/>
+        <location line="+23"/>
+        <location line="+36"/>
+        <location line="+23"/>
+        <location line="+36"/>
+        <location line="+23"/>
+        <location line="+82"/>
+        <location line="+552"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+26"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <location line="-1338"/>
+        <source>&amp;Information</source>
+        <translation>&amp;Information</translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Client version</source>
+        <translation>Client version</translation>
+    </message>
+    <message>
+        <location line="+49"/>
         <source>Using BerkeleyDB version</source>
-        <translation type="unfinished">Using BerkeleyDB version</translation>
+        <translation>Using BerkeleyDB version</translation>
     </message>
     <message>
+        <location line="+26"/>
         <source>Datadir</source>
-        <translation type="unfinished">Datadir</translation>
+        <translation>Datadir</translation>
     </message>
     <message>
+        <location line="+26"/>
         <source>Startup time</source>
-        <translation type="unfinished">Startup time</translation>
+        <translation>Startup time</translation>
     </message>
     <message>
+        <location line="+29"/>
         <source>Network</source>
-        <translation type="unfinished">Network</translation>
+        <translation>Network</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Number of connections</source>
-        <translation type="unfinished">Number of connections</translation>
+        <translation>Number of connections</translation>
     </message>
     <message>
+        <location line="+29"/>
         <source>Block chain</source>
-        <translation type="unfinished">Block chain</translation>
+        <translation>Block chain</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Current number of blocks</source>
-        <translation type="unfinished">Current number of blocks</translation>
+        <translation>Current number of blocks</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Last block time</source>
-        <translation type="unfinished">Last block time</translation>
+        <translation>Last block time</translation>
     </message>
     <message>
+        <location line="+29"/>
         <source>Memory Pool</source>
-        <translation type="unfinished">Memory Pool</translation>
+        <translation>Memory Pool</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>Current number of transactions</source>
-        <translation type="unfinished">Current number of transactions</translation>
+        <translation>Current number of transactions</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Memory usage</source>
-        <translation type="unfinished">Memory usage</translation>
+        <translation>Memory usage</translation>
     </message>
     <message>
+        <location line="+41"/>
         <source>Debug log file</source>
-        <translation type="unfinished">Debug log file</translation>
+        <translation>Debug log file</translation>
     </message>
     <message>
+        <location line="+13"/>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation type="unfinished">Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</translation>
+        <translation>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Open</source>
-        <translation type="unfinished">Open</translation>
+        <translation>Open</translation>
     </message>
     <message>
+        <location line="+28"/>
         <source>Current PoW² phase</source>
-        <translation type="unfinished">Current PoW² phase</translation>
+        <translation>Current PoW² phase</translation>
     </message>
     <message>
+        <location line="+15"/>
         <source>&amp;Console</source>
-        <translation type="unfinished">&amp;Console</translation>
+        <translation>&amp;Console</translation>
     </message>
     <message>
+        <location line="+143"/>
         <source>&amp;Network Traffic</source>
-        <translation type="unfinished">&amp;Network Traffic</translation>
+        <translation>&amp;Network Traffic</translation>
     </message>
     <message>
+        <location line="+52"/>
         <source>&amp;Reset</source>
-        <translation type="unfinished">&amp;Reset</translation>
+        <translation>&amp;Reset</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Totals</source>
-        <translation type="unfinished">Totals</translation>
+        <translation>Totals</translation>
     </message>
     <message>
+        <location line="+64"/>
+        <location line="+558"/>
         <source>Received</source>
-        <translation type="unfinished">Received</translation>
+        <translation>Received</translation>
     </message>
     <message>
+        <location line="-478"/>
+        <location line="+455"/>
         <source>Sent</source>
-        <translation type="unfinished">Sent</translation>
+        <translation>Sent</translation>
     </message>
     <message>
+        <location line="-414"/>
         <source>&amp;Peers</source>
-        <translation type="unfinished">&amp;Peers</translation>
+        <translation>&amp;Peers</translation>
     </message>
     <message>
+        <location line="+53"/>
         <source>Banned peers</source>
-        <translation type="unfinished">Banned peers</translation>
+        <translation>Banned peers</translation>
     </message>
     <message>
+        <location line="+60"/>
+        <location filename="../../rpcconsole.cpp" line="+468"/>
+        <location line="+763"/>
         <source>Select a peer to view detailed information.</source>
-        <translation type="unfinished">Select a peer to view detailed information.</translation>
+        <translation>Select a peer to view detailed information.</translation>
     </message>
     <message>
+        <location line="+25"/>
         <source>Whitelisted</source>
-        <translation type="unfinished">Whitelisted</translation>
+        <translation>Whitelisted</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Direction</source>
-        <translation type="unfinished">Direction</translation>
+        <translation>Direction</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Version</source>
-        <translation type="unfinished">Version</translation>
+        <translation>Version</translation>
     </message>
     <message>
+        <location line="+46"/>
         <source>Services</source>
-        <translation type="unfinished">Services</translation>
+        <translation>Services</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Starting Block</source>
-        <translation type="unfinished">Starting Block</translation>
+        <translation>Starting Block</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Synced Headers</source>
-        <translation type="unfinished">Synced Headers</translation>
+        <translation>Synced Headers</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Synced Blocks</source>
-        <translation type="unfinished">Synced Blocks</translation>
+        <translation>Synced Blocks</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Ban Score</source>
-        <translation type="unfinished">Ban Score</translation>
+        <translation>Ban Score</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Connection Time</source>
-        <translation type="unfinished">Connection Time</translation>
+        <translation>Connection Time</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Last Send</source>
-        <translation type="unfinished">Last Send</translation>
+        <translation>Last Send</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Last Receive</source>
-        <translation type="unfinished">Last Receive</translation>
+        <translation>Last Receive</translation>
     </message>
     <message>
+        <location line="+69"/>
         <source>Ping Time</source>
-        <translation type="unfinished">Ping Time</translation>
+        <translation>Ping Time</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>The duration of a currently outstanding ping.</source>
-        <translation type="unfinished">The duration of a currently outstanding ping.</translation>
+        <translation>The duration of a currently outstanding ping.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Ping Wait</source>
-        <translation type="unfinished">Ping Wait</translation>
+        <translation>Ping Wait</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Min Ping</source>
-        <translation type="unfinished">Min Ping</translation>
+        <translation>Min Ping</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Time Offset</source>
-        <translation type="unfinished">Time Offset</translation>
+        <translation>Time Offset</translation>
     </message>
     <message>
+        <location filename="../../rpcconsole.cpp" line="-669"/>
         <source>&amp;Disconnect</source>
-        <translation type="unfinished">&amp;Disconnect</translation>
+        <translation>&amp;Disconnect</translation>
     </message>
     <message>
+        <location line="+2"/>
+        <location line="+2"/>
+        <location line="+2"/>
+        <location line="+2"/>
         <source>Ban for</source>
-        <translation type="unfinished">Ban for</translation>
+        <translation>Ban for</translation>
     </message>
     <message>
+        <location line="-6"/>
         <source>1 &amp;hour</source>
-        <translation type="unfinished">1 &amp;hour</translation>
+        <translation>1 &amp;hour</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>1 &amp;day</source>
-        <translation type="unfinished">1 &amp;day</translation>
+        <translation>1 &amp;day</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>1 &amp;week</source>
-        <translation type="unfinished">1 &amp;week</translation>
+        <translation>1 &amp;week</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>1 &amp;year</source>
-        <translation type="unfinished">1 &amp;year</translation>
+        <translation>1 &amp;year</translation>
     </message>
     <message>
+        <location line="+49"/>
         <source>&amp;Unban</source>
-        <translation type="unfinished">&amp;Unban</translation>
+        <translation>&amp;Unban</translation>
     </message>
     <message>
+        <location line="+139"/>
         <source>Welcome to the %1 RPC console.</source>
-        <translation type="unfinished">Welcome to the %1 RPC console.</translation>
+        <translation>Welcome to the %1 RPC console.</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation type="unfinished">Use up and down arrows to navigate history, and %1 to clear screen.</translation>
+        <translation>Use up and down arrows to navigate history, and %1 to clear screen.</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation type="unfinished">Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</translation>
+        <translation>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation type="unfinished">WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</translation>
+        <translation>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</translation>
     </message>
     <message>
+        <location line="+35"/>
         <source>In:</source>
-        <translation type="unfinished">In:</translation>
+        <translation>In:</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Out:</source>
-        <translation type="unfinished">Out:</translation>
+        <translation>Out:</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Network activity disabled</source>
-        <translation type="unfinished">Network activity disabled</translation>
+        <translation>Network activity disabled</translation>
     </message>
     <message>
+        <location line="+167"/>
         <source>%1 B</source>
-        <translation type="unfinished">%1 B</translation>
+        <translation>%1 B</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>%1 KB</source>
-        <translation type="unfinished">%1 KB</translation>
+        <translation>%1 KB</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>%1 MB</source>
-        <translation type="unfinished">%1 MB</translation>
+        <translation>%1 MB</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>%1 GB</source>
-        <translation type="unfinished">%1 GB</translation>
+        <translation>%1 GB</translation>
     </message>
     <message>
+        <location line="+102"/>
         <source>(node id: %1)</source>
-        <translation type="unfinished">(node id: %1)</translation>
+        <translation>(node id: %1)</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>via %1</source>
-        <translation type="unfinished">via %1</translation>
+        <translation>via %1</translation>
     </message>
     <message>
+        <location line="+3"/>
+        <location line="+1"/>
         <source>never</source>
-        <translation type="unfinished">never</translation>
+        <translation>never</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Inbound</source>
-        <translation type="unfinished">Inbound</translation>
+        <translation>Inbound</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Outbound</source>
-        <translation type="unfinished">Outbound</translation>
+        <translation>Outbound</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Yes</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>No</source>
-        <translation type="unfinished">No</translation>
+        <translation>No</translation>
     </message>
     <message>
+        <location line="+12"/>
+        <location line="+6"/>
         <source>Unknown</source>
-        <translation type="unfinished">Unknown</translation>
+        <translation>Unknown</translation>
     </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
-        <source>My receiving address</source>
-        <translation type="unfinished">My receiving address</translation>
-    </message>
-    <message>
-        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation type="unfinished">GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
-    </message>
-    <message>
-        <source>Enter label</source>
-        <translation type="unfinished">Enter label</translation>
-    </message>
-    <message>
-        <source>Request %1 Gulden</source>
-        <translation type="unfinished">Request %1 Gulden</translation>
-    </message>
-    <message>
-        <source>Payment request URI</source>
-        <translation type="unfinished">Payment request URI</translation>
-    </message>
-    <message>
-        <source>QR code</source>
-        <translation type="unfinished">QR code</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="+315"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+588"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <location line="-150"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-105"/>
+        <source>Enter label</source>
+        <translation>Enter label</translation>
     </message>
     <message>
-        <source>Copy address to clipboard</source>
-        <translation type="unfinished">Copy address to clipboard</translation>
-    </message>
-    <message>
-        <source>Save QR as image</source>
-        <translation type="unfinished">Save QR as image</translation>
-    </message>
-    <message>
-        <source>Request payment</source>
-        <translation type="unfinished">Request payment</translation>
-    </message>
-    <message>
-        <source>Generate request</source>
-        <translation type="unfinished">Generate request</translation>
-    </message>
-    <message>
-        <source>New request</source>
-        <translation type="unfinished">New request</translation>
-    </message>
-    <message>
-        <source>Buy Gulden</source>
-        <translation type="unfinished">Buy Gulden</translation>
-    </message>
-    <message>
-        <source>Buy</source>
-        <translation type="unfinished">Buy</translation>
-    </message>
-    <message>
-        <source>Choose amount</source>
-        <translation type="unfinished">Choose amount</translation>
-    </message>
-    <message>
-        <source>1000</source>
-        <translation type="unfinished">1000</translation>
-    </message>
-    <message>
-        <source>€ 10.00</source>
-        <translation type="unfinished">€ 10.00</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2500</source>
-        <translation type="unfinished">2500</translation>
-    </message>
-    <message>
-        <source>€ 25.00</source>
-        <translation type="unfinished">€ 25.00</translation>
-    </message>
-    <message>
-        <source>5000</source>
-        <translation type="unfinished">5000</translation>
-    </message>
-    <message>
-        <source>€ 50.00</source>
-        <translation type="unfinished">€ 50.00</translation>
-    </message>
-    <message>
-        <source>More</source>
-        <translation type="unfinished">More</translation>
-    </message>
-    <message>
-        <source>Your details</source>
-        <translation type="unfinished">Your details</translation>
-    </message>
-    <message>
-        <source>Enter email address</source>
-        <translation type="unfinished">Enter email address</translation>
-    </message>
-    <message>
-        <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation type="unfinished">Did you buy for more than 40 Gulden in the past week?</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-55"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Yes</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>No</source>
-        <translation type="unfinished">No</translation>
+        <translation>No</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-110"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-364"/>
+        <source>My receiving address</source>
+        <translation>My receiving address</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
+        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
+    </message>
+    <message>
+        <location line="+130"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+402"/>
+        <source>Request %1 Gulden</source>
+        <translation>Request %1 Gulden</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+442"/>
+        <source>Payment request URI</source>
+        <translation>Payment request URI</translation>
+    </message>
+    <message>
+        <location line="+38"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-417"/>
+        <location line="+443"/>
+        <source>QR code</source>
+        <translation>QR code</translation>
+    </message>
+    <message>
+        <location line="+85"/>
+        <source>Close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+62"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="-111"/>
+        <source>Copy address to clipboard</source>
+        <translation>Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>Save QR as image</source>
+        <translation>Save QR as image</translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>Request payment</source>
+        <translation>Request payment</translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>Generate request</source>
+        <translation>Generate request</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>New request</source>
+        <translation>New request</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>Buy Gulden</source>
+        <translation>Buy Gulden</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <source>Buy</source>
+        <translation>Buy</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-504"/>
+        <source>Choose amount</source>
+        <translation>Choose amount</translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>1000</source>
+        <translation>1000</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>€ 10.00</source>
+        <translation>€ 10.00</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <location line="+55"/>
+        <location line="+55"/>
+        <location line="+55"/>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <location line="-132"/>
+        <source>2500</source>
+        <translation>2500</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>€ 25.00</source>
+        <translation>€ 25.00</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>5000</source>
+        <translation>5000</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>€ 50.00</source>
+        <translation>€ 50.00</translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>More</source>
+        <translation>More</translation>
+    </message>
+    <message>
+        <location line="+50"/>
+        <source>Your details</source>
+        <translation>Your details</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Enter email address</source>
+        <translation>Enter email address</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Did you buy for more than 40 Gulden in the past week?</source>
+        <translation>Did you buy for more than 40 Gulden in the past week?</translation>
+    </message>
+    <message>
+        <location line="+100"/>
         <source>Request 10 000 Gulden</source>
-        <translation type="unfinished">Request 10 000 Gulden</translation>
+        <translation>Request 10 000 Gulden</translation>
     </message>
     <message>
+        <location line="+14"/>
         <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation type="unfinished">Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
+        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="-72"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation type="unfinished">Resulting URI too long, try to reduce the text for label / message.</translation>
+        <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
     </message>
     <message>
+        <location line="+178"/>
         <source>Copy request to clipboard</source>
-        <translation type="unfinished">Copy request to clipboard</translation>
+        <translation>Copy request to clipboard</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>Request Gulden</source>
-        <translation type="unfinished">Request Gulden</translation>
+        <translation>Request Gulden</translation>
     </message>
     <message>
+        <location line="+44"/>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
-        <translation type="unfinished">Resulting URI too long, try to reduce the text for the label.</translation>
+        <translation>Resulting URI too long, try to reduce the text for the label.</translation>
     </message>
     <message>
+        <location line="+113"/>
         <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation type="unfinished">Error loading the buy page, please check your connection and try again later.</translation>
+        <translation>Error loading the buy page, please check your connection and try again later.</translation>
     </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
-        <source>QR Code</source>
-        <translation type="unfinished">QR Code</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation type="unfinished">Copy &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation type="unfinished">Copy &amp;Address</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation type="unfinished">&amp;Save Image...</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation type="unfinished">Request payment to %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation type="unfinished">Payment information</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation type="unfinished">URI</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation type="unfinished">Address</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation type="unfinished">Amount</translation>
-    </message>
-    <message>
+        <location filename="../../receiverequestdialog.cpp" line="+94"/>
         <source>Label</source>
-        <translation type="unfinished">Label</translation>
+        <translation>Label</translation>
     </message>
     <message>
+        <location line="-4"/>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <location filename="../../forms/receiverequestdialog.ui" line="+95"/>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Save Image...</translation>
+    </message>
+    <message>
+        <location filename="../../receiverequestdialog.cpp" line="+2"/>
+        <source>Amount</source>
+        <translation>Amount</translation>
+    </message>
+    <message>
+        <location filename="../../forms/receiverequestdialog.ui" line="-66"/>
+        <source>QR Code</source>
+        <translation>QR Code</translation>
+    </message>
+    <message>
+        <location line="+46"/>
+        <source>Copy &amp;URI</source>
+        <translation>Copy &amp;URI</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Copy &amp;Address</source>
+        <translation>Copy &amp;Address</translation>
+    </message>
+    <message>
+        <location filename="../../receiverequestdialog.cpp" line="-11"/>
+        <source>Request payment to %1</source>
+        <translation>Request payment to %1</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Payment information</source>
+        <translation>Payment information</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <source>Message</source>
-        <translation type="unfinished">Message</translation>
+        <translation>Message</translation>
     </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
-        <source>Date</source>
-        <translation type="unfinished">Date</translation>
-    </message>
-    <message>
+        <location filename="../../recentrequeststablemodel.cpp" line="+28"/>
         <source>Label</source>
-        <translation type="unfinished">Label</translation>
+        <translation>Label</translation>
     </message>
     <message>
-        <source>Message</source>
-        <translation type="unfinished">Message</translation>
-    </message>
-    <message>
+        <location line="+40"/>
         <source>(no label)</source>
-        <translation type="unfinished">(no label)</translation>
+        <translation>(no label)</translation>
     </message>
     <message>
+        <location line="-40"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Message</source>
+        <translation>Message</translation>
+    </message>
+    <message>
+        <location line="+49"/>
         <source>(no message)</source>
-        <translation type="unfinished">(no message)</translation>
+        <translation>(no message)</translation>
     </message>
     <message>
+        <location line="+8"/>
         <source>(no amount requested)</source>
-        <translation type="unfinished">(no amount requested)</translation>
+        <translation>(no amount requested)</translation>
     </message>
     <message>
+        <location line="+42"/>
         <source>Requested</source>
-        <translation type="unfinished">Requested</translation>
+        <translation>Requested</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <source>Send Coins</source>
-        <translation type="unfinished">Send Coins</translation>
-    </message>
-    <message>
-        <source>Coin Control Features</source>
-        <translation type="unfinished">Coin Control Features</translation>
-    </message>
-    <message>
-        <source>Inputs...</source>
-        <translation type="unfinished">Inputs...</translation>
-    </message>
-    <message>
-        <source>automatically selected</source>
-        <translation type="unfinished">automatically selected</translation>
-    </message>
-    <message>
-        <source>Insufficient funds!</source>
-        <translation type="unfinished">Insufficient funds!</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation type="unfinished">Quantity:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation type="unfinished">Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation type="unfinished">Amount:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation type="unfinished">Dust:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation type="unfinished">Fee:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation type="unfinished">After Fee:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation type="unfinished">Change:</translation>
-    </message>
-    <message>
-        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
-        <translation type="unfinished">If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</translation>
-    </message>
-    <message>
-        <source>Custom change address</source>
-        <translation type="unfinished">Custom change address</translation>
-    </message>
-    <message>
-        <source>Transaction Fee:</source>
-        <translation type="unfinished">Transaction Fee:</translation>
-    </message>
-    <message>
-        <source>Choose...</source>
-        <translation type="unfinished">Choose...</translation>
-    </message>
-    <message>
-        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation type="unfinished">Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</translation>
-    </message>
-    <message>
-        <source>Warning: Fee estimation is currently not possible.</source>
-        <translation type="unfinished">Warning: Fee estimation is currently not possible.</translation>
-    </message>
-    <message>
-        <source>collapse fee-settings</source>
-        <translation type="unfinished">collapse fee-settings</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation type="unfinished">Hide</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation type="unfinished">If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</translation>
-    </message>
-    <message>
-        <source>per kilobyte</source>
-        <translation type="unfinished">per kilobyte</translation>
-    </message>
-    <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</source>
-        <translation type="unfinished">Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</translation>
-    </message>
-    <message>
-        <source>(read the tooltip)</source>
-        <translation type="unfinished">(read the tooltip)</translation>
-    </message>
-    <message>
-        <source>Recommended:</source>
-        <translation type="unfinished">Recommended:</translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <translation type="unfinished">Custom:</translation>
-    </message>
-    <message>
-        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation type="unfinished">(Smart fee not initialized yet. This usually takes a few blocks...)</translation>
-    </message>
-    <message>
-        <source>Confirmation time target:</source>
-        <translation type="unfinished">Confirmation time target:</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation type="unfinished">normal</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation type="unfinished">fast</translation>
-    </message>
-    <message>
-        <source>Request Replace-By-Fee</source>
-        <translation type="unfinished">Request Replace-By-Fee</translation>
-    </message>
-    <message>
-        <source>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</source>
-        <translation type="unfinished">Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation type="unfinished">Confirm the send action</translation>
-    </message>
-    <message>
-        <source>S&amp;end</source>
-        <translation type="unfinished">S&amp;end</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation type="unfinished">Clear all fields of the form.</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation type="unfinished">Clear &amp;All</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation type="unfinished">Send to multiple recipients at once</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation type="unfinished">Add &amp;Recipient</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation type="unfinished">Balance:</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation type="unfinished">Copy quantity</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Copy amount</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation type="unfinished">Copy fee</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation type="unfinished">Copy after fee</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation type="unfinished">Copy bytes</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation type="unfinished">Copy dust</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation type="unfinished">Copy change</translation>
-    </message>
-    <message>
-        <source>%1 to %2</source>
-        <translation type="unfinished">%1 to %2</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to send?</source>
-        <translation type="unfinished">Are you sure you want to send?</translation>
-    </message>
-    <message>
-        <source>added as transaction fee</source>
-        <translation type="unfinished">added as transaction fee</translation>
-    </message>
-    <message>
-        <source>Total Amount</source>
-        <translation type="unfinished">Total Amount</translation>
-    </message>
-    <message>
-        <source>This transaction signals replaceability (optin-RBF).</source>
-        <translation type="unfinished">This transaction signals replaceability (optin-RBF).</translation>
-    </message>
-    <message>
-        <source>Send</source>
-        <translation type="unfinished">Send</translation>
-    </message>
-    <message>
+        <location filename="../../sendcoinsdialog.cpp" line="+520"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location line="-367"/>
+        <source>&amp;Delete</source>
+        <translation>&amp;Delete</translation>
+    </message>
+    <message>
+        <location line="-22"/>
+        <source>&amp;Edit</source>
+        <translation>&amp;Edit</translation>
+    </message>
+    <message>
+        <location line="+920"/>
+        <source>(no label)</source>
+        <translation>(no label)</translation>
+    </message>
+    <message>
+        <location filename="../../forms/sendcoinsdialog.ui" line="+219"/>
+        <source>Quantity:</source>
+        <translation>Quantity:</translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <location line="+48"/>
+        <source>Amount:</source>
+        <translation>Amount:</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>Dust:</source>
+        <translation>Dust:</translation>
+    </message>
+    <message>
+        <location line="+48"/>
+        <source>Fee:</source>
+        <translation>Fee:</translation>
+    </message>
+    <message>
+        <location line="+51"/>
+        <source>After Fee:</source>
+        <translation>After Fee:</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>Change:</source>
+        <translation>Change:</translation>
+    </message>
+    <message>
+        <location filename="../../sendcoinsdialog.cpp" line="-984"/>
+        <source>Copy amount</source>
+        <translation>Copy amount</translation>
+    </message>
+    <message>
+        <location line="-2"/>
+        <source>Copy quantity</source>
+        <translation>Copy quantity</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Copy fee</source>
+        <translation>Copy fee</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy after fee</source>
+        <translation>Copy after fee</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy bytes</source>
+        <translation>Copy bytes</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy dust</source>
+        <translation>Copy dust</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy change</source>
+        <translation>Copy change</translation>
+    </message>
+    <message>
+        <location line="+443"/>
+        <source>Send</source>
+        <translation>Send</translation>
+    </message>
+    <message>
+        <location line="+275"/>
+        <source>Payment request expired.</source>
+        <translation>Payment request expired.</translation>
+    </message>
+    <message>
+        <location filename="../../forms/sendcoinsdialog.ui" line="+298"/>
+        <source>Hide</source>
+        <translation>Hide</translation>
+    </message>
+    <message>
+        <location filename="../../sendcoinsdialog.cpp" line="-657"/>
+        <source>&amp;Clear</source>
+        <translation>&amp;Clear</translation>
+    </message>
+    <message>
+        <location filename="../../forms/sendcoinsdialog.ui" line="-749"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+670"/>
+        <source>Send Coins</source>
+        <translation>Send Coins</translation>
+    </message>
+    <message>
+        <location line="+76"/>
+        <source>Coin Control Features</source>
+        <translation>Coin Control Features</translation>
+    </message>
+    <message>
+        <location line="+20"/>
+        <source>Inputs...</source>
+        <translation>Inputs...</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>automatically selected</source>
+        <translation>automatically selected</translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Insufficient funds!</source>
+        <translation>Insufficient funds!</translation>
+    </message>
+    <message>
+        <location line="+370"/>
+        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
+        <translation>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Custom change address</source>
+        <translation>Custom change address</translation>
+    </message>
+    <message>
+        <location line="+175"/>
+        <source>Transaction Fee:</source>
+        <translation>Transaction Fee:</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Choose...</source>
+        <translation>Choose...</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
+        <translation>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Warning: Fee estimation is currently not possible.</translation>
+    </message>
+    <message>
+        <location line="+26"/>
+        <source>collapse fee-settings</source>
+        <translation>collapse fee-settings</translation>
+    </message>
+    <message>
+        <location line="+42"/>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>per kilobyte</source>
+        <translation>per kilobyte</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <location line="+13"/>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</source>
+        <translation>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Gulden transactions than the network can process.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>(read the tooltip)</source>
+        <translation>(read the tooltip)</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Recommended:</source>
+        <translation>Recommended:</translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Custom:</source>
+        <translation>Custom:</translation>
+    </message>
+    <message>
+        <location line="+52"/>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation>(Smart fee not initialized yet. This usually takes a few blocks...)</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Confirmation time target:</source>
+        <translation>Confirmation time target:</translation>
+    </message>
+    <message>
+        <location line="+60"/>
+        <source>normal</source>
+        <translation>normal</translation>
+    </message>
+    <message>
+        <location line="+40"/>
+        <source>fast</source>
+        <translation>fast</translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Request Replace-By-Fee</source>
+        <translation>Request Replace-By-Fee</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</source>
+        <translation>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</translation>
+    </message>
+    <message>
+        <location line="+36"/>
+        <source>Confirm the send action</source>
+        <translation>Confirm the send action</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Clear all fields of the form.</source>
+        <translation>Clear all fields of the form.</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Send to multiple recipients at once</source>
+        <translation>Send to multiple recipients at once</translation>
+    </message>
+    <message>
+        <location line="+37"/>
+        <source>Balance:</source>
+        <translation>Balance:</translation>
+    </message>
+    <message>
+        <location filename="../../sendcoinsdialog.cpp" line="-337"/>
+        <location line="+5"/>
+        <location line="+5"/>
+        <location line="+4"/>
+        <source>%1 to %2</source>
+        <translation>%1 to %2</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Are you sure you want to send?</source>
+        <translation>Are you sure you want to send?</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>added as transaction fee</source>
+        <translation>added as transaction fee</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Total Amount</source>
+        <translation>Total Amount</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>This transaction signals replaceability (optin-RBF).</source>
+        <translation>This transaction signals replaceability (optin-RBF).</translation>
+    </message>
+    <message>
+        <location line="+251"/>
         <source>PoW² is not yet active, please wait for activation and try again.</source>
-        <translation type="unfinished">PoW² is not yet active, please wait for activation and try again.</translation>
+        <translation>PoW² is not yet active, please wait for activation and try again.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>The recipient address is not valid. Please recheck.</source>
-        <translation type="unfinished">The recipient address is not valid. Please recheck.</translation>
+        <translation>The recipient address is not valid. Please recheck.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>The amount to pay must be larger than 0.</source>
-        <translation type="unfinished">The amount to pay must be larger than 0.</translation>
+        <translation>The amount to pay must be larger than 0.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>The amount exceeds your balance.
 If you  have recently received funds you may need to wait for them to clear before spending them.</source>
-        <translation type="unfinished">The amount exceeds your balance.
+        <translation>The amount exceeds your balance.
 If you  have recently received funds you may need to wait for them to clear before spending them.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>The total exceeds your balance when the %1 transaction fee is included.</source>
-        <translation type="unfinished">The total exceeds your balance when the %1 transaction fee is included.</translation>
+        <translation>The total exceeds your balance when the %1 transaction fee is included.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Duplicate address found: addresses should only be used once each.</source>
-        <translation type="unfinished">Duplicate address found: addresses should only be used once each.</translation>
+        <translation>Duplicate address found: addresses should only be used once each.</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Transaction creation failed!</source>
-        <translation type="unfinished">Transaction creation failed!</translation>
+        <translation>Transaction creation failed!</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>The transaction was rejected with the following reason: %1</source>
-        <translation type="unfinished">The transaction was rejected with the following reason: %1</translation>
+        <translation>The transaction was rejected with the following reason: %1</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
-        <translation type="unfinished">A fee higher than %1 is considered an absurdly high fee.</translation>
+        <translation>A fee higher than %1 is considered an absurdly high fee.</translation>
     </message>
     <message>
-        <source>Payment request expired.</source>
-        <translation type="unfinished">Payment request expired.</translation>
-    </message>
-    <message>
+        <location line="+7"/>
         <source>Nocks request failed [%1]</source>
-        <translation type="unfinished">Nocks request failed [%1]</translation>
+        <translation>Nocks request failed [%1]</translation>
     </message>
     <message numerus="yes">
+        <location line="+63"/>
         <source>%n block(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n block(s)</numerusform>
             <numerusform>%n block(s)</numerusform>
         </translation>
     </message>
     <message>
+        <location line="+24"/>
         <source>Pay only the required fee of %1</source>
-        <translation type="unfinished">Pay only the required fee of %1</translation>
+        <translation>Pay only the required fee of %1</translation>
     </message>
     <message numerus="yes">
+        <location line="+30"/>
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
             <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
         </translation>
     </message>
     <message>
+        <location line="+103"/>
         <source>Warning: Invalid Gulden address</source>
-        <translation type="unfinished">Warning: Invalid Gulden address</translation>
+        <translation>Warning: Invalid Gulden address</translation>
     </message>
     <message>
+        <location line="+8"/>
         <source>Warning: Unknown change address</source>
-        <translation type="unfinished">Warning: Unknown change address</translation>
+        <translation>Warning: Unknown change address</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Confirm custom change address</source>
-        <translation type="unfinished">Confirm custom change address</translation>
+        <translation>Confirm custom change address</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
-        <translation type="unfinished">The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation type="unfinished">(no label)</translation>
+        <translation>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</translation>
     </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
+        <location line="+113"/>
+        <location line="+5"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Yes</translation>
     </message>
 </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
+        <location filename="../../utilitydialog.cpp" line="+78"/>
         <source>%1 is shutting down...</source>
-        <translation type="unfinished">%1 is shutting down...</translation>
+        <translation>%1 is shutting down...</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Do not shut down the computer until this window disappears.</source>
-        <translation type="unfinished">Do not shut down the computer until this window disappears.</translation>
+        <translation>Do not shut down the computer until this window disappears.</translation>
+    </message>
+</context>
+<context>
+    <name>SyncOverlay</name>
+    <message>
+        <location filename="../../forms/syncoverlay.ui" line="+14"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location line="+119"/>
+        <source>Hide</source>
+        <translation>Hide</translation>
+    </message>
+    <message>
+        <location filename="../../syncoverlay.cpp" line="+119"/>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
+    </message>
+    <message>
+        <location line="-4"/>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
     </message>
 </context>
 <context>
     <name>TrafficGraphWidget</name>
     <message>
+        <location filename="../../trafficgraphwidget.cpp" line="+80"/>
         <source>KB/s</source>
-        <translation type="unfinished">KB/s</translation>
+        <translation>KB/s</translation>
     </message>
 </context>
 <context>
     <name>TransactionDesc</name>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform>Open for %n more block(s)</numerusform>
-            <numerusform>Open for %n more block(s)</numerusform>
-        </translation>
-    </message>
     <message>
-        <source>Open until %1</source>
-        <translation type="unfinished">Open until %1</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation type="unfinished">conflicted with a transaction with %1 confirmations</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation type="unfinished">%1/offline</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation type="unfinished">0/unconfirmed, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation type="unfinished">in memory pool</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation type="unfinished">not in memory pool</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation type="unfinished">abandoned</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation type="unfinished">%1/unconfirmed</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation type="unfinished">%1 confirmations</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="unfinished">Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation type="unfinished">, has not been successfully broadcast yet</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation type="unfinished">
-            <numerusform>, broadcast through %n node(s)</numerusform>
-            <numerusform>, broadcast through %n node(s)</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation type="unfinished">Date</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="unfinished">Source</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation type="unfinished">Generated</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation type="unfinished">From</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation type="unfinished">unknown</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation type="unfinished">To</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation type="unfinished">own address</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation type="unfinished">watch-only</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation type="unfinished">label</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation type="unfinished">Credit</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform>matures in %n more block(s)</numerusform>
-            <numerusform>matures in %n more block(s)</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation type="unfinished">not accepted</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation type="unfinished">Debit</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation type="unfinished">Total debit</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation type="unfinished">Total credit</translation>
-    </message>
-    <message>
-        <source>Total moved</source>
-        <translation type="unfinished">Total moved</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation type="unfinished">Transaction fee</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation type="unfinished">Net amount</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation type="unfinished">Message</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="unfinished">Comment</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation type="unfinished">Transaction ID</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation type="unfinished">Transaction total size</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation type="unfinished">Output index</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation type="unfinished">Merchant</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished">Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation type="unfinished">Debug information</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation type="unfinished">Transaction</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation type="unfinished">Inputs</translation>
-    </message>
-    <message>
+        <location filename="../../transactiondesc.cpp" line="+322"/>
         <source>Amount</source>
-        <translation type="unfinished">Amount</translation>
+        <translation>Amount</translation>
     </message>
     <message>
+        <location line="-241"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location line="+171"/>
+        <location line="+11"/>
+        <source>Message</source>
+        <translation>Message</translation>
+    </message>
+    <message numerus="yes">
+        <location line="-226"/>
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Open for %n more block(s)</numerusform>
+            <numerusform>Open for %n more block(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Open until %1</source>
+        <translation>Open until %1</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>conflicted with a transaction with %1 confirmations</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>%1/offline</source>
+        <translation>%1/offline</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/unconfirmed, %1</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>in memory pool</source>
+        <translation>in memory pool</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>not in memory pool</source>
+        <translation>not in memory pool</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>abandoned</source>
+        <translation>abandoned</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>%1/unconfirmed</source>
+        <translation>%1/unconfirmed</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>%1 confirmations</source>
+        <translation>%1 confirmations</translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, has not been successfully broadcast yet</translation>
+    </message>
+    <message numerus="yes">
+        <location line="+2"/>
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>, broadcast through %n node(s)</numerusform>
+            <numerusform>, broadcast through %n node(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Source</source>
+        <translation>Source</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Generated</source>
+        <translation>Generated</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <location line="+13"/>
+        <location line="+71"/>
+        <source>From</source>
+        <translation>From</translation>
+    </message>
+    <message>
+        <location line="-71"/>
+        <source>unknown</source>
+        <translation>unknown</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+20"/>
+        <location line="+68"/>
+        <source>To</source>
+        <translation>To</translation>
+    </message>
+    <message>
+        <location line="-86"/>
+        <source>own address</source>
+        <translation>own address</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <location line="+68"/>
+        <source>watch-only</source>
+        <translation>watch-only</translation>
+    </message>
+    <message>
+        <location line="-66"/>
+        <source>label</source>
+        <translation>label</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <location line="+12"/>
+        <location line="+53"/>
+        <location line="+33"/>
+        <location line="+55"/>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message numerus="yes">
+        <location line="-151"/>
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>matures in %n more block(s)</numerusform>
+            <numerusform>matures in %n more block(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>not accepted</source>
+        <translation>not accepted</translation>
+    </message>
+    <message>
+        <location line="+59"/>
+        <location line="+32"/>
+        <location line="+55"/>
+        <source>Debit</source>
+        <translation>Debit</translation>
+    </message>
+    <message>
+        <location line="-75"/>
+        <source>Total debit</source>
+        <translation>Total debit</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Total credit</source>
+        <translation>Total credit</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Total moved</source>
+        <translation>Total moved</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Transaction fee</source>
+        <translation>Transaction fee</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Net amount</source>
+        <translation>Net amount</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Comment</source>
+        <translation>Comment</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Transaction ID</source>
+        <translation>Transaction ID</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Transaction total size</source>
+        <translation>Transaction total size</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Output index</source>
+        <translation>Output index</translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>Merchant</source>
+        <translation>Merchant</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Debug information</source>
+        <translation>Debug information</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Transaction</source>
+        <translation>Transaction</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Inputs</source>
+        <translation>Inputs</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <location line="+1"/>
         <source>true</source>
-        <translation type="unfinished">true</translation>
+        <translation>true</translation>
     </message>
     <message>
+        <location line="-1"/>
+        <location line="+1"/>
         <source>false</source>
-        <translation type="unfinished">false</translation>
+        <translation>false</translation>
     </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
+        <location filename="../../forms/transactiondescdialog.ui" line="+20"/>
         <source>This pane shows a detailed description of the transaction</source>
-        <translation type="unfinished">This pane shows a detailed description of the transaction</translation>
+        <translation>This pane shows a detailed description of the transaction</translation>
     </message>
     <message>
+        <location filename="../../transactiondescdialog.cpp" line="+17"/>
         <source>Details for %1</source>
-        <translation type="unfinished">Details for %1</translation>
+        <translation>Details for %1</translation>
     </message>
 </context>
 <context>
     <name>TransactionTableModel</name>
     <message>
+        <location filename="../../transactiontablemodel.cpp" line="+891"/>
+        <source>(no label)</source>
+        <translation>(no label)</translation>
+    </message>
+    <message>
+        <location line="-618"/>
         <source>Date</source>
-        <translation type="unfinished">Date</translation>
+        <translation>Date</translation>
     </message>
     <message>
-        <source>Type</source>
-        <translation type="unfinished">Type</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation type="unfinished">Description</translation>
-    </message>
-    <message>
+        <location line="+0"/>
         <source>Received</source>
-        <translation type="unfinished">Received</translation>
+        <translation>Received</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>Sent</source>
-        <translation type="unfinished">Sent</translation>
+        <translation>Sent</translation>
+    </message>
+    <message>
+        <location line="+61"/>
+        <source>Open until %1</source>
+        <translation>Open until %1</translation>
+    </message>
+    <message>
+        <location line="+160"/>
+        <source>watch-only</source>
+        <translation>watch-only</translation>
+    </message>
+    <message>
+        <location line="-221"/>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Description</source>
+        <translation>Description</translation>
     </message>
     <message numerus="yes">
+        <location line="+58"/>
         <source>Open for %n more block(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Open for %n more block(s)</numerusform>
             <numerusform>Open for %n more block(s)</numerusform>
         </translation>
     </message>
     <message>
-        <source>Open until %1</source>
-        <translation type="unfinished">Open until %1</translation>
-    </message>
-    <message>
+        <location line="+6"/>
         <source>Offline</source>
-        <translation type="unfinished">Offline</translation>
+        <translation>Offline</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Unconfirmed</source>
-        <translation type="unfinished">Unconfirmed</translation>
+        <translation>Unconfirmed</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Abandoned</source>
-        <translation type="unfinished">Abandoned</translation>
+        <translation>Abandoned</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation type="unfinished">Confirming (%1 of %2 recommended confirmations)</translation>
+        <translation>Confirming (%1 of %2 recommended confirmations)</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation type="unfinished">Confirmed (%1 confirmations)</translation>
+        <translation>Confirmed (%1 confirmations)</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Conflicted</source>
-        <translation type="unfinished">Conflicted</translation>
+        <translation>Conflicted</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation type="unfinished">Immature (%1 confirmations, will be available after %2)</translation>
+        <translation>Immature (%1 confirmations, will be available after %2)</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation type="unfinished">This block was not received by any other nodes and will probably not be accepted!</translation>
+        <translation>This block was not received by any other nodes and will probably not be accepted!</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Generated but not accepted</source>
-        <translation type="unfinished">Generated but not accepted</translation>
+        <translation>Generated but not accepted</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>External payee</source>
-        <translation type="unfinished">External payee</translation>
+        <translation>External payee</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Multiple addresses</source>
-        <translation type="unfinished">Multiple addresses</translation>
+        <translation>Multiple addresses</translation>
     </message>
     <message>
+        <location line="+20"/>
         <source>Received with</source>
-        <translation type="unfinished">Received with</translation>
+        <translation>Received with</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Received from</source>
-        <translation type="unfinished">Received from</translation>
+        <translation>Received from</translation>
     </message>
     <message>
+        <location line="+3"/>
         <source>Sent to</source>
-        <translation type="unfinished">Sent to</translation>
+        <translation>Sent to</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Payment to yourself</source>
-        <translation type="unfinished">Payment to yourself</translation>
+        <translation>Payment to yourself</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Internal transfer</source>
-        <translation type="unfinished">Internal transfer</translation>
+        <translation>Internal transfer</translation>
     </message>
     <message>
+        <location line="+2"/>
+        <location line="+108"/>
+        <location line="+78"/>
         <source>Mining reward</source>
-        <translation type="unfinished">Mining reward</translation>
+        <translation>Mining reward</translation>
     </message>
     <message>
+        <location line="-184"/>
+        <location line="+108"/>
+        <location line="+78"/>
         <source>Witness reward</source>
-        <translation type="unfinished">Witness reward</translation>
+        <translation>Witness reward</translation>
     </message>
     <message>
+        <location line="-184"/>
+        <location line="+112"/>
+        <location line="+90"/>
         <source>Fund witness account extension</source>
-        <translation type="unfinished">Fund witness account extension</translation>
+        <translation>Fund witness account extension</translation>
     </message>
     <message>
+        <location line="-200"/>
         <source>Extend witness account</source>
-        <translation type="unfinished">Extend witness account</translation>
+        <translation>Extend witness account</translation>
     </message>
     <message>
+        <location line="+2"/>
+        <location line="+192"/>
         <source>Split locked funds</source>
-        <translation type="unfinished">Split locked funds</translation>
+        <translation>Split locked funds</translation>
     </message>
     <message>
+        <location line="-190"/>
+        <location line="+192"/>
         <source>Merge locked funds</source>
-        <translation type="unfinished">Merge locked funds</translation>
+        <translation>Merge locked funds</translation>
     </message>
     <message>
+        <location line="-190"/>
+        <location line="+192"/>
         <source>Rotate witness key</source>
-        <translation type="unfinished">Rotate witness key</translation>
+        <translation>Rotate witness key</translation>
     </message>
     <message>
+        <location line="-190"/>
+        <location line="+98"/>
+        <location line="+78"/>
         <source>Renew witness account</source>
-        <translation type="unfinished">Renew witness account</translation>
+        <translation>Renew witness account</translation>
     </message>
     <message>
+        <location line="-174"/>
         <source>Fund witness account</source>
-        <translation type="unfinished">Fund witness account</translation>
+        <translation>Fund witness account</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Lock funds</source>
-        <translation type="unfinished">Lock funds</translation>
+        <translation>Lock funds</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Empty witness account</source>
-        <translation type="unfinished">Empty witness account</translation>
+        <translation>Empty witness account</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Received from witness account</source>
-        <translation type="unfinished">Received from witness account</translation>
+        <translation>Received from witness account</translation>
     </message>
     <message>
-        <source>watch-only</source>
-        <translation type="unfinished">watch-only</translation>
-    </message>
-    <message>
+        <location line="+74"/>
         <source>Lock funds from: %1</source>
-        <translation type="unfinished">Lock funds from: %1</translation>
+        <translation>Lock funds from: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Extend locked funds from: %1</source>
-        <translation type="unfinished">Extend locked funds from: %1</translation>
+        <translation>Extend locked funds from: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Split locked funds: %1</source>
-        <translation type="unfinished">Split locked funds: %1</translation>
+        <translation>Split locked funds: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Merge locked funds: %1</source>
-        <translation type="unfinished">Merge locked funds: %1</translation>
+        <translation>Merge locked funds: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Rotate witness key: %1</source>
-        <translation type="unfinished">Rotate witness key: %1</translation>
+        <translation>Rotate witness key: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Unlock funds from: %1</source>
-        <translation type="unfinished">Unlock funds from: %1</translation>
+        <translation>Unlock funds from: %1</translation>
     </message>
     <message>
+        <location line="+12"/>
+        <location line="+2"/>
+        <location line="+72"/>
+        <location line="+2"/>
         <source>Paid to: %1</source>
-        <translation type="unfinished">Paid to: %1</translation>
+        <translation>Paid to: %1</translation>
     </message>
     <message>
+        <location line="-72"/>
+        <location line="+62"/>
         <source>Payment from: %1</source>
-        <translation type="unfinished">Payment from: %1</translation>
+        <translation>Payment from: %1</translation>
     </message>
     <message>
+        <location line="-58"/>
+        <location line="+88"/>
         <source>Complex transaction, view transaction details.</source>
-        <translation type="unfinished">Complex transaction, view transaction details.</translation>
+        <translation>Complex transaction, view transaction details.</translation>
     </message>
     <message>
+        <location line="-83"/>
         <source>Internal transfer from: %1</source>
-        <translation type="unfinished">Internal transfer from: %1</translation>
+        <translation>Internal transfer from: %1</translation>
     </message>
     <message>
+        <location line="+20"/>
         <source>Fund witness account: %1</source>
-        <translation type="unfinished">Fund witness account: %1</translation>
+        <translation>Fund witness account: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Fund witness account extension: %1</source>
-        <translation type="unfinished">Fund witness account extension: %1</translation>
+        <translation>Fund witness account extension: %1</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Unlock funds to: %1</source>
-        <translation type="unfinished">Unlock funds to: %1</translation>
+        <translation>Unlock funds to: %1</translation>
     </message>
     <message>
+        <location line="+18"/>
         <source>Internal transfer to: %1</source>
-        <translation type="unfinished">Internal transfer to: %1</translation>
+        <translation>Internal transfer to: %1</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Internal account movement</source>
-        <translation type="unfinished">Internal account movement</translation>
+        <translation>Internal account movement</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Extend locked funds</source>
-        <translation type="unfinished">Extend locked funds</translation>
+        <translation>Extend locked funds</translation>
     </message>
     <message>
-        <source>(no label)</source>
-        <translation type="unfinished">(no label)</translation>
-    </message>
-    <message>
+        <location line="+315"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation type="unfinished">Transaction status. Hover over this field to show number of confirmations.</translation>
+        <translation>Transaction status. Hover over this field to show number of confirmations.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Date and time that the transaction was received.</source>
-        <translation type="unfinished">Date and time that the transaction was received.</translation>
+        <translation>Date and time that the transaction was received.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Type of transaction.</source>
-        <translation type="unfinished">Type of transaction.</translation>
+        <translation>Type of transaction.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation type="unfinished">Whether or not a watch-only address is involved in this transaction.</translation>
+        <translation>Whether or not a watch-only address is involved in this transaction.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>User-defined intent/purpose of the transaction.</source>
-        <translation type="unfinished">User-defined intent/purpose of the transaction.</translation>
+        <translation>User-defined intent/purpose of the transaction.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Amount added to balance.</source>
-        <translation type="unfinished">Amount added to balance.</translation>
+        <translation>Amount added to balance.</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>Amount removed from balance.</source>
-        <translation type="unfinished">Amount removed from balance.</translation>
+        <translation>Amount removed from balance.</translation>
     </message>
 </context>
 <context>
     <name>TransactionView</name>
     <message>
-        <source>All dates</source>
-        <translation type="unfinished">All dates</translation>
-    </message>
-    <message>
-        <source>Today</source>
-        <translation type="unfinished">Today</translation>
-    </message>
-    <message>
-        <source>This week</source>
-        <translation type="unfinished">This week</translation>
-    </message>
-    <message>
-        <source>This month</source>
-        <translation type="unfinished">This month</translation>
-    </message>
-    <message>
-        <source>Last month</source>
-        <translation type="unfinished">Last month</translation>
-    </message>
-    <message>
-        <source>This year</source>
-        <translation type="unfinished">This year</translation>
-    </message>
-    <message>
-        <source>Select range</source>
-        <translation type="unfinished">Select range</translation>
-    </message>
-    <message>
-        <source>All transaction types</source>
-        <translation type="unfinished">All transaction types</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation type="unfinished">Received with</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation type="unfinished">Sent to</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation type="unfinished">Internal transfer</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation type="unfinished">Mining reward</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation type="unfinished">Witness reward</translation>
-    </message>
-    <message>
-        <source>Other</source>
-        <translation type="unfinished">Other</translation>
-    </message>
-    <message>
-        <source>Search label</source>
-        <translation type="unfinished">Search label</translation>
-    </message>
-    <message>
-        <source>Min amount</source>
-        <translation type="unfinished">Min amount</translation>
-    </message>
-    <message>
-        <source>Abandon transaction</source>
-        <translation type="unfinished">Abandon transaction</translation>
-    </message>
-    <message>
-        <source>Increase transaction fee</source>
-        <translation type="unfinished">Increase transaction fee</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation type="unfinished">Copy address</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Copy label</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation type="unfinished">Copy amount</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation type="unfinished">Copy transaction ID</translation>
-    </message>
-    <message>
-        <source>Copy raw transaction</source>
-        <translation type="unfinished">Copy raw transaction</translation>
-    </message>
-    <message>
-        <source>Copy full transaction details</source>
-        <translation type="unfinished">Copy full transaction details</translation>
-    </message>
-    <message>
-        <source>Edit label</source>
-        <translation type="unfinished">Edit label</translation>
-    </message>
-    <message>
-        <source>Show transaction details</source>
-        <translation type="unfinished">Show transaction details</translation>
-    </message>
-    <message>
-        <source>Export Transaction History</source>
-        <translation type="unfinished">Export Transaction History</translation>
-    </message>
-    <message>
+        <location filename="../../transactionview.cpp" line="+375"/>
         <source>Comma separated file (*.csv)</source>
-        <translation type="unfinished">Comma separated file (*.csv)</translation>
+        <translation>Comma separated file (*.csv)</translation>
     </message>
     <message>
-        <source>Confirmed</source>
-        <translation type="unfinished">Confirmed</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation type="unfinished">Date</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="unfinished">Type</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation type="unfinished">Label</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation type="unfinished">Address</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation type="unfinished">ID</translation>
-    </message>
-    <message>
+        <location line="+20"/>
         <source>Exporting Failed</source>
-        <translation type="unfinished">Exporting Failed</translation>
+        <translation>Exporting Failed</translation>
     </message>
     <message>
+        <location line="-6"/>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <source>Confirmed</source>
+        <translation>Confirmed</translation>
+    </message>
+    <message>
+        <location line="-233"/>
+        <source>Copy address</source>
+        <translation>Copy address</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy label</source>
+        <translation>Copy label</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy amount</source>
+        <translation>Copy amount</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy transaction ID</source>
+        <translation>Copy transaction ID</translation>
+    </message>
+    <message>
+        <location line="+231"/>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <location line="-304"/>
+        <source>Received with</source>
+        <translation>Received with</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Sent to</source>
+        <translation>Sent to</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Internal transfer</source>
+        <translation>Internal transfer</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Mining reward</source>
+        <translation>Mining reward</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Witness reward</source>
+        <translation>Witness reward</translation>
+    </message>
+    <message>
+        <location line="-19"/>
+        <source>All dates</source>
+        <translation>All dates</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Today</source>
+        <translation>Today</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>This week</source>
+        <translation>This week</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>This month</source>
+        <translation>This month</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Last month</source>
+        <translation>Last month</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>This year</source>
+        <translation>This year</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Select range</source>
+        <translation>Select range</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>All transaction types</source>
+        <translation>All transaction types</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Other</source>
+        <translation>Other</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Search label</source>
+        <translation>Search label</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Min amount</source>
+        <translation>Min amount</translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>Abandon transaction</source>
+        <translation>Abandon transaction</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Increase transaction fee</source>
+        <translation>Increase transaction fee</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Copy raw transaction</source>
+        <translation>Copy raw transaction</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Copy full transaction details</source>
+        <translation>Copy full transaction details</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Edit label</source>
+        <translation>Edit label</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Show transaction details</source>
+        <translation>Show transaction details</translation>
+    </message>
+    <message>
+        <location line="+209"/>
+        <source>Export Transaction History</source>
+        <translation>Export Transaction History</translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>There was an error trying to save the transaction history to %1.</source>
-        <translation type="unfinished">There was an error trying to save the transaction history to %1.</translation>
+        <translation>There was an error trying to save the transaction history to %1.</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Exporting Successful</source>
-        <translation type="unfinished">Exporting Successful</translation>
+        <translation>Exporting Successful</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>The transaction history was successfully saved to %1.</source>
-        <translation type="unfinished">The transaction history was successfully saved to %1.</translation>
+        <translation>The transaction history was successfully saved to %1.</translation>
     </message>
     <message>
+        <location line="+177"/>
         <source>Range:</source>
-        <translation type="unfinished">Range:</translation>
+        <translation>Range:</translation>
     </message>
     <message>
+        <location line="+8"/>
         <source>to</source>
-        <translation type="unfinished">to</translation>
+        <translation>to</translation>
     </message>
 </context>
 <context>
     <name>WalletModel</name>
     <message>
+        <location filename="../../walletmodel.cpp" line="+408"/>
         <source>Send Coins</source>
-        <translation type="unfinished">Send Coins</translation>
+        <translation>Send Coins</translation>
     </message>
     <message>
+        <location line="+518"/>
+        <location line="+46"/>
+        <location line="+9"/>
         <source>Fee bump error</source>
-        <translation type="unfinished">Fee bump error</translation>
+        <translation>Fee bump error</translation>
     </message>
     <message>
+        <location line="-55"/>
         <source>Increasing transaction fee failed</source>
-        <translation type="unfinished">Increasing transaction fee failed</translation>
+        <translation>Increasing transaction fee failed</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Do you want to increase the fee?</source>
-        <translation type="unfinished">Do you want to increase the fee?</translation>
+        <translation>Do you want to increase the fee?</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Current fee:</source>
-        <translation type="unfinished">Current fee:</translation>
+        <translation>Current fee:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Increase:</source>
-        <translation type="unfinished">Increase:</translation>
+        <translation>Increase:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>New fee:</source>
-        <translation type="unfinished">New fee:</translation>
+        <translation>New fee:</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Confirm fee bump</source>
-        <translation type="unfinished">Confirm fee bump</translation>
+        <translation>Confirm fee bump</translation>
     </message>
     <message>
+        <location line="+22"/>
         <source>Can&apos;t sign transaction.</source>
-        <translation type="unfinished">Can&apos;t sign transaction.</translation>
+        <translation>Can&apos;t sign transaction.</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>Could not commit transaction</source>
-        <translation type="unfinished">Could not commit transaction</translation>
+        <translation>Could not commit transaction</translation>
     </message>
 </context>
 <context>
     <name>WalletView</name>
     <message>
+        <location filename="../../walletview.cpp" line="+64"/>
         <source>&amp;Export</source>
-        <translation type="unfinished">&amp;Export</translation>
+        <translation>&amp;Export</translation>
     </message>
     <message>
+        <location line="+216"/>
         <source>Backup Wallet</source>
-        <translation type="unfinished">Backup Wallet</translation>
+        <translation>Backup Wallet</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>Wallet Data (*.dat)</source>
-        <translation type="unfinished">Wallet Data (*.dat)</translation>
+        <translation>Wallet Data (*.dat)</translation>
     </message>
     <message>
+        <location line="+6"/>
         <source>Backup Failed</source>
-        <translation type="unfinished">Backup Failed</translation>
+        <translation>Backup Failed</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>There was an error trying to save the wallet data to %1.</source>
-        <translation type="unfinished">There was an error trying to save the wallet data to %1.</translation>
+        <translation>There was an error trying to save the wallet data to %1.</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>Backup Successful</source>
-        <translation type="unfinished">Backup Successful</translation>
+        <translation>Backup Successful</translation>
     </message>
     <message>
+        <location line="+0"/>
         <source>The wallet data was successfully saved to %1.</source>
-        <translation type="unfinished">The wallet data was successfully saved to %1.</translation>
+        <translation>The wallet data was successfully saved to %1.</translation>
+    </message>
+</context>
+<context>
+    <name>WarningOverlay</name>
+    <message>
+        <location filename="../../forms/warningoverlay.ui" line="+14"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location line="+108"/>
+        <source>Hide</source>
+        <translation>Hide</translation>
     </message>
 </context>
 <context>
     <name>WelcomeDialog</name>
     <message>
-        <source>New wallet</source>
-        <translation type="unfinished">New wallet</translation>
-    </message>
-    <message>
-        <source>Restore wallet</source>
-        <translation type="unfinished">Restore wallet</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
-    </message>
-    <message>
-        <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation type="unfinished">Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>I wrote it down</source>
-        <translation type="unfinished">I wrote it down</translation>
-    </message>
-    <message>
-        <source>Recover wallet</source>
-        <translation type="unfinished">Recover wallet</translation>
-    </message>
-    <message>
-        <source>Create wallet</source>
-        <translation type="unfinished">Create wallet</translation>
-    </message>
-    <message>
-        <source>Please enter a recovery phrase</source>
-        <translation type="unfinished">Please enter a recovery phrase</translation>
-    </message>
-    <message>
-        <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
-        <translation type="unfinished">The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/welcomedialog.cpp" line="+165"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/forms/welcomedialog.ui" line="+170"/>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
+    </message>
+    <message>
+        <location line="-52"/>
+        <source>New wallet</source>
+        <translation>New wallet</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Restore wallet</source>
+        <translation>Restore wallet</translation>
+    </message>
+    <message>
+        <location line="+73"/>
+        <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</translation>
+    </message>
+    <message>
+        <location line="+32"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location line="+251"/>
+        <source>I wrote it down</source>
+        <translation>I wrote it down</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <location filename="../../_Gulden/welcomedialog.cpp" line="-31"/>
+        <source>Recover wallet</source>
+        <translation>Recover wallet</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/welcomedialog.cpp" line="-13"/>
+        <source>Create wallet</source>
+        <translation>Create wallet</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <source>Please enter a recovery phrase</source>
+        <translation>Please enter a recovery phrase</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</source>
+        <translation>The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Proceed with invalid phrase</source>
-        <translation type="unfinished">Proceed with invalid phrase</translation>
+        <translation>Proceed with invalid phrase</translation>
     </message>
     <message>
+        <location line="+16"/>
         <source>Generating wallet</source>
-        <translation type="unfinished">Generating wallet</translation>
+        <translation>Generating wallet</translation>
     </message>
     <message>
+        <location line="+12"/>
         <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
-        <translation type="unfinished">Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</translation>
+        <translation>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</translation>
     </message>
     <message>
+        <location line="+1"/>
         <source>I understand</source>
-        <translation type="unfinished">I understand</translation>
+        <translation>I understand</translation>
     </message>
 </context>
 <context>
     <name>WitnessDialog</name>
     <message>
-        <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation type="unfinished">To begin witnessing, select an account from which to lock funds:</translation>
-    </message>
-    <message>
-        <source>Projected earnings graph</source>
-        <translation type="unfinished">Projected earnings graph</translation>
-    </message>
-    <message>
-        <source>Compound earnings</source>
-        <translation type="unfinished">Compound earnings</translation>
-    </message>
-    <message>
+        <location filename="../../_Gulden/forms/witnessdialog.ui" line="+204"/>
         <source>Information</source>
-        <translation type="unfinished">Information</translation>
+        <translation>Information</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+563"/>
+        <source>%1 months</source>
+        <translation>%1 months</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/witnessdialog.ui" line="-131"/>
+        <source>To begin witnessing, select an account from which to lock funds:</source>
+        <translation>To begin witnessing, select an account from which to lock funds:</translation>
+    </message>
+    <message>
+        <location line="+94"/>
+        <source>Projected earnings graph</source>
+        <translation>Projected earnings graph</translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>Compound earnings</source>
+        <translation>Compound earnings</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <location line="+46"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location line="+13"/>
+        <location line="+49"/>
+        <location line="+23"/>
+        <location line="+23"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-514"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+454"/>
         <source>n/a</source>
-        <translation type="unfinished">n/a</translation>
+        <translation>n/a</translation>
     </message>
     <message>
+        <location line="-233"/>
         <source>Lock time remaining</source>
-        <translation type="unfinished">Lock time remaining</translation>
+        <translation>Lock time remaining</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Locked from</source>
-        <translation type="unfinished">Locked from</translation>
+        <translation>Locked from</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Locked until</source>
-        <translation type="unfinished">Locked until</translation>
+        <translation>Locked until</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Last earnings</source>
-        <translation type="unfinished">Last earnings</translation>
+        <translation>Last earnings</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Earnings</source>
-        <translation type="unfinished">Earnings</translation>
+        <translation>Earnings</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Lock duration</source>
-        <translation type="unfinished">Lock duration</translation>
+        <translation>Lock duration</translation>
     </message>
     <message>
+        <location line="+36"/>
         <source>Required earnings frequency</source>
-        <translation type="unfinished">Required earnings frequency</translation>
+        <translation>Required earnings frequency</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Weight</source>
-        <translation type="unfinished">Weight</translation>
+        <translation>Weight</translation>
     </message>
     <message>
+        <location line="+39"/>
         <source>Estimated earnings frequency</source>
-        <translation type="unfinished">Estimated earnings frequency</translation>
+        <translation>Estimated earnings frequency</translation>
     </message>
     <message>
+        <location line="+23"/>
         <source>Network weight</source>
-        <translation type="unfinished">Network weight</translation>
+        <translation>Network weight</translation>
     </message>
     <message>
+        <location line="+51"/>
         <source>Inactive witness account</source>
-        <translation type="unfinished">Inactive witness account</translation>
+        <translation>Inactive witness account</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation type="unfinished">Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</translation>
+        <translation>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</translation>
     </message>
     <message>
+        <location line="+85"/>
         <source>Waiting for confirmation</source>
-        <translation type="unfinished">Waiting for confirmation</translation>
+        <translation>Waiting for confirmation</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
-        <translation type="unfinished">Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</translation>
+        <translation>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</translation>
     </message>
     <message>
+        <location line="+48"/>
         <source>Account emptied</source>
-        <translation type="unfinished">Account emptied</translation>
+        <translation>Account emptied</translation>
     </message>
     <message>
+        <location line="+10"/>
         <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
 In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation type="unfinished">Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+        <translation>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
 In future versions of Gulden it will be possible to re-use this account for further witnessing.</translation>
     </message>
     <message>
+        <location line="+91"/>
         <source>Change units</source>
-        <translation type="unfinished">Change units</translation>
+        <translation>Change units</translation>
     </message>
     <message>
+        <location line="+7"/>
         <source>View graph</source>
-        <translation type="unfinished">View graph</translation>
+        <translation>View graph</translation>
     </message>
     <message>
+        <location line="+23"/>
+        <location line="+64"/>
         <source>Empty account</source>
-        <translation type="unfinished">Empty account</translation>
+        <translation>Empty account</translation>
     </message>
     <message>
+        <location line="-57"/>
+        <location line="+64"/>
         <source>Withdraw earnings</source>
-        <translation type="unfinished">Withdraw earnings</translation>
+        <translation>Withdraw earnings</translation>
     </message>
     <message>
+        <location line="-14"/>
         <source>Fund account</source>
-        <translation type="unfinished">Fund account</translation>
+        <translation>Fund account</translation>
     </message>
     <message>
+        <location line="+30"/>
         <source>Renew account</source>
-        <translation type="unfinished">Renew account</translation>
+        <translation>Renew account</translation>
     </message>
     <message>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-416"/>
         <source>Earnings to date</source>
-        <translation type="unfinished">Earnings to date</translation>
+        <translation>Earnings to date</translation>
     </message>
     <message>
+        <location line="+34"/>
         <source>Projected earnings</source>
-        <translation type="unfinished">Projected earnings</translation>
+        <translation>Projected earnings</translation>
     </message>
     <message>
+        <location line="+17"/>
         <source>Initial projected earnings</source>
-        <translation type="unfinished">Initial projected earnings</translation>
+        <translation>Initial projected earnings</translation>
     </message>
     <message>
+        <location line="+19"/>
         <source>&amp;Blocks</source>
-        <translation type="unfinished">&amp;Blocks</translation>
+        <translation>&amp;Blocks</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Days</source>
-        <translation type="unfinished">&amp;Days</translation>
+        <translation>&amp;Days</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Weeks</source>
-        <translation type="unfinished">&amp;Weeks</translation>
+        <translation>&amp;Weeks</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>&amp;Months</source>
-        <translation type="unfinished">&amp;Months</translation>
+        <translation>&amp;Months</translation>
     </message>
     <message>
+        <location line="+379"/>
         <source>%1 blocks</source>
-        <translation type="unfinished">%1 blocks</translation>
+        <translation>%1 blocks</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>%1 days</source>
-        <translation type="unfinished">%1 days</translation>
+        <translation>%1 days</translation>
     </message>
     <message>
+        <location line="+4"/>
         <source>%1 weeks</source>
-        <translation type="unfinished">%1 weeks</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation type="unfinished">%1 months</translation>
+        <translation>%1 weeks</translation>
     </message>
 </context>
 <context>
     <name>toolbar</name>
     <message>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-208"/>
         <source>Account toolbar</source>
-        <translation type="unfinished">Account toolbar</translation>
+        <translation>Account toolbar</translation>
     </message>
     <message>
+        <location line="+87"/>
         <source>Overview toolbar</source>
-        <translation type="unfinished">Overview toolbar</translation>
+        <translation>Overview toolbar</translation>
     </message>
     <message>
+        <location line="+77"/>
+        <location line="+120"/>
         <source>Spacer  toolbar</source>
-        <translation type="unfinished">Spacer  toolbar</translation>
+        <translation>Spacer  toolbar</translation>
     </message>
     <message>
+        <location line="-26"/>
         <source>Navigation toolbar</source>
-        <translation type="unfinished">Navigation toolbar</translation>
+        <translation>Navigation toolbar</translation>
     </message>
     <message>
+        <location line="+9"/>
         <source>Account info toolbar</source>
-        <translation type="unfinished">Account info toolbar</translation>
+        <translation>Account info toolbar</translation>
     </message>
     <message>
+        <location line="+160"/>
         <source>Status toolbar</source>
-        <translation type="unfinished">Status toolbar</translation>
+        <translation>Status toolbar</translation>
     </message>
     <message>
+        <location line="+65"/>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Backup</translation>
     </message>
 </context>
 </TS>

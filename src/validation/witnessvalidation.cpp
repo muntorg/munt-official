@@ -471,7 +471,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
         uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
         COutPoint outPoint = coinIter.first;
         Coin coin = coinIter.second;
-        if (coin.out.nValue >= nMinimumWitnessAmount)
+        if (coin.out.nValue >= (nMinimumWitnessAmount*COIN))
         {
             uint64_t nUnused1, nUnused2;
             int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));

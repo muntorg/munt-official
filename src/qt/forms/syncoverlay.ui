@@ -57,7 +57,7 @@
 
 QLabel { color: rgb(40,40,40);  }</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayoutSub" stretch="1,0,0">
+        <layout class="QVBoxLayout" name="verticalLayoutSub" stretch="1,0">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -99,46 +99,6 @@ QLabel { color: rgb(40,40,40);  }</string>
                </property>
                <property name="indent">
                 <number>0</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QFormLayout" name="formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-           </property>
-           <property name="horizontalSpacing">
-            <number>6</number>
-           </property>
-           <property name="verticalSpacing">
-            <number>6</number>
-           </property>
-           <property name="topMargin">
-            <number>10</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelSyncDone">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Progress</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayoutSync" stretch="0">
-             <item>
-              <widget class="QLabel" name="percentageProgress">
-               <property name="text">
-                <string notr="true">~</string>
                </property>
               </widget>
              </item>
