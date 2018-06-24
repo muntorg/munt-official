@@ -1252,7 +1252,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
-    //fixme: (2.0)
+    //fixme: (2.1)
     /*DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount;

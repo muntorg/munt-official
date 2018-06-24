@@ -237,7 +237,6 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     return ret;
 }
 
-//fixme: (2.0) (High) invalidate ismine cache when doing actions like importkey (anything that rescans?)
 isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);

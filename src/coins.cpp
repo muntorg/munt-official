@@ -281,8 +281,9 @@ bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
     return true;
 }
 
-//fixme: (2.0)
-static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE /  2;//::GetSerializeSize(CTxOut(), SER_NETWORK, PROTOCOL_VERSION); // TODO: merge with similar definition in undo.h.
+//fixme: (2.1) This can potentially be improved.
+//22 is the lower bound for a new SegSig output
+static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 22; // TODO: merge with similar definition in undo.h.
 
 const Coin& AccessByTxid(const CCoinsViewCache& view, const uint256& txid)
 {
