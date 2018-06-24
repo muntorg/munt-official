@@ -4,8 +4,8 @@
     <extra-po-header-language>af_ZA</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:03+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:03+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:51+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:51+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -217,10 +217,6 @@
         <translation>Transaksie fooi:</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>S&amp;tuur</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Stuur aan vele ontvangers op eens</translation>
     </message>
@@ -231,10 +227,6 @@
     <message>
         <source>%1 to %2</source>
         <translation>%1 tot %2</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>of</translation>
     </message>
 </context>
 <context>
@@ -438,21 +430,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopieer bedrag</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Boodskap:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Bedrag:</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>&amp;Label</source>
@@ -481,84 +458,6 @@
     <message>
         <source>Could not unlock wallet.</source>
         <translation>Kon nie die beursie oopsluit nie.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Blad nutsbalk</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oorsig</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Wys algemene oorsig van die beursie</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaksies</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Besoek transaksie geskiedenis</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>S&amp;luit af</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Sluit af</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Wys inligting oor Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opsies</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Lêer</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Instellings</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Hulp</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Beursie</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sinchroniseer met die netwerk ...</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 agter</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Fout</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informasie</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oorsig</translation>
     </message>
 </context>
 <context>
@@ -598,13 +497,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Vorm</translation>
-    </message>
-</context>
-<context>
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
@@ -623,32 +515,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Stuur Munstukke</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Bedrag:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Boodskap:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Teken boodskap</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Handtekening</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Teken &amp;Boodskap</translation>
     </message>
 </context>
 </TS>

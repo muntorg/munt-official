@@ -5,8 +5,8 @@
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
     <extra-po-header-plural_forms>nplurals=1; plural=0;</extra-po-header-plural_forms>
-    <extra-po-header-po_revision_date>2018-06-24 07:50+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:50+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:57+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:57+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -102,10 +102,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>현재 탭에 있는 데이터를 파일로 내보내기</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>내보내기 (&amp;E)</translation>
@@ -212,10 +208,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>거래 기록 내보내기</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>모니터링 지갑</translation>
     </message>
     <message>
         <source>ID</source>
@@ -593,24 +585,12 @@
         <translation>전송 기능 확인</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>보내기(&amp;E)</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>양식의 모든 필드를 지웁니다</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>모두 지우기(&amp;A)</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>다수의 수령인들에게 한번에 보내기</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>수령인 추가하기(&amp;R)</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -816,89 +796,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>라벨 복사</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>거래액 복사</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>예</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>아니오</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>지우기</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>지출기록 확인</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>선택된 요청을 표시하기 (더블 클릭으로 항목을 표시할 수 있습니다)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>보기</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>목록에서 삭제할 항목을 선택하시오</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>삭제</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>이전에 사용된 수취용 주소를 사용할려고 합니다. 주소의 재사용은 보안과 개인정보 보호 측면에서 문제를 초래할 수 있습니다. 이전 지불 요청을 재생성하는 경우가 아니라면 주소 재사용을 권하지 않습니다.  </translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>현재의 수취용 주소를 재사용하기(&amp;E) (권장하지 않습니다)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>메시지(&amp;M):</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>임의의 라벨이 새로운 받기 주소와 결합</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>지급을 요청하기 위해 아래 형식을 사용하세요. 입력값은 &lt;b&gt;선택 사항&lt;/b&gt; 입니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>라벨(&amp;L):</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>요청할 금액 입력칸으로 선택 사항입니다. 빈 칸으로 두거나 특정 금액이 필요하지 않는 경우 0을 입력하세요. </translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>거래액(&amp;A):</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>지불 요청(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>양식의 모든 필드를 지웁니다</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -950,13 +847,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>주소 편집</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -977,246 +867,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>데이터 폴더를 여기 생성할 수 없습니다.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>툴바 색인표</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>개요(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>지갑의 일반적 개요를 보여줍니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>보내기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>받기(&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>거래(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>거래내역을 검색합니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>보이기/숨기기(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>메인창 보이기 또는 숨기기</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&amp;URI 열기...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>지갑 백업(&amp;B)...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>지갑을 다른장소에 백업</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>보내는 주소(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>한번 이상 사용된 보내는 주소와 주소 제목의 목록을 보여줍니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>받는 주소(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>한번 이상 사용된 받는 주소와 주소 제목의 목록을 보여줍니다.</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>나가기(&amp;X)</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>어플리케이션 종료</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>메시지 서명(&amp;M)...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>메시지 확인(&amp;V)...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>디버그 창(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>디버깅 및 진단 콘솔을 엽니다</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>명령줄 옵션(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>%1 정보(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>%1 정보를 표시합니다</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt 정보</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Qt 정보를 표시합니다</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>지갑 암호화(&amp;E)...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>지갑에 포함된 개인키 암호화하기</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>암호문 변경(&amp;C)...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>지갑 암호화에 사용되는 암호를 변경합니다</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>옵션(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>%1 설정 옵션 수정</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>파일(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>설정(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>도움말(&amp;H)</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 클라이언트</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>지갑</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>노드</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>네트워크와 동기화중...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>디스크에서 블록 색인중...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>디스크에서 블록 처리중...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>디스크에서 블록 다시 색인중...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>%n 블럭 만큼의 거래 기록이 처리됨.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>현재까지</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 뒤에</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>오류</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>경고</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>정보</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>날짜: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>종류: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>라벨: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>주소: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>지갑이 암호화 되었고 현재 차단해제 되었습니다</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>지갑이 암호화 되었고 현재 잠겨져 있습니다</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>개요(&amp;O)</translation>
     </message>
 </context>
 <context>
@@ -1302,24 +952,8 @@
         <translation>%1 디버그 로그파일을 현재 데이터 폴더에서 엽니다. 용량이 큰 로그 파일들은 몇 초가 걸릴 수 있습니다.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>열기(&amp;O)</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>콘솔(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>글자 크기 축소</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>글자 크기 확대</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>콘솔 초기화</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1815,18 +1449,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>유형</translation>
+        <source>Open URI</source>
+        <translation>URI 열기</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>숨기기</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>지급 요청 URI 또는 파일 열기</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>최종 블럭 시각</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>지불 요청 파일을 선택하세요</translation>
+    </message>
+    <message>
+        <source>Select payment request file to open</source>
+        <translation>지불 요청 파일을 열기 위해서 선택하세요</translation>
     </message>
 </context>
 <context>
@@ -1901,29 +1543,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI 열기</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>지급 요청 URI 또는 파일 열기</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>지불 요청 파일을 선택하세요</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>지불 요청 파일을 열기 위해서 선택하세요</translation>
-    </message>
-</context>
-<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1946,6 +1565,17 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>예</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>아니오</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -1957,140 +1587,6 @@
     <message>
         <source>Send Coins</source>
         <translation>코인 보내기</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>라벨(&amp;L):</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>이것은 정상적인 지불입니다.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>송금할 대상(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>이전에 사용한 주소를 선택하십시오</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>클립보드로 부터 주소 붙여넣기</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>항목을 지웁니다</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>사용된 주소 목록에 새 주소를 추가하기 위해 라벨 이름을 입력해 주세요. </translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>금액(&amp;M):</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>송금액에서 수수료 공제(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>메시지:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>인증 되지 않은 지급 요청입니다.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>송금할 대상:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>메모:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>인증 된 지급 요청 입니다.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>모두 지우기(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>이전에 사용한 주소를 선택하십시오</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>클립보드로 부터 주소를 복사하기</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>서명 - 싸인 / 메시지 확인</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>메시지 서명(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>여기에 서명하려는 메시지를 입력하십시오</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>서명</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>현재 서명을 시스템 클립보드에 복사</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>메시지에 서명(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>메시지 필드의 모든 서명 재설정</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>메시지 검증(&amp;V)</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>메시지를 검증하기 위해 아래 칸에 각각 지갑 주소와 메시지, 전자서명을 입력하세요. (메시지 원본의 띄어쓰기, 들여쓰기, 행 나눔 등이 정확하게 입력되어야 하므로 원본을 복사해서 입력하세요) 이 기능은 메시지 검증이 주 목적이며, 네트워크 침입자에 의해 변조되지 않도록 전자서명 해독에 불필요한 시간을 소모하지 마세요. </translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>메시지 검증(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>모든 검증 메시지 필드 재설정</translation>
     </message>
 </context>
 <context>
@@ -2116,13 +1612,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>이 창은 거래의 세부내역을 보여줍니다</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>거래액을 표시하는 단위. 클릭해서 다른 단위를 선택할 수 있습니다.</translation>
     </message>
 </context>
 </TS>

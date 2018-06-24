@@ -4,8 +4,8 @@
     <extra-po-header-language>bg_BG</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:52+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:52+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Изнеси данните в избрания раздел към файл</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>Изнеси</translation>
@@ -243,104 +239,6 @@
     <message>
         <source>Banned Until</source>
         <translation>Блокиран до</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>Преглед</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Покажи общ преглед на портфейла</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>Транзакции</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Разгледай история на транзакциите</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Отвори URI</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Направи резервно копие на портфейла...</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Адреси за пращане...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Адреси за получаване...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Изход</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Излез от приложението</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Подпиши съобщение...</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>За %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Покажи информация за %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Относно Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Покажи информация отностно Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Криптирай портфейл</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Промени паролата...</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>Настройки...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Промени конфигурации за %1</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Възел</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Синхронизиране с мрежата...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Повторно индексиране на блоковете на диска...</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>Преглед</translation>
     </message>
 </context>
 </TS>

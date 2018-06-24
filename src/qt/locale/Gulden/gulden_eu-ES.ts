@@ -4,8 +4,8 @@
     <extra-po-header-language>eu_ES</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:05+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:05+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Esportatu datuak uneko fitxategian</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Esportatu</translation>
@@ -481,25 +477,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiatu etiketa</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Mezua</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiketa:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Kopurua</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -543,103 +520,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
+    <name>OptionsDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation>Editatu helbidea</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Fitxen tresna-barra</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Gainbegiratu</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Ikusi zorroaren begirada orokorra</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakzioak</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Ikusi transakzioen historia</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Helbideak jasotzen</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Irten</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Irten aplikaziotik</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt-ari buruz</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Erakutsi Bitcoin-i buruzko informazioa</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Aldatu zorroa enkriptatzeko erabilitako pasahitza</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Aukerak...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Artxiboa</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Ezarpenak</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Laguntza</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sarearekin sinkronizatzen...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Egunean</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Zorroa &lt;b&gt;enkriptatuta&lt;/b&gt; eta &lt;b&gt;desblokeatuta&lt;/b&gt; dago une honetan</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Zorroa &lt;b&gt;enkriptatuta&lt;/b&gt; eta &lt;b&gt;blokeatuta&lt;/b&gt; dago une honetan</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Gainbegiratu</translation>
-    </message>
-</context>
-<context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Inprimakia</translation>
+        <source>Options</source>
+        <translation>Aukerak</translation>
     </message>
 </context>
 <context>
@@ -650,55 +534,10 @@
     </message>
 </context>
 <context>
-    <name>OptionsDialog</name>
-    <message>
-        <source>Options</source>
-        <translation>Aukerak</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Bidali txanponak</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiketa:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Ordaindu &amp;honi:</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Itsatsi helbidea arbeletik</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>K&amp;opurua:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Mezua</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Ordaindu honi:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Sartu etiketa bat helbide honetarako, eta gehitu zure helbide-liburuan</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Itsatsi helbidea arbeletik</translation>
     </message>
 </context>
 <context>

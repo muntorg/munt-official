@@ -1307,92 +1307,92 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location filename="../../guldenstrings.cpp" line="+10"/>
         <source>Done loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Done loading</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Error reading from database, shutting down.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error reading from database, shutting down.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation type="unfinished"></translation>
+        <translation>Incorrect or no genesis block found. Wrong datadir for network?</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Legacy account</source>
-        <translation type="unfinished"></translation>
+        <translation>Legacy account</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading P2P addresses...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading P2P addresses...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading banlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading banlist...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading wallet...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading wallet...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>My account</source>
-        <translation type="unfinished"></translation>
+        <translation>My account</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Wallet unlock required for wallet upgrade</source>
-        <translation type="unfinished"></translation>
+        <translation>Wallet unlock required for wallet upgrade</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zapping all transactions from wallet...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapping all transactions from wallet...</translation>
     </message>
     <message>
         <location line="-8"/>
         <source>Pruning blockstore...</source>
-        <translation type="unfinished"></translation>
+        <translation>Pruning blockstore...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reloading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Reloading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rescanning...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rescanning...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rewinding blocks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rewinding blocks...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Starting network threads...</source>
-        <translation type="unfinished"></translation>
+        <translation>Starting network threads...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Upgrading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Upgrading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Verifying blocks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Verifying blocks...</translation>
     </message>
 </context>
 <context>
@@ -3406,17 +3406,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Send</translation>
     </message>
     <message>
+        <location line="+275"/>
+        <source>Payment request expired.</source>
+        <translation>Payment request expired.</translation>
+    </message>
+    <message>
         <location filename="../../forms/sendcoinsdialog.ui" line="+298"/>
         <source>Hide</source>
         <translation>Hide</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="+275"/>
-        <source>Payment request expired.</source>
-        <translation>Payment request expired.</translation>
-    </message>
-    <message>
-        <location line="-657"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-657"/>
         <source>&amp;Clear</source>
         <translation>&amp;Clear</translation>
     </message>
@@ -3714,17 +3714,17 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Form</translation>
     </message>
     <message>
+        <location line="+119"/>
+        <source>Hide</source>
+        <translation>Hide</translation>
+    </message>
+    <message>
         <location filename="../../syncoverlay.cpp" line="+119"/>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
     </message>
     <message>
-        <location filename="../../forms/syncoverlay.ui" line="+119"/>
-        <source>Hide</source>
-        <translation>Hide</translation>
-    </message>
-    <message>
-        <location filename="../../syncoverlay.cpp" line="-4"/>
+        <location line="-4"/>
         <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
         <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</translation>
     </message>

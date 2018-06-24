@@ -897,7 +897,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 
     if (nOurWeight < nMinimumWitnessWeight)
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.").arg(nMinimumWitnessWeight).arg(nOurWeight));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(nMinimumWitnessWeight).arg(nOurWeight));
         return;
     }
 

@@ -4,8 +4,8 @@
     <extra-po-header-language>el_GR</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:05+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:05+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:53+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:53+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Εξαγωγή δεδομένων καρτέλας σε αρχείο</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Εξαγωγή</translation>
@@ -277,24 +273,12 @@
         <translation>Επιβεβαίωση αποστολής</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Αποστολη</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Καθαρισμός όλων των πεδίων της φόρμας.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Καθαρισμός &amp;Όλων</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Αποστολή σε πολλούς αποδέκτες ταυτόχρονα</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;Προσθήκη αποδέκτη</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -408,13 +392,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Επεξεργασία Διεύθυνσης</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -435,220 +412,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Δεν μπορεί να δημιουργηθεί φάκελος δεδομένων εδώ.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Εργαλειοθήκη καρτελών</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Επισκόπηση</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Εμφάνισε τη γενική εικόνα του πορτοφολιού</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Αποστολή</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Παραλαβή </translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Συναλλαγές</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Περιήγηση στο ιστορικό συναλλαγών</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Εμφάνισε/Κρύψε</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Εμφάνιση ή αποκρύψη του κεντρικου παράθυρου </translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&apos;Ανοιγμα &amp;URI</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Αντίγραφο ασφαλείας του πορτοφολιού</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Δημιουργία αντιγράφου ασφαλείας πορτοφολιού σε άλλη τοποθεσία</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Διευθύνσεις αποστολής</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Προβολή της λίστας των χρησιμοποιημένων διευθύνσεων και ετικετών αποστολής</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Διευθύνσεις λήψης</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Προβολή της λίστας των χρησιμοποιημένων διευθύνσεων και ετικετών λήψεως</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Έ&amp;ξοδος</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Εξοδος από την εφαρμογή</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Υπογραφή &amp;Μηνύματος...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Επιβεβαίωση μηνύματος</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Παράθυρο αποσφαλμάτωσης</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Άνοιγμα κονσόλας αποσφαλμάτωσης και διαγνωστικών</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Επιλογές γραμμής εντολών</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Περί %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Σχετικά με &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Εμφάνισε πληροφορίες σχετικά με Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Κρυπτογράφησε το πορτοφόλι</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Κρυπτογραφήστε τα ιδιωτικά κλειδιά που ανήκουν στο πορτοφόλι σας </translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Άλλαξε κωδικο πρόσβασης</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Αλλαγή του κωδικού κρυπτογράφησης του πορτοφολιού</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Επιλογές...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Αρχείο</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Ρυθμίσεις</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Βοήθεια</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Πορτοφόλι</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Κόμβος</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Συγχρονισμός με το δίκτυο...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Φόρτωση ευρετηρίου μπλοκ στον σκληρο δισκο...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Ενημερωμένο</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 πίσω</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Σφάλμα</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Προειδοποίηση</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Πληροφορία</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Ημερομηνία: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Τύπος: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Ετικέτα: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Διεύθυνση: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Το πορτοφόλι είναι &lt;b&gt;κρυπτογραφημένο&lt;/b&gt; και &lt;b&gt;ξεκλείδωτο&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Το πορτοφόλι είναι &lt;b&gt;κρυπτογραφημένο&lt;/b&gt; και &lt;b&gt;κλειδωμένο&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Επισκόπηση</translation>
     </message>
 </context>
 <context>
@@ -710,16 +473,8 @@
         <translation>Αρχείο καταγραφής εντοπισμού σφαλμάτων </translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Άνοιγμα</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Κονσόλα</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Καθαρισμός κονσόλας</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1066,18 +821,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Φόρμα</translation>
+        <source>Open URI</source>
+        <translation>&apos;Ανοιγμα &amp;URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Απόκρυψη</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Ανοιχτό αίτημα πληρωμής από URI ή απο αρχείο</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Χρόνος τελευταίου μπλοκ</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Επιλέξτε πληρωμή αρχείου αίτησης</translation>
     </message>
 </context>
 <context>
@@ -1152,190 +911,10 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>&apos;Ανοιγμα &amp;URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Ανοιχτό αίτημα πληρωμής από URI ή απο αρχείο</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Επιλέξτε πληρωμή αρχείου αίτησης</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Clear</source>
-        <translation>Καθαρισμός</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Εμφάνιση</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Αφαίρεση επιλεγμένων καταχωρίσεων από τη λίστα</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Αφαίρεση</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>Ε&amp;παναχρησιμοποίηση υπάρχουσας διεύθυνσης λήψης (δεν συνιστάται)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Μήνυμα:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Επιγραφή</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Ποσό:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Αίτηση πληρωμής</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Καθαρισμός όλων των πεδίων της φόρμας.</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Αποστολή νομισμάτων</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Επιγραφή</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Αυτή είναι μια απλή πληρωμή.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Πληρωμή &amp;σε:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Επιλογή διεύθυνσης που έχει ήδη χρησιμοποιηθεί</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Αφαίρεση αυτής της καταχώρησης</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Εισάγεται μία ετικέτα για αυτή την διεύθυνση για να προστεθεί στη λίστα με τις χρησιμοποιημένες διευθύνσεις</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Ποσό:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Μήνυμα:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Πληρωμή σε:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Σημείωση:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Καθαρισμός &amp;Όλων</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Επιλογή διεύθυνσης που έχει ήδη χρησιμοποιηθεί</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Υπογραφές - Είσοδος / Επαλήθευση μήνυματος </translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Υπογραφή Μηνύματος</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Εισάγετε εδώ το μήνυμα που θέλετε να υπογράψετε</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Υπογραφή</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Αντέγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Υπογραφη μήνυματος</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Επαναφορά όλων των πεδίων μήνυματος</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Επιβεβαίωση μηνύματος</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Επιβεβαίωση μηνύματος</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Επαναφορά όλων επαλήθευμενων πεδίων μήνυματος </translation>
     </message>
 </context>
 <context>
@@ -1357,13 +936,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>Αυτό το παράθυρο δείχνει μια λεπτομερή περιγραφή της συναλλαγής</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Μονάδα μέτρησης προβολής ποσών. Κάντε κλικ για επιλογή άλλης μονάδας.</translation>
     </message>
 </context>
 </TS>

@@ -4,8 +4,8 @@
     <extra-po-header-language>ka</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:49+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:49+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:56+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:56+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -49,10 +49,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>ამ ბარათიდან მონაცემების ექსპორტი ფაილში</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;ექსპორტი</translation>
@@ -225,24 +221,12 @@
         <translation>გაგზავნის დადასტურება</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>გაგ&amp;ზავნა</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>ფორმის ყველა ველის წაშლა</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>გ&amp;ასუფთავება</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>გაგზავნა რამდენიმე რეციპიენტთან ერთდროულად</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;რეციპიენტის დამატება</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -332,13 +316,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>მისამართის შეცვლა</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -359,192 +336,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>კატალოგის აქ შექმნა შეუძლებელია.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>ბარათების პანელი</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>მიმ&amp;ოხილვა</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>საფულის ზოგადი მიმოხილვა</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;გაგზავნა</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;მიღება</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;ტრანსაქციები</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>ტრანსაქციების ისტორიის დათვალიერება</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;ჩვენება/დაფარვა</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>მთავარი ფანჯრის ჩვენება/დაფარვა</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&amp;URI-ის გახსნა...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>საფულის &amp;არქივირება</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>საფულის არქივირება სხვა ადგილზე</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>გაგზავნის მი&amp;სამართი</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>გამოყენებული გაგზავნის მისამართებისა და ნიშნულების სიის ჩვენება</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>მიღების მისამა&amp;რთი</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>გამოყენებული მიღების მისამართებისა და ნიშნულების სიის ჩვენება</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;გასვლა</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>გასვლა</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>ხელ&amp;მოწერა</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;ვერიფიკაცია</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>და&amp;ხვეწის ფანჯარა</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>დახვეწისა და გიაგნოსტიკის კონსოლის გაშვება</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>საკომანდო სტრიქონის ოპ&amp;ციები</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt-ს შესახებ</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>ინფორმაცია Qt-ს შესახებ</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>საფულის &amp;დაშიფრვა</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>თქვენი საფულის პირადი გასაღებების დაშიფრვა</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>ფრაზა-პაროლის შე&amp;ცვლა</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>საფულის დაშიფრვის ფრაზა-პაროლის შეცვლა</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;ოპციები</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;ფაილი</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;პარამეტრები</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;დახმარება</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>საფულე</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>კვანძი</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>ქსელთან სინქრონიზება...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>დისკზე ბლოკების რეინდექსაცია...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>განახლებულია</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 გავლილია</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>შეცდომა</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>გაფრთხილება</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>ინფორმაცია</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>საფულე &lt;b&gt;დაშიფრულია&lt;/b&gt; და ამჟამად &lt;b&gt;განბლოკილია&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>საფულე &lt;b&gt;დაშიფრულია&lt;/b&gt; და ამჟამად &lt;b&gt;დაბლოკილია&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>მიმ&amp;ოხილვა</translation>
     </message>
 </context>
 <context>
@@ -602,16 +393,8 @@
         <translation>დახვეწის ლოგ-ფაილი</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;შექმნა</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;კონსოლი</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>კონსოლის გასუფთავება</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -831,14 +614,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>ფორმა</translation>
+        <source>Open URI</source>
+        <translation>URI-ის გახსნა</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>ბოლო ბლოკის დრო</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>გადახდის მოთხოვნის შექმნა URI-იდან ან ფაილიდან</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>გადახდის მოთხოვნის ფაილის არჩევა</translation>
     </message>
 </context>
 <context>
@@ -881,214 +672,10 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI-ის გახსნა</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>გადახდის მოთხოვნის შექმნა URI-იდან ან ფაილიდან</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>გადახდის მოთხოვნის ფაილის არჩევა</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Clear</source>
-        <translation>წაშლა</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>მოთხოვნილი გადახდების ისტორია</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>არჩეული მოთხოვნის ჩვენება (იგივეა, რაც ჩანაწერზე ორჯერ ჩხვლეტა)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>ჩვენება</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>მონიშნული ჩანაწერების წაშლა სიიდან</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>წაშლა</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>რომელიმე ადრე გამოყენებული მიღების მისამართის გამოყენება. ეს ამცირებს უსაფრთხოებასა და პრივატულობას. ნუ გამოიყენებთ ამ ოპციას, თუ არ ახდენთ ადრე მოთხოვნილი გადახდის ხელახლა გენერირებას.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>ად&amp;რე გამოყენებული მიღების მისამართის გამოყენება (არ არის რეკომენდებული)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;მესიჯი:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>არააუცილებელი ნიშნული ახალ მიღების მისამართთან ასოცირებისათვის.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>გამოიყენეთ ეს ფორმა გადახდის მოთხოვნისათვის. ყველა ველი &lt;b&gt;არააუცილებელია&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ნიშნუ&amp;ლი:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>მოთხოვნის მოცულობა. არააუცილებელია. ჩაწერეთ 0 ან დატოვეთ ცარიელი, თუ არ მოითხოვება კონკრეტული მოცულობა.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>თ&amp;ანხა:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;გადახდის მოთხოვნა</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>ფორმის ყველა ველის წაშლა</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>მონეტების გაგზავნა</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ნიშნუ&amp;ლი:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>ეს არის ჩვეულებრივი გადახდა.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>ადრესა&amp;ტი:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>აირჩიეთ ადრე გამოყენებული მისამართი</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>მისამართის ჩასმა კლიპბორდიდან</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>ჩანაწერის წაშლა</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>შეიყვანეთ ამ მისამართის ნიშნული გამოყენებული მისამართების სიაში დასამატებლად</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;რაოდენობა</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>მესიჯი:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>ადრესატი:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>შენიშვნა:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>გ&amp;ასუფთავება</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>აირჩიეთ ადრე გამოყენებული მისამართი</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>მისამართის ჩასმა კლიპბორდიდან</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>ხელმოწერები - მესიჯის ხელმოწერა/ვერიფიკაცია</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>მე&amp;სიჯის ხელმოწერა</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>აკრიფეთ ხელმოსაწერი მესიჯი</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>ხელმოწერა</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>მიმდინარე ხელმოწერის კოპირება კლიპბორდში</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>&amp;მესიჯის ხელმოწერა</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>ხელმოწერის ყველა ველის წაშლა</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>მესიჯის &amp;ვერიფიკაცია</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;მესიჯის ვერიფიკაცია</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>ვერიფიკაციის ყველა ველის წაშლა</translation>
     </message>
 </context>
 <context>

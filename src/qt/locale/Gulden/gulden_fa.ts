@@ -4,8 +4,8 @@
     <extra-po-header-language>fa</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:06+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:06+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -81,10 +81,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>خروجی گرفتن داده‌های برگه‌ی فعلی به یک فایل</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;صدور</translation>
@@ -380,24 +376,12 @@
         <translation>عملیات ارسال را تأیید کنید</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;ارسال</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>تمام قسمت های فرم را خالی کن.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>پاکسازی &amp;همه</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>ارسال به چند دریافت‌کنندهٔ به‌طور همزمان</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;دریافت‌کنندهٔ جدید</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -559,61 +543,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>کپی برچسب</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>کپی مقدار</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>بله</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>خیر</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>پاک‌کردن</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>نمایش</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>حذف ورودی های انتخاب‌شده از لیست</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>حذف کردن</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>پیام:</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>برای درخواست پرداخت از این فرم استفاده کنید.تمام قسمت ها &lt;b&gt;اختیاری&lt;b&gt; هستند.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;برچسب:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>مبلغ:</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>تمام قسمت های فرم را خالی کن.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -653,13 +582,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>ویرایش نشانی</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -680,238 +602,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>نمی‌توان پوشهٔ داده در این‌جا ایجاد کرد.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>نوارابزار برگه‌ها</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;بررسی اجمالی</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>نمایش بررسی اجمالی کیف پول</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;ارسال</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;دریافت</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;تراکنش‌ها</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>مرور تاریخچهٔ تراکنش‌ها</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;نمایش/ عدم نمایش</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>نمایش یا مخفی‌کردن پنجرهٔ اصلی</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>باز کردن &amp;آدرس</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;پیشتیبان‌گیری از کیف پول...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>تهیهٔ پشتیبان از کیف پول در یک مکان دیگر</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;در حال ارسال آدرس ها...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>نمایش لیست آدرس های ارسال و لیبل ها</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;در حال دریافت آدرس ها...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>نمایش لیست آدرس های دریافت و لیبل ها</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;خروج</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>خروج از برنامه</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;امضای پیام...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>با&amp;زبینی پیام...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>پنجرهٔ ا&amp;شکال‌زدایی</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>باز کردن کنسول خطایابی و اشکال‌زدایی</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>گزینه‌های خط‌فرمان</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;حدود%1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>نمایش اطلاعات دربارهٔ %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>دربارهٔ &amp;کیوت</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>نمایش اطلاعات دربارهٔ کیوت</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;رمزنگاری کیف پول...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>رمزنگاری کلیدهای خصوصی متعلق به کیف پول شما</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;تغییر گذرواژه...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>تغییر گذرواژهٔ مورد استفاده در رمزنگاری کیف پول</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;تنظیمات...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>تغییر تنظیمات %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;فایل</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;تنظیمات</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;کمک‌رسانی</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>کیف پول</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>گره</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>همگام‌سازی با شبکه...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>پردازش بلوک‌ها روی دیسک...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>بازنشانی بلوک‌ها روی دیسک...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>پردازش %n  بلاک از تاریخچه ی تراکنش ها </numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>وضعیت به‌روز</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 عقب‌تر</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>خطا</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>هشدار</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>اطلاعات</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>تاریخ: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>نوع: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>برچسب: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>نشانی: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>کیف پول &lt;b&gt;رمزنگاری شده&lt;/b&gt; است و هم‌اکنون &lt;b&gt;باز&lt;/b&gt; است</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>کیف پول &lt;b&gt;رمزنگاری شده&lt;/b&gt; است و هم‌اکنون &lt;b&gt;قفل&lt;/b&gt; است</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;بررسی اجمالی</translation>
     </message>
 </context>
 <context>
@@ -977,16 +667,8 @@
         <translation>فایلِ لاگِ اشکال زدایی</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>با&amp;ز کردن</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;کنسول</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>پاکسازی کنسول</translation>
     </message>
     <message>
         <source>Totals</source>
@@ -1284,18 +966,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>فرم</translation>
+        <source>Open URI</source>
+        <translation>بازکردن آدرس</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>پنهان کردن</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>بازکردن درخواست پرداخت از آدرس یا فایل</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>زمان آخرین بلوک</translation>
+        <source>URI:</source>
+        <translation>آدرس اینترنتی:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>انتخاب فایل درخواست پرداخت</translation>
     </message>
 </context>
 <context>
@@ -1350,22 +1036,14 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>ReceiveCoinsDialog</name>
     <message>
-        <source>Open URI</source>
-        <translation>بازکردن آدرس</translation>
+        <source>Yes</source>
+        <translation>بله</translation>
     </message>
     <message>
-        <source>Open payment request from URI or file</source>
-        <translation>بازکردن درخواست پرداخت از آدرس یا فایل</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>آدرس اینترنتی:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>انتخاب فایل درخواست پرداخت</translation>
+        <source>No</source>
+        <translation>خیر</translation>
     </message>
 </context>
 <context>
@@ -1380,104 +1058,6 @@
     <message>
         <source>Send Coins</source>
         <translation>ارسال سکه</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;برچسب:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>این یک پرداخت عادی است</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>پرداخ&amp;ت به:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>انتخاب نشانی پیش‌تر استفاده شده</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>چسباندن نشانی از حافظهٔ سیستم</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>حذف این مدخل</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>A&amp;مبلغ :</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>پیام:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>پرداخت به:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>یادداشت:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>پاک &amp;کردن همه</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>انتخاب نشانی پیشتر استفاده شده</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>چسباندن نشانی از حافظهٔ سیستم</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>امضاها - امضا / تأیید یک پیام</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>ا&amp;مضای پیام</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>پیامی را که می‌خواهید امضا کنید در اینجا وارد کنید</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>امضا</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>امضای فعلی را به حافظهٔ سیستم کپی کن</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>ا&amp;مضای پیام</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>بازنشانی تمام فیلدهای پیام</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;شناسایی پیام</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;شناسایی پیام</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>بازنشانی تمام فیلدهای پیام</translation>
     </message>
 </context>
 <context>

@@ -4,8 +4,8 @@
     <extra-po-header-language>hr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:48+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:48+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:56+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:56+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -73,10 +73,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Izvoz podataka iz trenutnog lista u datoteku</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Izvozi</translation>
@@ -248,24 +244,12 @@
         <translation>Potvrdi akciju slanja</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Pošalji</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Obriši sva polja</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Obriši &amp;sve</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Pošalji novce većem broju primatelja u jednoj transakciji</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;Dodaj primatelja</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -340,13 +324,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Uredi adresu</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -359,224 +336,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Nije moguće stvoriti direktorij za podatke na tom mjestu.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Traka kartica</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Pregled</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Prikaži opći pregled novčanika</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Pošalji</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>Pri&amp;mi</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakcije</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Pretraži povijest transakcija</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>Po&amp;kaži / Sakrij</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Prikaži ili sakrij glavni prozor</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Otvori &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Spremi &amp;kopiju novčanika...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Napravite sigurnosnu kopiju novčanika na drugoj lokaciji</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adrese za &amp;slanje</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Prikaži popis korištenih adresa i oznaka za slanje novca</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adrese za &amp;primanje</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Prikaži popis korištenih adresa i oznaka za primanje novca</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Izlaz</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Izlazak iz programa</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>P&amp;otpišite poruku...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Potvrdite poruku...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>Konzola za dijagnostiku</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Otvori konzolu za dijagnostiku</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Opcije &amp;naredbene linije</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Više o %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Više o &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Prikaži informacije o Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Ši&amp;friraj novčanik...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Šifriranje privatnih ključeva koji u novčaniku</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Promjena &amp;lozinke...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Promijenite lozinku za šifriranje novčanika</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>Pos&amp;tavke...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Datoteka</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Postavke</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Pomoć</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Novčanik</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Čvor</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Usklađivanje s mrežom ...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Re-indeksiranje blokova na disku...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Obrađen %n blok povijesti transakcije.</numerusform>
-            <numerusform>Obrađeno %n bloka povijesti transakcije.</numerusform>
-            <numerusform>Obrađeno %n blokova povijesti transakcije.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Ažurno</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Greška</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Upozorenje</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informacija</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Datum: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Vrsta: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Oznaka: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresa: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Novčanik je &lt;b&gt;šifriran&lt;/b&gt; i trenutno &lt;b&gt;otključan&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Novčanik je &lt;b&gt;šifriran&lt;/b&gt; i trenutno &lt;b&gt;zaključan&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Pregled</translation>
     </message>
 </context>
 <context>
@@ -618,16 +377,8 @@
         <translation>Posljednje vrijeme bloka</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Otvori</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzola</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Očisti konzolu</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -815,28 +566,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Oblik</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Posljednje vrijeme bloka</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Oblik</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Ukupno:</translation>
-    </message>
-</context>
-<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -852,30 +581,14 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
+    <name>OverviewPage</name>
     <message>
-        <source>Show</source>
-        <translation>Pokaži</translation>
+        <source>Form</source>
+        <translation>Oblik</translation>
     </message>
     <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Poruka:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Oznaka:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Iznos:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Zatraži plaćanje</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Obriši sva polja</translation>
+        <source>Total:</source>
+        <translation>Ukupno:</translation>
     </message>
 </context>
 <context>
@@ -883,68 +596,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Slanje novca</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Oznaka:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>&amp;Primatelj plaćanja:</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Zalijepi adresu iz međuspremnika</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Iznos:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Poruka:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Primatelj plaćanja:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Obriši &amp;sve</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Zalijepi adresu iz međuspremnika</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Potpišite poruku</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Upišite poruku koju želite potpisati ovdje</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Potpis</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>&amp;Potpišite poruku</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Potvrdite poruku</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;Potvrdite poruku</translation>
     </message>
 </context>
 <context>

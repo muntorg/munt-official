@@ -4,8 +4,8 @@
     <extra-po-header-language>fa_IR</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:06+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:06+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -49,10 +49,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>صدور داده نوار جاری به یک فایل</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>صدور</translation>
@@ -113,10 +109,6 @@
     <message>
         <source>Confirm the send action</source>
         <translation>تایید عملیات ارسال </translation>
-    </message>
-    <message>
-        <source>S&amp;end</source>
-        <translation>و ارسال</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -197,135 +189,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>ویرایش حساب</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>نوار ابزار</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>و بازبینی</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>نمای کلی از wallet را نشان بده</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>و ارسال</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>و تراکنش</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>تاریخچه تراکنش را باز کن</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;نمایش/ عدم نمایش و</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>و گرفتن نسخه پیشتیبان از wallet</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>گرفتن نسخه پیشتیبان در آدرسی دیگر</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>دریافت آدرس ها</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>خروج</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>از &quot;درخواست نامه&quot;/ application خارج شو</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>امضا و پیام</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>درباره و Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>نمایش اطلاعات درباره Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>و رمزگذاری wallet</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>تغییر رمز/پَس فرِیز</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>رمز مربوط به رمزگذاریِ wallet را تغییر دهید</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>و انتخابها</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>و فایل</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>و تنظیمات</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>و راهنما</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>کیف پول</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>به روز رسانی با شبکه...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>روزآمد</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>خطا</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>wallet رمزگذاری شد و در حال حاضر از حالت قفل در آمده است</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>wallet رمزگذاری شد و در حال حاضر قفل است</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>و بازبینی</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -375,13 +238,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>فرم</translation>
-    </message>
-</context>
-<context>
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
@@ -416,83 +272,6 @@
     <message>
         <source>Send Coins</source>
         <translation>سکه های ارسالی</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>پیام:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>و برچسب</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>میزان وجه:</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>و برچسب</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>پرداخت و به چه کسی</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt و A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>آدرس را بر کلیپ بورد کپی کنید</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt و P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>و میزان وجه</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>پیام:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>پرداخت به:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>یادداشت:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt و A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>آدرس را بر کلیپ بورد کپی کنید</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt و P</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>و امضای پیام </translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>و امضای پیام </translation>
     </message>
 </context>
 <context>

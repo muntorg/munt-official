@@ -4,8 +4,8 @@
     <extra-po-header-language>af</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:03+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:03+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:51+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:51+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -97,10 +97,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Voer die inligting op hierdie bladsy uit na &apos;n leer</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Voer uit</translation>
@@ -392,203 +388,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Wysig Adres</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
         <translation>naam</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Orebalk</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oorsig</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Vertoon &apos;n algemene oorsig van die beursie</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Stuur</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Ontvang</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaksies</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Blaai deur transaksiegeskiedenis</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Wys / Versteek</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Wys of versteek die hoofbladsy</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Oop &amp; URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Rugsteun-kopie van Beursie</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Maak &apos;n rugsteun-kopié van beursie na &apos;n ander stoorplek</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Versending adresse...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Vertoon die lys van gebruikte versendingsadresse en etikette</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Ontvanger adresse</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Vertoon die lys van gebruikte ontvangers-adresse en etikette</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Sluit</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Stop en verlaat die applikasie</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Oor %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Wys inligting oor %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Oor &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Wys inligting oor Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Kodifiseer Beursie</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Kodifiseer die private sleutes wat aan jou beursie gekoppel is.</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Verander Wagwoord</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Verander die wagwoord wat ek vir kodifikasie van my beursie gebruik</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opsies</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Verander konfigurasie-opsies vir %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Leër</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Help</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Beursie</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Node</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Netwerk-sinkronisasie...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Blokke op skyf word geïndekseer...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Blokke op skyf word geprosesseer...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Besig met herindeksering van blokke op hardeskyf...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Op datum</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 agter</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Fout</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Waarskuwing</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Inligting</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Datum: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adres: %1
-</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oorsig</translation>
     </message>
 </context>
 <context>
@@ -689,13 +492,6 @@
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation>Alle instellings wat in die grafiese gebruikerkoppelvlak gewysig is, terugstel</translation>
-    </message>
-</context>
-<context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Hide</source>
-        <translation>Versteek</translation>
     </message>
 </context>
 <context>

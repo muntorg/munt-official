@@ -4,8 +4,8 @@
     <extra-po-header-language>id</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:49+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:49+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:56+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:56+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Ekspor data dalam tab sekarang ke sebuah berkas</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Ekspor</translation>
@@ -272,24 +268,12 @@
         <translation>Konfirmasi aksi pengiriman</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>K&amp;irim</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Hapus informasi dari form.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Hapus &amp;Semua</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Kirim ke beberapa penerima sekaligus</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Tambahlah &amp;Penerima</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -383,13 +367,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Ubah Alamat</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -410,222 +387,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Tidak bisa membuat direktori data disini.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Baris tab</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Kilasan</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Tampilkan gambaran umum dompet Anda</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Kirim</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Menerima</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaksi</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Lihat riwayat transaksi</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Tampilkan / Sembunyikan</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Tampilkan atau sembunyikan jendela utama</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Buka &amp;URI</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Cadangkan Dompet...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Cadangkan dompet ke lokasi lain</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Alamat-alamat untuk mengirim...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Tampilkan daftar alamat dan label yang terkirim</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Alamat-alamat untuk menerima...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Tampilkan daftar alamat dan label yang diterima</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>K&amp;eluar</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Keluar dari aplikasi</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Pesan &amp;penanda...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Verifikasi pesan...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Jendela Debug</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Buka konsol debug dan diagnosa</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;pilihan Command-line</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Mengenai &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Tampilkan informasi mengenai Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Enkripsi Dompet...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Enkripsi private key yang dimiliki dompet Anda</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Ubah Kata Kunci...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Ubah kata kunci yang digunakan untuk enkripsi dompet</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Pilihan...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Berkas</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Pengaturan</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Bantuan</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Dompet</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Node</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sinkronisasi dengan jaringan...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Mengindex ulang blok di dalam disk...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>%n blok dari riwayat transaksi diproses.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Terbaru</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>kurang %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Terjadi sebuah kesalahan</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Peringatan</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informasi</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Tanggal: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tipe: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Label: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Alamat: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Dompet saat ini &lt;b&gt;terenkripsi&lt;/b&gt; dan &lt;b&gt;terbuka&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Dompet saat ini &lt;b&gt;terenkripsi&lt;/b&gt; dan &lt;b&gt;terkunci&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Kilasan</translation>
     </message>
 </context>
 <context>
@@ -689,16 +450,8 @@
         <translation>Berkas catatan debug</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Buka</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Bersihkan konsol</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -860,60 +613,6 @@
     <message>
         <source>Set SSL root certificates for payment request (default: -system-)</source>
         <translation>Pilih sertifikat root SSL untuk permintaan pembayaran {default: -system-)</translation>
-    </message>
-</context>
-<context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulir</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Waktu blok terakhir</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulir</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldo:</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Jumlah:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo ditambang yang masih terlalu muda</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Terlalu Muda:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jumlah saldo Anda sekarang</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tersedia:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Ditunda</translation>
     </message>
 </context>
 <context>
@@ -1119,6 +818,49 @@
     </message>
 </context>
 <context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulir</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldo:</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Jumlah:</translation>
+    </message>
+    <message>
+        <source>Mined balance that has not yet matured</source>
+        <translation>Saldo ditambang yang masih terlalu muda</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Terlalu Muda:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jumlah saldo Anda sekarang</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tersedia:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Ditunda</translation>
+    </message>
+</context>
+<context>
     <name>PeerTableModel</name>
     <message>
         <source>User Agent</source>
@@ -1135,66 +877,6 @@
         <source>No</source>
         <translation>Tidak</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>Hapus</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Riwayat pembayaran yang diminta Anda</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Menunjukkan permintaan yang dipilih (sama dengan tekan pilihan dua kali)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Menunjukkan</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Menghapus informasi terpilih dari daftar</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Menghapus</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>Gunakan lagi alamat penerima yang ada (tidak disarankan)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Pesan:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Label opsional untuk mengasosiasikan dengan alamat penerima baru.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Gunakan form ini untuk meminta pembayaran. Semua bidang adalah &lt;b&gt;opsional&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Nilai permintaan opsional. Biarkan ini kosong atau nol bila tidak meminta nilai tertentu.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Nilai:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Minta pembayaran</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Hapus informasi dari form.</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -1208,124 +890,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Kirim Koin</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Ini adalah pembayaran normal</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Kirim &amp;Ke:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Pilih alamat yang telah digunakan sebelumnya</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+J</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Tempel alamat dari salinan</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+B</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Hapus masukan ini</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Masukkan label untuk alamat ini untuk dimasukan dalam daftar alamat yang pernah digunakan</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>J&amp;umlah:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Pesan:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Kirim Ke:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Catatan Peringatan:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Hapus &amp;Semua</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Pilih alamat yang telah digunakan sebelumnya</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Tempel alamat dari salinan</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+B</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Tanda Tangan / Verifikasi sebuah Pesan</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Tandakan Pesan</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Masukan pesan yang ingin ditandai disini</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Tanda Tangan</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Salin tanda tangan terpilih ke sistem klipboard</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Tandakan &amp;Pesan</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Hapus semua bidang penanda pesan</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Verifikasi Pesan</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Verifikasi &amp;Pesan</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Hapus semua bidang verifikasi pesan</translation>
     </message>
 </context>
 <context>

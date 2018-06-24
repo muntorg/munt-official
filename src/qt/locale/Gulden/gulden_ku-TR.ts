@@ -4,8 +4,8 @@
     <extra-po-header-language>ku_TR</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:50+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:50+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:57+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:57+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -157,37 +157,6 @@
     </message>
 </context>
 <context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;ناردن</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;پەرگە</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;سازکارییەکان</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;یارمەتی</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>هەڵە</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>ئاگاداری</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>زانیاری</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -247,10 +216,6 @@
     <message>
         <source>Name</source>
         <translation>ناو</translation>
-    </message>
-    <message>
-        <source>&amp;Open</source>
-        <translation>&amp;کردنەوە</translation>
     </message>
     <message>
         <source>Totals</source>
@@ -315,39 +280,12 @@
         <source>No</source>
         <translation>نەخێر</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>پاککردنەوە</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>پیشاندان</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>سڕینەوە</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;پەیام:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;سەرجەم:</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
         <translation>بەڵێ</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>Message:</source>
-        <translation>پەیام:</translation>
     </message>
 </context>
 </TS>

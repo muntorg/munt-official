@@ -4,8 +4,8 @@
     <extra-po-header-language>ne</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:51+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:51+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:59+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:59+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>वर्तमान ट्याबको डाटालाई फाइलमा निर्यात गर्नुहोस् </translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;निर्यात गर्नुहोस्</translation>
@@ -118,120 +114,6 @@
     <message>
         <source>Amount</source>
         <translation>रकम</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>शारांश</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>वालेटको साधारण शारांश देखाउनुहोस्</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;कारोबार</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>कारोबारको इतिहास हेर्नुहोस्</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>URI &amp;खोल्नुहोस्...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;वालेटलाई ब्याकअप गर्नुहोस्...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>वालेटलाई अर्को ठेगानामा ब्याकअप गर्नुहोस्</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;पठाउने ठेगानाहरू...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;प्राप्त गर्ने ठेगानाहरू...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>बाहिर निस्कनुहोस्</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>एप्लिकेसन बन्द गर्नुहोस्</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>सन्देशमा &amp;हस्ताक्षर  गर्नुहोस्...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;डिबग विन्डो</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>डिबगिङ र डायाग्नोस्टिक कन्सोल खोल्नुहोस्</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;बारेमा %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>%1 को बारेमा सूचना देखाउनुहोस्</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Qt को बारेमा सूचना देखाउनुहोस्</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;वालेटलाई इन्क्रिप्ट गर्नुहोस्...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;पासफ्रेज परिवर्तन गर्नुहोस्...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>वालेट इन्क्रिप्सनमा प्रयोग हुने इन्क्रिप्सन पासफ्रेज परिवर्तन गर्नुहोस्</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;विकल्प...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>%1 का लागि कन्फिगुरेसनको विकल्प परिमार्जन गर्नुहोस</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>नोड</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>नेटवर्कमा समिकरण हुँदै...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>डिस्कमा ब्लकलाई पुनः सूचीकरण गरिँदै...</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>शारांश</translation>
     </message>
 </context>
 <context>

@@ -4,8 +4,8 @@
     <extra-po-header-language>lv_LV</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:50+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:50+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:58+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:58+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -49,10 +49,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Datus no tekošā ieliktņa eksportēt uz failu</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Eksportēt</translation>
@@ -221,24 +217,12 @@
         <translation>Apstiprināt nosūtīšanu</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Sūtīt</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Notīrīt visus laukus formā.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Notīrīt visu</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Sūtīt vairākiem saņēmējiem uzreiz</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;Pievienot Saņēmēju</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -320,13 +304,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Mainīt adrese</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -343,184 +320,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Šeit nevar izveidot datu mapi.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Ciļņu rīkjosla</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Pārskats</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Rādīt vispārēju maciņa pārskatu</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Sūtīt</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Saņemt</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakcijas</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Skatīt transakciju vēsturi</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Rādīt / Paslēpt</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Parādīt vai paslēpt galveno Logu</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Atvērt &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Maciņa Rezerves Kopija...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Izveidot maciņa rezerves kopiju citur</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Sūtīšanas adreses...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Saņemšanas &amp;adreses...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Iziet</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Aizvērt programmu</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Parakstīt &amp;ziņojumu...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Pārbaudīt ziņojumu...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Atkļūdošanas logs</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Atvērt atkļūdošanas un diagnostikas konsoli</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Komandrindas iespējas</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Par &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Parādīt informāciju par Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Šifrēt &amp;maciņu...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Šifrēt privātās atslēgas kuras pieder tavam maciņam</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Mainīt &amp;Paroli...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Mainīt maciņa šifrēšanas paroli</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Iespējas...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fails</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Uzstādījumi</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Palīdzība</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Maciņš</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Node</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sinhronizācija ar tīklu...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Bloku reindeksēšana no diska...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Sinhronizēts</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 aizmugurē</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Kļūda</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Brīdinājums</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informācija</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Maciņš ir &lt;b&gt;šifrēts&lt;/b&gt; un pašlaik &lt;b&gt;atslēgts&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Maciņš ir &lt;b&gt;šifrēts&lt;/b&gt; un pašlaik &lt;b&gt;slēgts&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Pārskats</translation>
     </message>
 </context>
 <context>
@@ -578,16 +377,8 @@
         <translation>Atkļūdošanas žurnāla datne</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Atvērt</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsole</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Notīrīt konsoli</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -823,14 +614,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Forma</translation>
+        <source>Open URI</source>
+        <translation>Atvērt URI</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Pēdējā bloka laiks</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Atvērt maksājuma pieprasījumu no URI vai datnes</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Izvēlies maksājuma pieprasījuma datni</translation>
     </message>
 </context>
 <context>
@@ -869,194 +668,10 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Atvērt URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Atvērt maksājuma pieprasījumu no URI vai datnes</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Izvēlies maksājuma pieprasījuma datni</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Clear</source>
-        <translation>Notīrīt</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Pieprasīto maksājumu vēsture</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Parādīt atlasītos pieprasījumus (tas pats, kas dubultklikšķis uz ieraksta)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Rādīt</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Noņemt atlasītos ierakstus no saraksta.</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Noņemt</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Atkārtoti izmantot esošo saņemšanas adresi (nav ieteicams)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Ziņojums:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nosaukums:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Daudzums:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Pieprasīt maksājumu</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Notīrīt visus laukus formā.</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Sūtīt Bitkoinus</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nosaukums:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Šis ir parasts maksājums.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>&amp;Saņēmējs:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Izvēlies iepriekš izmantoto adresi</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>ielīmēt adresi no starpliktuves</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Noņem šo ierakstu</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Apjo&amp;ms</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Ziņojums:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Maksāt:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Notīrīt visu</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Izvēlies iepriekš izmantoto adresi</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>ielīmēt adresi no starpliktuves</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Paraksti - Parakstīt / Pabaudīt Ziņojumu</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>Parakstīt &amp;Ziņojumu</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Šeit ievadi ziņojumu kuru vēlies parakstīt</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Paraksts</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopēt parakstu uz sistēmas starpliktuvi</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Parakstīt &amp;Ziņojumu</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Atiestatīt visus laukus</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Pārbaudīt Ziņojumu</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;Pārbaudīt Ziņojumu</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Atiestatīt visus laukus</translation>
     </message>
 </context>
 <context>

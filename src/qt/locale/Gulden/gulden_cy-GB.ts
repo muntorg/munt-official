@@ -4,8 +4,8 @@
     <extra-po-header-language>cy_GB</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:53+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:53+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -139,167 +139,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Golygu&apos;r cyfeiriad</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
         <translation>enw</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Bar offer tabiau</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Trosolwg</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Dangos trosolwg cyffredinol y waled</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Anfon</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Derbyn</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Trafodion</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Pori hanes trafodion</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Dangos / Cuddio</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Agor &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Cyfeiriadau anfon...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Cyfeiriadau derbyn...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>A&amp;llanfa</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Gadael rhaglen</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Ynghylch &amp;Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Amgryptio&apos;r waled...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Newid cyfrinymadrodd...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Newid y cyfrinymadrodd a ddefnyddiwyd ar gyfer amgryptio&apos;r waled</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opsiynau</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Ffeil</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Gosodiadau</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Cymorth</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Waled</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Cysoni â&apos;r rhwydwaith...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Cyfamserol</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Gwall</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Rhybudd</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Gwybodaeth</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Dyddiad: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Math: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Label: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Cyfeiriad: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Mae&apos;r waled &lt;b&gt;wedi&apos;i amgryptio&lt;/b&gt; ac &lt;b&gt;heb ei gloi&lt;/b&gt; ar hyn o bryd</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Mae&apos;r waled &lt;b&gt;wedi&apos;i amgryptio&lt;/b&gt; ac &lt;b&gt;ar glo&lt;/b&gt; ar hyn o bryd</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Trosolwg</translation>
     </message>
 </context>
 <context>
@@ -367,20 +210,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Ffurflen</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Ffurflen</translation>
-    </message>
-</context>
-<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -389,6 +218,13 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Ffurflen</translation>
     </message>
 </context>
 <context>
@@ -408,10 +244,6 @@
         <source>Network</source>
         <translation>Rhwydwaith</translation>
     </message>
-    <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Agor</translation>
-    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -425,55 +257,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Anfon arian</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Gludo cyfeiriad o&apos;r glipfwrdd</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Maint</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Neges:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Gludo cyfeiriad o&apos;r glipfwrdd</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
 </context>
 </TS>

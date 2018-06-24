@@ -4,8 +4,8 @@
     <extra-po-header-language>ca</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:52+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:52+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exporta les dades de la pestanya actual a un fitxer</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Exporta</translation>
@@ -231,10 +227,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>Exporta l&apos;historial de transacció</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Només de lectura</translation>
     </message>
     <message>
         <source>ID</source>
@@ -568,12 +560,12 @@
         <translation>Copia el canvi</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Amaga</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>La sol·licitud de pagament ha vençut.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Amaga</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -652,24 +644,12 @@
         <translation>Confirma l&apos;acció d&apos;enviament</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>E&amp;nvia</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Esborra tots els camps del formuari.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Neteja-ho &amp;tot</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Envia a múltiples destinataris al mateix temps</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Afegeix &amp;destinatari</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -686,14 +666,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>S&apos;ha afegit una taxa de transacció</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Import total %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>o</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1139,97 +1111,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Copia l&apos;etiqueta</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Copia l&apos;import</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Sí</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>No</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Neteja</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Historial de pagaments sol·licitats</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Mostra la sol·licitud seleccionada (fa el mateix que el doble clic a una entrada)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Mostra</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Esborra les entrades seleccionades de la llista</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Esborra</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI resultant massa llarga, intenta reduir el text per a la etiqueta / missatge</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Copia el missatge</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Reutilitza una de les adreces de recepció utilitzades anteriorment. La reutilització d&apos;adreces pot comportar problemes de seguretat i privadesa. No ho utilitzeu llevat que torneu a generar una sol·licitud de pagament feta abans.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>R&amp;eutilitza una adreça de recepció anterior (no recomanat)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Missatge:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Una etiqueta opcional que s&apos;associarà amb la nova adreça receptora.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Utilitzeu aquest formulari per sol·licitar pagaments. Tots els camps són &lt;b&gt;opcionals&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiqueta:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Un import opcional per sol·licitar. Deixeu-ho en blanc o zero per no sol·licitar cap import específic.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Im&amp;port:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Sol·licitud de pagament</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Esborra tots els camps del formuari.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1281,13 +1162,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Edita l&apos;adreça</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1308,259 +1182,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>No es pot crear el directori de dades aquí.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Barra d&apos;eines de les pestanyes</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Panorama general</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Mostra el panorama general del moneder</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Envia</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Rep</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaccions</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Cerca a l&apos;historial de transaccions</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Mostra / Amaga</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Mostra o amaga la finestra principal</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Obre un &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Realitza una còpia de seguretat del moneder...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Realitza una còpia de seguretat del moneder a una altra ubicació</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adreces d&apos;e&amp;nviament...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Mostra la llista d&apos;adreces d&apos;enviament i etiquetes utilitzades</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adreces de &amp;recepció...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Mostra la llista d&apos;adreces de recepció i etiquetes utilitzades</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>S&amp;urt</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Surt de l&apos;aplicació</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Signa el &amp;missatge...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Verifica el missatge...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Finestra de depuració</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Obre la consola de diagnòstic i depuració</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Opcions de la &amp;línia d&apos;ordres</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>Qu&amp;ant al %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Mosta informació sobre el %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Quant a &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Mostra informació sobre Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Encripta el moneder...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Encripta les claus privades pertanyents al moneder</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Canvia la contrasenya...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Canvia la contrasenya d&apos;encriptació del moneder</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opcions...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Modifica les opcions de configuració de %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fitxer</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Configuració</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Ajuda</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>Client de %1</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Feu clic per inhabilitar l&apos;activitat de la xarxa.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>S&apos;ha inhabilitat l&apos;activitat de la xarxa.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Feu clic per tornar a habilitar l&apos;activitat de la xarxa.</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Moneder</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Node</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>S&apos;està sincronitzant amb la xarxa ...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>S&apos;estan indexant els blocs al disc...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>S&apos;estan processant els blocs al disc...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>S&apos;estan reindexant els blocs al disc...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>S&apos;ha processat %n bloc de l&apos;historial de transacció.</numerusform>
-            <numerusform>S&apos;han processat %n blocs de l&apos;historial de transacció.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Al dia</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 darrere</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Avís</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informació</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Data: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tipus: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etiqueta: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adreça: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>El moneder està &lt;b&gt;encriptat&lt;/b&gt; i actualment &lt;b&gt;desbloquejat&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>El moneder està &lt;b&gt;encriptat&lt;/b&gt; i actualment &lt;b&gt;bloquejat&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Panorama general</translation>
     </message>
 </context>
 <context>
@@ -1642,16 +1263,8 @@
         <translation>Fitxer de registre de depuració</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Obre</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consola</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Neteja la consola</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2145,34 +1758,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formulari</translation>
+        <source>Open URI</source>
+        <translation>Obre un URI</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>Progrés</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Obre una sol·licitud de pagament des d&apos;un URI o un fitxer</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>s&apos;està calculant...</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>Temps estimat restant fins sincronitzat</translation>
+        <source>Select payment request file</source>
+        <translation>Selecciona un fitxer de sol·licitud de pagament</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Amaga</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Desconegut. Sincronització de les capçaleres (%1)...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Últim temps de bloc</translation>
+        <source>Select payment request file to open</source>
+        <translation>Seleccioneu el fitxer de sol·licitud de pagament per obrir</translation>
     </message>
 </context>
 <context>
@@ -2244,29 +1849,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>Transaccions recents</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Obre un URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Obre una sol·licitud de pagament des d&apos;un URI o un fitxer</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Selecciona un fitxer de sol·licitud de pagament</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Seleccioneu el fitxer de sol·licitud de pagament per obrir</translation>
     </message>
 </context>
 <context>
@@ -2364,6 +1946,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sí</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>No</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI resultant massa llarga, intenta reduir el text per a la etiqueta / missatge</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2375,196 +1972,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Envia monedes</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etiqueta:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Això és un pagament normal.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Paga &amp;a:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Tria les adreces fetes servir amb anterioritat</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alta+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Enganxar adreça del porta-retalls</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Elimina aquesta entrada</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Introduïu una etiqueta per a aquesta adreça per afegir-la a la llista d&apos;adreces utilitzades</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Q&amp;uantitat:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>S&amp;ubstreu la comissió de l&apos;import</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Missatge:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Aquesta és una sol·licitud de pagament no autenticada.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Paga a:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Aquesta és una sol·licitud de pagament autenticada.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Introduïu una etiqueta per a aquesta adreça per afegir-la a la llibreta d&apos;adreces</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Neteja-ho &amp;tot</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Tria les adreces fetes servir amb anterioritat</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alta+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Enganxar adreça del porta-retalls</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Signatures - Signa / verifica un missatge</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Signa el missatge</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Introduïu aquí el missatge que voleu signar</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Signatura</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Copia la signatura actual al porta-retalls del sistema</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Signa el &amp;missatge</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Neteja tots els camps de clau</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Verifica el missatge</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>Introduïu l&apos;adreça del receptor, el missatge (assegureu-vos de copiar els salts de línia, espais, tabuladors, etc. exactament) i signatura de sota per verificar el missatge. Tingueu cura de no llegir més en la signatura del que està al missatge signat, per evitar ser enganyat per un atac d&apos;home-en-el-mig. Tingueu en compte que això només demostra que la part que signa rep amb l&apos;adreça, i no es pot provar l&apos;enviament de qualsevol transacció!</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Verifica el &amp;missatge</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Neteja tots els camps de verificació de missatge</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Feu clic a «Signa el missatge» per a generar una signatura</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>L&apos;adreça introduïda no és vàlida.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Comproveu l&apos;adreça i torneu-ho a provar.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>L&apos;adreça introduïda no referencia a cap clau.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>El desbloqueig del moneder ha estat cancelat.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>La clau privada per a la adreça introduïda no està disponible.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>La signatura del missatge ha fallat.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Missatge signat.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>La signatura no s&apos;ha pogut descodificar.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Comproveu la signatura i torneu-ho a provar.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>La signatura no coincideix amb el resum del missatge.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Ha fallat la verificació del missatge.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Missatge verificat.</translation>
     </message>
 </context>
 <context>
@@ -2586,13 +1993,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>Aquest panell mostra una descripció detallada de la transacció</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Unitat en què mostrar els imports. Feu clic per seleccionar una altra unitat.</translation>
     </message>
 </context>
 </TS>

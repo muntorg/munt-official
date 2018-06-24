@@ -4,8 +4,8 @@
     <extra-po-header-language>he</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:48+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:48+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:55+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:55+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -93,10 +93,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>יצוא הנתונים מהלשונית הנוכחית לקובץ</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>י&amp;צוא</translation>
@@ -360,24 +356,12 @@
         <translation>אישור פעולת השליחה</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;שליחה</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>ניקוי של כל השדות בטופס.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;ניקוי הכול</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>שליחה למספר מוטבים בו־זמנית</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>הוספת &amp;מוטב</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -510,13 +494,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>עריכת כתובת</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -537,204 +514,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>לא ניתן ליצור כאן תיקיית נתונים.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>סרגל כלים לשוניות</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;סקירה</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>הצגת סקירה כללית של הארנק</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;שליחה</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;קבלה</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>ה&amp;עברות</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>עיון בהיסטוריית ההעברות</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>ה&amp;צגה / הסתרה</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>הצגה או הסתרה של החלון הראשי</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>פתיחת &amp;כתובת משאב…</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;גיבוי הארנק…</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>גיבוי הארנק למיקום אחר</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>כתובת ה&amp;שליחה…</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>הצג את רשימת הכתובות לשליחה שהיו בשימוש לרבות התוויות</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>כתובות ה&amp;קבלה…</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>הצגת רשימת הכתובות והתוויות הנמצאות בשימוש</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>י&amp;ציאה</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>יציאה מהתכנית</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;חתימה על הודעה…</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;אימות הודעה…</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>חלון &amp;ניפוי</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>פתיחת לוח הבקרה לאבחון ולניפוי</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>אפשרויות &amp;שורת הפקודה</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;אודות %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>הצג מידע על %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>על אודות Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>הצגת מידע על Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>ה&amp;צפנת הארנק…</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>הצפנת המפתחות הפרטיים ששייכים לארנק שלך</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>ה&amp;חלפת מילת הצופן…</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>החלפת מילת הצופן להצפנת הארנק</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;אפשרויות…</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;קובץ</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>ה&amp;גדרות</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>ע&amp;זרה</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>ארנק</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>מפרק</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>בסנכרון עם הרשת…</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>מעבד בלוקים על הדיסק...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>המקטעים נוספים למפתח בכונן…</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>עדכני</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 מאחור</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>שגיאה</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>אזהרה</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>מידע</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>הארנק &lt;b&gt;מוצפן&lt;/b&gt; ו&lt;b&gt;פתוח&lt;/b&gt; כרגע</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>הארנק &lt;b&gt;מוצפן&lt;/b&gt; ו&lt;b&gt;נעול&lt;/b&gt; כרגע</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;סקירה</translation>
     </message>
 </context>
 <context>
@@ -812,24 +591,8 @@
         <translation>קובץ יומן ניפוי</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;פתיחה</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>מ&amp;סוף בקרה</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>הקטן גודל גופן</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>הגדל גודל גופן</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>ניקוי מסוף הבקרה</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1217,18 +980,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>טופס</translation>
+        <source>Open URI</source>
+        <translation>פתיחת כתובת משאב</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>הסתר</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>פתיחת בקשת תשלום מכתובת משאב או מקובץ</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>זמן המקטע האחרון</translation>
+        <source>URI:</source>
+        <translation>כתובת משאב:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>בחירת קובץ בקשת תשלום</translation>
     </message>
 </context>
 <context>
@@ -1303,25 +1070,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>פתיחת כתובת משאב</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>פתיחת בקשת תשלום מכתובת משאב או מקובץ</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>כתובת משאב:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>בחירת קובץ בקשת תשלום</translation>
-    </message>
-</context>
-<context>
     <name>PeerTableModel</name>
     <message>
         <source>User Agent</source>
@@ -1338,70 +1086,6 @@
         <source>No</source>
         <translation>לא</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>ניקוי</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>היסטוריית בקשות תשלום</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>הצגת בקשות נבחרות (דומה ללחיצה כפולה על רשומה)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>הצגה</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>הסרת הרשומות הנבחרות מהרשימה</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>הסרה</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>ניתן להשתמש שוב באחת מכתובות הקבלה שכבר נעשה בהן שימוש. לשימוש חוזר בכתובות ישנן השלכות אבטחה ופרטיות. מומלץ שלא להשתמש באפשרות זו למעט יצירה מחדש של בקשת תשלום שנוצרה בעבר.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>ש&amp;ימוש &amp;חוזר בכתובת קבלה קיימת (לא מומלץ)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>הו&amp;דעה:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>תווית רשות לשיוך עם כתובת הקבלה החדשה.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>יש להשתמש בטופס זה כדי לבקש תשלומים. כל השדות הם בגדר &lt;b&gt;רשות&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ת&amp;ווית:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>סכום כרשות לבקשה. ניתן להשאיר זאת ריק כדי לא לבקש סכום מסוים.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;סכום:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;בקשת תשלום</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>ניקוי של כל השדות בטופס.</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -1415,112 +1099,6 @@
     <message>
         <source>Send Coins</source>
         <translation>שליחת מטבעות</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ת&amp;ווית:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>זהו תשלום רגיל.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>לשלם ל&amp;טובת:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>בחירת כתובת שהייתה בשימוש</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>הדבקת כתובת מלוח הגזירים</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>הסרת רשומה זו</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>יש להזין תווית עבור כתובת זו כדי להוסיף אותה לרשימת הכתובות בשימוש</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;כמות:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>הודעה:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>תשלום לטובת:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>תזכורת:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>זוהי בקשה מאומתת לתשלום.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;ניקוי הכול</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>בחירת כתובת שהייתה בשימוש</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>הדבקת כתובת מלוח הגזירים</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>חתימות - חתימה או אימות של הודעה</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>חתימה על הו&amp;דעה</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>יש להוסיף כאן את ההודעה עליה לחתום</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>חתימה</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>העתקת החתימה הנוכחית ללוח הגזירים</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>&amp;חתימה על הודעה</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>איפוס כל שדות החתימה על הודעה</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;אימות הודעה</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;אימות הודעה</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>איפוס כל שדות אימות ההודעה</translation>
     </message>
 </context>
 <context>
@@ -1542,13 +1120,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>חלונית זו מציגה תיאור מפורט של ההעברה</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>יחידת המידה להצגת הסכומים. יש ללחוץ כדי לבחור ביחידת מידה אחרת.</translation>
     </message>
 </context>
 </TS>

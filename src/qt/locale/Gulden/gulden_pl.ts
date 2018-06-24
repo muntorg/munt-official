@@ -4,8 +4,8 @@
     <extra-po-header-language>pl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:52+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:52+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:59+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:59+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -180,10 +180,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Środki na tym koncie są obecnie zablokowane dla konta witnessing i nie można go przenieść, należy poczekać do momentu wygaśnięcia blokady lub zebrania zarobków przed ponowną próbą.</translation>
     </message>
     <message>
-        <source>Warning toolbar</source>
-        <translation>Pasek ostrzegawczy</translation>
-    </message>
-    <message>
         <source>Tabs toolbar</source>
         <translation>Pasek zakładek</translation>
     </message>
@@ -254,26 +250,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Show or hide the main Window</source>
         <translation>Pokazuje lub ukrywa główne okno</translation>
-    </message>
-    <message>
-        <source>Error importing private key</source>
-        <translation>Wystąpił błąd podczas importowania klucza prywatnego</translation>
-    </message>
-    <message>
-        <source>Invalid private key.</source>
-        <translation>Nieprawidłowy klucz prywatny.</translation>
-    </message>
-    <message>
-        <source>Wallet already contains key.</source>
-        <translation>Portfel już zawiera klucz.</translation>
-    </message>
-    <message>
-        <source>Imported legacy</source>
-        <translation>Importowany &quot;legacy&quot;</translation>
-    </message>
-    <message>
-        <source>Failed to add key to wallet.</source>
-        <translation>Nie udało się dodać klucza do portfela.</translation>
     </message>
     <message>
         <source>&amp;Import key</source>
@@ -573,113 +549,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     </message>
 </context>
 <context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>Okay</source>
-        <translation>Dobrze</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>Pending confirmation: %1</source>
-        <translation>Potwierdzenie oczekujące: %1</translation>
-    </message>
-    <message>
-        <source>Pending maturity: %1</source>
-        <translation>Do wygaśnięcia terminu: %1</translation>
-    </message>
-    <message>
-        <source>Renewing witness account will incur a transaction fee: </source>
-        <translation>Odnowienie konta witness pobierze opłatę transakcyjną: </translation>
-    </message>
-    <message>
-        <source>Send</source>
-        <translation>Wyślij</translation>
-    </message>
-    <message>
-        <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
-        <translation>Środki na tym koncie są obecnie zablokowane dla konta witnessing i nie można go przenieść, należy poczekać do momentu wygaśnięcia blokady lub zebrania zarobków przed ponowną próbą.</translation>
-    </message>
-    <message>
-        <source>My accounts</source>
-        <translation>Moje konta</translation>
-    </message>
-    <message>
-        <source>Add account</source>
-        <translation>Dodaj konto</translation>
-    </message>
-    <message>
-        <source>&amp;Password</source>
-        <translation>&amp;Hasło</translation>
-    </message>
-    <message>
-        <source>Change wallet password</source>
-        <translation>Zmień hasło portfela</translation>
-    </message>
-    <message>
-        <source>&amp;Backup</source>
-        <translation>&amp;Kopia zapasowa</translation>
-    </message>
-    <message>
-        <source>Backup wallet</source>
-        <translation>&amp;Kopia zapasowa portfela</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Podsumowanie</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation>Wyświetl statystyki i informacje dotyczące konta witness.</translation>
-    </message>
-    <message>
-        <source>Error importing private key</source>
-        <translation>Wystąpił błąd podczas importowania klucza prywatnego</translation>
-    </message>
-    <message>
-        <source>Invalid private key.</source>
-        <translation>Nieprawidłowy klucz prywatny.</translation>
-    </message>
-    <message>
-        <source>Wallet already contains key.</source>
-        <translation>Portfel już zawiera klucz.</translation>
-    </message>
-    <message>
-        <source>Imported legacy</source>
-        <translation>&quot;Imported legacy&quot;</translation>
-    </message>
-    <message>
-        <source>Failed to add key to wallet.</source>
-        <translation>Nie udało się dodać klucza do portfela.</translation>
-    </message>
-    <message>
-        <source>&amp;Import key</source>
-        <translation>&amp;Importuj klucz</translation>
-    </message>
-    <message>
-        <source>Import a private key address</source>
-        <translation>Importuj prywatny klucz adresu</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan transactions</source>
-        <translation>&amp;Skanuj transakcje</translation>
-    </message>
-    <message>
-        <source>Rescan the blockchain looking for any missing transactions</source>
-        <translation>Skanuj łańcuch bloków aby znaleźć brakujących transakcji</translation>
-    </message>
-    <message>
-        <source>&amp;Select currency</source>
-        <translation>&amp;Wybierz walutę</translation>
-    </message>
-    <message>
-        <source>&amp;Tools</source>
-        <translation>&amp;Narzędzia</translation>
-    </message>
-</context>
-<context>
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>Okay</source>
@@ -716,14 +585,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Address book</source>
         <translation>Książka adresowa</translation>
-    </message>
-    <message>
-        <source>s</source>
-        <translation>s</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation></translation>
     </message>
     <message>
         <source>Lock funds for:</source>
@@ -772,14 +633,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Save</source>
         <translation>Zapisz</translation>
-    </message>
-    <message>
-        <source>A minimum amount of 5000 is required.</source>
-        <translation>Wymagana jest minimalna ilość 5000.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of 10000 is required, but selected weight is only %1 please increase the amount or lock time for a larger weight.</source>
-        <translation>Wymagana jest minimalna waga 10000, ale wybrana waga to tylko %1 zwiększ ilość lub czas blokady dla większej wagi.</translation>
     </message>
     <message>
         <source>1 year</source>
@@ -999,20 +852,12 @@ Witness waga: %5</translation>
         <translation>Ok</translation>
     </message>
     <message>
-        <source>Edit Address</source>
-        <translation>Zmień adres</translation>
-    </message>
-    <message>
         <source>Import private key</source>
         <translation>importuj klucz prywatny</translation>
     </message>
     <message>
         <source>Private &amp;key</source>
         <translation>Prywatny &amp;klucz</translation>
-    </message>
-    <message>
-        <source>Private key</source>
-        <translation>Klucz prywatny</translation>
     </message>
     <message>
         <source>Enter a private key to import</source>
@@ -1028,10 +873,6 @@ Witness waga: %5</translation>
     <message>
         <source>Ok</source>
         <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <translation>Zmień adres</translation>
     </message>
     <message>
         <source>Import witness from URL</source>
@@ -1078,14 +919,6 @@ Witness waga: %5</translation>
     <message>
         <source>Cancel</source>
         <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiuj etykietę</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopiuj kwotę</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -1208,30 +1041,6 @@ Witness waga: %5</translation>
         <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Wyczyść</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Żądanie historii płatności</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Pokaż wybrane żądanie (robi to samo co dwukrotne kliknięcie pozycji)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Pokaż</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Usuń zaznaczone z listy</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Usuń</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>Wynikowy identyfikator URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety / wiadomości.</translation>
     </message>
@@ -1250,58 +1059,6 @@ Witness waga: %5</translation>
     <message>
         <source>Error loading the buy page, please check your connection and try again later.</source>
         <translation>Podczas wczytywania strony kupowania wystąpił błąd. Sprawdź połączenie i spróbuj ponownie później.</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>Kopiuj URI:</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Kopiuj wiadomość</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Użyj jednego z poprzednio użytych adresów odbiorczych. Podczas ponownego używania adresów występują problemy z bezpieczeństwem i prywatnością. Nie korzystaj z tej opcji, chyba że odtwarzasz żądanie płatności wykonane już wcześniej.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>U&amp;żyj ponownie istniejącego adresu odbiorczego (niepolecane)</translation>
-    </message>
-    <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Gulden network.</source>
-        <translation>Opcjonalna wiadomość do dołączenia do żądania zapłaty, która zostanie wyświetlona po otwarciu żądania. Uwaga: wiadomość nie zostanie wysłana z płatnością za pośrednictwem sieci Gulden.</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Wiadomość:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Opcjonalna etykieta do skojarzenia z nowym adresem odbiorczym.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Użyj tego formularza do zażądania płatności. Wszystkie pola są &lt;b&gt;opcjonalne&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etykieta:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Opcjonalna kwota by zażądać. Zostaw puste lub zero by nie zażądać konkretnej kwoty.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Ilość:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Żądaj płatności</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Wyczyść wszystkie pola formularza.</translation>
     </message>
 </context>
 <context>
@@ -1375,12 +1132,12 @@ Witness waga: %5</translation>
         <translation>Wyślij</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Ukryj</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Żądanie płatności wygasło.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Ukryj</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -1483,24 +1240,12 @@ Witness waga: %5</translation>
         <translation>Potwierdź akcję wysyłania</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Wy&amp;syłka</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Wyczyść wszystkie pola formularza.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Wyczyść &amp;wszystko</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Wyślij do wielu odbiorców na raz</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Dodaj Odbio&amp;rcę</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -1523,20 +1268,8 @@ Witness waga: %5</translation>
         <translation>Suma ogółem</translation>
     </message>
     <message>
-        <source>Total Amount %1</source>
-        <translation>Suma całkowita %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>lub</translation>
-    </message>
-    <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
         <translation>Ta transakcja sygnalizuje wymienność (optin-RBF).</translation>
-    </message>
-    <message>
-        <source>PoW2 is not yet active, please wait for activation and try again.</source>
-        <translation>PoW2 nie jest jeszcze aktywny, zaczekaj na aktywację i spróbuj ponownie.</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1679,10 +1412,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Total funds: </source>
         <translation>Razem środki: </translation>
     </message>
@@ -1800,10 +1529,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksportuj dane z aktywnej karty do pliku</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Eksportuj</translation>
@@ -1970,10 +1695,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Export Transaction History</source>
         <translation>Eksportuj historię transakcji</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Tylko podglądaj</translation>
     </message>
     <message>
         <source>ID</source>
@@ -2455,22 +2176,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Przelew wewnętrzny do: %1</translation>
     </message>
     <message>
-        <source>Internal transfer from: </source>
-        <translation>Transfer wewnętrzny od: </translation>
-    </message>
-    <message>
-        <source>Internal transfer to: </source>
-        <translation>Transfer wewnętrzny do: </translation>
-    </message>
-    <message>
-        <source>Payment from: </source>
-        <translation>Płatność od: </translation>
-    </message>
-    <message>
-        <source>Paid to: </source>
-        <translation>Zapłacono dla: </translation>
-    </message>
-    <message>
         <source>Internal account movement</source>
         <translation>Ruch konta wewnętrznego</translation>
     </message>
@@ -2873,329 +2578,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
 </context>
 <context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Pasek zakładek</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>P&amp;odsumowanie</translation>
-    </message>
-    <message>
-        <source>View statistics and information for witness account.</source>
-        <translation>Wyświetl statystyki i informacje dotyczące konta witness .</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Pokazuje ogólny widok portfela</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>Wyślij</translation>
-    </message>
-    <message>
-        <source>Send coins to a Gulden address</source>
-        <translation>Wyślij monety na adres Gulden</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Odbierz</translation>
-    </message>
-    <message>
-        <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation>Zapytaj o płatność (generuje kod QR oraz Gulden URI)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakcje</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Przeglądaj historię transakcji</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Pokaż / Ukryj</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Pokazuje lub ukrywa główne okno</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Otwórz &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Open a gulden: URI or payment request</source>
-        <translation>Otwórz Gulden: URI lub prośbę o płatność</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Wykonaj kopię zapasową...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Kopia zapasowa portfela do innej lokalizacji</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Adresy wysyłania...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Pokaż listę adresów i etykiet użytych do wysyłania</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adresy odbioru...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Pokaż listę adresów i etykiet użytych do odbierania</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Z&amp;akończ</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Zamknij program</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Podpisz &amp;wiadomość...</translation>
-    </message>
-    <message>
-        <source>Sign messages with your Gulden addresses to prove you own them</source>
-        <translation>Podpisz wiadomości ze swoimi adresami Gulden, aby udowodnić, że je posiadasz</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Zweryfikuj wiadomość...</translation>
-    </message>
-    <message>
-        <source>Verify messages to ensure they were signed with specified Gulden addresses</source>
-        <translation>Zweryfikuj wiadomości, aby upewnić się, że zostały podpisane przy użyciu określonych adresów Guldena</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Okno debugowania</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Otwórz konsolę debugowania i diagnostyki</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Opcje linii komend</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Gulden command-line options</source>
-        <translation>Pokaż %1 komunikaty pomocy aby uzyskać listę z możliwymi opcjami wiersza poleceń Gulden</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;O %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Pokaż informacje o %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>O &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Pokazuje informacje o Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Zaszyfruj Portfel..</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Szyfruj klucze prywatne, które są w twoim portfelu</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Zmień hasło Passphrase...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Zmień hasło Passphrase użyte do szyfrowania portfela</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opcje...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Zmień opcje konfiguracji dla %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Plik</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Ustawienia</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Pomoc</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 klient</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Gulden network</source>
-        <translation>
-            <numerusform>%n aktywne połączenie z siecią Gulden</numerusform>
-            <numerusform>%n aktywnych połączeń z siecią Gulden</numerusform>
-            <numerusform>%n aktywnych połączeń z siecią Gulden</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Kliknij, aby wyłączyć aktywność w sieci.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>Aktywność sieci wyłączona.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Kliknij aby ponownie włączyć aktywność sieciową.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation>Synchronizuj nagłówki (%1%) ...</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Portfel</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Węzeł</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synchronizacja z siecią...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Indeksowanie bloków na dysku...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Przetwarzanie bloków na dysku...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Ponowne indeksowanie bloków na dysku...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>Łączenie z peers...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
-            <numerusform>Przetworzono %n bloków historii transakcji.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Aktualny</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 za</translation>
-    </message>
-    <message>
-        <source>Catching up... %1% complete.&lt;br&gt;</source>
-        <translation>odrobienie zaległości... %1% kompletny.&lt;br&gt;</translation>
-    </message>
-    <message>
-        <source>Transactions and balances will not be accurate or correct until synchronisation is complete.</source>
-        <translation>Transakcje i salda nie będą dokładne ani poprawne, dopóki synchronizacja nie zostanie zakończona.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Błąd</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Ostrzeżenie</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informacja</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Data: %1
-</translation>
-    </message>
-    <message>
-        <source>Received: %1
-</source>
-        <translation>Otrzymano: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent: %1
-</source>
-        <translation>Wysłano: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Typ: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etykieta: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adres: %1
-</translation>
-    </message>
-    <message>
-        <source>Sent funds%1</source>
-        <translation>Wysłane środki%1</translation>
-    </message>
-    <message>
-        <source>Incoming funds%1</source>
-        <translation>Środki przychodzące%1</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Portfel jest &lt;b&gt;zaszyfrowany&lt;/b&gt; i obecnie &lt;b&gt;odblokowany&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Portfel jest &lt;b&gt;zaszyfrowany&lt;/b&gt; i obecnie &lt;b&gt;zablokowany&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
-        <translation>Wystąpił błąd krytyczny. Gulden nie może już bezpiecznie kontynuować i zrezygnuje.</translation>
-    </message>
-</context>
-<context>
     <name>RPCConsole</name>
     <message>
         <source>Debug window</source>
@@ -3282,40 +2664,12 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Otwórz</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Otwórz</translation>
-    </message>
-    <message>
         <source>Current PoW² phase</source>
         <translation>Obecny okres PoW²</translation>
     </message>
     <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsola</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation>+</translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation>x</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>Zmniejsz rozmiar czcionki</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>Zwiększ rozmiar czcionki</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Wyczyść konsolę</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -3516,36 +2870,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Unknown</source>
         <translation>Nieznany</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinAmountField</name>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation>Maksymalna dozwolona %1 płatność to %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation>Minimalna dozwolona %1 płatność wynosi %2.</translation>
-    </message>
-    <message>
-        <source>Gulden</source>
-        <translation>Gulden</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenAmountField</name>
-    <message>
-        <source>Maximum allowed %1 payment is %2.</source>
-        <translation>Maksymalna dozwolona %1 płatność wynosi %2.</translation>
-    </message>
-    <message>
-        <source>Minimum allowed %1 payment is %2.</source>
-        <translation>Minimalna dozwolona %1 płatność wynosi %2.</translation>
-    </message>
-    <message>
-        <source>Gulden</source>
-        <translation>Gulden</translation>
     </message>
 </context>
 <context>
@@ -4040,6 +3364,13 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
+    <name>GuldenAmountField</name>
+    <message>
+        <source>Gulden</source>
+        <translation>Gulden</translation>
+    </message>
+</context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -4091,62 +3422,26 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Open URI</source>
+        <translation>Otwórz URI</translation>
     </message>
     <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Komunikat&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Twój portfel po raz pierwszy synchronizuje się z siecią Gulden. &lt;br/&gt; Po zakończeniu synchronizacji Twoje saldo i ostatnie transakcje będą widoczne.</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Otwórz żądanie zapłaty z URI lub pliku</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>Postęp</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>Przyrost postępu na godzinę</translation>
+        <source>Select payment request file</source>
+        <translation>Otwórz żądanie zapłaty z pliku</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>obliczanie...</translation>
-    </message>
-    <message>
-        <source>Estimated time left until synced</source>
-        <translation>Przewidywany czas zakończenia synchronizacji</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Ukryj</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Komunikat&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Twój portfel synchronizuje się teraz z siecią Gulden. &lt;br/&gt; Po zakończeniu synchronizacji Twoje saldo i ostatnie transakcje będą widoczne.</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Nieznane. Synchronizowanie nagłówków (%1)...</translation>
-    </message>
-    <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Gulden network, as detailed below.</source>
-        <translation>Ostatnie transakcje mogą jeszcze nie być widoczne, dlatego saldo portfela może być nieprawidłowe. Ta informacja będzie poprawna po zakończeniu synchronizacji portfela z siecią Gulden, jak opisano poniżej.</translation>
-    </message>
-    <message>
-        <source>Attempting to spend Gulden that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation>Próba przelania Guldenów, na którą mają wpływ nieuregulowane transakcje, nie zostanie zaakceptowana przez sieć.</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>Pozostało bloków</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>Nienznane...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Czas ostatniego bloku</translation>
+        <source>Select payment request file to open</source>
+        <translation>Wybierz plik żądania zapłaty do otwarcia</translation>
     </message>
 </context>
 <context>
@@ -4222,29 +3517,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Recent transactions</source>
         <translation>Ostatnie transakcje</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Otwórz URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Otwórz żądanie zapłaty z URI lub pliku</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Otwórz żądanie zapłaty z pliku</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Wybierz plik żądania zapłaty do otwarcia</translation>
     </message>
 </context>
 <context>
@@ -4438,229 +3710,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etykieta:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>To jest standardowa płatność</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Zapłać &amp;dla:</translation>
-    </message>
-    <message>
-        <source>The Gulden address to send the payment to</source>
-        <translation>Adres Gulden, aby wysłać płatność do</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Wybierz wcześniej użyty adres</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Wklej adres ze schowka</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Usuń ten wpis</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Wprowadź etykietę dla tego adresu by dodać go do listy użytych adresów</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Su&amp;ma:</translation>
-    </message>
-    <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Gulden than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
-        <translation>Opłata zostanie potrącona z kwoty która zostanie wysłana. Odbiorca otrzyma mniej Guldena niż podasz w polu kwoty. Jeśli wybrano wielu odbiorców, opłata jest dzielona równo.</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>Od&amp;ejmij od wysokości opłaty</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Wiadomość:</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the gulden: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Gulden network.</source>
-        <translation>Wiadomość która została dołączona do Gulden: URI który będzie przechowywany wraz z transakcją w celach informacyjnych. Uwaga: ta wiadomość nie zostanie wysłana przez sieć Gulden.</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>To jest nieuwierzytelniona prośba o płatność.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Wpłać do:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Notatka:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>To żądanie zapłaty jest zweryfikowane.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Wpisz etykietę dla tego adresu, aby dodać ją do swojej książki adresowej</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Wyczyść &amp;wszystko</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Wybierz wcześniej użyty adres</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Wklej adres ze schowka</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Podpisy - Podpisz / zweryfikuj wiadomość</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>Podpi&amp;sz Wiadomość</translation>
-    </message>
-    <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Gulden sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
-        <translation>Możesz podpisywać wiadomości / umowy z twoimi adresami, aby udowodnić, że możesz otrzymać Gulden do nich wysłanego. Uważaj, aby nie podpisywać niczego niejasnego ani przypadkowego, ponieważ ataki phishingowe mogą skłonić Cię do podpisania Twojej tożsamości. Podawaj tylko w pełni szczegółowe oświadczenia, na które wyrażasz zgodę.</translation>
-    </message>
-    <message>
-        <source>The Gulden address to sign the message with</source>
-        <translation>Adres Gulden aby podpisać wiadomość</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Tutaj wprowadź wiadomość, którą chcesz podpisać</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Podpis</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopiuje aktualny podpis do schowka systemowego</translation>
-    </message>
-    <message>
-        <source>Sign the message to prove you own this Gulden address</source>
-        <translation>Podpisz wiadomość, aby potwierdzić, że jesteś właścicielem tego adresu Gulden</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Podpisz &amp;Wiadomość</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Zresetuj wszystkie pola podpisanej wiadomości</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Zweryfikuj wiadomość</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>Wpisz adres, wiadomość oraz sygnaturę (podpis) odbiorcy (upewnij się, że dokładnie skopiujesz wszystkie zakończenia linii, spacje, tabulacje itp.).  Uważaj by nie dodać więcej do podpisu niż do samej podpisywanej wiadomości by uniknąć ataku man-in-the-middle. 
-Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadawca posiada klucz do adresu, natomiast nie potwierdza to, że poprawne wysłanie jakiejkolwiek transakcji! </translation>
-    </message>
-    <message>
-        <source>The Gulden address the message was signed with</source>
-        <translation>Gulden adresu wiadomości z której została podpisana</translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Gulden address</source>
-        <translation>Zweryfikuj wiadomość aby upewnić się że została podpisana pod podanym adresem Guldena</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Zweryfikuj &amp;Wiadomość</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Resetuje wszystkie pola weryfikacji wiadomości</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Click &quot;Sign Message&quot; to generate signature</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Wprowadzony adres jest nieprawidłowy.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Sprawdź adres i spróbuj ponownie.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>Wprowadzony adres nie odnosi się do klucza.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Odblokowanie portfela zostało anulowane.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Klucz prywatny dla podanego adresu nie jest dostępny.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>Podpisanie wiadomości nie powiodło się.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Wiadomość podpisana.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Podpis nie mógł zostać zdekodowany.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Sprawdź podpis i spróbuj ponownie.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>Podpis nie pasuje do skrótu wiadomości.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Weryfikacja wiadomości nieudana.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Wiadomość zweryfikowana.</translation>
-    </message>
-</context>
-<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -4687,13 +3736,6 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Details for %1</source>
         <translation>Szczegóły dla %1</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Jednostka w jakiej pokazywane są kwoty. Kliknij aby wybrać inną.</translation>
     </message>
 </context>
 <context>

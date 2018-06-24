@@ -4,8 +4,8 @@
     <extra-po-header-language>lt</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:50+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:50+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:58+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:58+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksportuoti informaciją iš dabartinės lentelės į failą</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Eksportuoti</translation>
@@ -190,20 +186,8 @@
         <translation>Patvirtinti siuntimo veiksmą</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Siųsti</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Išvalyti &amp;viską</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Siųsti keliems gavėjams vienu metu</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;A Pridėti gavėją</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -300,195 +284,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Keisti adresą</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
         <translation>pavadinimas</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Kortelių įrankinė</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Apžvalga</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Rodyti piniginės bendrą apžvalgą</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Siųsti</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Gauti</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Sandoriai</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Apžvelgti sandorių istoriją</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Rodyti / Slėpti</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Rodyti arba slėpti pagrindinį langą</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Atidaryti &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup piniginę...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Daryti piniginės atsarginę kopiją</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Siunčiami adresai...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Gaunami adresai...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Išeiti</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Išjungti programą</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Pasirašyti ži&amp;nutę...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Tikrinti žinutę...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Derinimo langas</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Atverti derinimo ir diagnostikos konsolę</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Komandinės eilutės parametrai</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Apie %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Apie &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Rodyti informaciją apie Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Užšifruoti piniginę...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Užšifruoti privačius raktus, kurie priklauso jūsų piniginei</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Keisti slaptafrazę...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Pakeisti slaptafrazę naudojamą piniginės užšifravimui</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Parinktys...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Failas</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Nustatymai</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Pagalba</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Piniginė</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Taškas</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sinchronizavimas su tinklu ...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Blokai iš naujo indeksuojami...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Atnaujinta</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Klaida</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Įspėjimas</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informacija</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Piniginė &lt;b&gt;užšifruota&lt;/b&gt; ir šiuo metu &lt;b&gt;atrakinta&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Piniginė &lt;b&gt;užšifruota&lt;/b&gt; ir šiuo metu &lt;b&gt;užrakinta&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Apžvalga</translation>
     </message>
 </context>
 <context>
@@ -542,16 +341,8 @@
         <translation>Derinimo žurnalo failas</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Atverti</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsolė</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Išvalyti konsolę</translation>
     </message>
     <message>
         <source>Totals</source>
@@ -759,17 +550,6 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Paskutinio bloko laikas</translation>
-    </message>
-</context>
-<context>
     <name>OverviewPage</name>
     <message>
         <source>Form</source>
@@ -810,22 +590,6 @@
         <source>No</source>
         <translation>Ne</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>Išvalyti</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Žinutė:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>Ž&amp;ymė:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Suma:</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -839,80 +603,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Siųsti monetas</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>Ž&amp;ymė:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Mokėti &amp;gavėjui:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Įvesti adresą iš mainų atminties</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Su&amp;ma:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Žinutė:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Mokėti gavėjui:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Išvalyti &amp;viską</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Įvesti adresą iš mainų atminties</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Pasirašyti žinutę</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Įveskite pranešimą, kurį norite pasirašyti čia</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Registruoti praneši&amp;mą</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Patikrinti žinutę</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>&amp;Patikrinti žinutę</translation>
     </message>
 </context>
 <context>

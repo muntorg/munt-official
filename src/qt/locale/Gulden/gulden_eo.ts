@@ -5,8 +5,8 @@
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
     <extra-po-header-plural_forms>nplurals=2; plural=(n != 1);</extra-po-header-plural_forms>
-    <extra-po-header-po_revision_date>2018-06-24 10:05+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:05+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -54,10 +54,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksporti la datumojn el la aktuala langeto al dosiero</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Eksporti</translation>
@@ -234,24 +230,12 @@
         <translation>Konfirmi la sendon</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Ŝendi</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Malplenigi ĉiujn kampojn de la formularo.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Forigi Ĉion</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Sendi samtempe al pluraj ricevantoj</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Aldoni &amp;Ricevonton</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -353,13 +337,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Redakti Adreson</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -380,216 +357,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Ne eblas krei dosierujon por datumoj ĉi tie.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Langeto-breto</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Superrigardo</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Vidigi ĝeneralan superrigardon de la monujo</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Sendi</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Ricevi</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakcioj</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Esplori historion de transakcioj</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Montri / Kaŝi</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Montri aŭ kaŝi la ĉefan fenestron</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Malfermi &amp;URI-on...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Krei sekurkopion de la monujo...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Krei alilokan sekurkopion de monujo</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Sendaj adresoj...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Vidigi la liston de uzitaj sendaj adresoj kaj etikedoj</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Ricevaj adresoj...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Vidigi la liston de uzitaj ricevaj adresoj kaj etikedoj</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Eliri</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Eliri la aplikaĵon</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Subskribi &amp;mesaĝon...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Kontroli mesaĝon...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>Sen&amp;cimiga fenestro</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Malfermi konzolon de sencimigo kaj diagnozo</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Komandliniaj agordaĵoj</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Pri &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Vidigi informojn pri Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Ĉifri &amp;Monujon...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Ĉifri la privatajn ŝlosilojn de via monujo</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Ŝanĝi &amp;Pasfrazon...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Ŝanĝi la pasfrazon por ĉifri la monujon</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Agordoj...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Dosiero</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Agordoj</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Helpo</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Monujo</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Nodo</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sinkronigante kun reto...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Reindeksado de blokoj sur disko...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Ĝisdata</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>mankas %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Eraro</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Averto</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informoj</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Dato: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tipo: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Etikedo: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adreso: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Monujo estas &lt;b&gt;ĉifrita&lt;/b&gt; kaj aktuale &lt;b&gt;malŝlosita&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Monujo estas &lt;b&gt;ĉifrita&lt;/b&gt; kaj aktuale &lt;b&gt;ŝlosita&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Superrigardo</translation>
     </message>
 </context>
 <context>
@@ -651,16 +418,8 @@
         <translation>Sencimiga protokoldosiero</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Malfermi</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzolo</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Malplenigi konzolon</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -910,14 +669,22 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formularo</translation>
+        <source>Open URI</source>
+        <translation>Malfermi URI-on</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Horo de la lasta bloko</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Malfermi pagpeton el URI aŭ dosiero</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Elektu la dosieron de la pagpeto</translation>
     </message>
 </context>
 <context>
@@ -964,25 +731,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Malfermi URI-on</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Malfermi pagpeton el URI aŭ dosiero</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Elektu la dosieron de la pagpeto</translation>
-    </message>
-</context>
-<context>
     <name>PeerTableModel</name>
     <message>
         <source>User Agent</source>
@@ -990,171 +738,10 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Clear</source>
-        <translation>Forigi</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Vidigi</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Forigi</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Reuzi unu el la jam uzitaj ricevaj adresoj. Reuzo de adresoj povas krei problemojn pri sekureco kaj privateco. Ne uzu tiun ĉi funkcion krom por rekrei antaŭe faritan pagopeton.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>R&amp;euzi ekzistantan ricevan adreson (malrekomendinda)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Mesaĝo:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etikedo:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Kvanto:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Peti pagon</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Malplenigi ĉiujn kampojn de la formularo.</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Sendi Bitmonon</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Etikedo:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Tio estas normala pago.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>&amp;Ricevonto:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Elektu la jam uzitan adreson</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Alglui adreson de tondejo</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Forigu ĉi tiun enskribon</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Tajpu etikedon por tiu ĉi adreso por aldoni ĝin al la listo de uzitaj adresoj</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Sumo:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Mesaĝo:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Pagi Al:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memorando:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Forigi Ĉion</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Elektu la jam uzitan adreson</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Alglui adreson de tondejo</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Subskriboj - Subskribi / Kontroli mesaĝon</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Subskribi Mesaĝon</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Tajpu la mesaĝon, kiun vi volas sendi, cîi tie</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Subskribo</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopii la aktualan subskribon al la tondejo</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Subskribi &amp;Mesaĝon</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Reagordigi ĉiujn prisubskribajn kampojn</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Kontroli Mesaĝon</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Kontroli &amp;Mesaĝon</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Reagordigi ĉiujn prikontrolajn kampojn</translation>
     </message>
 </context>
 <context>

@@ -4,8 +4,8 @@
     <extra-po-header-language>ky</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:50+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:50+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:57+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:57+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -84,14 +84,6 @@
         <source>(no label)</source>
         <translation>(аты жок)</translation>
     </message>
-    <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Жөнөтүү</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Бардыгын тазалоо</translation>
-    </message>
 </context>
 <context>
     <name>TransactionTableModel</name>
@@ -124,45 +116,6 @@
     <message>
         <source>&amp;Address</source>
         <translation>&amp;Дарек</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Транзакциялар</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>Билдирүүнү &amp;текшерүү...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Жардам</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Капчык</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Жаңыланган</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Ката</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Эскертүү</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Маалымат</translation>
     </message>
 </context>
 <context>
@@ -244,45 +197,8 @@
         <translation>Аты</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Ачуу</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Консоль</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Консолду тазалоо</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Билдирүү:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Бардыгын тазалоо</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Даректи алмашуу буферинен коюу</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Даректи алмашуу буферинен коюу</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Билдирүү:</translation>
     </message>
 </context>
 </TS>

@@ -4,8 +4,8 @@
     <extra-po-header-language>fi</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:06+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:06+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:55+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:55+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -53,10 +53,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Vie</translation>
@@ -300,24 +296,12 @@
         <translation>Vahvista lähetys</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Lähetä</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Tyhjennä lomakkeen kaikki kentät</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Tyhjennnä Kaikki</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Lähetä usealla vastaanottajalle samanaikaisesti</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Lisää &amp;Vastaanottaja</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -411,13 +395,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Muokkaa osoitetta</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -438,247 +415,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Ei voida luoda data-hakemistoa tänne.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Välilehtipalkki</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Yleisnäkymä</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Lompakon tilanteen yleiskatsaus</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Lähetä</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Vastaanota</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Rahansiirrot</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Selaa rahansiirtohistoriaa</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Näytä / Piilota</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Näytä tai piilota Bitcoin-ikkuna</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Avaa &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Varmuuskopioi Lompakko...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Varmuuskopioi lompakko toiseen sijaintiin</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Lähetysosoitteet...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Näytä lähettämiseen käytettyjen osoitteiden ja nimien lista</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Vastaanotto-osoitteet...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Näytä vastaanottamiseen käytettyjen osoitteiden ja nimien lista</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>L&amp;opeta</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Sulje ohjelma</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;Allekirjoita viesti...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>Varmista &amp;viesti...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Testausikkuna</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Avaa debuggaus- ja diagnostiikkakonsoli</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Komentorivin valinnat</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Tietoja %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Näytä tietoa aiheesta %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Tietoja &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Näytä tietoja Qt:ta</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Salaa lompakko...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Suojaa yksityiset avaimet, jotka kuuluvat lompakkoosi</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Vaihda Tunnuslause...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Vaihda lompakon salaukseen käytettävä tunnuslause</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Asetukset...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Muuta kohteen %1 kokoonpanoasetuksia</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Tiedosto</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Asetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Apua</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1-asiakas</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Lompakko</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Solmu</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synkronoidaan verkon kanssa...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Ladataan lohkoindeksiä...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Käsitellään lohkoja levyllä...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Ladataan lohkoindeksiä...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Prosessoitu %n lohko rahansiirtohistoriasta.</numerusform>
-            <numerusform>Prosessoitu %n lohkoa rahansiirtohistoriasta.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Rahansiirtohistoria on ajan tasalla</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 jäljessä</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Virhe</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Varoitus</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Tietoa</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Päivämäärä: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tyyppi: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Nimike: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Osoite: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;avoinna&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;lukittuna&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Yleisnäkymä</translation>
     </message>
 </context>
 <context>
@@ -764,24 +500,8 @@
         <translation>Avaa %1 -debug-loki tämänhetkisestä data-hakemistosta. Tämä voi viedä muutaman sekunnin suurille lokitiedostoille.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Avaa</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsoli</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>Pienennä fontin kokoa</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>Suurenna fontin kokoa</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Tyhjennä konsoli</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1227,18 +947,18 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Lomake</translation>
+        <source>Open URI</source>
+        <translation>Avaa URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Piilota</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Avaa maksupyyntö URI:sta tai tiedostosta</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Viimeisimmän lohkon aika</translation>
+        <source>Select payment request file</source>
+        <translation>Valitse maksupyynnön tiedosto</translation>
     </message>
 </context>
 <context>
@@ -1313,21 +1033,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Avaa URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Avaa maksupyyntö URI:sta tai tiedostosta</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Valitse maksupyynnön tiedosto</translation>
-    </message>
-</context>
-<context>
     <name>PeerTableModel</name>
     <message>
         <source>Node/Service</source>
@@ -1348,70 +1053,6 @@
         <source>No</source>
         <translation>Ei</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>Tyhjennä</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Pyydettyjen maksujen historia</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Näytä valittu pyyntö (sama toiminta kuin alkion tuplaklikkaus)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Näytä</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Poista valitut alkiot listasta</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Poista</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Uudelleenkäytä yksi vanhoista vastaanotto-osoitteista. Uudelleenkäyttössä on turvallisuus- ja yksityisyysongelmia. Älä käytä tätä ellet ole uudelleenluomassa aikaisempaa maksupyyntöä.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Uudelleenkäytä vastaanotto-osoitetta (ei suositella)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Viesti:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Valinnainen nimi liitetään vastaanottavaan osoitteeseen.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Käytä lomaketta maksupyyntöihin. Kaikki kentät ovat &lt;b&gt;valinnaisia&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nimi:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Valinnainen pyyntömäärä. Jätä tyhjäksi tai nollaksi jos et pyydä tiettyä määrää.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Määrä</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Vastaanota maksu</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Tyhjennä lomakkeen kaikki kentät.</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -1425,120 +1066,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Lähetä Bitcoineja</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nimi:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Tämä on normaali maksu.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Maksun saaja:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Valitse aikaisemmin käytetty osoite</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Liitä osoite leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Poista tämä alkio</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Aseta nimi tälle osoitteelle lisätäksesi sen käytettyjen osoitteiden listalle.</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>M&amp;äärä:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>V&amp;ähennä maksukulu määrästä</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Viesti:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Tämä on todentamaton maksupyyntö.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Saaja:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Muistio:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Tämä on todennettu maksupyyntö.</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Tyhjennä Kaikki</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Valitse aikaisemmin käytetty osoite</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Liitä osoite leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Allekirjoitukset - Allekirjoita / Varmista viesti</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Allekirjoita viesti</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Kirjoita tähän viesti minkä haluat allekirjoittaa</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Allekirjoitus</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopioi tämänhetkinen allekirjoitus leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Allekirjoita &amp;viesti</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Tyhjennä kaikki allekirjoita-viesti-kentät</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Varmista viesti</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Varmista &amp;viesti...</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Tyhjennä kaikki varmista-viesti-kentät</translation>
     </message>
 </context>
 <context>
@@ -1557,13 +1084,6 @@
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>Tämä ruutu näyttää yksityiskohtaisen tiedon rahansiirrosta</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Yksikkö jossa määrät näytetään. Klikkaa valitaksesi toisen yksikön.</translation>
     </message>
 </context>
 </TS>

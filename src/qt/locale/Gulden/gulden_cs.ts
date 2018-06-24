@@ -4,8 +4,8 @@
     <extra-po-header-language>cs</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:53+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:53+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exportuj data z tohoto panelu do souboru</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Export</translation>
@@ -239,10 +235,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>Exportuj transakční historii</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Sledovaná</translation>
     </message>
     <message>
         <source>ID</source>
@@ -576,12 +568,12 @@
         <translation>Kopíruj drobné</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Skryj</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Platební požadavek vypršel.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Skryj</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -664,24 +656,12 @@
         <translation>Potvrď odeslání</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Pošl&amp;i</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Promaž obsah ze všech formulářových políček.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Všechno s&amp;maž</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Pošli více příjemcům naráz</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Při&amp;dej příjemce</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -698,14 +678,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>přidán jako transakční poplatek</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Celková částka %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>nebo</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1291,101 +1263,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopíruj její označení</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopíruj částku</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ano</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ne</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Vyčistit</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Historie vyžádaných plateb</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Zobraz zvolený požadavek (stejně tak můžeš přímo na něj dvakrát poklepat)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Zobrazit</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Smaž zvolené požadavky ze seznamu</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Smazat</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Výsledná URI je příliš dlouhá, zkus zkrátit text označení/zprávy.</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>Kopíruj URI</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Kopíruj zprávu</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Recyklovat již dříve použité adresy. Recyklace adres má bezpečnostní rizika a narušuje soukromí. Nezaškrtávejte to, pokud znovu nevytváříte již dříve vytvořený platební požadavek.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Recyklovat již existující adresy (nedoporučeno)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Zpráva:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Volitelné označení, které se má přiřadit k nové adrese.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Tímto formulářem můžeš požadovat platby. Všechna pole jsou &lt;b&gt;volitelná&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Označení:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Volitelná částka, kterou požaduješ. Nech prázdné nebo nulové, pokud nepožaduješ konkrétní částku.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Čás&amp;tka:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Vyžádat platbu</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Promaž obsah ze všech formulářových políček.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1437,13 +1314,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Uprav adresu</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1464,268 +1334,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Tady nemůžu vytvořit adresář pro data.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Panel s listy</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Přehled</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Zobraz celkový přehled peněženky</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>P&amp;ošli</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>Při&amp;jmi</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transakce</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Procházej historii transakcí</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Zobraz/Skryj</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Zobraz nebo skryj hlavní okno</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Načíst &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Zazálohuj peněženku...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Zazálohuj peněženku na jiné místo</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Od&amp;esílací adresy...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Ukaž seznam použitých odesílacích adres a jejich označení</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Př&amp;ijímací adresy...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Ukaž seznam použitých přijímacích adres a jejich označení</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Konec</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Ukonči aplikaci</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Po&amp;depiš zprávu...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Ověř zprávu...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Ladicí okno</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Otevři ladicí a diagnostickou konzoli</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Ar&amp;gumenty příkazové řádky</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>O &amp;%1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Zobraz informace o %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>O &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Zobraz informace o Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Zaši&amp;fruj peněženku...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Zašifruj soukromé klíče ve své peněžence</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Změň &amp;heslo...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Změň heslo k šifrování peněženky</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Možnosti...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Uprav nastavení %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Soubor</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Nastavení</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>Nápověd&amp;a</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 klient</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Kliknutím zařízneš spojení se sítí.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>Síť je vypnutá.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Kliknutím opět umožníš spojení do sítě.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation>Synchronizuji záhlaví bloků (%1 %)…</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Peněženka</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Uzel</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synchronizuji se se sítí...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Vytvářím index bloků na disku...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Zpracovávám bloky na disku...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Vytvářím nový index bloků na disku...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>Připojuji se…</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Zpracován %n blok transakční historie.</numerusform>
-            <numerusform>Zpracovány %n bloky transakční historie.</numerusform>
-            <numerusform>Zpracováno %n bloků transakční historie.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Aktuální</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>Stahuji ještě %1 bloků transakcí</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Chyba</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Upozornění</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informace</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Datum: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Typ: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Označení: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresa: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Peněženka je &lt;b&gt;zašifrovaná&lt;/b&gt; a momentálně &lt;b&gt;odemčená&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Peněženka je &lt;b&gt;zašifrovaná&lt;/b&gt; a momentálně &lt;b&gt;zamčená&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Přehled</translation>
     </message>
 </context>
 <context>
@@ -1811,24 +1419,8 @@
         <translation>Otevři soubor s ladicími záznamy %1 z aktuálního datového adresáře. U velkých žurnálů to může pár vteřin zabrat.</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Otevřít</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzole</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>Zmenšit písmo</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>Zvětšit písmo</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Vyčistit konzoli</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2352,46 +1944,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formulář</translation>
+        <source>Open URI</source>
+        <translation>Načíst URI</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>Stav</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Načíst platební požadavek z URI nebo ze souboru</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>Postup za hodinu</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>propočítávám…</translation>
+        <source>Select payment request file</source>
+        <translation>Vyber soubor platebního požadavku</translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>Odhadovaný zbývající čas</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Skryj</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Neznámý. Synchronizuji záhlaví bloků (%1)…</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>Zbývající počet bloků</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>neznámý…</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Čas posledního bloku</translation>
+        <source>Select payment request file to open</source>
+        <translation>Vyber soubor platebního požadavku k načtení</translation>
     </message>
 </context>
 <context>
@@ -2463,29 +2035,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>Poslední transakce</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Načíst URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Načíst platební požadavek z URI nebo ze souboru</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Vyber soubor platebního požadavku</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Vyber soubor platebního požadavku k načtení</translation>
     </message>
 </context>
 <context>
@@ -2606,6 +2155,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ano</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Výsledná URI je příliš dlouhá, zkus zkrátit text označení/zprávy.</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2617,196 +2181,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Pošli mince</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>O&amp;značení:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Tohle je normální platba.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>&amp;Komu:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vyber již použitou adresu</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Vlož adresu ze schránky</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Smaž tento záznam</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Zadej označení této adresy; obojí se ti pak uloží do adresáře</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Čás&amp;tka:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>Od&amp;ečíst poplatek od částky</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Zpráva:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Tohle je neověřený platební požadavek.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Komu:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Poznámka:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Tohle je ověřený platební požadavek.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Zadej označení této adresy; obojí se ti pak uloží do adresáře</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Všechno &amp;smaž</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vyber již použitou adresu</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Vlož adresu ze schránky</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Podpisy - podepsat/ověřit zprávu</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Podepiš zprávu</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Sem vepiš zprávu, kterou chceš podepsat</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Podpis</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Zkopíruj tento podpis do schránky</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Po&amp;depiš zprávu</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Vymaž všechna pole formuláře pro podepsání zrávy</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Ověř zprávu</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>K ověření podpisu zprávy zadej adresu příjemce, zprávu (ověř si, že správně kopíruješ zalomení řádků, mezery, tabulátory apod.) a podpis. Dávej pozor na to, abys nezkopíroval do podpisu víc, než co je v samotné podepsané zprávě, abys nebyl napálen man-in-the-middle útokem. Poznamenejme však, že takto lze pouze prokázat, že podepisující je schopný na dané adrese přijmout platbu, ale není možnéprokázat, že odeslal jakoukoli transakci!</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>O&amp;věř zprávu</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Vymaž všechna pole formuláře pro ověření zrávy</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Kliknutím na „Podepiš zprávu“ vygeneruješ podpis</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Zadaná adresa je neplatná.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Zkontroluj ji prosím a zkus to pak znovu.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>Zadaná adresa nepasuje ke klíči.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Odemčení peněženky bylo zrušeno.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Soukromý klíč pro zadanou adresu není dostupný.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>Nepodařilo se podepsat zprávu.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Zpráva podepsána.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Podpis nejde dekódovat.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Zkontroluj ho prosím a zkus to pak znovu.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>Podpis se neshoduje s hašem zprávy.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Nepodařilo se ověřit zprávu.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Zpráva ověřena.</translation>
     </message>
 </context>
 <context>
@@ -2836,13 +2210,6 @@
     <message>
         <source>Details for %1</source>
         <translation>Podrobnosti o %1</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Jednotka pro částky. Klikni pro výběr nějaké jiné.</translation>
     </message>
 </context>
 </TS>

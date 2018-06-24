@@ -4,8 +4,8 @@
     <extra-po-header-language>ja</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:49+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:49+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:56+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:56+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>ファイルに現在のタブのデータをエクスポート</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>エクスポート (&amp;E)</translation>
@@ -239,10 +235,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>トランザクション履歴をエクスポートする</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>監視限定</translation>
     </message>
     <message>
         <source>ID</source>
@@ -576,12 +568,12 @@
         <translation>釣り銭をコピー</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>隠す</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>支払いリクエストの期限が切れました。</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>隠す</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -664,24 +656,12 @@
         <translation>送る操作を確認する</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>送金 (&amp;E)</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>全ての入力項目をクリア</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>すべてクリア (&amp;A)</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>一度に複数の人に送る</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>受取人を追加 (&amp;R)</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -698,14 +678,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>取引手数料として追加された</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>合計：　%1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>または</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1267,101 +1239,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>ラベルをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>総額のコピー</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>はい</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>いいえ</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>クリア</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>支払リクエスト履歴</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>選択されたリクエストを表示する（項目をダブルクリックすることでも表示できます）</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>表示</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>リストから選択項目を削除</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI が長くなり過ぎます。ラベルやメッセージのテキストを短くしてください。</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>URI をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>メッセージをコピーする</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>以前利用した受取用アドレスのどれかを再利用します。アドレスの再利用はセキュリティおよびプライバシーにおいて問題があります。以前作成した支払リクエストを再生成するとき以外は利用しないでください。</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>既存の受取用アドレスを再利用する (非推奨) (&amp;E)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>メッセージ (&amp;M):</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>受取用アドレスに紐づく任意のラベル。</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>このフォームを使用して支払のリクエストを行いましょう。すべての項目は&lt;b&gt;任意入力&lt;/b&gt;です。</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ラベル(&amp;L):</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>リクエストする任意の金額。特定の金額をリクエストするのでない場合には、この欄は空白のままかゼロにしてください。</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>総額:(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>支払をリクエストする (&amp;R)</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>全ての入力項目をクリア</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1413,13 +1290,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>アドレスの編集</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1440,266 +1310,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>ここにデータ ディレクトリを作成することはできません。</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>タブツールバー</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>概要(&amp;O)</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>ウォレットの概要を見る</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>送金 (&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>入金 (&amp;R)</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>取引(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>取引履歴を閲覧</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>見る/隠す (&amp;S)</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>メイン ウインドウを表示または非表示</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>URI を開く (&amp;U)...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>ウォレットのバックアップ... (&amp;B)</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>ウォレットを他の場所にバックアップ</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>送金先アドレス一覧 (&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>使用済みの送金用アドレスとラベルの一覧を表示する</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>受け取り用アドレス一覧 (&amp;R)...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>支払いを受け取るアドレスとラベルのリストを表示する</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>終了(&amp;E)</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>アプリケーションを終了</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>メッセージの署名... (&amp;m)</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>メッセージの検証... (&amp;V)</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>デバッグ ウインドウ (&amp;D)</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>デバッグと診断コンソールを開く</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>コマンドラインオプション (&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>%1 について (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>%1 の情報を表示</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Qt について(&amp;Q)</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Qt の情報を表示</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>ウォレットの暗号化... (&amp;E)</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>あなたのウォレットの秘密鍵を暗号化します</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>パスフレーズの変更... (&amp;C)</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>ウォレット暗号化用パスフレーズの変更</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>オプション... (&amp;O)</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>%1 の設定を変更する</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>ファイル(&amp;F)</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>設定(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>ヘルプ(&amp;H)</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 クライアント</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>クリックするとネットワーク活動を無効化します。</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>ネットワーク活動は無効化されました。</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>クリックするとネットワーク活動を再び有効化します。</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation>未知。ヘッダを同期しています (%1%)...</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>ウォレット</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>ノード</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>ネットワークに同期中……</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>ディスク上のブロックのインデックスを作成しています...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>ディスク上のブロックを処理しています...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>ディスク上のブロックのインデックスを再作成中...</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>ピアに接続しています...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>トランザクション履歴の %n ブロックを処理しました。</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>バージョンは最新です</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 遅延</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>エラー</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>情報</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>日付: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>タイプ: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>ラベル: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>アドレス: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>ウォレットは&lt;b&gt;暗号化されて、アンロックされています&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>ウォレットは&lt;b&gt;暗号化されて、ロックされています&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>概要(&amp;O)</translation>
     </message>
 </context>
 <context>
@@ -1785,24 +1395,8 @@
         <translation>現在のデータディレクトリから %1 のデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>開く (&amp;O)</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>コンソール (&amp;C)</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>文字サイズを縮小</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>文字サイズを拡大</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>コンソールをクリア</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2322,46 +1916,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>フォーム</translation>
+        <source>Open URI</source>
+        <translation>URI を開く</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>進捗</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>URI またはファイルから支払いリクエストを開く</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>進捗状況は一時間ごとに増加します</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>計算しています...</translation>
+        <source>Select payment request file</source>
+        <translation>支払いリクエストファイルを選択してください</translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>同期完了までの推定残り時間</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>隠す</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>未知。ヘッダを同期しています (%1)...</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>残りのブロック数</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>未知...</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>最終ブロックの日時</translation>
+        <source>Select payment request file to open</source>
+        <translation>開きたい支払いリクエストファイルを選択してください</translation>
     </message>
 </context>
 <context>
@@ -2433,29 +2007,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>最近のトランザクション</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI を開く</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>URI またはファイルから支払いリクエストを開く</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>支払いリクエストファイルを選択してください</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>開きたい支払いリクエストファイルを選択してください</translation>
     </message>
 </context>
 <context>
@@ -2576,6 +2127,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>はい</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>いいえ</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI が長くなり過ぎます。ラベルやメッセージのテキストを短くしてください。</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2587,196 +2153,6 @@
     <message>
         <source>Send Coins</source>
         <translation>コインを送る</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>ラベル(&amp;L):</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>これは通常の支払です。</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>送り先(&amp;T):</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>前に使用したアドレスを選ぶ</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>クリップボードからアドレスを貼付ける</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>この項目を削除する</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>このアドレスに対するラベルを入力することで、使用済みアドレスの一覧に追加することができます</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>金額(&amp;A):</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>送金額から手数料を差し引く (&amp;U)</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>メッセージ:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>これは未認証の支払いリクエストです。</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>支払先:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>メモ：</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>これは認証済みの支払いリクエストです。</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>アドレス帳に追加するには、このアドレスのラベルを入力します</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>すべてクリア (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>前に使用したアドレスを選ぶ</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>クリップボードからアドレスを貼付ける</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>署名 - メッセージの署名/検証</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>メッセージの署名 (&amp;S)</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>ここにあなたが署名するメッセージを入力します</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>署名</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>現在の署名をシステムのクリップボードにコピーする</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>メッセージの署名 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>入力項目の内容をすべて消去します</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>メッセージの検証 (&amp;V)</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>受取人のアドレスとメッセージ（改行やスペース、タブなども完全に一致するよう注意してください）および署名を以下に入力し、メッセージの署名を検証してください。中間者攻撃により騙されるのを防ぐため、署名対象のメッセージに書かれていること以上の意味を署名から読み取ろうとしないよう注意してください。これは署名作成者がこのアドレスで受け取ったことを証明するだけであり、トランザクションの送信権限を証明するものではないことに注意してください！</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>メッセージの検証 (&amp;M)</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>入力項目の内容をすべて消去します</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>署名を作成するには&quot;メッセージの署名&quot;をクリック</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>不正なアドレスが入力されました。</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>アドレスを確かめてからもう一度試してください。</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>入力されたアドレスに関連するキーがありません。</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>ウォレットのアンロックはキャンセルされました。</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>入力されたアドレスのプライベート キーが無効です。</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>メッセージの署名に失敗しました。</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>メッセージに署名しました。</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>署名がデコードできません。</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>署名を確認してからもう一度試してください。</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>署名はメッセージ ダイジェストと一致しませんでした。</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>メッセージの検証に失敗しました。</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>メッセージは検証されました。</translation>
     </message>
 </context>
 <context>
@@ -2806,13 +2182,6 @@
     <message>
         <source>Details for %1</source>
         <translation>%1 の詳細</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>金額を表示する際の単位。クリックすることで他の単位を選択します。</translation>
     </message>
 </context>
 </TS>

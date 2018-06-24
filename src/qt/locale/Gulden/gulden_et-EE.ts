@@ -4,8 +4,8 @@
     <extra-po-header-language>et_EE</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:05+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:05+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -353,37 +353,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopeeri kogus</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Jah</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ei</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Eemalda</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Kopeeri sõnum</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Sõnum:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Kogus:</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>New key generation failed.</source>
@@ -395,60 +364,6 @@
     <message>
         <source>name</source>
         <translation>nimi</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Ülevaade</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Ava &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fail</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Abi</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Rahakott</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Võrguga sünkroniseerimine...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Kõvakettal olevate plokkide reindekseerimine...</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 ajast maas</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Viga</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Hoiatus</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informatsioon</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Ülevaade</translation>
     </message>
 </context>
 <context>
@@ -549,10 +464,6 @@
         <translation>Mälu kasutus</translation>
     </message>
     <message>
-        <source>Clear console</source>
-        <translation>Puhasta konsool</translation>
-    </message>
-    <message>
         <source>&amp;Network Traffic</source>
         <translation>&amp;Võrgu Liiklus</translation>
     </message>
@@ -602,41 +513,21 @@
     </message>
 </context>
 <context>
-    <name>SendConfirmationDialog</name>
+    <name>ReceiveCoinsDialog</name>
     <message>
         <source>Yes</source>
         <translation>Jah</translation>
     </message>
+    <message>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
 </context>
 <context>
-    <name>SignVerifyMessageDialog</name>
+    <name>SendConfirmationDialog</name>
     <message>
-        <source>Signature</source>
-        <translation>Allkiri</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Palun kontrolli aadressi ja proovi uuesti.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Sõnum allkirjastatud.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Allkirja ei õnnestunud dekodeerida.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Palun kontrolli allkirja ja proovi uuesti.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Sõnumi verifitseerimine ebaõnnestus.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Sõnum verifitseeritud.</translation>
+        <source>Yes</source>
+        <translation>Jah</translation>
     </message>
 </context>
 <context>

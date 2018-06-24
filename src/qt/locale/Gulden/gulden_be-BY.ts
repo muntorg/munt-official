@@ -4,8 +4,8 @@
     <extra-po-header-language>be_BY</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:52+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:52+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Экспартаваць гэтыя звесткі у файл</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>Экспарт</translation>
@@ -677,25 +673,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Капіяваць пазнаку</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Капіяваць колькасць</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>Метка:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Колькасць:</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -739,13 +716,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Рэдагаваць Адрас</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -758,212 +728,6 @@
     <message>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
         <translation>Каталог ужо існуе. Дадайце %1 калі вы збіраецеся стварыць тут новы каталог.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>Агляд</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Паказвае агульныя звесткі аб гаманцы</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>Даслаць</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>Атрымаць</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>Транзакцыі</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Праглядзець гісторыю транзакцый</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Паказаць / Схаваць</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Паказаць альбо схаваць галоўнае вакно</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Адчыниць &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Стварыць копію гаманца...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Зрабіце копію гаманца ў іншае месца</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Адрасы дасылання...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Паказаць спіс адрасоў і метак для дасылання</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Адрасы прымання...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Паказаць спіс адрасоў і метак для прымання</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Выйсці</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Выйсці з праграмы</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Падпісаць паведамленне...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>Праверыць паведамленне...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>Вакно адладкі</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Адкрыць кансоль дыягностыкі і адладкі</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Опцыі каманднага радка</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Аб Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Паказаць інфармацыю аб Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>Зашыфраваць Гаманец...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Зашыфраваць прыватныя ключы, якия належаць вашаму гаманцу</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Change Passphrase...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Змяніць пароль шыфравання гаманца</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>Опцыі...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>Ф&amp;айл</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>Наладкі</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>Дапамога</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Гаманец</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Вузел</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Сінхранізацыя з сецівам...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Пераіндэксацыя блокаў на дыску...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Сінхранізавана</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 таму</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Памылка</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Увага</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Інфармацыя</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Дата: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Тып: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Метка: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Адрас: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Гаманец &lt;b&gt;зашыфраваны&lt;/b&gt; і зараз &lt;b&gt;разблакаваны&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Гаманец &lt;b&gt;зашыфраваны&lt;/b&gt; і зараз &lt;b&gt;заблакаваны&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>Агляд</translation>
     </message>
 </context>
 <context>
@@ -1038,10 +802,10 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Форма</translation>
+        <source>Open URI</source>
+        <translation>Адкрыць URI</translation>
     </message>
 </context>
 <context>
@@ -1052,75 +816,10 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Адкрыць URI</translation>
-    </message>
-</context>
-<context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation>Даслаць Манеты</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>Метка:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Заплаціць да:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Уставіць адрас з буферу абмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Колькасць:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Паведамленне:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Заплаціць да:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Памятка:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Увядзіце пазнаку гэтаму адрасу, каб дадаць яго ў адрасную кнігу</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Уставіць адрас з буферу абмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
 </context>
 <context>

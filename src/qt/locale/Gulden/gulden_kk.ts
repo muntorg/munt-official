@@ -4,8 +4,8 @@
     <extra-po-header-language>kk</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:49+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:49+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:57+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:57+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -177,69 +177,6 @@
     </message>
 </context>
 <context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Send</source>
-        <translation>Жіберу</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>Алу</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Транзакциялар</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>Әмиянды жасыру</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Шығу</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>Құпия сөзді өзгерту</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>Параметрлері</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>Көмек</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Әмиян</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Жаңартылған</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 қалмады</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>қате</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Ескерту</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Информация</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -269,20 +206,6 @@
     <message>
         <source>&amp;Information</source>
         <translation>Информация</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Саны</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Саны</translation>
     </message>
 </context>
 </TS>

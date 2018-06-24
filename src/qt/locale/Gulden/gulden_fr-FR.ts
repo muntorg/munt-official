@@ -4,8 +4,8 @@
     <extra-po-header-language>fr_FR</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:06+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:06+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:55+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:55+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -56,13 +56,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
-    <name>AccountSummaryWidget</name>
-    <message>
-        <source></source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -107,10 +100,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exporter les données de l&apos;onglet courant vers un fichier</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Exporter...</translation>
@@ -302,16 +291,8 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Confirmer l&apos;action d&apos;envoi</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>E&amp;voyer</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Nettoyer tous les champs du formulaire.</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Nettoyer &amp;Tout</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -371,13 +352,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Éditer l&apos;adresse</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -394,204 +368,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Impossible de créer un répertoire ici.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Barre d&apos;outils des onglets</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Vue d&apos;ensemble</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Affiche une vue d&apos;ensemble du porte-monnaie</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Envoyer</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Réception</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Permet de parcourir l&apos;historique des transactions</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Montrer / Cacher</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Montrer ou cacher la fenêtre principale</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Ouvrir &amp;URI</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Sauvegarder le portefeuille</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Sauvegarder le porte-monnaie à un autre emplacement</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Adresses d&apos;envoi</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Montrer la liste des adresses d&apos;envois utilisées et les étiquettes</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adresses de réception</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Qui&amp;tter</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Quitter l&apos;application</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Signer &amp;message...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Vérification du message</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Fenêtre de débogage</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Ouvrir la console de débogage et de diagnostic</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Options de ligne de commande</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;À propos de %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Afficher les informations sur %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>À propos de &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Afficher des informations sur Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Chiffrer le portefeuille </translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Crypter les clé privées qui appartiennent votre portefeuille</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Modifier le mot de passe</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Modifier la phrase de passe utilisée pour le cryptage du porte-monnaie</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Modifier les options de configuration pour %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fichier</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Réglages</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Aide</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Portefeuille</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Nœud</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synchronisation avec le réseau...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Indexation des blocs sur le disque...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Réindexer les blocs sur le disque...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>À jour</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>en retard de %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erreur</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Attention</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Étiquette: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresse: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et est actuellement &lt;b&gt;déverrouillé&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Le porte-monnaie est &lt;b&gt;chiffré&lt;/b&gt; et est actuellement &lt;b&gt;verrouillé&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Vue d&apos;ensemble</translation>
     </message>
 </context>
 <context>
@@ -659,14 +435,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Debug log file</source>
         <translation>Fichier du journal de débogage</translation>
-    </message>
-    <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Ouvert</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Nettoyer la console</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -961,14 +729,18 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formulaire</translation>
+        <source>Open URI</source>
+        <translation>Ouvrir URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Cacher</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Ouvrir une demande de paiement depuis une URI ou un fichier</translation>
+    </message>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Sélectionner un fichier de demande de paiement</translation>
     </message>
 </context>
 <context>
@@ -1003,21 +775,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Ouvrir URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Ouvrir une demande de paiement depuis une URI ou un fichier</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Sélectionner un fichier de demande de paiement</translation>
-    </message>
-</context>
-<context>
     <name>PeerTableModel</name>
     <message>
         <source>Node/Service</source>
@@ -1049,42 +806,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <source>No</source>
         <translation>Non</translation>
     </message>
-    <message>
-        <source>Clear</source>
-        <translation>Nettoyer</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Historique des demandes de paiements.</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Montrer</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Message :</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Étiquette :</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Montant :</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Demande de paiement</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Nettoyer tous les champs du formulaire.</translation>
-    </message>
 </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -1098,84 +819,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Send Coins</source>
         <translation>Envoyer des pièces</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Étiquette :</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>C&apos;est un paiement normal.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Payer &amp;à :</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Choisir une adresse précédemment utilisée </translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Coller une adresse depuis le presse-papiers</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Retirer cette entrée</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Montant :</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Message :</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Payer à :</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Nettoyer &amp;Tout</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Choisir une adresse précédemment utilisée </translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Coller une adresse depuis le presse-papiers</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Signer le message</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Entrez ici le message que vous désirez signer</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Copier l&apos;adresse courante dans le presse papier</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>&amp;Signer le message</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Vérifier message</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Vérifier &amp;Message</translation>
     </message>
 </context>
 <context>

@@ -4,8 +4,8 @@
     <extra-po-header-language>da</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:53+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:53+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksportér den aktuelle visning til en fil</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Eksportér</translation>
@@ -239,10 +235,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>Eksportér transaktionshistorik</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Kigge</translation>
     </message>
     <message>
         <source>ID</source>
@@ -576,12 +568,12 @@
         <translation>Kopiér byttepenge</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Skjul</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Betalingsanmodning er udløbet.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Skjul</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -664,24 +656,12 @@
         <translation>Bekræft afsendelsen</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>&amp;Afsend</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Ryd alle felter af formen.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Ryd &amp;alle</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Send til flere modtagere på en gang</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Tilføj &amp;modtager</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -698,14 +678,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>tilføjet som transaktionsgebyr</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Beløb i alt %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>eller</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1279,101 +1251,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiér mærkat</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopiér beløb</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nej</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Ryd</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Historik over betalingsanmodninger</translation>
-    </message>
-    <message>
-        <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Vis den valgte anmodning (gør det samme som dobbeltklik på en indgang)</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Vis</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Fjern de valgte indgange fra listen</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Fjern</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterende URI var for lang; prøv at forkorte teksten til mærkaten/beskeden.</translation>
-    </message>
-    <message>
-        <source>Copy URI</source>
-        <translation>Kopiér URI</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Kopiér besked</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Genbrug en af de tidligere brugte modtagelsesadresser. Genbrug af adresser har indflydelse på sikkerhed og privatliv. Brug ikke dette med mindre du genskaber en betalingsanmodning fra tidligere.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Genbrug en eksisterende modtagelsesadresse (anbefales ikke)</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Besked:</translation>
-    </message>
-    <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Et valgfrit mærkat, der associeres med den nye modtagelsesadresse.</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Brug denne formular for at anmode om betalinger. Alle felter er &lt;b&gt;valgfri&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Mærkat:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Et valgfrit beløb til anmodning. Lad dette felt være tomt eller indeholde nul for at anmode om et ikke-specifikt beløb.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Beløb:</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Anmod om betaling</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Ryd alle felter af formen.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1425,13 +1302,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Redigér adresse</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1452,267 +1322,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Kan ikke oprette en mappe her.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Faneværktøjslinje</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oversigt</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Vis generel oversigt over tegnebog</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Send</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Modtag</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transaktioner</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Gennemse transaktionshistorik</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Vis / skjul</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Vis eller skjul hovedvinduet</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>&amp;Åbn URI…</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Sikkerhedskopiér tegnebog…</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Lav sikkerhedskopi af tegnebogen til et andet sted</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Afsendelsesadresser…</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Vis listen over brugte afsendelsesadresser og -mærkater</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Modtagelsesadresser…</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Vis listen over brugte modtagelsesadresser og -mærkater</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;Luk</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Afslut program</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Signér &amp;besked…</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Verificér besked…</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Fejlsøgningsvindue</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Åbn fejlsøgnings- og diagnosticeringskonsollen</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Tilvalg for &amp;kommandolinje</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Om %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Vis informationer om %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Om &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Vis informationer om Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Kryptér tegnebog…</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Kryptér de private nøgler, der hører til din tegnebog</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Skift adgangskode…</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Skift adgangskode anvendt til tegnebogskryptering</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Indstillinger…</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Redigér konfigurationsindstillinger for %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fil</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Opsætning</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Hjælp</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1-klient</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Klik for at deaktivere netværksaktivitet.</translation>
-    </message>
-    <message>
-        <source>Network activity disabled.</source>
-        <translation>Netværksaktivitet deaktiveret.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Klik for a aktivere netværksaktivitet igen.</translation>
-    </message>
-    <message>
-        <source>Syncing Headers (%1%)...</source>
-        <translation>Synkroniserer hoveder (%1%)…</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Tegnebog</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Knude</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synkroniserer med netværk…</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Genindekserer blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Bearbejder blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Genindekserer blokke på disken…</translation>
-    </message>
-    <message>
-        <source>Connecting to peers...</source>
-        <translation>Forbinder til knuder…</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Bearbejdede %n blok med transaktionshistorik.</numerusform>
-            <numerusform>Bearbejdede %n blokke med transaktionshistorik.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Opdateret</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 bagud</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Fejl</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Advarsel</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Dato: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Type: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Mærkat: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Adresse: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;ulåst&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Oversigt</translation>
     </message>
 </context>
 <context>
@@ -1794,24 +1403,8 @@
         <translation>Fejlsøgningslogfil</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Åbn</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>Decrease font size</source>
-        <translation>Formindsk skrifttypestørrelse</translation>
-    </message>
-    <message>
-        <source>Increase font size</source>
-        <translation>Forstør skrifttypestørrelse</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Ryd konsol</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -2329,46 +1922,26 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formular</translation>
+        <source>Open URI</source>
+        <translation>Åbn URI</translation>
     </message>
     <message>
-        <source>Progress</source>
-        <translation>Fremgang</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Åbn betalingsanmodning fra URI eller fil</translation>
     </message>
     <message>
-        <source>Progress increase per hour</source>
-        <translation>Øgning af fremgang pr. time</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
     <message>
-        <source>calculating...</source>
-        <translation>beregner…</translation>
+        <source>Select payment request file</source>
+        <translation>Vælg fil for betalingsanmodning</translation>
     </message>
     <message>
-        <source>Estimated time left until synced</source>
-        <translation>Estimeret tid tilbage af synkronisering</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Skjul</translation>
-    </message>
-    <message>
-        <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Ukendt. Synkroniserer hoveder (%1)…</translation>
-    </message>
-    <message>
-        <source>Number of blocks left</source>
-        <translation>Antal blokke tilbage</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation>Ukendt…</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Tidsstempel for seneste blok</translation>
+        <source>Select payment request file to open</source>
+        <translation>Vælg fil for betalingsanmodning til åbning</translation>
     </message>
 </context>
 <context>
@@ -2440,29 +2013,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>Nylige transaktioner</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Åbn URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Åbn betalingsanmodning fra URI eller fil</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Vælg fil for betalingsanmodning</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Vælg fil for betalingsanmodning til åbning</translation>
     </message>
 </context>
 <context>
@@ -2583,6 +2133,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nej</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterende URI var for lang; prøv at forkorte teksten til mærkaten/beskeden.</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2594,196 +2159,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Send bitcoins</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Mærkat:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Dette er en normal betaling.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Betal &amp;til:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vælg tidligere brugt adresse</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Indsæt adresse fra udklipsholderen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Fjern denne indgang</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Indtast et mærkat for denne adresse for at føje den til listen over brugte adresser</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>&amp;Beløb:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>&amp;Træk gebyr fra beløb</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Besked:</translation>
-    </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Dette er en uautentificeret betalingsanmodning.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Betal til:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Dette er en autentificeret betalingsanmodning.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Indtast en mærkat for denne adresse for at føje den til din adressebog</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Ryd &amp;alle</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vælg tidligere brugt adresse</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Indsæt adresse fra udklipsholderen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Signaturer – Underskriv/verificér en besked</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Singér besked</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Indtast her beskeden, du ønsker at signere</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Signatur</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopiér den nuværende signatur til systemets udklipsholder</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Signér &amp;besked</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Nulstil alle “signér besked”-felter</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Verificér besked</translation>
-    </message>
-    <message>
-        <source>Enter the receiver&apos;s address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>Indtast modtagerens adresse, besked (vær sikker på at kopiere linjeskift, mellemrum, tabuleringer, etc. præcist) og signatur herunder for at verificere beskeden. Vær forsigtig med ikke at læse noget ud fra signaturen, som ikke står i selve beskeden, for at undgå at blive snydt af et eventuelt man-in-the-middle-angreb. Bemærk, at dette kun beviser, at den signerende person kan modtage med adressen; det kan ikke bevise hvem der har sendt en given transaktion!</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Verificér &amp;besked</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Nulstil alle “verificér besked”-felter</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Klik “Signér besked” for at generere underskriften</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Den indtastede adresse er ugyldig.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Tjek venligst adressen og forsøg igen.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>Den indtastede adresse henviser ikke til en nøgle.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Tegnebogsoplåsning annulleret.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Den private nøgle for den indtastede adresse er ikke tilgængelig.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>Signering af besked mislykkedes.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Besked signeret.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Signaturen kunne ikke afkodes.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Tjek venligst signaturen og forsøg igen.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>Signaturen passer ikke overens med beskedens indhold.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Verificering af besked mislykkedes.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Besked verificeret.</translation>
     </message>
 </context>
 <context>
@@ -2813,13 +2188,6 @@
     <message>
         <source>Details for %1</source>
         <translation>Detaljer for %1</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Enhed, som beløb vises i. Klik for at vælge en anden enhed.</translation>
     </message>
 </context>
 </TS>

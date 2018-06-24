@@ -4,8 +4,8 @@
     <extra-po-header-language>bg</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:04+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:04+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:52+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:52+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Запишете данните от текущия раздел във файл</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>Изнеси</translation>
@@ -227,10 +223,6 @@
     <message>
         <source>Export Transaction History</source>
         <translation>Изнасяне историята на транзакциите</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>само гледане</translation>
     </message>
     <message>
         <source>ID</source>
@@ -540,12 +532,12 @@
         <translation>Копирай рестото</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Скрий</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Заявката за плащане е изтекла.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Скрий</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -600,24 +592,12 @@
         <translation>Потвърдете изпращането</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>И&amp;зпрати</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Изчисти всички полета от формуляра.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Изчисти</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Изпращане към повече от един получател</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Добави &amp;получател</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -630,10 +610,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>добавено като такса за транзакция</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>или</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -1047,73 +1023,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Копирай име</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Копирай сума</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Не</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Изчистване</translation>
-    </message>
-    <message>
-        <source>Requested payments history</source>
-        <translation>Изискана история на плащанията</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Показване</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Премахване</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Копиране на съобщението</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Съобщение:</translation>
-    </message>
-    <message>
-        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Използвате този формуляр за заявяване на плащания. Всички полета са &lt;b&gt;незадължителни&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Име:</translation>
-    </message>
-    <message>
-        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Незадължително заявяване на сума. Оставете полето празно или нулево, за да не заявите конкретна сума.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Сума</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Изискване на плащане</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Изчисти всички полета от формуляра.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -1165,13 +1074,6 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Редактиране на адрес</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
@@ -1192,240 +1094,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Не може да се създаде директория тук.</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Раздели</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Баланс</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Обобщена информация за портфейла</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Изпращане</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Получаване</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Транзакции</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>История на транзакциите</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Показване / Скриване</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Показване и скриване на основния прозорец</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Отвори &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Запазване на портфейла...</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Запазване на портфейла на друго място</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Изпращане на адресите...</translation>
-    </message>
-    <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Показване на списъка с използвани адреси и имена</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Получаване на адресите...</translation>
-    </message>
-    <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Покажи списък с използваните адреси и имена.</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Из&amp;ход</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Изход от приложението</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Подписване на &amp;съобщение...</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Проверка на съобщение...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Прозорец за отстраняване на грешки</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Отворете конзолата за диагностика и отстраняване на грешки</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Налични команди</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>Относно %1</translation>
-    </message>
-    <message>
-        <source>Show information about %1</source>
-        <translation>Покажи информация относно %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>За &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Покажи информация за Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Шифриране на портфейла...</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Шифроване на личните ключове,които принадлежат на портфейла Ви.</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Смяна на паролата...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Променя паролата за портфейла</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Опции...</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for %1</source>
-        <translation>Промени настройки за %1</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Настройки</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Помощ</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 клиент</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Портфейл</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Сървър</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Синхронизиране с мрежата...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Индексиране на блокове на диска...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Обработване на блокове на диска...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Повторно индексиране на блоковете на диска...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Синхронизиран</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 зад</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Грешка</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Предупреждение</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Информация</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Дата: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Тип: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Етикет: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Адрес: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Портфейлът е &lt;b&gt;криптиран&lt;/b&gt; и &lt;b&gt;отключен&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Портфейлът е &lt;b&gt;криптиран&lt;/b&gt; и &lt;b&gt;заключен&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Баланс</translation>
     </message>
 </context>
 <context>
@@ -1487,16 +1155,8 @@
         <translation>Лог файл,съдържащ грешките</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Отвори</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Конзола</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Изчисти конзолата</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1844,18 +1504,18 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Формуляр</translation>
+        <source>Open URI</source>
+        <translation>Отваряне на URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Скрий</translation>
+        <source>Open payment request from URI or file</source>
+        <translation>Отвори молба за изплащане от URI или файл</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Време на последния блок</translation>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1907,21 +1567,6 @@
     <message>
         <source>Recent transactions</source>
         <translation>Скорошни транзакции</translation>
-    </message>
-</context>
-<context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Отваряне на URI</translation>
-    </message>
-    <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Отвори молба за изплащане от URI или файл</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1995,6 +1640,17 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Не</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -2006,168 +1662,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Изпращане</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Име:</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Това е нормално плащане.</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Плати &amp;На:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Изберете използван преди адрес</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Вмъкни от клипборда</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Remove this entry</source>
-        <translation>Премахване на този запис</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>С&amp;ума:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Съобщение:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Плащане на:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Бележка:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Въведете име за този адрес, за да го добавите в списъка с адреси</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Изчисти</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Изберете използван преди адрес</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Вмъкни от клипборда</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Подпиши / Провери съобщение</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Подпиши</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Въведете съобщението тук</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Подпис</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Копиране на текущия подпис</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Подпиши &amp;съобщение</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Провери</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Потвърди &amp;съобщението</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Натиснете &quot;Подписване на съобщение&quot; за да създадете подпис</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Въведеният адрес е невалиден.</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Моля проверете адреса и опитайте отново.</translation>
-    </message>
-    <message>
-        <source>The entered address does not refer to a key.</source>
-        <translation>Въведеният адрес не може да се съпостави с валиден ключ.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Отключването на портфейла беше отменено.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Не е наличен частен ключ за въведеният адрес.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>Подписването на съобщение беше неуспешно.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Съобщението е подписано.</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Подписът не може да бъде декодиран.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Проверете подписа и опитайте отново.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>Подписът не отговаря на комбинацията от съобщение и адрес.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Проверката на съобщението беше неуспешна.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Съобщението е потвърдено.</translation>
     </message>
 </context>
 <context>

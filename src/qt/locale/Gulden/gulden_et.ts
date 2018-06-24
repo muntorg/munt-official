@@ -4,8 +4,8 @@
     <extra-po-header-language>et</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 10:05+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 10:05+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:54+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:54+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -101,10 +101,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Ekspordi kuvatava vahelehe sisu faili</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Ekspordi</translation>
@@ -428,12 +424,12 @@
         <translation>Kopeeri vahetusraha</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Peida</translation>
-    </message>
-    <message>
         <source>Payment request expired.</source>
         <translation>Maksepäring aegunud.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Peida</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -480,24 +476,12 @@
         <translation>Saatmise kinnitamine</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>S&amp;aada</translation>
-    </message>
-    <message>
         <source>Clear all fields of the form.</source>
         <translation>Puhasta kõik vormi väljad.</translation>
     </message>
     <message>
-        <source>Clear &amp;All</source>
-        <translation>Puhasta &amp;Kõik</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Saatmine mitmele korraga</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Lisa &amp;Saaja</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -510,10 +494,6 @@
     <message>
         <source>added as transaction fee</source>
         <translation>lisatud kui tehingutasu</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>või</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -759,57 +739,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopeeri märgis</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopeeri summa</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Jah</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ei</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation>Näita</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Eemalda</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI liiga pikk, proovi vähendada märke / sõnumi pikkust.</translation>
-    </message>
-    <message>
-        <source>Copy message</source>
-        <translation>Kopeeri sõnum</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>&amp;Sõnum:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Märgis</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Summa:</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Puhasta kõik vormi väljad.</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -853,230 +782,10 @@
     </message>
 </context>
 <context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Muuda aadressi</translation>
-    </message>
-</context>
-<context>
     <name>FreespaceChecker</name>
     <message>
         <source>name</source>
         <translation>nimi</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>Tabs toolbar</source>
-        <translation>Vahelehe tööriistariba</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Ülevaade</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Kuva rahakoti üld-ülevaade</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation>&amp;Saada</translation>
-    </message>
-    <message>
-        <source>&amp;Receive</source>
-        <translation>&amp;Võta vastu</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Tehingud</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Sirvi tehingute ajalugu</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Näita / Peida</translation>
-    </message>
-    <message>
-        <source>Show or hide the main Window</source>
-        <translation>Näita või peida peaaken</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Ava &amp;URI...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Varunda Rahakott</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Varunda rahakott teise asukohta</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>V&amp;älju</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Väljumine</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>Signeeri &amp;sõnum</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>&amp;Kontrolli sõnumit...</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Silumise aken</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Ava debugimise ja diagnostika konsool</translation>
-    </message>
-    <message>
-        <source>&amp;Command-line options</source>
-        <translation>Käsurea valikud</translation>
-    </message>
-    <message>
-        <source>&amp;About %1</source>
-        <translation>&amp;Teave %1</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Teave &amp;Qt kohta</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Kuva Qt kohta käiv info</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Krüpteeri Rahakott</translation>
-    </message>
-    <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Krüpteeri oma rahakoti privaatvõtmed</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Salafraasi muutmine</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Rahakoti krüpteerimise salafraasi muutmine</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Valikud...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fail</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Seaded</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Abi</translation>
-    </message>
-    <message>
-        <source>%1 client</source>
-        <translation>%1 klient</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Rahakott</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Võrgusünkimine...</translation>
-    </message>
-    <message>
-        <source>Indexing blocks on disk...</source>
-        <translation>Kõvakettal olevate plokkide indekseerimine...</translation>
-    </message>
-    <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Kõvakettal olevate plokkide töötlemine...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Kettal olevate blokkide re-indekseerimine...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation>
-            <numerusform>Töödeldud %n plokk transaktsioonide ajaloost.</numerusform>
-            <numerusform>Töödeldud %n plokki transaktsioonide ajaloost.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Ajakohane</translation>
-    </message>
-    <message>
-        <source>%1 behind</source>
-        <translation>%1 maas</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Tõrge</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Hoiatus</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Informatsioon</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Kuupäev: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tüüp: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>&amp;Märgis: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Aadress: %1
-</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Rahakott on &lt;b&gt;krüpteeritud&lt;/b&gt; ning hetkel &lt;b&gt;avatud&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Rahakott on &lt;b&gt;krüpteeritud&lt;/b&gt; ning hetkel &lt;b&gt;suletud&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>GuldenGUI</name>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Ülevaade</translation>
     </message>
 </context>
 <context>
@@ -1138,16 +847,8 @@
         <translation>Silumise logifail</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Ava</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsool</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Puhasta konsool</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1347,18 +1048,18 @@
     </message>
 </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>OpenURIDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Vorm</translation>
+        <source>Open URI</source>
+        <translation>Ava URI</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Peida</translation>
+        <source>Select payment request file</source>
+        <translation>Vali maksepäringu fail</translation>
     </message>
     <message>
-        <source>Last block time</source>
-        <translation>Viimane ploki aeg</translation>
+        <source>Select payment request file to open</source>
+        <translation>Vali maksepäringu fail mida avada</translation>
     </message>
 </context>
 <context>
@@ -1389,21 +1090,6 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Ava URI</translation>
-    </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Vali maksepäringu fail</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Vali maksepäringu fail mida avada</translation>
-    </message>
-</context>
-<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1423,6 +1109,21 @@
     </message>
 </context>
 <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Jah</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI liiga pikk, proovi vähendada märke / sõnumi pikkust.</translation>
+    </message>
+</context>
+<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
@@ -1434,144 +1135,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Müntide saatmine</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Märgis</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Maksa &amp;:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vali eelnevalt kasutatud aadress</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Kleebi aadress vahemälust</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>S&amp;umma:</translation>
-    </message>
-    <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>L&amp;ahuta tehingutasu summast</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Sõnum:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Maksa :</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>Puhasta &amp;Kõik</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Vali eelnevalt kasutatud aadress</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Kleebi aadress vahemälust</translation>
-    </message>
-    <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Signatuurid - Allkirjasta / Kinnita Sõnum</translation>
-    </message>
-    <message>
-        <source>&amp;Sign Message</source>
-        <translation>&amp;Allkirjastamise teade</translation>
-    </message>
-    <message>
-        <source>Enter the message you want to sign here</source>
-        <translation>Sisesta siia allkirjastamise sõnum</translation>
-    </message>
-    <message>
-        <source>Signature</source>
-        <translation>Signatuur</translation>
-    </message>
-    <message>
-        <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopeeri praegune signatuur vahemällu</translation>
-    </message>
-    <message>
-        <source>Sign &amp;Message</source>
-        <translation>Allkirjasta &amp;Sõnum</translation>
-    </message>
-    <message>
-        <source>Reset all sign message fields</source>
-        <translation>Tühjenda kõik sõnumi allkirjastamise väljad</translation>
-    </message>
-    <message>
-        <source>&amp;Verify Message</source>
-        <translation>&amp;Kinnita Sõnum</translation>
-    </message>
-    <message>
-        <source>Verify &amp;Message</source>
-        <translation>Kinnita &amp;Sõnum</translation>
-    </message>
-    <message>
-        <source>Reset all verify message fields</source>
-        <translation>Tühjenda kõik sõnumi kinnitamise väljad</translation>
-    </message>
-    <message>
-        <source>Click &quot;Sign Message&quot; to generate signature</source>
-        <translation>Allkirja loomiseks vajuta &quot;Allkirjasta Sõnum&quot;</translation>
-    </message>
-    <message>
-        <source>The entered address is invalid.</source>
-        <translation>Sisestatud aadress ei ole korrektne</translation>
-    </message>
-    <message>
-        <source>Please check the address and try again.</source>
-        <translation>Palun kontrolli aadressi ja proovi uuesti.</translation>
-    </message>
-    <message>
-        <source>Wallet unlock was cancelled.</source>
-        <translation>Rahakoti lahtilukustamine on katkestatud.</translation>
-    </message>
-    <message>
-        <source>Private key for the entered address is not available.</source>
-        <translation>Sisestatud aadressi privaatvõti pole saadaval.</translation>
-    </message>
-    <message>
-        <source>Message signing failed.</source>
-        <translation>Sõnumi allkirjastamine ebaõnnestus.</translation>
-    </message>
-    <message>
-        <source>Message signed.</source>
-        <translation>Sõnum allkirjastatud</translation>
-    </message>
-    <message>
-        <source>The signature could not be decoded.</source>
-        <translation>Allkirja polnud võimalik dekodeerida.</translation>
-    </message>
-    <message>
-        <source>Please check the signature and try again.</source>
-        <translation>Palun kontrolli allkirja ja proovi uuesti.</translation>
-    </message>
-    <message>
-        <source>The signature did not match the message digest.</source>
-        <translation>Allkiri ei vastanud sõnumi krüptoräsile.</translation>
-    </message>
-    <message>
-        <source>Message verification failed.</source>
-        <translation>Sõnumi verifitseerimine ebaõnnestus.</translation>
-    </message>
-    <message>
-        <source>Message verified.</source>
-        <translation>Sõnum verifitseeritud.</translation>
     </message>
 </context>
 <context>

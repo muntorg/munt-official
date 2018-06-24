@@ -4,8 +4,8 @@
     <extra-po-header-language>mn</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 07:51+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 07:51+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-24 11:58+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-24 11:58+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -49,10 +49,6 @@
 </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Сонгогдсон таб дээрхи дата-г экспортлох</translation>
-    </message>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Экспортдлох</translation>
@@ -123,20 +119,8 @@
         <translation>Явуулах үйлдлийг баталгаажуулна уу</translation>
     </message>
     <message>
-        <source>S&amp;end</source>
-        <translation>Яв&amp;уул</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Бүгдийг Цэвэрлэ</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Нэгэн зэрэг олон хүлээн авагчруу явуулах</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>&amp;Хүлээн авагчийг Нэмэх</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -214,120 +198,6 @@
     <message>
         <source>&amp;Address</source>
         <translation>&amp;Хаяг</translation>
-    </message>
-</context>
-<context>
-    <name>ImportPrivKeyDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Хаягийг ѳѳрчлѳх</translation>
-    </message>
-</context>
-<context>
-    <name>BitcoinGUI</name>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>Гүйлгээнүүд</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Гүйлгээнүүдийн түүхийг харах</translation>
-    </message>
-    <message>
-        <source>&amp;Show / Hide</source>
-        <translation>&amp;Харуул / Нуу</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Түрүйвчийг Жоорлох...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Хүлээн авах хаяг</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>Гарах</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Програмаас Гарах</translation>
-    </message>
-    <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;Зурвас хавсаргах...</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Оношилгоо ба засварын консолыг онгойлго</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>&amp;Клиентийн тухай</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Клиентийн тухай мэдээллийг харуул</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Түрүйвчийг цоожлох...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Нууц Үгийг Солих...</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Түрүйвчийг цоожлох нууц үгийг солих</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Сонголтууд...</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation>&amp;Тохиргоо</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Тусламж</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Түрүйвч</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Нод</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Сүлжээтэй тааруулж байна...</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Шинэчлэгдсэн</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Алдаа</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>Мэдээллэл</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Түрүйвч &lt;b&gt;цоожтой&lt;/b&gt; ба одоогоор цоож &lt;b&gt;онгорхой&lt;/b&gt; байна</translation>
-    </message>
-    <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Түрүйвч &lt;b&gt;цоожтой&lt;/b&gt; ба одоогоор цоож &lt;b&gt;хаалттай&lt;/b&gt; байна</translation>
     </message>
 </context>
 <context>
@@ -440,50 +310,8 @@
         <translation>Сүүлийн блокийн хугацаа</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Нээх</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Консол</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Консолыг цэвэрлэх</translation>
-    </message>
-</context>
-<context>
-    <name>ModalOverlay</name>
-    <message>
-        <source>Last block time</source>
-        <translation>Сүүлийн блокийн хугацаа</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Show</source>
-        <translation>Харуул</translation>
-    </message>
-    <message>
-        <source>Remove the selected entries from the list</source>
-        <translation>Сонгогдсон ѳгѳгдлүүдийг устгах</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Устгах</translation>
-    </message>
-    <message>
-        <source>&amp;Message:</source>
-        <translation>Зурвас:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Шошго:</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>Хэмжээ:</translation>
     </message>
 </context>
 <context>
@@ -491,60 +319,6 @@
     <message>
         <source>Send Coins</source>
         <translation>Зоос явуулах</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Шошго:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Тѳлѳх &amp;хаяг:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Копидсон хаягийг буулгах</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
-        <source>A&amp;mount:</source>
-        <translation>Дүн:</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Зурвас:</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Тѳлѳх хаяг:</translation>
-    </message>
-</context>
-<context>
-    <name>SignVerifyMessageDialog</name>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Бүгдийг Цэвэрлэ</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
-        <source>Paste address from clipboard</source>
-        <translation>Копидсон хаягийг буулгах</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
