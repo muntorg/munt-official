@@ -406,14 +406,28 @@ void CAccountHD::GetKey(CExtKey& childKey, int nChain)
 
 bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
+    assert(!m_readOnly);
+    assert(IsHD());
+
+    // Witness keys are a special case.
+    // They are stored instead of generated on demand (so that they work in encrypted wallets)
+    if (IsPoW2Witness())
+    {
+        if (internalKeyStore.GetKey(keyID, key))
+        {
+            // But skip it if it is an empty key... (Which can happen by design)
+            // Technical: Witness keystore is filled with "public/empty" pairs as the public keys are created and then populated on demand with "public/witness" keys only when they are needed/generated (first use)
+            if (key.IsValid())
+                return true;
+        }
+    }
+
     if (IsLocked())
         return false;
 
-    assert(!m_readOnly);
-
     int64_t nKeyIndex = -1;
     CExtKey privKey;
-    if(externalKeyStore.GetKey(keyID, nKeyIndex))
+    if (externalKeyStore.GetKey(keyID, nKeyIndex))
     {
         primaryChainKeyPriv.Derive(privKey, nKeyIndex);
         if(privKey.Neuter().pubkey.GetID() != keyID)
@@ -421,7 +435,7 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
         key = privKey.key;
         return true;
     }
-    if(internalKeyStore.GetKey(keyID, nKeyIndex))
+    if (internalKeyStore.GetKey(keyID, nKeyIndex))
     {
         changeChainKeyPriv.Derive(privKey, nKeyIndex);
         if(privKey.Neuter().pubkey.GetID() != keyID)
@@ -480,9 +494,10 @@ bool CAccountHD::Lock()
     if (!encrypted)
         return false;
 
-    //We don't encrypt the keystores for HD accounts - as they only contain public keys.
-    //if (!CAccount::Lock())
-        //return false;
+    // We don't encrypt the keystores for HD accounts - as they only contain public keys.
+    // The exception being witness accounts, which may contain (select) witness keys in their keystores.
+    // However these must -never- be encrypted anyway.
+    //CAccount::Lock()
 
     //fixme: GULDEN (2.1) burn the memory here.
     accountKeyPriv = CExtKey();
@@ -569,10 +584,12 @@ bool CAccountHD::IsLocked() const
 
 bool CAccountHD::AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain)
 {
-    //This should never be called on a HD account.
-    //We don't store private keys for HD we just generate them as needed.
-    assert(0);
-    return true;
+    // This should never be called on a HD account.
+    // We don't store private keys for HD we just generate them as needed.
+    // The exception being PoW² witnesses which may contain witness keys unencrypted (change chain keys)
+    assert(IsPoW2Witness());
+    assert(keyChain == KEYCHAIN_WITNESS);
+    return internalKeyStore.AddKeyPubKey(key, pubkey);
 }
 
 bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain)
@@ -580,7 +597,23 @@ bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int key
     if(keyChain == KEYCHAIN_EXTERNAL)
         return externalKeyStore.AddKeyPubKey(HDKeyIndex, pubkey);
     else
+    {
+        // Add public key with null private key - we later write the private key IFF it is used in a witnessing operation
+        if (IsPoW2Witness())
+        {
+            CKey nullKey;
+            //fixme: (2.1) This is possibly a bit inefficient - see if it can be sped up.
+            if(!internalKeyStore.HaveKey(pubkey.GetID()))
+            {
+                if(!internalKeyStore.AddKeyPubKey(nullKey, pubkey))
+                {
+                    //fixme: (2.0) testing assert - remove
+                    assert(0);
+                }
+            }
+        }
         return internalKeyStore.AddKeyPubKey(HDKeyIndex, pubkey);
+    }
 }
 
 
@@ -861,18 +894,9 @@ bool CAccount::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
 
 bool CAccount::AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain)
 {
-    std::vector<unsigned char> encryptedKeyOut;
     if(keyChain == KEYCHAIN_EXTERNAL)
     {
         return externalKeyStore.AddKeyPubKey(key, pubkey);
-        /*if (externalKeyStore.AddKeyPubKey(key, pubkey))
-        {
-            if (externalKeyStore.GetKey(pubkey.GetID(), encryptedKeyOut))
-            {
-                return AddCryptedKey(pubkey, encryptedKeyOut, keyChain);
-            }
-        }
-        return false;*/
     }
     else
     {
