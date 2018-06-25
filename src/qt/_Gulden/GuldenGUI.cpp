@@ -1453,7 +1453,16 @@ void GUI::promptImportWitnessOnlyAccount()
     ImportWitnessDialog dlg(this);
     if (dlg.exec())
     {
-        pactiveWallet->importWitnessOnlyAccountFromURL(dlg.getWitnessURL());
+        // Temporarily unlock for account generation.
+        std::function<void (void)> successCallback = [&](){pactiveWallet->importWitnessOnlyAccountFromURL(dlg.getWitnessURL());};
+        if (pactiveWallet->IsLocked())
+        {
+            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import witness-only account"), successCallback);
+        }
+        else
+        {
+            successCallback();
+        }
     }
 }
 
