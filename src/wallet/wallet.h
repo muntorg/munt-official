@@ -166,6 +166,7 @@ public:
     CRecipient(CTxOutStandardKeyHash standardKeyHash_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::StandardKeyHashOutput), standardKeyHash(standardKeyHash_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
     CTxOutType nType;
     CScript scriptPubKey;
+    CAccount* witnessForAccount = nullptr;
     CTxOutPoW2Witness witnessDetails;
     CTxOutStandardKeyHash standardKeyHash;
     CAmount nAmount;

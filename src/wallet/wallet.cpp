@@ -127,7 +127,12 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
     if (HaveWatchOnly(script))
         RemoveWatchOnly(script);
 
-    if (!IsCrypted())
+    // Special case, witness keys are never encrypted when added.
+    if ((forAccount.IsHD() && forAccount.IsPoW2Witness() && nKeyChain == KEYCHAIN_WITNESS))
+    {
+        return CWalletDB(*dbw).WriteKeyOverride(pubkey, secret.GetPrivKey(), getUUIDAsString(forAccount.getUUID()), nKeyChain);
+    }
+    else if (!IsCrypted())
     {
         return CWalletDB(*dbw).WriteKey(pubkey, secret.GetPrivKey(), mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
     }
