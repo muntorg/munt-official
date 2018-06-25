@@ -485,6 +485,8 @@ bool CAccountHD::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
 
 bool CAccountHD::Lock()
 {
+    // NB! We don't encrypt the keystores for HD accounts - as they only contain public keys.
+    // So we don't need to unlock the underlying keystore.
     if (!IsReadOnly())
     {
         return true;
@@ -783,6 +785,13 @@ bool CAccount::IsCrypted() const
 
 bool CAccount::Lock()
 {
+    // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
+    // So we don't need to unlock the underlying keystore..
+    if (IsFixedKeyPool() && IsPoW2Witness())
+    {
+        return true;
+    }
+
     //fixme: (2.1) - Also burn the memory just to be sure?
     vMasterKey.clear();
 
@@ -791,6 +800,13 @@ bool CAccount::Lock()
 
 bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDisk)
 {
+    // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
+    // So we don't need to unlock the underlying keystore..
+    if (IsFixedKeyPool() && IsPoW2Witness())
+    {
+        return true;
+    }
+
     needsWriteToDisk = false;
     vMasterKey = vMasterKeyIn;
 
@@ -881,6 +897,13 @@ bool CAccount::EncryptKeys(const CKeyingMaterial& vMasterKeyIn)
 
 bool CAccount::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 {
+    // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
+    // So we don't need to unlock the underlying keystore..
+    if (IsFixedKeyPool() && IsPoW2Witness())
+    {
+        return true;
+    }
+
     return EncryptKeys(vMasterKeyIn) /*&& SetCrypted()*/;
 }
 

@@ -310,6 +310,30 @@ void CWallet::importPrivKey(const CKey& privKey)
     CAccount* newAccount = new CAccount();
     newAccount->m_Type = ImportedPrivateKeyAccount;
 
+    if (IsCrypted())
+    {
+        if (IsLocked())
+        {
+            std::string strErrorMessage = _("Error importing private key") + "\n" + ("Wallet locked.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+        }
+
+        if (!activeAccount)
+        {
+            std::string strErrorMessage = _("Error importing private key") + "\n" + ("Unable to obtain encyption key.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+        }
+
+        if (!newAccount->Encrypt(activeAccount->vMasterKey))
+        {
+            std::string strErrorMessage = _("Error importing private key") + "\n" + ("Failed to encrypt new account.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+        }
+    }
+
     //fixme: (2.1) - Optionally take a key bith date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
     {

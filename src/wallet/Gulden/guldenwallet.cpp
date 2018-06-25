@@ -867,6 +867,18 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
 CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
+    //fixme: (2.1) Improve the way encryption of legacy accounts is handled
+    if (IsCrypted())
+    {
+        if (IsLocked())
+            return nullptr;
+
+        if (!activeAccount)
+            return nullptr;
+
+        if (!newAccount->Encrypt(activeAccount->vMasterKey))
+            return nullptr;
+    }
     addAccount(newAccount, strAccount);
 
     return newAccount;
@@ -956,6 +968,18 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
 
     newAccount = new CAccount();
     newAccount->m_Type = WitnessOnlyWitnessAccount;
+
+    if (IsCrypted())
+    {
+        if (IsLocked())
+            return nullptr;
+
+        if (!activeAccount)
+            return nullptr;
+
+        if (!newAccount->Encrypt(activeAccount->vMasterKey))
+            return nullptr;
+    }
 
     if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates))
     {

@@ -1432,7 +1432,17 @@ void GUI::promptImportPrivKey()
     ImportPrivKeyDialog dlg(this);
     if (dlg.exec())
     {
-        pactiveWallet->importPrivKey(dlg.getPrivKey());
+        // Temporarily unlock for account generation.
+        std::function<void (void)> successCallback = [&](){pactiveWallet->importPrivKey(dlg.getPrivKey());};
+        if (pactiveWallet->IsLocked())
+        {
+            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import private key"), successCallback);
+        }
+        else
+        {
+            successCallback();
+        }
+        return;
     }
 }
 
