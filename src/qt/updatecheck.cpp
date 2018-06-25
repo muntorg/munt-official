@@ -98,11 +98,16 @@ void UpdateCheck::netRequestFinished()
         QByteArray headerName = QByteArray::fromStdString("ECSignature");
         if (reply->hasRawHeader(headerName))
         {
-            QByteArray jsonReply = reply->readAll();
             auto signature = ParseHex(reply->rawHeader(headerName).toStdString());
-            auto hash = Hash(jsonReply.begin(), jsonReply.end());
+
+            QByteArray jsonReply = reply->readAll();
+
+            std::vector<unsigned char> hash;
+            hash.resize(CSHA256::OUTPUT_SIZE);
+            CSHA256().Write((unsigned char*)jsonReply.data(), jsonReply.length()).Finalize(&hash[0]);
+
             CPubKey pubKey(UPDATE_PUB_KEY);
-            if (pubKey.Verify(hash, signature))
+            if (pubKey.Verify(uint256(hash), signature))
             {
                 QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
                 jsonResponse(jsonDoc);
