@@ -2280,15 +2280,16 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
         return;
     }
 
+    // Always pay to KEYCHAIN_SPENDING instead of KEYCHAIN_WITNESS if possible - that way if witness key is stolen our funds are safe.
     // If an explicit script has been set via RPC then use that, otherwise we just make a script from a key
     if (forAccount->hasNonCompoundRewardScript())
     {
-        rKey = std::make_shared<CReserveKeyOrScript>(nullptr, nullptr, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(nullptr, nullptr, KEYCHAIN_SPENDING);
         rKey->reserveScript = forAccount->getNonCompoundRewardScript();
     }
     else
     {
-        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_SPENDING);
 
         CPubKey pubkey;
         if (!rKey->GetReservedKey(pubkey))
