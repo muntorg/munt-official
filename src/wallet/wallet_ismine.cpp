@@ -137,6 +137,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         // Wipe ismine cache for all accounts.
         for (const auto& [accountUUID, account] : mapAccounts)
         {
+            (unused) accountUUID;
             account->accountIsMineCache.clear();
         }
 

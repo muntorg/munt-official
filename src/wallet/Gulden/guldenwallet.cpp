@@ -834,6 +834,7 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
     //Don't import an address that is already in wallet.
     for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
     {
+        (unused) nKeyBirthDate;
         if (static_cast<CWallet*>(this)->HaveKey(privateWitnessKey.GetPubKey().GetID()))
         {
             std::string strErrorMessage = _("Error importing private key") + "\n" + _("Wallet already contains key.");

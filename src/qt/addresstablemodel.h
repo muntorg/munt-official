@@ -75,9 +75,9 @@ public:
     EditStatus getEditStatus() const { return editStatus; }
 
 private:
-    WalletModel *walletModel;
-    CWallet *wallet;
-    AddressTablePriv *priv;
+    WalletModel *walletModel = nullptr;
+    CWallet *wallet = nullptr;
+    AddressTablePriv *priv = nullptr;
     QStringList columns;
     EditStatus editStatus;
 

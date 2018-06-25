@@ -171,8 +171,11 @@ public:
     }
 };
 
-AddressTableModel::AddressTableModel(CWallet *_wallet, WalletModel *parent) :
-    QAbstractTableModel(parent),walletModel(parent),wallet(_wallet),priv(0)
+AddressTableModel::AddressTableModel(CWallet *_wallet, WalletModel *parent)
+: QAbstractTableModel(parent)
+, walletModel(parent)
+, wallet(_wallet)
+, priv(nullptr)
 {
     columns << tr("Label") << tr("Address");
     priv = new AddressTablePriv(wallet, this);
