@@ -713,6 +713,11 @@ bool CAccount::HaveKey(const CKeyID &address) const
     return externalKeyStore.HaveKey(address) || internalKeyStore.HaveKey(address);
 }
 
+bool CAccount::HaveKeyInternal(const CKeyID &address) const
+{
+    return internalKeyStore.HaveKey(address);
+}
+
 bool CAccount::HaveWatchOnly(const CScript &dest) const
 {
     return externalKeyStore.HaveWatchOnly(dest) || internalKeyStore.HaveWatchOnly(dest);
