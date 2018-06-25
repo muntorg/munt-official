@@ -319,14 +319,15 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
         LOCK(cs_wallet);
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountItem.second->HaveKey(keyID))
+            (unused) accountUUID;
+            if (forAccount->HaveKey(keyID))
             {
                 if (usageTime > 0)
                 {
                     CWalletDB walletdb(*dbw);
-                    accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
+                    forAccount->possiblyUpdateEarliestTime(usageTime, &walletdb);
                 }
 
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
@@ -348,10 +349,14 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 if (keyUsedSet.find(keyID) == keyUsedSet.end())
                 {
                     keyUsedSet.insert(keyID);
-                    if (accountItem.second->m_State != AccountState::Normal && accountItem.second->m_State != AccountState::ShadowChild)
+
+                    if (forAccount->m_State != AccountState::Normal && forAccount->m_State != AccountState::ShadowChild)
                     {
-                        accountItem.second->m_State = AccountState::Normal;
-                        std::string name = accountItem.second->getLabel();
+                        forAccount->m_State = AccountState::Normal;
+                        std::string name = forAccount->getLabel();
+
+                        //fixme: (2.1) remove this in name delete/restore labelling for something less error prone. (translations would break this for instance)
+                        //We should just set a restored attribute on the account or something.
                         if (name.find(_("[Deleted]")) != std::string::npos)
                         {
                             name = name.replace(name.find(_("[Deleted]")), _("[Deleted]").length(), _("[Restored]"));
@@ -360,7 +365,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         {
                             name = _("Restored");
                         }
-                        addAccount(accountItem.second, name);
+                        addAccount(forAccount, name);
 
                         //fixme: (Post-2.1) Shadow accounts during rescan...
                     }
