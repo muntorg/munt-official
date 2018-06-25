@@ -90,6 +90,9 @@ public:
     static const int CURRENT_VERSION = 1;
     int nVersion;
 
+    //! Witness for account should only be set when "destinationPoW2Witness" is funding a "never used before"
+    //! witness key ID (e.g. when funding a witness account for the first time).
+    CAccount* witnessForAccount = nullptr;
     CPoW2WitnessDestination destinationPoW2Witness;
 
     ADD_SERIALIZE_METHODS;

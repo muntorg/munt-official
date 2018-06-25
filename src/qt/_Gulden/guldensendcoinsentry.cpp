@@ -528,6 +528,8 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         keyWitness.ReturnKey();
         recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
         recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+        //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+        recipient.witnessForAccount = targetWitnessAccount;
         recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
     }
