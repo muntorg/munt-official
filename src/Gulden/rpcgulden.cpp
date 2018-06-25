@@ -2006,12 +2006,12 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
     std::string reasonForFail;
     CAmount transactionFee;
     CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    CTxOut rotatedWitnessTxOutput;
     {
         // Add the existing witness output as an input
         pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
 
         // Add new witness output
-        CTxOut rotatedWitnessTxOutput;
         rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
         // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
         rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
@@ -2040,6 +2040,25 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
         {
             throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         }
+    }
+
+    //fixme: (2.1) Improve this, it should only happen if Sign transaction is a success.
+    //Also We must make sure that the UI version of this command does the same
+    //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
+    CKey privWitnessKey;
+    if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
+    {
+        //fixme: (2.1) Localise
+        reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        return false;
+    }
+    if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
+    {
+        //fixme: (2.1) Localise
+        reasonForFail = strprintf("Wallet error, failed to store witness key.");
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        return false;
     }
 
     uint256 finalTransactionHash;
