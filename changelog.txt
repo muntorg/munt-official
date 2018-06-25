@@ -2,14 +2,18 @@
 
 This release incorporates three new major feature branches, which combined involve over a year of intense development effort:
 * PoW² https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
+Changes include: Ability to lock funds for a period of 
 
 * SegSig - A new transaction format
-Changes include: solving of malleability issues; more compact transactions (over 50% in some cases) leading to increased network capacity for peak transaction periods; new transaction types (for PoW²); extensible transaction types for future development.
+Changes include: Solving of malleability issues; More compact transactions (over 50% in some cases) leading to increased network capacity for peak transaction periods; New transaction types (for PoW²); Extensible transaction types for future development.
 
 * Sonic - The sonic project involves multiple changes to the p2p networking stack within Gulden.
 Changes include: A switch to boost::asio for the networking stack to replace the old select() based networking code; Multiple improvements to the initial chain synchronisation process, including reverse header synchronisation, making it drastically faster; Removal of limitations to how many peers a server can handle, which helps solve scalability/congestion issues on the network in peak usage periods.
 
 
+UI - New "all" button on send coin screen to send all funds.
+UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
+UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
 CORE - Implement the new version 3 transaction format (SegSig) which allows for much smaller transactions as well as solving malleability issues.
 CORE - New version bit functionality, allows soft forks to be activated via miner voting, via witness voting or via a combination of the two.
 CORE - New PoW2 witness system that combines witnessing with existing proof of work mining for multiple improvements to the network https://github.com/Gulden/gulden-official/blob/master/technical_documentation/Gulden_PoW2.pdf
@@ -31,7 +35,7 @@ RPC - New command 'getlockedbalance' as conterpart to 'getunconfirmedbalance'
 RPC - Add account capability to 'sendmany' command.
 RPC - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
 
-And many other minor changes.
+And many more changes and bug fixes...
 
 1.6.4.8
 
