@@ -255,8 +255,8 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
             int64_t nNumWitnessAddresses;
             int64_t nTotalWeight;
             GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
-            //fixme: (2.0) (POW2) (LAUNCH) - Finalise paramaters here.
-            const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 200;
+
+            const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 300;
             const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
             // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
             // Then set ourselves as the activation hash.
