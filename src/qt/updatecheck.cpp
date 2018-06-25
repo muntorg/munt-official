@@ -4,6 +4,11 @@
 
 #include "updatecheck.h"
 #include "clientversion.h"
+#include "hash.h"
+#include "key.h"
+#include "pubkey.h"
+#include "util.h"
+#include "utilstrencodings.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -21,6 +26,10 @@
 #include <sstream>
 
 #include <openssl/x509_vfy.h>
+
+const char* UPDATE_CHECK_ENDPOINT = "https://ecyt65hwyc.execute-api.eu-central-1.amazonaws.com/test/updatecheck";
+const std::vector<unsigned char> UPDATE_PUB_KEY =
+        ParseHex("042c788c9f3ade6818f4ff4a553a7ffeceac40ca0c413fa6deb71e65b258e2e52b9069c937f573faf55f1f4ac7ba69d9b356f4385a8c81378d5d26daae421e187e");
 
 UpdateCheck::UpdateCheck() :
   networkReply(nullptr)
@@ -40,7 +49,7 @@ void UpdateCheck::start(const QUrl& url)
 
     QNetworkRequest netRequest;
     netRequest.setUrl(url);
-    // netRequest.setRawHeader( "User-Agent", QByteArray(UserAgent().c_str()));
+    netRequest.setHeader(QNetworkRequest::UserAgentHeader, QByteArray::fromStdString(UserAgent()));
     netRequest.setRawHeader( "Accept", "application/json" );
 
     QSslConfiguration config( QSslConfiguration::defaultConfiguration() );
@@ -63,17 +72,39 @@ void UpdateCheck::cancel()
 
 void UpdateCheck::netRequestFinished()
 {
+    bool succes = false;
+    QString msg = "Unknown failure checking for update";
+    bool important = false;
+
     QNetworkReply* reply = networkReply;
     if (reply->error() == QNetworkReply::NetworkError::NoError && reply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() == 200)
     {
-        QByteArray jsonReply = reply->readAll();
-        QString temp = QString::fromStdString( jsonReply.data() );
-        QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
-        jsonResponse(jsonDoc);
+        QByteArray headerName = QByteArray::fromStdString("ECSignature");
+        if (reply->hasRawHeader(headerName))
+        {
+            QByteArray jsonReply = reply->readAll();
+            auto signature = ParseHex(reply->rawHeader(headerName).toStdString());
+            auto hash = Hash(jsonReply.begin(), jsonReply.end());
+            CPubKey pubKey(UPDATE_PUB_KEY);
+            if (pubKey.Verify(hash, signature))
+            {
+                QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
+                jsonResponse(jsonDoc);
+                succes = true;
+            }
+            else
+                msg = "Update server invalid signature.";
+        }
+        else
+            msg = "Update server did not provide a signature.";
     }
     else
+        msg = "Error requesting update ";
+
+
+    if (!succes)
     {
-        Q_EMIT result(false, "const QString& msg", false, noisy);
+        Q_EMIT result(succes, msg, important, noisy);
     }
 
     networkReply->deleteLater();
@@ -83,7 +114,7 @@ void UpdateCheck::netRequestFinished()
 void UpdateCheck::check(bool _noisy)
 {
     noisy = _noisy;
-    QUrl url("https://ecyt65hwyc.execute-api.eu-central-1.amazonaws.com/test/updatecheck");
+    QUrl url(UPDATE_CHECK_ENDPOINT);
     QUrlQuery query;
     query.addQueryItem("version", QString::fromStdString(Version()));
     query.addQueryItem("systype", QSysInfo::productType());
