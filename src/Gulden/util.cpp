@@ -64,8 +64,7 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
     return CHDSeed::CHDSeed::BIP44;
 }
 
-//fixme: (2.0) (POW2) (LAUNCH) - set this.
-const int earliestPossibleMainnetWitnessACtivationHeight = 850000;
+const int gEarliestPossibleMainnetWitnessActivationHeight = 765000;
 
 // Phase 2 becomes active after 75% of miners signal upgrade.
 // After activation creation of 'backwards compatible' PoW2 addresses becomes possible.
@@ -133,7 +132,7 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
     }
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
+    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
 
@@ -199,7 +198,7 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
     DO_BENCHMARK("WIT: IsPow2Phase3Active", BCLog::BENCH|BCLog::WITNESS);
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
+    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
 
@@ -283,7 +282,7 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainpara
     DO_BENCHMARK("WIT: IsPow2Phase4Active", BCLog::BENCH|BCLog::WITNESS);
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
+    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
 
@@ -335,7 +334,7 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
+    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
 
@@ -389,7 +388,7 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chain
 {
     DO_BENCHMARK("WIT: IsPow2WitnessingActive", BCLog::BENCH|BCLog::WITNESS);
 
-    static int checkDepth = IsArgSet("-testnet") ? 10 : earliestPossibleMainnetWitnessACtivationHeight;
+    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
 
