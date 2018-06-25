@@ -151,8 +151,12 @@ public:
     bool WriteTx(const CWalletTx& wtx);
     bool EraseTx(uint256 hash);
 
+    //! Write key and metadata to walletdb (unencrypted)
     bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
+    //! Write key and metadata to walletdb (encrypted)
     bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta, const std::string forAccount, int64_t nKeyChain);
+    //! Special writer only for witness accounts (where we store the witness key in both HD and non-HD mode)
+    bool WriteKeyOverride(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const std::string forAccount, int64_t nKeyChain);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
 
     bool EraseKey(const CPubKey& vchPubKey);

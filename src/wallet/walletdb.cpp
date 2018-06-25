@@ -92,6 +92,25 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     return WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
 }
 
+bool CWalletDB::WriteKeyOverride(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const std::string forAccount, int64_t nKeyChain)
+{
+    // hash pubkey/privkey to accelerate wallet load
+    std::vector<unsigned char> vchKey;
+    vchKey.reserve(vchPubKey.size() + vchPrivKey.size());
+    vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
+    vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
+
+    //Erase previous value if any.and new privkey is not null
+    CPrivKey nullKey;
+    if (vchPrivKey == nullKey)
+    {
+        WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
+        return true;
+    }
+    EraseIC(std::pair(std::string("key"), vchPubKey));
+    return WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
+}
+
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
 {
     if (!WriteIC(std::pair(std::string("keymeta"), vchPubKey), keyMeta, false))
