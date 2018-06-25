@@ -29,7 +29,7 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
     // IsAllFromMe(ISMINE_SPENDABLE), so every input should already be in our
     // wallet, with a valid index into the vout array.
     for (auto& input : tx.vin) {
-        const auto mi = pWallet->mapWallet.find(input.prevout.hash);
+        const auto mi = pWallet->mapWallet.find(input.prevout.getHash());
         assert(mi != pWallet->mapWallet.end() && input.prevout.n < mi->second.tx->vout.size());
         vCoins.emplace_back(CInputCoin(&(mi->second), input.prevout.n));
     }

@@ -81,7 +81,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
     {
         const CTxIn& txin = tx->vin[i];
 
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getHash());
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;

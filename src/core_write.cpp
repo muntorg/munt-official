@@ -194,7 +194,7 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             {
                 in.pushKV("pow2-coinbase", "");
             }
-            in.pushKV("txid", txin.prevout.hash.GetHex());
+            in.pushKV("txid", txin.prevout.getHash().GetHex());
             in.pushKV("vout", (int64_t)txin.prevout.n);
             UniValue o(UniValue::VOBJ);
             o.pushKV("asm", ScriptToAsmStr(txin.scriptSig, true));

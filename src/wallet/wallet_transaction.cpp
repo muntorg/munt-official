@@ -41,7 +41,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             continue;
         }
 
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.getHash());
         if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
             return false;
         }
@@ -937,7 +937,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx &coin = mapWallet[txin.prevout.hash];
+                CWalletTx &coin = mapWallet[txin.prevout.getHash()];
                 coin.BindWallet(this);
                 NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }

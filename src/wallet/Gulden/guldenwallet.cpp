@@ -297,7 +297,7 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 {
     {
         LOCK(cs_wallet);
-        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.hash);
+        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.getHash());
         if (prev)
         {
             if (txin.prevout.n < prev->tx->vout.size())
@@ -779,7 +779,7 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;

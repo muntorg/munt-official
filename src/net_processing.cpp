@@ -2197,7 +2197,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         {
             bool fRejectedParents = false; // It may be the case that the orphans parents have all been rejected
             for(const CTxIn& txin : tx.vin) {
-                if (recentRejects->contains(txin.prevout.hash)) {
+                if (recentRejects->contains(txin.prevout.getHash())) {
                     fRejectedParents = true;
                     break;
                 }
@@ -2205,7 +2205,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if (!fRejectedParents) {
                 uint32_t nFetchFlags = GetFetchFlags(pfrom);
                 for(const CTxIn& txin : tx.vin) {
-                    CInv _inv(MSG_TX | nFetchFlags, txin.prevout.hash);
+                    CInv _inv(MSG_TX | nFetchFlags, txin.prevout.getHash());
                     pfrom->AddInventoryKnown(_inv);
                     if (!AlreadyHave(_inv)) pfrom->AskFor(_inv);
                 }

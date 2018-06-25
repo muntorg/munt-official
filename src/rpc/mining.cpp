@@ -781,8 +781,8 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         UniValue deps(UniValue::VARR);
         for (const CTxIn &in : tx.vin)
         {
-            if (setTxIndex.count(in.prevout.hash))
-                deps.push_back(setTxIndex[in.prevout.hash]);
+            if (setTxIndex.count(in.prevout.getHash()))
+                deps.push_back(setTxIndex[in.prevout.getHash()]);
         }
         entry.push_back(Pair("depends", deps));
 
