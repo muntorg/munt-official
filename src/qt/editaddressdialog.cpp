@@ -99,20 +99,20 @@ bool EditAddressDialog::saveCurrentRow()
 
     switch(mode)
     {
-    case NewReceivingAddress:
-    case NewSendingAddress:
-        address = model->addRow(
-                mode == NewSendingAddress ? AddressTableModel::Send : AddressTableModel::Receive,
-                ui->labelEdit->text(),
-                ui->addressEdit->text());
-        break;
-    case EditReceivingAddress:
-    case EditSendingAddress:
-        if(mapper->submit())
-        {
-            address = ui->addressEdit->text();
-        }
-        break;
+        case NewReceivingAddress:
+        case NewSendingAddress:
+            address = model->addRow(
+                    mode == NewSendingAddress ? AddressTableModel::Send : AddressTableModel::Receive,
+                    ui->labelEdit->text(),
+                    ui->addressEdit->text());
+            break;
+        case EditReceivingAddress:
+        case EditSendingAddress:
+            if(mapper->submit())
+            {
+                address = ui->addressEdit->text();
+            }
+            break;
     }
     return !address.isEmpty();
 }

@@ -247,12 +247,12 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
     //Align address table to right, all other columns to left.
     else if(role == Qt::TextAlignmentRole)
     {
-	switch(index.column())
+        switch(index.column())
         {
-	    case Address:
-		return QVariant(Qt::AlignRight | Qt::AlignVCenter);
+            case Address:
+            return QVariant(Qt::AlignRight | Qt::AlignVCenter);
         }
-	return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
+        return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
     }
     return QVariant();
 }
