@@ -14,6 +14,7 @@ Changes include: A switch to boost::asio for the networking stack to replace the
 UI - New "all" button on send coin screen to send all funds.
 UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
 UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
+UI - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
 CORE - Implement the new version 3 transaction format (SegSig) which allows for much smaller transactions as well as solving malleability issues.
 CORE - New version bit functionality, allows soft forks to be activated via miner voting, via witness voting or via a combination of the two.
 CORE - New PoW2 witness system that combines witnessing with existing proof of work mining for multiple improvements to the network https://github.com/Gulden/gulden-official/blob/master/technical_documentation/Gulden_PoW2.pdf
