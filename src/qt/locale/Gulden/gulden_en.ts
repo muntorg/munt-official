@@ -91,7 +91,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+153"/>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+154"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -134,7 +134,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Delete</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+23"/>
         <source>Export the data in the current tab to a file</source>
         <translation>Export the data in the current tab to a file</translation>
     </message>
@@ -144,7 +144,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Export</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+10"/>
         <source>Create a new address</source>
         <translation>Create a new address</translation>
     </message>
@@ -154,7 +154,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;New</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+10"/>
         <source>Copy the currently selected address to the system clipboard</source>
         <translation>Copy the currently selected address to the system clipboard</translation>
     </message>
@@ -164,7 +164,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Copy</translation>
     </message>
     <message>
-        <location filename="../../addressbookpage.cpp" line="+72"/>
+        <location filename="../../addressbookpage.cpp" line="+68"/>
         <source>Choose the address to send coins to</source>
         <translation>Choose the address to send coins to</translation>
     </message>
@@ -237,7 +237,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AddressTableModel</name>
     <message>
-        <location filename="../../addresstablemodel.cpp" line="+177"/>
+        <location filename="../../addresstablemodel.cpp" line="+180"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -808,7 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+246"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+250"/>
         <location line="+22"/>
         <location line="+35"/>
         <source>Okay</source>
@@ -822,22 +822,22 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="-36"/>
         <source>Total funds: </source>
-        <translation type="unfinished">Total funds: </translation>
+        <translation>Total funds: </translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Locked funds: </source>
-        <translation type="unfinished">Locked funds: </translation>
+        <translation>Locked funds: </translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Funds awaiting confirmation: </source>
-        <translation type="unfinished">Funds awaiting confirmation: </translation>
+        <translation>Funds awaiting confirmation: </translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Spendable funds: </source>
-        <translation type="unfinished">Spendable funds: </translation>
+        <translation>Spendable funds: </translation>
     </message>
     <message>
         <location line="+29"/>
@@ -1421,7 +1421,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+241"/>
+        <location line="+243"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -1488,7 +1488,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-537"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-539"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1508,7 +1508,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+242"/>
+        <location line="+244"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>
@@ -1530,7 +1530,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="+45"/>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation type="unfinished"></translation>
+        <translation>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -4534,7 +4534,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+408"/>
+        <location filename="../../walletmodel.cpp" line="+414"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>

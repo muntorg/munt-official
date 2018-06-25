@@ -4,15 +4,40 @@
     <extra-po-header-language>it</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 17:17+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 17:17+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-25 17:33+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-25 17:33+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <source>Change name of account</source>
+        <translation>Cambia nome dell&apos;account</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Cambia nome dell&apos;account</translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>Cancella account</translation>
+    </message>
+    <message>
         <source>Copy sync code</source>
         <translation>Copia il codice di sincronizzazione</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Fatto</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation>Scansione del QR per connettersi all&apos;app Mobile Gulden</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Clicca qui per rendere visibile il codice QR. AVVERTENZA: assicuratevi di essere l&apos;unica persona che può vedere questo codice QR, altrimenti potrebbe essere utilizzato per accedere ai tuoi fondi.</translation>
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
@@ -24,6 +49,196 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Clicca qui per rendere visibile il codice QR.
 ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo codice QR in quanto altrimenti potrebbe essere utilizzato per guadagnare per tuo conto e rubare i tuoi guadagni.</translation>
     </message>
+    <message>
+        <source>Account not empty, please first empty your account before trying to delete it.</source>
+        <translation>Account pieno, per favore svuota il tuo account prima di tentare di eliminarlo.</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+The account will continue to be monitored and will be restored should it receive new funds in future.</source>
+        <translation>Sei sicuro di voler eliminare %1 dall&apos;elenco dei tuoi account? Il conto continuerà ad essere monitorato e sarà ripristinato se riceverà nuovi fondi in futuro.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Fatto</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Frase di recupero</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Mostra la frase di recupero</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Si raccomanda inoltre di fare un  backup criptato del portafoglio sul disco , oltre a memorizzare la frase di recupero di cui sopra.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Salva file</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Nessuna frase di recupero per questo portafoglio</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Il portafoglio contiene alcuni conti legacy non HD, questi non possono essere ripristinati utilizzando frasi di recupero e richiedono un normale backup del disco. Assicurati di eseguire regolari backup del disco del portafoglio o di eliminare l&apos;account precedente affinché i fondi rimangano protetti.</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Finestra passphrase</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Inserisci la passphrase</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nuova passphrase</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Ripeti la nuova passphrase</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Inserisci la nuova passphrase per il portamonete.&lt;br/&gt;Si consiglia di utilizzare &lt;b&gt;almeno dieci caratteri casuali&lt;/b&gt; oppure &lt;b&gt;otto o più parole&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Cifra il portamonete</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Questa operazione necessita della passphrase per sbloccare il portamonete.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Sblocca il portamonete</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Quest&apos;operazione necessita della passphrase per decifrare il portamonete,</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Decifra il portamonete</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Cambia la passphrase</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Inserisci la vecchia e la nuova passphrase per il portamonete.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Conferma la cifratura del portamonete</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Si è sicuri di voler cifrare il portamonete?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Portamonete cifrato</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Il processo di crittografia del tuo portafogli è fallito</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Le password non corrispondono.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Sbloccaggio del portafoglio fallito</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>La frase inserita per decrittografare il tuo portafoglio è incorretta</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Decriptatura del portafoglio fallita</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>La password del portafoglio è stata cambiata con successo.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Attenzione: Blocco Maiuscola attivato</translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Edit Address</source>
+        <translation>Modifica l&apos;indirizzo</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etichetta</translation>
+    </message>
+    <message>
+        <source>The label associated with this address list entry</source>
+        <translation>L&apos;etichetta associata con questa voce della lista degli indirizzi</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Indirizzo</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>L&apos;indirizzo associato con questa voce della lista degli indirizzi. Può essere modificato solo per gli indirizzi d&apos;invio.</translation>
+    </message>
+    <message>
+        <source>New receiving address</source>
+        <translation>Nuovo indirizzo di ricezione</translation>
+    </message>
 </context>
 <context>
     <name>ImportWitnessDialog</name>
@@ -34,6 +249,25 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
     <message>
         <source>Ok</source>
         <translation>ok</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Total funds: </source>
+        <translation>Fondi totali: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Fondi bloccati: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Fondi in attesa di conferma: </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Fondi spendibili: </translation>
     </message>
 </context>
 <context>
@@ -296,6 +530,82 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
         <source>Confirmed</source>
         <translation>Confermato</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copia indirizzo</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copia etichetta</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Copia importo</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Copia ID della transazione</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Blocco non utilizzato</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Sblocco non utilizzato</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Copia quantità</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Copia tassa</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Copia con la tassa</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Copia bytes</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Copia trascurabile</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Copia modifica</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 bloccato)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>Si</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Questa etichetta diventa rossa se un destinatario riceve un importo inferiore al valore corrente.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Può variare +/- %1 satoshi per input.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>modifica da %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(modifica)</translation>
+    </message>
 </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -452,81 +762,6 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
     </message>
 </context>
 <context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Finestra passphrase</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Inserisci la passphrase</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Nuova passphrase</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Ripeti la nuova passphrase</translation>
-    </message>
-    <message>
-        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Inserisci la nuova passphrase per il portamonete.&lt;br/&gt;Si consiglia di utilizzare &lt;b&gt;almeno dieci caratteri casuali&lt;/b&gt; oppure &lt;b&gt;otto o più parole&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>Encrypt wallet</source>
-        <translation>Cifra il portamonete</translation>
-    </message>
-    <message>
-        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Questa operazione necessita della passphrase per sbloccare il portamonete.</translation>
-    </message>
-    <message>
-        <source>Unlock wallet</source>
-        <translation>Sblocca il portamonete</translation>
-    </message>
-    <message>
-        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Quest&apos;operazione necessita della passphrase per decifrare il portamonete,</translation>
-    </message>
-    <message>
-        <source>Decrypt wallet</source>
-        <translation>Decifra il portamonete</translation>
-    </message>
-    <message>
-        <source>Change passphrase</source>
-        <translation>Cambia la passphrase</translation>
-    </message>
-    <message>
-        <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation>Inserisci la vecchia e la nuova passphrase per il portamonete.</translation>
-    </message>
-    <message>
-        <source>Confirm wallet encryption</source>
-        <translation>Conferma la cifratura del portamonete</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>Si è sicuri di voler cifrare il portamonete?</translation>
-    </message>
-    <message>
-        <source>Wallet encrypted</source>
-        <translation>Portamonete cifrato</translation>
-    </message>
-    <message>
-        <source>Wallet encryption failed</source>
-        <translation>Il processo di crittografia del tuo portafogli è fallito</translation>
-    </message>
-    <message>
-        <source>Wallet unlock failed</source>
-        <translation>Sbloccaggio del portafoglio fallito</translation>
-    </message>
-    <message>
-        <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>La frase inserita per decrittografare il tuo portafoglio è incorretta</translation>
-    </message>
-</context>
-<context>
     <name>BanTableModel</name>
     <message>
         <source>IP/Netmask</source>
@@ -542,6 +777,29 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Salva Immagine...</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>Copia immagine</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Errore di decodifica URI nel codice QR.</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>Salva codice QR</translation>
+    </message>
+    <message>
+        <source>PNG Image (*.png)</source>
+        <translation>Immagine PNG  (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <source>Network Alert</source>
+        <translation>Avviso di rete</translation>
     </message>
 </context>
 <context>
@@ -596,29 +854,6 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
     <message>
         <source>Date</source>
         <translation>Data</translation>
-    </message>
-</context>
-<context>
-    <name>EditAddressDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Modifica l&apos;indirizzo</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Etichetta</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>L&apos;etichetta associata con questa voce della lista degli indirizzi</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Indirizzo</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>L&apos;indirizzo associato con questa voce della lista degli indirizzi. Può essere modificato solo per gli indirizzi d&apos;invio.</translation>
     </message>
 </context>
 <context>

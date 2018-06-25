@@ -4,8 +4,8 @@
     <extra-po-header-language>fr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 17:16+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 17:16+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-25 17:32+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-25 17:32+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -163,6 +163,22 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Cancel</source>
         <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Total funds: </source>
+        <translation>Total des fonds : </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Fonds bloqués : </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Fonds en attente de confirmation : </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Fonds disponibles : </translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
@@ -640,6 +656,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>A minimum amount of %1 is required.</source>
         <translation>Un montant minimum de %1 est requis.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Un poids minimum de %1 est requis, mais le poids sélectionné est seulement %2, veuillez augmenter la quantité ou le temps de blocage pour un poids plus grand.</translation>
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</source>
@@ -3374,6 +3394,81 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>%1 weeks</source>
         <translation>%1 semaines</translation>
+    </message>
+</context>
+<context>
+    <name>Gulden</name>
+    <message>
+        <source>Done loading</source>
+        <translation>Chargement terminé</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Erreur de lecture de la base de données, arrêt.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Bloc de genèse incorrect ou aucun bloc de genèse trouvé. Mauvais répertoire de données pour le réseau ?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Compte de l&apos;héritage</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Chargement des adresses P2P.....</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Chargement de la liste de bannissement.....</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Chargement de l&apos;index des blocs.....</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Chargement du portefeuille.....</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Mon compte</translation>
+    </message>
+    <message>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Déverrouillage du porte-monnaie requis pour la mise à niveau du porte-monnaie</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Zapping toutes les transactions du portefeuille......</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Blockstore d&apos;élagage.....</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Rechargement de l&apos;index des blocs.....</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Refaire la numérisation.....</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>Enroulement des Blocs.....</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Démarrer les fils de réseau.....</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Mise à jour de l&apos;index des blocs.....</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Vérification des blocs.....</translation>
     </message>
 </context>
 <context>
