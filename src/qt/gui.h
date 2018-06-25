@@ -26,6 +26,7 @@
 #include <QSystemTrayIcon>
 
 #include "_Gulden/GuldenGUI.h"
+#include "updatecheck.h"
 #include "validation/validation.h"
 
 #include <boost/uuid/uuid.hpp>
@@ -114,6 +115,7 @@ public:
     void restoreCachedWidgetIfNeeded();
     void updateAccount(CAccount* account);
     ClickableLabel* accountAddedHelper(CAccount* addedAccount);
+    void autoUpdateCheck();
 
     /** Early disconnect timer signals/slots and similar for clean shutdown */
     void disconnectNonEssentialSignals();
@@ -215,6 +217,8 @@ private:
     const QStyle* platformStyle = nullptr;
 
     QFrame* frameBlocks = nullptr;
+
+    UpdateCheck updateCheck;
 
     std::map<ClickableLabel*, CAccount*> m_accountMap;
 
@@ -354,6 +358,12 @@ private Q_SLOTS:
     void toggleNetworkActive();
 
     void showSyncOverlay();
+
+    /** Show result of software update check.
+        If noisy the user will be shown errors and non-important messages, like no update availabe,
+        else only important messages like a new update available will be shown.
+    */
+    void updateCheckResult(bool succes, const QString& msg, bool important, bool noisy);
 
     //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
     void activeAccountChanged(CAccount* account);

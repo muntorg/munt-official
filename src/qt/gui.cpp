@@ -314,6 +314,26 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
         connect(progressBar, SIGNAL(clicked(QPoint)), this, SLOT(showSyncOverlay()));
     }
 #endif
+
+    connect(&updateCheck, SIGNAL(result(bool, const QString&, bool, bool)), this, SLOT(updateCheckResult(bool, const QString&, bool, bool)));
+}
+
+void GUI::autoUpdateCheck()
+{
+    const char* LAST_UPDATE_KEY = "last_update_check";
+    if (optionsModel && optionsModel->getAutoUpdateCheck())
+    {
+        QSettings settings;
+        QDateTime now = QDateTime::currentDateTime();
+        QDateTime last = settings.value(LAST_UPDATE_KEY, now.addDays(-1)).toDateTime();
+        if (!last.isValid())
+            last = now.addDays(-1);
+        if (now.date().dayOfYear() != last.date().dayOfYear())
+        {
+            settings.setValue(LAST_UPDATE_KEY, now);
+            updateCheck.check(false);
+        }
+    }
 }
 
 void GUI::disconnectNonEssentialSignals()
@@ -847,6 +867,15 @@ void GUI::aboutClicked()
 void GUI::checkUpdatesClicked()
 {
     LogPrint(BCLog::QT, "GUI::checkUpdatesClicked\n");
+
+    updateCheck.check(true);
+
+//    QProgressDialog progress("Copying files...", "Abort Copy", 0, 1, this);
+//    progress.setWindowModality(Qt::WindowModal);
+//    progress.setValue(0);
+//    QThread::sleep(5);
+
+
 }
 
 void GUI::showDebugWindow()
@@ -1583,6 +1612,15 @@ void GUI::showSyncOverlay()
 
     if (syncOverlay && (progressBar->isVisible() || syncOverlay->isLayerVisible()))
         syncOverlay->toggleVisibility();
+}
+
+void GUI::updateCheckResult(bool succes, const QString& msg, bool important, bool noisy)
+{
+    if (important || noisy)
+    {
+        message(tr("Software update"), msg, succes ? CClientUIInterface::MSG_WARNING
+                                                   : CClientUIInterface::MSG_ERROR);
+    }
 }
 
 static bool ThreadSafeMessageBox(GUI *gui, const std::string& message, const std::string& caption, unsigned int style)

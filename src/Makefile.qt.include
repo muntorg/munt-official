@@ -265,6 +265,7 @@ QT_MOC_CPP = \
   qt/moc_transactiontablemodel.cpp \
   qt/moc_transactionview.cpp \
   qt/moc_utilitydialog.cpp \
+  qt/moc_updatecheck.cpp \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp
@@ -338,6 +339,7 @@ GULDEN_QT_H = \
   qt/transactionrecord.h \
   qt/transactiontablemodel.h \
   qt/transactionview.h \
+  qt/updatecheck.h \
   qt/utilitydialog.h \
   qt/walletframe.h \
   qt/walletmodel.h \
@@ -383,7 +385,8 @@ GULDEN_QT_BASE_CPP = \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp
+  qt/utilitydialog.cpp \
+  qt/updatecheck.cpp
 
 GULDEN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
 
@@ -420,7 +423,7 @@ if ENABLE_WALLET
 GULDEN_QT_CPP += $(GULDEN_QT_WALLET_CPP)
 endif
 
-RES_IMAGES = 
+RES_IMAGES =
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
