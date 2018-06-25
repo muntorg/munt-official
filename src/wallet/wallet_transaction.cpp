@@ -548,6 +548,29 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             return false;
         }
     }
+
+    // NB! This part of the process is super important.
+    // We insert the private witnessing (**not** -spending- only -witnessing-) key into the unencrypted keychain for the HD account (even on encrypted wallet)
+    // This allows witnessing to work correctly on encrypted wallets.
+    for (const auto& recipient : vecSend)
+    {
+        if (recipient.witnessForAccount != nullptr)
+        {
+            CKey privWitnessKey;
+            if (!recipient.witnessForAccount->GetKey(recipient.witnessDetails.witnessKeyID, privWitnessKey))
+            {
+                //fixme: (2.1) Localise
+                strFailReason = strprintf("Wallet error, failed to retrieve private witness key.");
+                return false;
+            }
+            if (!AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *recipient.witnessForAccount, KEYCHAIN_WITNESS))
+            {
+                //fixme: (2.1) Localise
+                strFailReason = strprintf("Wallet error, failed to store witness key.");
+                return false;
+            }
+        }
+    }
     return true;
 }
 
