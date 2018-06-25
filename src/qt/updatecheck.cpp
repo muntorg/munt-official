@@ -7,7 +7,6 @@
 #include "hash.h"
 #include "key.h"
 #include "pubkey.h"
-#include "util.h"
 #include "utilstrencodings.h"
 
 #include <QNetworkRequest>
@@ -16,18 +15,35 @@
 #include <QUrlQuery>
 #include <QString>
 #include <QJsonDocument>
-#include <QJsonArray>
 #include <QJsonObject>
 #include <QSysInfo>
-#include <QTimer>
 
-#include <ostream>
-#include <iomanip>
-#include <sstream>
+/* Update server REST protocol
 
-#include <openssl/x509_vfy.h>
+Query string parameters accepted by the UPDATE_CHECK_ENDPOINT:
+- version, currently running Gulden version
+- systype, operating system type as returned by QSysInfo::productType() , ie. windows, osx, debian etc
+- sysver, operating system version as return by QSysInfo::productVersion(), ie. 10 (for Windows 10)
+- sysarch, system CPU architecture as returned by QSysInfo::currentCpuArchitecture(), ie. x86_64, arm etc.
 
+For documentation of these function see http://doc.qt.io/qt-5/qsysinfo.html#currentCpuArchitecture
+
+The server responds with a json object with fields:
+- msg, rich text that can be shown to the user this may include a link to a download page
+- important, bool if the message should be shown to the user or that it is ok to silently ignore it. Typically
+             if availability of a new version is important, while a message that the latest version is already
+             running would not be important.
+
+Repsonse signing
+
+The update server signs the response. The hex encoding of the der signature of the Sha256 hash of
+the response body is put in the ECSignature header.
+*/
+
+//! Update server REST API endpoint
 const char* UPDATE_CHECK_ENDPOINT = "https://ecyt65hwyc.execute-api.eu-central-1.amazonaws.com/test/updatecheck";
+
+//! Update server public key to verify ECSignature
 const std::vector<unsigned char> UPDATE_PUB_KEY =
         ParseHex("042c788c9f3ade6818f4ff4a553a7ffeceac40ca0c413fa6deb71e65b258e2e52b9069c937f573faf55f1f4ac7ba69d9b356f4385a8c81378d5d26daae421e187e");
 
