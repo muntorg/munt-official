@@ -369,6 +369,50 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
 
                         //fixme: (Post-2.1) Shadow accounts during rescan...
                     }
+
+                    if (forAccount->IsHD() && forAccount->IsPoW2Witness())
+                    {
+                        //This is here for the sake of restoring wallets from recovery phrase only, in the normal case this has already been done by the funding code...
+                        //fixme: (2.0.1) Improve this, there are two things that need improving:
+                        //1) When restoring from phrase but also encrypting and locking - it won't be able to add the key here.
+                        //We try to work around this by using an unlock callback, but if the user refuses to unlock then there might be issues.
+                        //2) This will indescriminately add -all- used change keys in a witness account; even if used for normal transactions (which shouldn't be done, but still it would be preferable to avoid this)
+                        //Note as witness-only accounts are not HD this is not an issue for witness-only accounts.
+                        if (forAccount->getLabel().find(_("[Restored]")) != std::string::npos)
+                        {
+                            if (forAccount->HaveKeyInternal(keyID))
+                            {
+                                std::function<void (void)> witnessKeyCallback = [&]()
+                                {
+                                    CKey privWitnessKey;
+                                    if (!forAccount->GetKey(keyID, privWitnessKey))
+                                    {
+                                        //fixme: (2.1) localise
+                                        std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
+                                        LogPrintf(strErrorMessage.c_str());
+                                        CAlert::Notify(strErrorMessage, true, true);
+                                    }
+                                    if (!static_cast<CWallet*>(this)->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *forAccount, KEYCHAIN_WITNESS))
+                                    {
+                                        //fixme: (2.1) localise
+                                        std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
+                                        LogPrintf(strErrorMessage.c_str());
+                                        CAlert::Notify(strErrorMessage, true, true);
+                                    }
+                                };
+                                if (forAccount->IsLocked())
+                                {
+                                    //Last ditch effort to try work around 1.
+                                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for witness key"), witnessKeyCallback);
+                                    continue;
+                                }
+                                else
+                                {
+                                    witnessKeyCallback();
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1055,7 +1099,13 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
+    bool ret = CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
+    if (ret && forAccount.IsPoW2Witness() && keyChain == KEYCHAIN_WITNESS)
+    {
+        CPrivKey nullKey;
+        ret = CWalletDB(*dbw).WriteKeyOverride(pubkey, nullKey, getUUIDAsString(forAccount.getUUID()), KEYCHAIN_WITNESS);
+    }
+    return ret;
 }
 
 
