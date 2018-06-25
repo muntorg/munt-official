@@ -255,18 +255,24 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
 bool WalletModel::validateAddressBitcoin(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValidBitcoin();
 }
 
 bool WalletModel::validateAddressIBAN(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     if (patternMatcherIBAN.match(address).hasMatch())
         return true;
     return false;

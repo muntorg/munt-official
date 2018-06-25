@@ -278,7 +278,9 @@ bool AddressTableModel::setData(const QModelIndex &index, const QVariant &value,
                 return false;
             }
             wallet->SetAddressBook(curAddress, value.toString().toStdString(), strPurpose);
-        } else if(index.column() == Address) {
+        }
+        else if(index.column() == Address)
+        {
             QString newAddress = value.toString();
             // Refuse to set invalid address, set error status and return false
             if( !walletModel->validateAddress(newAddress) && !walletModel->validateAddressBitcoin(newAddress) && !walletModel->validateAddressIBAN(newAddress) )
@@ -372,12 +374,15 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     boost::uuids::uuid accountUUID = boost::uuids::nil_generator()();
     editStatus = OK;
 
+    if (!walletModel)
+        return "";
+
     if(type == Send)
     {
         if( !walletModel->validateAddress(address) && !walletModel->validateAddressBitcoin(address) && !walletModel->validateAddressIBAN(address) )
         {
             editStatus = INVALID_ADDRESS;
-            return QString();
+            return "";
         }
         // Check for duplicate addresses
         {
@@ -385,7 +390,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
             if(wallet->mapAddressBook.count(strAddress))
             {
                 editStatus = DUPLICATE_ADDRESS;
-                return QString();
+                return "";
             }
         }
     }
@@ -424,8 +429,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     // Add entry
     {
         LOCK(wallet->cs_wallet);
-        wallet->SetAddressBook(strAddress, strLabel,
-                               (type == Send ? "send" : "receive"));
+        wallet->SetAddressBook(strAddress, strLabel, (type == Send ? "send" : "receive"));
     }
     return QString::fromStdString(strAddress);
 }
