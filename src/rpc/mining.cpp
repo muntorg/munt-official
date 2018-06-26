@@ -636,11 +636,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if(!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+    /*if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Gulden is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Gulden is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Gulden is downloading blocks...");*/
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -713,6 +713,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
     }
 
+    std::vector<unsigned char> witnessCoinbaseHex;
+    std::vector<unsigned char> witnessSubsidyHex;
+
     // Update block
     static CBlockIndex* pindexPrevChainTip=nullptr;
     static CBlockIndex* pindexPrev=nullptr;
@@ -744,7 +747,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed);
+        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
@@ -787,10 +790,27 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         entry.push_back(Pair("depends", deps));
 
         int index_in_template = i - 1;
-        entry.push_back(Pair("fee", pblocktemplate->vTxFees[index_in_template]));
-        int64_t nTxSigOps = pblocktemplate->vTxSigOpsCost[index_in_template];
-        entry.push_back(Pair("sigops", nTxSigOps));
-        entry.push_back(Pair("weight", GetTransactionWeight(tx)));
+        if (index_in_template >= pblocktemplate->vTxFees.size())
+        {
+            //fixme: (2.1) remove
+            entry.push_back(Pair("fee", 0));
+        }
+        else
+        {
+            entry.push_back(Pair("fee", pblocktemplate->vTxFees[index_in_template]));
+        }
+        if (index_in_template >= pblocktemplate->vTxSigOpsCost.size())
+        {
+            //fixme: (2.1) remove
+            entry.push_back(Pair("sigops", 0));
+            entry.push_back(Pair("weight", 0));
+        }
+        else
+        {
+            int64_t nTxSigOps = pblocktemplate->vTxSigOpsCost[index_in_template];
+            entry.push_back(Pair("sigops", nTxSigOps));
+            entry.push_back(Pair("weight", GetTransactionWeight(tx)));
+        }
 
         transactions.push_back(entry);
     }
@@ -888,6 +908,10 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     //fixme: (2.1) Double check this doesn't result in miners mining smaller blocks or anything strange
     result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SERIALIZED_SIZE));
     result.push_back(Pair("weightlimit", (int64_t)MAX_BLOCK_WEIGHT));
+
+    //fixme: (2.1) remove
+    result.push_back(Pair("pow2_aux1", HexStr(witnessCoinbaseHex)));
+    result.push_back(Pair("pow2_aux2", HexStr(witnessSubsidyHex)));
 
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
