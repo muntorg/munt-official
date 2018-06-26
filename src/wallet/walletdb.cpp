@@ -490,6 +490,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssValue >> keyChain;
             ssValue >> forAccount;
 
+            if (pwallet->mapAccounts.count(getUUIDFromString(forAccount)) == 0)
+            {
+                strErr = "Wallet contains key for non existent HD account";
+                return false;
+            }
+
             if (!static_cast<CGuldenWallet*>(pwallet)->LoadKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
             {
                 strErr = "Error reading wallet database: LoadKey (HD) failed";
