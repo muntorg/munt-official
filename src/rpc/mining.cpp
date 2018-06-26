@@ -713,9 +713,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
     }
 
-    std::vector<unsigned char> witnessCoinbaseHex;
-    std::vector<unsigned char> witnessSubsidyHex;
-    CAmount amountPoW2Subsidy = 0;
+    static std::vector<unsigned char> witnessCoinbaseHex;
+    static std::vector<unsigned char> witnessSubsidyHex;
+    static CAmount amountPoW2Subsidy = 0;
 
     // Update block
     static CBlockIndex* pindexPrevChainTip=nullptr;
