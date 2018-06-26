@@ -36,6 +36,7 @@
 #include <QTimer>
 
 #include "_Gulden/GuldenGUI.h"
+#include <unity/appmanager.h>
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -272,7 +273,7 @@ void OptionsDialog::on_resetButton_clicked()
 
         /* reset all options and close GUI */
         model->Reset();
-        QApplication::quit();
+        GuldenAppManager::gApp->shutdown();
     }
 }
 
