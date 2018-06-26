@@ -808,8 +808,10 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("capabilities", aCaps));
 
-    UniValue aRules(UniValue::VARR);
+    // In phase 3 we are restricted to using the same version bits as the witness; we aren't allowed to modify these bits.
+    bool versionBitsLockedToWitness = IsPow2Phase3Active(pindexPrev, Params(), chainActive) || (pindexPrev->pprev && IsPow2Phase3Active(pindexPrev->pprev, Params(), chainActive));
     UniValue vbavailable(UniValue::VOBJ);
+    UniValue aRules(UniValue::VARR);
     for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
         Consensus::DeploymentPos pos = Consensus::DeploymentPos(j);
         ThresholdState state = VersionBitsState(pindexPrev, consensusParams, pos, versionbitscache);
@@ -820,16 +822,23 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 break;
             case THRESHOLD_LOCKED_IN:
                 // Ensure bit is set in block version
-                pblock->nVersion |= VersionBitsMask(consensusParams, pos);
+                if (!versionBitsLockedToWitness)
+                {
+                    pblock->nVersion |= VersionBitsMask(consensusParams, pos);
+                }
                 // FALL THROUGH to get vbavailable set...
             case THRESHOLD_STARTED:
             {
                 const struct VBDeploymentInfo& vbinfo = VersionBitsDeploymentInfo[pos];
                 vbavailable.push_back(Pair(gbt_vb_name(pos), consensusParams.vDeployments[pos].bit));
                 if (setClientRules.find(vbinfo.name) == setClientRules.end()) {
-                    if (!vbinfo.gbt_force) {
-                        // If the client doesn't support this, don't indicate it in the [default] version
-                        pblock->nVersion &= ~VersionBitsMask(consensusParams, pos);
+                    if (!vbinfo.gbt_force)
+                    {
+                        if (!versionBitsLockedToWitness)
+                        {
+                            // If the client doesn't support this, don't indicate it in the [default] version
+                            pblock->nVersion &= ~VersionBitsMask(consensusParams, pos);
+                        }
                     }
                 }
                 break;
