@@ -240,7 +240,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     return true;
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck, std::vector<unsigned char>* pWitnessCoinbaseHex, std::vector<unsigned char>* pWitnessSubsidyHex)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck, std::vector<unsigned char>* pWitnessCoinbaseHex, std::vector<unsigned char>* pWitnessSubsidyHex, CAmount* pAmountPoW2Subsidy)
 {
     fMineSegSig = true;
 
@@ -272,8 +272,14 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     //fixme: (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
     Consensus::Params consensusParams = chainparams.GetConsensus();
     CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
+    CAmount nSubsidyWitness = 0;
     if (nParentPoW2Phase >= 3)
-        nSubsidy -= GetBlockSubsidyWitness(nHeight, consensusParams);
+    {
+        nSubsidyWitness = GetBlockSubsidyWitness(nHeight, consensusParams);
+        if (pAmountPoW2Subsidy)
+            *pAmountPoW2Subsidy = nSubsidyWitness;
+        nSubsidy -= nSubsidyWitness;
+    }
 
 
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block

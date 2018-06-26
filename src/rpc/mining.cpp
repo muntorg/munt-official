@@ -715,6 +715,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
 
     std::vector<unsigned char> witnessCoinbaseHex;
     std::vector<unsigned char> witnessSubsidyHex;
+    CAmount amountPoW2Subsidy = 0;
 
     // Update block
     static CBlockIndex* pindexPrevChainTip=nullptr;
@@ -747,7 +748,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex);
+        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex, &amountPoW2Subsidy);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
@@ -912,6 +913,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     //fixme: (2.1) remove
     result.push_back(Pair("pow2_aux1", HexStr(witnessCoinbaseHex)));
     result.push_back(Pair("pow2_aux2", HexStr(witnessSubsidyHex)));
+    result.push_back(Pair("pow2_subsidy", amountPoW2Subsidy));
 
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
