@@ -511,7 +511,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
     infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
     if (infoForAccount.nOriginNetworkWeight == 0)
-        infoForAccount.nOriginNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+        infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
     pointMapForecast[0] = 0;
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
@@ -1176,7 +1176,7 @@ void WitnessDialog::setModel(WalletModel* _model)
             WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
             proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
             proxyFilterByBalanceFund->setDynamicSortFilter(true);
-            proxyFilterByBalanceFund->setAmount((nMinimumWitnessAmount*COIN));
+            proxyFilterByBalanceFund->setAmount((gMinimumWitnessAmount*COIN));
 
             QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
             proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);

@@ -64,8 +64,6 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
     return CHDSeed::CHDSeed::BIP44;
 }
 
-const int gEarliestPossibleMainnetWitnessActivationHeight = 765000;
-
 // Phase 2 becomes active after 75% of miners signal upgrade.
 // After activation creation of 'backwards compatible' PoW2 addresses becomes possible.
 std::map<uint256, bool> phase2ActivationCache;
@@ -256,8 +254,8 @@ bool IsPow2Phase3Active(const CBlockIndex* pIndex,  const CChainParams& chainpar
             int64_t nTotalWeight;
             GetPow2NetworkWeight(pIndex, chainparams, nNumWitnessAddresses, nTotalWeight, chain, viewOverride);
 
-            const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : 300;
-            const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : 20000000;
+            const int64_t nNumWitnessAddressesRequired = IsArgSet("-testnet") ? 10 : gNumWitnessesRequiredForPhase3Activation;
+            const int64_t nTotalWeightRequired = IsArgSet("-testnet") ? 2000000 : gTotalWeightRequiredForPhase3Activation;
             // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
             // Then set ourselves as the activation hash.
             if (nNumWitnessAddresses >= nNumWitnessAddressesRequired && nTotalWeight > nTotalWeightRequired)

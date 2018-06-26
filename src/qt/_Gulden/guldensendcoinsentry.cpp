@@ -353,7 +353,7 @@ bool GuldenSendCoinsEntry::validate()
     {
         int nDays = ui->pow2LockFundsSlider->value();
         int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*576);
-        if (ui->payAmount->amount() < (nMinimumWitnessAmount*COIN) || nOurWeight <= nMinimumWitnessWeight)
+        if (ui->payAmount->amount() < (gMinimumWitnessAmount*COIN) || nOurWeight <= gMinimumWitnessWeight)
         {
             setValid(ui->pow2LockFundsInfoLabel, false);
             return false;
@@ -852,9 +852,9 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
-    if (nAmount < CAmount(nMinimumWitnessAmount*COIN))
+    if (nAmount < CAmount(gMinimumWitnessAmount*COIN))
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(nMinimumWitnessAmount));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(gMinimumWitnessAmount));
         return;
     }
 
@@ -865,7 +865,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
-    static int64_t nNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+    static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     if (chainActive.Tip())
     {
         static uint64_t lastUpdate = GetTimeMillis();
@@ -899,9 +899,9 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     }
 
 
-    if (nOurWeight < nMinimumWitnessWeight)
+    if (nOurWeight < gMinimumWitnessWeight)
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(nMinimumWitnessWeight).arg(nOurWeight));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(gMinimumWitnessWeight).arg(nOurWeight));
         return;
     }
 

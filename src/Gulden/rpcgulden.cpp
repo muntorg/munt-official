@@ -997,8 +997,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < (nMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+    if (nAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1019,7 +1019,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // Enforce minimum weight
     int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
-    if (nWeight < nMinimumWitnessWeight)
+    if (nWeight < gMinimumWitnessWeight)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
@@ -1098,8 +1098,8 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < (nMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+    if (requestedAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1145,7 +1145,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // Enforce minimum weight
     int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
-    if (newWeight < nMinimumWitnessWeight)
+    if (newWeight < gMinimumWitnessWeight)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
