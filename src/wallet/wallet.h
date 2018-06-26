@@ -164,6 +164,17 @@ public:
     CRecipient(CScript scriptPubKey_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::ScriptLegacyOutput), scriptPubKey(scriptPubKey_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
     CRecipient(CTxOutPoW2Witness witnessDetails_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::PoW2WitnessOutput), witnessDetails(witnessDetails_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
     CRecipient(CTxOutStandardKeyHash standardKeyHash_, CAmount nAmount_, bool fSubtractFeeFromAmount_) : nType(CTxOutType::StandardKeyHashOutput), standardKeyHash(standardKeyHash_), nAmount(nAmount_), fSubtractFeeFromAmount(fSubtractFeeFromAmount_) {}
+
+    CRecipient(const CRecipient& copy)
+    {
+        nType = copy.nType;
+        scriptPubKey = copy.scriptPubKey;
+        witnessForAccount = copy.witnessForAccount;
+        witnessDetails = copy.witnessDetails;
+        standardKeyHash = copy.standardKeyHash;
+        nAmount = copy.nAmount;
+        fSubtractFeeFromAmount = copy.fSubtractFeeFromAmount;
+    }
     CTxOutType nType;
     CScript scriptPubKey;
     CAccount* witnessForAccount = nullptr;

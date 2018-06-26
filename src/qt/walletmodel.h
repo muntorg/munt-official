@@ -54,6 +54,26 @@ public:
     explicit SendCoinsRecipient(const QString &addr, const QString &_label, const CAmount& _amount, const QString &_message):
         address(addr), label(_label), amount(_amount), message(_message), fSubtractFeeFromAmount(false), paymentType(PaymentType::NormalPayment), nVersion(SendCoinsRecipient::CURRENT_VERSION), destinationPoW2Witness(CKeyID(), CKeyID()) {}
 
+    SendCoinsRecipient(const SendCoinsRecipient& copy)
+    {
+        address = copy.address;
+        label = copy.label;
+        amount = copy.amount;
+        message = copy.message;
+        paymentRequest = copy.paymentRequest;
+        authenticatedMerchant = copy.authenticatedMerchant;
+        fSubtractFeeFromAmount = copy.fSubtractFeeFromAmount;
+        addToAddressBook = copy.addToAddressBook;
+        paymentType = copy.paymentType;
+        forexPaymentType = copy.forexPaymentType;
+        forexAddress = copy.forexAddress;
+        forexAmount = copy.forexAmount;
+        forexFailCode = copy.forexFailCode;
+        expiry = copy.expiry;
+        nVersion = copy.nVersion;
+        witnessForAccount = copy.witnessForAccount;
+        destinationPoW2Witness = copy.destinationPoW2Witness;
+    }
     // If from an unauthenticated payment request, this is used for storing
     // the addresses, e.g. address-A<br />address-B<br />address-C.
     // Info: As we don't need to process addresses in here when using
