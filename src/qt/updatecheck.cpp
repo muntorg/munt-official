@@ -41,7 +41,7 @@ the response body is put in the ECSignature header.
 */
 
 //! Update server REST API endpoint
-const char* UPDATE_CHECK_ENDPOINT = "https://ecyt65hwyc.execute-api.eu-central-1.amazonaws.com/test/updatecheck";
+const char* UPDATE_CHECK_ENDPOINT = "https://api.guldentools.com/v1/updatecheck";
 
 //! Update server public key to verify ECSignature
 const std::vector<unsigned char> UPDATE_PUB_KEY =
