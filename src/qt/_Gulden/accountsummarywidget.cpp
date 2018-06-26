@@ -133,7 +133,7 @@ void AccountSummaryWidget::balanceChanged()
 
         m_accountBalanceAvailable = balanceAvailableExcludingLocked;
         m_accountBalanceLocked = balanceLocked;
-        m_accountBalanceImmatureOrUnconfirmed = balanceImmatureIncludingLocked + balanceUnconfirmedExcludingLocked;
+        m_accountBalanceImmatureOrUnconfirmed = balanceImmatureExcludingLocked + balanceUnconfirmedExcludingLocked;
         m_accountBalanceTotal = m_accountBalanceLocked + m_accountBalanceAvailable + m_accountBalanceImmatureOrUnconfirmed;
         updateExchangeRates();
     }
