@@ -411,8 +411,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 return SendCoinsReturn(AmountWithFeeExceedsBalance);
             }
-            Q_EMIT message(tr("Send Coins"), QString::fromStdString(strFailReason),
-                         CClientUIInterface::MSG_ERROR);
+            //NB! do not warn of error here we can legitimately fail in some cases.
+            //Caller is responsible for warning.
             return TransactionCreationFailed;
         }
 
