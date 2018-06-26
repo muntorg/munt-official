@@ -6,7 +6,7 @@
 #ifndef SPVSCANNER_H
 #define SPVSCANNER_H
 
-#include "../validationinterface.h"
+#include "../validation/validationinterface.h"
 
 class CWallet;
 

@@ -923,7 +923,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                                         }
                                         else
                                         {
-                                            if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr))
+                                            if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr, false, true))
                                             {
                                                 if (mapBlockIndex.count(hashPoW2Witness) > 0)
                                                 {

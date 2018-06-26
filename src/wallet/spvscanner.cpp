@@ -5,7 +5,7 @@
 
 #include "spvscanner.h"
 #include "../net_processing.h"
-#include "../validation.h"
+#include "../validation/validation.h"
 #include "wallet.h"
 
 #include <algorithm>
@@ -65,7 +65,7 @@ void CSPVScanner::RequestBlocks()
         }
         else { // so here requestTip == lastProcessed
             std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
-            if (!ReadBlockFromDisk(*pblock, lastProcessed, Params().GetConsensus())) {
+            if (!ReadBlockFromDisk(*pblock, lastProcessed, Params())) {
                 wallet.BlockDisconnected(pblock);
             }
             else {

@@ -3961,7 +3961,7 @@ void ProcessPriorityRequests(const std::shared_ptr<CBlock> blockRef) {
         }
         else if (r.pindex->nStatus & BLOCK_HAVE_DATA) {
             CBlock loadBlock;
-            if (!ReadBlockFromDisk(loadBlock, r.pindex, Params().GetConsensus())) {
+            if (!ReadBlockFromDisk(loadBlock, r.pindex, Params())) {
                 throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
             }
             currentBlock = std::make_shared<const CBlock>(loadBlock);
