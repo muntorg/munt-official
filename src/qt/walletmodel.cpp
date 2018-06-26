@@ -344,12 +344,22 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 {
                     CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
+
+                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+                    recipient.witnessForAccount = rcp.witnessForAccount;
+
                 }
                 else if (nTipPrevPoW2Phase >= 2)
                 {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
                     CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
                     vecSend.push_back(recipient);
+
+                    // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
+                    recipient.witnessDetails.witnessKeyID = destinationPoW2Witness.witnessKey;
+
+                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+                    recipient.witnessForAccount = rcp.witnessForAccount;
                 }
                 else
                 {
