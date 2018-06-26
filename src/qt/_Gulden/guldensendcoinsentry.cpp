@@ -872,6 +872,8 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
         // Only check this once a minute, no need to be constantly updating.
         if (GetTimeMillis() - lastUpdate > 60000)
         {
+            LOCK(cs_main);
+
             lastUpdate = GetTimeMillis();
             if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
             {
