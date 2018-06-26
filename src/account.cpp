@@ -609,8 +609,7 @@ bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int key
             {
                 if(!internalKeyStore.AddKeyPubKey(nullKey, pubkey))
                 {
-                    //fixme: (2.0) testing assert - remove
-                    assert(0);
+                    throw std::runtime_error("CAccountHD::AddKeyPubKey failed to store witness key.");
                 }
             }
         }
