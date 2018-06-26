@@ -635,11 +635,13 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
         {
             QString formatStr;
             double divideBy=1;
+            int roundTo = 2;
             switch (witnessInfoForAccount.scale)
             {
                 case GraphScale::Blocks:
                     formatStr = tr("%1 blocks");
                     divideBy = 1;
+                    roundTo = 0;
                     break;
                 case GraphScale::Days:
                     formatStr = tr("%1 days");
@@ -655,13 +657,13 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                     break;
             }
             if (witnessInfoForAccount.nWitnessLength > 0)
-                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy));
+                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
-                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy));
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
-                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy));
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nLockBlocksRemaining > 0)
-                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy));
+                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
         }
 
         ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
