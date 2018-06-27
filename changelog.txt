@@ -1,42 +1,77 @@
 2.0.0
 
 This release incorporates three new major feature branches, which combined involve over a year of intense development effort:
-* PoW² https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf
-Changes include: Ability to lock funds for a period of 
+* PoW² - See https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf for technical information
+Highlights include: Ability to lock funds for a period of time and earn rewards while securing the network. Drastically enhanced network security.
 
-* SegSig - A new transaction format
-Changes include: Solving of malleability issues; More compact transactions (over 50% in some cases) leading to increased network capacity for peak transaction periods; New transaction types (for PoW²); Extensible transaction types for future development.
+RPC - New commands:
+View a statistical/informational snapshot of the witness system for any block in the blockchain - getwitnessinfo "block_specifier" verbose mine_only
+Create a new witness account - createwitnessaccount "name"
+Lock funds into a witness account - fundwitnessaccount "funding_account" "witness_account" "amount" "time" "force_multiple"
+Add funds to a witness account and/or extend the lock period - extendwitnessaccount "funding_account" "witness_account" "amount" "time" 
+Add funds to a witness address and/or extend the lock period - extendwitnessaddress "funding_account" "witness_address" "amount" "time" 
+Export a URL for creation of a linked "witness-only" account - getwitnessaccountkeys "witness_account" 
+
+getwitnesscompound "witness_account"
+getwitnessinfo "block_specifier" verbose mine_only
+getwitnessrewardscript "witness_account" 
+importwitnesskeys "account_name" "encoded_key_url" "create_account" 
+mergewitnessaccount "funding_account" "witness_account"
+renewwitnessaccount "witness_account" 
+rotatewitnessaccount "funding_account" "witness_account" 
+rotatewitnessaddress "funding_account" "witness_address" 
+setwitnesscompound "witness_account" "amount"
+setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
+splitwitnessaccount "funding_account" "witness_account" "amounts" 
+
+RPC - New command 'getwitnessaccountkeys' for exporting of witness keys to other wallets/devices.
+RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
+RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
+RPC - New command 'getlockedbalance' as counterpart to 'getunconfirmedbalance'
+UI  - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
+UI  - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
+
+
+
+* SegSig - A new transaction format. See https://github.com/Gulden/gulden-official/blob/master/technical_documentation/transaction_format.md for technical information.
+Highlights include: Solving of malleability issues; More compact transactions (over 50% in some cases) leading to increased network capacity for peak transaction periods; New transaction types (for PoW²); Extensible transaction types for future development.
+
+CORE - Implement fixes for transaction malleability
+CORE - Implement new more compact transaction format
+CORE - Implement two new transaction types "StandardKeyHash" and "PoW2_Witness"
+CORE - Implement version scheme allowing easy future creation of additional compact special purpose transactions
+CORE - Witness based version bit activation, for better control of future updates. Feature activation can now be controlled by "miner voting", "witness voting" or a combination at developer discretion.
+
 
 * Sonic - The sonic project involves multiple changes to the p2p networking stack within Gulden.
-Changes include: A switch to boost::asio for the networking stack to replace the old select() based networking code; Multiple improvements to the initial chain synchronisation process, including reverse header synchronisation, making it drastically faster; Removal of limitations to how many peers a server can handle, which helps solve scalability/congestion issues on the network in peak usage periods.
+Highlights include: A switch to boost::asio for the networking stack to replace the old select() based networking code; Multiple improvements to the initial chain synchronisation process, including reverse header synchronisation, making it drastically faster; Removal of limitations to how many peers a server can handle, which helps solve scalability/congestion issues on the network in peak usage periods.
 
 
+Non exhaustive list of additional changes:
+UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
+UI - Improved handling of wallet alerts/warnings through a new warning dialog.
 UI - New "all" button on send coin screen to send all funds.
 UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
-UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
 UI - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
-CORE - Implement the new version 3 transaction format (SegSig) which allows for much smaller transactions as well as solving malleability issues.
-CORE - New version bit functionality, allows soft forks to be activated via miner voting, via witness voting or via a combination of the two.
-CORE - New PoW2 witness system that combines witnessing with existing proof of work mining for multiple improvements to the network https://github.com/Gulden/gulden-official/blob/master/technical_documentation/Gulden_PoW2.pdf
 CORE - Major performance improvements for wallets with lots of transactions.
 CORE - Major performance improvements for wallets with lots of accounts.
 CORE - Performance improvements when creating new accounts.
+CORE - Numerous other performance improvements throughout the wallet.
+CORE - Major reworking of application life cycle management (open/close); so that it is faster and more consistent across applications. This forms the first step of our future "Unity" project, and fixes various crash at exit bugs and possible sources of wallet corruption.
 CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assist with testing so that multiple program instances can be easily distinguished.
 CMDFLAG - Add a new -disableui flag to start with just a RPC console (and wallet); Useful for some types of debugging.
-RPC - New command 'createwitnessaccount' as a convenience call to 'createaccount witness' used to create an account for witnessing.
-RPC - New command 'fundwitnessaccount' used to lock funds into a witness account that has previously been created.
-RPC - New command 'getwitnessaccountkeys' for exporting of witness keys to other wallets/devices.
-RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
 RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
 RPC - New command 'listunspentforaccount' as account specific counterpart for listunspent.
 RPC - New command 'rescan' to trigger a wallet rescan (Same as Tools>rescan via UI).
 RPC - New command 'getrescanprogress' to view the progress percentageof an ongoing wallet rescan.
 RPC - New command 'getimmaturebalance' as conterpart to 'getunconfirmedbalance'
-RPC - New command 'getlockedbalance' as conterpart to 'getunconfirmedbalance'
 RPC - Add account capability to 'sendmany' command.
 RPC - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
 
 And many more changes and bug fixes...
+
+
+
 
 1.6.4.8
 
@@ -48,17 +83,28 @@ UI - Remove bitcoin payment option from send screen
 CORE - Update checkpoints, static difficulties, static seeds and other static information to help assist new users with better syncing experience.
 
 
+
+
 1.6.4.7
 
 Minor testnet related release.
+
+
+
 
 1.6.4.6
 
 RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
 
+
+
+
 1.6.4.5
 
 UI - Fix "run on boot" links that were broken by testnet changes and other minor "run on boot" corrections.
+
+
+
 
 1.6.4.1
 
@@ -66,6 +112,9 @@ Minor bugfix release.
 UI - Some small translation changes
 RPC - Add an HDIndex flag to 'listaccounts' RPC output, useful for debugging HD wallet issues.
 CORE - Speed up address allocation when -keypool is set to a larger than default size.
+
+
+
 
 1.6.4
 
@@ -88,19 +137,31 @@ CORE/RPC/UI - Support for read only (watch) HD accounts.
 CORE/RPC/UI - Support for read only (watch) HD seeds.
 CORE - Assorted other minor bug fixes.
 
+
+
+
 1.6.3
 
 RPC - Fix incorrect getaddressesbyaccount output.
 Fix a possible crash in the checkpoint system.
+
+
+
 
 1.6.2
 
 RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
 RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
 
+
+
+
 1.6.1
 
 Minor bugfix release.
+
+
+
 
 1.6.0
 
@@ -116,11 +177,14 @@ Improve the checkpointing code, fix a checkpoint corruption issue that some user
 RPC - Change 'rpconlylistsecuredtransactions' to be on by default.
 
 
+
+
 1.5.5
 
 CORE - Introduce a checkpoint system to protect against 50% attacks.
 UI - Update the UI so that only checkpointed transactions are marked as 'final'
 RPC - Update several commands so that exchanges can make use of the checkpoint system to be double spend proof.
+
 
 
 
@@ -130,9 +194,11 @@ Minor bugfix release.
 
 
 
+
 1.5.3
 
 Minor bugfix release.
+
 
 
 
@@ -145,10 +211,12 @@ CORE - Add the KGW fix to all platforms.
 
 
 
+
 1.5.1
 
 UI - Rebrand to Gulden, updated UI.
 CORE - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
+
 
 
 
