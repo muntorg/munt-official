@@ -223,9 +223,9 @@ void WalletModel::checkBalanceChanged()
 
     if (cachedAvailableBalance != balanceAvailableIncludingLocked || cachedUnconfirmedBalance != balanceUnconfirmedIncludingLocked || cachedImmatureBalance != balanceImmatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balanceLocked)
     {
-        cachedAvailableBalance = balanceAvailableIncludingLocked;
-        cachedUnconfirmedBalance = balanceUnconfirmedIncludingLocked;
-        cachedImmatureBalance = balanceImmatureIncludingLocked;
+        cachedAvailableBalance = balanceAvailableExcludingLocked;
+        cachedUnconfirmedBalance = balanceUnconfirmedExcludingLocked;
+        cachedImmatureBalance = balanceImmatureExcludingLocked;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
@@ -255,18 +255,24 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
 bool WalletModel::validateAddressBitcoin(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     CGuldenAddress addressParsed(address.toStdString());
     return addressParsed.IsValidBitcoin();
 }
 
 bool WalletModel::validateAddressIBAN(const QString &address)
 {
+    if (address.isEmpty())
+        return false;
     if (patternMatcherIBAN.match(address).hasMatch())
         return true;
     return false;
@@ -337,12 +343,23 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 if (IsSegSigEnabled(chainActive.TipPrev()))
                 {
                     CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
+
+                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+                    recipient.witnessForAccount = rcp.witnessForAccount;
+
                     vecSend.push_back(recipient);
                 }
                 else if (nTipPrevPoW2Phase >= 2)
                 {
                     CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
                     CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
+
+                    // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
+                    recipient.witnessDetails.witnessKeyID = rcp.destinationPoW2Witness.witnessKey;
+
+                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+                    recipient.witnessForAccount = rcp.witnessForAccount;
+
                     vecSend.push_back(recipient);
                 }
                 else
@@ -405,8 +422,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             {
                 return SendCoinsReturn(AmountWithFeeExceedsBalance);
             }
-            Q_EMIT message(tr("Send Coins"), QString::fromStdString(strFailReason),
-                         CClientUIInterface::MSG_ERROR);
+            //NB! do not warn of error here we can legitimately fail in some cases.
+            //Caller is responsible for warning.
             return TransactionCreationFailed;
         }
 
@@ -806,10 +823,10 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
     LOCK2(cs_main, wallet->cs_wallet);
     for(const COutPoint& outpoint : vOutpoints)
     {
-        if (!wallet->mapWallet.count(outpoint.hash)) continue;
-        int nDepth = wallet->mapWallet[outpoint.hash].GetDepthInMainChain();
+        if (!wallet->mapWallet.count(outpoint.getHash())) continue;
+        int nDepth = wallet->mapWallet[outpoint.getHash()].GetDepthInMainChain();
         if (nDepth < 0) continue;
-        COutput out(&wallet->mapWallet[outpoint.hash], outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
+        COutput out(&wallet->mapWallet[outpoint.getHash()], outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
         vOutputs.push_back(out);
     }
 }
@@ -817,7 +834,7 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
 bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
     LOCK2(cs_main, wallet->cs_wallet);
-    return wallet->IsSpent(outpoint.hash, outpoint.n);
+    return wallet->IsSpent(outpoint.getHash(), outpoint.n);
 }
 
 QString WalletModel::getAccountLabel(const boost::uuids::uuid& uuid)

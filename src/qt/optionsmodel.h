@@ -70,6 +70,7 @@ public:
 
     enum OptionID {
         StartAtStartup,         // bool
+        AutoUpdateCheck,        // bool
         HideTrayIcon,           // bool
         MinimizeToTray,         // bool
         MapPortUPnP,            // bool
@@ -106,6 +107,7 @@ public:
     bool getHideTrayIcon() { return fHideTrayIcon; }
     bool getMinimizeToTray() { return fMinimizeToTray; }
     bool getDockOnClose() { return fDockOnClose; }
+    bool getAutoUpdateCheck() { return fAutoUpdateCheck; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
@@ -143,6 +145,7 @@ private:
     bool fHideTrayIcon;
     bool fMinimizeToTray;
     bool fDockOnClose;
+    bool fAutoUpdateCheck;
     bool fMinimizeOnClose;
     QString language;
     int nDisplayUnit;

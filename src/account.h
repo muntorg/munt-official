@@ -299,6 +299,7 @@ public:
 
 
     virtual bool HaveKey(const CKeyID &address) const override;
+    bool HaveKeyInternal(const CKeyID &address) const;
     virtual bool HaveWatchOnly(const CScript &dest) const override;
     virtual bool HaveWatchOnly() const override;
     virtual bool HaveCScript(const CScriptID &hash) const override;

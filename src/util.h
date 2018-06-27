@@ -367,8 +367,6 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
     }
 }
 
-std::string CopyrightHolders(const std::string& strPrefix);
-
 //fixme: (C++-20) We should be able to take the string desc as a constant compile time paramater as well.
 // Little helper class to RAII encapusulate benchmarks at minimal runtime overhead.
 template <uint32_t logCategory=BCLog::BENCH> class BenchMarkHelper

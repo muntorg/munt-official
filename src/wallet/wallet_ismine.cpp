@@ -26,7 +26,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -61,7 +61,7 @@ bool CWallet::IsAllFromMe(const CTransaction& tx, const isminefilter& filter) co
 
     for(const CTxIn& txin : tx.vin)
     {
-        auto mi = mapWallet.find(txin.prevout.hash);
+        auto mi = mapWallet.find(txin.prevout.getHash());
         if (mi == mapWallet.end())
             return false; // any unknown inputs can't be from us
 
@@ -137,6 +137,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         // Wipe ismine cache for all accounts.
         for (const auto& [accountUUID, account] : mapAccounts)
         {
+            (unused) accountUUID;
             account->accountIsMineCache.clear();
         }
 

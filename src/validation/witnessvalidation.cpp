@@ -361,14 +361,14 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
 
     /** Generate the pool of potential witnesses for the given block index **/
     /** Addresses older than 10000 blocks or younger than 100 blocks are discarded **/
-    uint64_t nMinAge = nMinimumParticipationAge;
+    uint64_t nMinAge = gMinimumParticipationAge;
     while (true)
     {
         witnessInfo.witnessSelectionPoolFiltered.clear();
         witnessInfo.witnessSelectionPoolFiltered = witnessInfo.witnessSelectionPoolUnfiltered;
 
         //LogPrint(BCLog::WITNESS, "Witness pool size1b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
-        /** Eliminate addresses that have witnessed within the last `nMinimumParticipationAge` blocks **/
+        /** Eliminate addresses that have witnessed within the last `gMinimumParticipationAge` blocks **/
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return (x.nAge <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
         //LogPrint(BCLog::WITNESS, "Witness pool size1a %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
@@ -471,11 +471,11 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
         uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
         COutPoint outPoint = coinIter.first;
         Coin coin = coinIter.second;
-        if (coin.out.nValue >= (nMinimumWitnessAmount*COIN))
+        if (coin.out.nValue >= (gMinimumWitnessAmount*COIN))
         {
             uint64_t nUnused1, nUnused2;
             int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
-            if (nWeight < nMinimumWitnessWeight)
+            if (nWeight < gMinimumWitnessWeight)
                 continue;
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
             witnessInfo.nTotalWeight += nWeight;
@@ -505,7 +505,7 @@ bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t n
     DO_BENCHMARK("WIT: witnessHasExpired", BCLog::BENCH|BCLog::WITNESS);
 
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
-    return ( nWitnessAge > nMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
+    return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
 
 bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseIndex, const CBlockIndex* pindexPrev, const CBlock& block, const CChainParams& chainParams, CCoinsViewCache& view, CBlock& embeddedWitnessBlock)

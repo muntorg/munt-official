@@ -41,6 +41,19 @@ struct CBlockPosition
     uint64_t transactionIndex; // Position of transaction within the block.
     CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
 
+    //fixme: (2.1) (MOBILE) (SPV) (SEGSIG) Look closer at how to handle this in relation to mobile SPV wallets
+    uint256 getHash() const
+    {
+        std::vector<unsigned char> serData;
+        {
+            CVectorWriter serializedBlockPosition(SER_NETWORK, INIT_PROTO_VERSION, serData, 0);
+            serializedBlockPosition << blockNumber;
+            serializedBlockPosition << transactionIndex;
+        }
+        std::string sHex = HexStr(serData);
+        return Hash(sHex.begin(), sHex.end());
+    }
+
     friend bool operator<(const CBlockPosition& a, const CBlockPosition& b)
     {
         if (a.blockNumber == b.blockNumber)
@@ -60,22 +73,36 @@ struct CBlockPosition
 };
 
 
-// Represented in class as 3 bits - so maximum of 8 values
+//fixme: (2.0) Ensure network rules for the other 7 types are consistently handled.
+// Represented in class as 3 bits.
+// Maximum of 8 values
 enum CTxInType : uint8_t
 {
-    //fixme: (2.0) What types do we even need here?
+    CURRENT_TX_IN_TYPE = 0,
+    FUTURE_TX_IN_TYPE2 = 1,
+    FUTURE_TX_IN_TYPE3 = 2,
+    FUTURE_TX_IN_TYPE4 = 3,
+    FUTURE_TX_IN_TYPE5 = 4,
+    FUTURE_TX_IN_TYPE6 = 5,
+    FUTURE_TX_IN_TYPE7 = 6,
+    FUTURE_TX_IN_TYPE8 = 7
 };
 
-// Only 5 bits available for TxInFlags (used as bit flags so only 5 values)
+//fixme: (2.0) we forbid index based outpoint for now.
+//fixme: (2.0) Double check all RBF/AbsoluteLock/RelativeLock behaviour
+// Only 5 bits available for TxInFlags.
+// The are used as bit flags so only 5 values possible each with an on/off state.
+// All 5 values are currently in use.
 enum CTxInFlags : uint8_t
 {
-    //fixme: (2.0) NEXTNEXTNEXT HIGHHIGHHIGH - Implement these three.
+    // The actual flag values
+    IndexBasedOutpoint = 1,                                                         // Outpoint is an index instead of a hash.
+    OptInRBF = 2,                                                                   // CTxIn allows RBF.
+    HasAbsoluteLock = 4,                                                            // CTxIn uses "absolute" locktime.
+    HasTimeBasedRelativeLock = 8,                                                   // CTxIn uses time based "relative" locktime.
+    HasBlockBasedRelativeLock = 16,                                                 // CTxIn uses block based "relative" locktime.
+    // Below are mask/setting helpers
     None = 0,
-    IndexBasedOutpoint = 1,  // Outpoint is an index instead of a hash
-    OptInRBF = 2,
-    HasAbsoluteLock = 4,
-    HasTimeBasedRelativeLock = 8,
-    HasBlockBasedRelativeLock = 16,
     HasRelativeLock = HasTimeBasedRelativeLock | HasBlockBasedRelativeLock,
     HasLock = HasRelativeLock | HasAbsoluteLock
 };
@@ -85,20 +112,54 @@ enum CTxInFlags : uint8_t
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
 {
-public:
-    // fixme: (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
+private:
+     // fixme: (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
     // Outpoint either uses hash or 'block position' never both.
     union
     {
         uint256 hash;
         CBlockPosition prevBlock;
     };
+public:
     uint32_t isHash: 1; // Set to 0 when using prevBlock, 1 when using hash.
     uint32_t n : 31;
 
-    COutPoint(): hash(uint256()), isHash(1), n(UINT31_MAX) { }
-    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), isHash(1), n(nIn) { }
-    COutPoint(const uint64_t blockNumber, const uint64_t transactionIndex, uint32_t nIn): prevBlock(blockNumber, transactionIndex), isHash(0), n(nIn) { }
+    COutPoint()
+    : hash(uint256())
+    , isHash(1)
+    , n(UINT31_MAX)
+    {
+    }
+    COutPoint(const uint256& hashIn, uint32_t nIn)
+    :
+    hash(hashIn)
+    , isHash(1)
+    , n(nIn)
+    {
+    }
+    COutPoint(const uint64_t blockNumber, const uint64_t transactionIndex, uint32_t nIn)
+    : prevBlock(blockNumber, transactionIndex)
+    , isHash(0)
+    , n(nIn)
+    {
+    }
+
+    uint256 getHash() const
+    {
+        if (isHash)
+        {
+            return hash;
+        }
+        else
+        {
+            return prevBlock.getHash();
+        }
+    }
+    void setHash(uint256 hash_)
+    {
+        hash = hash_;
+        isHash = 1;
+    }
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
     {
@@ -602,14 +663,11 @@ public:
     {
         if (GetType() <= CTxOutType::ScriptLegacyOutput)
             return output.scriptPubKey.IsUnspendable();
-
-        //fixme: (2.0) - Can our 'standard' outputs still be unspendable?
         return false;
     }
 
     virtual ~CTxOut()
     {
-        //fixme: (2.0) (IMPLEMENT)
         output.DeleteOutput();
     }
 
@@ -1162,11 +1220,11 @@ public:
 
     std::string ToString() const;
 
+    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
         {
-            //fixme: (2.0) - Rather test on transaction version?
             if (!vin[i].segregatedSignatureData.IsNull()) 
                 return true;
         }
@@ -1213,11 +1271,11 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
+    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
         {
-            //fixme: (2.0) - Rather test on transaction version?
             if (!vin[i].segregatedSignatureData.IsNull())
                 return true;
         }

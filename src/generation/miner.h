@@ -198,7 +198,7 @@ public:
     BlockAssembler(const CChainParams& params, const Options& options);
 
     /** Construct a new block template with coinbase to scriptPubKeyIn */
-    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false);
+    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false, std::vector<unsigned char>* pWitnessCoinbaseHex=nullptr, std::vector<unsigned char>* pWitnessSubsidyHex=nullptr, CAmount* pAmountPoW2Subsidy=nullptr);
 
 private:
     // utility functions

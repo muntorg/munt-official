@@ -92,6 +92,25 @@ bool CWalletDB::WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, c
     return WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
 }
 
+bool CWalletDB::WriteKeyOverride(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const std::string forAccount, int64_t nKeyChain)
+{
+    // hash pubkey/privkey to accelerate wallet load
+    std::vector<unsigned char> vchKey;
+    vchKey.reserve(vchPubKey.size() + vchPrivKey.size());
+    vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
+    vchKey.insert(vchKey.end(), vchPrivKey.begin(), vchPrivKey.end());
+
+    //Erase previous value if any.and new privkey is not null
+    CPrivKey nullKey;
+    if (vchPrivKey == nullKey)
+    {
+        WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
+        return true;
+    }
+    EraseIC(std::pair(std::string("key"), vchPubKey));
+    return WriteIC(std::pair(std::string("key"), vchPubKey), std::tuple(COMPACTSIZEVECTOR(vchPrivKey), Hash( vchKey.begin(), vchKey.end() ), forAccount, nKeyChain), false);
+}
+
 bool CWalletDB::WriteKeyHD(const CPubKey& vchPubKey, const int64_t HDKeyIndex, int64_t keyChain, const CKeyMetadata &keyMeta, const std::string forAccount)
 {
     if (!WriteIC(std::pair(std::string("keymeta"), vchPubKey), keyMeta, false))
@@ -471,6 +490,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssValue >> keyChain;
             ssValue >> forAccount;
 
+            if (pwallet->mapAccounts.count(getUUIDFromString(forAccount)) == 0)
+            {
+                strErr = "Wallet contains key for non existent HD account";
+                return false;
+            }
+
             if (!static_cast<CGuldenWallet*>(pwallet)->LoadKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
             {
                 strErr = "Error reading wallet database: LoadKey (HD) failed";
@@ -526,35 +551,49 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             }
             else
             {
-            bool fSkipCheck = false;
+                bool fSkipCheck = false;
 
-            if (!hash.IsNull())
-            {
-                // hash pubkey/privkey to accelerate wallet load
-                std::vector<unsigned char> vchKey;
-                vchKey.reserve(vchPubKey.size() + pkey.size());
-                vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
-                vchKey.insert(vchKey.end(), pkey.begin(), pkey.end());
-
-                if (Hash(vchKey.begin(), vchKey.end()) != hash)
+                if (!hash.IsNull())
                 {
-                    strErr = "Error reading wallet database: CPubKey/CPrivKey corrupt";
-                    return false;
+                    // hash pubkey/privkey to accelerate wallet load
+                    std::vector<unsigned char> vchKey;
+                    vchKey.reserve(vchPubKey.size() + pkey.size());
+                    vchKey.insert(vchKey.end(), vchPubKey.begin(), vchPubKey.end());
+                    vchKey.insert(vchKey.end(), pkey.begin(), pkey.end());
+
+                    if (Hash(vchKey.begin(), vchKey.end()) != hash)
+                    {
+                        strErr = "Error reading wallet database: CPubKey/CPrivKey corrupt";
+                        return false;
+                    }
+
+                    fSkipCheck = true;
                 }
 
-                fSkipCheck = true;
-            }
-
-            if (!key.Load(pkey, vchPubKey, fSkipCheck))
-            {
-                strErr = "Error reading wallet database: CPrivKey corrupt";
-                return false;
-            }
-            if (!pwallet->LoadKey(key, vchPubKey, forAccount, nKeyChain))
-            {
-                strErr = "Error reading wallet database: LoadKey failed";
-                return false;
-            }
+                if (!key.Load(pkey, vchPubKey, fSkipCheck))
+                {
+                    if ( pwallet->mapAccounts.count(getUUIDFromString(forAccount)) == 0 )
+                    {
+                        strErr = "Wallet contains key for non existent account";
+                        return false;
+                    }
+                    CAccount* targetAccount = pwallet->mapAccounts[getUUIDFromString(forAccount)];
+                    if (targetAccount->IsHD() && targetAccount->IsPoW2Witness())
+                    {
+                        //NULL key was expected in this case.
+                        key = CKey();
+                    }
+                    else
+                    {
+                        strErr = "Error reading wallet database: CPrivKey corrupt";
+                        return false;
+                    }
+                }
+                if (!pwallet->LoadKey(key, vchPubKey, forAccount, nKeyChain))
+                {
+                    strErr = "Error reading wallet database: LoadKey failed";
+                    return false;
+                }
             }
         }
         else if (strType == "mkey")

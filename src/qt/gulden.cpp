@@ -475,6 +475,8 @@ void GuldenApplication::initializeResult(bool success)
             window->show();
         }
 
+        window->autoUpdateCheck();
+
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
         // Gulden: URIs or payment requests:

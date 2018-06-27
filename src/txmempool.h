@@ -629,7 +629,7 @@ public:
     bool exists(const COutPoint& outpoint) const
     {
         LOCK(cs);
-        auto it = mapTx.find(outpoint.hash);
+        auto it = mapTx.find(outpoint.getHash());
         return (it != mapTx.end() && outpoint.n < it->GetTx().vout.size());
     }
 

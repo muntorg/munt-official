@@ -48,7 +48,7 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     for (int in = 0; in < ins; in++) {
         tx.vin.push_back(CTxIn());
         CTxIn &txin = tx.vin.back();
-        txin.prevout.hash = InsecureRand256();
+        txin.prevout.setHash(InsecureRand256());
         txin.prevout.n = InsecureRandBits(2);
         RandomScript(txin.scriptSig);
         txin.SetSequence((InsecureRandBool()) ? InsecureRand32() : (unsigned int)-1, tx.nVersion, CTxInFlags::None);

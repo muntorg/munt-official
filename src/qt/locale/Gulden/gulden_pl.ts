@@ -4,8 +4,8 @@
     <extra-po-header-language>pl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 17:27+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 17:27+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-26 17:34+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-26 17:34+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -48,6 +48,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
         <translation>Kliknij tutaj, aby kod QR był widoczny.
 OSTRZEŻENIE: upewnij się, że jesteś jedyną osobą, która widzi ten kod QR, ponieważ w przeciwnym razie może zostać wykorzystana do zarabiania w twoim imieniu i kradzieży twoich zarobków  witness .</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Proszę najpierw zasilić konto witness .</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -158,6 +162,22 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Cancel</source>
         <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Total funds: </source>
+        <translation>Razem środki: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Zablokowane środki: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Środki w oczekiwaniu na potwierdzenie: </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Dostępne środki: </translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
@@ -635,6 +655,18 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Zapisz</translation>
     </message>
     <message>
+        <source>A minimum amount of %1 is required.</source>
+        <translation>Wymagana jest minimalna ilość %1.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Wymagane jest minimalne obciążenie %1, ale wybrana obciążenie to tylko %2. Zwiększ ilość lub czas blokady dla większego obciążenia.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</source>
+        <translation>Wymagane jest minimalne obciążenie %1, ale wybrana obciążenie to tylko %2 zwiększ ilość lub czas blokady dla większego obciążenia.</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 rok</translation>
     </message>
@@ -1068,6 +1100,14 @@ Witness waga: %5</translation>
         <translation>Anuluj</translation>
     </message>
     <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Usuń</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Edytuj</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(brak etykiety)</translation>
     </message>
@@ -1138,6 +1178,10 @@ Witness waga: %5</translation>
     <message>
         <source>Hide</source>
         <translation>Ukryj</translation>
+    </message>
+    <message>
+        <source>&amp;Clear</source>
+        <translation>&amp;Wyczyść</translation>
     </message>
     <message>
         <source>Send Coins</source>
@@ -1270,6 +1314,10 @@ Witness waga: %5</translation>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
         <translation>Ta transakcja sygnalizuje wymienność (optin-RBF).</translation>
+    </message>
+    <message>
+        <source>PoW² is not yet active, please wait for activation and try again.</source>
+        <translation>PoW² nie jest jeszcze aktywny, zaczekaj na aktywację i spróbuj ponownie.</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -3364,6 +3412,81 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
+    <name>Gulden</name>
+    <message>
+        <source>Done loading</source>
+        <translation>Wczytywanie zakończone</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Błąd odczytu z bazy danych, wyłączam się.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Nieprawidłowy lub brak bloku genezy. Błędny folder_danych dla sieci?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Legacy account</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Wczytywanie P2P adresów...</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Ładowanie listy zablokowanych...</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Ładowanie indeksu bloku...</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Wczytywanie portfela...</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Moje konto</translation>
+    </message>
+    <message>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Odblokowanie portfela jest wymagane do aktualizacji portfela</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Usuwam wszystkie transakcje z portfela...</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Przycinanie zapisu bloków...</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Ponowne ładowanie indeksu bloku...</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Ponowne skanowanie...</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>Przewijanie bloków ...</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Uruchamianie wątków sieci ...</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Aktualizowanie indeksu bloku ...</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Weryfikacja bloków...</translation>
+    </message>
+</context>
+<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Gulden</source>
@@ -3517,6 +3640,36 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Recent transactions</source>
         <translation>Ostatnie transakcje</translation>
+    </message>
+</context>
+<context>
+    <name>SyncOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Formularz</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Ukryj</translation>
+    </message>
+    <message>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Komunikat&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Twój portfel po raz pierwszy synchronizuje się z siecią Gulden. &lt;br/&gt; Po zakończeniu synchronizacji Twoje saldo i ostatnie transakcje będą widoczne.</translation>
+    </message>
+    <message>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Komunikat&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Twój portfel synchronizuje się teraz z siecią Gulden. &lt;br/&gt; Po zakończeniu synchronizacji Twoje saldo i ostatnie transakcje będą widoczne.</translation>
+    </message>
+</context>
+<context>
+    <name>WarningOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Formularz</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Ukryj</translation>
     </message>
 </context>
 <context>

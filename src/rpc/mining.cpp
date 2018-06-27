@@ -291,7 +291,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
             fGenerate = false;
     }
 
-    SoftSetArg("-gen", fGenerate ? "1" : "0");
+    SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     PoWMineGulden(fGenerate, nGenProcLimit, Params());
 
@@ -636,11 +636,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if(!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+    /*if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Gulden is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Gulden is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Gulden is downloading blocks...");*/
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -713,6 +713,10 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
     }
 
+    static std::vector<unsigned char> witnessCoinbaseHex;
+    static std::vector<unsigned char> witnessSubsidyHex;
+    static CAmount amountPoW2Subsidy = 0;
+
     // Update block
     static CBlockIndex* pindexPrevChainTip=nullptr;
     static CBlockIndex* pindexPrev=nullptr;
@@ -744,7 +748,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
-        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed);
+        pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex, &amountPoW2Subsidy);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
@@ -781,16 +785,33 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         UniValue deps(UniValue::VARR);
         for (const CTxIn &in : tx.vin)
         {
-            if (setTxIndex.count(in.prevout.hash))
-                deps.push_back(setTxIndex[in.prevout.hash]);
+            if (setTxIndex.count(in.prevout.getHash()))
+                deps.push_back(setTxIndex[in.prevout.getHash()]);
         }
         entry.push_back(Pair("depends", deps));
 
         int index_in_template = i - 1;
-        entry.push_back(Pair("fee", pblocktemplate->vTxFees[index_in_template]));
-        int64_t nTxSigOps = pblocktemplate->vTxSigOpsCost[index_in_template];
-        entry.push_back(Pair("sigops", nTxSigOps));
-        entry.push_back(Pair("weight", GetTransactionWeight(tx)));
+        if (index_in_template >= pblocktemplate->vTxFees.size())
+        {
+            //fixme: (2.1) remove
+            entry.push_back(Pair("fee", 0));
+        }
+        else
+        {
+            entry.push_back(Pair("fee", pblocktemplate->vTxFees[index_in_template]));
+        }
+        if (index_in_template >= pblocktemplate->vTxSigOpsCost.size())
+        {
+            //fixme: (2.1) remove
+            entry.push_back(Pair("sigops", 0));
+            entry.push_back(Pair("weight", 0));
+        }
+        else
+        {
+            int64_t nTxSigOps = pblocktemplate->vTxSigOpsCost[index_in_template];
+            entry.push_back(Pair("sigops", nTxSigOps));
+            entry.push_back(Pair("weight", GetTransactionWeight(tx)));
+        }
 
         transactions.push_back(entry);
     }
@@ -808,8 +829,10 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("capabilities", aCaps));
 
-    UniValue aRules(UniValue::VARR);
+    // In phase 3 we are restricted to using the same version bits as the witness; we aren't allowed to modify these bits.
+    bool versionBitsLockedToWitness = IsPow2Phase3Active(pindexPrev, Params(), chainActive) || (pindexPrev->pprev && IsPow2Phase3Active(pindexPrev->pprev, Params(), chainActive));
     UniValue vbavailable(UniValue::VOBJ);
+    UniValue aRules(UniValue::VARR);
     for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
         Consensus::DeploymentPos pos = Consensus::DeploymentPos(j);
         ThresholdState state = VersionBitsState(pindexPrev, consensusParams, pos, versionbitscache);
@@ -820,16 +843,23 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 break;
             case THRESHOLD_LOCKED_IN:
                 // Ensure bit is set in block version
-                pblock->nVersion |= VersionBitsMask(consensusParams, pos);
+                if (!versionBitsLockedToWitness)
+                {
+                    pblock->nVersion |= VersionBitsMask(consensusParams, pos);
+                }
                 // FALL THROUGH to get vbavailable set...
             case THRESHOLD_STARTED:
             {
                 const struct VBDeploymentInfo& vbinfo = VersionBitsDeploymentInfo[pos];
                 vbavailable.push_back(Pair(gbt_vb_name(pos), consensusParams.vDeployments[pos].bit));
                 if (setClientRules.find(vbinfo.name) == setClientRules.end()) {
-                    if (!vbinfo.gbt_force) {
-                        // If the client doesn't support this, don't indicate it in the [default] version
-                        pblock->nVersion &= ~VersionBitsMask(consensusParams, pos);
+                    if (!vbinfo.gbt_force)
+                    {
+                        if (!versionBitsLockedToWitness)
+                        {
+                            // If the client doesn't support this, don't indicate it in the [default] version
+                            pblock->nVersion &= ~VersionBitsMask(consensusParams, pos);
+                        }
                     }
                 }
                 break;
@@ -879,6 +909,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     //fixme: (2.1) Double check this doesn't result in miners mining smaller blocks or anything strange
     result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SERIALIZED_SIZE));
     result.push_back(Pair("weightlimit", (int64_t)MAX_BLOCK_WEIGHT));
+
+    //fixme: (2.1) remove
+    result.push_back(Pair("pow2_aux1", HexStr(witnessCoinbaseHex)));
+    result.push_back(Pair("pow2_aux2", HexStr(witnessSubsidyHex)));
+    result.push_back(Pair("pow2_subsidy", amountPoW2Subsidy));
 
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));

@@ -77,7 +77,7 @@ void CBloomFilter::insert(const std::vector<unsigned char>& vKey)
 void CBloomFilter::insert(const COutPoint& outpoint)
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (2.0) HIGH SEGSIG
+    //fixme: (2.1) SEGSIG - HIGH
     outpoint.WriteToStream(stream, (CTxInType)0, 0, 3);
     std::vector<unsigned char> data(stream.begin(), stream.end());
     insert(data);
@@ -108,7 +108,7 @@ bool CBloomFilter::contains(const std::vector<unsigned char>& vKey) const
 bool CBloomFilter::contains(const COutPoint& outpoint) const
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (2.0) HIGH SEGSIG
+    //fixme: (2.1) SEGSIG HIGH
     outpoint.WriteToStream(stream, (CTxInType)0, 0, 3);
     std::vector<unsigned char> data(stream.begin(), stream.end());
     return contains(data);
@@ -158,26 +158,55 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
         // If this matches, also add the specific output that was matched.
         // This means clients don't have to update the filter themselves when a new relevant tx 
         // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
-        CScript::const_iterator pc = txout.output.scriptPubKey.begin();
-        //fixme: (2.0) (HIGH) (SEGSIG)  - Handle new output types here.
-        std::vector<unsigned char> data;
-        while (pc < txout.output.scriptPubKey.end())
+        switch(CTxOutType(txout.output.nType))
         {
-            opcodetype opcode;
-            if (!txout.output.scriptPubKey.GetOp(pc, opcode, data))
-                break;
-            if (data.size() != 0 && contains(data))
+            case CTxOutType::ScriptLegacyOutput:
             {
-                fFound = true;
-                if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_ALL)
-                    insert(COutPoint(hash, i));
-                else if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_P2PUBKEY_ONLY)
+                CScript::const_iterator pc = txout.output.scriptPubKey.begin();
+                std::vector<unsigned char> data;
+                while (pc < txout.output.scriptPubKey.end())
                 {
-                    txnouttype type;
-                    std::vector<std::vector<unsigned char> > vSolutions;
-                    if (Solver(txout.output.scriptPubKey, type, vSolutions) &&
-                            (type == TX_PUBKEY || type == TX_MULTISIG))
-                        insert(COutPoint(hash, i));
+                    opcodetype opcode;
+                    if (!txout.output.scriptPubKey.GetOp(pc, opcode, data))
+                        break;
+                    if (data.size() != 0 && contains(data))
+                    {
+                        fFound = true;
+                        if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_ALL)
+                            insert(COutPoint(hash, i));
+                        else if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_P2PUBKEY_ONLY)
+                        {
+                            txnouttype type;
+                            std::vector<std::vector<unsigned char> > vSolutions;
+                            if (Solver(txout.output.scriptPubKey, type, vSolutions) &&
+                                    (type == TX_PUBKEY || type == TX_MULTISIG))
+                                insert(COutPoint(hash, i));
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+            case CTxOutType::PoW2WitnessOutput:
+            {
+                if (contains(std::vector<unsigned char>(txout.output.standardKeyHash.keyID.begin(), txout.output.standardKeyHash.keyID.end())))
+                {
+                    fFound = true;
+                    insert(COutPoint(hash, i));
+                }
+                break;
+            }
+            case CTxOutType::StandardKeyHashOutput:
+            {
+                if (contains(std::vector<unsigned char>(txout.output.witnessDetails.witnessKeyID.begin(), txout.output.witnessDetails.witnessKeyID.end())))
+                {
+                    fFound = true;
+                    insert(COutPoint(hash, i));
+                }
+                else if(contains(std::vector<unsigned char>(txout.output.witnessDetails.spendingKeyID.begin(), txout.output.witnessDetails.spendingKeyID.end())))
+                {
+                    fFound = true;
+                    insert(COutPoint(hash, i));
                 }
                 break;
             }

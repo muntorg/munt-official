@@ -376,8 +376,8 @@ static void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
     std::set<std::string> setDepends;
     for(const CTxIn& txin : tx.vin)
     {
-        if (mempool.exists(txin.prevout.hash))
-            setDepends.insert(txin.prevout.hash.ToString());
+        if (mempool.exists(txin.prevout.getHash()))
+            setDepends.insert(txin.prevout.getHash().ToString());
     }
 
     UniValue depends(UniValue::VARR);
@@ -846,11 +846,11 @@ static bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
         COutPoint key;
         Coin coin;
         if (pcursor->GetKey(key) && pcursor->GetValue(coin)) {
-            if (!outputs.empty() && key.hash != prevkey) {
+            if (!outputs.empty() && key.getHash() != prevkey) {
                 ApplyStats(stats, ss, prevkey, outputs);
                 outputs.clear();
             }
-            prevkey = key.hash;
+            prevkey = key.getHash();
             outputs[key.n] = std::move(coin);
         } else {
             return error("%s: unable to read value", __func__);

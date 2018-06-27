@@ -14,8 +14,10 @@
 //fixme: (2.1) we can make this the only behaviour and remove the previous behaviour.
 static bool SignalsOptInRBFSegSig(const CTransaction &tx)
 {
-    for(const CTxIn &txin : tx.vin) {
-        if (txin.FlagIsSet(CTxInFlags::OptInRBF)) {
+    for(const CTxIn &txin : tx.vin)
+    {
+        if (txin.FlagIsSet(CTxInFlags::OptInRBF))
+        {
             return true;
         }
     }
@@ -27,8 +29,10 @@ bool SignalsOptInRBF(const CTransaction &tx)
     if (!IsOldTransactionVersion(tx.nVersion))
         return SignalsOptInRBFSegSig(tx);
 
-    for(const CTxIn &txin : tx.vin) {
-        if (txin.GetSequence(tx.nVersion) < std::numeric_limits<unsigned int>::max()-1) {
+    for(const CTxIn &txin : tx.vin)
+    {
+        if (txin.GetSequence(tx.nVersion) < std::numeric_limits<unsigned int>::max()-1)
+        {
             return true;
         }
     }
@@ -42,13 +46,15 @@ RBFTransactionState IsRBFOptIn(const CTransaction &tx, CTxMemPool &pool)
     CTxMemPool::setEntries setAncestors;
 
     // First check the transaction itself.
-    if (SignalsOptInRBF(tx)) {
+    if (SignalsOptInRBF(tx))
+    {
         return RBF_TRANSACTIONSTATE_REPLACEABLE_BIP125;
     }
 
     // If this transaction is not in our mempool, then we can't be sure
     // we will know about all its inputs.
-    if (!pool.exists(tx.GetHash())) {
+    if (!pool.exists(tx.GetHash()))
+    {
         return RBF_TRANSACTIONSTATE_UNKNOWN;
     }
 
@@ -59,8 +65,10 @@ RBFTransactionState IsRBFOptIn(const CTransaction &tx, CTxMemPool &pool)
     CTxMemPoolEntry entry = *pool.mapTx.find(tx.GetHash());
     pool.CalculateMemPoolAncestors(entry, setAncestors, noLimit, noLimit, noLimit, noLimit, dummy, false);
 
-    for(CTxMemPool::txiter it : setAncestors) {
-        if (SignalsOptInRBF(it->GetTx())) {
+    for(CTxMemPool::txiter it : setAncestors)
+    {
+        if (SignalsOptInRBF(it->GetTx()))
+        {
             return RBF_TRANSACTIONSTATE_REPLACEABLE_BIP125;
         }
     }

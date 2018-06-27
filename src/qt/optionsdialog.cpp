@@ -36,6 +36,7 @@
 #include <QTimer>
 
 #include "_Gulden/GuldenGUI.h"
+#include <unity/appmanager.h>
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -213,6 +214,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->guldenAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
+    mapper->addMapping(ui->autoUpdateCheck, OptionsModel::AutoUpdateCheck);
 
     /* Wallet */
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
@@ -271,7 +273,7 @@ void OptionsDialog::on_resetButton_clicked()
 
         /* reset all options and close GUI */
         model->Reset();
-        QApplication::quit();
+        GuldenAppManager::gApp->shutdown();
     }
 }
 

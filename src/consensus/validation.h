@@ -15,14 +15,17 @@
 
 #include <string>
 
-static const int nMinimumWitnessAmount = 5000;
-static const int nMinimumWitnessWeight = 10000;
-static const int nMinimumParticipationAge = 100;    // This forces an attacker to split funds into at least 200 accounts to have a high precentage chance of controlling the network.
-static const int nMaximumParticipationAge = 210240; // Witnesses will essentially be required to download and parse the utxo for this many blocks back from current tip.
+static const int gMinimumWitnessAmount = 5000;
+static const int gMinimumWitnessWeight = 10000;
+static const int gMinimumParticipationAge = 100;    // This forces an attacker to split funds into at least 200 accounts to have a high precentage chance of controlling the network.
+static const int gMaximumParticipationAge = 210240; // Witnesses will essentially be required to download and parse the utxo for this many blocks back from current tip.
                                                     // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.
                                                     // Currently set at - 1 year (365 days * 576 blocks).
-//fixme: (2.0) (RELEASE)
-static const int nStartingWitnessNetworkWeightEstimate = 10000000;
+
+static const int gEarliestPossibleMainnetWitnessActivationHeight = 765000;
+static const int gNumWitnessesRequiredForPhase3Activation = 300;
+static const int gTotalWeightRequiredForPhase3Activation =  20000000;
+static const int gStartingWitnessNetworkWeightEstimate =    25000000;
 
 /** "reject" message codes */
 static const unsigned char REJECT_MALFORMED = 0x01;

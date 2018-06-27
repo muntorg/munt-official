@@ -241,6 +241,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
         else
         {
+            //fixme: (FUTURE) - encrypt at creation option here.
             walletInstance->activeAccount = new CAccount();
             walletInstance->activeAccount->m_State = AccountState::Normal;
             walletInstance->activeAccount->m_Type = AccountType::Desktop;

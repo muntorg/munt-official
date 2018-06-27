@@ -288,6 +288,7 @@ bool CGuldenAddress::IsValidWitness(const CChainParams& params) const
 {
     if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
         return true;
+    return false;
 }
 
 bool CGuldenAddress::IsValidBitcoin() const
