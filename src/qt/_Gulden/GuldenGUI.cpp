@@ -234,11 +234,9 @@ void GUI::updateExchangeRates()
     setBalance(availableBalanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached, lockedBalanceCached);
 }
 
-void GUI::requestRenewWitness(CAccount* funderAccount)
+void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitnessAccount)
 {
-    LogPrint(BCLog::QT, "GUI::requestRenewWitness\n");
-
-    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+    LogPrint(BCLog::QT, "GUI::doRequestRenewWitness\n");
 
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
@@ -246,7 +244,7 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
     CAmount txFee;
     if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
     {
-        std::string strAlert = "Failed to create witness renew transaction:" + strError;
+        std::string strAlert = "Failed to create witness renew transaction: " + strError;
         CAlert::Notify(strAlert, true, true);
         LogPrintf("%s", strAlert.c_str());
         return;
@@ -279,6 +277,23 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
     targetWitnessAccount->SetWarningState(AccountStatus::WitnessPending);
     static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
     walletFrame->currentWalletView()->witnessDialogPage->update();
+}
+
+void GUI::requestRenewWitness(CAccount* funderAccount)
+{
+    LogPrint(BCLog::QT, "GUI::requestRenewWitness\n");
+
+    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+
+    std::function<void (void)> successCallback = [=](){doRequestRenewWitness(funderAccount, targetWitnessAccount);};
+    if (pactiveWallet->IsLocked())
+    {
+        uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to renew witness"), successCallback);
+    }
+    else
+    {
+        successCallback();
+    }
 }
 
 void GUI::requestFundWitness(CAccount* funderAccount)
@@ -1434,7 +1449,8 @@ void GUI::promptImportPrivKey()
     if (dlg.exec())
     {
         // Temporarily unlock for account generation.
-        std::function<void (void)> successCallback = [&](){pactiveWallet->importPrivKey(dlg.getPrivKey());};
+        SecureString encodedPrivKey = dlg.getPrivKey();
+        std::function<void (void)> successCallback = [=](){pactiveWallet->importPrivKey(encodedPrivKey);};
         if (pactiveWallet->IsLocked())
         {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import private key"), successCallback);
@@ -1455,7 +1471,8 @@ void GUI::promptImportWitnessOnlyAccount()
     if (dlg.exec())
     {
         // Temporarily unlock for account generation.
-        std::function<void (void)> successCallback = [&](){pactiveWallet->importWitnessOnlyAccountFromURL(dlg.getWitnessURL());};
+        SecureString witnessURL = dlg.getWitnessURL();
+        std::function<void (void)> successCallback = [=](){pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL);};
         if (pactiveWallet->IsLocked())
         {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import witness-only account"), successCallback);
@@ -1675,7 +1692,7 @@ void GUI::acceptNewAccount()
         if (!newAccount)
         {
             // Temporarily unlock for account generation.
-            std::function<void (void)> successCallback = [&](){this->acceptNewAccount(); pactiveWallet->Lock();};
+            std::function<void (void)> successCallback = [=](){this->acceptNewAccount(); pactiveWallet->Lock();};
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account creation"), successCallback);
             return;
         }

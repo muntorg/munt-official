@@ -389,6 +389,7 @@ private Q_SLOTS:
     void dismissAccountSettings();
     void showExchangeRateDialog();
     void updateExchangeRates();
+    void doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitnessAccount);
     void requestRenewWitness(CAccount* funderAccount);
     void requestFundWitness(CAccount* funderAccount);
     void requestEmptyWitness();

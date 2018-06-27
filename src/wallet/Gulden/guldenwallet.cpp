@@ -381,7 +381,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         {
                             if (accountIter.second->HaveKeyInternal(keyID))
                             {
-                                std::function<void (void)> witnessKeyCallback = [&]()
+                                std::function<void (void)> witnessKeyCallback = [=]()
                                 {
                                     CKey privWitnessKey;
                                     if (!accountIter.second->GetKey(keyID, privWitnessKey))
