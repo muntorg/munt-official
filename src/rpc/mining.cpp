@@ -291,7 +291,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
             fGenerate = false;
     }
 
-    SoftSetArg("-gen", fGenerate ? "1" : "0");
+    SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     PoWMineGulden(fGenerate, nGenProcLimit, Params());
 

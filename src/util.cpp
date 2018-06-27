@@ -384,9 +384,13 @@ static bool InterpretBool(const std::string& strValue)
         return true;
     if (strValue == "yes")
         return true;
+    if (strValue == "1")
+        return true;
     if (strValue == "false")
         return false;
     if (strValue == "no")
+        return false;
+    if (strValue == "0")
         return false;
     return (atoi(strValue) != 0);
 }
