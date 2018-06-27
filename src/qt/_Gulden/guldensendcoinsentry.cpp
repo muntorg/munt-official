@@ -1020,6 +1020,8 @@ void GuldenSendCoinsEntry::sendAllClicked()
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
     ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
+    //Update witness value for amount.
+    witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
 }
 
 void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)
