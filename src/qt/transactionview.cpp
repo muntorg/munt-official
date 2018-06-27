@@ -52,6 +52,7 @@ TransactionView::TransactionView(QWidget *parent)
 , transactionView(nullptr)
 , abandonAction(nullptr)
 , bumpFeeAction(nullptr)
+, editLabelAction(nullptr)
 , columnResizingFixer(nullptr)
 {
     // Build filter row
@@ -160,7 +161,7 @@ TransactionView::TransactionView(QWidget *parent)
     copyTxHexAction->setObjectName("action_transaction_view_raw_tx");
     QAction *copyTxPlainText = new QAction(tr("Copy full transaction details"), this);
     copyTxPlainText->setObjectName("action_transaction_view_tx_details_full");
-    QAction *editLabelAction = new QAction(tr("Edit label"), this);
+    editLabelAction = new QAction(tr("Edit label"), this);
     editLabelAction->setObjectName("action_transaction_view_edit_label");
     QAction *showDetailsAction = new QAction(tr("Show transaction details"), this);
     showDetailsAction->setObjectName("action_transaction_view_show_details");
@@ -416,6 +417,36 @@ void TransactionView::contextualMenu(const QPoint &point)
     QModelIndexList selection = transactionView->selectionModel()->selectedRows(0);
     if (selection.empty())
         return;
+
+    //fixme: (2.1) relook at all right click items wholistically
+    bool canEditLabel = true;
+    int transactionType = selection.at(0).data(TransactionTableModel::TypeRole).toInt();
+    switch (transactionType)
+    {
+        case TransactionRecord::Other:
+        case TransactionRecord::WitnessRenew:
+        case TransactionRecord::WitnessFundSend:
+        case TransactionRecord::WitnessEmptySend:
+        case TransactionRecord::WitnessIncreaseSend:
+        case TransactionRecord::SendToAddress:
+        case TransactionRecord::SendToOther:
+        case TransactionRecord::RecvWithAddress:
+        case TransactionRecord::RecvFromOther:
+        case TransactionRecord::SendToSelf:
+        case TransactionRecord::InternalTransfer:
+            break;
+        case TransactionRecord::WitnessFundRecv:
+        case TransactionRecord::WitnessIncreaseRecv:
+        case TransactionRecord::WitnessChangeKeyRecv:
+        case TransactionRecord::WitnessEmptyRecv:
+        case TransactionRecord::WitnessSplitRecv:
+        case TransactionRecord::WitnessMergeRecv:
+        case TransactionRecord::Generated:
+        case TransactionRecord::GeneratedWitness:
+            canEditLabel = false;
+            break;
+    }
+    editLabelAction->setEnabled(canEditLabel);
 
     // check if transaction can be abandoned, disable context menu action in case it doesn't
     uint256 hash;
