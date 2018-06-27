@@ -678,7 +678,6 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 }
                 if (!matchedExistingBundle)
                 {
-                    //fixme: (2.0) (HIGH) ensure not still locked nLockFrom.
                     CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType);
                     spendBundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                     pWitnessBundles->push_back(spendBundle);
