@@ -594,12 +594,13 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    const std::string URL_WEBSITE = "Gulden.com";
+    const std::string URL_WEBSITE = "<https://Gulden.com>";
 
     //fixme: (2.1) Mention additional libraries, boost etc.
     //fixme: (2.1) Translate
     //fixme: (2.1) Add code to ensure translations never strip copyrights
     return helptr("Copyright (C) 2014-2018 The Gulden developers")+ "\n"
+           + helptr("Licensed under the Gulden license")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
            + strprintf(helptr("Please contribute if you find %s useful. Visit %s for further information about the software."), PACKAGE_NAME, URL_WEBSITE)
