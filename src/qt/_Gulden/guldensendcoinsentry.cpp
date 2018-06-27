@@ -506,9 +506,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
-            std::string strErrorMessage = strprintf("Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            std::string strErrorMessage = "Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf(strErrorMessage.c_str());
+            LogPrintf("%s", strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -520,7 +520,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
         {
-            std::string strErrorMessage = strprintf("Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            std::string strErrorMessage = "Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf(strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
@@ -578,7 +578,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {
-                            std::string strErrorMessage = strprintf("Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+                            std::string strErrorMessage = "Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
                             CAlert::Notify(strErrorMessage, true, true);
                             LogPrintf(strErrorMessage.c_str());
                             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;

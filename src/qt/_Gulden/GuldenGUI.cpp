@@ -16,6 +16,7 @@
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"
+#include "alert.h"
 
 #include <QAction>
 #include <QApplication>
@@ -245,10 +246,10 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
     CAmount txFee;
     if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
     {
-        //fixme: (2.0) Improve error message
-        QString message = QString::fromStdString(strError.c_str());
-        QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
-        d->exec();
+        std::string strAlert = "Failed to create witness renew transaction:" + strError;
+        CAlert::Notify(strAlert, true, true);
+        LogPrintf("%s", strAlert.c_str());
+        return;
     }
 
     QString questionString = tr("Renewing witness account will incur a transaction fee: ");
@@ -267,10 +268,10 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
         {
-            //fixme: (2.0) Improve error message
-            QString message = QString::fromStdString(strError.c_str());
-            QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
-            d->exec();
+            std::string strAlert = "Failed to sign witness renewal transaction:" + strError;
+            CAlert::Notify(strAlert, true, true);
+            LogPrintf("%s", strAlert.c_str());
+            return;
         }
     }
 
