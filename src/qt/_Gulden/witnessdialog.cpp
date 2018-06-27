@@ -914,9 +914,12 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         if (cachedIndexForAccount && cachedIndexForAccount == forAccount && cachedIndex == setIndex)
         {
             setIndex = (WitnessDialogStates)ui->witnessDialogStackedWidget->currentIndex();
-            // Prevent these two buttons from flipping as well.
-            stateUnitButton = ui->unitButton->isVisible();
-            stateViewWitnessGraphButton = ui->viewWitnessGraphButton->isVisible();
+            if (setIndex == WitnessDialogStates::STATISTICS)
+            {
+                // Prevent these two buttons from flipping as well.
+                stateUnitButton = true;
+                stateViewWitnessGraphButton = false;
+            }
         }
         else
         {
