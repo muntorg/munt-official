@@ -163,7 +163,7 @@ Note that cpu miner software is sufficient for this, while you can use an asic f
 * Wipe the data directories and start two GuldenD instance again
 * Make a testnet copy of your mining pool
 * Check the debug.log for the magic header bytes (they are logged near the start) and update your testnet pool with the information as well as other testnet information from above (rpc port etc.)
-* Some small changes need to be made to your pool software - see [This sample](https://github.com/mjmacleod/node-merged-pool/commit/dbca336fbafb7f1059a66c1ef68cfabfb0b8b1cd) to get an idea of what needs to be done. Note this ignores other Gulden specific customisations that might be required - these are only the PoW² specific changes.
+* Some small changes need to be made to your pool software - see [This sample](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master) to get an idea of what needs to be done. Note this ignores other Gulden specific customisations that might be required - these are only the PoW² specific changes.
 * Start mining with the pool
 * Follow the same basic steps again ont he witness node to create witnesses and make sure that the pool continues to mine blocks well into phase 3
 
