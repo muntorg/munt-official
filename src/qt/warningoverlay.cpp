@@ -44,6 +44,10 @@ WarningOverlay::WarningOverlay(QWidget *parent)
     ui->warningOverlayInfoText->setContentsMargins(0,0,0,0);
     ui->warningOverlayInfoText->setIndent(0);
 
+    // Make URLS clickable (e.g. for updates)
+    ui->warningOverlayInfoText->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->warningOverlayInfoText->setOpenExternalLinks(true);
+
     ui->closeButton->setContentsMargins(0,0,0,0);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
 }
@@ -124,7 +128,7 @@ void WarningOverlay::closeClicked()
 
 void WarningOverlay::setWarning(const QString& icon, const QString& title, const QString& warning)
 {
-    ui->warningOverlayHeading->setText(icon + " " + title);
+    ui->warningOverlayHeading->setText(icon + "  " + title);
     QString finalWarning = warning;
     finalWarning.replace("\n", "<br/>");
     ui->warningOverlayInfoText->setText(finalWarning);
