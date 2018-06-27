@@ -141,6 +141,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     witnessDestination.lockFromBlock = witnessInput.lockFromBlock;
     witnessDestination.lockUntilBlock = witnessInput.lockUntilBlock;
     witnessDestination.failCount = witnessInput.failCount;
+    witnessDestination.actionNonce = witnessInput.actionNonce+1;
 
     // If this is the first time witnessing the lockFromBlock won't yet be filled in so fill it in now.
     if (witnessDestination.lockFromBlock == 0)
@@ -211,6 +212,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
         coinbaseTx.vout[0].output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
         coinbaseTx.vout[0].output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
         coinbaseTx.vout[0].output.witnessDetails.failCount = witnessDestination.failCount;
+        coinbaseTx.vout[0].output.witnessDetails.actionNonce = witnessDestination.actionNonce;
     }
     else
     {

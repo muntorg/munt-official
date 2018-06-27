@@ -448,6 +448,7 @@ public:
     uint64_t lockFromBlock;
     uint64_t lockUntilBlock;
     uint64_t failCount;
+    uint64_t actionNonce;
 
     CTxOutPoW2Witness() {clear();}
 
@@ -458,6 +459,7 @@ public:
         lockFromBlock = 0;
         lockUntilBlock = 0;
         failCount = 0;
+        actionNonce = 0;
     }
 
     bool operator==(const CTxOutPoW2Witness& compare) const
@@ -466,7 +468,8 @@ public:
                witnessKeyID == compare.witnessKeyID &&
                lockFromBlock == compare.lockFromBlock &&
                lockUntilBlock == compare.lockUntilBlock &&
-               failCount == compare.failCount;
+               failCount == compare.failCount &&
+               actionNonce == compare.actionNonce;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -478,7 +481,8 @@ public:
         READWRITE(witnessKeyID);
         READWRITE(lockFromBlock);
         READWRITE(lockUntilBlock);
-        READWRITE(failCount);
+        READWRITE(VARINT(failCount));
+        READWRITE(VARINT(actionNonce));
     }
 };
 

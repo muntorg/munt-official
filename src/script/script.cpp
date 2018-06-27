@@ -219,19 +219,19 @@ bool CScript::IsPayToScriptHash() const
             (*this)[22] == OP_EQUAL);
 }
 
-//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
+//OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 bool CScript::IsPoW2Witness() const
 {
-    if (this->size() != 66)
+    if (this->size() != 74)
         return false;
 
-    if ((*this)[0] != OP_0 || (*this)[1] != 64)
+    if ((*this)[0] != OP_0 || (*this)[1] != 72)
         return false;
 
     return true;
 }
 
-//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
+//OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 {
     assert(IsPoW2Witness());
@@ -241,22 +241,24 @@ std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 }
 
 
-//OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
+//OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 //fixme: (2.0) Better error handling.
-void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
+bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
-    if (this->size() != 66)
-        assert(0);
+    if (this->size() != 74)
+    {
+        return false;
+    }
 
     CScript::const_iterator it = begin();
 
     opcodetype opcode;
     std::vector<unsigned char> item;
     if (!GetOp(it, opcode, item) || opcode != OP_0)
-        assert(0);
+        return false;
 
-    if (!GetOp(it, opcode, item) || opcode != (unsigned char)64)
-        assert(0);
+    if (!GetOp(it, opcode, item) || opcode != (unsigned char)72)
+        return false;
 
     std::vector<unsigned char> vchSpendingKey( begin()+2, begin()+22 );
     witness.spendingKeyID = CKeyID(uint160(vchSpendingKey));
@@ -272,6 +274,11 @@ void CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 
     std::vector<unsigned char> vchFailCount( begin()+58, begin()+66 );
     witness.failCount = CScriptUInt64( vchFailCount ).nNumber;
+
+    std::vector<unsigned char> vchActionNonce( begin()+66, begin()+74 );
+    witness.actionNonce = CScriptUInt64( vchActionNonce ).nNumber;
+
+    return true;
 }
 
 

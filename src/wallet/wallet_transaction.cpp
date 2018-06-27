@@ -863,6 +863,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
                     renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
                     renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+                    renewedWitnessTxOutput.output.witnessDetails.actionNonce = witnessDestination.actionNonce+1;
                 }
                 else
                 {
@@ -872,6 +873,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     dest.lockFromBlock = witnessDestination.lockFromBlock;
                     dest.lockUntilBlock = witnessDestination.lockUntilBlock;
                     dest.failCount = witnessDestination.failCount;
+                    dest.actionNonce = witnessDestination.actionNonce+1;
                     renewedWitnessTxOutput.SetType(CTxOutType::ScriptLegacyOutput);
                     renewedWitnessTxOutput.output.scriptPubKey = GetScriptForDestination(dest);
                 }

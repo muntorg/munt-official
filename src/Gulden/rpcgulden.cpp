@@ -145,6 +145,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "             \"lock_period_expired\": n                 (boolean)true if the lock has expired (funds can be withdrawed)\n"
             "             \"eligible_to_witness\": n                 (number) true if the address is eligible to witness.\n"
             "             \"expired_from_inactivity\": n             (number) true if the network has expired (kicked off) this address due to it failing to witness in the expected period\n"
+            //"             \"fail_count\": n                          (number) Internal accounting for how many times this address has been renewed; Note it increases in a non-linear fashion but decreases by 1 for every valid witnessing operation.\n"
+            //"             \"action_nonce\": n                        (number) Internal count of how many actions this address has been involved in since creation; Used to ensure address transaction uniqueness across operations.\n"
             "             \"ismine_accountname\": n                  (string) If the address belongs to an account in this wallet, the name of the account.\n"
             "         }\n"
             "         ...\n"
@@ -364,6 +366,9 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
+            //fixme: (2.1) Add these two
+            //rec.push_back(Pair("fail_count", fExpired));
+            //rec.push_back(Pair("action_nonce", fExpired));
             #ifdef ENABLE_WALLET
             rec.push_back(Pair("ismine_accountname", accountName));
             #else
@@ -1029,6 +1034,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     destinationPoW2Witness.lockFromBlock = 0;
     destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     destinationPoW2Witness.failCount = 0;
+    destinationPoW2Witness.actionNonce = 0;
     {
         CReserveKeyOrScript keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
@@ -1186,6 +1192,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
         extendedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
         extendedWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
         extendedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        extendedWitnessTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
         extendedWitnessTxOutput.nValue = requestedAmount;
         extendWitnessTransaction.vout.push_back(extendedWitnessTxOutput);
 
@@ -2029,6 +2036,7 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
             rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
         }
         rotatedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        rotatedWitnessTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
         rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
         rotateWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
 
@@ -2377,6 +2385,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
             splitWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
             splitWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
             splitWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+            splitWitnessTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
             splitWitnessTxOutput.nValue = splitAmount;
             splitWitnessTransaction.vout.push_back(splitWitnessTxOutput);
         }
@@ -2487,8 +2496,9 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     CAmount transactionFee;
     CMutableTransaction mergeWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
     {
-        // Add all the existing witness outputs as inputs and sum the amounts / fail count.
+        // Add all the existing witness outputs as inputs and sum the fail count.
         uint64_t totalFailCount = currentWitnessDetails.failCount;
+        uint64_t highestActionNonce = currentWitnessDetails.actionNonce;
         CAmount totalAmount = currentWitnessTxOut.nValue;
         pwallet->AddTxInput(mergeWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
         for (int i = 1; i < unspentWitnessOutputs.size(); ++i)
@@ -2505,6 +2515,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
                 throw JSONRPCError(RPC_MISC_ERROR, "Not all inputs share identical witness characteristics, cannot merge.");
             }
             totalFailCount += compareWitnessDetails.failCount;
+            highestActionNonce = std::max(highestActionNonce, compareWitnessDetails.actionNonce);
             totalAmount += compareWitnessTxOut.nValue;
             pwallet->AddTxInput(mergeWitnessTransaction, CInputCoin(compareWitnessOutpoint, compareWitnessTxOut), false);
         }
@@ -2517,6 +2528,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
         mergeWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
         mergeWitnessTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
         mergeWitnessTxOutput.output.witnessDetails.failCount = totalFailCount;
+        mergeWitnessTxOutput.output.witnessDetails.actionNonce = highestActionNonce+1;
         mergeWitnessTxOutput.nValue = totalAmount;
         mergeWitnessTransaction.vout.push_back(mergeWitnessTxOutput);
 

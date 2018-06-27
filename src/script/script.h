@@ -675,7 +675,7 @@ public:
 
     bool IsPoW2Witness() const;
     std::vector<unsigned char> GetPow2WitnessHash() const;
-    void ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const;
+    bool ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */
     bool IsPushOnly(const_iterator pc) const;

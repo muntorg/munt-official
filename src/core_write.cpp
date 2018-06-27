@@ -166,6 +166,7 @@ void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
     out.pushKV("lock_from_block", txout.output.witnessDetails.lockFromBlock);
     out.pushKV("lock_until_block", txout.output.witnessDetails.lockUntilBlock);
     out.pushKV("fail_count", txout.output.witnessDetails.failCount);
+    out.pushKV("action_nonce", txout.output.witnessDetails.actionNonce);
     out.pushKV("pubkey_spend", txout.output.witnessDetails.spendingKeyID.ToString());
     out.pushKV("pubkey_witness", txout.output.witnessDetails.witnessKeyID.ToString());
 

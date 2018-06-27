@@ -280,7 +280,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
 
             if (pWitnessBundles)
             {
-                if (witnessDetails.lockFromBlock == 0)
+                if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0)
                 {
                     pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
                 }
@@ -382,6 +382,9 @@ inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
         return false;
+    // Action nonce always increment
+    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+        return false;
     // Keys and lock unchanged
     if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
         return false;
@@ -429,6 +432,9 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
     // Amount keys and lock unchanged.
     if (nInputAmount != nOutputAmount)
         return false;
+    // Action nonce always increment
+    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+        return false;
     if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
         return false;
     if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
@@ -454,6 +460,9 @@ inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputD
 {
     // Needs 2 signature (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
+        return false;
+    // Action nonce always increment
+    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
         return false;
     // Keys unchanged.
     if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
@@ -494,6 +503,9 @@ bool CWitnessTxBundle::IsValidSplitBundle()
     for (const auto& output : outputs)
     {
         const auto& outputDetails = output.second;
+        // Action nonce always increment
+        if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+            return false;
         if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
             return false;
         if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
@@ -529,6 +541,8 @@ bool CWitnessTxBundle::IsValidMergeBundle()
     const auto& outputDetails = output.second;
     CAmount nOutputValue = output.first.nValue;
     CAmount nInputValue = 0;
+    uint64_t highestActionNonce = 0;
+    uint64_t totalFailCount = 0;
     for (const auto& input : inputs)
     {
         const auto& inputDetails = input.second;
@@ -536,14 +550,21 @@ bool CWitnessTxBundle::IsValidMergeBundle()
             return false;
         if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
             return false;
-        if (inputDetails.failCount > outputDetails.failCount)
-            return false;
+        if (inputDetails.actionNonce > highestActionNonce)
+            highestActionNonce = inputDetails.actionNonce;
         if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
             return false;
         if (inputDetails.lockFromBlock != outputDetails.lockFromBlock)
             return false;
         nInputValue += input.first.nValue;
+        totalFailCount += outputDetails.failCount;
     }
+    //
+    if (totalFailCount != outputDetails.failCount)
+        return false;
+    // Action nonce always increment
+    if (highestActionNonce+1 != outputDetails.actionNonce)
+        return false;
     if (nInputValue != nOutputValue)
         return false;
     return true;
@@ -558,6 +579,9 @@ inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness
 {
     // 2 signatures (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
+        return false;
+    // Action nonce always increment
+    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
         return false;
     // Everything unchanged except witness key.
     if (nInputAmount != nOutputAmount)
