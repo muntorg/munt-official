@@ -41,6 +41,19 @@ struct CBlockPosition
     uint64_t transactionIndex; // Position of transaction within the block.
     CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
 
+    //fixme: (2.1) (MOBILE) (SPV) (SEGSIG) Look closer at how to handle this in relation to mobile SPV wallets
+    uint256 getHash() const
+    {
+        std::vector<unsigned char> serData;
+        {
+            CVectorWriter serializedBlockPosition(SER_NETWORK, INIT_PROTO_VERSION, serData, 0);
+            serializedBlockPosition << blockNumber;
+            serializedBlockPosition << transactionIndex;
+        }
+        std::string sHex = HexStr(serData);
+        return Hash(sHex.begin(), sHex.end());
+    }
+
     friend bool operator<(const CBlockPosition& a, const CBlockPosition& b)
     {
         if (a.blockNumber == b.blockNumber)
@@ -139,8 +152,7 @@ public:
         }
         else
         {
-            //fixme: (2.0)
-            return hash;
+            return prevBlock.getHash();
         }
     }
     void setHash(uint256 hash_)
@@ -651,14 +663,11 @@ public:
     {
         if (GetType() <= CTxOutType::ScriptLegacyOutput)
             return output.scriptPubKey.IsUnspendable();
-
-        //fixme: (2.0) - Can our 'standard' outputs still be unspendable?
         return false;
     }
 
     virtual ~CTxOut()
     {
-        //fixme: (2.0) (IMPLEMENT)
         output.DeleteOutput();
     }
 
@@ -1211,11 +1220,11 @@ public:
 
     std::string ToString() const;
 
+    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
         {
-            //fixme: (2.0) - Rather test on transaction version?
             if (!vin[i].segregatedSignatureData.IsNull()) 
                 return true;
         }
@@ -1262,11 +1271,11 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
+    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
         {
-            //fixme: (2.0) - Rather test on transaction version?
             if (!vin[i].segregatedSignatureData.IsNull())
                 return true;
         }
