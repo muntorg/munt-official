@@ -71,6 +71,10 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
 
+    ui->sendAll->setContentsMargins(0, 0, 0, 0);
+    ui->sendAll->setIndent(0);
+    ui->sendAll->setCursor(Qt::PointingHandCursor);
+
     ui->pow2LockFundsSlider->setMinimum(30);
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
