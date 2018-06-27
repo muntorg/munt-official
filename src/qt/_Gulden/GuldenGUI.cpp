@@ -1678,35 +1678,52 @@ void GUI::acceptNewAccount()
 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
-        CAccount* newAccount = nullptr;
-        const auto newAccountType = dialogNewAccount->getAccountType();
-        if (newAccountType == NewAccountType::FixedDeposit)
-        {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
-        }
-        else
-        {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
-        }
+        //fixme: (2.1) This can be improved; we don't really need to unlock for every single creation only sometimes
+        //This is here to stop the weird effect of shadow thread requesting password -after- account creation though
+        //This should tie in better with the shadow thread..
 
-        if (!newAccount)
+        // Temporarily unlock for account generation.
+        std::function<void (void)> successCallback = [=]()
         {
-            // Temporarily unlock for account generation.
-            std::function<void (void)> successCallback = [=](){this->acceptNewAccount(); pactiveWallet->Lock();};
+            CAccount* newAccount = nullptr;
+            const auto newAccountType = dialogNewAccount->getAccountType();
+            if (newAccountType == NewAccountType::FixedDeposit)
+            {
+                newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
+            }
+            else
+            {
+                newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
+            }
+
+            if (!newAccount)
+            {
+                std::string strAlert = "Failed to create new account";
+                CAlert::Notify(strAlert, true, true);
+                LogPrintf("%s", strAlert.c_str());
+                return;
+            }
+            restoreCachedWidgetIfNeeded();
+            if (newAccountType == NewAccountType::FixedDeposit)
+            {
+                newAccount->SetWarningState(AccountStatus::WitnessEmpty);
+                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
+                showWitnessDialog();
+            }
+            else
+            {
+                gotoReceiveCoinsPage();
+            }
+        };
+        if (pactiveWallet->IsLocked())
+        {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account creation"), successCallback);
-            return;
-        }
-        restoreCachedWidgetIfNeeded();
-        if (newAccountType == NewAccountType::FixedDeposit)
-        {
-            newAccount->SetWarningState(AccountStatus::WitnessEmpty);
-            static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
-            showWitnessDialog();
         }
         else
         {
-            gotoReceiveCoinsPage();
+            successCallback();
         }
+        return;
     }
     else
     {
