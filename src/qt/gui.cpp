@@ -1618,8 +1618,15 @@ void GUI::updateCheckResult(bool succes, const QString& msg, bool important, boo
 {
     if (important || noisy)
     {
-        message(tr("Software update"), msg, succes ? CClientUIInterface::MSG_WARNING
-                                                   : CClientUIInterface::MSG_ERROR);
+        if (!succes)
+        {
+            warningOverlay->setWarning(GUIUtil::fontAwesomeSolid("\uf071"), tr("Software update warning"), msg);
+        }
+        else
+        {
+            warningOverlay->setWarning(GUIUtil::fontAwesomeSolid("\uf274"), tr("Software update"), msg);
+        }
+        warningOverlay->showHide(false, false);
     }
 }
 
