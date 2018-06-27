@@ -6,9 +6,10 @@ Highlights include: Ability to lock funds for a period of time and earn rewards 
 
 UI  - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
 UI  - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
-CORE - New blockchain conesnsus rules for a PoW² driven blockchain with determistic witnessing.
+CORE - New blockchain consensus rules for a PoW² driven blockchain with determistic witnessing.
 CORE - New address type for two key witness accounts
 CORE - New account types for witnessing, including special behaviour (hardening) of the witness key chain so that witness keys can be shared without compromising wallet security.
+CORE - New witness-only account types for linked witnessing between main wallet and a backup witness device.
 CORE - Automatic witnessing of incoming blocks in exchange for rewards
 RPC - New commands:
 View a statistical/informational snapshot of the witness system for any block in the blockchain - getwitnessinfo "block_specifier" verbose mine_only
@@ -27,7 +28,7 @@ Set a witness account to compound all or part of the earnings it receives (phase
 Check the compounding settings for a witness account - getwitnesscompound "witness_account"
 Set an address or script other than the default for witness reward payout - setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
 Get the current address or script that has been set for witness reward payout - getwitnessrewardscript "witness_account" 
-
+RPC - GetBlockTemplate support for mining in conjunction with phase 3 witnessing.
 
 
 * SegSig - A new transaction format. See https://github.com/Gulden/gulden-official/blob/master/technical_documentation/transaction_format.md for technical information.
@@ -51,6 +52,7 @@ UI - New "all" button on send coin screen to send all funds.
 UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
 UI - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
 UI - Add localisation for the loading/splash screen when wallet first opens.
+CORE - Improved handling of "private key" imports.
 CORE - Major performance improvements for wallets with lots of transactions.
 CORE - Major performance improvements for wallets with lots of accounts.
 CORE - Performance improvements when creating new accounts.
