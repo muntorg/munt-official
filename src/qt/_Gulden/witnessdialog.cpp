@@ -511,7 +511,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
     infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
     if (infoForAccount.nOriginNetworkWeight == 0)
-        infoForAccount.nOriginNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+        infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
     pointMapForecast[0] = 0;
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
@@ -635,11 +635,13 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
         {
             QString formatStr;
             double divideBy=1;
+            int roundTo = 2;
             switch (witnessInfoForAccount.scale)
             {
                 case GraphScale::Blocks:
                     formatStr = tr("%1 blocks");
                     divideBy = 1;
+                    roundTo = 0;
                     break;
                 case GraphScale::Days:
                     formatStr = tr("%1 days");
@@ -655,13 +657,13 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                     break;
             }
             if (witnessInfoForAccount.nWitnessLength > 0)
-                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy));
+                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
-                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy));
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
-                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy));
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
             if (witnessInfoForAccount.nLockBlocksRemaining > 0)
-                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy));
+                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
         }
 
         ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
@@ -912,9 +914,12 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         if (cachedIndexForAccount && cachedIndexForAccount == forAccount && cachedIndex == setIndex)
         {
             setIndex = (WitnessDialogStates)ui->witnessDialogStackedWidget->currentIndex();
-            // Prevent these two buttons from flipping as well.
-            stateUnitButton = ui->unitButton->isVisible();
-            stateViewWitnessGraphButton = ui->viewWitnessGraphButton->isVisible();
+            if (setIndex == WitnessDialogStates::STATISTICS)
+            {
+                // Prevent these two buttons from flipping as well.
+                stateUnitButton = true;
+                stateViewWitnessGraphButton = false;
+            }
         }
         else
         {
@@ -1174,7 +1179,7 @@ void WitnessDialog::setModel(WalletModel* _model)
             WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
             proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
             proxyFilterByBalanceFund->setDynamicSortFilter(true);
-            proxyFilterByBalanceFund->setAmount((nMinimumWitnessAmount*COIN));
+            proxyFilterByBalanceFund->setAmount((gMinimumWitnessAmount*COIN));
 
             QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
             proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);

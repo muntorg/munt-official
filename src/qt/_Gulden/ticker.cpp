@@ -136,8 +136,11 @@ CAmount CurrencyTicker::convertForexToGulden(CAmount forexAmount, std::string fo
         {
             arith_uint256 forexAmountBN = forexAmount;
             forexAmountBN *= COIN;
-            forexAmountBN /= exchangeRate;
-            return forexAmountBN.GetLow64();
+            if (exchangeRate != 0)
+            {
+                forexAmountBN /= exchangeRate;
+                return forexAmountBN.GetLow64();
+            }
         }
     }
     return CAmount(0);

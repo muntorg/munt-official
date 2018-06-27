@@ -119,6 +119,12 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && !fHideTrayIcon;
 
+    if (!settings.contains("fAutoUpdateCheck"))
+    {
+        settings.setValue("fAutoUpdateCheck", true);
+    }
+    fAutoUpdateCheck = settings.value("fAutoUpdateCheck").toBool();
+
     //Standard osx behaviour is for app to remain open in dock when close button is pushed.
     if (!settings.contains("fDockOnClose"))
     {
@@ -274,6 +280,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fMinimizeOnClose;
         case DockOnClose:
             return fDockOnClose;
+        case AutoUpdateCheck:
+            return fAutoUpdateCheck;
 
         // default proxy
         case ProxyUse:
@@ -360,6 +368,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case DockOnClose:
             fDockOnClose = value.toBool();
             settings.setValue("fDockOnClose", fDockOnClose);
+            break;
+        case AutoUpdateCheck:
+            fAutoUpdateCheck = value.toBool();
+            settings.setValue("fAutoUpdateCheck", fAutoUpdateCheck);
             break;
 
         // default proxy

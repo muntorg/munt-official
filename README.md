@@ -55,7 +55,7 @@ All code, binaries and other assets in this repository are subject to [The Gulde
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf)
+* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf); [PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)

@@ -41,7 +41,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             continue;
         }
 
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.getHash());
         if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
             return false;
         }
@@ -548,6 +548,29 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             return false;
         }
     }
+
+    // NB! This part of the process is super important.
+    // We insert the private witnessing (**not** -spending- only -witnessing-) key into the unencrypted keychain for the HD account (even on encrypted wallet)
+    // This allows witnessing to work correctly on encrypted wallets.
+    for (const auto& recipient : vecSend)
+    {
+        if (recipient.witnessForAccount != nullptr)
+        {
+            CKey privWitnessKey;
+            if (!recipient.witnessForAccount->GetKey(recipient.witnessDetails.witnessKeyID, privWitnessKey))
+            {
+                //fixme: (2.1) Localise
+                strFailReason = strprintf("Wallet error, failed to retrieve private witness key.");
+                return false;
+            }
+            if (!AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *recipient.witnessForAccount, KEYCHAIN_WITNESS))
+            {
+                //fixme: (2.1) Localise
+                strFailReason = strprintf("Wallet error, failed to store witness key.");
+                return false;
+            }
+        }
+    }
     return true;
 }
 
@@ -914,7 +937,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx &coin = mapWallet[txin.prevout.hash];
+                CWalletTx &coin = mapWallet[txin.prevout.getHash()];
                 coin.BindWallet(this);
                 NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }

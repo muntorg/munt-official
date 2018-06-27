@@ -297,7 +297,7 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 {
     {
         LOCK(cs_wallet);
-        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.hash);
+        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.getHash());
         if (prev)
         {
             if (txin.prevout.n < prev->tx->vout.size())
@@ -319,14 +319,14 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
         LOCK(cs_wallet);
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& accountIter : mapAccounts)
         {
-            if (accountItem.second->HaveKey(keyID))
+            if (accountIter.second->HaveKey(keyID))
             {
                 if (usageTime > 0)
                 {
                     CWalletDB walletdb(*dbw);
-                    accountItem.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
+                    accountIter.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
                 }
 
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
@@ -348,10 +348,14 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 if (keyUsedSet.find(keyID) == keyUsedSet.end())
                 {
                     keyUsedSet.insert(keyID);
-                    if (accountItem.second->m_State != AccountState::Normal && accountItem.second->m_State != AccountState::ShadowChild)
+
+                    if (accountIter.second->m_State != AccountState::Normal && accountIter.second->m_State != AccountState::ShadowChild)
                     {
-                        accountItem.second->m_State = AccountState::Normal;
-                        std::string name = accountItem.second->getLabel();
+                        accountIter.second->m_State = AccountState::Normal;
+                        std::string name = accountIter.second->getLabel();
+
+                        //fixme: (2.1) remove this in name delete/restore labelling for something less error prone. (translations would break this for instance)
+                        //We should just set a restored attribute on the account or something.
                         if (name.find(_("[Deleted]")) != std::string::npos)
                         {
                             name = name.replace(name.find(_("[Deleted]")), _("[Deleted]").length(), _("[Restored]"));
@@ -360,9 +364,53 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         {
                             name = _("Restored");
                         }
-                        addAccount(accountItem.second, name);
+                        addAccount(accountIter.second, name);
 
                         //fixme: (Post-2.1) Shadow accounts during rescan...
+                    }
+
+                    if (accountIter.second->IsHD() && accountIter.second->IsPoW2Witness())
+                    {
+                        //This is here for the sake of restoring wallets from recovery phrase only, in the normal case this has already been done by the funding code...
+                        //fixme: (2.0.1) Improve this, there are two things that need improving:
+                        //1) When restoring from phrase but also encrypting and locking - it won't be able to add the key here.
+                        //We try to work around this by using an unlock callback, but if the user refuses to unlock then there might be issues.
+                        //2) This will indescriminately add -all- used change keys in a witness account; even if used for normal transactions (which shouldn't be done, but still it would be preferable to avoid this)
+                        //Note as witness-only accounts are not HD this is not an issue for witness-only accounts.
+                        if (accountIter.second->getLabel().find(_("[Restored]")) != std::string::npos)
+                        {
+                            if (accountIter.second->HaveKeyInternal(keyID))
+                            {
+                                std::function<void (void)> witnessKeyCallback = [=]()
+                                {
+                                    CKey privWitnessKey;
+                                    if (!accountIter.second->GetKey(keyID, privWitnessKey))
+                                    {
+                                        //fixme: (2.1) localise
+                                        std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
+                                        LogPrintf(strErrorMessage.c_str());
+                                        CAlert::Notify(strErrorMessage, true, true);
+                                    }
+                                    if (!static_cast<CWallet*>(this)->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *accountIter.second, KEYCHAIN_WITNESS))
+                                    {
+                                        //fixme: (2.1) localise
+                                        std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
+                                        LogPrintf(strErrorMessage.c_str());
+                                        CAlert::Notify(strErrorMessage, true, true);
+                                    }
+                                };
+                                if (accountIter.second->IsLocked())
+                                {
+                                    //Last ditch effort to try work around 1.
+                                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for witness key"), witnessKeyCallback);
+                                    continue;
+                                }
+                                else
+                                {
+                                    witnessKeyCallback();
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -731,7 +779,7 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -818,6 +866,18 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
 CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
+    //fixme: (2.1) Improve the way encryption of legacy accounts is handled
+    if (IsCrypted())
+    {
+        if (IsLocked())
+            return nullptr;
+
+        if (!activeAccount)
+            return nullptr;
+
+        if (!newAccount->Encrypt(activeAccount->vMasterKey))
+            return nullptr;
+    }
     addAccount(newAccount, strAccount);
 
     return newAccount;
@@ -834,6 +894,7 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
     //Don't import an address that is already in wallet.
     for (const auto& [privateWitnessKey, nKeyBirthDate] : privateWitnessKeysWithBirthDates)
     {
+        (unused) nKeyBirthDate;
         if (static_cast<CWallet*>(this)->HaveKey(privateWitnessKey.GetPubKey().GetID()))
         {
             std::string strErrorMessage = _("Error importing private key") + "\n" + _("Wallet already contains key.");
@@ -906,6 +967,18 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
 
     newAccount = new CAccount();
     newAccount->m_Type = WitnessOnlyWitnessAccount;
+
+    if (IsCrypted())
+    {
+        if (IsLocked())
+            return nullptr;
+
+        if (!activeAccount)
+            return nullptr;
+
+        if (!newAccount->Encrypt(activeAccount->vMasterKey))
+            return nullptr;
+    }
 
     if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates))
     {
@@ -1049,7 +1122,13 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    return CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
+    bool ret = CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
+    if (ret && forAccount.IsPoW2Witness() && keyChain == KEYCHAIN_WITNESS)
+    {
+        CPrivKey nullKey;
+        ret = CWalletDB(*dbw).WriteKeyOverride(pubkey, nullKey, getUUIDAsString(forAccount.getUUID()), KEYCHAIN_WITNESS);
+    }
+    return ret;
 }
 
 

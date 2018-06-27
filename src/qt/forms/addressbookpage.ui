@@ -86,7 +86,7 @@
       </widget>
      </item>
      <item>
-      <widget class="ClickableLabel" name="deleteAddress">
+      <widget class="QPushButton" name="deleteAddress">
        <property name="toolTip">
         <string>Delete the currently selected address from the list</string>
        </property>
@@ -95,9 +95,6 @@
        </property>
        <property name="autoDefault" stdset="0">
         <bool>false</bool>
-       </property>
-       <property name="indent">
-         <number>0</number>
        </property>
       </widget>
      </item>
@@ -115,7 +112,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="ClickableLabel" name="exportButton">
+      <widget class="QPushButton" name="exportButton">
        <property name="toolTip">
         <string>Export the data in the current tab to a file</string>
        </property>
@@ -125,13 +122,10 @@
        <property name="autoDefault" stdset="0">
         <bool>false</bool>
        </property>
-       <property name="indent">
-         <number>0</number>
-       </property>
       </widget>
      </item>
      <item>
-      <widget class="ClickableLabel" name="newAddress">
+      <widget class="QPushButton" name="newAddress">
        <property name="toolTip">
         <string>Create a new address</string>
        </property>
@@ -141,13 +135,10 @@
        <property name="autoDefault" stdset="0">
         <bool>false</bool>
        </property>
-       <property name="indent">
-         <number>0</number>
-       </property>
       </widget>
      </item>
      <item>
-      <widget class="ClickableLabel" name="copyAddress">
+      <widget class="QPushButton" name="copyAddress">
        <property name="toolTip">
         <string>Copy the currently selected address to the system clipboard</string>
        </property>
@@ -157,22 +148,12 @@
        <property name="autoDefault" stdset="0">
         <bool>false</bool>
        </property>
-       <property name="indent">
-         <number>0</number>
-       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ClickableLabel</class>
-   <extends>QLabel</extends>
-   <header location="global">qt/_Gulden/clickablelabel.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../gulden.qrc"/>
  </resources>

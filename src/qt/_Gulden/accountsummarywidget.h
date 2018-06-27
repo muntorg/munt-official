@@ -56,7 +56,8 @@ private:
     Ui::AccountSummaryWidget* ui;
     const CAccount* m_account;
     std::string m_accountName;
-    CAmount m_accountBalance = 0;
+    CAmount m_accountBalanceAvailable = 0;
+    CAmount m_accountBalanceTotal = 0;
     CAmount m_accountBalanceLocked = 0;
     CAmount m_accountBalanceImmatureOrUnconfirmed = 0;
     bool m_showForexBalance = true;

@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include "_Gulden/GuldenGUI.h"
+#include <unity/appmanager.h>
 
 AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent, QString reason) :
     QDialog(parent),
@@ -158,7 +159,7 @@ void AskPassphraseDialog::accept()
                                          "For security reasons, previous backups of the unencrypted wallet file "
                                          "will become useless as soon as you start using the new, encrypted wallet.") +
                                          "</b></qt>");
-                    QApplication::quit();
+                    GuldenAppManager::gApp->shutdown();
                 }
                 else
                 {

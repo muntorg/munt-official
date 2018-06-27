@@ -112,3 +112,8 @@ std::string UserAgent()
 {
     return FormatSubVersion(CLIENT_NAME, CLIENT_VERSION, std::vector<std::string>());;
 }
+
+std::string Version()
+{
+    return FormatVersion(CLIENT_VERSION);
+}

@@ -16,6 +16,7 @@
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"
+#include "alert.h"
 
 #include <QAction>
 #include <QApplication>
@@ -186,11 +187,15 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
     if (!labelBalance || !labelBalanceForex)
         return;
 
-    CAmount displayBalance = availableBalance + unconfirmedBalance + immatureBalance;
-    labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
-    if (displayBalance > 0 && optionsModel)
+    CAmount displayBalanceAvailable = availableBalanceCached;
+    CAmount displayBalanceLocked = lockedBalanceCached;
+    CAmount displayBalanceImmatureOrUnconfirmed = immatureBalanceCached + unconfirmedBalanceCached;
+    CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
+
+    labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+    if (displayBalanceTotal > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalance, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
+        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -199,13 +204,13 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
         labelBalanceForex->setVisible(false);
     }
 
-    if (accountScrollArea && displayBalance > 999999 * COIN && sideBarWidth != sideBarWidthExtended)
+    if (accountScrollArea && displayBalanceTotal > 999999 * COIN && sideBarWidth != sideBarWidthExtended)
     {
         sideBarWidth = sideBarWidthExtended;
         doApplyStyleSheet();
         resizeToolBarsGulden();
     }
-    else if (accountScrollArea && displayBalance < 999999 * COIN && sideBarWidth == sideBarWidthExtended)
+    else if (accountScrollArea && displayBalanceTotal < 999999 * COIN && sideBarWidth == sideBarWidthExtended)
     {
         sideBarWidth = sideBarWidthNormal;
         doApplyStyleSheet();
@@ -215,10 +220,10 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
     labelBalance->setToolTip("");
     if (immatureBalance>0 || unconfirmedBalance>0)
     {
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, lockedBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, unconfirmedBalance + immatureBalance, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, availableBalance, false, GuldenUnits::separatorStandard, 2));
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
         labelBalance->setToolTip(toolTip);
     }
 }
@@ -229,11 +234,9 @@ void GUI::updateExchangeRates()
     setBalance(availableBalanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached, lockedBalanceCached);
 }
 
-void GUI::requestRenewWitness(CAccount* funderAccount)
+void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitnessAccount)
 {
-    LogPrint(BCLog::QT, "GUI::requestRenewWitness\n");
-
-    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+    LogPrint(BCLog::QT, "GUI::doRequestRenewWitness\n");
 
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
@@ -241,10 +244,10 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
     CAmount txFee;
     if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
     {
-        //fixme: (2.0) Improve error message
-        QString message = QString::fromStdString(strError.c_str());
-        QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
-        d->exec();
+        std::string strAlert = "Failed to create witness renew transaction: " + strError;
+        CAlert::Notify(strAlert, true, true);
+        LogPrintf("%s", strAlert.c_str());
+        return;
     }
 
     QString questionString = tr("Renewing witness account will incur a transaction fee: ");
@@ -263,10 +266,10 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
         {
-            //fixme: (2.0) Improve error message
-            QString message = QString::fromStdString(strError.c_str());
-            QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
-            d->exec();
+            std::string strAlert = "Failed to sign witness renewal transaction:" + strError;
+            CAlert::Notify(strAlert, true, true);
+            LogPrintf("%s", strAlert.c_str());
+            return;
         }
     }
 
@@ -274,6 +277,23 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
     targetWitnessAccount->SetWarningState(AccountStatus::WitnessPending);
     static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
     walletFrame->currentWalletView()->witnessDialogPage->update();
+}
+
+void GUI::requestRenewWitness(CAccount* funderAccount)
+{
+    LogPrint(BCLog::QT, "GUI::requestRenewWitness\n");
+
+    CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
+
+    std::function<void (void)> successCallback = [=](){doRequestRenewWitness(funderAccount, targetWitnessAccount);};
+    if (pactiveWallet->IsLocked())
+    {
+        uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to renew witness"), successCallback);
+    }
+    else
+    {
+        successCallback();
+    }
 }
 
 void GUI::requestFundWitness(CAccount* funderAccount)
@@ -415,7 +435,7 @@ void GUI::createToolBars()
 
         accountBar->addWidget( scrollArea );
 
-        QVBoxLayout* vbox = new QVBoxLayout();
+        QVBoxLayout* vbox = new QVBoxLayout(accountScrollArea);
         vbox->setObjectName("account_scroll_area_frame");
         vbox->setSpacing(0);
         vbox->setContentsMargins( 0, 0, 0, 0 );
@@ -453,9 +473,9 @@ void GUI::createToolBars()
 
     // We place all the widgets for this action bar inside a frame of fixed width - otherwise the sizing comes out wrong
     {
-        balanceContainer = new QFrame();
+        balanceContainer = new QFrame(this);
         balanceContainer->setObjectName("balance_container");
-        QHBoxLayout* layoutBalance = new QHBoxLayout;
+        QHBoxLayout* layoutBalance = new QHBoxLayout(balanceContainer);
         layoutBalance->setObjectName("balance_layout");
         balanceContainer->setLayout(layoutBalance);
         balanceContainer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -467,7 +487,7 @@ void GUI::createToolBars()
 
         //Left margin
         {
-            QWidget* spacerL = new QWidget();
+            QWidget* spacerL = new QWidget(this);
             spacerL->setObjectName("gulden_bar_left_margin");
             spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerL );
@@ -482,13 +502,13 @@ void GUI::createToolBars()
 
         // Use spacer to push balance label to the right
         {
-            QWidget* spacerMid = new QWidget();
+            QWidget* spacerMid = new QWidget(this);
             spacerMid->setObjectName("layout_balance_mid_spacer");
             spacerMid->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerMid );
         }
 
-        labelBalance = new ClickableLabel( this );
+        labelBalance = new ClickableLabel( balanceContainer );
         labelBalance->setObjectName( "gulden_label_balance" );
         labelBalance->setText( "" );
         layoutBalance->addWidget( labelBalance );
@@ -503,7 +523,7 @@ void GUI::createToolBars()
 
         //Right margin
         {
-            QWidget* spacerR = new QWidget();
+            QWidget* spacerR = new QWidget(this);
             spacerR->setObjectName("gulden_bar_right_margin");
             spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
             layoutBalance->addWidget( spacerR );
@@ -523,7 +543,7 @@ void GUI::createToolBars()
     spacerBarL->setMovable( false );
     //Spacer to fill width
     {
-        QWidget* spacerL = new QWidget();
+        QWidget* spacerL = new QWidget(this);
         spacerL->setObjectName( "spacer_bar_left_spacer" );
         spacerL->setMinimumWidth( 40 );
         spacerL->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -596,7 +616,7 @@ void GUI::createToolBars()
 
     //Spacer to fill width
     {
-        QWidget* spacerR = new QWidget();
+        QWidget* spacerR = new QWidget(this);
         spacerR->setObjectName("navigation_bar_right_spacer");
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
         //Delibritely large amount - to push the next toolbar as far right as possible.
@@ -643,7 +663,7 @@ void GUI::createToolBars()
     spacerBarR->setMovable( false );
     //Spacer to fill width
     {
-        QWidget* spacerR = new QWidget();
+        QWidget* spacerR = new QWidget(this);
         spacerR->setObjectName("spacer_bar_right_spacer");
         spacerR->setMinimumWidth( 40 );
         spacerR->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -1428,7 +1448,18 @@ void GUI::promptImportPrivKey()
     ImportPrivKeyDialog dlg(this);
     if (dlg.exec())
     {
-        pactiveWallet->importPrivKey(dlg.getPrivKey());
+        // Temporarily unlock for account generation.
+        SecureString encodedPrivKey = dlg.getPrivKey();
+        std::function<void (void)> successCallback = [=](){pactiveWallet->importPrivKey(encodedPrivKey);};
+        if (pactiveWallet->IsLocked())
+        {
+            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import private key"), successCallback);
+        }
+        else
+        {
+            successCallback();
+        }
+        return;
     }
 }
 
@@ -1439,7 +1470,17 @@ void GUI::promptImportWitnessOnlyAccount()
     ImportWitnessDialog dlg(this);
     if (dlg.exec())
     {
-        pactiveWallet->importWitnessOnlyAccountFromURL(dlg.getWitnessURL());
+        // Temporarily unlock for account generation.
+        SecureString witnessURL = dlg.getWitnessURL();
+        std::function<void (void)> successCallback = [=](){pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL);};
+        if (pactiveWallet->IsLocked())
+        {
+            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import witness-only account"), successCallback);
+        }
+        else
+        {
+            successCallback();
+        }
     }
 }
 
@@ -1637,35 +1678,52 @@ void GUI::acceptNewAccount()
 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
-        CAccount* newAccount = nullptr;
-        const auto newAccountType = dialogNewAccount->getAccountType();
-        if (newAccountType == NewAccountType::FixedDeposit)
-        {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
-        }
-        else
-        {
-            newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
-        }
+        //fixme: (2.1) This can be improved; we don't really need to unlock for every single creation only sometimes
+        //This is here to stop the weird effect of shadow thread requesting password -after- account creation though
+        //This should tie in better with the shadow thread..
 
-        if (!newAccount)
+        // Temporarily unlock for account generation.
+        std::function<void (void)> successCallback = [=]()
         {
-            // Temporarily unlock for account generation.
-            std::function<void (void)> successCallback = [&](){this->acceptNewAccount(); pactiveWallet->Lock();};
+            CAccount* newAccount = nullptr;
+            const auto newAccountType = dialogNewAccount->getAccountType();
+            if (newAccountType == NewAccountType::FixedDeposit)
+            {
+                newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
+            }
+            else
+            {
+                newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
+            }
+
+            if (!newAccount)
+            {
+                std::string strAlert = "Failed to create new account";
+                CAlert::Notify(strAlert, true, true);
+                LogPrintf("%s", strAlert.c_str());
+                return;
+            }
+            restoreCachedWidgetIfNeeded();
+            if (newAccountType == NewAccountType::FixedDeposit)
+            {
+                newAccount->SetWarningState(AccountStatus::WitnessEmpty);
+                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
+                showWitnessDialog();
+            }
+            else
+            {
+                gotoReceiveCoinsPage();
+            }
+        };
+        if (pactiveWallet->IsLocked())
+        {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account creation"), successCallback);
-            return;
-        }
-        restoreCachedWidgetIfNeeded();
-        if (newAccountType == NewAccountType::FixedDeposit)
-        {
-            newAccount->SetWarningState(AccountStatus::WitnessEmpty);
-            static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
-            showWitnessDialog();
         }
         else
         {
-            gotoReceiveCoinsPage();
+            successCallback();
         }
+        return;
     }
     else
     {

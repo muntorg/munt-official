@@ -384,9 +384,13 @@ static bool InterpretBool(const std::string& strValue)
         return true;
     if (strValue == "yes")
         return true;
+    if (strValue == "1")
+        return true;
     if (strValue == "false")
         return false;
     if (strValue == "no")
+        return false;
+    if (strValue == "0")
         return false;
     return (atoi(strValue) != 0);
 }
@@ -926,15 +930,4 @@ int GetNumCores()
 #else // Must fall back to hardware_concurrency, which unfortunately counts virtual cores
     return boost::thread::hardware_concurrency();
 #endif
-}
-
-std::string CopyrightHolders(const std::string& strPrefix)
-{
-    std::string strCopyrightHolders = strPrefix + strprintf(_(COPYRIGHT_HOLDERS), _(COPYRIGHT_HOLDERS_SUBSTITUTION));
-
-    // Check for untranslated substitution to make sure Gulden Core copyright is not removed by accident
-    if (strprintf(COPYRIGHT_HOLDERS, COPYRIGHT_HOLDERS_SUBSTITUTION).find("Bitcoin Core") == std::string::npos) {
-        strCopyrightHolders += "\n" + strPrefix + "The Bitcoin Core developers";
-    }
-    return strCopyrightHolders;
 }

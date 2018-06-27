@@ -90,7 +90,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (prevout.IsNull() && wtx.tx->IsPoW2WitnessCoinBase())
                 continue;
 
-            const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.hash);
+            const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.getHash());
             if (!txPrev)
                 break;
 
@@ -153,7 +153,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             if (mine)
                             {
                                 CTxDestination getAddress;
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
                                 if (parent != NULL)
                                 {
                                     if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
@@ -234,7 +234,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
                                 if (parent != NULL)
                                 {
                                     CTxDestination getAddress;
@@ -343,7 +343,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                                 if (mine)
                                 {
-                                    const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.hash);
+                                    const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
                                     if (parent != NULL)
                                     {
                                         subReceive.debit = parent->tx->vout[inputs[0].prevout.n].nValue;
@@ -372,7 +372,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             if (mine)
                             {
                                 CTxDestination getAddress;
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[1].prevout.hash);
+                                const CWalletTx* parent = wallet->GetWalletTx(inputs[1].prevout.getHash());
                                 if (parent != NULL)
                                 {
                                     if (ExtractDestination(parent->tx->vout[inputs[1].prevout.n], getAddress))
@@ -584,7 +584,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             //fixme: (2.1) Add a 'payment to self' sub here as well.
                         }
 
-                        const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.hash);
+                        const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.getHash());
                         if (parent != NULL)
                         {
                             CTxDestination senderAddress;

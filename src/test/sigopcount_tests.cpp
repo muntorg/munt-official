@@ -100,7 +100,7 @@ static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CM
 
     spendingTx.nVersion = 1;
     spendingTx.vin.resize(1);
-    spendingTx.vin[0].prevout.hash = creationTx.GetHash();
+    spendingTx.vin[0].prevout.setHash(creationTx.GetHash());
     spendingTx.vin[0].prevout.n = 0;
     spendingTx.vin[0].scriptSig = scriptSig;
     spendingTx.vin[0].segregatedSignatureData = segregatedSignatureData;

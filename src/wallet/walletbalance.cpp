@@ -23,7 +23,7 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
         if (mi != mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -161,7 +161,7 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount)
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+    if (!IsCoinBase() || GetBlocksToMaturity() <= 0 || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
@@ -197,7 +197,7 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (!IsCoinBase() || GetBlocksToMaturity() == 0)
+    if (!IsCoinBase() || GetBlocksToMaturity() <= 0 || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && immatureCreditCachedIncludingLockedWitnesses.find(forAccount) != immatureCreditCachedIncludingLockedWitnesses.end())
@@ -230,7 +230,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (IsCoinBase() && GetBlocksToMaturity() > 0)
+    if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && availableCreditCached.find(forAccount) != availableCreditCached.end())
@@ -266,7 +266,7 @@ CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, co
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (IsCoinBase() && GetBlocksToMaturity() > 0)
+    if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && availableCreditCachedIncludingLockedWitnesses.find(forAccount) != availableCreditCachedIncludingLockedWitnesses.end())
@@ -295,6 +295,9 @@ CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, co
 
 CAmount CWalletTx::GetImmatureWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount) const
 {
+    if (GetDepthInMainChain() < 0)
+        return 0;
+
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
     {
         if (fUseCache && immatureWatchCreditCached.find(forAccount) != immatureWatchCreditCached.end())
@@ -312,7 +315,7 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAcc
         return 0;
 
     // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if (IsCoinBase() && GetBlocksToMaturity() > 0)
+    if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
         return 0;
 
     if (fUseCache && availableWatchCreditCached.find(forAccount) != availableWatchCreditCached.end())
@@ -392,7 +395,7 @@ CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildr
     CAmount balanceImmatureExcludingLocked;
     CAmount balanceImmatureLocked;
     CAmount balanceLocked;
-    GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked);
+    GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, forAccount, includeChildren);
     return balanceLocked;
 }
 

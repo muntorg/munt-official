@@ -314,6 +314,26 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
         connect(progressBar, SIGNAL(clicked(QPoint)), this, SLOT(showSyncOverlay()));
     }
 #endif
+
+    connect(&updateCheck, SIGNAL(result(bool, const QString&, bool, bool)), this, SLOT(updateCheckResult(bool, const QString&, bool, bool)));
+}
+
+void GUI::autoUpdateCheck()
+{
+    const char* LAST_UPDATE_KEY = "last_update_check";
+    if (optionsModel && optionsModel->getAutoUpdateCheck())
+    {
+        QSettings settings;
+        QDateTime now = QDateTime::currentDateTime();
+        QDateTime last = settings.value(LAST_UPDATE_KEY, now.addDays(-1)).toDateTime();
+        if (!last.isValid())
+            last = now.addDays(-1);
+        if (now.date().dayOfYear() != last.date().dayOfYear())
+        {
+            settings.setValue(LAST_UPDATE_KEY, now);
+            updateCheck.check(false);
+        }
+    }
 }
 
 void GUI::disconnectNonEssentialSignals()
@@ -488,6 +508,11 @@ void GUI::createActions()
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
 
+    checkUpdatesAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf274), tr("Check for Updates"), this);
+    checkUpdatesAction->setObjectName("action_check_updates");
+    checkUpdatesAction->setStatusTip(tr("Check for software updates"));
+    checkUpdatesAction->setMenuRole(QAction::ApplicationSpecificRole);
+
     encryptWalletAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf30d), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setObjectName("action_encrypt_wallet");
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
@@ -512,6 +537,7 @@ void GUI::createActions()
     connect(quitAction, SIGNAL(triggered()), this, SLOT(userWantsToQuit()), (Qt::ConnectionType)(Qt::QueuedConnection|Qt::UniqueConnection));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(checkUpdatesAction, SIGNAL(triggered()), this, SLOT(checkUpdatesClicked()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(currencyAction, SIGNAL(triggered()), this, SLOT(showExchangeRateDialog()));
     connect(importPrivateKeyAction, SIGNAL(triggered()), this, SLOT(promptImportPrivKey()));
@@ -591,6 +617,7 @@ void GUI::createMenuBar()
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
+    help->addAction(checkUpdatesAction);
 }
 
 void GUI::setClientModel(ClientModel *_clientModel)
@@ -835,6 +862,20 @@ void GUI::aboutClicked()
 
     HelpMessageDialog dlg(this, true);
     dlg.exec();
+}
+
+void GUI::checkUpdatesClicked()
+{
+    LogPrint(BCLog::QT, "GUI::checkUpdatesClicked\n");
+
+    updateCheck.check(true);
+
+//    QProgressDialog progress("Copying files...", "Abort Copy", 0, 1, this);
+//    progress.setWindowModality(Qt::WindowModal);
+//    progress.setValue(0);
+//    QThread::sleep(5);
+
+
 }
 
 void GUI::showDebugWindow()
@@ -1571,6 +1612,22 @@ void GUI::showSyncOverlay()
 
     if (syncOverlay && (progressBar->isVisible() || syncOverlay->isLayerVisible()))
         syncOverlay->toggleVisibility();
+}
+
+void GUI::updateCheckResult(bool succes, const QString& msg, bool important, bool noisy)
+{
+    if (important || noisy)
+    {
+        if (!succes)
+        {
+            warningOverlay->setWarning(GUIUtil::fontAwesomeSolid("\uf071"), tr("Software update warning"), msg);
+        }
+        else
+        {
+            warningOverlay->setWarning(GUIUtil::fontAwesomeSolid("\uf274"), tr("Software update"), msg);
+        }
+        warningOverlay->showHide(false, false);
+    }
 }
 
 static bool ThreadSafeMessageBox(GUI *gui, const std::string& message, const std::string& caption, unsigned int style)

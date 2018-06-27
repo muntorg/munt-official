@@ -41,14 +41,10 @@ AddressBookPage::AddressBookPage(const QStyle *platformStyle, Mode _mode, Tabs _
 
     if (GUIUtil::showImagesOnButtons())
     {
-        ui->newAddress->setText(GUIUtil::fontAwesomeRegular("\uf067") + " " + ui->newAddress->text());
-        ui->newAddress->setTextFormat( Qt::RichText );
-        ui->copyAddress->setText(GUIUtil::fontAwesomeRegular("\uf0c5") + " " + ui->copyAddress->text());
-        ui->copyAddress->setTextFormat( Qt::RichText );
-        ui->deleteAddress->setText(GUIUtil::fontAwesomeRegular("\uf1f8") + " " + ui->deleteAddress->text());
-        ui->deleteAddress->setTextFormat( Qt::RichText );
-        ui->exportButton->setText(GUIUtil::fontAwesomeRegular("\uf064") + " " + ui->exportButton->text());
-        ui->exportButton->setTextFormat( Qt::RichText );
+        ui->newAddress->setIcon(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf067));
+        ui->copyAddress->setIcon(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf0c5));
+        ui->deleteAddress->setIcon(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf1f8));
+        ui->exportButton->setIcon(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf064));
     }
 
     QFrame* horizontalLine = new QFrame(this);

@@ -388,7 +388,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 
                 for(const CTxIn &txin : mi->GetTx().vin)
                 {
-                    setConflictsParents.insert(txin.prevout.hash);
+                    setConflictsParents.insert(txin.prevout.getHash());
                 }
 
                 nConflictingCount += mi->GetCountWithDescendants();
@@ -421,12 +421,12 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 // feerate junk to be mined first. Ideally we'd keep track of
                 // the ancestor feerates and make the decision based on that,
                 // but for now requiring all new inputs to be confirmed works.
-                if (!setConflictsParents.count(tx.vin[j].prevout.hash))
+                if (!setConflictsParents.count(tx.vin[j].prevout.getHash()))
                 {
                     // Rather than check the UTXO set - potentially expensive -
                     // it's cheaper to just check if the new input refers to a
                     // tx that's in the mempool.
-                    if (pool.mapTx.find(tx.vin[j].prevout.hash) != pool.mapTx.end())
+                    if (pool.mapTx.find(tx.vin[j].prevout.getHash()) != pool.mapTx.end())
                         return state.DoS(0, false,
                                          REJECT_NONSTANDARD, "replacement-adds-unconfirmed", false,
                                          strprintf("replacement %s adds unconfirmed input, idx %d",

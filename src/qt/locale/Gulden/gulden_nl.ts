@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-24 17:21+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-24 17:21+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-26 17:27+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-26 17:27+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -41,13 +41,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation>Scan QR-code met een witnessing-apparaat om het apparaat aan je portemonnee te koppelen</translation>
+        <translation>Scan QR-code met een witnessing-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
         <translation>Klik hier om de QR-code zichtbaar te maken.
-WAARSCHUWING: zorg dat jij de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot jouw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
+WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot uw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
     </message>
     <message>
         <source>Please fund the witness account first.</source>
@@ -55,7 +55,7 @@ WAARSCHUWING: zorg dat jij de enige persoon bent die deze QR-code kan zien omdat
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation>Account is niet leeg. Maak eerst uw Guldens alvorens u dit account verwijdert.</translation>
+        <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
     </message>
     <message>
         <source>Okay</source>
@@ -64,7 +64,7 @@ WAARSCHUWING: zorg dat jij de enige persoon bent die deze QR-code kan zien omdat
     <message>
         <source>Are you sure you want to delete %1 from your account list?
 </source>
-        <translation>Weet je zeker dat je %1 wil verwijderen uit het adresboek?
+        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
 </translation>
     </message>
     <message>
@@ -90,7 +90,8 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om je QR code zichtbaar te maken. WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot je Guldens.</translation>
+        <translation>Klik hier om uw QR code zichtbaar te maken. 
+WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -98,11 +99,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
-        <translation> Verbind met je mobiele Gulden app</translation>
+        <translation> Verbind met uw mobiele Gulden app</translation>
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Verbind met je mobiele Gulden app</translation>
+        <translation>Scan QR om met uw mobiele Gulden app te verbinden</translation>
     </message>
     <message>
         <source>Transactional account</source>
@@ -129,7 +130,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Het is aangeraden om ook een beveiligde back-up van je portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+        <translation>Het is aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
     </message>
     <message>
         <source>Save to file</source>
@@ -137,11 +138,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
+        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
     </message>
     <message>
         <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit zijn je herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</translation>
+        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
     </message>
     <message>
         <source>No recovery phrases present for this wallet.</source>
@@ -149,7 +150,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Jouw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
+        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
     </message>
 </context>
 <context>
@@ -163,6 +164,22 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Annuleren</translation>
     </message>
     <message>
+        <source>Total funds: </source>
+        <translation>Totaalbedrag: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Vastgezet bedrag: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Bedragen in afwachting van bevestiging: </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Besteedbare bedragen: </translation>
+    </message>
+    <message>
         <source>Pending confirmation: %1</source>
         <translation>Wachten op bevestiging: %1</translation>
     </message>
@@ -172,7 +189,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
-        <translation>Voor het vernieuwen van het witness-account worden transactiekosten in rekening gebracht: </translation>
+        <translation>Voor het vernieuwen van het witness-rekening worden transactiekosten in rekening gebracht: </translation>
     </message>
     <message>
         <source>Send</source>
@@ -272,7 +289,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>&amp;Rescan transactions</source>
-        <translation>transacties opnieuw scannen</translation>
+        <translation>&amp;Transacties opnieuw scannen</translation>
     </message>
     <message>
         <source>Rescan the blockchain looking for any missing transactions</source>
@@ -601,7 +618,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
-        <translation>De Guldens zijn geblokkeerd gedurende 30 dagen (%1 maand). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de blokkeringsperiode.</translation>
+        <translation>De Guldens zijn geblokkeerd gedurende 30 dagen (%1 maand). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.</translation>
     </message>
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
@@ -621,11 +638,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation>Het bedrag dat je wil overmaken is gelijk aan je saldo en zal dus worden aangepast aan de transactiekosten. Weet je zeker dat dit is wat je wil voordat je verder gaat om te voorkomen dat de ontvanger te weinig betaald krijgt.</translation>
+        <translation>Het bedrag dat u wilt overmaken is gelijk aan uw saldo en zal dus worden aangepast aan de transactiekosten. Weet u zeker dat dit is wat u wilt, voordat u verder gaat om te voorkomen dat de ontvanger te weinig betaald krijgt.</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>
-        <translation>Weet je zeker dat je %1 wil verwijderen uit het adresboek?</translation>
+        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -638,6 +655,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <source>A minimum amount of %1 is required.</source>
         <translation>Een minimum hoeveelheid van %1 is vereist.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Een minimaal gewicht van %1 is vereist, maar het geselecteerde gewicht is slechts %2. Verhoog de hoeveelheid of de looptijd voor meer gewicht.</translation>
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</source>
@@ -661,9 +682,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</source>
-        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de blokkeringsperiode.
-
-Verwachtte verdiensten: %3 (%4 per maand)
+        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.
+Verwachte verdiensten: %3 (%4 per maand)
 
 Witness-gewicht: %5</translation>
     </message>
@@ -1031,7 +1051,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Your details</source>
-        <translation>Jouw gegevens</translation>
+        <translation>Uw gegevens</translation>
     </message>
     <message>
         <source>Enter email address</source>
@@ -1039,7 +1059,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation>Heb je in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
+        <translation>Heeft u in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
     </message>
     <message>
         <source>Request 10 000 Gulden</source>
@@ -2086,7 +2106,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Payment to yourself</source>
-        <translation>Betaling aan jezelf</translation>
+        <translation>Betaling aan uzelf</translation>
     </message>
     <message>
         <source>Internal transfer</source>
@@ -2905,7 +2925,7 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation>Je kan kiezen waar %1 de data moet opslaan.</translation>
+        <translation>U kunt kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -3233,7 +3253,7 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
     <message>
         <source>Projected earnings graph</source>
-        <translation>Verwachtte inkomsten grafiek</translation>
+        <translation>Verwachte inkomsten grafiek</translation>
     </message>
     <message>
         <source>Compound earnings</source>
@@ -3277,7 +3297,7 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
     <message>
         <source>Estimated earnings frequency</source>
-        <translation>Verwachtte belonings tijd</translation>
+        <translation>Verwachte belonings tijd</translation>
     </message>
     <message>
         <source>Network weight</source>
@@ -3289,7 +3309,7 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
     <message>
         <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation>Uw witness account is gedeactiveerd omdat uw account niet binnen de verwachte tijd heeft kunnen &quot;witnessen&quot;. Als dit vaak gebeurt, zorg er dan voor dat u een stabiele witnessing instelling hebt of neem contact op met support. Om witnessing te hervatten, selecteert u het account hieronder en drukt u op de knop &apos;Rekening vernieuwen&apos;. Een kleine heractiverings-fee zal u worden berekend.</translation>
+        <translation>Uw witness rekening is gedeactiveerd omdat uw rekening niet binnen de verwachte tijd heeft kunnen &quot;witnessen&quot;. Als dit vaak gebeurt, zorg er dan voor dat u een stabiele witnessing omgeving hebt of neem contact op met support. Om witnessing te hervatten, selecteert u de rekening hieronder en drukt u op de knop &apos;Rekening vernieuwen&apos;. Een kleine heractiverings-fee zal u worden berekend.</translation>
     </message>
     <message>
         <source>Waiting for confirmation</source>
@@ -3306,8 +3326,8 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     <message>
         <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
 In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation>Jouw witness-rekening is klaar met witnissing en alle fondsen zijn geleegd. Jouw inkomsten en transacties blijven hier staan om te bekijken maar je kan de rekening verder niet meer gebruiken. Als je witness weer wil gebruiken, maar daarvoor een nieuwe rekening aan.
-In toekomstige versies van Gulden zal het mogelijk zijn om deze rekening te hergebruiken voor toekomstige witnissing.</translation>
+        <translation>Uw witness-rekening is klaar met witnessing en alle bedragen zijn verplaatst. Uw inkomsten en transacties blijven hier zichtbaar maar u kunt de rekening verder niet meer gebruiken. Als u witness weer wil gebruiken, maak dan een nieuwe witness-rekening aan.
+In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te hergebruiken voor witnessing.</translation>
     </message>
     <message>
         <source>Change units</source>
@@ -3798,7 +3818,7 @@ In toekomstige versies van Gulden zal het mogelijk zijn om deze rekening te herg
     </message>
     <message>
         <source>Do you want to increase the fee?</source>
-        <translation>Wilt je de transactiekosten verhogen?</translation>
+        <translation>Wilt u de transactiekosten verhogen?</translation>
     </message>
     <message>
         <source>Current fee:</source>

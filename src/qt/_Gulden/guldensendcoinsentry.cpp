@@ -71,6 +71,10 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
 
+    ui->sendAll->setContentsMargins(0, 0, 0, 0);
+    ui->sendAll->setIndent(0);
+    ui->sendAll->setCursor(Qt::PointingHandCursor);
+
     ui->pow2LockFundsSlider->setMinimum(30);
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
@@ -353,7 +357,7 @@ bool GuldenSendCoinsEntry::validate()
     {
         int nDays = ui->pow2LockFundsSlider->value();
         int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*576);
-        if (ui->payAmount->amount() < (nMinimumWitnessAmount*COIN) || nOurWeight <= nMinimumWitnessWeight)
+        if (ui->payAmount->amount() < (gMinimumWitnessAmount*COIN) || nOurWeight <= gMinimumWitnessWeight)
         {
             setValid(ui->pow2LockFundsInfoLabel, false);
             return false;
@@ -502,9 +506,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
         {
-            std::string strErrorMessage = strprintf("Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            std::string strErrorMessage = "Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf(strErrorMessage.c_str());
+            LogPrintf("%s", strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
             recipient.address = QString("error");
             return recipient;
@@ -516,7 +520,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         CPubKey pubWitnessKey;
         if (!keySpending.GetReservedKey(pubWitnessKey))
         {
-            std::string strErrorMessage = strprintf("Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+            std::string strErrorMessage = "Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf(strErrorMessage.c_str());
             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
@@ -528,6 +532,8 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         keyWitness.ReturnKey();
         recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
         recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+        //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+        recipient.witnessForAccount = targetWitnessAccount;
         recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
         recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
     }
@@ -572,7 +578,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         CPubKey pubSpendingKey;
                         if (!keySpending.GetReservedKey(pubSpendingKey))
                         {
-                            std::string strErrorMessage = strprintf("Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.");
+                            std::string strErrorMessage = "Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
                             CAlert::Notify(strErrorMessage, true, true);
                             LogPrintf(strErrorMessage.c_str());
                             recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
@@ -850,9 +856,9 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
-    if (nAmount < CAmount(nMinimumWitnessAmount*COIN))
+    if (nAmount < CAmount(gMinimumWitnessAmount*COIN))
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(nMinimumWitnessAmount));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(gMinimumWitnessAmount));
         return;
     }
 
@@ -863,13 +869,15 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
 
-    static int64_t nNetworkWeight = nStartingWitnessNetworkWeightEstimate;
+    static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     if (chainActive.Tip())
     {
         static uint64_t lastUpdate = GetTimeMillis();
         // Only check this once a minute, no need to be constantly updating.
         if (GetTimeMillis() - lastUpdate > 60000)
         {
+            LOCK(cs_main);
+
             lastUpdate = GetTimeMillis();
             if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
             {
@@ -895,9 +903,9 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     }
 
 
-    if (nOurWeight < nMinimumWitnessWeight)
+    if (nOurWeight < gMinimumWitnessWeight)
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(nMinimumWitnessWeight).arg(nOurWeight));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(gMinimumWitnessWeight).arg(nOurWeight));
         return;
     }
 
@@ -1016,6 +1024,8 @@ void GuldenSendCoinsEntry::sendAllClicked()
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
     ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
+    //Update witness value for amount.
+    witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
 }
 
 void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)

@@ -976,15 +976,15 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
     // arg2 - 'to' account.
-    CAccount* witnessAccount = AccountFromValue(pwallet, request.params[1], true);
-    if (!witnessAccount)
+    CAccount* targetWitnessAccount = AccountFromValue(pwallet, request.params[1], true);
+    if (!targetWitnessAccount)
         throw std::runtime_error(strprintf("Unable to locate witness account [%s].",  request.params[1].get_str()));
-    if (!witnessAccount->IsPoW2Witness())
+    if (!targetWitnessAccount->IsPoW2Witness())
         throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[1].get_str()));
-    if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
+    if (targetWitnessAccount->m_Type == WitnessOnlyWitnessAccount || !targetWitnessAccount->IsHD())
         throw std::runtime_error(strprintf("Cannot fund a witness only witness account [%s].",  request.params[1].get_str()));
 
-    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(targetWitnessAccount);
     if (unspentWitnessOutputs.size() > 0)
     {
         bool fAllowMultiple = false;
@@ -997,8 +997,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
-    if (nAmount < (nMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+    if (nAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1019,7 +1019,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     // Enforce minimum weight
     int64_t nWeight = GetPoW2RawWeightForAmount(nAmount, nLockPeriodInBlocks);
-    if (nWeight < nMinimumWitnessWeight)
+    if (nWeight < gMinimumWitnessWeight)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
@@ -1030,7 +1030,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
     destinationPoW2Witness.failCount = 0;
     {
-        CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+        CReserveKeyOrScript keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
         if (!keyWitness.GetReservedKey(pubWitnessKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
@@ -1042,7 +1042,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     }
     {
         //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
-        CReserveKeyOrScript keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
+        CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
@@ -1059,6 +1059,14 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     int nChangePosRet = -1;
 
     CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), nAmount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), nAmount, false) ) ) ;
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+    {
+        // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
+        recipient.witnessDetails.witnessKeyID = destinationPoW2Witness.witnessKey;
+    }
+
+    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+    recipient.witnessForAccount = targetWitnessAccount;
     vecSend.push_back(recipient);
 
     CWalletTx wtx;
@@ -1090,8 +1098,8 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < (nMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", nMinimumWitnessAmount));
+    if (requestedAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1137,7 +1145,7 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // Enforce minimum weight
     int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
-    if (newWeight < nMinimumWitnessWeight)
+    if (newWeight < gMinimumWitnessWeight)
     {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
@@ -1998,12 +2006,12 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
     std::string reasonForFail;
     CAmount transactionFee;
     CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    CTxOut rotatedWitnessTxOutput;
     {
         // Add the existing witness output as an input
         pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
 
         // Add new witness output
-        CTxOut rotatedWitnessTxOutput;
         rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
         // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
         rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
@@ -2032,6 +2040,25 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
         {
             throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         }
+    }
+
+    //fixme: (2.1) Improve this, it should only happen if Sign transaction is a success.
+    //Also We must make sure that the UI version of this command does the same
+    //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
+    CKey privWitnessKey;
+    if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
+    {
+        //fixme: (2.1) Localise
+        reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        return false;
+    }
+    if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
+    {
+        //fixme: (2.1) Localise
+        reasonForFail = strprintf("Wallet error, failed to store witness key.");
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        return false;
     }
 
     uint256 finalTransactionHash;

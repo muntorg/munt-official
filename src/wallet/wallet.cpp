@@ -127,7 +127,12 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
     if (HaveWatchOnly(script))
         RemoveWatchOnly(script);
 
-    if (!IsCrypted())
+    // Special case, witness keys are never encrypted when added.
+    if ((forAccount.IsHD() && forAccount.IsPoW2Witness() && nKeyChain == KEYCHAIN_WITNESS))
+    {
+        return CWalletDB(*dbw).WriteKeyOverride(pubkey, secret.GetPrivKey(), getUUIDAsString(forAccount.getUUID()), nKeyChain);
+    }
+    else if (!IsCrypted())
     {
         return CWalletDB(*dbw).WriteKey(pubkey, secret.GetPrivKey(), mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
     }
@@ -450,7 +455,7 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
 {
     AssertLockHeld(cs_wallet);
     auto iter = mapTxSpends.lower_bound(COutPoint(txid, 0));
-    return (iter != mapTxSpends.end() && iter->first.hash == txid);
+    return (iter != mapTxSpends.end() && iter->first.getHash() == txid);
 }
 
 void CWallet::Flush(bool shutdown)
@@ -584,7 +589,7 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
                 if (mit->second.tx->vin.size() > 0)
                 {
                     // Unconfirmed witness transactions never spend, otherwise we get strange display/balance issues with orphaned witness transactions.
-                    auto prevtx = mapWallet.find(mit->second.tx->vin[0].prevout.hash);
+                    auto prevtx = mapWallet.find(mit->second.tx->vin[0].prevout.getHash());
                     if (prevtx != mapWallet.end())
                     {
                         const auto& prevOut = prevtx->second.tx->vout[mit->second.tx->vin[0].prevout.n].output;
@@ -1000,7 +1005,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
     for (const CTxIn& txin : wtx.tx->vin) {
-        auto it = mapWallet.find(txin.prevout.hash);
+        auto it = mapWallet.find(txin.prevout.getHash());
         if (it != mapWallet.end()) {
             CWalletTx& prevtx = it->second;
             if (prevtx.nIndex == -1 && !prevtx.hashUnset()) {
@@ -1048,14 +1053,14 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 {
                     if (range.first->second != tx.GetHash())
                     {
-                        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.hash);
+                        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
                         if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
                         {
                             LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
                         }
                         else
                         {
-                            LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.hash.ToString(), range.first->first.n);
+                            LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.getHash().ToString(), range.first->first.n);
                         }
                         MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
@@ -1070,9 +1075,9 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             ClearCacheForTransaction(tx.GetHash());
         for(const auto& txin : tx.vin)
         {
-            if (mapWallet.count(txin.prevout.hash) != 0)
+            if (mapWallet.count(txin.prevout.getHash()) != 0)
             {
-                ClearCacheForTransaction(txin.prevout.hash);
+                ClearCacheForTransaction(txin.prevout.getHash());
             }
         }
         if (fExisted && !fUpdate) return false;
@@ -1187,7 +1192,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             NotifyTransactionChanged(this, wtx.GetHash(), CT_UPDATED);
             // Iterate over all its outputs, and mark transactions in the wallet that spend them abandoned too
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(hashTx, 0));
-            while (iter != mapTxSpends.end() && iter->first.hash == now) {
+            while (iter != mapTxSpends.end() && iter->first.getHash() == now) {
                 if (!done.count(iter->second)) {
                     todo.insert(iter->second);
                 }
@@ -1197,9 +1202,9 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             // available of the outputs it spends. So force those to be recomputed
             for(const CTxIn& txin : wtx.tx->vin)
             {
-                if (mapWallet.count(txin.prevout.hash))
+                if (mapWallet.count(txin.prevout.getHash()))
                 {
-                    mapWallet[txin.prevout.hash].MarkDirty();
+                    mapWallet[txin.prevout.getHash()].MarkDirty();
                 }
             }
         }
@@ -1251,7 +1256,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             walletdb.WriteTx(wtx);
             // Iterate over all its outputs, and mark transactions in the wallet that spend them conflicted too
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(now, 0));
-            while (iter != mapTxSpends.end() && iter->first.hash == now) {
+            while (iter != mapTxSpends.end() && iter->first.getHash() == now) {
                  if (!done.count(iter->second)) {
                      todo.insert(iter->second);
                  }
@@ -1260,7 +1265,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             // If a transaction changes 'conflicted' state, that changes the balance
             // available of the outputs it spends. So force those to be recomputed
             for (const CTxIn& txin : wtx.tx->vin) {
-                auto it = mapWallet.find(txin.prevout.hash);
+                auto it = mapWallet.find(txin.prevout.getHash());
                 if (it != mapWallet.end()) {
                     it->second.MarkDirty();
                 }
@@ -1280,8 +1285,8 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pin
     // recomputed, also:
     for(const CTxIn& txin : tx.vin)
     {
-        if (mapWallet.count(txin.prevout.hash))
-            mapWallet[txin.prevout.hash].MarkDirty();
+        if (mapWallet.count(txin.prevout.getHash()))
+            mapWallet[txin.prevout.getHash()].MarkDirty();
     }
 }
 
@@ -1432,7 +1437,7 @@ bool CWalletTx::IsTrusted() const
     for(const CTxIn& txin : tx->vin)
     {
         // Transactions not sent by us: not trusted
-        const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout.hash);
+        const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout.getHash());
         if (parent == NULL)
             return false;
         const CTxOut& parentOut = parent->tx->vout[txin.prevout.n];
@@ -1658,7 +1663,7 @@ std::map<CTxDestination, std::vector<COutput>> CWallet::ListCoins(CAccount* forA
     std::vector<COutPoint> lockedCoins;
     ListLockedCoins(lockedCoins);
     for (const auto& output : lockedCoins) {
-        auto it = mapWallet.find(output.hash);
+        auto it = mapWallet.find(output.getHash());
         if (it != mapWallet.end()) {
             int depth = it->second.GetDepthInMainChain();
             if (depth >= 0 && output.n < it->second.tx->vout.size() &&
@@ -1681,7 +1686,7 @@ const CTxOut& CWallet::FindNonChangeParentOutput(const CTransaction& tx, int out
     int n = output;
     while (IsChange(ptx->vout[n]) && ptx->vin.size() > 0) {
         const COutPoint& prevout = ptx->vin[0].prevout;
-        auto it = mapWallet.find(prevout.hash);
+        auto it = mapWallet.find(prevout.getHash());
         if (it == mapWallet.end() || it->second.tx->vout.size() <= prevout.n ||
             !IsMine(it->second.tx->vout[prevout.n])) {
             break;
@@ -1872,7 +1877,7 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
         coinControl->ListSelected(vPresetInputs);
     for(const COutPoint& outpoint : vPresetInputs)
     {
-        std::map<uint256, CWalletTx>::const_iterator it = mapWallet.find(outpoint.hash);
+        std::map<uint256, CWalletTx>::const_iterator it = mapWallet.find(outpoint.getHash());
         if (it != mapWallet.end())
         {
             const CWalletTx* pcoin = &it->second;
@@ -2082,7 +2087,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
                 CTxDestination address;
                 if(!IsMine(txin)) /* If this input isn't mine, ignore it */
                     continue;
-                if(!ExtractDestination(mapWallet[txin.prevout.hash].tx->vout[txin.prevout.n], address))
+                if(!ExtractDestination(mapWallet[txin.prevout.getHash()].tx->vout[txin.prevout.n], address))
                     continue;
                 grouping.insert(address);
                 any_mine = true;
@@ -2275,15 +2280,16 @@ void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &scrip
         return;
     }
 
+    // Always pay to KEYCHAIN_SPENDING instead of KEYCHAIN_WITNESS if possible - that way if witness key is stolen our funds are safe.
     // If an explicit script has been set via RPC then use that, otherwise we just make a script from a key
     if (forAccount->hasNonCompoundRewardScript())
     {
-        rKey = std::make_shared<CReserveKeyOrScript>(nullptr, nullptr, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(nullptr, nullptr, KEYCHAIN_SPENDING);
         rKey->reserveScript = forAccount->getNonCompoundRewardScript();
     }
     else
     {
-        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_EXTERNAL);
+        rKey = std::make_shared<CReserveKeyOrScript>(this, forAccount, KEYCHAIN_SPENDING);
 
         CPubKey pubkey;
         if (!rKey->GetReservedKey(pubkey))

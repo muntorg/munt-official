@@ -594,20 +594,23 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    const std::string URL_WEBSITE = "Gulden.com";
+    const std::string URL_WEBSITE = "<https://Gulden.com>";
 
-    //fixme: (2.0) (HIGH) - Fix copyright and also add license info.
-    return CopyrightHolders(strprintf(helptr("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
-           "\n" +
-           strprintf(helptr("Please contribute if you find %s useful. "
-                       "Visit %s for further information about the software."),
-               PACKAGE_NAME, URL_WEBSITE) +
-           "\n" +
-           "\n" +
-           helptr("This is experimental software.") + "\n" +
-
-           strprintf(helptr("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard."), "<https://www.openssl.org>") +
-           "\n";
+    //fixme: (2.1) Mention additional libraries, boost etc.
+    //fixme: (2.1) Translate
+    //fixme: (2.1) Add code to ensure translations never strip copyrights
+    return helptr("Copyright (C) 2014-2018 The Gulden developers")+ "\n"
+           + helptr("Licensed under the Gulden license")+ "\n"
+           + "\n"
+           + helptr("This is experimental software.")+ "\n"
+           + strprintf(helptr("Please contribute if you find %s useful. Visit %s for further information about the software."), PACKAGE_NAME, URL_WEBSITE)
+           + "\n"
+           + "\n"
+           + strprintf(helptr("This product is originally based on a fork of the Bitcoin project. Copyright (C) 2014-2018 The Bitcoin Core Developers.")) + "\n"
+           + strprintf(helptr("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard."), "<https://www.openssl.org>")+ "\n"
+           + strprintf(helptr("This product uses a licensed copy of Font Awesome Pro"))+ "\n"
+           + strprintf(helptr("This product includes and uses the Lato font which is licensed under the SIL Open Font License"))+ "\n"
+           + strprintf(helptr("This product makes use of the Qt toolkit which is dynamically linked and licensed under the LGPL"))+ "\n";
 }
 
 static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex)
@@ -1471,34 +1474,47 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     fDiscover = GetBoolArg("-discover", true);
     fRelayTxes = !GetBoolArg("-blocksonly", DEFAULT_BLOCKSONLY);
 
-    if (fListen) {
-        bool fBound = false;
-        if (gArgs.IsArgSet("-bind")) {
-            for(const std::string& strBind : gArgs.GetArgs("-bind")) {
-                CService addrBind;
-                if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
-                    return InitError(ResolveErrMsg("bind", strBind));
-                fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR));
+    //fixme: (2.1) Improve exception handling here
+    try
+    {
+        if (fListen)
+        {
+            bool fBound = false;
+            if (gArgs.IsArgSet("-bind")) {
+                for(const std::string& strBind : gArgs.GetArgs("-bind"))
+                {
+                    CService addrBind;
+                    if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
+                        return InitError(ResolveErrMsg("bind", strBind));
+                    fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR));
+                }
             }
-        }
-        if (gArgs.IsArgSet("-whitebind")) {
-            for(const std::string& strBind : gArgs.GetArgs("-whitebind")) {
-                CService addrBind;
-                if (!Lookup(strBind.c_str(), addrBind, 0, false))
-                    return InitError(ResolveErrMsg("whitebind", strBind));
-                if (addrBind.GetPort() == 0)
-                    return InitError(strprintf(errortr("Need to specify a port with -whitebind: '%s'"), strBind));
-                fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR | BF_WHITELIST));
+            if (gArgs.IsArgSet("-whitebind"))
+            {
+                for(const std::string& strBind : gArgs.GetArgs("-whitebind"))
+                {
+                    CService addrBind;
+                    if (!Lookup(strBind.c_str(), addrBind, 0, false))
+                        return InitError(ResolveErrMsg("whitebind", strBind));
+                    if (addrBind.GetPort() == 0)
+                        return InitError(strprintf(errortr("Need to specify a port with -whitebind: '%s'"), strBind));
+                    fBound |= Bind(connman, addrBind, (BF_EXPLICIT | BF_REPORT_ERROR | BF_WHITELIST));
+                }
             }
+            if (!gArgs.IsArgSet("-bind") && !gArgs.IsArgSet("-whitebind"))
+            {
+                struct in_addr inaddr_any;
+                inaddr_any.s_addr = INADDR_ANY;
+                fBound |= Bind(connman, CService((in6_addr)IN6ADDR_ANY_INIT, GetListenPort()), BF_NONE);
+                fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
+            }
+            if (!fBound)
+                return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
         }
-        if (!gArgs.IsArgSet("-bind") && !gArgs.IsArgSet("-whitebind")) {
-            struct in_addr inaddr_any;
-            inaddr_any.s_addr = INADDR_ANY;
-            fBound |= Bind(connman, CService((in6_addr)IN6ADDR_ANY_INIT, GetListenPort()), BF_NONE);
-            fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
-        }
-        if (!fBound)
-            return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
+    }
+    catch(...)
+    {
+        return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
     }
 
     if (gArgs.IsArgSet("-externalip")) {
@@ -1738,7 +1754,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
 
-    //fixme: (2.0) - ensure activation
     if (chainparams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout != 0) {
         // Only advertise witness capabilities if they have a reasonable start time.
         // This allows us to have the code merged without a defined softfork, by setting its

@@ -159,13 +159,33 @@ bool DecodeHexBlk(CBlock& block, const std::string& strHexBlk)
     if (!IsHex(strHexBlk))
         return false;
 
-    std::vector<unsigned char> blockData(ParseHex(strHexBlk));
-    CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION);
-    try {
-        ssBlock >> block;
+    {
+        bool parsedAsSegSig = true;
+        std::vector<unsigned char> blockData(ParseHex(strHexBlk));
+        CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
+        try
+        {
+            ssBlock >> block;
+        }
+        catch (const std::exception&)
+        {
+            parsedAsSegSig = false;
+        }
+        if (parsedAsSegSig)
+            return true;
     }
-    catch (const std::exception&) {
-        return false;
+    //fixme: (2.1) We can remove this code block after phase 4 activates.
+    {
+        std::vector<unsigned char> blockData(ParseHex(strHexBlk));
+        CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION);
+        try
+        {
+            ssBlock >> block;
+        }
+        catch (const std::exception& e)
+        {
+            return false;
+        }
     }
 
     return true;

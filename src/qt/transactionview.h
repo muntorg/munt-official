@@ -85,6 +85,7 @@ private:
     QDateTimeEdit *dateTo;
     QAction *abandonAction;
     QAction *bumpFeeAction;
+    QAction *editLabelAction;
 
     QWidget *createDateRangeWidget();
 

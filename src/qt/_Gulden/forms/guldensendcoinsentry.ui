@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>887</width>
+    <width>831</width>
     <height>660</height>
    </rect>
   </property>
@@ -39,9 +39,25 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1,0">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="GuldenAmountField" name="payAmount"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="ClickableLabel" name="sendAll">
@@ -51,6 +67,12 @@
        <property name="text">
         <string>All</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
       </widget>
      </item>
     </layout>
@@ -59,6 +81,9 @@
     <widget class="QLabel" name="payInfo">
      <property name="text">
       <string/>
+     </property>
+     <property name="indent">
+      <number>0</number>
      </property>
     </widget>
    </item>

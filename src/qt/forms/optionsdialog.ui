@@ -59,6 +59,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="autoUpdateCheck">
+         <property name="toolTip">
+          <string>Periodically check if updates are available. </string>
+         </property>
+         <property name="text">
+          <string>&amp;Automatically check for updates</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2_Main">
          <item>
           <widget class="QLabel" name="databaseCacheLabel">

@@ -261,8 +261,8 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
     {
         if (IsPow2WitnessOutput(txout))
         {
-            if ( txout.nValue < (nMinimumWitnessAmount * COIN) )
-                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", nMinimumWitnessAmount));
+            if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
+                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
 
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             uint64_t nUnused1, nUnused2;
@@ -273,7 +273,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
-            if (nWeight < nMinimumWitnessWeight)
+            if (nWeight < gMinimumWitnessWeight)
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
             }

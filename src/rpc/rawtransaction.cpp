@@ -585,7 +585,7 @@ UniValue decodescript(const JSONRPCRequest& request)
 static void TxInErrorToJSON(const uint64_t nTransactionVersion, const CTxIn& txin, UniValue& vErrorsRet, const std::string& strMessage)
 {
     UniValue entry(UniValue::VOBJ);
-    entry.push_back(Pair("txid", txin.prevout.hash.ToString()));
+    entry.push_back(Pair("txid", txin.prevout.getHash().ToString()));
     entry.push_back(Pair("vout", (uint64_t)txin.prevout.n));
     UniValue witness(UniValue::VARR);
     for (unsigned int i = 0; i < txin.segregatedSignatureData.stack.size(); i++) {
