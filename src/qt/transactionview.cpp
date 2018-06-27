@@ -424,10 +424,6 @@ void TransactionView::contextualMenu(const QPoint &point)
     switch (transactionType)
     {
         case TransactionRecord::Other:
-        case TransactionRecord::WitnessRenew:
-        case TransactionRecord::WitnessFundSend:
-        case TransactionRecord::WitnessEmptySend:
-        case TransactionRecord::WitnessIncreaseSend:
         case TransactionRecord::SendToAddress:
         case TransactionRecord::SendToOther:
         case TransactionRecord::RecvWithAddress:
@@ -435,6 +431,10 @@ void TransactionView::contextualMenu(const QPoint &point)
         case TransactionRecord::SendToSelf:
         case TransactionRecord::InternalTransfer:
             break;
+        case TransactionRecord::WitnessRenew:
+        case TransactionRecord::WitnessFundSend:
+        case TransactionRecord::WitnessEmptySend:
+        case TransactionRecord::WitnessIncreaseSend:
         case TransactionRecord::WitnessFundRecv:
         case TransactionRecord::WitnessIncreaseRecv:
         case TransactionRecord::WitnessChangeKeyRecv:
