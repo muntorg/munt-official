@@ -4,6 +4,12 @@ This release incorporates three new major feature branches, which combined invol
 * PoW² - See https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf for technical information
 Highlights include: Ability to lock funds for a period of time and earn rewards while securing the network. Drastically enhanced network security.
 
+UI  - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
+UI  - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
+CORE - New blockchain conesnsus rules for a PoW² driven blockchain with determistic witnessing.
+CORE - New address type for two key witness accounts
+CORE - New account types for witnessing, including special behaviour (hardening) of the witness key chain so that witness keys can be shared without compromising wallet security.
+CORE - Automatic witnessing of incoming blocks in exchange for rewards
 RPC - New commands:
 View a statistical/informational snapshot of the witness system for any block in the blockchain - getwitnessinfo "block_specifier" verbose mine_only
 Create a new witness account - createwitnessaccount "name"
@@ -11,25 +17,16 @@ Lock funds into a witness account - fundwitnessaccount "funding_account" "witnes
 Add funds to a witness account and/or extend the lock period - extendwitnessaccount "funding_account" "witness_account" "amount" "time" 
 Add funds to a witness address and/or extend the lock period - extendwitnessaddress "funding_account" "witness_address" "amount" "time" 
 Export a URL for creation of a linked "witness-only" account - getwitnessaccountkeys "witness_account" 
-
-getwitnesscompound "witness_account"
-getwitnessinfo "block_specifier" verbose mine_only
-getwitnessrewardscript "witness_account" 
-importwitnesskeys "account_name" "encoded_key_url" "create_account" 
-mergewitnessaccount "funding_account" "witness_account"
-renewwitnessaccount "witness_account" 
-rotatewitnessaccount "funding_account" "witness_account" 
-rotatewitnessaddress "funding_account" "witness_address" 
-setwitnesscompound "witness_account" "amount"
-setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
-splitwitnessaccount "funding_account" "witness_account" "amounts" 
-
-RPC - New command 'getwitnessaccountkeys' for exporting of witness keys to other wallets/devices.
-RPC - New command 'getwitnessinfo' used to get various info and statistics about witness system (current network weight etc.)
-RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
-RPC - New command 'getlockedbalance' as counterpart to 'getunconfirmedbalance'
-UI  - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
-UI  - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
+Import a "witness-only" account from a URL that has previously been exported - importwitnesskeys "account_name" "encoded_key_url" "create_account"
+Split a witness account into multiple witness addresses; Lock period is not changed this exists for the benefit of users whose weight is too large for the network - splitwitnessaccount "funding_account" "witness_account" "amounts"
+Merge multiple identical witness addresses into a single one; Only works on identical accounts i.e. ones that have previously been split - mergewitnessaccount "funding_account" "witness_account"
+Renew a witness account that has expired due to failiure to witness - renewwitnessaccount "witness_account" 
+Change the witness key on an account where the key may have been compromised or as a periodic precaution - rotatewitnessaccount "funding_account" "witness_account"
+Change the witness key on an account where the key may have been compromised or as a periodic precaution  - rotatewitnessaddress "funding_account" "witness_address"
+Set a witness account to compound all or part of the earnings it receives (phase 4 only) - setwitnesscompound "witness_account" "amount"
+Check the compounding settings for a witness account - getwitnesscompound "witness_account"
+Set an address or script other than the default for witness reward payout - setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
+Get the current address or script that has been set for witness reward payout - getwitnessrewardscript "witness_account" 
 
 
 
@@ -47,12 +44,13 @@ CORE - Witness based version bit activation, for better control of future update
 Highlights include: A switch to boost::asio for the networking stack to replace the old select() based networking code; Multiple improvements to the initial chain synchronisation process, including reverse header synchronisation, making it drastically faster; Removal of limitations to how many peers a server can handle, which helps solve scalability/congestion issues on the network in peak usage periods.
 
 
-Non exhaustive list of additional changes:
+* Non exhaustive list of additional general changes.
 UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
 UI - Improved handling of wallet alerts/warnings through a new warning dialog.
 UI - New "all" button on send coin screen to send all funds.
 UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
 UI - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
+UI - Add localisation for the loading/splash screen when wallet first opens.
 CORE - Major performance improvements for wallets with lots of transactions.
 CORE - Major performance improvements for wallets with lots of accounts.
 CORE - Performance improvements when creating new accounts.
@@ -68,7 +66,7 @@ RPC - New command 'getimmaturebalance' as conterpart to 'getunconfirmedbalance'
 RPC - Add account capability to 'sendmany' command.
 RPC - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
 
-And many more changes and bug fixes...
+And many more changes and bug fixes, for a comprehensive list view the commit history on our github repository.
 
 
 
