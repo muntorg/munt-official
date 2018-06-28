@@ -483,7 +483,7 @@ int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride
         ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
         return pIndex->nTime;
     }
-    return std::numeric_limits<int64_t>::max();
+    return 0;
 }
 
 typedef std::pair<int64_t, int64_t> NumAndWeight;

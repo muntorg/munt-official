@@ -198,17 +198,28 @@ protected:
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
-            // Mainnet - 1 month from phase 3 activation
-            // Testnet - 1/4 of that
-            if (IsArgSet("-testnet"))
+            if (nActivationTime > 0)
             {
-                nActivationTime += (2629746/4);
+                // Mainnet - 1 month from phase 3 activation
+                // Testnet - 1/4 of that
+                if (IsArgSet("-testnet"))
+                {
+                    nActivationTime += (2629746/4);
+                }
+                else
+                {
+                    nActivationTime += 2629746;
+                }
+                if (nActivationTime <= 0)
+                {
+                    return std::numeric_limits<int64_t>::max();
+                }
+                return nActivationTime;
             }
             else
             {
-                nActivationTime += 2629746;
+                return std::numeric_limits<int64_t>::max();
             }
-            return nActivationTime;
         }
 
         return params.vDeployments[id].nStartTime;
