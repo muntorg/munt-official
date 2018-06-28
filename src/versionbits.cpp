@@ -199,9 +199,10 @@ protected:
         {
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
             // Mainnet - 1 month from phase 3 activation
+            // Testnet - 1/4 of that
             if (IsArgSet("-testnet"))
             {
-                360 * params.nPowTargetSpacing;
+                nActivationTime += (2629746/4);
             }
             else
             {

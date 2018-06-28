@@ -106,7 +106,7 @@ public:
 
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 1531223700; // July 10th 2018 - 11::55 UTC
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 1531411200; // July 12th 2018 - 16::00 UTC
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1533902100; // August 10th 2018 - 11::55 UTC
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
 
@@ -258,7 +258,7 @@ public:
 
             // Deployment of PoW2 - phase 2
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
-            consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = seedTimestamp; 
+            consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = seedTimestamp;
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = seedTimestamp + (1 * 30 * 24 * 60 * 60); //1 month.
             consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
 
@@ -369,14 +369,14 @@ public:
 
         // Deployment of PoW2 - phase 2
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].bit = 27;
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 999999999999ULL; // July 1st 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1504051200; // August 30th 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nStartTime = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].nTimeout = 1504051200;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE2].type = Consensus::DEPLOYMENT_POW;
 
         // Deployment of PoW2 - phase 4
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit = 26;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nStartTime = 999999999999ULL; // From timestamp of first phase 3 block
-        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout = 1504051200; // August 30th 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout = 1504051200;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].type =Consensus::DEPLOYMENT_POW;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].protoVersion = 70015;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 95; 
