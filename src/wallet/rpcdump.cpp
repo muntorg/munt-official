@@ -34,6 +34,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <univalue.h>
+#include <Gulden/util.h>
 
 
 
@@ -149,7 +150,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
         pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), strLabel, "receive");
 
         // Don't throw error in case a key is already there
-        if (pwallet->HaveKey(vchAddress)) {
+        if (pwallet->HaveKey(vchAddress)){
             return NullUniValue;
         }
 
@@ -161,9 +162,9 @@ UniValue importprivkey(const JSONRPCRequest& request)
 
         // whenever a key is imported, we need to scan the whole chain
         pwallet->UpdateTimeFirstKey(1);
-
-        if (fRescan) {
-            pwallet->ScanForWalletTransactions(chainActive.Genesis(), true);
+        if (fRescan)
+        {
+            std::thread(rescanThread).detach();
         }
     }
 
