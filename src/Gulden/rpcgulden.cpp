@@ -755,6 +755,8 @@ static UniValue createaccounthelper(CWallet* pwallet, std::string accountName, s
 {
     CAccount* account = NULL;
 
+    EnsureWalletIsUnlocked(pwallet);
+
     if (accountType == "HD")
     {
         account = pwallet->GenerateNewAccount(accountName, AccountState::Normal, AccountType::Desktop, bMakeActive);
@@ -769,7 +771,6 @@ static UniValue createaccounthelper(CWallet* pwallet, std::string accountName, s
     }
     else if (accountType == "Legacy")
     {
-        EnsureWalletIsUnlocked(pwallet);
         account = pwallet->GenerateNewLegacyAccount(accountName.c_str());
     }
 
