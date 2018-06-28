@@ -26,6 +26,7 @@
 #include "policy/policy.h"
 #include "policy/rbf.h"
 #include "Gulden/util.h"
+#include "alert.h"
 
 bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
 {
@@ -315,7 +316,16 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                         ret = reservekey.GetReservedKey(vchPubKey);
                         if (!ret)
                         {
-                            strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                            if (reservekey.account && reservekey.account->IsFixedKeyPool())
+                            {
+                                std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
+                                CAlert::Notify(strFailReason, true, true);
+                                LogPrintf("%s", strFailReason.c_str());
+                            }
+                            else
+                            {
+                                strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                            }
                             return false;
                         }
 
@@ -349,7 +359,16 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                             ret = reservekey.GetReservedKey(vchPubKey);
                             if (!ret)
                             {
-                                strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                                if (reservekey.account && reservekey.account->IsFixedKeyPool())
+                                {
+                                    std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
+                                    CAlert::Notify(strFailReason, true, true);
+                                    LogPrintf("%s", strFailReason.c_str());
+                                }
+                                else
+                                {
+                                    strFailReason = _("Keypool ran out, please call keypoolrefill first");
+                                }
                                 return false;
                             }
 

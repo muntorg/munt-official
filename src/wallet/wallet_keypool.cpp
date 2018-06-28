@@ -335,6 +335,8 @@ void CWallet::importPrivKey(const CKey& privKey)
         }
     }
 
+    pactiveWallet->addAccount(newAccount, _("Imported key"));
+
     //fixme: (2.1) - Optionally take a key bith date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
     {
@@ -343,7 +345,7 @@ void CWallet::importPrivKey(const CKey& privKey)
         return;
     }
 
-    pactiveWallet->addAccount(newAccount, _("Imported key"));
+    //fixme: (2.1) Delete account on failure.
 }
 
 bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
