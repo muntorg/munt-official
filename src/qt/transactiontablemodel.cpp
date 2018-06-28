@@ -581,7 +581,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                     case TransactionRecord::WitnessFundRecv:
                         return tr("Lock funds");
                     case TransactionRecord::WitnessEmptyRecv:
-                        return tr("Unlock funds");
+                        return tr("Lock funds");
                     case TransactionRecord::WitnessSplitRecv:
                         return tr("Split locked funds");
                     case TransactionRecord::WitnessMergeRecv:
@@ -637,7 +637,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         case TransactionRecord::WitnessFundRecv:
             return tr("Lock funds");
         case TransactionRecord::WitnessFundSend:
-            return tr("Fund witness accoun");
+            return tr("Fund witness account");
         case TransactionRecord::InternalTransfer:
             return "";//Already  handled above this switch
         case TransactionRecord::Other:
