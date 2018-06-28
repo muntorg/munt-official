@@ -90,6 +90,8 @@ public:
         }
     }
 
+    bool SetPrivKey(const CPrivKey& privkey, bool fCompressedIn);
+
     //! Simple read-only vector-like interface.
     unsigned int size() const { return (fValid ? keydata.size() : 0); }
     const unsigned char* begin() const { return keydata.data(); }

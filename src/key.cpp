@@ -220,6 +220,15 @@ bool CKey::Load(const CPrivKey &privkey, const CPubKey &vchPubKey, bool fSkipChe
     return VerifyPubKey(vchPubKey);
 }
 
+bool CKey::SetPrivKey(const CPrivKey& privkey, bool fCompressedIn)
+{
+    if (!ec_privkey_import_der(secp256k1_context_sign, (unsigned char*)begin(), &privkey[0], privkey.size()))
+        return false;
+    fCompressed = fCompressedIn;
+    fValid = true;
+    return true;
+}
+
 bool CKey::Derive(CKey& keyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const {
     assert(IsValid());
     assert(IsCompressed());
