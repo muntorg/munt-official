@@ -17,7 +17,7 @@
 
 bool fShowChildAccountsSeperately = false;
 
-static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {
@@ -27,6 +27,11 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNum
 
         for (const auto shadowSubType : { AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness })
         {
+            int nFinalAccountPoolTargtSize = nAccountPoolTargetSize;
+            if (shadowSubType == AccountType::PoW2Witness)
+            {
+                nFinalAccountPoolTargtSize = nAccountPoolTargetSizeWitness;
+            }
             int numShadow = 0;
             {
                 for (const auto& accountPair : pactiveWallet->mapAccounts)
@@ -43,10 +48,10 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int& nNum
                     }
                 }
             }
-            if (numShadow < nAccountPoolTargetSize)
+            if (numShadow < nFinalAccountPoolTargtSize)
             {
                 CWalletDB db(*pactiveWallet->dbw);
-                while (numShadow < nAccountPoolTargetSize)
+                while (numShadow < nFinalAccountPoolTargtSize)
                 {
                     // New shadow account
                     CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
@@ -79,7 +84,8 @@ static void ThreadShadowPoolManager()
     static bool promptOnceForAddressGenerationUnlock = true;
     int depth = 1;
     int nAccountPoolTargetSize = GetArg("-accountpool", 10);
-    int nKeyPoolTargetDepth = GetArg("-keypool", 40);
+    int nAccountPoolTargetSizeWitness = GetArg("-accountpool", 2);
+    int nKeyPoolTargetDepth = GetArg("-keypool", 20);
     while (true)
     {
         long milliSleep = 500;
@@ -87,12 +93,12 @@ static void ThreadShadowPoolManager()
 
         if (pactiveWallet)
         {
-            LOCK(pactiveWallet->cs_wallet);
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
 
             int nNumNewAccountsAllocated = 0;
 
             // First we expand the amount of shadow accounts until we have the desired amount.
-            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nNumNewAccountsAllocated, tryLockWallet);
+            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nNumNewAccountsAllocated, tryLockWallet);
             if (nNumNewAccountsAllocated > 0)
             {
                 // Reset the depth to 1, so that our new accounts get their first keys as a priority instead of expanding deeper the other accounts.
@@ -869,6 +875,7 @@ CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
     //fixme: (2.1) Improve the way encryption of legacy accounts is handled
     if (IsCrypted())
     {
+        LOCK2(cs_main, cs_wallet);
         if (IsLocked())
             return nullptr;
 
@@ -970,6 +977,7 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
 
     if (IsCrypted())
     {
+        LOCK2(cs_main, cs_wallet);
         if (IsLocked())
             return nullptr;
 
