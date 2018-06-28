@@ -4042,13 +4042,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+634"/>
-        <location line="+2"/>
-        <source>Unlock funds</source>
-        <translation>Unlock funds</translation>
-    </message>
-    <message>
-        <location line="+266"/>
+        <location filename="../../transactiontablemodel.cpp" line="+902"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -4078,7 +4072,13 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>watch-only</translation>
     </message>
     <message>
-        <location line="-221"/>
+        <location line="+140"/>
+        <location line="+2"/>
+        <source>Unlock funds</source>
+        <translation>Unlock funds</translation>
+    </message>
+    <message>
+        <location line="-363"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
