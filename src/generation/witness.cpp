@@ -513,7 +513,6 @@ void static GuldenWitness()
 
 
                                     /** Set witness specific block header information **/
-                                    //testme: (GULDEN) (POW2) (2.0)
                                     {
                                         // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
                                         pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);

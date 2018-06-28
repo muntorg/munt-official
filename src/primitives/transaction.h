@@ -30,7 +30,6 @@ static const int SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES = 0x40000000;
 
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
-//fixme: (2.0) (HIGH) - Consider putting a phase 2/3 validation restriction to lock this in (prevent anyone mining a nVersion >= 5 transaction before we are ready) - normally this would be cause for concern of forking the network (before phase 2 kicks in) but checkpoint server should help us out here.
     return (nVersion < 5) || (nVersion == 536870912);
 }
 

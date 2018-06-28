@@ -1163,7 +1163,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
     CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight, chainparams.GetConsensus());
 
-    // testme: (2.0) (POW2) (HIGH) Ensure this works as intended.
+    //fixme: (2.0.1) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
     if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)

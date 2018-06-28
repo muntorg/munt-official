@@ -413,7 +413,7 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
     /** sha256 as random roulette spin/seed - NB! We deliritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
     arith_uint256 rouletteSelectionSeed = UintToArith256(blockHash);
 
-    //checkme: (GULDEN) (2.0) (POW2) - Is this necessary? I don't think so, so disabling.
+    //fixme: (2.0.1) Update whitepaper.
     /** ensure random seed exceeds one full spin of the wheel to prevent any possible bias towards low numbers **/
     //while (rouletteSelectionSeed < witnessInfo.nReducedTotalWeight)
     //{
@@ -450,7 +450,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
     // Calculate network weight based on current block, exclude witnesses that are too old.
     for (auto coinIter : witnessInfo.allWitnessCoins)
     {
-        //testme: (GULDEN) (POW2) (2.0) (HIGH) - Make sure no off by 1 error here.
+        //fixme: (2.0.1) Unit tests
         uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
         COutPoint outPoint = coinIter.first;
         Coin coin = coinIter.second;
