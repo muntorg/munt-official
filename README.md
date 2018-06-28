@@ -10,7 +10,7 @@
     </td>
     <td width="20%" border=0>
       <a href="#">
-        <img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=2.0_development" alt="ci build status"/>
+        <img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=master" alt="ci build status"/>
       </a>
     </td>
   </tr>
