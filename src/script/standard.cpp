@@ -74,7 +74,7 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
 
     //fixme: (2.1) We can remove this logic after 2.1 release.
     // Shortcut for PoW2 witness, which is more constrained than other types: 
-    //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
+    //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
     if (scriptPubKey.IsPoW2Witness())
     {
         typeRet = TX_PUBKEYHASH_POW2WITNESS;
@@ -316,14 +316,14 @@ public:
         return true;
     }
 
-    //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte]  (66 bytes)
+    //OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
     bool operator()(const CPoW2WitnessDestination& destinationPoW2Witness) const {
         script->clear();
         *script << OP_0;
-        script->insert(script->end(), (unsigned char)64);
+        script->insert(script->end(), (unsigned char)72);
         script->insert(script->end(), destinationPoW2Witness.spendingKey.begin(), destinationPoW2Witness.spendingKey.end());
         script->insert(script->end(), destinationPoW2Witness.witnessKey.begin(), destinationPoW2Witness.witnessKey.end());
-        *script << CScriptUInt64(destinationPoW2Witness.lockFromBlock) << CScriptUInt64(destinationPoW2Witness.lockUntilBlock) << CScriptUInt64(destinationPoW2Witness.failCount);
+        *script << CScriptUInt64(destinationPoW2Witness.lockFromBlock) << CScriptUInt64(destinationPoW2Witness.lockUntilBlock) << CScriptUInt64(destinationPoW2Witness.failCount) << CScriptUInt64(destinationPoW2Witness.actionNonce);
 
         return true;
     }

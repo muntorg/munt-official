@@ -870,8 +870,18 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
 
     if (pblock->nVersionPoW2Witness > 0)
     {
+        hashBlock = pblock->GetHashPoW2();
+        {
+            LOCK(cs_most_recent_block);
+            most_recent_block_hash_pow2 = hashBlock;
+            most_recent_block_pow2 = pblock;
+            most_recent_compact_block_pow2 = pcmpctblock;
+            fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
+        }
+    }
+    else
+    {
         hashBlock = pblock->GetHashLegacy();
-
         {
             LOCK(cs_most_recent_block);
             most_recent_block_hash_pow = hashBlock;
@@ -879,14 +889,6 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
             most_recent_compact_block_pow = pcmpctblock;
             fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
         }
-    }
-    hashBlock = pblock->GetHashPoW2();
-    {
-        LOCK(cs_most_recent_block);
-        most_recent_block_hash_pow2 = hashBlock;
-        most_recent_block_pow2 = pblock;
-        most_recent_compact_block_pow2 = pcmpctblock;
-        fWitnessesPresentInMostRecentCompactBlock = fWitnessEnabled;
     }
 
 
@@ -1969,7 +1971,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CBlock block;
         bool ret = ReadBlockFromDisk(block, it->second, chainparams);
 
-        //fixme: (2.0) (HIGH) Work around assert we are getting here, ideally we should fix this.
+        //fixme: (2.1) (NETWORK) 
+        //We were getting an assert here at some point so assert disable and error handling placed instead.
+        //We should look into this again.
         //assert(ret);
         if (ret)
         {

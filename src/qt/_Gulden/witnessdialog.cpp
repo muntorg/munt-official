@@ -46,6 +46,8 @@
 
 #include <QMenu>
 
+#include "alert.h"
+
 PlotMouseTracker::PlotMouseTracker( QWidget* canvas )
 : QwtPlotPicker( canvas )
 {
@@ -451,7 +453,9 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                     int64_t nUnused1;
                     if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
                     {
-                        //fixme: (2.0) Error handling
+                        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
+                        CAlert::Notify(strErrorMessage, true, true);
+                        LogPrintf("%s", strErrorMessage.c_str());
                         return;
                     }
                     pointMapGenerated[0] = 0;
@@ -757,11 +761,20 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                     CBlock block;
                     {
                         LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
-                        //fixme: (2.0) Error handling
                         if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+                        {
+                            std::string strErrorMessage = "Error in witness dialog, failed to read block from disk";
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf("%s", strErrorMessage.c_str());
                             return;
+                        }
                         if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                        {
+                            std::string strErrorMessage = "Error in witness dialog, failed to retrieve witness info";
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf("%s", strErrorMessage.c_str());
                             return;
+                        }
                         nTotalNetworkWeight = witnessInfo.nTotalWeight;
                     }
                     for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
@@ -992,11 +1005,20 @@ void WitnessDialog::updateAccountIndicators()
 
         CGetWitnessInfo witnessInfo;
         CBlock block;
-        //fixme: (2.0) Error handling.
         if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+        {
+            std::string strErrorMessage = "Error in witness dialog, failed to read block from disk";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
             return;
+        }
         if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+        {
+            std::string strErrorMessage = "Error in witness dialog, failed to read witness info";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
             return;
+        }
 
         LOCK(pactiveWallet->cs_wallet);
 

@@ -503,10 +503,16 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                     CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
                     oss << strRequestMutable;
                     oss >> fCheckMemPool;
-                    //fixme: (2.0) HIGH
-                    /*
-                    oss >> COMPACTSIZEVECTOR(vOutPoints);
-                    */
+                    //fixme: (2.1)
+                    int nSize;
+                    oss >> COMPACTSIZE(nSize);
+                    for (int i=0; i<nSize; ++i)
+                    {
+                        COutPoint outpoint;
+                        //fixme: (2.1) (SEGSIG)
+                        outpoint.WriteToStream(oss, (CTxInType)0, 0, 1);
+                        vOutPoints.push_back(outpoint);
+                    }
                 }
             } catch (const std::ios_base::failure& e) {
                 // abort in case of unreadable binary data
@@ -602,7 +608,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                 utxo.push_back(Pair("height", (int32_t)coin.nHeight));
                 utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
 
-                //fixme: (2.0) - Implement something here for other output types.
+                //fixme: (2.1) (SEGSIG)
                 if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
                 {
                     // include the script in a json output

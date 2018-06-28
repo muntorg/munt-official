@@ -8,7 +8,8 @@
 
 #include "validation/validation.h"
 
-//fixme: (2.0) - Properly document all of these; including pre/post conditions; implement unit tests.
+//fixme: (2.0.1) - Properly document all of these; including pre/post conditions;
+//fixme: (2.0.1) implement unit tests.
 
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;

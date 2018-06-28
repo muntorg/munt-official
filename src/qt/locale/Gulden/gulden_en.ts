@@ -255,7 +255,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AskPassphraseDialog</name>
     <message>
-        <location filename="../../askpassphrasedialog.cpp" line="+50"/>
+        <location filename="../../askpassphrasedialog.cpp" line="+51"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -808,19 +808,17 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+250"/>
-        <location line="+22"/>
-        <location line="+35"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+323"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="-49"/>
+        <location line="-66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-36"/>
+        <location line="-34"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -840,7 +838,27 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Spendable funds: </translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location filename="../../gui.cpp" line="+511"/>
+        <source>Check for Updates</source>
+        <translation>Check for Updates</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Check for software updates</source>
+        <translation>Check for software updates</translation>
+    </message>
+    <message>
+        <location line="+1110"/>
+        <source>Software update warning</source>
+        <translation>Software update warning</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Software update</source>
+        <translation>Software update</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+27"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -850,7 +868,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Send</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+65"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
         <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
@@ -890,7 +908,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+382"/>
+        <location filename="../../gui.cpp" line="-1245"/>
         <location line="+6"/>
         <source>&amp;Overview</source>
         <translation>&amp;Overview</translation>
@@ -1068,17 +1086,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Show information about Qt</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Check for Updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Check for software updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+8"/>
         <source>&amp;Encrypt Wallet...</source>
         <translation>&amp;Encrypt Wallet...</translation>
     </message>
@@ -1317,11 +1325,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+109"/>
-        <source>Software update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../gulden.cpp" line="+564"/>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation>A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
@@ -1431,28 +1434,28 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+487"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+480"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+243"/>
+        <location line="+254"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+254"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+279"/>
         <source>My accounts</source>
         <translation>My accounts</translation>
     </message>
     <message>
-        <location line="-202"/>
+        <location line="-211"/>
         <source>All</source>
         <translation>All</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+51"/>
         <source>Receiving address</source>
         <translation>Receiving address</translation>
     </message>
@@ -1513,7 +1516,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Amount below minimum for IBAN payment.</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+74"/>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
@@ -1523,7 +1526,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+244"/>
+        <location line="+255"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>
@@ -1873,12 +1876,22 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>OptionsDialog</name>
     <message>
-        <location filename="../../optionsdialog.cpp" line="+288"/>
+        <location filename="../../optionsdialog.cpp" line="+289"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../forms/optionsdialog.ui" line="+14"/>
+        <location filename="../../forms/optionsdialog.ui" line="+64"/>
+        <source>Periodically check if updates are available. </source>
+        <translation>Periodically check if updates are available. </translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>&amp;Automatically check for updates</source>
+        <translation>&amp;Automatically check for updates</translation>
+    </message>
+    <message>
+        <location line="-53"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
@@ -1898,17 +1911,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;Start %1 on system login</translation>
     </message>
     <message>
-        <location line="+7"/>
-        <source>Periodically check if updates are available. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>&amp;Automatically check for updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="+19"/>
         <source>Size of &amp;database cache</source>
         <translation>Size of &amp;database cache</translation>
     </message>
@@ -3346,7 +3349,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="+520"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+522"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -3356,12 +3359,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;Delete</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-24"/>
         <source>&amp;Edit</source>
         <translation>&amp;Edit</translation>
     </message>
     <message>
-        <location line="+920"/>
+        <location line="+922"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -3401,7 +3404,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Change:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-984"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-986"/>
         <source>Copy amount</source>
         <translation>Copy amount</translation>
     </message>
@@ -3436,12 +3439,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+443"/>
+        <location line="+445"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
     <message>
-        <location line="+275"/>
+        <location line="-385"/>
+        <source>&amp;Send</source>
+        <translation>&amp;Send</translation>
+    </message>
+    <message>
+        <location line="+660"/>
         <source>Payment request expired.</source>
         <translation>Payment request expired.</translation>
     </message>
@@ -4034,12 +4042,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+891"/>
+        <location filename="../../transactiontablemodel.cpp" line="+902"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location line="-618"/>
+        <location line="-629"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -4064,7 +4072,13 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>watch-only</translation>
     </message>
     <message>
-        <location line="-221"/>
+        <location line="+140"/>
+        <location line="+2"/>
+        <source>Unlock funds</source>
+        <translation>Unlock funds</translation>
+    </message>
+    <message>
+        <location line="-363"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
@@ -4164,66 +4178,74 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <location line="+2"/>
         <location line="+108"/>
-        <location line="+78"/>
+        <location line="+85"/>
         <source>Mining reward</source>
         <translation>Mining reward</translation>
     </message>
     <message>
-        <location line="-184"/>
+        <location line="-191"/>
         <location line="+108"/>
-        <location line="+78"/>
+        <location line="+85"/>
         <source>Witness reward</source>
         <translation>Witness reward</translation>
     </message>
     <message>
-        <location line="-184"/>
+        <location line="-191"/>
         <location line="+112"/>
-        <location line="+90"/>
+        <location line="+97"/>
         <source>Fund witness account extension</source>
         <translation>Fund witness account extension</translation>
     </message>
     <message>
-        <location line="-200"/>
+        <location line="-207"/>
         <source>Extend witness account</source>
         <translation>Extend witness account</translation>
     </message>
     <message>
         <location line="+2"/>
-        <location line="+192"/>
+        <location line="+159"/>
+        <location line="+40"/>
         <source>Split locked funds</source>
         <translation>Split locked funds</translation>
     </message>
     <message>
-        <location line="-190"/>
-        <location line="+192"/>
+        <location line="-197"/>
+        <location line="+159"/>
+        <location line="+40"/>
         <source>Merge locked funds</source>
         <translation>Merge locked funds</translation>
     </message>
     <message>
-        <location line="-190"/>
-        <location line="+192"/>
+        <location line="-197"/>
+        <location line="+161"/>
+        <location line="+38"/>
         <source>Rotate witness key</source>
         <translation>Rotate witness key</translation>
     </message>
     <message>
-        <location line="-190"/>
+        <location line="-197"/>
         <location line="+98"/>
-        <location line="+78"/>
+        <location line="+49"/>
+        <location line="+36"/>
         <source>Renew witness account</source>
         <translation>Renew witness account</translation>
     </message>
     <message>
-        <location line="-174"/>
+        <location line="-181"/>
+        <location line="+205"/>
         <source>Fund witness account</source>
         <translation>Fund witness account</translation>
     </message>
     <message>
+        <location line="-203"/>
+        <location line="+145"/>
         <location line="+2"/>
+        <location line="+54"/>
         <source>Lock funds</source>
         <translation>Lock funds</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="-199"/>
         <source>Empty witness account</source>
         <translation>Empty witness account</translation>
     </message>
@@ -4265,25 +4287,25 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <location line="+12"/>
         <location line="+2"/>
-        <location line="+72"/>
+        <location line="+79"/>
         <location line="+2"/>
         <source>Paid to: %1</source>
         <translation>Paid to: %1</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <location line="+62"/>
+        <location line="-79"/>
+        <location line="+69"/>
         <source>Payment from: %1</source>
         <translation>Payment from: %1</translation>
     </message>
     <message>
-        <location line="-58"/>
-        <location line="+88"/>
+        <location line="-65"/>
+        <location line="+99"/>
         <source>Complex transaction, view transaction details.</source>
         <translation>Complex transaction, view transaction details.</translation>
     </message>
     <message>
-        <location line="-83"/>
+        <location line="-94"/>
         <source>Internal transfer from: %1</source>
         <translation>Internal transfer from: %1</translation>
     </message>
@@ -4303,7 +4325,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Unlock funds to: %1</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+25"/>
         <source>Internal transfer to: %1</source>
         <translation>Internal transfer to: %1</translation>
     </message>
@@ -4313,12 +4335,13 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Internal account movement</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="-32"/>
+        <location line="+34"/>
         <source>Extend locked funds</source>
         <translation>Extend locked funds</translation>
     </message>
     <message>
-        <location line="+315"/>
+        <location line="+319"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
         <translation>Transaction status. Hover over this field to show number of confirmations.</translation>
     </message>
@@ -4356,7 +4379,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionView</name>
     <message>
-        <location filename="../../transactionview.cpp" line="+375"/>
+        <location filename="../../transactionview.cpp" line="+376"/>
         <source>Comma separated file (*.csv)</source>
         <translation>Comma separated file (*.csv)</translation>
     </message>
@@ -4546,7 +4569,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>The transaction history was successfully saved to %1.</translation>
     </message>
     <message>
-        <location line="+177"/>
+        <location line="+207"/>
         <source>Range:</source>
         <translation>Range:</translation>
     </message>
@@ -4559,7 +4582,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+942"/>
+        <location filename="../../walletmodel.cpp" line="+943"/>
         <location line="+46"/>
         <location line="+9"/>
         <source>Fee bump error</source>

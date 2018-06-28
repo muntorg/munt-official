@@ -142,7 +142,7 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
         }
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
-        //fixme: (2.0) Need new ismine type here.?
+        //fixme: (2.1) (ISMINE_WITNESS)
         if (keystore.HaveKey(witnessKeyID))
             return ISMINE_SPENDABLE;
         break;
@@ -167,7 +167,7 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
         {
             if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
                 return ISMINE_SPENDABLE;
-            //fixme: (2.0) Need new ismine type here.?
+            //fixme: (2.1) (ISMINE_WITNESS)
             if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
                 return ISMINE_SPENDABLE;
             break;
@@ -198,7 +198,7 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
             if (haveWitnessKey)
                 keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
 
-            //fixme: (2.0) Need new ismine type here.?
+            //fixme: (2.1) (ISMINE_WITNESS)
             if (haveSpendingKey)
                 return ISMINE_SPENDABLE;
             if (haveWitnessKey)
@@ -342,7 +342,7 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
 
         if (haveSpendingKey)
             return ISMINE_SPENDABLE;
-        //fixme: (2.0) Need new ismine type here.?
+        //fixme: (2.1) (ISMINE_WITNESS)
         if (haveWitnessKey)
             return ISMINE_SPENDABLE;
         break;

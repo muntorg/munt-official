@@ -215,9 +215,9 @@ QList<std::pair<CTxOut,CAmount> > PaymentRequestPlus::getPayTo() const
     QList<std::pair<CTxOut,CAmount> > result;
     for (int i = 0; i < details.outputs_size(); i++)
     {
+        //fixme: (2.1) Payment requests
         //const unsigned char* scriptStr = (const unsigned char*)details.outputs(i).script().data();
         //CScript s(scriptStr, scriptStr+details.outputs(i).script().size());
-        //fixme: (2.0) (HIGH)
         //result.append(std::pair(CTxOut(details.outputs(i).amount(), details.outputs(i)), details.outputs(i).amount()));
     }
     return result;

@@ -92,14 +92,14 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
         return false;
     }
 
-    //fixme: (2.0) - Anything else to serialise here? Add the block height maybe? probably overkill.
+    //Sign the hash of the block as proof that it has been witnessed.
     uint256 hash = pBlock->GetHashPoW2();
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
-    //LogPrintf(">>>[WitFound] witness pubkey [%s]\n", key.GetPubKey().GetID().GetHex());
-
-    //fixme: (2.0) (RELEASE) - Remove this, it is here for testing purposes only.
+    //fixme: (2.0.1) - Enable for testing then delete; this is testing code.
+    //Note there has not been a single hit here in all the testing so this can definitely go in future.
+    #if 0
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
@@ -120,6 +120,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
             return false;
         }
     }
+    #endif
 
     return true;
 }
@@ -141,6 +142,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     witnessDestination.lockFromBlock = witnessInput.lockFromBlock;
     witnessDestination.lockUntilBlock = witnessInput.lockUntilBlock;
     witnessDestination.failCount = witnessInput.failCount;
+    witnessDestination.actionNonce = witnessInput.actionNonce+1;
 
     // If this is the first time witnessing the lockFromBlock won't yet be filled in so fill it in now.
     if (witnessDestination.lockFromBlock == 0)
@@ -211,6 +213,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
         coinbaseTx.vout[0].output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
         coinbaseTx.vout[0].output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
         coinbaseTx.vout[0].output.witnessDetails.failCount = witnessDestination.failCount;
+        coinbaseTx.vout[0].output.witnessDetails.actionNonce = witnessDestination.actionNonce;
     }
     else
     {
@@ -423,7 +426,7 @@ void static GuldenWitness()
                         CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
                         CAmount witnessFeesSubsidy = 0;
 
-                        //fixme: (2.0) (POW2) (ISMINE_WITNESS)
+                        //fixme: (2.1) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
                         {
                             CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
@@ -510,7 +513,6 @@ void static GuldenWitness()
 
 
                                     /** Set witness specific block header information **/
-                                    //testme: (GULDEN) (POW2) (2.0)
                                     {
                                         // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
                                         pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);

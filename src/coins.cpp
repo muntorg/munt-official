@@ -76,7 +76,6 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     {
         if ( IsPow2WitnessOutput(coin.out) )
         {
-            //LogPrintf(">>>CCoinsViewCache: AddCoin %d %s %s\n", GetDepth(), outpoint.ToString(), coin.out.ToString());
             pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase, coin.fSegSig), possible_overwrite);
         }
     }
@@ -117,7 +116,6 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
 void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh) {
     if (pChainedWitView)
     {
-        //LogPrintf(">>>CCoinsViewCache: SpendCoin %d %s\n", GetDepth(), outpoint.ToString());
         // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
         // For chained view we force everything to 'dirty' because we need to know about fresh coins that have been removed and can't just erase them.
         pChainedWitView->SpendCoin(outpoint, NULL, true);

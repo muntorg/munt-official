@@ -30,8 +30,6 @@ static const int SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES = 0x40000000;
 
 inline bool IsOldTransactionVersion(const unsigned int nVersion)
 {
-    //fixme: (2.0) (RELEASE) - Make sure this still works before release.
-    //fixme: (2.0) (HIGH) - Consider putting a phase 2/3 validation restriction to lock this in (prevent anyone mining a nVersion >= 5 transaction before we are ready) - normally this would be cause for concern of forking the network (before phase 2 kicks in) but checkpoint server should help us out here.
     return (nVersion < 5) || (nVersion == 536870912);
 }
 
@@ -73,7 +71,7 @@ struct CBlockPosition
 };
 
 
-//fixme: (2.0) Ensure network rules for the other 7 types are consistently handled.
+//fixme: (2.1) (SEGSIG) Ensure again that network rules for the other 7 types are consistently handled.
 // Represented in class as 3 bits.
 // Maximum of 8 values
 enum CTxInType : uint8_t
@@ -88,8 +86,8 @@ enum CTxInType : uint8_t
     FUTURE_TX_IN_TYPE8 = 7
 };
 
-//fixme: (2.0) we forbid index based outpoint for now.
-//fixme: (2.0) Double check all RBF/AbsoluteLock/RelativeLock behaviour
+//fixme: (2.1) (SEGSIG) we forbid index based outpoint for now.
+//fixme: (2.1) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
 // Only 5 bits available for TxInFlags.
 // The are used as bit flags so only 5 values possible each with an on/off state.
 // All 5 values are currently in use.
@@ -448,6 +446,7 @@ public:
     uint64_t lockFromBlock;
     uint64_t lockUntilBlock;
     uint64_t failCount;
+    uint64_t actionNonce;
 
     CTxOutPoW2Witness() {clear();}
 
@@ -458,6 +457,7 @@ public:
         lockFromBlock = 0;
         lockUntilBlock = 0;
         failCount = 0;
+        actionNonce = 0;
     }
 
     bool operator==(const CTxOutPoW2Witness& compare) const
@@ -466,7 +466,8 @@ public:
                witnessKeyID == compare.witnessKeyID &&
                lockFromBlock == compare.lockFromBlock &&
                lockUntilBlock == compare.lockUntilBlock &&
-               failCount == compare.failCount;
+               failCount == compare.failCount &&
+               actionNonce == compare.actionNonce;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -478,7 +479,8 @@ public:
         READWRITE(witnessKeyID);
         READWRITE(lockFromBlock);
         READWRITE(lockUntilBlock);
-        READWRITE(failCount);
+        READWRITE(VARINT(failCount));
+        READWRITE(VARINT(actionNonce));
     }
 };
 
@@ -1202,7 +1204,7 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
     }
 
-    //fixme: (2.0) - check second vin is a witness transaction.
+    //fixme: (2.0.1) - check second vin is a witness transaction.
     bool IsPoW2WitnessCoinBase() const
     {
         return (vin.size() == 2 && vin[0].prevout.IsNull());

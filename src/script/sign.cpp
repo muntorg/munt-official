@@ -36,12 +36,10 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     if (sigversion == SIGVERSION_SEGSIG && !key.IsCompressed())
         return false;
 
-    //LogPrintf(">>>>SignSignatureSigHash scriptcode=%s txto=%s nIn=%d nHashType=%d amount=%d sigversion=%d\n", HexStr(scriptCode.begin(), scriptCode.end()), txTo->ToString(), nIn, nHashType, amount, sigversion);
-    //LogPrintf(">>>>SignSignatureSigHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", this->txdata->hashPrevouts.ToString(), this->txdata->hashSequence.ToString(), this->txdata->hashOutputs.ToString());
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
-        //fixme: (2.0) MAKE SURE THIS WORKS FOR NORMAL (BITCOIN STYLE) TRANSACTIONS!!! - unit tests required.
+        //fixme: (2.1) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
             return false;
     }
@@ -51,7 +49,6 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
             return false;
     }
     CPubKey pub = key.GetPubKey();
-    //LogPrintf(">>>>SignSignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pub.begin(), pub.end()), HexStr(hash.begin(), hash.end()));
     vchSig.push_back((unsigned char)nHashType);
     return true;
 }
@@ -175,15 +172,14 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
     }
 }
 
-//fixme: (2.0) (HIGH) testme...
 static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witness& pow2Witness, std::vector<valtype>& ret, SigVersion sigversion, SignType type)
 {
     CScript scriptRet;
     uint160 h160;
     ret.clear();
 
-    //fixme: (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
     //As we have no segregated signature data to sign we instead sign a standard placeholder.
+    //Note that the witness itself contains a nonce to avoid ever signing identical data
     std::vector<unsigned char> sSignatureDataPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
     CScript scriptSignatureDataPlaceholder(sSignatureDataPlaceholder.begin(), sSignatureDataPlaceholder.end());
 
@@ -213,7 +209,6 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutStandardKe
     uint160 h160;
     ret.clear();
 
-    //fixme: (2.0) HIGH - Should this incorporate unique transaction data to avoid weakening the signature?
     //As we have no segregated signature data to sign we instead sign a standard placeholder.
     std::vector<unsigned char> sSignatureDataPlaceholder = {'k','e','y','h','a','s','h'};
     CScript scriptSignatureDataPlaceholder(sSignatureDataPlaceholder.begin(), sSignatureDataPlaceholder.end());
@@ -238,7 +233,7 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-//fixme: (2.0) (HIGH) (MULTISIG?)
+//fixme: (2.1) (SEGSIG) (MULTISIG)
 class CSigningKeysVisitor : public boost::static_visitor<void> {
 public:
     std::vector<CKeyID> vKeys;
@@ -257,11 +252,11 @@ public:
 
     void operator()(const CScriptID &scriptId)
     {
-        //fixme: (2.0) (HIGH)
+        //fixme: (2.1) (WATCH_ONLY)
     }
 
     void operator()(const CPoW2WitnessDestination &dest) {
-        //fixme: (2.0) (HIGH) (stacked signing?)
+        //fixme: (FUTURE) (Look into possibility of stacked signing.)
         if (type == SignType::Witness)
             vKeys.push_back(dest.witnessKey);
         else if (type == SignType::Spend)
@@ -277,22 +272,21 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
     {
         case ScriptLegacyOutput:
         {
-            //fixme: (2.0) HIGH NEXT - implement.
-            //=== CDestination(pubkey))
+            //fixme: (2.1) (SEGSIG)
             CTxDestination dest;
             if (!ExtractDestination(txOut.output.scriptPubKey, dest))
                 return CKeyID();
 
             CSigningKeysVisitor getSigningKeys(type);
             getSigningKeys.Process(dest);
-            //fixme: (2.0) (HIGH) MULTISIG
+            //fixme: (2.1) (SEGSIG) MULTISIG
             if (getSigningKeys.vKeys.size() != 1)
                 return CKeyID();
             return getSigningKeys.vKeys[0];
         }
         case PoW2WitnessOutput:
         {
-            //fixme: (2.0) (stacked signing?) HIGH NEXT
+            //fixme: (FUTURE) (Look into possibility of stacked signing.)
             if (type == SignType::Spend)
                 return txOut.output.witnessDetails.spendingKeyID;
             else if(type == SignType::Witness)
@@ -318,9 +312,9 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
 
         if (!IsOldTransactionVersion(nVersion))
         {
+            //fixme: (2.1) (SEGSIG)
             if (solved && whichType == TX_SCRIPTHASH)
             {
-                //fixme: (2.0) HIGH NEXTNEXTNEXT
                  sigdata.segregatedSignatureData.stack = result;
             }
             else
@@ -346,17 +340,16 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //fixme: (2.0) TESTME
+        //fixme: (2.0.1) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, SIGVERSION_BASE, type);
         sigdata.segregatedSignatureData.stack = result;
 
-        //fixme: (2.0) - Do we need to verify anything here?
         return solved;
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
-        //fixme: (2.0) TESTME
+        //fixme: (2.0.1) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, SIGVERSION_BASE, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -391,7 +384,7 @@ bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutable
     assert(nIn < txTo.vin.size());
 
     CTransaction txToConst(txTo);
-    //fixme: (2.0) (HIGH) (sign type)
+    //fixme: (2.1) (SEGSIG) (sign type)
     CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(fromOutput, SignType::Spend);
     TransactionSignatureCreator creator(signingKeyID, &keystore, &txToConst, nIn, amount, nHashType);
 
@@ -507,7 +500,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
             return sigs2;
         return sigs1;
     case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (2.0) NEXTNEXT
+        //fixme: (2.0.1) Key renewal
         //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
         return sigs1;
     case TX_SCRIPTHASH:

@@ -577,12 +577,19 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                     case TransactionRecord::Generated:
                     case TransactionRecord::GeneratedWitness:
                     case TransactionRecord::WitnessRenew:
+                        return tr("Renew witness account");
                     case TransactionRecord::WitnessFundRecv:
+                        return tr("Lock funds");
                     case TransactionRecord::WitnessEmptyRecv:
+                        return tr("Lock funds");
                     case TransactionRecord::WitnessSplitRecv:
+                        return tr("Split locked funds");
                     case TransactionRecord::WitnessMergeRecv:
+                        return tr("Merge locked funds");
                     case TransactionRecord::WitnessIncreaseRecv:
+                        return tr("Extend locked funds");
                     case TransactionRecord::WitnessChangeKeyRecv:
+                        return tr("Rotate witness key");
                     case TransactionRecord::SendToAddress:
                     case TransactionRecord::SendToOther:
                     case TransactionRecord::Other:
@@ -624,9 +631,13 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         case TransactionRecord::WitnessIncreaseSend:
             return tr("Fund witness account extension");
         case TransactionRecord::WitnessEmptySend:
+            return tr("Unlock funds");
         case TransactionRecord::WitnessEmptyRecv:
+            return tr("Unlock funds");
         case TransactionRecord::WitnessFundRecv:
+            return tr("Lock funds");
         case TransactionRecord::WitnessFundSend:
+            return tr("Fund witness account");
         case TransactionRecord::InternalTransfer:
             return "";//Already  handled above this switch
         case TransactionRecord::Other:

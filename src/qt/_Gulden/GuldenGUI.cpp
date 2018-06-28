@@ -1245,7 +1245,7 @@ void GUI::setActiveAccountButton( ClickableLabel* activeButton )
 void GUI::updateAccount(CAccount* account)
 {
     LogPrint(BCLog::QT, "GUI::updateAccount\n");
-    LOCK(pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
     CPubKey pubKey;

@@ -4,10 +4,264 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-26 17:27+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-26 17:27+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-28 11:36+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-28 11:36+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Fund witness accoun</source>
+        <translation>Vul witness-rekening</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Verstuurd</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Open tot %1</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>alleen-bekijkbaar</translation>
+    </message>
+    <message>
+        <source>Unlock funds</source>
+        <translation>Deblokkeer saldo</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Omschrijving</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Open voor nog %n blok</numerusform>
+            <numerusform>Open voor nog %n blokken</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation>Niet verbonden</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Onbevestigd</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>Afbreken</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Bevestigen (%1 van %2 aanbevolen bevestigingen)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Bevestigd (%1 bevestigingen)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>Conflicterend</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>immatuur (%1 bevestigingen, zal beschikbaar zijn na %2)</translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Dit blok is niet ontvangen bij andere knooppunten en zal waarschijnlijk niet worden geaccepteerd!</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Gegenereerd maar niet geaccepteerd</translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation>Externe</translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation>Meerdere adressen</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Ontvangen met</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Ontvangen van</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Verzonden aan</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Betaling aan uzelf</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Interne transactie</translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation>Mining-beloning</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Witness-beloning</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation>Financier uitbreiding witness-rekening</translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation>Breid witness-rekening uit</translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation>Splits geblokkeerde fondsen</translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation>Voeg geblokkeerde fondsen samen</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Roteer witness-sleutel</translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation>Vernieuwen witness-rekening</translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation>Vul witness-rekening</translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation>Blokkeer het saldo</translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation>Leeg witness-rekening</translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation>Ontvangen van witness-rekening</translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
+        <translation>Blokkeer het saldo vanaf: %1</translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation>Breid geblokkeerde fondsen uit van: %1</translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation>Splits geblokkeerde fondsen: %1</translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation>Voeg fondsen bij elkaar: %1</translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation>Roteer witness-sleutel: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds from: %1</source>
+        <translation>Deblokkeer het saldo vanaf: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation>Betaald aan: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation>Betaling van: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation>Complexe transactie, bekijk transactiedetails</translation>
+    </message>
+    <message>
+        <source>Internal transfer from: %1</source>
+        <translation>Interne transactie van: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account: %1</source>
+        <translation>Vul witness-rekening: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation>Financier uitbreiding witness-rekening: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation>Deblokkeer het saldo naar: %1</translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation>Interne transactie naar: %1</translation>
+    </message>
+    <message>
+        <source>Internal account movement</source>
+        <translation>Verplaatsing interne account</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation>Breid geblokkeerde fondsen uit</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Datum en tijd waarop deze transactie is ontvangen.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Transactietype.</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation>Al dan niet een alleen-bekijkenadres betrokken is in deze transactie.</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Doel van de transactie</translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation>toegevoegd aan totaal bedrag</translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation>Bedrag verwijderd van saldo.</translation>
+    </message>
+</context>
 <context>
     <name>AccountSettingsDialog</name>
     <message>
@@ -178,6 +432,22 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Spendable funds: </source>
         <translation>Besteedbare bedragen: </translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Naar updates zoeken</translation>
+    </message>
+    <message>
+        <source>Check for software updates</source>
+        <translation>Naar software updates zoeken</translation>
+    </message>
+    <message>
+        <source>Software update warning</source>
+        <translation>Software update waarschuwing</translation>
+    </message>
+    <message>
+        <source>Software update</source>
+        <translation>Software update</translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
@@ -1169,6 +1439,10 @@ Witness-gewicht: %5</translation>
         <translation>Verstuur</translation>
     </message>
     <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Verstuur</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>Betalingsverzoek verlopen.</translation>
     </message>
@@ -2008,252 +2282,6 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
-    <name>TransactionTableModel</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(geen label)</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Ontvangen</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Verstuurd</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Open tot %1</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>alleen-bekijkbaar</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>Omschrijving</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Open voor nog %n blok</numerusform>
-            <numerusform>Open voor nog %n blokken</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Niet verbonden</translation>
-    </message>
-    <message>
-        <source>Unconfirmed</source>
-        <translation>Onbevestigd</translation>
-    </message>
-    <message>
-        <source>Abandoned</source>
-        <translation>Afbreken</translation>
-    </message>
-    <message>
-        <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Bevestigen (%1 van %2 aanbevolen bevestigingen)</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Bevestigd (%1 bevestigingen)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>Conflicterend</translation>
-    </message>
-    <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>immatuur (%1 bevestigingen, zal beschikbaar zijn na %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Dit blok is niet ontvangen bij andere knooppunten en zal waarschijnlijk niet worden geaccepteerd!</translation>
-    </message>
-    <message>
-        <source>Generated but not accepted</source>
-        <translation>Gegenereerd maar niet geaccepteerd</translation>
-    </message>
-    <message>
-        <source>External payee</source>
-        <translation>Externe</translation>
-    </message>
-    <message>
-        <source>Multiple addresses</source>
-        <translation>Meerdere adressen</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Ontvangen met</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Ontvangen van</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Verzonden aan</translation>
-    </message>
-    <message>
-        <source>Payment to yourself</source>
-        <translation>Betaling aan uzelf</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Interne transactie</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Mining-beloning</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Witness-beloning</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension</source>
-        <translation>Financier uitbreiding witness-rekening</translation>
-    </message>
-    <message>
-        <source>Extend witness account</source>
-        <translation>Breid witness-rekening uit</translation>
-    </message>
-    <message>
-        <source>Split locked funds</source>
-        <translation>Splits geblokkeerde fondsen</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Voeg geblokkeerde fondsen samen</translation>
-    </message>
-    <message>
-        <source>Rotate witness key</source>
-        <translation>Roteer witness-sleutel</translation>
-    </message>
-    <message>
-        <source>Renew witness account</source>
-        <translation>Vernieuwen witness-rekening</translation>
-    </message>
-    <message>
-        <source>Fund witness account</source>
-        <translation>Vul witness-rekening</translation>
-    </message>
-    <message>
-        <source>Lock funds</source>
-        <translation>Blokkeer het saldo</translation>
-    </message>
-    <message>
-        <source>Empty witness account</source>
-        <translation>Leeg witness-rekening</translation>
-    </message>
-    <message>
-        <source>Received from witness account</source>
-        <translation>Ontvangen van witness-rekening</translation>
-    </message>
-    <message>
-        <source>Lock funds from: %1</source>
-        <translation>Blokkeer het saldo vanaf: %1</translation>
-    </message>
-    <message>
-        <source>Extend locked funds from: %1</source>
-        <translation>Breid geblokkeerde fondsen uit van: %1</translation>
-    </message>
-    <message>
-        <source>Split locked funds: %1</source>
-        <translation>Splits geblokkeerde fondsen: %1</translation>
-    </message>
-    <message>
-        <source>Merge locked funds: %1</source>
-        <translation>Voeg fondsen bij elkaar: %1</translation>
-    </message>
-    <message>
-        <source>Rotate witness key: %1</source>
-        <translation>Roteer witness-sleutel: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds from: %1</source>
-        <translation>Deblokkeer het saldo vanaf: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation>Betaald aan: %1</translation>
-    </message>
-    <message>
-        <source>Payment from: %1</source>
-        <translation>Betaling van: %1</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation>Complexe transactie, bekijk transactiedetails</translation>
-    </message>
-    <message>
-        <source>Internal transfer from: %1</source>
-        <translation>Interne transactie van: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account: %1</source>
-        <translation>Vul witness-rekening: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension: %1</source>
-        <translation>Financier uitbreiding witness-rekening: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds to: %1</source>
-        <translation>Deblokkeer het salso naar: %1</translation>
-    </message>
-    <message>
-        <source>Internal transfer to: %1</source>
-        <translation>Interne transactie naar: %1</translation>
-    </message>
-    <message>
-        <source>Internal account movement</source>
-        <translation>Verplaatsing interne account</translation>
-    </message>
-    <message>
-        <source>Extend locked funds</source>
-        <translation>Breid geblokkeerde fondsen uit</translation>
-    </message>
-    <message>
-        <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
-    </message>
-    <message>
-        <source>Date and time that the transaction was received.</source>
-        <translation>Datum en tijd waarop deze transactie is ontvangen.</translation>
-    </message>
-    <message>
-        <source>Type of transaction.</source>
-        <translation>Transactietype.</translation>
-    </message>
-    <message>
-        <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation>Al dan niet een alleen-bekijkenadres betrokken is in deze transactie.</translation>
-    </message>
-    <message>
-        <source>User-defined intent/purpose of the transaction.</source>
-        <translation>Doel van de transactie</translation>
-    </message>
-    <message>
-        <source>Amount added to balance.</source>
-        <translation>toegevoegd aan totaal bedrag</translation>
-    </message>
-    <message>
-        <source>Amount removed from balance.</source>
-        <translation>Bedrag verwijderd van saldo.</translation>
-    </message>
-</context>
-<context>
     <name>BanTableModel</name>
     <message>
         <source>IP/Netmask</source>
@@ -2987,6 +3015,14 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     <message>
         <source>Error</source>
         <translation>Fout</translation>
+    </message>
+    <message>
+        <source>Periodically check if updates are available. </source>
+        <translation>Periodiek zoeken naar updates.</translation>
+    </message>
+    <message>
+        <source>&amp;Automatically check for updates</source>
+        <translation>&amp;Automatisch zoeken naar updates</translation>
     </message>
     <message>
         <source>Options</source>

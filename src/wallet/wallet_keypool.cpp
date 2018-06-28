@@ -64,7 +64,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
     unsigned int nNew = 0;
     bool bAnyNonHDAccountsLockedAndRequireKeys = false;
 
-    LOCK(cs_wallet);
+    LOCK2(cs_main, cs_wallet);
 
     CWalletDB walletdb(*dbw);
 
@@ -106,6 +106,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
                     if (!account->IsHD() && account->IsLocked())
                     {
                         bAnyNonHDAccountsLockedAndRequireKeys = true;
+                        break;
                     }
                     else
                     {
@@ -133,7 +134,7 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
     nIndex = -1;
     keypoolentry.vchPubKey = CPubKey();
     {
-        LOCK(cs_wallet);
+        LOCK2(cs_main, cs_wallet);
 
         if (!IsLocked())
             TopUpKeyPool(1, 0, forAccount);//Only assign the bare minimum here, let the background thread do the rest.
@@ -334,6 +335,8 @@ void CWallet::importPrivKey(const CKey& privKey)
         }
     }
 
+    pactiveWallet->addAccount(newAccount, _("Imported key"));
+
     //fixme: (2.1) - Optionally take a key bith date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
     {
@@ -342,7 +345,7 @@ void CWallet::importPrivKey(const CKey& privKey)
         return;
     }
 
-    pactiveWallet->addAccount(newAccount, _("Imported key"));
+    //fixme: (2.1) Delete account on failure.
 }
 
 bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)

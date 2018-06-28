@@ -56,7 +56,8 @@ inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessDe
     }
     else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (2.1) we can remove this
     {
-        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
+        if (!out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails))
+            return false;
         return true;
     }
     return false;
@@ -70,6 +71,7 @@ inline CTxOutPoW2Witness GetPoW2WitnessOutputFromWitnessDestination(const CPoW2W
     txout.lockFromBlock = fromDest.lockFromBlock;
     txout.lockUntilBlock = fromDest.lockUntilBlock;
     txout.failCount = fromDest.failCount;
+    txout.actionNonce = fromDest.actionNonce;
     return txout;
 }
 

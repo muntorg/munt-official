@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(test_Get)
 
 static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
 {
-    //fixme: (2.0)
+    //fixme: (2.0.1)
     //SignSignature issues
 	#if 0
     CMutableTransaction outputm;

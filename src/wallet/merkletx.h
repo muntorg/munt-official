@@ -39,7 +39,6 @@ public:
 
     CMerkleTx()
     {
-        //fixme: (2.0) Check this is okay.
         SetTx(MakeTransactionRef(CTransaction::MAX_STANDARD_VERSION));
         Init();
     }
