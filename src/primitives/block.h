@@ -39,7 +39,7 @@ public:
     int32_t nVersionPoW2Witness;
     uint32_t nTimePoW2Witness;
     uint256 hashMerkleRootPoW2Witness;
-    //fixme: (2.0) (POW2) - Fixed size 65 bit.
+    //fixme: (2.1) Optimisation - this is always 65 bits, we should use a fixed size data structure.
     std::vector<unsigned char> witnessHeaderPoW2Sig;
 
 

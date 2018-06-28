@@ -160,7 +160,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (2.0) - Do we have to set relative lock time on the inputs?
+            //fixme: (2.1) (SEGSIG) - Do we have to set relative lock time on the inputs?
             //Whats the relationship between relative and absolute locktime?
             //nFlags |= CTxInFlags::OptInRBF;
         }
@@ -444,7 +444,6 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    //fixme: (2.0) HIGHNEXT ensure this still works.
                     if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
@@ -523,10 +522,9 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             int nIn = 0;
             for (const auto& coin : setCoins)
             {
-                //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                //fixme: (2.0) (HIGH) (sign type)
+                //fixme: (2.1) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
@@ -711,7 +709,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Fill in dummy signatures for fee calculation.
                 if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    //fixme: (2.0) HIGHNEXT ensure this still works.
                     if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
@@ -790,10 +787,9 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             int nIn = 0;
             for (const auto& coin : setCoins)
             {
-                //const CScript& scriptPubKey = coin.txout.scriptPubKey;
                 SignatureData sigdata;
 
-                //fixme: (2.0) (HIGH) (sign type)
+                //fixme: (2.1) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))

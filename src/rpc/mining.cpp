@@ -580,7 +580,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
                 CCloneChain tempChain = chainActive.Clone(pIndexMiningTip, pindexPrev_);
-                //fixme: (2.0) error handling.
+                //fixme: (2.0.1) error handling.
                 assert(pindexPrev_);
                 ForceActivateChain(pindexPrev_, nullptr, state, Params(), tempChain, viewNew);
 
@@ -588,7 +588,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
             }
 
             //fixme: (2.1) - We can remove this after phase 4 activates
-            //fixme: (2.0) - Implement if needed
+            //fixme: (2.0.1) - Implement if needed
             /*if (pWitnessBlockToEmbed)
             {
                 CBlock PoWParent;

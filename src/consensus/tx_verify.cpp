@@ -241,7 +241,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (2.0) (HIGH) implement - check the segregatedSignatureData here?
+            //fixme: (2.1) (SEGSIG) (HIGH) implement - check the segregatedSignatureData here? (already tested elsewhere I believe but double check)
         }
     }
     else
@@ -329,6 +329,10 @@ inline bool IsLockFromConsistent(const CTxOutPoW2Witness& inputDetails, const CT
     return true;
 }
 
+//fixme: (2.1) define this with rest of global constants
+static const int gMaximumRenewalPenalty = COIN*20;
+static const int gPerFailCountRenewalPenalty = (2*COIN)/100;
+
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output)
 {
     CTxOutPoW2Witness witnessDestination;
@@ -336,10 +340,9 @@ CAmount CalculateWitnessPenaltyFee(const CTxOut& output)
     {
         return 0;
     }
-    CAmount nPenalty = ((2*COIN)/100) * witnessDestination.failCount;
-    //fixme: (2.0) define this as a constant somewhere (no magic numbers)
-    if (nPenalty > COIN * 20)
-        return COIN * 20;
+    CAmount nPenalty = (gPerFailCountRenewalPenalty) * witnessDestination.failCount;
+    if (nPenalty > gMaximumRenewalPenalty)
+        return gMaximumRenewalPenalty;
     return nPenalty;
 }
 
@@ -375,7 +378,7 @@ inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetail
 */
 inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
-    //fixme: (2.0) (HIGH) - test coinbase type.
+    //fixme: (2.0.1) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
     // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
     if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
         return false;
@@ -474,7 +477,6 @@ inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputD
     // Amount must have increased or lock until must have increased
     if (nInputAmount >= nOutputAmount && inputDetails.lockUntilBlock >= outputDetails.lockUntilBlock)
         return false;
-    //fixme: (2.0) - High check the WEIGHT as well.
     // Lock until block may never decrease
     if (inputDetails.lockUntilBlock > outputDetails.lockUntilBlock)
         return false;
@@ -599,7 +601,7 @@ inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness
     return true;
 }
 
-//fixme: (2.0) (HIGH) Implement test code for this function.
+//fixme: (2.0.1) (HIGH) Implement unit test code for this function.
 bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight)
 {
     if (pWitnessBundles)

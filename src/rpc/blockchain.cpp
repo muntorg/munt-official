@@ -808,7 +808,7 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     stats.nTransactions++;
     for (const auto output : outputs) {
         ss << VARINT(output.first + 1);
-        //fixme: (2.0) (SEGSIG) (HIGH) - Other output types
+        //fixme: (2.1) (SEGSIG)
         ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
         ss << VARINT(output.second.out.nValue);
         {
@@ -1032,7 +1032,7 @@ static UniValue gettxout(const JSONRPCRequest& request)
         ret.push_back(Pair("confirmations", (int64_t)(pindex->nHeight - coin.nHeight + 1)));
     }
     ret.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
-    //fixme: (2.0) - Implement something here for other output types.
+    //fixme: (2.1) - (SEGSIG)
     if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
         UniValue o(UniValue::VOBJ);

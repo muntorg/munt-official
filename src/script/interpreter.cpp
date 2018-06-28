@@ -407,7 +407,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // To provide for future soft-fork extensibility, if the
                     // operand has the disabled lock-time flag set,
                     // CHECKSEQUENCEVERIFY behaves as a NOP.
-                    //fixme: (2.0) HIGH
+                    //fixme: (2.1) SEGSIG
                     //if ((IsOldTransactionVersion(tx.nVersion) && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasSequenceNumberMask)))) {
                         //break;
 
@@ -893,7 +893,6 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         //serror is set
                         return false;
                     }
-                    //LogPrintf(">>>>checker.CheckSig=%s %s %s %d\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(vchPubKey.begin(), vchPubKey.end()), HexStr(scriptCode.begin(), scriptCode.end()), sigversion);
                     bool fSuccess = checker.CheckSig(vchSig, vchPubKey, scriptCode, sigversion);
 
                     if (!fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL) && vchSig.size())
@@ -1104,7 +1103,7 @@ public:
         {
             if (nInput != nIn && (fHashSingle || fHashNone))
             {
-                //fixme: (2.0) HIGH - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
+                //fixme: (2.1) (SEGSIG) - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
                 // let the others update at will
                 ::Serialize(s, (int)0);
             }
@@ -1215,8 +1214,6 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
             hashOutputs = ss.GetHash();
         }
 
-        //LogPrintf(">>>>SignatureHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", hashPrevouts.ToString(), hashSequence.ToString(), hashOutputs.ToString());
-
         CHashWriter ss(SER_GETHASH, 0);
         // Version
         ss << txTo.nVersion;
@@ -1280,8 +1277,6 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
     int nHashType = vchSig.back();
     vchSig.pop_back();
 
-    //LogPrintf(">>>>VerifySignatureSigHash scriptcode=%s txto=%s nIn=%d nHashType=%d amount=%d sigversion=%d\n", HexStr(scriptCode.begin(), scriptCode.end()), txTo->ToString(), nIn, nHashType, amount, sigversion);
-    //LogPrintf(">>>>VerifySignatureSigHash hashPrevouts=%s hashSequence=%s hashOutputs=%s\n", this->txdata->hashPrevouts.ToString(), this->txdata->hashSequence.ToString(), this->txdata->hashOutputs.ToString());
     uint256 sighash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion, this->txdata);
 
     if (sigversion == SIGVERSION_SEGSIG)
@@ -1290,10 +1285,9 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
 
         if (!pubkey.RecoverCompact(sighash, vchSig))
             return false;
-        //LogPrintf(">>>>VerifySignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pubkey.begin(), pubkey.end()), HexStr(sighash.begin(), sighash.end()));
         if (!pubkey.IsValid())
             return false;
-        // fixme: (2.0) (HIGH) (MULTISIG?!?!?)
+        // fixme: (2.1) (HIGH) (SEGSIG) (MULTISIG!)
         // Ensure that the recovered pubkey is the correct one for the address in question
         if (signatureKeyID == CKeyID() || signatureKeyID != pubkey.GetID())
             return false;
@@ -1303,7 +1297,6 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
         CPubKey pubkey = CPubKey(vchPubKey);
         if (!pubkey.IsValid())
             return false;
-        //LogPrintf(">>>>VerifySignature sig=%s key=%s hash=%s\n", HexStr(vchSig.begin(), vchSig.end()), HexStr(pubkey.begin(), pubkey.end()), HexStr(sighash.begin(), sighash.end()));
         if (!VerifySignature(vchSig, pubkey, sighash))
             return false;
     }
@@ -1341,7 +1334,7 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // prevent this condition. Alternatively we could test all
     // inputs, but testing just this input minimizes the data
     // required to prove correct CHECKLOCKTIMEVERIFY execution.
-    //fixme: (2.0) (HIGH) - CHECK FOR SEQUENCE FLAGS
+    //fixme: (2.1) (SEGSIG) - CHECK FOR SEQUENCE FLAGS
     if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].GetSequence(txTo->nVersion))
         return false;
 
@@ -1391,7 +1384,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     }
     else
     {
-        //fixme: (2.0) HIGH - Implement
+        //fixme: (2.1) HIGH - (SEGSIG)
     }
 
     // Now that we know we're comparing apples-to-apples, the
@@ -1447,18 +1440,11 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
     if (flags & SCRIPT_VERIFY_P2SH)
             stackCopy = stack;
-    //LogPrintf(">>>>VerifyScript stacksize=%d scriptPubKey=%s flags=%d\n", stack.size(), HexStr(scriptPubKey.begin(), scriptPubKey.end()), flags);
-    //for (auto item : stack)
-    //{
-        //LogPrintf(">>>>VerifyScript stackitem=%s\n", HexStr(item.begin(), item.end()));
-    //}
     if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
     {
-        //LogPrintf(">>>>VerifyScript false\n");
         // serror is set
         return false;
     }
-    //LogPrintf(">>>>VerifyScript true\n");
     if (stack.empty())
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
     if (!CastToBool(stack.back()))

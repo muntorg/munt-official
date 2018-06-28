@@ -852,7 +852,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
     setValid(ui->pow2LockFundsInfoLabel, true);
 
-    //fixme: (2.0) (POW2) (CLEANUP)
+    //fixme: (2.0.1) Improve this dialog.
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 

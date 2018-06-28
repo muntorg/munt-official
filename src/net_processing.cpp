@@ -1971,7 +1971,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CBlock block;
         bool ret = ReadBlockFromDisk(block, it->second, chainparams);
 
-        //fixme: (2.0) (HIGH) Work around assert we are getting here, ideally we should fix this.
+        //fixme: (2.1) (NETWORK) 
+        //We were getting an assert here at some point so assert disable and error handling placed instead.
+        //We should look into this again.
         //assert(ret);
         if (ret)
         {

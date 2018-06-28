@@ -355,7 +355,7 @@ public:
         if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
 
-        //fixme: (2.0) - Check this works right.
+        //fixme: (2.0.1) - Unit tests
         if (this->nTimePoW2Witness != 0)
         {
             nMedianTimeSpan *= 2;

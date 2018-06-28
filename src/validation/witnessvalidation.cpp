@@ -200,21 +200,6 @@ bool ForceActivateChain(CBlockIndex* pActivateIndex, std::shared_ptr<const CBloc
             pindexNewTip = currentChain.Tip();
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
-
-        //fixme: (2.0) - I think we can remove this now, but make sure?
-        // Disallow the following as they should never happen:
-        // 1) Activating a witness block as tip during phase 3 is an error.
-        // 2) Activating an unwitnessed PoW block as tip for phase 3.
-        // 3) Activating a PoW block as tip from phase 4 onwards...
-        /*if (pindexNewTip->pprev && IsPow2Phase3Active(pindexNewTip->pprev->pprev, chainparams.GetConsensus()) && !IsPow2Phase4Active(pindexNewTip->pprev, chainparams.GetConsensus()))
-        {
-            assert(pindexNewTip->nVersionPoW2Witness == 0);
-            assert (GetWitnessOrphanForBlock(pindexNewTip->nHeight, pindexNewTip->pprev->GetBlockHashLegacy(), pindexNewTip->GetBlockHashLegacy()) != NULL);
-        }
-        if (GetPoW2Phase(pindexNewTip->pprev, chainparams.GetConsensus()) >= 4)
-        {
-            assert(pindexNewTip->nVersionPoW2Witness != 0);
-        }*/
     } while (pindexNewTip != pActivateIndex);
 
     return true;
@@ -272,7 +257,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     assert(pPreviousIndexChain_);
 
     allWitnessCoins.clear();
-    //fixme: (2.0) (PoW2) Error handling
+    //fixme: (2.0.1) Add more error handling to this function.
     // Sort out pre-conditions.
     // We have to make sure that we are using a view and chain that includes the PoW block we are witnessing and all of its transactions as the tip.
     // It won't necessarily be part of the chain yet; if we are in the process of witnessing; or if the block is an older one on a fork; because only blocks that have already been witnessed can be part of the chain.
@@ -331,7 +316,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
         if (!ConnectBlock(tempChain, *newBlock, state, &indexDummy, viewNew, chainParams, true, false))
         {
-            //fixme: (2.0) If we are inside a GetWitness call ban the peer that sent us this?
+            //fixme: (2.1) If we are inside a GetWitness call ban the peer that sent us this?
             return false;
         }
     }
@@ -348,11 +333,8 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 }
 
 
-//fixme: (2.0) NEXT.
-//Proper error handling.
-//Handle pruning.
-// Check whether we have ever pruned block & undo files
-//pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
+//fixme: (2.0.1) Improve error handling.
+//fixme: (2.1) Handle nodes with excessive pruning. //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
 bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
     DO_BENCHMARK("WIT: GetWitnessHelper", BCLog::BENCH|BCLog::WITNESS);
@@ -385,7 +367,9 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            // fixme: (2.0) Add warning/logging for this.
+            //fixme: (2.1) activate warning
+            // if(!fTestnet)
+            // CAlert::Notify("Warning network is experiencing low levels of witnessing participants!");
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
             // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
             if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
@@ -450,7 +434,6 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
     witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
     witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
 
-    //LogPrintf(">>>Selected witness=%s %s fromblockhash=%s fromblockheight=%d currentheight=%d prevout=%s \n",selectedWitness->coin.out.output.GetHex(selectedWitness->coin.out.GetType()), selectedWitness->coin.out.ToString(), block.GetHashPoW2().ToString(), resultBlockHeight, nBlockHeight, resultOutPoint.hash.ToString());
     return true;
 }
 
@@ -498,8 +481,10 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     return GetWitnessHelper(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo, nBlockHeight);
 }
 
-//fixme: (2.0) (HIGH) - switch to a hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
-// total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
+// Ideally this should have been some hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
+// Total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
+// However on a large network with lots of participants this should not matter - and technical constraints make the total the best compromise
+// As we need to call this from within the witness algorithm from before nReducedTotalWeight is even known. 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
     DO_BENCHMARK("WIT: witnessHasExpired", BCLog::BENCH|BCLog::WITNESS);
@@ -573,7 +558,6 @@ bool ExtractWitnessBlockFromWitnessCoinbase(CChain& chain, int nWitnessCoinbaseI
     coinbaseTx.vin[1] = block.vtx[1]->vin[0];
     embeddedWitnessBlock.vtx.emplace_back(MakeTransactionRef(std::move(coinbaseTx)));
 
-    //LogPrintf(">>>[Embedded] Extract witness block from coinbase: prevheight:%d height:%d \nembedded block: %s\n", pindexPrev->nHeight, pindexPrev->nHeight+1 , embeddedWitnessBlock.ToString());
     return true;
 }
 
@@ -598,7 +582,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         uint256 hash = embeddedWitnessBlock.GetHashPoW2();
         if (!pubkey.RecoverCompact(hash, embeddedWitnessBlock.witnessHeaderPoW2Sig))
             ret = error("Could not recover public key from embedded witness coinbase header");
-        //LogPrintf(">>>[Embedded] witness pubkey [%s]\n", pubkey.GetID().GetHex());
 
         // Phase 3 restriction - we force the miners nVersion to reflect the version the witness of the block before had - thus allowing control of voting for phase 4 to be controlled by witnesses.
         if (ret && block.nVersion != embeddedWitnessBlock.nVersionPoW2Witness)

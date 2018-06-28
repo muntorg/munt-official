@@ -311,7 +311,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 const payments::Output& out = details.outputs(i);
                 if (out.amount() <= 0) continue;
                 subtotal += out.amount();
-                //fixme: (2.0) (Handle other transaction types here?) (SEGSIG)
+                //fixme: (2.1) (SEGSIG)
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr+out.script().size());
                 CAmount nAmount = out.amount();

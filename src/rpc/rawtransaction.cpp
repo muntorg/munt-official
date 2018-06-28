@@ -390,7 +390,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             if (rbfOptIn)
                 nFlags |= CTxInFlags::OptInRBF;
-            //fixme: (2.0) (HIGH) Also handle block based sequence number?
+            //fixme: (2.1) (SEGSIG) Also handle block based sequence number.
             if (rawTx.nLockTime)
                 nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
@@ -760,7 +760,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (2.0) implement
+            //fixme: (2.1) implement
             /*{
                 const Coin& coin = view.AccessCoin(out);
                 if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
@@ -851,11 +851,11 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
-        //fixme: (2.0) (SEGSIG) Other transaction types
+        //fixme: (2.1) (SEGSIG) Other transaction types
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (2.0) (HIGH) (sign type)
+        //fixme: (2.1) (SEGSIG) (sign type)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
         SignatureData sigdata;

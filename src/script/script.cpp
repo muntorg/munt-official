@@ -242,11 +242,11 @@ std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 
 
 //OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
-//fixme: (2.0) Better error handling.
 bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
     if (this->size() != 74)
     {
+        //fixme: (2.1) Better error handling - this should probably at least log something.
         return false;
     }
 

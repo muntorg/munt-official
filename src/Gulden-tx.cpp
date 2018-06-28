@@ -230,7 +230,7 @@ static void MutateTxRBFOptIn(CMutableTransaction& tx, const std::string& strInId
         for (CTxIn& txin : tx.vin) {
             if (strInIdx == "" || cnt == inIdx) {
                 if (txin.GetSequence(tx.nVersion) > MAX_BIP125_RBF_SEQUENCE) {
-                    //fixme: (2.0) - Make sure we are setting the right flag here.
+                    //fixme: (2.1) (SEGSIG)
                     txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
                 }
             }
@@ -278,7 +278,7 @@ static void MutateTxAddInput(CMutableTransaction& tx, const std::string& strInpu
         nSequenceIn = std::stoul(vStrInputParts[2]);
 
     // append to transaction input list
-    //fixme: (2.0) (HIGH) - pass appropriate flags here
+    //fixme: (2.1) (SEGSIG)
     CTxIn txin(txid, vout, CScript(), nSequenceIn, 0);
     tx.vin.push_back(txin);
 }
@@ -590,14 +590,14 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             if (nOut < 0)
                 throw std::runtime_error("vout must be positive");
 
-            //fixme: (2.0) (SEGSIG)
+            //fixme: (2.1) (SEGSIG)
             COutPoint out(txid, nOut);
             std::vector<unsigned char> pkData(ParseHexUV(prevOut["scriptPubKey"], "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
             {
                 const Coin& coin = view.AccessCoin(out);
-                //fixme: (2.0) (HIGH)
+                //fixme: (2.1) (SEGSIG)
                 if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
                     err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n"+
@@ -641,13 +641,14 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (2.0) (HIGH) (sign type)
+        //fixme: (2.1) (SEGSIG) (SIGNTYPE)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
+        //fixme: (2.1) (SEGSIG) - We must somehow detect if this is a spend or a witness here.
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);//fixme: (2.0) - We must somehow detect if this is a spend or a witness here.
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);
 
         // ... and merge in other signatures:
         for(const CTransaction& txv : txVariants)
@@ -792,8 +793,8 @@ static int CommandLineRawTx(int argc, char* argv[])
             argv++;
         }
 
-        //fixme: (2.0) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
-        //fixme: (2.0) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
+        //fixme: (2.1) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
+        //fixme: (2.1) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
         CMutableTransaction tx(1);
         int startArg;
 
