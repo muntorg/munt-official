@@ -4,8 +4,8 @@
     <extra-po-header-language>fr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-26 17:30+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-26 17:30+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-28 08:42+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-28 08:42+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -179,6 +179,22 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Spendable funds: </source>
         <translation>Fonds disponibles : </translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier les mises à jour</translation>
+    </message>
+    <message>
+        <source>Check for software updates</source>
+        <translation>Vérifier les mises à jour logicielles</translation>
+    </message>
+    <message>
+        <source>Software update warning</source>
+        <translation>Avertissement de mise à jour du logiciel</translation>
+    </message>
+    <message>
+        <source>Software update</source>
+        <translation>Mise à jour du logiciel</translation>
     </message>
     <message>
         <source>Pending confirmation: %1</source>
@@ -1169,6 +1185,10 @@ Poids du Witness : %5</translation>
     <message>
         <source>Send</source>
         <translation>Envoyer</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Envoyer</translation>
     </message>
     <message>
         <source>Payment request expired.</source>
@@ -2989,6 +3009,14 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Error</source>
         <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Periodically check if updates are available. </source>
+        <translation>Vérifiez périodiquement si des mises à jour sont disponibles. </translation>
+    </message>
+    <message>
+        <source>&amp;Automatically check for updates</source>
+        <translation>&amp;Vérification automatique des mises à jour</translation>
     </message>
     <message>
         <source>Options</source>

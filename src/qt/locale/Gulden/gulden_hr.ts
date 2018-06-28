@@ -4,8 +4,8 @@
     <extra-po-header-language>hr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-26 17:31+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-26 17:31+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-06-28 08:43+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-06-28 08:43+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
