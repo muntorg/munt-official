@@ -134,6 +134,8 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     ui->horizontalLayout->addWidget(ui->sendButton);
 
     ui->sendButton->setIcon(QIcon());
+    ui->sendButton->setText(tr("&Send"));
+
     ui->clearButton->setIcon(QIcon());
     ui->clearButton->setText(tr("&Clear"));
     ui->clearButton->setMinimumSize(QSize(0, 0));
