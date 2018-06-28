@@ -466,17 +466,6 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->amount();
 
-    recipient.destinationPoW2Witness.lockFromBlock = 0;
-    recipient.destinationPoW2Witness.lockUntilBlock = 0;
-    if (isPoW2WitnessCreation())
-    {
-        uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*576;
-        // Add a small buffer to give us time to enter the blockchain
-        if (nLockPeriodInBlocks == 30*576)
-            nLockPeriodInBlocks += 50;
-        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
-    }
-
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
     CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
@@ -500,8 +489,16 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     //fixme: (Post-2.1) - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();
 
+    recipient.destinationPoW2Witness.lockFromBlock = 0;
+    recipient.destinationPoW2Witness.lockUntilBlock = 0;
     if (isPoW2WitnessCreation())
     {
+        uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*576;
+        // Add a small buffer to give us time to enter the blockchain
+        if (nLockPeriodInBlocks == 30*576)
+            nLockPeriodInBlocks += 50;
+        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
+
         CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
         CPubKey pubSpendingKey;
         if (!keySpending.GetReservedKey(pubSpendingKey))
@@ -532,6 +529,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         keyWitness.ReturnKey();
         recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
         recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+        recipient.destinationPoW2Witness.failCount = 0;
+        recipient.destinationPoW2Witness.actionNonce = 0;
+
         //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
         recipient.witnessForAccount = targetWitnessAccount;
         recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
