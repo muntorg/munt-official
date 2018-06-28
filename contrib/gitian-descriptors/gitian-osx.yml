@@ -1,5 +1,5 @@
 ---
-name: "Gulden-osx-0.15"
+name: "Gulden-osx-2.0.0"
 enable_cache: true
 suites:
 - "bionic"
