@@ -501,6 +501,9 @@ bool CAccountHD::Lock()
     // However these must -never- be encrypted anyway.
     //CAccount::Lock()
 
+    //fixme: (2.1) - Also burn the memory just to be sure?
+    vMasterKey.clear();
+
     //fixme: GULDEN (2.1) burn the memory here.
     accountKeyPriv = CExtKey();
     primaryChainKeyPriv = CExtKey();
@@ -536,6 +539,8 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToD
     if (!DecryptSecret(vMasterKeyIn, changeChainKeyEncrypted, changeChainKeyPub.pubkey.GetHash(), vchChangeChainKeyPrivEncoded))
         return false;
     changeChainKeyPriv.Decode(vchChangeChainKeyPrivEncoded.data());
+
+    vMasterKey = vMasterKeyIn;
 
     return true;
 }
@@ -903,7 +908,17 @@ bool CAccount::Encrypt(const CKeyingMaterial& vMasterKeyIn)
         return true;
     }
 
-    return EncryptKeys(vMasterKeyIn) /*&& SetCrypted()*/;
+    bool needsWriteToDisk;
+    if (!EncryptKeys(vMasterKeyIn))
+        return false;
+    if (!externalKeyStore.SetCrypted() || !externalKeyStore.Unlock(vMasterKeyIn, needsWriteToDisk))
+        return false;
+    if (!internalKeyStore.SetCrypted() || !internalKeyStore.Unlock(vMasterKeyIn, needsWriteToDisk))
+        return false;
+
+    vMasterKey = vMasterKeyIn;
+
+    return true;
 }
 
 
