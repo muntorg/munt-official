@@ -572,7 +572,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                         QModelIndex index = selection.at(0);
                         boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
 
-                        LOCK(pactiveWallet->cs_wallet);
+                        LOCK2(cs_main, pactiveWallet->cs_wallet);
 
                         CReserveKeyOrScript keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
                         CPubKey pubSpendingKey;
