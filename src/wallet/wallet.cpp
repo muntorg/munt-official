@@ -132,7 +132,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
     {
         return CWalletDB(*dbw).WriteKeyOverride(pubkey, secret.GetPrivKey(), getUUIDAsString(forAccount.getUUID()), nKeyChain);
     }
-    else if (!IsCrypted())
+    else if (!IsCrypted() || (forAccount.IsFixedKeyPool() && forAccount.IsPoW2Witness()))
     {
         return CWalletDB(*dbw).WriteKey(pubkey, secret.GetPrivKey(), mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()), nKeyChain);
     }
