@@ -504,7 +504,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                     oss << strRequestMutable;
                     oss >> fCheckMemPool;
                     //fixme: (2.1)
-                    int nSize;
+                    int nSize = 0;
                     oss >> COMPACTSIZE(nSize);
                     for (int i=0; i<nSize; ++i)
                     {
