@@ -1115,7 +1115,7 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
 }
 
 
-bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain)
+bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     if (!forAccount.AddKeyPubKey(HDKeyIndex, pubkey, keyChain))
@@ -1140,7 +1140,7 @@ bool CGuldenWallet::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAcc
 }
 
 
-bool CGuldenWallet::LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
+bool CGuldenWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
 {
     LOCK(cs_wallet);
     return mapAccounts[getUUIDFromString(forAccount)]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);

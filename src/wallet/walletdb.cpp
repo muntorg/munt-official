@@ -496,7 +496,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
 
-            if (!static_cast<CGuldenWallet*>(pwallet)->LoadKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
+            if (!pwallet->LoadHDKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
             {
                 strErr = "Error reading wallet database: LoadKey (HD) failed";
                 return false;

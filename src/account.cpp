@@ -637,7 +637,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUIDAsString(getUUID());
 
-    if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
+    if (!wallet.AddHDKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
     return childKey.pubkey;
