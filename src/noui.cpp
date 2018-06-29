@@ -88,6 +88,7 @@ static void NotifyRequestUnlockWithCallbackS(CWallet* wallet, std::string reason
     else
     {
         fprintf(stderr, "Wallet requested unlock but could not unlock - please unlock via RPC or in the case of an upgrade temporarily set -unlockpasswd in Gulden.conf: reason for request [%s]\n", reason.c_str());
+        return;
     }
     successCallback();
 }
