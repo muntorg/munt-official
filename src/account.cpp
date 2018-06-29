@@ -390,17 +390,17 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
     m_readOnly = true;
 }
 
-void CAccountHD::GetKey(CExtKey& childKey, int nChain)
+bool CAccountHD::GetKey(CExtKey& childKey, int nChain) const
 {
     assert(!m_readOnly);
     assert(!IsLocked());
     if (nChain == KEYCHAIN_EXTERNAL)
     {
-        primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
+        return primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
     }
     else
     {
-        changeChainKeyPriv.Derive(childKey, m_nNextChangeIndex++);
+        return changeChainKeyPriv.Derive(childKey, m_nNextChangeIndex++);
     }
 }
 

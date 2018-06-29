@@ -238,7 +238,6 @@ public:
     void SetNull();
 
     //fixme: (2.1) (CLEANUP)
-    virtual void GetKey([[maybe_unused]] CExtKey& childKey, [[maybe_unused]] int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
 
     //! Account uses hierarchial deterministic key generation and not legacy (random) key generation.
@@ -400,7 +399,7 @@ public:
     //For serialization only.
     CAccountHD(){};
 
-    virtual void GetKey(CExtKey& childKey, int nChain) override;
+    virtual bool GetKey(CExtKey& childKey, int nChain) const;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;
