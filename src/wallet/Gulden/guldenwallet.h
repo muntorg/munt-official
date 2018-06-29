@@ -86,7 +86,7 @@ public:
         return ret;
     }
 
-    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) const
+    bool UnlockWithMasterKey(const CKeyingMaterial& vMasterKeyIn) const
     {
         LOCK(cs_wallet);
         bool ret = true;

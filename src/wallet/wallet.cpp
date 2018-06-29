@@ -309,30 +309,7 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
                 return false;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 continue; // try another master key
-            for (auto accountPair : mapAccounts)
-            {
-                bool needsWriteToDisk = false;
-                if (!accountPair.second->Unlock(_vMasterKey, needsWriteToDisk))
-                {
-                    return false;
-                }
-                if (needsWriteToDisk)
-                {
-                    CWalletDB db(*dbw);
-                    if (!db.WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second))
-                    {
-                        throw std::runtime_error("Writing account failed");
-                    }
-                }
-            }
-            for (auto seedPair : mapSeeds)
-            {
-                if (!seedPair.second->Unlock(_vMasterKey))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return UnlockWithMasterKey(_vMasterKey);
         }
     }
     return false;
@@ -354,7 +331,7 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
                 return false;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 return false;
-            if (static_cast<CGuldenWallet*>(this)->Unlock(_vMasterKey))
+            if (UnlockWithMasterKey(_vMasterKey))
             {
                 int64_t nStartTime = GetTimeMillis();
                 crypter.SetKeyFromPassphrase(strNewWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod);
