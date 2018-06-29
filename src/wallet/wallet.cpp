@@ -176,7 +176,7 @@ bool CWallet::LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
     if (mapAccounts.find(getUUIDFromString(forAccount)) == mapAccounts.end())
         return false;
  
-    return mapAccounts[getUUIDFromString(forAccount)]->AddCryptedKey(vchPubKey, vchCryptedSecret, nKeyChain);
+    return mapAccounts[getUUIDFromString(forAccount)]->AddCryptedKeyWithChain(vchPubKey, vchCryptedSecret, nKeyChain);
 }
 
 void CWallet::UpdateTimeFirstKey(int64_t nCreateTime)

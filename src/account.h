@@ -317,7 +317,7 @@ public:
     virtual bool AddWatchOnly(const CScript &dest) override;
     virtual bool RemoveWatchOnly(const CScript &dest) override;
     virtual bool AddCScript(const CScript& redeemScript) override;
-    virtual bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain);
+    virtual bool AddCryptedKeyWithChain(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain);
 
     virtual bool AddKeyPubKey([[maybe_unused]] const CKey& key, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly
     virtual bool AddKeyPubKey([[maybe_unused]] int64_t HDKeyIndex, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly

@@ -969,7 +969,7 @@ bool CAccount::AddCScript(const CScript& redeemScript)
     return externalKeyStore.AddCScript(redeemScript);
 }
 
-bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain)
+bool CAccount::AddCryptedKeyWithChain(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain)
 {
     //fixme: (Post-2.1) This is essentially dead code now - it has been replaced at the bottom of CWallet::AddKeyPubKey
     //For technical reasons (wallet upgrade)
