@@ -682,7 +682,6 @@ public:
     int64_t RescanFromTime(int64_t startTime, bool update);
     CBlockIndex* ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
     void ReacceptWalletTransactions();
-    void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
     void GetBalances(CAmount& balanceAvailableIncludingLocked, CAmount& balanceAvailableExcludingLocked, CAmount& balanceAvailableLocked, CAmount& balanceUnconfirmedIncludingLocked, CAmount& balanceUnconfirmedExcludingLocked, CAmount& balanceUnconfirmedLocked, CAmount& balanceImmatureIncludingLocked, CAmount& balanceImmatureExcludingLocked, CAmount& balanceImmatureLocked, CAmount& balanceLocked, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
     CAmount GetBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
@@ -783,7 +782,6 @@ public:
     bool IsAllFromMe(const CTransaction& tx, const isminefilter& filter) const;
     CAmount GetCredit(const CTransaction& tx, const isminefilter& filter, CAccount* forAccount=NULL) const;
     CAmount GetChange(const CTransaction& tx) const;
-    void SetBestChain(const CBlockLocator& loc);
 
     DBErrors LoadWallet(WalletLoadState& nExtraLoadState);
     DBErrors ZapWalletTx(std::vector<CWalletTx>& vWtx);
@@ -795,7 +793,10 @@ public:
 
     CAccount* FindAccountForTransaction(const CTxOut& out);
 
-    void Inventory(const uint256 &hash)
+    // CValidationInterface updates
+    void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
+    void SetBestChain(const CBlockLocator& loc) override;
+    void Inventory(const uint256 &hash) override
     {
         {
             LOCK(cs_wallet);
