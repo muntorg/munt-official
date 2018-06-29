@@ -25,9 +25,6 @@
 #ifdef OS_WIN
 #include <windows.h>
 #endif
-#ifdef OS_MACOSX
-#include <libkern/OSAtomic.h>
-#endif
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define ARCH_CPU_X86_FAMILY 1
@@ -55,10 +52,14 @@ namespace port {
 
 // Mac OS
 #elif defined(OS_MACOSX)
-inline void MemoryBarrier() {
-  OSMemoryBarrier();
-}
-#define LEVELDB_HAVE_MEMORY_BARRIER
+
+// OSMemoryBarrier() below is deprecated, do not implement MemoryBarrier()
+// so fall through to std::atomic based implementation
+
+// inline void MemoryBarrier() {
+//   OSMemoryBarrier();
+// }
+// #define LEVELDB_HAVE_MEMORY_BARRIER
 
 // Gcc on x86
 #elif defined(ARCH_CPU_X86_FAMILY) && defined(__GNUC__)
