@@ -435,12 +435,11 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
 }
 
 void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
-    AssertLockHeld(cs_main);
-    CNodeState* nodestate = State(nodeid);
-
     //fixme: (2.1)
     return;
     #if 0
+    AssertLockHeld(cs_main);
+    CNodeState* nodestate = State(nodeid);
     if (!nodestate || !nodestate->fSupportsDesiredCmpctVersion) {
         // Never ask from peers who can't provide witnesses.
         return;

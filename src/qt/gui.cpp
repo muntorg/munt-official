@@ -134,8 +134,8 @@ static void addFontFromResource(QString sFontResourceName)
 
 GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidget *parent)
 : QMainWindow(parent)
-, platformStyle(_platformStyle)
 , networkStyle(networkStyle_)
+, platformStyle(_platformStyle)
 {
 
     // Delete ourselves on close, application catches this and uses it as a signal to exit.

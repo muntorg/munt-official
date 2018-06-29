@@ -48,7 +48,6 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
         if (!key.Sign(hash, vchSig))
             return false;
     }
-    CPubKey pub = key.GetPubKey();
     vchSig.push_back((unsigned char)nHashType);
     return true;
 }

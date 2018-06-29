@@ -51,7 +51,7 @@ uint256 CBlock::GetPoWHash() const
     {
         arith_uint256 thash;
         hash_city(BEGIN(nVersion), thash);
-        hashRet = std::move(ArithToUint256(thash));
+        hashRet = ArithToUint256(thash);
     }
     else
     {

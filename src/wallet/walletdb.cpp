@@ -661,7 +661,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             // find earliest key creation time, as wallet birthday
             if (!pwallet->nTimeFirstKey ||
-                (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
+                (keyMeta.nCreateTime < int64_t(pwallet->nTimeFirstKey)))
                 pwallet->nTimeFirstKey = keyMeta.nCreateTime;
         }
         else if (strType == "pool")

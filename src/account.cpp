@@ -162,7 +162,7 @@ void CHDSeed::InitReadOnly()
 
 CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
 {
-    CAccountHD* account = NULL;
+    CAccountHD* account = nullptr;
     switch (type)
     {
         case Desktop:
@@ -177,6 +177,8 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
             assert(m_nAccountIndexWitness < HDFutureReservedStartIndex);
             account = GenerateAccount( m_nAccountIndexWitness++, type);
             break;
+        default:
+            ; // fall through on purpose with null account
     }
 
     if (!account)
@@ -446,9 +448,11 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
     return false;
 }
 
-bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const [[no_return]]
+bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const
 {
-    assert(0);
+    // had [[no_return]] intended [[noreturn]], not allowed here as explained in https://en.cppreference.com/w/cpp/language/attributes/noreturn
+    assert(0); // asserts are always compiled in even in releae builds, should this ever change we fallback to the throw below
+    throw std::runtime_error("Should never call CAccountHD::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut)");
 }
 
 void CAccountHD::GetPubKey(CExtPubKey& childKey, int nChain) const

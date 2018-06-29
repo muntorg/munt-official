@@ -162,7 +162,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey &pubkey, CAccount& 
 bool CWallet::LoadKeyMetadata(const CPubKey &pubkey, const CKeyMetadata &meta)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
-    if (meta.nCreateTime && (!nTimeFirstKey || meta.nCreateTime < nTimeFirstKey))
+    if (meta.nCreateTime && (!nTimeFirstKey || meta.nCreateTime < int64_t(nTimeFirstKey)))
         nTimeFirstKey = meta.nCreateTime;
 
     mapKeyMetadata[pubkey.GetID()] = meta;
@@ -186,7 +186,7 @@ void CWallet::UpdateTimeFirstKey(int64_t nCreateTime)
         // Cannot determine birthday information, so set the wallet birthday to
         // the beginning of time.
         nTimeFirstKey = 1;
-    } else if (!nTimeFirstKey || nCreateTime < nTimeFirstKey) {
+    } else if (!nTimeFirstKey || nCreateTime < int64_t(nTimeFirstKey)) {
         nTimeFirstKey = nCreateTime;
     }
 }
