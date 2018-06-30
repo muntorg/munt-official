@@ -1,3 +1,13 @@
+2.0.0.1
+
+RPC - Fix a small issue with rescan progress percentage
+CORE - Fix an issue with locked wallets and account indexes that was triggering assertions in some cases.
+UI - Fix a possible minor crash that some users may have been encountering during upgrade.
+UI - Fix an issue with GuldenD and repeated unlock requests, limit to a single unlock request.
+
+
+
+
 2.0.0
 
 This release incorporates three new major feature branches, which combined involve over a year of intense development effort:
