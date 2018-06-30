@@ -27,10 +27,10 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
 
         for (const auto shadowSubType : { AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness })
         {
-            int nFinalAccountPoolTargtSize = nAccountPoolTargetSize;
+            int nFinalAccountPoolTargetSize = nAccountPoolTargetSize;
             if (shadowSubType == AccountType::PoW2Witness)
             {
-                nFinalAccountPoolTargtSize = nAccountPoolTargetSizeWitness;
+                nFinalAccountPoolTargetSize = nAccountPoolTargetSizeWitness;
             }
             int numShadow = 0;
             {
@@ -48,15 +48,16 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
                     }
                 }
             }
-            if (numShadow < nFinalAccountPoolTargtSize)
+            if (numShadow < nFinalAccountPoolTargetSize)
             {
                 CWalletDB db(*pactiveWallet->dbw);
-                while (numShadow < nFinalAccountPoolTargtSize)
+                while (numShadow < nFinalAccountPoolTargetSize)
                 {
                     // New shadow account
                     CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
 
-                    if (newShadow == NULL)
+                    // Only explicitely ask for an unlock if really low on shadow accounts
+                    if (newShadow == NULL && numShadow < std::max(nFinalAccountPoolTargetSize, 2))
                     {
                         tryLockWallet = false;
                         return;

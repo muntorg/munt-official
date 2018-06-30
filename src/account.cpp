@@ -167,20 +167,26 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
     {
         case Desktop:
             assert(m_nAccountIndex < HDMobileStartIndex);
-            account = GenerateAccount( m_nAccountIndex++, type);
+            account = GenerateAccount(m_nAccountIndex, type);
+            if (!account)
+                return nullptr;
+            ++m_nAccountIndex;
             break;
         case Mobi:
             assert(m_nAccountIndexMobi < HDWitnessStartIndex);
-            account = GenerateAccount( m_nAccountIndexMobi++, type);
+            account = GenerateAccount(m_nAccountIndexMobi, type);
+            if (!account)
+                return nullptr;
+            ++m_nAccountIndexMobi;
             break;
         case PoW2Witness:
             assert(m_nAccountIndexWitness < HDFutureReservedStartIndex);
-            account = GenerateAccount( m_nAccountIndexWitness++, type);
+            account = GenerateAccount(m_nAccountIndexWitness, type);
+            if (!account)
+                return nullptr;
+            ++m_nAccountIndexWitness;
             break;
     }
-
-    if (!account)
-        return nullptr;
 
     if (Db)
     {
