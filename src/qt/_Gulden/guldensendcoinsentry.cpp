@@ -38,7 +38,8 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui(new Ui::GuldenSendCoinsEntry),
     model(0),
     platformStyle(_platformStyle),
-    nocksQuote(nullptr)
+    nocksQuote(nullptr),
+    nocksTimer(nullptr)
 {
     ui->setupUi(this);
 
@@ -97,11 +98,6 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
-
-    nocksTimer = new QTimer(this);
-    nocksTimer->setInterval(60 * 1000); // if nothing changed update quote every 60s
-    connect(nocksTimer, SIGNAL(timeout()), this, SLOT(nocksTimeout()));
-    nocksTimer->start();
 }
 
 GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
@@ -224,6 +220,14 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
 
         connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
         connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
+
+        if (!nocksTimer)
+        {
+            nocksTimer = new QTimer(this);
+            nocksTimer->setInterval(60 * 1000); // if nothing changed update quote every 60s
+            connect(nocksTimer, SIGNAL(timeout()), this, SLOT(nocksTimeout()));
+            nocksTimer->start();
+        }
     }
 
     clear();
@@ -461,6 +465,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     if (recipient.paymentRequest.IsInitialized())
         return recipient;
 
+    if (!model)
+    {
+        recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+        recipient.address = QString("error");
+        return recipient;
+    }
 
     recipient.addToAddressBook = false;
     recipient.fSubtractFeeFromAmount = false;
@@ -974,6 +984,9 @@ void GuldenSendCoinsEntry::payInfoUpdateRequired()
 {
     // any outstanding quote request is now outdated
     cancelNocksQuote();
+
+    if (!model)
+        return;
 
     // for IBAN payment that passes minimum amount request a quote
     SendCoinsRecipient val = getValue(false);
