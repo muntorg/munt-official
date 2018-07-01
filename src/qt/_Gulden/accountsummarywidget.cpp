@@ -119,21 +119,12 @@ void AccountSummaryWidget::balanceChanged()
     if (pactiveWallet && m_account)
     {
         //fixme: (2.1) rather cache this somewhere central where it can be shared with e.g. the witness dialog?
-        CAmount balanceAvailableIncludingLocked;
-        CAmount balanceAvailableExcludingLocked;
-        CAmount balanceAvailableLocked;
-        CAmount balanceUnconfirmedIncludingLocked;
-        CAmount balanceUnconfirmedExcludingLocked;
-        CAmount balanceUnconfirmedLocked;
-        CAmount balanceImmatureIncludingLocked;
-        CAmount balanceImmatureExcludingLocked;
-        CAmount balanceImmatureLocked;
-        CAmount balanceLocked;
-        pactiveWallet->GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, m_account, true);
+        WalletBalances balances;
+        pactiveWallet->GetBalances(balances, m_account, true);
 
-        m_accountBalanceAvailable = balanceAvailableExcludingLocked;
-        m_accountBalanceLocked = balanceLocked;
-        m_accountBalanceImmatureOrUnconfirmed = balanceImmatureExcludingLocked + balanceUnconfirmedExcludingLocked;
+        m_accountBalanceAvailable = balances.availableExcludingLocked;
+        m_accountBalanceLocked = balances.totalLocked;
+        m_accountBalanceImmatureOrUnconfirmed = balances.immatureExcludingLocked + balances.unconfirmedExcludingLocked;
         m_accountBalanceTotal = m_accountBalanceLocked + m_accountBalanceAvailable + m_accountBalanceImmatureOrUnconfirmed;
         updateExchangeRates();
     }

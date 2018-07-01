@@ -384,6 +384,20 @@ private:
     std::vector<char> _ssExtra;
 };
 
+struct WalletBalances
+{
+    CAmount availableIncludingLocked;
+    CAmount availableExcludingLocked;
+    CAmount availableLocked;
+    CAmount unconfirmedIncludingLocked;
+    CAmount unconfirmedExcludingLocked;
+    CAmount unconfirmedLocked;
+    CAmount immatureIncludingLocked;
+    CAmount immatureExcludingLocked;
+    CAmount immatureLocked;
+    CAmount totalLocked;
+};
+
 /*
 All Gulden specific functionality goes in base class CGuldenWallet
 A little bit clumsy 
@@ -684,7 +698,7 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
-    void GetBalances(CAmount& balanceAvailableIncludingLocked, CAmount& balanceAvailableExcludingLocked, CAmount& balanceAvailableLocked, CAmount& balanceUnconfirmedIncludingLocked, CAmount& balanceUnconfirmedExcludingLocked, CAmount& balanceUnconfirmedLocked, CAmount& balanceImmatureIncludingLocked, CAmount& balanceImmatureExcludingLocked, CAmount& balanceImmatureLocked, CAmount& balanceLocked, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
+    void GetBalances(WalletBalances& balances, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
     CAmount GetBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;

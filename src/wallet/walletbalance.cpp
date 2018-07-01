@@ -385,33 +385,23 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
 CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildren)
 {
     //fixme: (2.1) This can probably be drastically improved.
-    CAmount balanceAvailableIncludingLocked;
-    CAmount balanceAvailableExcludingLocked;
-    CAmount balanceAvailableLocked;
-    CAmount balanceUnconfirmedIncludingLocked;
-    CAmount balanceUnconfirmedExcludingLocked;
-    CAmount balanceUnconfirmedLocked;
-    CAmount balanceImmatureIncludingLocked;
-    CAmount balanceImmatureExcludingLocked;
-    CAmount balanceImmatureLocked;
-    CAmount balanceLocked;
-    GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, forAccount, includeChildren);
-    return balanceLocked;
+    WalletBalances balances;
+    GetBalances(balances, forAccount, includeChildren);
+    return balances.totalLocked;;
 }
 
-
-void CWallet::GetBalances(CAmount& balanceAvailableIncludingLocked, CAmount& balanceAvailableExcludingLocked, CAmount& balanceAvailableLocked, CAmount& balanceUnconfirmedIncludingLocked, CAmount& balanceUnconfirmedExcludingLocked, CAmount& balanceUnconfirmedLocked, CAmount& balanceImmatureIncludingLocked, CAmount& balanceImmatureExcludingLocked, CAmount& balanceImmatureLocked, CAmount& balanceLocked, const CAccount* forAccount, bool includeChildren) const
+void CWallet::GetBalances(WalletBalances& balances, const CAccount* forAccount, bool includeChildren) const
 {
-    balanceAvailableIncludingLocked = GetBalance(forAccount, true, includeChildren);
-    balanceAvailableExcludingLocked = GetBalance(forAccount, false, includeChildren);
-    balanceAvailableLocked = balanceAvailableIncludingLocked - balanceAvailableExcludingLocked;
-    balanceUnconfirmedIncludingLocked = GetUnconfirmedBalance(forAccount, true, includeChildren);
-    balanceUnconfirmedExcludingLocked = GetUnconfirmedBalance(forAccount, false, includeChildren);
-    balanceUnconfirmedLocked = balanceUnconfirmedIncludingLocked - balanceUnconfirmedExcludingLocked;
-    balanceImmatureIncludingLocked = GetImmatureBalance(forAccount, true, includeChildren);
-    balanceImmatureExcludingLocked = GetImmatureBalance(forAccount, false, includeChildren);
-    balanceImmatureLocked = balanceImmatureIncludingLocked - balanceImmatureExcludingLocked;
-    balanceLocked = balanceAvailableLocked + balanceUnconfirmedLocked + balanceImmatureLocked;
+    balances.availableIncludingLocked = GetBalance(forAccount, true, includeChildren);
+    balances.availableExcludingLocked = GetBalance(forAccount, false, includeChildren);
+    balances.availableLocked = balances.availableIncludingLocked - balances.availableExcludingLocked;
+    balances.unconfirmedIncludingLocked = GetUnconfirmedBalance(forAccount, true, includeChildren);
+    balances.unconfirmedExcludingLocked = GetUnconfirmedBalance(forAccount, false, includeChildren);
+    balances.unconfirmedLocked = balances.unconfirmedIncludingLocked - balances.unconfirmedExcludingLocked;
+    balances.immatureIncludingLocked = GetImmatureBalance(forAccount, true, includeChildren);
+    balances.immatureExcludingLocked = GetImmatureBalance(forAccount, false, includeChildren);
+    balances.immatureLocked = balances.immatureIncludingLocked - balances.immatureExcludingLocked;
+    balances.totalLocked = balances.availableLocked + balances.unconfirmedLocked + balances.immatureLocked;
 }
 
 CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const

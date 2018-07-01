@@ -199,17 +199,8 @@ void WalletModel::pollBalanceChanged()
 
 void WalletModel::checkBalanceChanged()
 {
-    CAmount balanceAvailableIncludingLocked;
-    CAmount balanceAvailableExcludingLocked;
-    CAmount balanceAvailableLocked;
-    CAmount balanceUnconfirmedIncludingLocked;
-    CAmount balanceUnconfirmedExcludingLocked;
-    CAmount balanceUnconfirmedLocked;
-    CAmount balanceImmatureIncludingLocked;
-    CAmount balanceImmatureExcludingLocked;
-    CAmount balanceImmatureLocked;
-    CAmount balanceLocked;
-    wallet->GetBalances(balanceAvailableIncludingLocked, balanceAvailableExcludingLocked, balanceAvailableLocked, balanceUnconfirmedIncludingLocked, balanceUnconfirmedExcludingLocked, balanceUnconfirmedLocked, balanceImmatureIncludingLocked, balanceImmatureExcludingLocked, balanceImmatureLocked, balanceLocked, nullptr, true);
+    WalletBalances balances;
+    wallet->GetBalances(balances, nullptr, true);
 
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
@@ -221,15 +212,15 @@ void WalletModel::checkBalanceChanged()
         newWatchImmatureBalance = getWatchImmatureBalance();
     }
 
-    if (cachedAvailableBalance != balanceAvailableIncludingLocked || cachedUnconfirmedBalance != balanceUnconfirmedIncludingLocked || cachedImmatureBalance != balanceImmatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balanceLocked)
+    if (cachedAvailableBalance != balances.availableIncludingLocked || cachedUnconfirmedBalance != balances.unconfirmedIncludingLocked || cachedImmatureBalance != balances.immatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balances.totalLocked)
     {
-        cachedAvailableBalance = balanceAvailableExcludingLocked;
-        cachedUnconfirmedBalance = balanceUnconfirmedExcludingLocked;
-        cachedImmatureBalance = balanceImmatureExcludingLocked;
+        cachedAvailableBalance = balances.availableExcludingLocked;
+        cachedUnconfirmedBalance = balances.unconfirmedExcludingLocked;
+        cachedImmatureBalance = balances.immatureExcludingLocked;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        cachedLockedBalance = balanceLocked;
+        cachedLockedBalance = balances.totalLocked;
         Q_EMIT balanceChanged(cachedAvailableBalance, cachedUnconfirmedBalance, cachedImmatureBalance, cachedWatchOnlyBalance, cachedWatchUnconfBalance, cachedWatchImmatureBalance, cachedLockedBalance);
     }
 }
