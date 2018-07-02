@@ -412,7 +412,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(helptr("Specify configuration file (default: %s)"), GULDEN_CONF_FILENAME));
     if (mode == HMM_GULDEND)
     {
-#if HAVE_DECL_DAEMON
+#if HAVE_DECL_FORK
         strUsage += HelpMessageOpt("-daemon", helptr("Run in the background as a daemon and accept commands"));
 #endif
     }
