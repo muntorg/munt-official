@@ -117,7 +117,12 @@ void GuldenAppManager::shutdown()
     sigtermCv.notify_one();
     #else
     char signalClose = 1;
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunused-result"
     ::write(sigtermFd[0], &signalClose, sizeof(signalClose));
+    #pragma GCC diagnostic pop
+
     #endif
 }
 
@@ -213,7 +218,10 @@ void GuldenAppManager::shutdownThread()
         sigtermCv.wait(lk, [this]{ return fShutDownHasBeenInitiated == true; });
         #else
         char signalClose = 0;
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wunused-result"
         ::read(sigtermFd[1], &signalClose, sizeof(signalClose));
+        #pragma GCC diagnostic pop
         LogPrintf("shutdown thread: App shutdown requested\n");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         #endif
