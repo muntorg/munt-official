@@ -21,4 +21,5 @@ An important concept is that of "Users should only pay for the features they act
 * Should maintain the advanced scripting capabilities that the V1 format has.
 * Should be easy to extend in future for even more advanced functionality
 
-TODO: technical description here.
+
+Check back for more technical information, this documentation will be updated over the coming weeks.
