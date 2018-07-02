@@ -106,6 +106,8 @@ void RequestContextMenu(QWidget* widget)
     static_cast<Qt4Hack*>(widget)->customContextMenuRequested({});
 }
 
+//fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+#if 0
 //! Invoke bumpfee on txid and check results.
 void BumpFee(TransactionView& view, const uint256& txid, bool expectDisabled, std::string expectError, bool cancel)
 {
@@ -131,6 +133,7 @@ void BumpFee(TransactionView& view, const uint256& txid, bool expectDisabled, st
     action->trigger();
     QVERIFY(text.indexOf(QString::fromStdString(expectError)) != -1);
 }
+#endif
 
 //! Simple qt wallet tests.
 //

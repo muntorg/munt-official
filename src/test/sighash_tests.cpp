@@ -38,6 +38,7 @@ void static RandomScript(CScript &script) {
         script << oplist[InsecureRandRange(sizeof(oplist)/sizeof(oplist[0]))];
 }
 
+#if defined(PRINT_SIGHASH_JSON)
 void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     tx.nVersion = InsecureRand32();
     tx.vin.clear();
@@ -60,6 +61,7 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
         RandomScript(txout.output.scriptPubKey);
     }
 }
+#endif
 
 BOOST_FIXTURE_TEST_SUITE(sighash_tests, BasicTestingSetup)
 

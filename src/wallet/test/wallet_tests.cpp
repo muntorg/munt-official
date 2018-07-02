@@ -96,7 +96,6 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
     CWallet wallet;
     LOCK(wallet.cs_wallet);
     wallet.GenerateNewLegacyAccount("My account");
-    CAccount* account = wallet.getActiveAccount();
 
     // test multiple times to allow for differences in the shuffle order
     for (int i = 0; i < RUN_TESTS; i++)
@@ -515,8 +514,8 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         vpwallets[0] = &wallet;
         ::importwallet(request);
 
-        BOOST_CHECK_EQUAL(wallet.mapWallet.size(), 3);
-        BOOST_CHECK_EQUAL(coinbaseTxns.size(), 103);
+        BOOST_CHECK_EQUAL(wallet.mapWallet.size(), 3U);
+        BOOST_CHECK_EQUAL(coinbaseTxns.size(), 103U);
         for (size_t i = 0; i < coinbaseTxns.size(); ++i) {
             bool found = wallet.GetWalletTx(coinbaseTxns[i].GetHash());
             bool expected = i >= 100;
@@ -616,7 +615,7 @@ BOOST_AUTO_TEST_CASE(LoadReceiveRequests)
     pwalletMain->AddDestData(dest, "rr1", "val_rr1");
 
     auto values = pwalletMain->GetDestValues("rr");
-    BOOST_CHECK_EQUAL(values.size(), 2);
+    BOOST_CHECK_EQUAL(values.size(), 2U);
     BOOST_CHECK_EQUAL(values[0], "val_rr0");
     BOOST_CHECK_EQUAL(values[1], "val_rr1");
 }
@@ -680,9 +679,9 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
     // address.
     auto list = wallet->ListCoins(account);
-    BOOST_CHECK_EQUAL(list.size(), 1);
+    BOOST_CHECK_EQUAL(list.size(), 1U);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
-    BOOST_CHECK_EQUAL(list.begin()->second.size(), 1);
+    BOOST_CHECK_EQUAL(list.begin()->second.size(), 1U);
 
     // Check initial balance from first mature coinbase transaction.
     BOOST_CHECK_EQUAL(17000000000000000, wallet->GetAvailableBalance(account));
@@ -693,28 +692,28 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     // pubkey.
     AddTx(CRecipient{GetScriptForRawPubKey({}), 1 * COIN, false /* subtract fee */});
     list = wallet->ListCoins(account);
-    BOOST_CHECK_EQUAL(list.size(), 1);
+    BOOST_CHECK_EQUAL(list.size(), 1U);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
-    BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
+    BOOST_CHECK_EQUAL(list.begin()->second.size(), 2U);
 
     // Lock both coins. Confirm number of available coins drops to 0.
     std::vector<COutput> available;
     wallet->AvailableCoins(account, available);
-    BOOST_CHECK_EQUAL(available.size(), 2);
+    BOOST_CHECK_EQUAL(available.size(), 2U);
     for (const auto& group : list) {
         for (const auto& coin : group.second) {
             wallet->LockCoin(COutPoint(coin.tx->GetHash(), coin.i));
         }
     }
     wallet->AvailableCoins(account, available);
-    BOOST_CHECK_EQUAL(available.size(), 0);
+    BOOST_CHECK_EQUAL(available.size(), 0U);
 
     // Confirm ListCoins still returns same result as before, despite coins
     // being locked.
     list = wallet->ListCoins(account);
-    BOOST_CHECK_EQUAL(list.size(), 1);
+    BOOST_CHECK_EQUAL(list.size(), 1U);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
-    BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
+    BOOST_CHECK_EQUAL(list.begin()->second.size(), 2U);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
