@@ -1006,11 +1006,6 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip
     font-size: MINOR_LABEL_FONT_SIZE;
 }
 
-#newAccountName
-{
-    margin-top: 30px;
-}
-
 #checkBoxAddToAddressBook
 {
     font-size: MINOR_LABEL_FONT_SIZE;
@@ -1118,7 +1113,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading
 {
     margin: 0px;
     padding: 0px;
@@ -1139,14 +1134,14 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip
     color: TEXT_COLOR_1;
 }
 
-#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountTypeHeading
 {
     margin-top: 35px;
     margin-bottom: 10px;
 }
 
 
-#witnessEarningsGraphHeader
+#witnessEarningsGraphHeader, #labelAccountNameHeading, #labelAccountTypeHeading
 {
     margin-top: 35px;
     margin-bottom: 35px;
@@ -1317,4 +1312,9 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     color: COLOR_VALIDATION_FAILED;
 }
 
-
+#add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_witnessonly, #add_account_type_label_privkey
+{
+    width: 100px;
+    border: 1px solid TEXT_COLOR_1;
+    color: TEXT_COLOR_1
+}

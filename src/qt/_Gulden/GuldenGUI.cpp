@@ -1057,7 +1057,7 @@ static QString getAccountLabel(CAccount* account)
     }
     else if (account->m_Type == ImportedPrivateKeyAccount)
     {
-        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf084");
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf084"); // Key
     }
     else if (account->IsPoW2Witness())
     {
@@ -1669,6 +1669,18 @@ void GUI::acceptNewAccount()
 {
     LogPrint(BCLog::QT, "GUI::acceptNewAccount\n");
 
+    const auto newAccountType = dialogNewAccount->getAccountType();
+    if (newAccountType == NewAccountType::ImportKey)
+    {
+        gotoReceiveCoinsPage();
+        promptImportPrivKey();
+    }
+    else if(newAccountType == NewAccountType::WitnessOnly)
+    {
+        gotoReceiveCoinsPage();
+        promptImportWitnessOnlyAccount();
+    }
+
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
         //fixme: (2.1) This can be improved; we don't really need to unlock for every single creation only sometimes
@@ -1679,7 +1691,6 @@ void GUI::acceptNewAccount()
         std::function<void (void)> successCallback = [=]()
         {
             CAccount* newAccount = nullptr;
-            const auto newAccountType = dialogNewAccount->getAccountType();
             if (newAccountType == NewAccountType::FixedDeposit)
             {
                 newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);

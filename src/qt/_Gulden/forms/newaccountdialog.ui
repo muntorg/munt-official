@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>707</width>
-    <height>348</height>
+    <width>568</width>
+    <height>744</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -41,13 +50,25 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
-          <widget class="QComboBox" name="newAccountType">
-           <property name="currentIndex">
-            <number>-1</number>
+          <widget class="QLabel" name="labelAccountNameHeading">
+           <property name="text">
+            <string>Account name</string>
+           </property>
+           <property name="indent">
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -63,6 +84,145 @@
             <string>Enter name of account.</string>
            </property>
           </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelAccountTypeHeading">
+           <property name="text">
+            <string>Account type</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,1,0" columnminimumwidth="0,20,0,20,0">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="0">
+            <widget class="ClickableLabel" name="labelImportWitnessOnlyAccount">
+             <property name="text">
+              <string notr="true">Import witness only account</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="ClickableLabel" name="labelMobileAccount">
+             <property name="text">
+              <string notr="true">Linked mobile account</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="ClickableLabel" name="labelWitnessAccount">
+             <property name="text">
+              <string notr="true">Witness account</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="ClickableLabel" name="labelImportPrivateKey">
+             <property name="text">
+              <string notr="true">Import private key</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="ClickableLabel" name="labelTransactionAccount">
+             <property name="text">
+              <string notr="true">Transactional account</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <property name="indent">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
          <item>
           <spacer name="verticalSpacer">
@@ -89,7 +249,16 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item>
@@ -112,20 +281,6 @@
               </property>
              </spacer>
             </item>
-            <item>
-             <widget class="QPushButton" name="syncWithMobileButton">
-              <property name="text">
-               <string> Connect to mobile Gulden app</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="doneButton">
-              <property name="text">
-               <string>Done</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
@@ -136,7 +291,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -196,7 +360,16 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item>
@@ -242,6 +415,11 @@
    <class>ClickableQRImage</class>
    <extends>QLabel</extends>
    <header location="global">qt/_Gulden/clickableqrimage.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">qt/_Gulden/clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

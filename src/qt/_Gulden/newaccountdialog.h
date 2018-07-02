@@ -28,7 +28,9 @@ namespace Ui {
 enum NewAccountType
 {
     Transactional,
-    FixedDeposit
+    FixedDeposit,
+    WitnessOnly,
+    ImportKey
 };
 
 class NewAccountDialog : public QFrame
@@ -40,11 +42,13 @@ public:
     ~NewAccountDialog();
 
     QString getAccountName();
-    NewAccountType getAccountType();
+    NewAccountType getAccountType() { return m_Type; }
 Q_SIGNALS:
       void cancel();
       void accountAdded();
       void addAccountMobile();
+      void importPrivateKey();
+      void importWitnessAccount();
 
 public Q_SLOTS:
 
@@ -55,14 +59,17 @@ private:
     const QStyle *platformStyle;
     CAccountHD* newAccount;
     WalletModel* walletModel;
+    NewAccountType m_Type = Transactional;
 
 private Q_SLOTS:
-      void connectToMobile();
-      void cancelMobile();
-      void accountTypeChanged(int index);
-      void valueChanged();
-      void addAccount();
-      void showSyncQr();
+    void connectToMobile();
+    void cancelMobile();
+    void valueChanged();
+    void addAccount();
+    void addWitnessAccount();
+    void importWitnessOnly();
+    void importMobile();
+    void showSyncQr();
 };
 
 #endif // GULDEN_QT_GULDENNEWACCOUNTDIALOG_H

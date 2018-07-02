@@ -45,34 +45,59 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->newAccountPage->setObjectName("newAccountPage");
 
     // Setup cursors for all clickable elements
-    ui->doneButton->setCursor(Qt::PointingHandCursor);
     ui->cancelButton->setCursor(Qt::PointingHandCursor);
     ui->doneButton2->setCursor(Qt::PointingHandCursor);
     ui->cancelButton2->setCursor(Qt::PointingHandCursor);
-    ui->syncWithMobileButton->setCursor(Qt::PointingHandCursor);
+
+    ui->labelMobileAccount->setCursor(Qt::PointingHandCursor);
+    ui->labelTransactionAccount->setCursor(Qt::PointingHandCursor);
+    ui->labelWitnessAccount->setCursor(Qt::PointingHandCursor);
+    ui->labelImportWitnessOnlyAccount->setCursor(Qt::PointingHandCursor);
+    ui->labelImportPrivateKey->setCursor(Qt::PointingHandCursor);
+
+    ui->labelMobileAccount->setObjectName("add_account_type_label_mobile");
+    ui->labelTransactionAccount->setObjectName("add_account_type_label_transactional");
+    ui->labelWitnessAccount->setObjectName("add_account_type_label_witness");
+    ui->labelImportWitnessOnlyAccount->setObjectName("add_account_type_label_witnessonly");
+    ui->labelImportPrivateKey->setObjectName("add_account_type_label_privkey");
+
+    QString accountTemplate = "<table><tr><td style='padding: 10px'><span style='font-size: 12pt; color: #007aff;'>%1</span>  %2</td><tr><td style='padding: 10px'><ul style='type: circle; text-indent: 0px'>%3</ul></td><table>";
+    QString textTransactionalAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf09d")).arg(tr("Transactional account")).arg(tr("<li>Day to day fund management</li><li>Send and receive Gulden</li><li>Send funds to any elligible IBAN account</li><li>Easily transfer funds between mobile and desktop wallet</li>"));
+    QString textMobileAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf10b")).arg(tr("Linked mobile account")).arg(tr("<li>Top up, manage and control your mobile funds from the desktop</li><li>Empty your mobile funds with ease if phone is broken or stolen</li>"));
+    QString textWitnessAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(tr("Witness account")).arg(tr("<li>Flexible period of 1 month to 3 years</li><li>Help secure the network with minimal hardware equirements</li><li>Grow your money by earning your share in the block rewards</li>"));
+    QString textImportWitnessAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf06e")).arg(tr("Import witness account")).arg(tr("<li>Import a witness account from another device</li><li>Let this device act as a backup witness device so that you are always available to witness</li>"));
+    QString textImportPrivKey = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf084")).arg(tr("Import private key")).arg(tr("<li>Import a private key from cold storage</li><li>Not backed up as part of your recovery phrase</li>"));
+    ui->labelTransactionAccount->setText(textTransactionalAccount);
+    ui->labelMobileAccount->setText(textMobileAccount);
+    ui->labelWitnessAccount->setText(textWitnessAccount);
+    ui->labelImportWitnessOnlyAccount->setText(textImportWitnessAccount);
+    ui->labelImportPrivateKey->setText(textImportPrivKey);
 
     // Set default display state
     ui->stackedWidget->setCurrentIndex(0);
     setValid(ui->newAccountName, true);
     ui->cancelButton2->setVisible(false);
 
-    QStringListModel* accountTypeModel = new QStringListModel();
-    QStringList accountTypeList;
-    accountTypeList << tr("Transactional account") << tr("Witness account");
-    accountTypeModel->setStringList(accountTypeList);
-    ui->newAccountType->setModel(accountTypeModel);
-
     // Set default keyboard focus
     ui->newAccountName->setFocus();
 
     // Connect signals.
-    connect(ui->doneButton, SIGNAL(clicked()), this, SLOT(addAccount()));
+    connect(ui->labelTransactionAccount, SIGNAL(clicked()), this, SLOT(addAccount()));
+    connect(ui->labelWitnessAccount, SIGNAL(clicked()), this, SLOT(addWitnessAccount()));
+    connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
+    connect(ui->labelImportWitnessOnlyAccount, SIGNAL(clicked()), this, SIGNAL(importWitnessOnly()));
+    connect(ui->labelImportPrivateKey, SIGNAL(clicked()), this, SIGNAL(importPrivateKey()));
     connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
     connect(ui->cancelButton, SIGNAL(clicked()), this, SIGNAL(cancel()));
     connect(ui->cancelButton2, SIGNAL(clicked()), this, SLOT(cancelMobile()));
-    connect(ui->syncWithMobileButton, SIGNAL(clicked()), this, SLOT(connectToMobile()));
-    connect(ui->newAccountType, SIGNAL(currentIndexChanged(int)), this, SLOT(accountTypeChanged(int)));
+    connect(ui->labelMobileAccount, SIGNAL(clicked()), this, SLOT(connectToMobile()));
     connect(ui->newAccountName, SIGNAL(textEdited(QString)), this, SLOT(valueChanged()));
+
+    ui->labelMobileAccount->forceStyleRefresh();
+    ui->labelTransactionAccount->forceStyleRefresh();
+    ui->labelWitnessAccount->forceStyleRefresh();
+    ui->labelImportWitnessOnlyAccount->forceStyleRefresh();
+    ui->labelImportPrivateKey->forceStyleRefresh();
 }
 
 
@@ -126,6 +151,49 @@ void NewAccountDialog::showSyncQr()
 
 void NewAccountDialog::addAccount()
 {
+    m_Type = Transactional;
+    if (!ui->newAccountName->text().simplified().isEmpty())
+    {
+        Q_EMIT accountAdded();
+    }
+    else
+    {
+        ui->newAccountName->setFocus();
+        setValid(ui->newAccountName, false);
+    }
+}
+
+void NewAccountDialog::addWitnessAccount()
+{
+    m_Type = FixedDeposit;
+    if (!ui->newAccountName->text().simplified().isEmpty())
+    {
+        Q_EMIT accountAdded();
+    }
+    else
+    {
+        ui->newAccountName->setFocus();
+        setValid(ui->newAccountName, false);
+    }
+}
+
+void NewAccountDialog::importWitnessOnly()
+{
+    m_Type = WitnessOnly;
+    if (!ui->newAccountName->text().simplified().isEmpty())
+    {
+        Q_EMIT accountAdded();
+    }
+    else
+    {
+        ui->newAccountName->setFocus();
+        setValid(ui->newAccountName, false);
+    }
+}
+
+void NewAccountDialog::importMobile()
+{
+    m_Type = ImportKey;
     if (!ui->newAccountName->text().simplified().isEmpty())
     {
         Q_EMIT accountAdded();
@@ -147,32 +215,9 @@ void NewAccountDialog::valueChanged()
     setValid(ui->newAccountName, true);
 }
 
-void NewAccountDialog::accountTypeChanged(int index)
-{
-    if (index > 0)
-    {
-        ui->syncWithMobileButton->setVisible(false);
-    }
-    else
-    {
-        ui->syncWithMobileButton->setVisible(true);
-    }
-}
-
 
 QString NewAccountDialog::getAccountName()
 {
     return ui->newAccountName->text();
 }
 
-NewAccountType NewAccountDialog::getAccountType()
-{
-    if (ui->newAccountType->currentIndex() == 0)
-    {
-        return NewAccountType::Transactional;
-    }
-    else
-    {
-        return NewAccountType::FixedDeposit;
-    }
-}
