@@ -10,6 +10,8 @@
 #include <QWidget>
 #include <memory>
 
+#include "wallet/wallet.h"
+
 class ClientModel;
 class TransactionFilterProxy;
 class TxViewDelegate;
@@ -38,8 +40,7 @@ public:
     void showOutOfSyncWarning(bool fShow);
 
 public Q_SLOTS:
-    void setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
+    void setBalance(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
@@ -49,13 +50,10 @@ private:
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-    CAmount currentAvailableBalance = -1;
-    CAmount currentUnconfirmedBalance = -1;
-    CAmount currentImmatureBalance = -1;
-    CAmount currentWatchOnlyBalance = -1;
-    CAmount currentWatchUnconfBalance = -1;
-    CAmount currentWatchImmatureBalance = -1;
-    CAmount currentLockedBalance = -1;
+    WalletBalances cachedBalances;
+    CAmount cachedWatchOnlyBalance = -1;
+    CAmount cachedWatchUnconfBalance = -1;
+    CAmount cachedWatchImmatureBalance = -1;
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;

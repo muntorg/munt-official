@@ -150,20 +150,18 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance)
+void OverviewPage::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
-    (unused) lockedBalance;
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
-    currentAvailableBalance = availableBalance;
-    currentUnconfirmedBalance = unconfirmedBalance;
-    currentImmatureBalance = immatureBalance;
-    currentWatchOnlyBalance = watchOnlyBalance;
-    currentWatchUnconfBalance = watchUnconfBalance;
-    currentWatchImmatureBalance = watchImmatureBalance;
-    ui->labelBalance->setText(GuldenUnits::formatWithUnit(unit, currentAvailableBalance, false, GuldenUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(GuldenUnits::formatWithUnit(unit, unconfirmedBalance, false, GuldenUnits::separatorAlways));
-    ui->labelImmature->setText(GuldenUnits::formatWithUnit(unit, immatureBalance, false, GuldenUnits::separatorAlways));
-    ui->labelTotal->setText(GuldenUnits::formatWithUnit(unit, currentAvailableBalance + unconfirmedBalance + immatureBalance, false, GuldenUnits::separatorAlways));
+    cachedBalances = balances;
+    cachedWatchOnlyBalance = watchOnlyBalance;
+    cachedWatchUnconfBalance = watchUnconfBalance;
+    cachedWatchImmatureBalance = watchImmatureBalance;
+    ui->labelBalance->setText(GuldenUnits::formatWithUnit(unit, cachedBalances.availableExcludingLocked, false, GuldenUnits::separatorAlways));
+    ui->labelUnconfirmed->setText(GuldenUnits::formatWithUnit(unit, cachedBalances.unconfirmedExcludingLocked, false, GuldenUnits::separatorAlways));
+    ui->labelImmature->setText(GuldenUnits::formatWithUnit(unit, cachedBalances.immatureExcludingLocked, false, GuldenUnits::separatorAlways));
+    //ui->labelLocked->setText(GuldenUnits::formatWithUnit(unit, cachedBalances.totalLocked, false, GuldenUnits::separatorAlways));
+    ui->labelTotal->setText(GuldenUnits::formatWithUnit(unit, cachedBalances.availableExcludingLocked + cachedBalances.unconfirmedExcludingLocked + cachedBalances.immatureExcludingLocked, false, GuldenUnits::separatorAlways));
     ui->labelWatchAvailable->setText(GuldenUnits::formatWithUnit(unit, watchOnlyBalance, false, GuldenUnits::separatorAlways));
     ui->labelWatchPending->setText(GuldenUnits::formatWithUnit(unit, watchUnconfBalance, false, GuldenUnits::separatorAlways));
     ui->labelWatchImmature->setText(GuldenUnits::formatWithUnit(unit, watchImmatureBalance, false, GuldenUnits::separatorAlways));
@@ -171,7 +169,7 @@ void OverviewPage::setBalance(const CAmount& availableBalance, const CAmount& un
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
-    bool showImmature = immatureBalance != 0;
+    bool showImmature = cachedBalances.immatureExcludingLocked != 0;
     bool showWatchOnlyImmature = watchImmatureBalance != 0;
 
     // for symmetry reasons also show immature label when the watch-only one is shown
@@ -223,8 +221,8 @@ void OverviewPage::setWalletModel(WalletModel *model)
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
-        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(), model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance(), model->getLockedBalance());
-        connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
+        setBalance(model->getBalances(), model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
+        connect(model, SIGNAL(balanceChanged(WalletBalances, CAmount, CAmount, CAmount)), this, SLOT(setBalance(WalletBalances, CAmount, CAmount, CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
@@ -240,8 +238,8 @@ void OverviewPage::updateDisplayUnit()
 {
     if(walletModel && walletModel->getOptionsModel())
     {
-        if(currentAvailableBalance != -1)
-            setBalance(currentAvailableBalance, currentUnconfirmedBalance, currentImmatureBalance, currentWatchOnlyBalance, currentWatchUnconfBalance, currentWatchImmatureBalance, currentLockedBalance);
+        if(cachedWatchOnlyBalance != -1)
+            setBalance(cachedBalances, cachedWatchOnlyBalance, cachedWatchUnconfBalance, cachedWatchImmatureBalance);
 
         // Update txdelegate->unit with the current unit
         txdelegate->unit = walletModel->getOptionsModel()->getDisplayUnit();

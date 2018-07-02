@@ -28,6 +28,7 @@
 #include "_Gulden/GuldenGUI.h"
 #include "updatecheck.h"
 #include "validation/validation.h"
+#include "wallet/wallet.h"
 
 #include <boost/uuid/uuid.hpp>
 
@@ -223,13 +224,10 @@ private:
     std::map<ClickableLabel*, CAccount*> m_accountMap;
 
     //Cache the balances so that we can easily re-use them when the currency ticker changes.
-    CAmount availableBalanceCached = 0;
-    CAmount unconfirmedBalanceCached = 0;
-    CAmount immatureBalanceCached = 0;
-    CAmount watchOnlyBalanceCached = 0;
-    CAmount watchUnconfBalanceCached = 0;
-    CAmount watchImmatureBalanceCached = 0;
-    CAmount lockedBalanceCached = 0;
+    WalletBalances cachedBalances;
+    CAmount watchOnlyBalanceCached = -1;
+    CAmount watchUnconfBalanceCached = -1;
+    CAmount watchImmatureBalanceCached = -1;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks = 0;
@@ -284,7 +282,7 @@ public Q_SLOTS:
     */
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
 
-    void setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
+    void setBalance(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
     //! UI calls this to signal that the user wants to exit - this then causes the core to initiate proper shutdown etc.
     void userWantsToQuit();

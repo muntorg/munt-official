@@ -20,7 +20,7 @@ class OptionsModel;
 class QNetworkAccessManager;
 class QNetworkReply;
 class CurrencyTicker;
-
+class WalletBalances;
 
 
 class CurrencyTableModel : public QAbstractTableModel
@@ -42,7 +42,7 @@ public:
     void setBalance(CAmount balanceNLG);
 
 public Q_SLOTS:
-    void balanceChanged(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
+    void balanceChanged(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
 private:
     CurrencyTicker* m_ticker;

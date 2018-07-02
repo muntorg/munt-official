@@ -386,16 +386,43 @@ private:
 
 struct WalletBalances
 {
-    CAmount availableIncludingLocked;
-    CAmount availableExcludingLocked;
-    CAmount availableLocked;
-    CAmount unconfirmedIncludingLocked;
-    CAmount unconfirmedExcludingLocked;
-    CAmount unconfirmedLocked;
-    CAmount immatureIncludingLocked;
-    CAmount immatureExcludingLocked;
-    CAmount immatureLocked;
-    CAmount totalLocked;
+    CAmount availableIncludingLocked = -1;
+    CAmount availableExcludingLocked = -1;
+    CAmount availableLocked = -1;
+    CAmount unconfirmedIncludingLocked = -1;
+    CAmount unconfirmedExcludingLocked = -1;
+    CAmount unconfirmedLocked = -1;
+    CAmount immatureIncludingLocked = -1;
+    CAmount immatureExcludingLocked = -1;
+    CAmount immatureLocked = -1;
+    CAmount totalLocked = -1;
+
+    bool operator==(const WalletBalances& rhs) const
+    {
+        return availableIncludingLocked       == rhs.availableIncludingLocked
+                && availableExcludingLocked   == rhs.availableExcludingLocked
+                && availableLocked            == rhs.availableLocked
+                && unconfirmedIncludingLocked == rhs.unconfirmedIncludingLocked
+                && unconfirmedExcludingLocked == rhs.unconfirmedExcludingLocked
+                && unconfirmedLocked          == rhs.unconfirmedLocked
+                && immatureIncludingLocked    == rhs.immatureIncludingLocked
+                && immatureExcludingLocked    == rhs.immatureExcludingLocked
+                && immatureLocked             == rhs.immatureLocked
+                && totalLocked                == rhs.totalLocked;
+    }
+    bool operator!=(const WalletBalances& rhs) const
+    {
+        return availableIncludingLocked       != rhs.availableIncludingLocked
+                || availableExcludingLocked   != rhs.availableExcludingLocked
+                || availableLocked            != rhs.availableLocked
+                || unconfirmedIncludingLocked != rhs.unconfirmedIncludingLocked
+                || unconfirmedExcludingLocked != rhs.unconfirmedExcludingLocked
+                || unconfirmedLocked          != rhs.unconfirmedLocked
+                || immatureIncludingLocked    != rhs.immatureIncludingLocked
+                || immatureExcludingLocked    != rhs.immatureExcludingLocked
+                || immatureLocked             != rhs.immatureLocked
+                || totalLocked                != rhs.totalLocked;
+    }
 };
 
 /*

@@ -19,6 +19,7 @@
 #include <QTimer>
 #include <QVariant>
 #include <QModelIndex>
+#include "wallet/wallet.h"
 
 
 #include <ostream>
@@ -87,9 +88,9 @@ void CurrencyTableModel::setBalance(CAmount balanceNLG)
     m_balanceNLG = balanceNLG;
 }
 
-void CurrencyTableModel::balanceChanged(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance)
+void CurrencyTableModel::balanceChanged(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
-    setBalance(availableBalance + unconfirmedBalance + immatureBalance);
+    setBalance(balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked);
     //fixme: (2.1) Only emit if data actually changes.
     Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(rowCount()-1, columnCount()-1, QModelIndex()));
 }

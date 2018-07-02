@@ -32,7 +32,6 @@
 #include "ui_interface.h"
 #include "util.h" // for GetBoolArg
 #include "wallet/feebumper.h"
-#include "wallet/wallet.h"
 #include "wallet/walletdb.h" // for BackupWallet
 
 #include <stdint.h>
@@ -90,8 +89,8 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
     {
         return wallet->GetAvailableBalance(coinControl);
     }*/
-    if (cachedAvailableBalance != -1)
-        return cachedAvailableBalance;
+    if (cachedBalances.availableExcludingLocked != -1)
+        return cachedBalances.availableExcludingLocked;
     else if (wallet)
         return wallet->GetBalance(forAccount, true, false);
     else
@@ -100,8 +99,8 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
 
 CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 {
-    if (cachedUnconfirmedBalance != -1)
-        return cachedUnconfirmedBalance;
+    if (cachedBalances.unconfirmedExcludingLocked != -1)
+        return cachedBalances.unconfirmedExcludingLocked;
     else if (wallet)
         return wallet->GetUnconfirmedBalance(forAccount);
     else
@@ -110,8 +109,8 @@ CAmount WalletModel::getUnconfirmedBalance(CAccount* forAccount) const
 
 CAmount WalletModel::getImmatureBalance() const
 {
-    if (cachedImmatureBalance != -1)
-        return cachedImmatureBalance;
+    if (cachedBalances.immatureExcludingLocked != -1)
+        return cachedBalances.immatureExcludingLocked;
     else if (wallet)
         return wallet->GetImmatureBalance();
     else
@@ -151,14 +150,12 @@ CAmount WalletModel::getWatchImmatureBalance() const
         return 0;
 }
 
-CAmount WalletModel::getLockedBalance() const
+WalletBalances WalletModel::getBalances() const
 {
-    if (cachedLockedBalance != -1)
-        return cachedLockedBalance;
-    else if (wallet)
-        return wallet->GetLockedBalance();
-    else
-        return 0;
+    if (wallet && cachedBalances.totalLocked == -1)
+        wallet->GetBalances(cachedBalances);
+
+    return cachedBalances;
 }
 
 void WalletModel::updateStatus()
@@ -212,16 +209,13 @@ void WalletModel::checkBalanceChanged()
         newWatchImmatureBalance = getWatchImmatureBalance();
     }
 
-    if (cachedAvailableBalance != balances.availableIncludingLocked || cachedUnconfirmedBalance != balances.unconfirmedIncludingLocked || cachedImmatureBalance != balances.immatureIncludingLocked || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance || cachedLockedBalance != balances.totalLocked)
+    if (cachedBalances != balances || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance)
     {
-        cachedAvailableBalance = balances.availableExcludingLocked;
-        cachedUnconfirmedBalance = balances.unconfirmedExcludingLocked;
-        cachedImmatureBalance = balances.immatureExcludingLocked;
+        cachedBalances = balances;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        cachedLockedBalance = balances.totalLocked;
-        Q_EMIT balanceChanged(cachedAvailableBalance, cachedUnconfirmedBalance, cachedImmatureBalance, cachedWatchOnlyBalance, cachedWatchUnconfBalance, cachedWatchImmatureBalance, cachedLockedBalance);
+        Q_EMIT balanceChanged(cachedBalances, cachedWatchOnlyBalance, cachedWatchUnconfBalance, cachedWatchImmatureBalance);
     }
 }
 

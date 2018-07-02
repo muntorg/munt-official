@@ -170,26 +170,23 @@ void GUI::handlePaymentAccepted()
     refreshTabVisibilities();
 }
 
-void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance)
+void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     LogPrint(BCLog::QT, "GUI::setBalance\n");
     if (ShutdownRequested())
         return;
 
-    availableBalanceCached = availableBalance;
-    unconfirmedBalanceCached = unconfirmedBalance;
-    immatureBalanceCached = immatureBalance;
+    cachedBalances = balances;
     watchOnlyBalanceCached = watchOnlyBalance;
     watchUnconfBalanceCached = watchUnconfBalance;
     watchImmatureBalanceCached = watchImmatureBalance;
-    lockedBalanceCached = lockedBalance;
 
     if (!labelBalance || !labelBalanceForex)
         return;
 
-    CAmount displayBalanceAvailable = availableBalanceCached;
-    CAmount displayBalanceLocked = lockedBalanceCached;
-    CAmount displayBalanceImmatureOrUnconfirmed = immatureBalanceCached + unconfirmedBalanceCached;
+    CAmount displayBalanceAvailable = balances.availableExcludingLocked;
+    CAmount displayBalanceLocked = balances.totalLocked;
+    CAmount displayBalanceImmatureOrUnconfirmed = balances.immatureExcludingLocked + balances.unconfirmedExcludingLocked;
     CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
 
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
@@ -217,21 +214,17 @@ void GUI::setBalance(const CAmount& availableBalance, const CAmount& unconfirmed
         resizeToolBarsGulden();
     }
 
-    labelBalance->setToolTip("");
-    if (immatureBalance>0 || unconfirmedBalance>0)
-    {
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
-        labelBalance->setToolTip(toolTip);
-    }
+    QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
+    labelBalance->setToolTip(toolTip);
 }
 
 void GUI::updateExchangeRates()
 {
     LogPrint(BCLog::QT, "GUI::updateExchangeRates\n");
-    setBalance(availableBalanceCached, unconfirmedBalanceCached, immatureBalanceCached, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached, lockedBalanceCached);
+    setBalance(cachedBalances, watchOnlyBalanceCached, watchUnconfBalanceCached, watchImmatureBalanceCached);
 }
 
 void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitnessAccount)
@@ -1770,7 +1763,7 @@ void GUI::showExchangeRateDialog()
     {
         CurrencyTableModel* currencyTabelmodel = ticker->GetCurrencyTableModel();
         currencyTabelmodel->setBalance( walletFrame->currentWalletView()->walletModel->getBalance() );
-        connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), currencyTabelmodel , SLOT( balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+        connect( walletFrame->currentWalletView()->walletModel, SIGNAL( balanceChanged(WalletBalances, CAmount, CAmount, CAmount) ), currencyTabelmodel , SLOT( balanceChanged(WalletBalances, CAmount, CAmount, CAmount) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         dialogExchangeRate = new ExchangeRateDialog( platformStyle, this, currencyTabelmodel );
         dialogExchangeRate->setOptionsModel( optionsModel );
     }

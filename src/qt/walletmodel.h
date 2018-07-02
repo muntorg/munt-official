@@ -25,6 +25,7 @@
 #include <QRegularExpression>
 
 #include <boost/uuid/uuid.hpp>
+#include "wallet/wallet.h"
 
 class AddressTableModel;
 class AccountTableModel;
@@ -201,7 +202,7 @@ public:
     CAmount getWatchBalance() const;
     CAmount getWatchUnconfirmedBalance() const;
     CAmount getWatchImmatureBalance() const;
-    CAmount getLockedBalance() const;
+    WalletBalances getBalances() const;
     EncryptionStatus getEncryptionStatus() const;
 
     // Check address for validity
@@ -307,13 +308,10 @@ private:
     RecentRequestsTableModel *recentRequestsTableModel;
 
     // Cache some values to be able to detect changes
-    CAmount cachedAvailableBalance = -1;
-    CAmount cachedUnconfirmedBalance = -1;
-    CAmount cachedImmatureBalance = -1;
+    mutable WalletBalances cachedBalances;
     CAmount cachedWatchOnlyBalance = -1;
     CAmount cachedWatchUnconfBalance = -1;
     CAmount cachedWatchImmatureBalance = -1;
-    CAmount cachedLockedBalance = -1;
     EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
 
@@ -327,8 +325,7 @@ private:
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
-    void balanceChanged(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                        const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& lockedBalance);
+    void balanceChanged(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
     // Encryption status of wallet changed
     void encryptionStatusChanged(int status);
