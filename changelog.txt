@@ -1,3 +1,10 @@
+2.0.0.2
+
+UI - Implement an improved "new account" page; which makes witnessing more visible as well as better displays and advertizes various other capabilities of our wallets.
+
+
+
+
 2.0.0.1
 
 RPC - Fix a small issue with rescan progress percentage
