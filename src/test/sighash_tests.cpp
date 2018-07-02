@@ -30,6 +30,7 @@
 
 extern UniValue read_json(const std::string& jsondata);
 
+#if defined(PRINT_SIGHASH_JSON)
 void static RandomScript(CScript &script) {
     static const opcodetype oplist[] = {OP_FALSE, OP_1, OP_2, OP_3, OP_CHECKSIG, OP_IF, OP_VERIF, OP_RETURN, OP_CODESEPARATOR};
     script = CScript();
@@ -38,7 +39,6 @@ void static RandomScript(CScript &script) {
         script << oplist[InsecureRandRange(sizeof(oplist)/sizeof(oplist[0]))];
 }
 
-#if defined(PRINT_SIGHASH_JSON)
 void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     tx.nVersion = InsecureRand32();
     tx.vin.clear();

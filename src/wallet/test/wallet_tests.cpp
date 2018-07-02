@@ -505,7 +505,6 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
     {
         CWallet wallet;
         wallet.GenerateNewLegacyAccount("My account");
-        CAccount* account = wallet.getActiveAccount();
 
         JSONRPCRequest request;
         request.params.setArray();

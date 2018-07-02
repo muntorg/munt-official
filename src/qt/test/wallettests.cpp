@@ -24,6 +24,9 @@
 
 namespace
 {
+//fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+#if 0
+
 //! Press "Ok" button in message box dialog.
 void ConfirmMessage(QString* text = nullptr)
 {
@@ -38,6 +41,7 @@ void ConfirmMessage(QString* text = nullptr)
         delete callback;
     }), SLOT(call()));
 }
+#endif
 
 //! Press "Yes" or "Cancel" buttons in modal send confirmation dialog.
 void ConfirmSend(QString* text = nullptr, bool cancel = false)
@@ -93,17 +97,6 @@ QModelIndex FindTx(const QAbstractItemModel& model, const uint256& txid)
         }
     }
     return {};
-}
-
-//! Request context menu (call method that is public in qt5, but protected in qt4).
-void RequestContextMenu(QWidget* widget)
-{
-    class Qt4Hack : public QWidget
-    {
-    public:
-        using QWidget::customContextMenuRequested;
-    };
-    static_cast<Qt4Hack*>(widget)->customContextMenuRequested({});
 }
 
 //fixme: (2.1) - We don't currently have fee bumping enabled in the UI

@@ -347,6 +347,7 @@ BOOST_AUTO_TEST_CASE(test_Get)
     BOOST_CHECK_EQUAL(coins.GetValueIn(t1), (50+21+22)*CENT);
 }
 
+/* unused, why does it need fixing in 2.0.1?
 static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
 {
     //fixme: (2.0.1)
@@ -388,6 +389,7 @@ static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outsc
     assert(input.vin[0].segregatedSignatureData.stack == inputm.vin[0].segregatedSignatureData.stack);
 #endif
 }
+*/
 
 void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& input, int flags, bool success)
 {
@@ -412,6 +414,7 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
+/* unused
 static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 {
     std::vector<valtype> stack;
@@ -420,6 +423,7 @@ static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
     stack.back() = std::vector<unsigned char>(redeemScript.begin(), redeemScript.end());
     script = PushAll(stack);
 }
+*/
 
 BOOST_AUTO_TEST_CASE(test_IsStandard)
 {
