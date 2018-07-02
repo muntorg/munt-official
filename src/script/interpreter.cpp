@@ -1416,7 +1416,6 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     if (witness == NULL) {
         witness = &emptyWitness;
     }
-    bool hadWitness = false;
 
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
 
