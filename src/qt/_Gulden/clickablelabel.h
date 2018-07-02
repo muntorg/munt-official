@@ -18,6 +18,8 @@ public:
     void setChecked(bool checked);
     bool isChecked();
 
+    void forceStyleRefresh();
+
 Q_SIGNALS:
     void clicked();
 

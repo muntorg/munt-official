@@ -26,18 +26,22 @@ ClickableLabel::ClickableLabel( QWidget * parent )
     //connect(mnemonicShortcut, SIGNAL(activated()), this, SIGNAL(clicked()));
 }
 
+void ClickableLabel::forceStyleRefresh()
+{
+    style()->unpolish(this);
+    style()->polish(this);
+}
+
 void ClickableLabel::mousePressEvent( [[maybe_unused]] QMouseEvent * event ) 
 {
     setProperty("pressed", QVariant(true));
-    style()->unpolish(this);
-    style()->polish(this);
+    forceStyleRefresh();
 }
 
 void ClickableLabel::mouseReleaseEvent ( [[maybe_unused]] QMouseEvent * event )
 {
     setProperty("pressed", QVariant(false));
-    style()->unpolish(this);
-    style()->polish(this);
+    forceStyleRefresh();
     if (mouseIn)
     {
         Q_EMIT clicked();
@@ -48,16 +52,14 @@ void ClickableLabel::enterEvent([[maybe_unused]] QEvent * event)
 {
     mouseIn = true;
     setProperty("hover", QVariant(true));
-    style()->unpolish(this);
-    style()->polish(this);
+    forceStyleRefresh();
 }
 
 void ClickableLabel::leaveEvent([[maybe_unused]] QEvent * event)
 {
     mouseIn = false;
     setProperty("hover", QVariant(false));
-    style()->unpolish(this);
-    style()->polish(this);
+    forceStyleRefresh();
 }
 
 void ClickableLabel::setChecked(bool checked)
@@ -65,8 +67,7 @@ void ClickableLabel::setChecked(bool checked)
     if (isChecked() != checked)
     {
         setProperty("checked", QVariant(checked));
-        style()->unpolish(this);
-        style()->polish(this);
+        forceStyleRefresh();
     }
 }
 
