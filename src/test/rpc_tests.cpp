@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     BOOST_CHECK_NO_THROW(CallRPC(std::string("setban 127.0.0.0 remove")));
     BOOST_CHECK_NO_THROW(r = CallRPC(std::string("listbanned")));
     ar = r.get_array();
-    BOOST_CHECK_EQUAL(ar.size(), 0);
+    BOOST_CHECK_EQUAL(ar.size(), 0U);
 
     BOOST_CHECK_NO_THROW(r = CallRPC(std::string("setban 127.0.0.0/24 add 1607731200 true")));
     BOOST_CHECK_NO_THROW(r = CallRPC(std::string("listbanned")));
