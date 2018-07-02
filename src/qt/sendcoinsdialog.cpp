@@ -193,8 +193,7 @@ void SendCoinsDialog::setModel(WalletModel *_model)
             }
         }
 
-        setBalance(_model->getBalance(), _model->getUnconfirmedBalance(), _model->getImmatureBalance(),
-                   _model->getWatchBalance(), _model->getWatchUnconfirmedBalance(), _model->getWatchImmatureBalance());
+        setBalance(_model->getBalances(), _model->getWatchBalance(), _model->getWatchUnconfirmedBalance(), _model->getWatchImmatureBalance());
         connect(_model, SIGNAL(balanceChanged(WalletBalances, CAmount, CAmount, CAmount)), this, SLOT(setBalance(WalletBalances, CAmount, CAmount, CAmount)));
         connect(_model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         updateDisplayUnit();
@@ -716,18 +715,15 @@ bool SendCoinsDialog::handlePaymentRequest(const SendCoinsRecipient &rv)
     return true;
 }
 
-void SendCoinsDialog::setBalance(const CAmount& availableBalance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                                 const CAmount& watchBalance, const CAmount& watchUnconfirmedBalance, const CAmount& watchImmatureBalance)
+void SendCoinsDialog::setBalance(WalletBalances balances, const CAmount& watchBalance, const CAmount& watchUnconfirmedBalance, const CAmount& watchImmatureBalance)
 {
-    (unused)unconfirmedBalance;
-    (unused)immatureBalance;
     (unused)watchBalance;
     (unused)watchUnconfirmedBalance;
     (unused)watchImmatureBalance;
 
     if(model && model->getOptionsModel())
     {
-        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), availableBalance));
+        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.availableBalanceExcludingLocked));
     }
 }
 
