@@ -13,7 +13,12 @@
 #include <sys/types.h>
 #endif
 
-
+#if HAVE_DECL_FORK
+#include <errno.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
 
 GuldenAppManager* GuldenAppManager::gApp = nullptr;
 
@@ -116,12 +121,62 @@ void GuldenAppManager::shutdown()
     #endif
 }
 
+#if HAVE_DECL_FORK
+bool daemoniseUsingFork() {
+    // deamonize using double fork as daemonise() is not standarized and available on all platforms
+    // instead use POSIX compliant fork() using double forking as described (for example)
+    // at http://www.microhowto.info/howto/cause_a_process_to_become_a_daemon_in_c.html
+
+    pid_t pid = fork();
+    if (pid == -1) {
+        return false;
+    } else if (pid != 0) {
+        // I'm the parent of the first fork, exit
+        _exit(0);
+    }
+
+    // Start a new session for the daemon.
+    if (setsid()==-1) {
+        return false;
+    }
+
+    // ignore closing of controlliing terminal
+    signal(SIGHUP,SIG_IGN);
+
+    pid=fork();
+    if (pid == -1) {
+        return false;
+    } else if (pid != 0) {
+        // I'm the parent of the 2nd fork, exit
+        _exit(0);
+    }
+
+    // close standard file descriptors.
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    // re-open
+    const char* DEV_NULL = "/dev/null";
+    if (open(DEV_NULL, O_RDONLY) == -1) {
+        return false;
+    }
+    if (open(DEV_NULL, O_WRONLY) == -1) {
+        return false;
+    }
+    if (open(DEV_NULL, O_RDWR) == -1) {
+        return false;
+    }
+
+    return true;
+}
+#endif
+
 bool GuldenAppManager::daemonise()
 {
-    #if HAVE_DECL_DAEMON
+    #if HAVE_DECL_FORK
     {
-        // Daemonize - don't chdir (1), do close FDs (0)
-        bool managedToDeamonise = (daemon(1, 0) != -1);
+        bool managedToDeamonise = daemoniseUsingFork();
 
         if (!managedToDeamonise)
         {
