@@ -100,6 +100,7 @@ qt/_Gulden/accounttablemodel.h
 GDN_QT_SRCS = qt/_Gulden/guldensendcoinsentry.cpp \
 qt/_Gulden/accountsummarywidget.cpp \
 qt/_Gulden/receivecoinsdialog.cpp \
+qt/_Gulden/GuldenGUI.cpp \
 qt/_Gulden/ticker.cpp \
 qt/_Gulden/nockssettings.cpp \
 qt/_Gulden/nocksrequest.cpp \
@@ -238,6 +239,7 @@ QT_MOC_CPP = \
   qt/moc_csvmodelwriter.cpp \
   qt/moc_editaddressdialog.cpp \
   qt/moc_guiutil.cpp \
+  qt/qfonticon/moc_qfonticon.cpp \
   qt/moc_intro.cpp \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
