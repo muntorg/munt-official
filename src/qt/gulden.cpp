@@ -91,12 +91,6 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 //fixme: (BUILD_SYSTEM) - Enable turning this on for special debugging cases
 //#define LOG_ALL_QT_EVENTS
 
-// Declare meta types used for QMetaObject::invokeMethod
-Q_DECLARE_METATYPE(bool*)
-Q_DECLARE_METATYPE(CAccount*)
-Q_DECLARE_METATYPE(CAmount)
-Q_DECLARE_METATYPE(std::function<void (void)>)
-
 static void InitMessage(const std::string &message)
 {
     LogPrintf("init message: %s\n", message);
@@ -617,14 +611,15 @@ int main(int argc, char *argv[])
 #endif
 
     // Register meta types used for QMetaObject::invokeMethod
-    qRegisterMetaType< bool* >();
-    qRegisterMetaType< CAccount* >();
+    qRegisterMetaType<bool*>();
+    qRegisterMetaType<CAccount*>();
     //   Need to pass name here as CAmount is a typedef (see http://qt-project.org/doc/qt-5/qmetatype.html#qRegisterMetaType)
     //   IMPORTANT if it is no longer a typedef use the normal variant above
-    qRegisterMetaType< CAmount >("CAmount");
-    qRegisterMetaType< std::function<void (void)> >();
+    qRegisterMetaType<CAmount>("CAmount");
+    qRegisterMetaType<WalletBalances>();
+    qRegisterMetaType<std::function<void (void)>>();
     //Used by QVariant in table models.
-    qRegisterMetaType< boost::uuids::uuid >();
+    qRegisterMetaType<boost::uuids::uuid>();
 
     /// 3. Application identification
     // must be set before OptionsModel is initialized or translations are loaded,

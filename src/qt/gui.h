@@ -61,6 +61,12 @@ QT_END_NAMESPACE
 
 //Needed for QVariant.
 Q_DECLARE_METATYPE(boost::uuids::uuid);
+// Needed for signal/slot handling.
+Q_DECLARE_METATYPE(bool*)
+Q_DECLARE_METATYPE(CAccount*)
+Q_DECLARE_METATYPE(CAmount)
+Q_DECLARE_METATYPE(WalletBalances)
+Q_DECLARE_METATYPE(std::function<void (void)>)
 
 /**
   Gulden GUI main class. This class represents the main window of the Gulden UI. It communicates with both the client and
