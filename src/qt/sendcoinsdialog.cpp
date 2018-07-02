@@ -723,7 +723,7 @@ void SendCoinsDialog::setBalance(WalletBalances balances, const CAmount& watchBa
 
     if(model && model->getOptionsModel())
     {
-        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.availableBalanceExcludingLocked));
+        ui->labelBalance->setText(GuldenUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.availableExcludingLocked));
     }
 }
 
@@ -744,7 +744,7 @@ void SendCoinsDialog::updateActionButtons()
 
 void SendCoinsDialog::updateDisplayUnit()
 {
-    setBalance(model->getBalance(), 0, 0, 0, 0, 0);
+    setBalance(model->getBalances(), model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
     updateMinFeeLabel();
     updateSmartFeeLabel();
 }
