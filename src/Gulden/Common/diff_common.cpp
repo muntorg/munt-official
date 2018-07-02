@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import org.bitcoinj.store.BlockStoreException;
 public class CommonDiff extends DeltaDiff {
 public static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
-public static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
+public static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 750000);
 public static
 #endif
 
@@ -37,7 +37,7 @@ unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE bl
 {
     #ifndef __JAVA__
     static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 437600);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 750000);
     #endif
 
     #if !defined(__JAVA__) && !defined(BUILD_IOS)
