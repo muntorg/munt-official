@@ -1576,8 +1576,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         do {
             try {
                 static bool upgradeOnceOnly=true;
-                loadblockindex:
                 UnloadBlockIndex();
+                loadblockindex:
                 delete pcoinsTip;
                 delete pcoinsdbview;
                 delete pcoinscatcher;
@@ -1628,6 +1628,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     }
                     uiInterface.InitMessage(_("Reloading block index..."));
                     upgradeOnceOnly = false;
+                    // Flush and reload index
+                    FlushStateToDisk();
+                    UnloadBlockIndex();
                     goto loadblockindex;
                 }
 
