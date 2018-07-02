@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(util_ParseTorReplyMapping)
     BOOST_CHECK(ret.size() == 1);
     auto r_it = ret.begin();
     BOOST_CHECK_EQUAL(r_it->first, "Null");
-    BOOST_CHECK_EQUAL(r_it->second.size(), 1);
+    BOOST_CHECK(r_it->second.size() == 1);
     BOOST_CHECK_EQUAL(r_it->second[0], '\0');
 
     // A more complex valid grammar. PROTOCOLINFO accepts a VersionLine that
