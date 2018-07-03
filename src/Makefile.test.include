@@ -127,9 +127,14 @@ test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_WALLET) \
+test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER)
+if ENABLE_WALLET
+test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_WALLET)
+endif
+if ENABLE_ZMQ
+test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+endif
+test_test_gulden_fuzzy_LDADD += \
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_CONSENSUS) \
@@ -141,10 +146,9 @@ test_test_gulden_fuzzy_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBMEMENV) \
   $(EVENT_LIBS) \
-  $(EVENT_PTHREADS_LIBS)
-
-test_test_gulden_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
-#
+  $(EVENT_PTHREADS_LIBS) \
+  $(BOOST_LIBS) \
+  $(CRYPTO_LIBS)
 
 nodist_test_test_gulden_SOURCES = $(GENERATED_TEST_FILES)
 
