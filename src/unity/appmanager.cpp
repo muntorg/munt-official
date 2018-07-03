@@ -49,7 +49,7 @@ void GuldenAppManager::initialize()
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         try
         {
-            LogPrintf("%s: Running initialization in thread\n", __func__);
+            LogPrintf("GuldenAppManager::initialize: Running initialization in thread\n");
             if (fShutDownHasBeenInitiated)
                 return;
             if (!AppInitBasicSetup())
@@ -199,12 +199,12 @@ void GuldenAppManager::shutdownThread()
         }
         catch (const std::exception& e)
         {
-            LogPrintf("%s: App shutdown exception [%s]\n", __func__, e.what());
+            LogPrintf("GuldenAppManager::shutdownThread: App shutdown exception [%s]\n", e.what());
             handleRunawayException(&e);
         }
         catch (...)
         {
-            LogPrintf("%s: App shutdown exception\n", __func__);
+            LogPrintf("GuldenAppManager::shutdownThread: App shutdown exception\n");
             handleRunawayException(NULL);
         }
     }).detach();
