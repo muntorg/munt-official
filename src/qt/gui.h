@@ -377,8 +377,8 @@ private Q_SLOTS:
     void accountAdded(CAccount* account);
     void accountDeleted(CAccount* account);
     void accountButtonPressed();
-    void promptImportPrivKey();
-    void promptImportWitnessOnlyAccount();
+    void promptImportPrivKey(const QString accountName="");
+    void promptImportWitnessOnlyAccount(const QString accountName="");
     void promptRescan();
     void gotoWebsite();
     void gotoNewAccountDialog();

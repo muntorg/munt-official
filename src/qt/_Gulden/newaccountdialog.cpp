@@ -85,8 +85,8 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     connect(ui->labelTransactionAccount, SIGNAL(clicked()), this, SLOT(addAccount()));
     connect(ui->labelWitnessAccount, SIGNAL(clicked()), this, SLOT(addWitnessAccount()));
     connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
-    connect(ui->labelImportWitnessOnlyAccount, SIGNAL(clicked()), this, SIGNAL(importWitnessOnly()));
-    connect(ui->labelImportPrivateKey, SIGNAL(clicked()), this, SIGNAL(importPrivateKey()));
+    connect(ui->labelImportWitnessOnlyAccount, SIGNAL(clicked()), this, SLOT(importWitnessOnly()));
+    connect(ui->labelImportPrivateKey, SIGNAL(clicked()), this, SLOT(importPrivateKey()));
     connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
     connect(ui->cancelButton, SIGNAL(clicked()), this, SIGNAL(cancel()));
     connect(ui->cancelButton2, SIGNAL(clicked()), this, SLOT(cancelMobile()));
@@ -191,7 +191,7 @@ void NewAccountDialog::importWitnessOnly()
     }
 }
 
-void NewAccountDialog::importMobile()
+void NewAccountDialog::importPrivateKey()
 {
     m_Type = ImportKey;
     if (!ui->newAccountName->text().simplified().isEmpty())

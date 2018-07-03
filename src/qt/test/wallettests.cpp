@@ -162,7 +162,7 @@ void TestSendCoins()
     {
         LOCK(wallet->cs_wallet);
 
-        wallet->importPrivKey(test.coinbaseKey);
+        wallet->importPrivKey(test.coinbaseKey, "Imported key");
     }
     wallet->ScanForWalletTransactions(chainActive.Genesis(), true);
     wallet->SetBroadcastTransactions(true);

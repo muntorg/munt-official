@@ -1434,16 +1434,21 @@ void GUI::accountButtonPressed()
 }
 
 
-void GUI::promptImportPrivKey()
+void GUI::promptImportPrivKey(const QString accountName)
 {
     LogPrint(BCLog::QT, "GUI::promptImportPrivKey\n");
+
+    std::string adjustedAccountName = accountName.toStdString();
+
+    if (adjustedAccountName.empty())
+        adjustedAccountName = tr("Imported key").toStdString();
 
     ImportPrivKeyDialog dlg(this);
     if (dlg.exec())
     {
         // Temporarily unlock for account generation.
         SecureString encodedPrivKey = dlg.getPrivKey();
-        std::function<void (void)> successCallback = [=](){pactiveWallet->importPrivKey(encodedPrivKey);};
+        std::function<void (void)> successCallback = [=](){ pactiveWallet->importPrivKey(encodedPrivKey, adjustedAccountName); };
         if (pactiveWallet->IsLocked())
         {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import private key"), successCallback);
@@ -1456,16 +1461,19 @@ void GUI::promptImportPrivKey()
     }
 }
 
-void GUI::promptImportWitnessOnlyAccount()
+void GUI::promptImportWitnessOnlyAccount(QString accountName)
 {
     LogPrint(BCLog::QT, "GUI::promptImportWitnessOnlyAccount\n");
+
+    if (accountName.isEmpty())
+        accountName = tr("Imported witness");
 
     ImportWitnessDialog dlg(this);
     if (dlg.exec())
     {
         // Temporarily unlock for account generation.
         SecureString witnessURL = dlg.getWitnessURL();
-        std::function<void (void)> successCallback = [=](){pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL);};
+        std::function<void (void)> successCallback = [=](){pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL, accountName.toStdString());};
         if (pactiveWallet->IsLocked())
         {
             uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import witness-only account"), successCallback);
@@ -1673,12 +1681,14 @@ void GUI::acceptNewAccount()
     if (newAccountType == NewAccountType::ImportKey)
     {
         gotoReceiveCoinsPage();
-        promptImportPrivKey();
+        promptImportPrivKey(dialogNewAccount->getAccountName());
+        return;
     }
     else if(newAccountType == NewAccountType::WitnessOnly)
     {
         gotoReceiveCoinsPage();
-        promptImportWitnessOnlyAccount();
+        promptImportWitnessOnlyAccount(dialogNewAccount->getAccountName());
+        return;
     }
 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )

@@ -695,10 +695,10 @@ public:
     unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
     //! Import a witness-only account from a URL
-    void importWitnessOnlyAccountFromURL(const SecureString& sKey);
+    void importWitnessOnlyAccountFromURL(const SecureString& sKey, std::string sAccountName);
 
-    void importPrivKey(const SecureString& sKey);
-    void importPrivKey(const CKey& privKey);
+    void importPrivKey(const SecureString& sKey, std::string sAccountName);
+    void importPrivKey(const CKey& privKey, std::string sAccountName);
     bool importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);
     bool forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey);
 

@@ -244,7 +244,7 @@ int64_t CWallet::GetOldestKeyPoolTime()
     return nTime;
 }
 
-void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey)
+void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey, const std::string sAccountName)
 {
     //fixme: (2.1) Handle error here more appropriately etc.
     std::vector<std::pair<CKey, uint64_t>> keysAndBirthDates;
@@ -269,10 +269,10 @@ void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey)
         return;
     }
 
-    CreateWitnessOnlyWitnessAccount("Imported witness", keysAndBirthDates);
+    CreateWitnessOnlyWitnessAccount(sAccountName, keysAndBirthDates);
 }
 
-void CWallet::importPrivKey(const SecureString& sKey)
+void CWallet::importPrivKey(const SecureString& sKey, std::string sAccountName)
 {
     CGuldenSecret vchSecret;
     bool fGood = vchSecret.SetString(sKey.c_str());
@@ -284,15 +284,17 @@ void CWallet::importPrivKey(const SecureString& sKey)
         CKey privKey = vchSecret.GetKey();
         if (!privKey.IsValid())
         {
-            uiInterface.ThreadSafeMessageBox(_("Error importing private key"), _("Invalid private key."), CClientUIInterface::MSG_ERROR);
+            std::string strErrorMessage = _("Error importing private key") + "\n" + _("Invalid private key.");
+            LogPrintf(strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
             return;
         }
 
-        importPrivKey(privKey);
+        importPrivKey(privKey, sAccountName);
     }
 }
 
-void CWallet::importPrivKey(const CKey& privKey)
+void CWallet::importPrivKey(const CKey& privKey, std::string sAccountName)
 {
     CPubKey pubkey = privKey.GetPubKey();
     assert(privKey.VerifyPubKey(pubkey));
@@ -335,7 +337,7 @@ void CWallet::importPrivKey(const CKey& privKey)
         }
     }
 
-    pactiveWallet->addAccount(newAccount, _("Imported key"));
+    pactiveWallet->addAccount(newAccount, sAccountName);
 
     //fixme: (2.1) - Optionally take a key bith date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))

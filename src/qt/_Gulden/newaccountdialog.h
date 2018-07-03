@@ -47,8 +47,6 @@ Q_SIGNALS:
       void cancel();
       void accountAdded();
       void addAccountMobile();
-      void importPrivateKey();
-      void importWitnessAccount();
 
 public Q_SLOTS:
 
@@ -68,7 +66,7 @@ private Q_SLOTS:
     void addAccount();
     void addWitnessAccount();
     void importWitnessOnly();
-    void importMobile();
+    void importPrivateKey();
     void showSyncQr();
 };
 
