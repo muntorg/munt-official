@@ -48,7 +48,8 @@ enum AccountState
     Normal = 0,                      // Standard account (or HD account)
     Shadow = 1,                      // Shadow account (account remains invisible until it becomes active - either through account creation or a payment)
     ShadowChild = 2,                 // Shadow child account (as above but a child of another account) - used to handle legacy accounts (e.g. BIP32 child of BIP44 account that shares the same seed)
-    Deleted = 3                      // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
+    Deleted = 3,                     // An account that has been deleted - we keep it arround anyway in case it receives funds, if it receives funds then we re-activate it.
+    AccountStateMax = Deleted
 };
 
 enum AccountType
@@ -58,6 +59,7 @@ enum AccountType
     PoW2Witness = 2,                 // PoW2 witness account.
     WitnessOnlyWitnessAccount = 3,   // non-HD witness account without spending keys only witness keys.
     ImportedPrivateKeyAccount = 4,   // non-HD account contains one or more imported private keys.
+    AccountTypeMax = ImportedPrivateKeyAccount
 };
 
 std::string GetAccountStateString(AccountState state);
@@ -301,6 +303,16 @@ public:
         catch(...)
         {
         }
+        //Handle invalid values (in case older wallets ended up with an invalid state somehow)
+        if (m_State > AccountState::AccountStateMax)
+        {
+            m_State = AccountState::Normal;
+            m_readOnly = false;
+        }
+        if (m_Type > AccountType::AccountTypeMax)
+        {
+            m_Type = AccountType::Desktop;
+        }
     }
 
 
@@ -368,8 +380,8 @@ public:
     mutable CCriticalSection cs_keypool;
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
-    AccountState m_State;
-    AccountType m_Type;
+    AccountState m_State = AccountState::Normal;
+    AccountType m_Type = AccountType::Desktop;
 
     void possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db);
     uint64_t getEarliestPossibleCreationTime();
