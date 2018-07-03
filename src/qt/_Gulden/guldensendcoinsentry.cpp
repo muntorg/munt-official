@@ -121,30 +121,6 @@ void GuldenSendCoinsEntry::update()
     }
 }
 
-void GuldenSendCoinsEntry::on_pasteButton_clicked()
-{
-    // Paste text from clipboard into recipient field
-    //ui->payTo->setText(QApplication::clipboard()->text());
-}
-
-void GuldenSendCoinsEntry::on_addressBookButton_clicked()
-{
-    /*if(!model)
-        return;
-    AddressBookPage dlg(platformStyle, AddressBookPage::ForSelection, AddressBookPage::SendingTab, this);
-    dlg.setModel(model->getAddressTableModel());
-    if(dlg.exec())
-    {
-        ui->payTo->setText(dlg.getReturnValue());
-        ui->payAmount->setFocus();
-    }*/
-}
-
-void GuldenSendCoinsEntry::on_payTo_textChanged(const QString &address)
-{
-    updateLabel(address);
-}
-
 void GuldenSendCoinsEntry::setModel(WalletModel *_model)
 {
     this->model = _model;
