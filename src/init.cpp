@@ -436,6 +436,7 @@ std::string HelpMessage(HelpMessageMode mode)
             "(default: 0 = disable pruning blocks, 1 = allow manual pruning via RPC, >%u = automatically prune block files to stay under the specified target size in MiB)"), MIN_DISK_SPACE_FOR_BLOCK_FILES / 1024 / 1024));
     strUsage += HelpMessageOpt("-reindex-chainstate", helptr("Rebuild chain state from the currently indexed blocks"));
     strUsage += HelpMessageOpt("-reindex", helptr("Rebuild chain state and block index from the blk*.dat files on disk"));
+    strUsage += HelpMessageOpt("-resyncforblockindexupgrade", helptr("In the event that the system requires an expensive block index upgrade, the system will bypass the upgrade in favour of simply doing a complete resync. This might be favourable for unattended devices like pis."));
 #ifndef WIN32
     strUsage += HelpMessageOpt("-sysperms", helptr("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
 #endif
@@ -1612,6 +1613,21 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     }
                 }
 
+                //GULDEN - version 2.0 upgrade
+                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
+                {
+                    bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
+                    if (fullResyncForUpgrade)
+                    {
+                        upgradeOnceOnly = false;
+                        uiInterface.InitMessage(_("Erasing block index..."));
+                        UnloadBlockIndex();
+                        fReindex = true;
+                        blockStore.Delete();
+                        goto loadblockindex;
+                    }
+                }
+
                 if (!LoadBlockIndex(chainparams)) {
                     strLoadError = errortr("Error loading block database");
                     break;
@@ -1620,17 +1636,32 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 //GULDEN - version 2.0 upgrade
                 if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
                 {
-                    uiInterface.InitMessage(_("Upgrading block index..."));
-                    if (!UpgradeBlockIndex(chainparams, pcoinsdbview->nPreviousVersion, pcoinsdbview->nCurrentVersion))
-                    {
-                        strLoadError = errortr("Error upgrading block database to 2.0 (segsig) format, please clear blockchain data and start again.");
-                        break;
-                    }
-                    uiInterface.InitMessage(_("Reloading block index..."));
+                    bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
                     upgradeOnceOnly = false;
-                    // Flush and reload index
-                    FlushStateToDisk();
-                    UnloadBlockIndex();
+                    if (!fullResyncForUpgrade)
+                    {
+                        uiInterface.InitMessage(_("Upgrading block index..."));
+                        if (!UpgradeBlockIndex(chainparams, pcoinsdbview->nPreviousVersion, pcoinsdbview->nCurrentVersion))
+                        {
+                            LogPrintf("Error upgrading block database to 2.0 (segsig) format, attempting to wipe index and resync instead.");
+                            fullResyncForUpgrade = true;
+                        }
+                        else
+                        {
+                            uiInterface.InitMessage(_("Reloading block index..."));
+                            // Flush and reload index
+                            FlushStateToDisk();
+                            UnloadBlockIndex();
+                        }
+                    }
+                    if (fullResyncForUpgrade)
+                    {
+                        uiInterface.InitMessage(_("Erasing block index..."));
+                        UnloadBlockIndex();
+                        fReindex = true;
+                        blockStore.Delete();
+                        goto loadblockindex;
+                    }
                     goto loadblockindex;
                 }
 
