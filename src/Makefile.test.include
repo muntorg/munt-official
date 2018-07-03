@@ -12,7 +12,6 @@
 
 TESTS += test/test_gulden
 bin_PROGRAMS += test/test_gulden
-# Disable fuzzy test it can't link beacuse of wallet dependencies
 noinst_PROGRAMS += test/test_gulden_fuzzy
 TEST_SRCDIR = test
 TEST_BINARY=test/test_gulden$(EXEEXT)
@@ -129,7 +128,6 @@ test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 test_test_gulden_fuzzy_LDADD = \
-  $(LIBUNIVALUE) \
   $(LIBGULDEN_SERVER) \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_COMMON) \
@@ -139,7 +137,11 @@ test_test_gulden_fuzzy_LDADD = \
   $(LIBLEVELDB) \
   $(BDB_LIBS) \
   $(EVENT_LIBS) \
-  $(LIBSECP256K1)
+  $(LIBSECP256K1) \
+  $(LIBUNIVALUE) \
+  $(LIBMEMENV) \
+  $(EVENT_LIBS) \
+  $(EVENT_PTHREADS_LIBS)
 
 test_test_gulden_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
