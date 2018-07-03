@@ -273,7 +273,8 @@ TransactionTableModel::TransactionTableModel(const QStyle *_platformStyle, CWall
     columns << QString() << QString() << tr("Date") << tr("Type") << tr("Description") << tr("Received") << tr("Sent");
     priv->refreshWallet();
 
-    connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    if (walletModel->getOptionsModel())
+        connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
     subscribeToCoreSignals();
 }
