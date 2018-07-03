@@ -135,11 +135,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         //fixme: (2.1) Is there anywhere other than rescans where we would need to wipe the cache?
         // Wipe ismine cache for all accounts.
-        for (const auto& [accountUUID, account] : mapAccounts)
-        {
-            (unused) accountUUID;
-            account->accountIsMineCache.clear();
-        }
+        walletIsMineCache.clear();
+        walletIsNotMineCache.clear();
 
         // no need to read and scan block, if block was created before
         // our wallet birthday (as adjusted for block time variability)

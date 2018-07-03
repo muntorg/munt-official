@@ -676,8 +676,10 @@ uint32_t CAccountHD::getIndex()
     return m_nIndex;
 }
 
+IsNotMineLRUCache walletIsNotMineCache(500,100);
+IsMineLRUCache walletIsMineCache(500,100);
+
 CAccount::CAccount()
-: accountIsMineCache(5000, 2000)
 {
     SetNull();
     //Start at current time and go backwards as we find transactions.

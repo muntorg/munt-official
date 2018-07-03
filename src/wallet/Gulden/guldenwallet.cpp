@@ -210,7 +210,7 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& accountItem : wallet.mapAccounts)
     {
-        //fixme: (2.1) Use accountIsMineCache
+        //fixme: (2.1) Use walletIsMineCache
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
             isminetype temp = ( keyChain == KEYCHAIN_EXTERNAL ? IsMine(accountItem.second->externalKeyStore, dest) : IsMine(accountItem.second->internalKeyStore, dest) );
@@ -231,7 +231,7 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest)
     LOCK(wallet.cs_wallet);
 
     isminetype ret = isminetype::ISMINE_NO;
-    //fixme: (2.1) Use accountIsMineCache
+    //fixme: (2.1) Use walletIsMineCache
     for (const auto& accountItem : wallet.mapAccounts)
     {
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
@@ -249,53 +249,61 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     LOCK(wallet.cs_wallet);
 
     uint256 outHash = out.output.GetHash();
+    if (walletIsNotMineCache.contains(outHash))
+    {
+        return isminetype::ISMINE_NO;
+    }
+    if (walletIsMineCache.contains(outHash))
+    {
+        return walletIsMineCache.get(outHash).first;
+    }
 
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
         (unused)accountUUID;
-        if (account->accountIsMineCache.contains(outHash))
+        isminetype temp = IsMine(*account, out);
+        if (temp > ret)
         {
-            isminetype cachedValue = account->accountIsMineCache.get(outHash);
-            if (cachedValue > ret)
-                ret = cachedValue;
-        }
-        else
-        {
-            isminetype temp = IsMine(*account, out);
-            if (temp > ret)
-                ret = temp;
-            account->accountIsMineCache.insert(outHash, ret);
+            ret = temp;
+            walletIsMineCache.insert(outHash, std::pair(ret, accountUUID));
         }
         // No need to keep going through the remaining accounts at this point.
         if (ret >= ISMINE_SPENDABLE)
             return ret;
     }
+    if (ret == isminetype::ISMINE_NO)
+        walletIsNotMineCache.insert(outHash, ret);
     return ret;
 }
 
 bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
 {
-    isminetype ret = isminetype::ISMINE_NO;
     for (const auto& txout : tx.tx->vout)
     {
         uint256 outHash = txout.output.GetHash();
-        if (forAccount->accountIsMineCache.contains(outHash))
+        if (walletIsNotMineCache.contains(outHash))
         {
-            isminetype cachedValue = forAccount->accountIsMineCache.get(outHash);
-            if (cachedValue > ret)
-                ret = cachedValue;
+            return isminetype::ISMINE_NO;
         }
-        else
+        if (walletIsMineCache.contains(outHash))
         {
-            isminetype temp = IsMine(*forAccount, txout);
-            if (temp > ret)
-                ret = temp;
-            forAccount->accountIsMineCache.insert(outHash, ret);
+            const auto& [mineType, mineUUID] = walletIsMineCache.get(outHash);
+            if (mineUUID == forAccount->getUUID())
+                return mineType;
+            else
+                return isminetype::ISMINE_NO;
         }
+
+        isminetype ret = IsMine(*forAccount, txout);
         // No need to keep going through the remaining outputs at this point.
         if (ret > isminetype::ISMINE_NO)
+        {
+            walletIsMineCache.insert(outHash, std::pair(ret, forAccount->getUUID()));
             return true;
+        }
+        //NB! We don't insert into the "IsNotMineCache" here as it is for the whole wallet
+        //This output could still belong to a different account...
     }
     return false;
 }

@@ -223,7 +223,13 @@ protected:
 };
 
 
-typedef lru11::Cache<uint256, isminetype, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, isminetype>>::iterator, BlockHasher>> IsMineLRUCache;
+//fixme: (2.1) Possibly like a bloom/cuckoo cache for this instead
+//Also consider persisting cache to disk across runs
+typedef lru11::Cache<uint256, std::pair<isminetype, boost::uuids::uuid>, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, std::pair<isminetype, boost::uuids::uuid>>>::iterator, BlockHasher>> IsMineLRUCache;
+//Storing the isminetype here is a waste of memory - this could rather be a set.
+typedef lru11::Cache<uint256, isminetype, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, isminetype>>::iterator, BlockHasher>> IsNotMineLRUCache;
+extern IsNotMineLRUCache walletIsNotMineCache;
+extern IsMineLRUCache walletIsMineCache;
 
 /** 
  * Account information.
@@ -362,9 +368,6 @@ public:
     mutable CCriticalSection cs_keypool;
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
-    //fixme: (2.1) Possibly like a bloom/cuckoo cache for this instead
-    //Also consider persisting cache to disk across runs
-    mutable IsMineLRUCache accountIsMineCache;
     AccountState m_State;
     AccountType m_Type;
 

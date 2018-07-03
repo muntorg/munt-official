@@ -488,7 +488,7 @@ int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride
 
 typedef std::pair<int64_t, int64_t> NumAndWeight;
 typedef lru11::Cache<uint256, NumAndWeight, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, NumAndWeight>>::iterator, BlockHasher>> BlockWeightCache;
-BlockWeightCache networkWeightCache(1000,500);
+BlockWeightCache networkWeightCache(800,100);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride)
 {
     DO_BENCHMARK("WIT: GetPow2NetworkWeight", BCLog::BENCH|BCLog::WITNESS);

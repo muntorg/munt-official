@@ -22,7 +22,7 @@ class CScript;
 class CWallet;
 
 /** IsMine() return codes */
-enum isminetype
+enum isminetype : uint_fast8_t
 {
     ISMINE_NO = 0,
     //! Indicates that we don't know how to create a scriptSig that would solve this if we were given the appropriate private keys
