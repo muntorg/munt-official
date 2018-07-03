@@ -676,9 +676,6 @@ uint32_t CAccountHD::getIndex()
     return m_nIndex;
 }
 
-IsNotMineLRUCache walletIsNotMineCache(500,100);
-IsMineLRUCache walletIsMineCache(500,100);
-
 CAccount::CAccount()
 {
     SetNull();

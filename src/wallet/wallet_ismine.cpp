@@ -133,11 +133,6 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         fAbortRescan = false;
         fScanningWallet = true;
 
-        //fixme: (2.1) Is there anywhere other than rescans where we would need to wipe the cache?
-        // Wipe ismine cache for all accounts.
-        walletIsMineCache.clear();
-        walletIsNotMineCache.clear();
-
         // no need to read and scan block, if block was created before
         // our wallet birthday (as adjusted for block time variability)
         // NB! nTimeFirstKey > TIMESTAMP_WINDOW check is important otherwise we overflow nTimeFirstKey
