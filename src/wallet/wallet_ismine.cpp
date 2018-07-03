@@ -150,7 +150,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         uint64_t nProgressStart = pindex->nHeight;
         uint64_t nProgressTip = chainActive.Tip()->nHeight;
         uint64_t nWorkQuantity = nProgressTip - nProgressStart;
-        while (pindex && !fAbortRescan)
+        while (pindex && !fAbortRescan && nWorkQuantity > 0)
         {
             // Temporarily release lock to allow shadow key allocation a chance to do it's thing
             LEAVE_CRITICAL_SECTION(cs_main)
