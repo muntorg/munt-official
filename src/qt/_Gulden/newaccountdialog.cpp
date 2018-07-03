@@ -130,7 +130,7 @@ void NewAccountDialog::showSyncQr()
     if (ctx.isValid())
     {
         newAccount = pactiveWallet->GenerateNewAccount(ui->newAccountName->text().toStdString(), AccountState::Normal, AccountType::Mobi);
-        LOCK(pactiveWallet->cs_wallet);
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
         {
             int64_t currentTime = newAccount->getEarliestPossibleCreationTime();
 
