@@ -2801,6 +2801,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     // all headers have connecting sha hashes and passed the checkpoints.
                     // Consider aborting here.
                     vReverseHeaders.clear();
+                    vReverseHeaders.shrink_to_fit();
 
                     // Blame peer latest reverse headers came from
                     LOCK(cs_main);
@@ -2822,6 +2823,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHashPoW2());
 
             vReverseHeaders.clear();
+            vReverseHeaders.shrink_to_fit();
         }
 
         if (nRHeadersConnected > 0)
