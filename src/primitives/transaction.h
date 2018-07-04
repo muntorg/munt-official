@@ -558,6 +558,7 @@ public:
         output()
         {
             new(&scriptPubKey) CScript();
+            nType = 0;
         }
         ~output()
         {
