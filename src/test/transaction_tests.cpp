@@ -399,6 +399,7 @@ void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& inp
     assert(ret == success);
 }
 
+/* unused
 static CScript PushAll(const std::vector<valtype>& values)
 {
     CScript result;
@@ -414,7 +415,6 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-/* unused
 static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 {
     std::vector<valtype> stack;

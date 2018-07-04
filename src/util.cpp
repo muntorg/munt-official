@@ -111,6 +111,8 @@ std::atomic<uint32_t> logCategories(0);
 
 /** Init OpenSSL library multithreading support */
 static std::unique_ptr<CCriticalSection[]> ppmutexOpenSSL;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void locking_callback(int mode, int i, [[maybe_unused]] const char* file, [[maybe_unused]] int line) NO_THREAD_SAFETY_ANALYSIS
 {
     if (mode & CRYPTO_LOCK) {
@@ -119,6 +121,8 @@ static void locking_callback(int mode, int i, [[maybe_unused]] const char* file,
         LEAVE_CRITICAL_SECTION(ppmutexOpenSSL[i]);
     }
 }
+#pragma GCC diagnostic pop
+#pragma message("Check thread safety of OpenSSL usage!")
 
 // Singleton for wrapping OpenSSL setup/teardown.
 class CInit
