@@ -47,7 +47,7 @@ before_script:
 script:
     - export TRAVIS_COMMIT_LOG=`git log --format=fuller -1`
     - OUTDIR=$BASE_OUTDIR/$TRAVIS_PULL_REQUEST/$TRAVIS_JOB_NUMBER-$HOST
-    - GULDEN_CONFIG_ALL="--disable-dependency-tracking --prefix=$TRAVIS_BUILD_DIR/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
+    - GULDEN_CONFIG_ALL="--enable-werror --disable-dependency-tracking --prefix=$TRAVIS_BUILD_DIR/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
     - if [ -z "$NO_DEPENDS" ]; then DOCKER_EXEC ccache --max-size=$CCACHE_SIZE; fi
     - test -n "$CONFIG_SHELL" && DOCKER_EXEC "$CONFIG_SHELL" -c "./autogen.sh" || DOCKER_EXEC ./autogen.sh
     - mkdir build && cd build
