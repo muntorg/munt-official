@@ -47,7 +47,7 @@ before_script:
 script:
     - export TRAVIS_COMMIT_LOG=`git log --format=fuller -1`
     - OUTDIR=$BASE_OUTDIR/$TRAVIS_PULL_REQUEST/$TRAVIS_JOB_NUMBER-$HOST
-    - GULDEN_CONFIG_ALL="--disable-dependency-tracking --prefix=$TRAVIS_BUILD_DIR/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
+    - GULDEN_CONFIG_ALL="--enable-werror --disable-dependency-tracking --prefix=$TRAVIS_BUILD_DIR/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
     - if [ -z "$NO_DEPENDS" ]; then DOCKER_EXEC ccache --max-size=$CCACHE_SIZE; fi
     - test -n "$CONFIG_SHELL" && DOCKER_EXEC "$CONFIG_SHELL" -c "./autogen.sh" || DOCKER_EXEC ./autogen.sh
     - mkdir build && cd build
@@ -67,6 +67,6 @@ after_script:
     - echo $TRAVIS_COMMIT_RANGE
     - echo $TRAVIS_COMMIT_LOG
 
-notifications:   
+notifications:
   slack:
     secure: iNEHGC+a1uC0bGNKDH85XuSwk18Jyqb8t02dosNcZd46L1eZyUrcL/AoQBVw/r8Ay+dOUcTY6arjKrkobPjvXGpamrJo0ejI6vZlfe8t1nR+P7feYLDhYeJQ4yb6ZV7uKzOP+ZocoEoTKttsHkoWKGGNuNzHcPcjhzLkYmY3MHfGmIQDVcU6DAGGTw6SQB1FkMbOWpgpqXndidEpX6N8pdZ3gCG3EFLKI/xQAVlyvzEmQOc4uP4vLMVhCQVc03MgnQIm5DpbsPdMMp4h24ysstTIFk6zO8qwjqzeePr4bRWTYRdaVxIHvd269bo7rCMn7p+Apc+xHnDIaCHJbzrI7HN8iJ4Pe9W4MTOR/GUNesfQhnrkWndSYRfObTzpfZHOgdv+K9dQ+A+kn3CUEQfLXFtwtmafgpVzQ0PeU3mLqXJt1zzYVoxCSqyO/dpye9Ezr5cPged29a35lL80ChIywlL83EkbcXpctoA9AHu4M44h1gTCG5oleulsuQjEPnNZYdEKuY2uAmB0dszzbgu1R+BBVmnBQSW0LT1AwJGD/30SihQZhY+vXrJOBBTrQl6mrA7iX5kAe2o5kGCkVuKj/o8P9ia5LF88PsWibYm4cB+wt07DxVK/rjZDw/yi0+G59D6HrF0B2i8Jg7yJOQ2JyC3Au/1d+17tHmxqAdp6xPE=
