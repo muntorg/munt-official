@@ -1544,6 +1544,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 7: load block chain
 
+    //fixme: (2.1) Turn this back to true once memory consumption reduced.
+    fReverseHeaders = GetBoolArg("-reverseheaders", false);
     fReindex = GetBoolArg("-reindex", false);
     bool fReindexChainState = GetBoolArg("-reindex-chainstate", false);
 
@@ -1565,6 +1567,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("* Using %.1fMiB for block index database\n", nBlockTreeDBCache * (1.0 / 1024 / 1024));
     LogPrintf("* Using %.1fMiB for chain state database\n", nCoinDBCache * (1.0 / 1024 / 1024));
     LogPrintf("* Using %.1fMiB for in-memory UTXO set (plus up to %.1fMiB of unused mempool space)\n", nCoinCacheUsage * (1.0 / 1024 / 1024), nMempoolSizeMax * (1.0 / 1024 / 1024));
+
+    if (fReverseHeaders)
+    {
+        LogPrintf("Reverse header sync will temporarily use up to %.1fMiB until initial sync is complete", sizeof(CBlockHeader) * 1000000.0 / 1024.0 / 1024.0);
+    }
 
     bool fLoaded = false;
     while (!fLoaded) {

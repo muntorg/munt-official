@@ -2709,7 +2709,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
     }
 
-    else if (strCommand == NetMsgType::RHEADERS && !fImporting && !fReindex) // Ignore headers received while importing
+    else if (fReverseHeaders && strCommand == NetMsgType::RHEADERS && !fImporting && !fReindex) // Ignore headers received while importing
     {
         LogPrint(BCLog::NET, "Received reverse headers peer=%d\n", pfrom->GetId());
 
@@ -2757,7 +2757,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 break;
             }
 
-            // if a checkpoint exsists at the expected height verify it
+            // if a checkpoint exists at the expected height verify it
             auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
             if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
                 if (hash != it->second) {
@@ -2773,7 +2773,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
             // never process more then lastCheckPointHeight
             if ((int)vReverseHeaders.size()<lastCheckPointHeight)
+            {
+                // Try to limit the growth of vReverseHeaders
+                if (vReverseHeaders.size() == 0)
+                {
+                    vReverseHeaders.reserve(lastCheckPointHeight + 1000);
+                }
                 vReverseHeaders.push_back(header);
+            }
 
             nRHeadersConnected++;
 
@@ -3360,7 +3367,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             int lastCheckPointHeight = lastCheckpoint->first;
 
             // Prefer reverse header sync if possible
-            if (pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
+            if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
                     && pto->nStartingHeight > lastCheckPointHeight
                     && pindexBestHeader->nHeight < lastCheckPointHeight - (int)vReverseHeaders.size()) {
 

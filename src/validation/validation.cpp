@@ -82,6 +82,7 @@ CConditionVariable cvBlockChange;
 int nScriptCheckThreads = 0;
 std::atomic_bool fImporting(false);
 bool fReindex = false;
+bool fReverseHeaders = false;
 bool fTxIndex = false;
 bool fHavePruned = false;
 bool fPruneMode = false;
