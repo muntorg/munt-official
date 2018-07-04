@@ -43,6 +43,9 @@ public:
 
     QString getAccountName();
     NewAccountType getAccountType() { return m_Type; }
+
+    virtual void resizeEvent(QResizeEvent* event);
+
 Q_SIGNALS:
       void cancel();
       void accountAdded();
@@ -51,6 +54,7 @@ Q_SIGNALS:
 public Q_SLOTS:
 
 protected:
+    void updateTextForSize(const QSize& size);
 
 private:
     Ui::NewAccountDialog *ui;
@@ -58,6 +62,14 @@ private:
     CAccountHD* newAccount;
     WalletModel* walletModel;
     NewAccountType m_Type = Transactional;
+
+    QString toolTipTransactionalAccount;
+    QString toolTipMobileAccount;
+    QString toolTipWitnessAccount;
+    QString toolTipImportWitnessAccount;
+    QString toolTipImportPrivKey;
+    int verticalCachedDisplayType=0;
+    int horizontalCachedDisplayType=0;
 
 private Q_SLOTS:
     void connectToMobile();

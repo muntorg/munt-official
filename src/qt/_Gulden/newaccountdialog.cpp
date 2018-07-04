@@ -61,17 +61,19 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->labelImportWitnessOnlyAccount->setObjectName("add_account_type_label_witnessonly");
     ui->labelImportPrivateKey->setObjectName("add_account_type_label_privkey");
 
-    QString accountTemplate = "<table><tr><td style='padding: 10px'><span style='font-size: 12pt; color: #007aff;'>%1</span>  %2</td><tr><td style='padding: 10px'><ul style='type: circle; text-indent: 0px'>%3</ul></td><table>";
-    QString textTransactionalAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf09d")).arg(tr("Transactional account")).arg(tr("<li>Day to day fund management</li><li>Send and receive Gulden</li><li>Send funds to any elligible IBAN account</li><li>Easily transfer funds between mobile and desktop wallet</li>"));
-    QString textMobileAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf10b")).arg(tr("Linked mobile account")).arg(tr("<li>Top up, manage and control your mobile funds from the desktop</li><li>Empty your mobile funds with ease if phone is broken or stolen</li>"));
-    QString textWitnessAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(tr("Witness account")).arg(tr("<li>Flexible period of 1 month to 3 years</li><li>Help secure the network with minimal hardware equirements</li><li>Grow your money by earning your share in the block rewards</li>"));
-    QString textImportWitnessAccount = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf06e")).arg(tr("Import witness account")).arg(tr("<li>Import a witness account from another device</li><li>Let this device act as a backup witness device so that you are always available to witness</li>"));
-    QString textImportPrivKey = accountTemplate.arg(GUIUtil::fontAwesomeLight("\uf084")).arg(tr("Import private key")).arg(tr("<li>Import a private key from cold storage</li><li>Not backed up as part of your recovery phrase</li>"));
-    ui->labelTransactionAccount->setText(textTransactionalAccount);
-    ui->labelMobileAccount->setText(textMobileAccount);
-    ui->labelWitnessAccount->setText(textWitnessAccount);
-    ui->labelImportWitnessOnlyAccount->setText(textImportWitnessAccount);
-    ui->labelImportPrivateKey->setText(textImportPrivKey);
+    toolTipTransactionalAccount = tr("<li>Day to day fund management</li><li>Send and receive Gulden</li><li>Send funds to any elligible IBAN account</li>");
+    toolTipMobileAccount = tr("<li>Top up, manage and control your mobile funds from the desktop</li><li>Empty your mobile funds with ease if phone is broken or stolen</li>");
+    toolTipWitnessAccount = tr("<li>Grow your money</li><li>Flexible period of 1 month to 3 years</li><li>Help secure the network with minimal hardware equirements</li>");
+    toolTipImportWitnessAccount = tr("<li>Import a witness account from another device</li><li>Let this device act as a backup witness device so that you are always available to witness</li>");
+    toolTipImportPrivKey = tr("<li>Import a private key from cold storage</li><li>Not backed up as part of your recovery phrase</li>");
+
+    ui->labelTransactionAccount->setToolTip(toolTipTransactionalAccount);
+    ui->labelMobileAccount->setToolTip(toolTipMobileAccount);
+    ui->labelWitnessAccount->setToolTip(toolTipWitnessAccount);
+    ui->labelImportWitnessOnlyAccount->setToolTip(toolTipImportWitnessAccount);
+    ui->labelImportPrivateKey->setToolTip(toolTipImportPrivKey);
+
+    updateTextForSize(size());
 
     // Set default display state
     ui->stackedWidget->setCurrentIndex(0);
@@ -221,3 +223,94 @@ QString NewAccountDialog::getAccountName()
     return ui->newAccountName->text();
 }
 
+void NewAccountDialog::resizeEvent(QResizeEvent* event)
+{
+    updateTextForSize(event->size());
+}
+
+void NewAccountDialog::updateTextForSize(const QSize& size)
+{
+    static QString accountTemplateVerticallyCompact = "<table height=\"100%\" width=\"100%\"><tr><td valign=middle align=center><span style='font-size: 12pt;'>%1</span> %2</td></tr><table>";
+    static QString accountTemplateExpanded = "<table cellpadding=5 height=\"100%\" width=\"100%\"><tr><td valign=top align=left><span style='font-size: 12pt;'>%1</span> %2</td></tr><tr style=\"color: #999;\"><td valign=top align=left style=\"white-space: wrap; text-align: justify\"><ul style='type: circle; text-indent: 0px'>%3</ul></td></tr><table>";
+    QString accountTemplateNewAccounts;
+    QString accountTemplateImportAccounts;
+    int verticalDisplayType = -1;
+    int horizontalDisplayType = -1;
+    if (size.height() < 550)
+        verticalDisplayType = 0;
+    else if (size.height() < 700)
+        verticalDisplayType = 1;
+    else
+        verticalDisplayType = 2;
+    if (size.width() < 540)
+        horizontalDisplayType = 0;
+    else if (size.width() < 680)
+        horizontalDisplayType = 1;
+    else
+        horizontalDisplayType = 2;
+
+    // Prevent multiple expensive updates during resize.
+    if (horizontalCachedDisplayType == horizontalDisplayType && verticalCachedDisplayType == verticalDisplayType)
+        return;
+
+    verticalCachedDisplayType = verticalDisplayType;
+    horizontalCachedDisplayType = horizontalDisplayType;
+    uint64_t nWidth = 150;
+    uint64_t nHeightAdd = 30;
+    uint64_t nHeightImport = 30;
+
+    accountTemplateNewAccounts = accountTemplateVerticallyCompact;
+    accountTemplateImportAccounts = accountTemplateVerticallyCompact;
+    if (horizontalDisplayType == 2)
+    {
+        nWidth = 200;
+        if (verticalDisplayType >= 1)
+        {
+            accountTemplateNewAccounts = accountTemplateExpanded;
+            nHeightAdd = 150;
+        }
+        if (verticalDisplayType == 2)
+        {
+            accountTemplateImportAccounts = accountTemplateExpanded;
+            nHeightImport = 150;
+        }
+    }
+
+    if (horizontalDisplayType == 0)
+    {
+        nWidth = 130;
+        ui->accButtonHSpacer1->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer2->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer3->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+    else
+    {
+        ui->accButtonHSpacer1->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer2->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer3->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+
+    // Padding necessary to force table to full height.
+    QString padding = "<br/><br/><br/><br/>";
+    QString textTransactionalAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf09d")).arg(tr("Standard")).arg(toolTipTransactionalAccount+padding);
+    QString textMobileAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf10b")).arg(tr("Linked mobile")).arg(toolTipMobileAccount+padding);
+    QString textWitnessAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(tr("Witness")).arg(toolTipWitnessAccount+padding);
+    QString textImportWitnessAccount = accountTemplateImportAccounts.arg(GUIUtil::fontAwesomeLight("\uf06e")).arg(tr("Witness-only")).arg(toolTipImportWitnessAccount+padding);
+    QString textImportPrivKey = accountTemplateImportAccounts.arg(GUIUtil::fontAwesomeLight("\uf084")).arg(tr("Private key")).arg(toolTipImportPrivKey+padding);
+
+    ui->labelTransactionAccount->setText(textTransactionalAccount);
+    ui->labelTransactionAccount->setFixedSize(nWidth, nHeightAdd);
+    ui->labelMobileAccount->setText(textMobileAccount);
+    ui->labelMobileAccount->setFixedSize(nWidth, nHeightAdd);
+    ui->labelWitnessAccount->setText(textWitnessAccount);
+    ui->labelWitnessAccount->setFixedSize(nWidth, nHeightAdd);
+    ui->labelImportWitnessOnlyAccount->setText(textImportWitnessAccount);
+    ui->labelImportWitnessOnlyAccount->setFixedSize(nWidth, nHeightImport);
+    ui->labelImportPrivateKey->setText(textImportPrivKey);
+    ui->labelImportPrivateKey->setFixedSize(nWidth, nHeightImport);
+
+    ui->hLayout1->invalidate();
+    ui->hLayout2->invalidate();
+    ui->vLayout1->invalidate();
+    layout()->invalidate();
+}

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
-    <height>744</height>
+    <width>592</width>
+    <height>363</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="toolTip">
    <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="vLayout1">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -36,299 +36,96 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
       <number>0</number>
      </property>
-     <item>
-      <widget class="QStackedWidget" name="stackedWidget">
-       <property name="currentIndex">
+     <widget class="QWidget" name="newAccountPage">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="newAccountPage">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="labelAccountNameHeading">
+         <property name="text">
+          <string>Account name</string>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="newAccountName">
+         <property name="inputMethodHints">
+          <set>Qt::ImhNone</set>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Enter name of account.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelAccountTypeHeading">
+         <property name="text">
+          <string>Create account type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="hLayout1" stretch="0,0,0,0,0,1">
          <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
           <number>0</number>
          </property>
          <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="labelAccountNameHeading">
-           <property name="text">
-            <string>Account name</string>
+          <widget class="ClickableLabel" name="labelTransactionAccount">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="indent">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="newAccountName">
-           <property name="inputMethodHints">
-            <set>Qt::ImhNone</set>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="placeholderText">
-            <string>Enter name of account.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="labelAccountTypeHeading">
-           <property name="text">
-            <string>Account type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,1,0" columnminimumwidth="0,20,0,20,0">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item row="0" column="1">
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="3">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="0">
-            <widget class="ClickableLabel" name="labelImportWitnessOnlyAccount">
-             <property name="text">
-              <string notr="true">Import witness only account</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="indent">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="ClickableLabel" name="labelMobileAccount">
-             <property name="text">
-              <string notr="true">Linked mobile account</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="indent">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4">
-            <widget class="ClickableLabel" name="labelWitnessAccount">
-             <property name="text">
-              <string notr="true">Witness account</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="indent">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="ClickableLabel" name="labelImportPrivateKey">
-             <property name="text">
-              <string notr="true">Import private key</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="indent">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="ClickableLabel" name="labelTransactionAccount">
-             <property name="text">
-              <string notr="true">Transactional account</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="margin">
-              <number>0</number>
-             </property>
-             <property name="indent">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Preferred</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QFrame" name="accountActionButtonFrame">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QPushButton" name="cancelButton">
-              <property name="text">
-               <string>Cancel</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="newAccountButtonSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>72</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="scanToConnectPage">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="scanQRSyncHeader">
-           <property name="text">
-            <string>Scan QR to connect your mobile Gulden app</string>
-           </property>
-           <property name="indent">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="ClickableQRImage" name="scanQRCode">
            <property name="minimumSize">
             <size>
-             <width>230</width>
-             <height>230</height>
+             <width>1</width>
+             <height>1</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>230</width>
-             <height>230</height>
+             <width>400</width>
+             <height>400</height>
             </size>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true">Transactional</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="margin">
+            <number>0</number>
            </property>
            <property name="indent">
             <number>0</number>
@@ -336,77 +133,412 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_2">
+          <spacer name="accButtonHSpacer1">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>20</width>
-             <height>589</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
           </spacer>
          </item>
          <item>
-          <widget class="QFrame" name="accountActionButtonFrame2">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+          <widget class="ClickableLabel" name="labelWitnessAccount">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QPushButton" name="cancelButton2">
-              <property name="text">
-               <string>Cancel</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="newAccountButtonSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>72</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="doneButton2">
-              <property name="text">
-               <string>Done</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="text">
+            <string notr="true">Witness</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
           </widget>
          </item>
+         <item>
+          <spacer name="accButtonHSpacer2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="ClickableLabel" name="labelMobileAccount">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="text">
+            <string notr="true">Linked mobile</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
-       </widget>
-      </widget>
-     </item>
-    </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelImportAccountTypeHeading">
+         <property name="text">
+          <string>Import account type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="hLayout2" stretch="0,0,0,1">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="ClickableLabel" name="labelImportWitnessOnlyAccount">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="text">
+            <string notr="true">Witness only</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="accButtonHSpacer3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="ClickableLabel" name="labelImportPrivateKey">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="text">
+            <string notr="true">Private key</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QFrame" name="accountActionButtonFrame">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="cancelButton">
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="newAccountButtonSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>72</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="scanToConnectPage">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="scanQRSyncHeader">
+         <property name="text">
+          <string>Scan QR to connect your mobile Gulden app</string>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ClickableQRImage" name="scanQRCode">
+         <property name="minimumSize">
+          <size>
+           <width>230</width>
+           <height>230</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>230</width>
+           <height>230</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="indent">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>589</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QFrame" name="accountActionButtonFrame2">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="cancelButton2">
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="newAccountButtonSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>72</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="doneButton2">
+            <property name="text">
+             <string>Done</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>

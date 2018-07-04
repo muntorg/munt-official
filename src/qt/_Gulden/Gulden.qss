@@ -1113,7 +1113,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading
 {
     margin: 0px;
     padding: 0px;
@@ -1141,7 +1141,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip
 }
 
 
-#witnessEarningsGraphHeader, #labelAccountNameHeading, #labelAccountTypeHeading
+#witnessEarningsGraphHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading
 {
     margin-top: 35px;
     margin-bottom: 35px;
@@ -1314,7 +1314,19 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 
 #add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_witnessonly, #add_account_type_label_privkey
 {
-    width: 100px;
-    border: 1px solid TEXT_COLOR_1;
-    color: TEXT_COLOR_1
+    border: 1px solid #ebebeb;
+    color: TEXT_COLOR_1;
+    border-radius: 5px;
+    background-color: white;
+}
+
+#add_account_type_label_mobile[hover=true], #add_account_type_label_transactional[hover=true], #add_account_type_label_witness[hover=true], #add_account_type_label_witnessonly[hover=true], #add_account_type_label_privkey[hover=true]
+{
+    border: 1px solid ACCENT_COLOR_1;
+    color: ACCENT_COLOR_1;
+}
+
+#add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
+{
+    border: 1px solid ACCENT_COLOR_2;
 }
