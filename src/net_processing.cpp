@@ -2643,7 +2643,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // If there is reverse header sync in progress stop this slow forward header sync,
             // it is severly slowing down progress. Reverse header sync will go in lock step
             // with forward header sync. The peer connection is appreciated however and so
-            // the fSyncStarted is reset so header download migth start again later from this peer.
+            // the fSyncStarted is reset so header download might start again later from this peer.
             if (nodestate->fSyncStarted && nRHeaderSyncStarted > 0) {
                 nodestate->fSyncStarted = false;
                 nSyncStarted--;
