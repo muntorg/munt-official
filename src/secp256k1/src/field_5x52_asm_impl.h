@@ -17,9 +17,10 @@
 /* It is desirable to be able to build Gulden with -fno-omit-frame-pointer (for tools like ASAN) but the code in this file won't compile without frame pointers.
  * So we force frame pointers to be on for this file only.
  */
+#if !defined(__clang__)
 #pragma GCC push_options
 #pragma GCC optimize "O3,omit-frame-pointer"
-
+#endif
 
 SECP256K1_INLINE static void secp256k1_fe_mul_inner(uint64_t *r, const uint64_t *a, const uint64_t * SECP256K1_RESTRICT b) {
 /**
