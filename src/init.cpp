@@ -1698,11 +1698,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         if (!fLoaded) {
             // first suggest a reindex
             if (!fReset) {
-                bool fRet = uiInterface.ThreadSafeQuestion(
+                auto fRet = uiInterface.ThreadSafeQuestion(
                     strLoadError + ".\n\n" + errortr("Do you want to rebuild the block database now?"),
                     strLoadError + ".\nPlease restart with -reindex or -reindex-chainstate to recover.",
                     "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
-                if (fRet) {
+                if (fRet.value_or(false)) {
                     fReindex = true;
                 } else {
                     LogPrintf("Aborted block database rebuild. Exiting.\n");
