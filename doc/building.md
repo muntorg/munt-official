@@ -1,23 +1,39 @@
 Please read all the below instructions before attempting to build the software or asking for assistance with building the software.
 
-Distro specific instructions:
-
-|Distro|Version|
-|:-----------|:-------|
-|Ubuntu|[16.04.1](https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d) |
-|Ubuntu|[14.04.4](https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76) |
-
-
 Generic instructions:
 
-Gulden is autotools based, to build Gulden from this repository please follow these steps:
-* ./autogen.sh
-* automake
-* ./configure
-* make
+Gulden is autotools based, and has a dependency management system capable of building all libraries it requires.
 
-Prerequisites:
-> &gt;=g++-78 pkg-config autoconf libtool automake gperf bison flex
+To build GuldenD from this repository please follow these steps which are valid for Ubuntu and Debian but can easily be modified for any distribution:
+* sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev
+* ./autogen.sh
+* cd depends
+* make NO_QT=1 NO_UPNP=1
+* cd ..
+* mkdir build && cd build
+* ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
+* make -j`nproc`
+
+To build the full UI version of Gulden:
+* sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev
+* ./autogen.sh  
+* cd depends  
+* make NO_QT=1 NO_UPNP=1
+* cd ..
+* mkdir build && cd build
+* ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
+* make -j`nproc`
+
+Note that it may take a while to build all the dependencies.
+
+
+
+Details for advanced builders:
+
+If you wish to attempt to use existing dependencies in your distribution instead of using the depends system please note the following.
+
+Prerequisites for building:
+> &gt;=g++-7 pkg-config autoconf libtool automake gperf bison flex
 
 Required dependencies:
 > &gt;=bdb-4.8.30 &gt;=boost-1_66_0 expat-2 openssl miniupnpc protobuf zeromq
@@ -27,24 +43,12 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 
 Troubleshooting:
 
-If your distro  does not have boost 1.66 you can do the following to build it
-cd depends
-make boost
-
-And then add it to your configure flags
-> ./configure --with-boost=<path> LDFLAGS="-L<path>/lib/" CPPFLAGS="-I<path>/include" <otherconfigureflagshere>
-
-To run after doing the above
-> LD_LIBRARY_PATH=<path>/lib src/GuldenD 
+Gulden dynamically links qt by default as a licensing requirement for distribution. If you have trouble running Gulden after building it you may need to tell it where to find the libraries:
+> LD_LIBRARY_PATH=<path>/lib ./src/Gulden
 
 If your distro is missing Berkley DB 4.8 (error: Found Berkeley DB other than 4.8, required for portable wallets)
-Either configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
+Either compile your own BDB, or configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
 > ./configure --with-incompatible-bdb <otherconfigureflagshere>
-
-Or compile your own:
-> sudo mkdir /db-4.8 && sudo chmod -R a+rwx /db-4.8 && wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && tar -xzvf db-4.8.30.NC.tar.gz && cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=/db-4.8/ && make install
-
-> ./configure LDFLAGS="-L/db-4.8/lib/" CPPFLAGS="-I/db-4.8/include"
 
 Binaries are output as follows by the build process:
 
