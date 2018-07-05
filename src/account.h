@@ -304,6 +304,11 @@ public:
         if (m_Type > AccountType::AccountTypeMax)
         {
             m_Type = AccountType::Desktop;
+            m_readOnly = false;
+        }
+        if (!IsHD())
+        {
+            m_readOnly = false;
         }
     }
 
