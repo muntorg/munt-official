@@ -422,7 +422,7 @@ void static GuldenWitness()
                         }
 
                         boost::this_thread::interruption_point();
-                        CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight, pParams);
+                        CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
                         CAmount witnessFeesSubsidy = 0;
 
                         //fixme: (2.1) (ISMINE_WITNESS)

@@ -627,7 +627,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     // Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to the current block height. Can only appear as a "witnesscoinbase" transaction.
                     if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
                     {
-                        if (bundle.outputs[0].first.nValue - prevOut.nValue > GetBlockSubsidyWitness(nInputHeight, Params().GetConsensus()))
+                        if (bundle.outputs[0].first.nValue - prevOut.nValue > GetBlockSubsidyWitness(nInputHeight))
                         {
                             return state.DoS(50, false, REJECT_INVALID, "witness-coinbase-compounding-too-much");
                         }

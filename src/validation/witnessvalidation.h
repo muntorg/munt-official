@@ -70,7 +70,7 @@ struct CGetWitnessInfo
 
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
 
-CAmount GetBlockSubsidyWitness(int nHeight, const Consensus::Params& consensusParams);
+CAmount GetBlockSubsidyWitness(int nHeight);
 
 // Returns all competing orphans at same height and same parent as current tip.
 // NB! It is important that we consider height and not chain weight here.

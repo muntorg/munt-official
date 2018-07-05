@@ -87,7 +87,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
     return false;
 }
 
-CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
+CAmount GetBlockSubsidy(int nHeight)
 {
     CAmount nSubsidy = 0;
     if(nHeight == 1) //First block premine

@@ -1161,8 +1161,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //Until PoW2 activates mining subsidy remains full.
     //Phase 3 - miner mines 80 reward for himself and 20 reward for previous blocks witness...
     //Phase 4/5 - miner mines 80 reward for himself, witness 20 reward for himself (two seperate coinbases)
-    CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
-    CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight, chainparams.GetConsensus());
+    CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight);
+    CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight);
 
     //fixme: (2.0.1) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.

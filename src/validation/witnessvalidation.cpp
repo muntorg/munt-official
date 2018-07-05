@@ -25,10 +25,10 @@ CWitViewDB *ppow2witdbview = NULL;
 std::shared_ptr<CCoinsViewCache> ppow2witTip = NULL;
 
 
-CAmount GetBlockSubsidyWitness(int nHeight, const Consensus::Params& consensusParams)
+CAmount GetBlockSubsidyWitness(int nHeight)
 {
     CAmount nSubsidy = 0;
-    if (nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
+    if (nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - continue until original coin target is met.
     {
         nSubsidy = 20 * COIN;
     }
