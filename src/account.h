@@ -238,7 +238,6 @@ public:
     void SetNull();
 
     //fixme: (2.1) (CLEANUP)
-    virtual void GetKey([[maybe_unused]] CExtKey& childKey, [[maybe_unused]] int nChain) {};
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
 
     //! Account uses hierarchial deterministic key generation and not legacy (random) key generation.
@@ -333,7 +332,7 @@ public:
     virtual bool AddWatchOnly(const CScript &dest) override;
     virtual bool RemoveWatchOnly(const CScript &dest) override;
     virtual bool AddCScript(const CScript& redeemScript) override;
-    virtual bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain);
+    virtual bool AddCryptedKeyWithChain(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain);
 
     virtual bool AddKeyPubKey([[maybe_unused]] const CKey& key, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly
     virtual bool AddKeyPubKey([[maybe_unused]] int64_t HDKeyIndex, [[maybe_unused]] const CPubKey &pubkey) override {assert(0);};//Must never be called directly
@@ -412,7 +411,7 @@ public:
     //For serialization only.
     CAccountHD(){};
 
-    virtual void GetKey(CExtKey& childKey, int nChain) override;
+    virtual bool GetKey(CExtKey& childKey, int nChain) const;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override;

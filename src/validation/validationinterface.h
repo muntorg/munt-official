@@ -39,6 +39,8 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn);
 void UnregisterAllValidationInterfaces();
 
 class CValidationInterface {
+public:
+    virtual ~CValidationInterface() {}
 protected:
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}

@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE(iterator_ordering)
         else
             seek_start = 0x80;
         it->Seek((uint8_t)seek_start);
-        for (int x=seek_start; x<256; ++x) {
+        for (unsigned int x=seek_start; x<256; ++x) {
             uint8_t key;
             uint32_t value;
             BOOST_CHECK(it->Valid());
@@ -287,8 +287,8 @@ BOOST_AUTO_TEST_CASE(iterator_string_ordering)
     }
 
     std::unique_ptr<CDBIterator> it(const_cast<CDBWrapper*>(&dbw)->NewIterator());
-    for (int c=0; c<2; ++c) {
-        int seek_start;
+    for (unsigned int c=0; c<2; ++c) {
+        unsigned int seek_start;
         if (c == 0)
             seek_start = 0;
         else
@@ -296,11 +296,11 @@ BOOST_AUTO_TEST_CASE(iterator_string_ordering)
         snprintf(buf, sizeof(buf), "%d", seek_start);
         StringContentsSerializer seek_key(buf);
         it->Seek(seek_key);
-        for (int x=seek_start; x<10; ++x) {
-            for (int y = 0; y < 10; y++) {
+        for (unsigned int x=seek_start; x<10; ++x) {
+            for (unsigned int y = 0; y < 10; y++) {
                 snprintf(buf, sizeof(buf), "%d", x);
                 std::string exp_key(buf);
-                for (int z = 0; z < y; z++)
+                for (unsigned int z = 0; z < y; z++)
                     exp_key += exp_key;
                 StringContentsSerializer key;
                 uint32_t value;

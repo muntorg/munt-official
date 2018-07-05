@@ -217,6 +217,7 @@ libgulden_server_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
+  Gulden/auto_checkpoints.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \
@@ -258,6 +259,7 @@ libgulden_server_a_SOURCES = \
   validation/versionbitsvalidation.cpp \
   validation/validationinterface.cpp \
   versionbits.cpp \
+	warnings.cpp \
   $(GULDEN_CORE_H)
 
 if ENABLE_ZMQ
@@ -362,7 +364,6 @@ libgulden_consensus_a_SOURCES = \
 libgulden_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_common_a_SOURCES = \
-  Gulden/auto_checkpoints.cpp \
   unity/appmanager.cpp \
   base58.cpp \
   chainparams.cpp \
@@ -379,7 +380,6 @@ libgulden_common_a_SOURCES = \
   scheduler.cpp \
   script/sign.cpp \
   script/standard.cpp \
-  warnings.cpp \
   $(GULDEN_CORE_H)
 
 # util: shared between all executables.

@@ -185,7 +185,7 @@ public:
                 STRREAD(VARINT(prevBlock.blockNumber));
                 STRREAD(VARINT(prevBlock.transactionIndex));
             }
-            uint32_t n_;
+            uint32_t n_ = 0;
             STRREAD(VARINT(n_));
             n = n_;
         }
@@ -558,6 +558,7 @@ public:
         output()
         {
             new(&scriptPubKey) CScript();
+            nType = 0;
         }
         ~output()
         {
@@ -889,7 +890,7 @@ inline void UnserializeTransactionOld(TxType& tx, Stream& s)
 
     /* Try to read the vin. */
     {
-        uint64_t nSize;
+        uint64_t nSize = 0;
         s >> COMPACTSIZE(nSize);
         tx.vin.resize(nSize);
         for (auto& in : tx.vin)
@@ -900,7 +901,7 @@ inline void UnserializeTransactionOld(TxType& tx, Stream& s)
 
     /* We read a non-empty vin. Assume a normal vout follows. */
     {
-        uint64_t nSize;
+        uint64_t nSize = 0;
         s >> COMPACTSIZE(nSize);
         tx.vout.resize(nSize);
         for (auto& out : tx.vout)
@@ -1069,7 +1070,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     }
     else
     {
-        int nSize;
+        int nSize = 0;
         s >> VARINT(nSize);
         tx.vin.resize(nSize);
     }
@@ -1094,7 +1095,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     }
     else
     {
-        uint64_t nSize;
+        uint64_t nSize = 0;
         s >> VARINT(nSize);
         tx.vout.resize(nSize);
     }

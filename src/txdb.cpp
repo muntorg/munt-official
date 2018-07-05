@@ -64,7 +64,7 @@ struct CoinEntry {
         uint256 hash;
         s >> hash;
         outpoint->setHash(hash);
-        uint32_t n_;
+        uint32_t n_ = 0;
         s >> VARINT(n_);
         outpoint->n = n_;
     }

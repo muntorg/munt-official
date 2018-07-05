@@ -2502,7 +2502,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
         uint64_t highestActionNonce = currentWitnessDetails.actionNonce;
         CAmount totalAmount = currentWitnessTxOut.nValue;
         pwallet->AddTxInput(mergeWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
-        for (int i = 1; i < unspentWitnessOutputs.size(); ++i)
+        for (unsigned int i = 1; i < unspentWitnessOutputs.size(); ++i)
         {
             const auto& [compareWitnessTxOut, compareWitnessHeight, compareWitnessOutpoint] = unspentWitnessOutputs[i];
             (unused) compareWitnessHeight;

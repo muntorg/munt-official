@@ -12,8 +12,7 @@
 
 TESTS += test/test_gulden
 bin_PROGRAMS += test/test_gulden
-# Disable fuzzy test it can't link beacuse of wallet dependencies
-# noinst_PROGRAMS += test/test_gulden_fuzzy
+noinst_PROGRAMS += test/test_gulden_fuzzy
 TEST_SRCDIR = test
 TEST_BINARY=test/test_gulden$(EXEEXT)
 
@@ -128,17 +127,28 @@ test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = \
-  $(LIBUNIVALUE) \
-  $(LIBGULDEN_SERVER) \
+test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER)
+if ENABLE_WALLET
+test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_WALLET)
+endif
+if ENABLE_ZMQ
+test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+endif
+test_test_gulden_fuzzy_LDADD += \
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_CONSENSUS) \
   $(LIBGULDEN_CRYPTO) \
-  $(LIBSECP256K1)
-
-test_test_gulden_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
-#
+  $(LIBLEVELDB) \
+  $(BDB_LIBS) \
+  $(EVENT_LIBS) \
+  $(LIBSECP256K1) \
+  $(LIBUNIVALUE) \
+  $(LIBMEMENV) \
+  $(EVENT_LIBS) \
+  $(EVENT_PTHREADS_LIBS) \
+  $(BOOST_LIBS) \
+  $(CRYPTO_LIBS)
 
 nodist_test_test_gulden_SOURCES = $(GENERATED_TEST_FILES)
 

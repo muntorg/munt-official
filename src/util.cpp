@@ -111,6 +111,14 @@ std::atomic<uint32_t> logCategories(0);
 
 /** Init OpenSSL library multithreading support */
 static std::unique_ptr<CCriticalSection[]> ppmutexOpenSSL;
+
+#pragma message("Check thread safety of OpenSSL usage!")
+/* In recent versions of OpenSSL the CRYPTO_set_locking_callback taking the locking_callback below as an argument is
+ * an empty define. So the locking_callback is reported as unused. It could be fine as it is, but we should check
+ * that our usage of OpenSSL doesn't have concurrency issues because we should update to newer OpenSSL APIs or something.
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void locking_callback(int mode, int i, [[maybe_unused]] const char* file, [[maybe_unused]] int line) NO_THREAD_SAFETY_ANALYSIS
 {
     if (mode & CRYPTO_LOCK) {
@@ -119,6 +127,8 @@ static void locking_callback(int mode, int i, [[maybe_unused]] const char* file,
         LEAVE_CRITICAL_SECTION(ppmutexOpenSSL[i]);
     }
 }
+#pragma GCC diagnostic pop
+
 
 // Singleton for wrapping OpenSSL setup/teardown.
 class CInit

@@ -767,7 +767,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
 
     UniValue transactions(UniValue::VARR);
     std::map<uint256, int64_t> setTxIndex;
-    int i = 0;
+    unsigned int i = 0;
     for (const auto& it : pblock->vtx) {
         const CTransaction& tx = *it;
         uint256 txHash = tx.GetHash();
@@ -790,7 +790,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
         entry.push_back(Pair("depends", deps));
 
-        int index_in_template = i - 1;
+        unsigned int index_in_template = i - 1; // i >= 1 guaranteed here
         if (index_in_template >= pblocktemplate->vTxFees.size())
         {
             //fixme: (2.1) remove

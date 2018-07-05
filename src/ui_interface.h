@@ -82,10 +82,10 @@ public:
     };
 
     /** Show message box. */
-    boost::signals2::signal<bool (const std::string& message, const std::string& caption, unsigned int style), boost::signals2::last_value<bool> > ThreadSafeMessageBox;
+    boost::signals2::signal<bool (const std::string& message, const std::string& caption, unsigned int style) > ThreadSafeMessageBox;
 
     /** If possible, ask the user a question. If not, falls back to ThreadSafeMessageBox(noninteractive_message, caption, style) and returns false. */
-    boost::signals2::signal<bool (const std::string& message, const std::string& noninteractive_message, const std::string& caption, unsigned int style), boost::signals2::last_value<bool> > ThreadSafeQuestion;
+    boost::signals2::signal<bool (const std::string& message, const std::string& noninteractive_message, const std::string& caption, unsigned int style), boost::signals2::optional_last_value<bool> > ThreadSafeQuestion;
 
     /** Progress message during initialization. */
     boost::signals2::signal<void (const std::string &message)> InitMessage;

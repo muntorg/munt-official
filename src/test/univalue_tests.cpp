@@ -113,13 +113,13 @@ BOOST_AUTO_TEST_CASE(univalue_set)
 
     BOOST_CHECK(v.setObject());
     BOOST_CHECK(v.isObject());
-    BOOST_CHECK_EQUAL(v.size(), 0);
+    BOOST_CHECK_EQUAL(v.size(), 0U);
     BOOST_CHECK_EQUAL(v.getType(), UniValue::VOBJ);
     BOOST_CHECK(v.empty());
 
     BOOST_CHECK(v.setArray());
     BOOST_CHECK(v.isArray());
-    BOOST_CHECK_EQUAL(v.size(), 0);
+    BOOST_CHECK_EQUAL(v.size(), 0U);
 
     BOOST_CHECK(v.setStr("zum"));
     BOOST_CHECK(v.isStr());
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(univalue_array)
     BOOST_CHECK(arr.push_backV(vec));
 
     BOOST_CHECK_EQUAL(arr.empty(), false);
-    BOOST_CHECK_EQUAL(arr.size(), 5);
+    BOOST_CHECK_EQUAL(arr.size(), 5U);
 
     BOOST_CHECK_EQUAL(arr[0].getValStr(), "1023");
     BOOST_CHECK_EQUAL(arr[1].getValStr(), "zippy");
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(univalue_array)
 
     arr.clear();
     BOOST_CHECK(arr.empty());
-    BOOST_CHECK_EQUAL(arr.size(), 0);
+    BOOST_CHECK_EQUAL(arr.size(), 0U);
 }
 
 BOOST_AUTO_TEST_CASE(univalue_object)
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(univalue_object)
     BOOST_CHECK(obj.pushKVs(obj2));
 
     BOOST_CHECK_EQUAL(obj.empty(), false);
-    BOOST_CHECK_EQUAL(obj.size(), 9);
+    BOOST_CHECK_EQUAL(obj.size(), 9U);
 
     BOOST_CHECK_EQUAL(obj["age"].getValStr(), "100");
     BOOST_CHECK_EQUAL(obj["first"].getValStr(), "John");
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(univalue_object)
 
     obj.clear();
     BOOST_CHECK(obj.empty());
-    BOOST_CHECK_EQUAL(obj.size(), 0);
+    BOOST_CHECK_EQUAL(obj.size(), 0U);
 }
 
 static const char *json1 =
@@ -296,13 +296,13 @@ BOOST_AUTO_TEST_CASE(univalue_readwrite)
     BOOST_CHECK(v.read(strJson1));
 
     BOOST_CHECK(v.isArray());
-    BOOST_CHECK_EQUAL(v.size(), 2);
+    BOOST_CHECK_EQUAL(v.size(), 2U);
 
     BOOST_CHECK_EQUAL(v[0].getValStr(), "1.10000000");
 
     UniValue obj = v[1];
     BOOST_CHECK(obj.isObject());
-    BOOST_CHECK_EQUAL(obj.size(), 3);
+    BOOST_CHECK_EQUAL(obj.size(), 3U);
 
     BOOST_CHECK(obj["key1"].isStr());
     std::string correctValue("str");

@@ -162,7 +162,7 @@ void CHDSeed::InitReadOnly()
 
 CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
 {
-    CAccountHD* account = NULL;
+    CAccountHD* account = nullptr;
     switch (type)
     {
         case Desktop:
@@ -186,6 +186,8 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
                 return nullptr;
             ++m_nAccountIndexWitness;
             break;
+        default:
+            ; // fall through on purpose with null account
     }
 
     if (Db)
@@ -396,17 +398,17 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
     m_readOnly = true;
 }
 
-void CAccountHD::GetKey(CExtKey& childKey, int nChain)
+bool CAccountHD::GetKey(CExtKey& childKey, int nChain) const
 {
     assert(!m_readOnly);
     assert(!IsLocked());
     if (nChain == KEYCHAIN_EXTERNAL)
     {
-        primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
+        return primaryChainKeyPriv.Derive(childKey, m_nNextChildIndex++);
     }
     else
     {
-        changeChainKeyPriv.Derive(childKey, m_nNextChangeIndex++);
+        return changeChainKeyPriv.Derive(childKey, m_nNextChangeIndex++);
     }
 }
 
@@ -452,9 +454,10 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
     return false;
 }
 
-bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const [[no_return]]
+bool CAccountHD::GetKey([[maybe_unused]] const CKeyID &address, [[maybe_unused]] std::vector<unsigned char>& encryptedKeyOut) const
 {
-    assert(0);
+    assert(0); // asserts are always compiled in even in releae builds, should this ever change we fallback to the throw below
+    throw std::runtime_error("Should never call CAccountHD::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut)");
 }
 
 void CAccountHD::GetPubKey(CExtPubKey& childKey, int nChain) const
@@ -643,7 +646,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUIDAsString(getUUID());
 
-    if (!dynamic_cast<CGuldenWallet*>(&wallet)->AddKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
+    if (!wallet.AddHDKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))
         throw std::runtime_error("CAccount::GenerateNewKey(): AddKeyPubKey failed");
 
     return childKey.pubkey;
@@ -974,7 +977,7 @@ bool CAccount::AddCScript(const CScript& redeemScript)
     return externalKeyStore.AddCScript(redeemScript);
 }
 
-bool CAccount::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain)
+bool CAccount::AddCryptedKeyWithChain(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain)
 {
     //fixme: (Post-2.1) This is essentially dead code now - it has been replaced at the bottom of CWallet::AddKeyPubKey
     //For technical reasons (wallet upgrade)

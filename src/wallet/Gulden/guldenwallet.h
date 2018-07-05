@@ -86,7 +86,7 @@ public:
         return ret;
     }
 
-    virtual bool Unlock(const CKeyingMaterial& vMasterKeyIn) const
+    bool UnlockWithMasterKey(const CKeyingMaterial& vMasterKeyIn) const
     {
         LOCK(cs_wallet);
         bool ret = true;
@@ -234,8 +234,8 @@ public:
         }
         return false;
     }
-    virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain);
-    virtual bool LoadKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount);
+    virtual bool AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain);
+    virtual bool LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount);
 
     virtual void MarkKeyUsed(CKeyID keyID, uint64_t usageTime);
 

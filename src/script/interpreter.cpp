@@ -1416,7 +1416,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     if (witness == NULL) {
         witness = &emptyWitness;
     }
-    bool hadWitness = false;
+    //fixme: (2.1) Triple check removal of hadWitness = false here.
 
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
 

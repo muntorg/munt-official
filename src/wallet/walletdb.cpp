@@ -496,7 +496,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
 
-            if (!static_cast<CGuldenWallet*>(pwallet)->LoadKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
+            if (!pwallet->LoadHDKey(HDKeyIndex, keyChain, vchPubKey, forAccount))
             {
                 strErr = "Error reading wallet database: LoadKey (HD) failed";
                 return false;
@@ -661,7 +661,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             // find earliest key creation time, as wallet birthday
             if (!pwallet->nTimeFirstKey ||
-                (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
+                (keyMeta.nCreateTime < int64_t(pwallet->nTimeFirstKey)))
                 pwallet->nTimeFirstKey = keyMeta.nCreateTime;
         }
         else if (strType == "pool")
