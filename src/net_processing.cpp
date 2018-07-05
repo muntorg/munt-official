@@ -2647,8 +2647,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if (nodestate->fSyncStarted && nRHeaderSyncStarted > 0) {
                 nodestate->fSyncStarted = false;
                 nSyncStarted--;
-                LogPrint(BCLog::NET, "Giving up forward header sync in favor of reverse headers, peer=%d\n",
-                         pfrom->GetId());
+                LogPrintf("Giving up forward header sync in favor of reverse headers, peer=%d\n", pfrom->GetId());
                 return true;
             }
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
@@ -2793,7 +2792,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         int headerGap = lastCheckPointHeight - headerHeight - (int)vReverseHeaders.size();
 
         if (headerGap <= 0) {
-            LogPrint(BCLog::NET, "Reverse headers complete, connecting to tip\n");
+            LogPrintf("%s", "Reverse headers complete, connecting to tip\n");
 
             std::reverse(std::begin(vReverseHeaders), std::end(vReverseHeaders));
             CValidationState state;
@@ -2822,7 +2821,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             nodestate->fRHeadersSyncStarted = false;
             nRHeaderSyncStarted--;
 
-            LogPrint(BCLog::NET, "Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
+            LogPrintf("Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
 
             // Reverse headers are only requested from peers that have at least up to the last checkpoint
             // so we can update the block availability of the current reverse header peer even if
@@ -3377,7 +3376,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 state.nHeadersSyncTimeout = GetTimeMicros() + RHEADERS_DOWNLOAD_TIMEOUT_BASE
                         + RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (lastCheckPointHeight - pindexBestHeader->nHeight);
 
-                LogPrint(BCLog::NET, "initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight - vReverseHeaders.size(),
+                LogPrintf("initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight - vReverseHeaders.size(),
                          pto->GetId(), pto->nStartingHeight);
 
                 int headerGap = lastCheckPointHeight - pindexBestHeader->nHeight - (int)vReverseHeaders.size();
@@ -3408,7 +3407,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                    got back an empty response.  */
                 if (pindexStart->pprev)
                     pindexStart = pindexStart->pprev;
-                LogPrint(BCLog::NET, "initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
+                LogPrintf("initial getheaders (%d) to peer=%d (startheight:%d)\n", pindexStart->nHeight, pto->GetId(), pto->nStartingHeight);
                 if (pto->IsPoW2Capable())
                 {
                     connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexStart), uint256()));
