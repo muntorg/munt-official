@@ -67,6 +67,7 @@ ExchangeRateDialog::~ExchangeRateDialog()
 
 void ExchangeRateDialog::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
+    (void) deselected;
     if (optionsModel)
     {
         QString itemSel = selected.indexes()[0].data().toString();

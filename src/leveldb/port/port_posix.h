@@ -117,8 +117,7 @@ typedef pthread_once_t OnceType;
 #define LEVELDB_ONCE_INIT PTHREAD_ONCE_INIT
 extern void InitOnce(OnceType* once, void (*initializer)());
 
-inline bool Snappy_Compress(const char* input, size_t length,
-                            ::std::string* output) {
+inline bool Snappy_Compress([[maybe_unused]] const char* input, [[maybe_unused]] size_t length, [[maybe_unused]] std::string* output) {
 #ifdef SNAPPY
   output->resize(snappy::MaxCompressedLength(length));
   size_t outlen;
@@ -130,8 +129,7 @@ inline bool Snappy_Compress(const char* input, size_t length,
   return false;
 }
 
-inline bool Snappy_GetUncompressedLength(const char* input, size_t length,
-                                         size_t* result) {
+inline bool Snappy_GetUncompressedLength[[maybe_unused]] (const char* input, [[maybe_unused]] size_t length, [[maybe_unused]] size_t* result) {
 #ifdef SNAPPY
   return snappy::GetUncompressedLength(input, length, result);
 #else
@@ -139,8 +137,7 @@ inline bool Snappy_GetUncompressedLength(const char* input, size_t length,
 #endif
 }
 
-inline bool Snappy_Uncompress(const char* input, size_t length,
-                              char* output) {
+inline bool Snappy_Uncompress([[maybe_unused]] const char* input, [[maybe_unused]] size_t length, [[maybe_unused]] char* output) {
 #ifdef SNAPPY
   return snappy::RawUncompress(input, length, output);
 #else
@@ -148,7 +145,10 @@ inline bool Snappy_Uncompress(const char* input, size_t length,
 #endif
 }
 
-inline bool GetHeapProfile(void (*func)(void*, const char*, int), void* arg) {
+inline bool GetHeapProfile(void (*func)(void*, const char*, int), void* arg)
+{
+  (void) func;
+  (void) arg;
   return false;
 }
 

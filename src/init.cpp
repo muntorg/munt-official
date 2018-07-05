@@ -1253,6 +1253,7 @@ static bool LockDataDirectory(bool probeOnly)
 
     // Make sure only a single Gulden process is using the data directory.
     //fixme: (2.1)
+    (unused) probeOnly;
     /* (GULDEN) - we do this elsewhere (MERGE) look into this again.
     FILE* file = fsbridge::fopen(pathLockFile, "a"); // empty lock file; created if it doesn't exist.
     if (file) fclose(file);

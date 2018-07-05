@@ -179,6 +179,7 @@ void TorControlConnection::readcb(struct bufferevent *bev, void *ctx)
 
 void TorControlConnection::eventcb(struct bufferevent *bev, short what, void *ctx)
 {
+    (void) bev;
     TorControlConnection *self = (TorControlConnection*)ctx;
     if (what & BEV_EVENT_CONNECTED) {
         LogPrint(BCLog::TOR, "tor: Successfully connected!\n");
@@ -484,6 +485,7 @@ TorController::~TorController()
 
 void TorController::add_onion_cb(TorControlConnection& _conn, const TorControlReply& reply)
 {
+    (void) _conn;
     if (reply.code == 250) {
         LogPrint(BCLog::TOR, "tor: ADD_ONION successful\n");
         for(const std::string &s : reply.lines) {
@@ -682,6 +684,7 @@ void TorController::protocolinfo_cb(TorControlConnection& _conn, const TorContro
 
 void TorController::connected_cb(TorControlConnection& _conn)
 {
+    (void) _conn;
     reconnect_timeout = RECONNECT_TIMEOUT_START;
     // First send a PROTOCOLINFO command to figure out what authentication is expected
     if (!_conn.Command("PROTOCOLINFO 1", boost::bind(&TorController::protocolinfo_cb, this, _1, _2)))
@@ -724,6 +727,8 @@ fs::path TorController::GetPrivateKeyFile()
 
 void TorController::reconnect_cb(evutil_socket_t fd, short what, void *arg)
 {
+    (void) fd;
+    (void) what;
     TorController *self = (TorController*)arg;
     self->Reconnect();
 }

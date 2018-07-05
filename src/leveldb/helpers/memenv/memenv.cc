@@ -224,7 +224,11 @@ class WritableFileImpl : public WritableFile {
 
 class NoOpLogger : public Logger {
  public:
-  virtual void Logv(const char* format, va_list ap) { }
+  virtual void Logv(const char* format, va_list ap)
+  {
+      (void) format;
+      (void) ap;
+  }
 };
 
 class InMemoryEnv : public EnvWrapper {
@@ -332,10 +336,12 @@ class InMemoryEnv : public EnvWrapper {
   }
 
   virtual Status CreateDir(const std::string& dirname) {
+    (void) dirname;
     return Status::OK();
   }
 
   virtual Status DeleteDir(const std::string& dirname) {
+    (void) dirname;
     return Status::OK();
   }
 
@@ -363,6 +369,7 @@ class InMemoryEnv : public EnvWrapper {
   }
 
   virtual Status LockFile(const std::string& fname, FileLock** lock) {
+    (void) fname;
     *lock = new FileLock;
     return Status::OK();
   }
@@ -378,6 +385,7 @@ class InMemoryEnv : public EnvWrapper {
   }
 
   virtual Status NewLogger(const std::string& fname, Logger** result) {
+    (void) fname;
     *result = new NoOpLogger;
     return Status::OK();
   }

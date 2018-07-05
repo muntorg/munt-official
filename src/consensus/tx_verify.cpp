@@ -358,6 +358,8 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 
 inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetails)
 {
+    //fixme: (2.0.1) Double check usage of inputDetails here.
+    (unused) inputDetails;
     // 2 signatures, spending key and witness key.
     if (input.segregatedSignatureData.stack.size() != 2)
         return false;
@@ -461,6 +463,8 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 */
 inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
+    //fixme: (2.0.1) Check unused paramater.
+    (unused) nInputHeight;
     // Needs 2 signature (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
         return false;
@@ -579,6 +583,8 @@ bool CWitnessTxBundle::IsValidMergeBundle()
 */
 inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
+    //fixme: (2.0.1) Check unused paramater.
+    (unused) nInputHeight;
     // 2 signatures (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
         return false;

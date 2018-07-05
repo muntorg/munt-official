@@ -241,6 +241,7 @@ static std::string RequestMethodString(HTTPRequest::RequestMethod m)
 /** HTTP request callback */
 static void http_request_cb(struct evhttp_request* req, void* arg)
 {
+    (unused) arg;
     std::unique_ptr<HTTPRequest> hreq(new HTTPRequest(req));
 
     LogPrint(BCLog::HTTP, "Received a %s request for %s from %s\n",
@@ -300,6 +301,7 @@ static void http_reject_request_cb(struct evhttp_request* req, void*)
 /** Event dispatcher thread */
 static bool ThreadHTTP(struct event_base* base, struct evhttp* http)
 {
+    (unused) http;
     RenameThread("Gulden-http");
     LogPrint(BCLog::HTTP, "Entering http event loop\n");
     event_base_dispatch(base);

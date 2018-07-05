@@ -161,6 +161,8 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
     {
+        //fixme: (2.1) Implement usage of nType here.
+        (void) nType;
         CSerActionUnserialize ser_action;
 
         if (IsOldTransactionVersion(nTransactionVersion))
@@ -193,6 +195,8 @@ public:
 
     template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion) const
     {
+        //fixme: (2.1) Implement usage of nType here.
+        (void) nType;
         CSerActionSerialize ser_action;
 
         if (IsOldTransactionVersion(nTransactionVersion))
