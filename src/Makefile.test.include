@@ -127,7 +127,7 @@ test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER)
+test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER) $(MINIUPNPC_LIBS)
 if ENABLE_WALLET
 test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_WALLET)
 endif
