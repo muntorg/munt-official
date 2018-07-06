@@ -246,7 +246,6 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
 {
     LOCK(wallet.cs_wallet);
 
-    uint256 outHash = out.output.GetHash();
     isminetype ret = isminetype::ISMINE_NO;
     for (const auto& [accountUUID, account] : wallet.mapAccounts)
     {
@@ -267,7 +266,6 @@ bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
 {
     for (const auto& txout : tx.tx->vout)
     {
-        uint256 outHash = txout.output.GetHash();
         isminetype ret = IsMine(*forAccount, txout);
         // No need to keep going through the remaining outputs at this point.
         if (ret > isminetype::ISMINE_NO)

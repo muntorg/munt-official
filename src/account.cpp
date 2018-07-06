@@ -726,7 +726,7 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
             if (temp > ret)
                 ret = temp;
         }
-        if (ret >= isminetype::ISMINE_NO)
+        if (ret > isminetype::ISMINE_NO)
             return true;
     }
     for(const CTxIn& txin : tx.vin)
@@ -748,7 +748,7 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
                 }
             }
         }
-        if (ret >= isminetype::ISMINE_NO)
+        if (ret > isminetype::ISMINE_NO)
             return true;
     }
     return false;
