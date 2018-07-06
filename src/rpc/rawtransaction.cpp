@@ -436,7 +436,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
             setAddress.insert(address);
 
-            if (IsOldTransactionVersion(rawTx.nVersion))
+            if (!IsOldTransactionVersion(rawTx.nVersion))
             {
                 CKeyID keyID;
                 address.GetKeyID(keyID);
