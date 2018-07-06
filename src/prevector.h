@@ -220,13 +220,17 @@ public:
         }
     }
 
-    prevector() : _size(0) {}
+    prevector() : _size(0) {
+        _union.indirect = nullptr;
+    }
 
     explicit prevector(size_type n) : _size(0) {
+        _union.indirect = nullptr;
         resize(n);
     }
 
     explicit prevector(size_type n, const T& val = T()) : _size(0) {
+        _union.indirect = nullptr;
         change_capacity(n);
         while (size() < n) {
             _size++;
@@ -236,6 +240,7 @@ public:
 
     template<typename InputIterator>
     prevector(InputIterator first, InputIterator last) : _size(0) {
+        _union.indirect = nullptr;
         size_type n = last - first;
         change_capacity(n);
         while (first != last) {
@@ -246,6 +251,7 @@ public:
     }
 
     prevector(const prevector<N, T, Size, Diff>& other) : _size(0) {
+        _union.indirect = nullptr;
         change_capacity(other.size());
         const_iterator it = other.begin();
         while (it != other.end()) {
@@ -255,7 +261,8 @@ public:
         }
     }
 
-    prevector(prevector<N, T, Size, Diff>&& other) : _size(0) {
+    prevector(prevector<N, T, Size, Diff>&& other) : _size(0)  {
+        _union.indirect = nullptr;
         swap(other);
     }
 
