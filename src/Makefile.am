@@ -259,7 +259,7 @@ libgulden_server_a_SOURCES = \
   validation/versionbitsvalidation.cpp \
   validation/validationinterface.cpp \
   versionbits.cpp \
-	warnings.cpp \
+  warnings.cpp \
   $(GULDEN_CORE_H)
 
 if ENABLE_ZMQ
