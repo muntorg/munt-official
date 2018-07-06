@@ -1545,8 +1545,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 7: load block chain
 
-    //fixme: (2.1) Turn this back to true once memory consumption reduced.
-    fReverseHeaders = GetBoolArg("-reverseheaders", false);
+    fReverseHeaders = GetBoolArg("-reverseheaders", true);
     fReindex = GetBoolArg("-reindex", false);
     bool fReindexChainState = GetBoolArg("-reindex-chainstate", false);
 
