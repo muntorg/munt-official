@@ -11,6 +11,8 @@ During this phase the focus is on getting miners to upgrade, as PoW² cannot act
 On `July 12th 2018 - 16::00 UTC` upgraded miners will be able to begin signalling their upgrade status in the blocks the mine.
 Every 2016 blocks (roughly 3.5 days) the quantity of upgraded blocks is measured and once a sufficient percentage signal upgrade `Phase 2` will become "locked in"; after this another 2016 blocks window period is allowed before `Phase 2` becomes fully activated.
 
+Note that this is not an opportunity for miners to 'vote'; but only a mechanism to ensure miners have time to upgrade for a smooth upgrade. That the community wants PoW² to activate is abundantly clear and the developers will under no circumstances allow a minority of people to attempt to prevent this. In the unlikely and unfortunate event that after a reasonable period of time miners still refuse to upgrade or otherwise attempt to abuse the situation to override the will of the community alternative activation steps can and will be taken to ensure that `phase 2` activates.
+
 Interested users can monitor this process via `getblockchainfo` RPC command.
 
 
