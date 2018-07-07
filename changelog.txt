@@ -4,7 +4,7 @@ UI - Implement an improved "new account" page; which makes witnessing more visib
 UI - Resolve a minor issue where old Legacy accounts were incorrectly hidden by UI in some circumstances, due to an old already fixed issue that was in some older 1.6.x wallets.
 CMDFLAG - Add a new command line flag "-resyncforblockindexupgrade" for the benefit of some devices that may be having trouble upgrading.
 CMDFLAG - Add a new command line flag "-reverseheaders" to allow control over whether to use reverse headers or not.
-
+CORE - Various code quality improvements; travis now running with '-Werror -Wall -Wextra' for first time.
 
 
 
