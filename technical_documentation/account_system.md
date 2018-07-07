@@ -10,7 +10,7 @@ In addition to this basic account system the wallets also support various advanc
 * The ability to share an entire seed as a read only seed with another wallet; with the other wallet being able to generate the same future accounts and addresses as ours
 * The ability to link an account in a read/write way with our mobile wallets 
 
-These capabilities allow for proper secure implementation of various services for Gulden - e.g. by setting up a merchant or website with a read only seed they can generate and receive payments without any risk of the funds being compromised if they server is compromised (as it contains a read only key)
+These capabilities allow for proper secure implementation of various services for Gulden - e.g. by setting up a merchant or website with a read only seed they can generate and receive payments without any risk of the funds being compromised if the server is compromised (as it contains a read only key)
 For more on the account system please view the RPC help.
 
 
