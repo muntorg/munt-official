@@ -56,6 +56,6 @@ Interested users users can monitor this process via `getwitnessinfo` RPC command
 
 Phase 5
 -----
-Phase 5 signals that the network is not in its final, completely upgraded state.
+Phase 5 signals that the network is now in its final, completely upgraded state.
 At this point the developers will be able to put out a new release that removes a lot of the special code that was necessary for `phases 1-4` which will help improve wallet performance as well as being good for the quality of the codebase.
 The developers will also be able to turn off automated-checkpointing after this has happened.
