@@ -1112,6 +1112,10 @@ void GUI::refreshTabVisibilities()
     else
     {
         witnessDialogAction->setVisible( false );
+        if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
+        {
+            gotoReceiveCoinsPage();
+        }
     }
 }
 
@@ -1531,6 +1535,9 @@ void GUI::restoreCachedWidgetIfNeeded()
     }
     else
     {
+        if (cacheCurrentWidget && cacheCurrentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
+            cacheCurrentWidget = nullptr;
+
         witnessDialogAction->setVisible( false );
         if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage )
         {
