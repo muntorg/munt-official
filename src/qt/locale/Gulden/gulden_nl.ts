@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-06-28 11:36+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-06-28 11:36+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-07 11:15+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-07 11:15+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -295,7 +295,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation>Scan QR-code met een witnessing-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
+        <translation>Scan QR-code met een witness-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
@@ -305,7 +305,7 @@ WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat a
     </message>
     <message>
         <source>Please fund the witness account first.</source>
-        <translation>Eerst vul witness-rekening.</translation>
+        <translation>Vul eerst uw witness-rekening aan</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
@@ -350,6 +350,58 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Cancel</source>
         <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Rekening naam</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Kies een rekening type</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importeer een rekening type</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar ieder elke IBAN rekening&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Vul aan en beheer uw Guldens in uw mobiel vanuit de desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiel wallet als uw mobiel is gestolen of defect is&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;flexibele priodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standaard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Gelinkte mobiel</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Alleen witness</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Private key</translation>
     </message>
     <message>
         <source> Connect to mobile Gulden app</source>
@@ -496,6 +548,14 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Backup wallet</source>
         <translation>Back-up portemonnee</translation>
+    </message>
+    <message>
+        <source>Imported key</source>
+        <translation>Geïmporteerde sleutel</translation>
+    </message>
+    <message>
+        <source>Imported witness</source>
+        <translation>Geïmporteerde witness</translation>
     </message>
     <message>
         <source>&amp;Overview</source>
@@ -1741,7 +1801,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Spendable funds: </source>
-        <translation>Beschikbare bedragen: </translation>
+        <translation>Besteedbaar bedrag</translation>
     </message>
 </context>
 <context>
@@ -3435,6 +3495,10 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Done loading</source>
         <translation>Laden gereed</translation>
+    </message>
+    <message>
+        <source>Erasing block index...</source>
+        <translation>Blokindex legen</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>

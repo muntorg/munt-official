@@ -91,7 +91,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+154"/>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+145"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -808,7 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+323"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+316"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -818,7 +818,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-34"/>
+        <location line="-33"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -858,7 +858,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Software update</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+27"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+26"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -906,6 +906,16 @@ The account will continue to be monitored and will be restored should it receive
         <location line="+2"/>
         <source>Backup wallet</source>
         <translation>Backup wallet</translation>
+    </message>
+    <message>
+        <location line="+871"/>
+        <source>Imported key</source>
+        <translation>Imported key</translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Imported witness</source>
+        <translation>Imported witness</translation>
     </message>
     <message>
         <location filename="../../gui.cpp" line="-1245"/>
@@ -1325,7 +1335,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../gulden.cpp" line="+564"/>
+        <location filename="../../gulden.cpp" line="+558"/>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation>A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
     </message>
@@ -1336,6 +1346,11 @@ The account will continue to be monitored and will be restored should it receive
         <location filename="../../guldenstrings.cpp" line="+10"/>
         <source>Done loading</source>
         <translation>Done loading</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Erasing block index...</source>
+        <translation>Erasing block index...</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1434,7 +1449,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+480"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+466"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -1506,7 +1521,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-541"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-547"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1516,7 +1531,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Amount below minimum for IBAN payment.</translation>
     </message>
     <message>
-        <location line="+74"/>
+        <location line="+80"/>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
@@ -1579,7 +1594,7 @@ Estimated earnings: %3 (%4% per month)
 Witness weight: %5</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+59"/>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
         <translation>Will require approximately %1 Gulden including IBAN service fee</translation>
     </message>
@@ -1801,48 +1816,97 @@ Witness weight: %5</translation>
 <context>
     <name>NewAccountDialog</name>
     <message>
-        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="+63"/>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="+79"/>
         <source>Enter name of account.</source>
         <translation>Enter name of account.</translation>
     </message>
     <message>
-        <location line="+62"/>
-        <location line="+100"/>
+        <location line="+453"/>
         <source>Done</source>
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/newaccountdialog.cpp" line="+91"/>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="+118"/>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
         <translation>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="-127"/>
-        <location line="+107"/>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="-131"/>
+        <location line="+111"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-87"/>
-        <source> Connect to mobile Gulden app</source>
-        <translation> Connect to mobile Gulden app</translation>
+        <location line="-449"/>
+        <source>Account name</source>
+        <translation>Account name</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+23"/>
+        <source>Create account type</source>
+        <translation>Create account type</translation>
+    </message>
+    <message>
+        <location line="+167"/>
+        <source>Import account type</source>
+        <translation>Import account type</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="-54"/>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+227"/>
+        <source>Standard</source>
+        <translation>Standard</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Linked mobile</source>
+        <translation>Linked mobile</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Witness-only</source>
+        <translation>Witness-only</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Private key</source>
+        <translation>Private key</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="+190"/>
         <source>Scan QR to connect your mobile Gulden app</source>
         <translation>Scan QR to connect your mobile Gulden app</translation>
-    </message>
-    <message>
-        <location filename="../../_Gulden/newaccountdialog.cpp" line="-30"/>
-        <source>Transactional account</source>
-        <translation>Transactional account</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Witness account</source>
-        <translation>Witness account</translation>
     </message>
 </context>
 <context>
@@ -2491,7 +2555,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>PlotMouseTracker</name>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+82"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+84"/>
         <source>Initial expected earnings:</source>
         <translation>Initial expected earnings:</translation>
     </message>
@@ -2529,7 +2593,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter a Gulden URL</translation>
     </message>
     <message>
-        <location line="+830"/>
+        <location line="+835"/>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -2619,7 +2683,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         </translation>
     </message>
     <message>
-        <location filename="../../gulden.cpp" line="+194"/>
+        <location filename="../../gulden.cpp" line="+195"/>
         <source>%1 didn&apos;t yet exit safely...</source>
         <translation>%1 didn&apos;t yet exit safely...</translation>
     </message>
@@ -3316,12 +3380,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Label</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+41"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location line="-40"/>
+        <location line="-41"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -3331,7 +3395,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Message</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+50"/>
         <source>(no message)</source>
         <translation>(no message)</translation>
     </message>
@@ -3349,12 +3413,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="+522"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+521"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-367"/>
+        <location line="-366"/>
         <source>&amp;Delete</source>
         <translation>&amp;Delete</translation>
     </message>
@@ -3364,7 +3428,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;Edit</translation>
     </message>
     <message>
-        <location line="+922"/>
+        <location line="+918"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -3404,7 +3468,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Change:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-986"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-982"/>
         <source>Copy amount</source>
         <translation>Copy amount</translation>
     </message>
@@ -3439,17 +3503,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+445"/>
+        <location line="+444"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
     <message>
-        <location line="-385"/>
+        <location line="-384"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
     </message>
     <message>
-        <location line="+660"/>
+        <location line="+656"/>
         <source>Payment request expired.</source>
         <translation>Payment request expired.</translation>
     </message>
@@ -3459,13 +3523,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Hide</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-657"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-653"/>
         <source>&amp;Clear</source>
         <translation>&amp;Clear</translation>
     </message>
     <message>
         <location filename="../../forms/sendcoinsdialog.ui" line="-749"/>
-        <location filename="../../sendcoinsdialog.cpp" line="+670"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+666"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>
@@ -3606,7 +3670,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Balance:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-337"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-334"/>
         <location line="+5"/>
         <location line="+5"/>
         <location line="+4"/>
@@ -3634,7 +3698,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>This transaction signals replaceability (optin-RBF).</translation>
     </message>
     <message>
-        <location line="+251"/>
+        <location line="+248"/>
         <source>PoW² is not yet active, please wait for activation and try again.</source>
         <translation>PoW² is not yet active, please wait for activation and try again.</translation>
     </message>
@@ -4042,12 +4106,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+902"/>
+        <location filename="../../transactiontablemodel.cpp" line="+903"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location line="-629"/>
+        <location line="-630"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -4062,7 +4126,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Sent</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+62"/>
         <source>Open until %1</source>
         <translation>Open until %1</translation>
     </message>
@@ -4078,7 +4142,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Unlock funds</translation>
     </message>
     <message>
-        <location line="-363"/>
+        <location line="-364"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
@@ -4088,7 +4152,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Description</translation>
     </message>
     <message numerus="yes">
-        <location line="+58"/>
+        <location line="+59"/>
         <source>Open for %n more block(s)</source>
         <translation>
             <numerusform>Open for %n more block(s)</numerusform>
@@ -4582,7 +4646,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+943"/>
+        <location filename="../../walletmodel.cpp" line="+928"/>
         <location line="+46"/>
         <location line="+9"/>
         <source>Fee bump error</source>
@@ -4767,7 +4831,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+565"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+567"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
@@ -4797,7 +4861,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+49"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-516"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-518"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -4807,7 +4871,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
-        <location line="+454"/>
+        <location line="+456"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
@@ -4926,7 +4990,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>Renew account</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-416"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-418"/>
         <source>Earnings to date</source>
         <translation>Earnings to date</translation>
     </message>
@@ -4961,7 +5025,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+380"/>
+        <location line="+382"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>
@@ -4979,7 +5043,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-208"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1104"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>
