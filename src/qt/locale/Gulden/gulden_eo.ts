@@ -5,8 +5,8 @@
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
     <extra-po-header-plural_forms>nplurals=2; plural=(n != 1);</extra-po-header-plural_forms>
-    <extra-po-header-po_revision_date>2018-07-07 11:17+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-07 11:17+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-08 20:35+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-08 20:35+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -735,13 +735,6 @@
     <message>
         <source>User Agent</source>
         <translation>Uzanto Agento</translation>
-    </message>
-</context>
-<context>
-    <name>WalletModel</name>
-    <message>
-        <source>Send Coins</source>
-        <translation>Sendi Bitmonon</translation>
     </message>
 </context>
 <context>
