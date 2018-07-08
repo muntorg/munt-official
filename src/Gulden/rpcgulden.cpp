@@ -2057,14 +2057,12 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
     CKey privWitnessKey;
     if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
     {
-        //fixme: (2.1) Localise
         reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
         throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         return false;
     }
     if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
     {
-        //fixme: (2.1) Localise
         reasonForFail = strprintf("Wallet error, failed to store witness key.");
         throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         return false;
