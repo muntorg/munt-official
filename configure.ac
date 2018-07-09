@@ -266,6 +266,7 @@ AC_ARG_WITH([daemon],
   [build_GuldenD=yes])
 
 use_pkgconfig=yes
+default_webview=webengine
 case $host in
   *mingw*)
 
@@ -313,7 +314,9 @@ case $host in
        CXXFLAGS="$CXXFLAGS -w"
      fi
      case $host in
-       i?86-*) WINDOWS_BITS=32 ;;
+       i?86-*) WINDOWS_BITS=32
+         default_webview=webkit
+         ;;
        x86_64-*) WINDOWS_BITS=64 ;;
        *) AC_MSG_ERROR("Could not determine win32/win64 for installer") ;;
      esac
@@ -421,6 +424,12 @@ if test x$use_pkgconfig = xyes; then
   fi
   ])
 fi
+
+AC_ARG_WITH([webview],
+  [AS_HELP_STRING([--with-webview],
+  [Build with embedded webview (webengine|webkit|no, default=webengine except on Windows 32 bit)])],
+  [with_webview=$withval],
+  [with_webview=$default_webview])
 
 if test x$use_extended_functional_tests != xno; then
   AC_SUBST(EXTENDED_FUNCTIONAL_TESTS, --extended)
@@ -1063,6 +1072,15 @@ if test x$gulden_enable_qt != xno; then
   dnl enable graph support
   PKG_CHECK_MODULES([QWT], [Qt5Qwt6],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt5],, [AC_MSG_ERROR(qwt not found.)])])])
 
+  dnl enable webview support
+  if test x$with_webview = xwebengine; then
+      PKG_CHECK_MODULES([QWEB], [Qt5WebEngineWidgets], [AC_DEFINE([HAVE_WEBENGINE_VIEW],[1],[Define if embedded webview should use Qt WebEngine])], [AC_MSG_ERROR(Qt WebEngine not found.)])
+  else
+    if test x$with_webview = xwebkit; then
+      PKG_CHECK_MODULES([QWEB], [Qt5WebKit Qt5WebKitWidgets], [AC_DEFINE([HAVE_WEBKIT],[1],[Define if embedded webview should use Qt WebKit])], [AC_MSG_ERROR(Qt WebKit not found.)])
+    fi
+  fi
+
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
   if test x$have_qrencode = xno; then
@@ -1170,6 +1188,8 @@ AC_SUBST(MINIUPNPC_CPPFLAGS)
 AC_SUBST(MINIUPNPC_LIBS)
 AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(QWT_LIBS)
+AC_SUBST(HAVE_WEBENGINE_VIEW)
+AC_SUBST(HAVE_WEBKIT)
 AC_SUBST(SSL_LIBS)
 AC_SUBST(EVENT_LIBS)
 AC_SUBST(EVENT_PTHREADS_LIBS)
