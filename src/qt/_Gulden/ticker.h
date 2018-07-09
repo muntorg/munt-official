@@ -20,7 +20,7 @@ class OptionsModel;
 class QNetworkAccessManager;
 class QNetworkReply;
 class CurrencyTicker;
-class WalletBalances;
+struct WalletBalances;
 
 
 class CurrencyTableModel : public QAbstractTableModel
