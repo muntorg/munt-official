@@ -35,7 +35,7 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     // was uint64_t seedTime = wallet.GetOldestKeyPoolTime();
     int64_t seedTime = 1527681623; // 05/30/2018 @ 12:00pm (UTC)
 
-    startTime =  std::max(0LL, seedTime - startTimeGap);
+    startTime =  std::max(int64_t(0), seedTime - startTimeGap);
 
     LogPrint(BCLog::WALLET, "Using %s (height = %d) as last processed SPV block\n",
              lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
