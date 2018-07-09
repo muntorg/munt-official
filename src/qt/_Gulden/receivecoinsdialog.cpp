@@ -62,12 +62,12 @@ class WebView: public QWebView
 {
 public:
     WebView(QWidget *p = 0)
-    : QWebView(p) 
+    : QWebView(p)
     , parent(p)
     {
         dismissOnPopup = false;
     }
- 
+
     QWebView *createWindow(QWebPage::WebWindowType type)
     {
         QWebView *webView = new QWebView;
@@ -300,7 +300,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     #endif
     if (externalBuyPage)
     {
-        QDesktopServices::openUrl(QUrl("https://gulden.com/purchase")); 
+        QDesktopServices::openUrl(QUrl("https://gulden.com/purchase"));
         return;
     }
 
@@ -567,10 +567,9 @@ void ReceiveCoinsDialog::loadBuyViewFinished([[maybe_unused]] bool bOk)
     #endif
 }
 
-#ifdef HAVE_WEBKIT
 void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist)
 {
+#ifdef HAVE_WEBKIT
     qnr->ignoreSslErrors();
-}
 #endif
-
+}

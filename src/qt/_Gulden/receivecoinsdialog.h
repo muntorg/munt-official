@@ -77,9 +77,7 @@ private Q_SLOTS:
   void loadBuyViewFinished(bool bOk);
   void generateRequest();
   void buyGulden();
-  #ifdef HAVE_WEBKIT
   void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
-  #endif
 };
 
 #endif // GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
