@@ -200,6 +200,13 @@ AC_ARG_ENABLE([werror],
     [enable_werror=$enableval],
     [enable_werror=no])
 
+# Strong warnings
+AC_ARG_ENABLE([strong-warnings],
+    [AS_HELP_STRING([--disable-strong-warnings],
+                    [Use compiler flags to generate extra warnings (default is yes)])],
+    [strong_warnings=$enableval],
+    [strong_warnings=yes])
+
 AC_LANG_PUSH([C++])
 AX_CHECK_COMPILE_FLAG([-Werror],[CXXFLAG_WERROR="-Werror"],[CXXFLAG_WERROR=""])
 
@@ -222,7 +229,7 @@ if test "x$enable_werror" = "xyes"; then
   AX_CHECK_COMPILE_FLAG([-Werror],[ERROR_CXXFLAGS="$ERROR_CXXFLAGS -Werror"],,[[$CXXFLAG_WERROR]])
 fi
 
-if test "x$CXXFLAGS_overridden" = "xno" -o "x$TRAVIS" = "xtrue"; then
+if test "x$strong_warnings" = "xyes"; then
   AX_CHECK_COMPILE_FLAG([-Wall],[CXXFLAGS="$CXXFLAGS -Wall"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wextra],[CXXFLAGS="$CXXFLAGS -Wextra"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wformat],[CXXFLAGS="$CXXFLAGS -Wformat"],,[[$CXXFLAG_WERROR]])

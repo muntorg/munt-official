@@ -34,7 +34,7 @@ before_install:
     - eval "${MATRIX_EVAL}"
     - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
 install:
-    - env | grep -E '^(CCACHE_|WINEDEBUG|DISPLAY|BOOST_TEST_RANDOM|CONFIG_SHELL|TRAVIS)' | tee /tmp/env
+    - env | grep -E '^(CCACHE_|WINEDEBUG|DISPLAY|BOOST_TEST_RANDOM|CONFIG_SHELL)' | tee /tmp/env
     - DOCKER_ID=$(docker run $DOCKER_ADMIN -idt --mount type=bind,src=$TRAVIS_BUILD_DIR,dst=$TRAVIS_BUILD_DIR --mount type=bind,src=$CCACHE_DIR,dst=$CCACHE_DIR -w $TRAVIS_BUILD_DIR --env-file /tmp/env ubuntu:18.04)
     - DOCKER_EXEC () { docker exec $DOCKER_ID bash -c "cd $PWD && $*"; }
     - if [ -n "$DPKG_ADD_ARCH" ]; then DOCKER_EXEC dpkg --add-architecture "$DPKG_ADD_ARCH" ; fi
