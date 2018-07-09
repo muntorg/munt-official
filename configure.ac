@@ -266,7 +266,10 @@ AC_ARG_WITH([daemon],
   [build_GuldenD=yes])
 
 use_pkgconfig=yes
-default_webview=webengine
+
+# fixme: (2.1) switch default to webengine when build and deploy works on all platforms
+default_webview=webkit
+
 case $host in
   *mingw*)
 
