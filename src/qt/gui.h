@@ -145,6 +145,7 @@ private:
     QLabel* labelWalletEncryptionIcon = nullptr;
     QLabel* labelWalletHDStatusIcon = nullptr;
     QLabel*connectionsControl = nullptr;
+    QLabel* spvStatusIcon = nullptr;
     QLabel* labelBlocksIcon = nullptr;
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;

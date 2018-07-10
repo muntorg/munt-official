@@ -254,6 +254,14 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     frameBlocksLayout->setSpacing(3);
     labelWalletEncryptionIcon = new QLabel(this);
     labelWalletHDStatusIcon = new QLabel(this);
+
+    spvStatusIcon = new GUIUtil::ClickableLabel();
+    spvStatusIcon->setObjectName("spv_status_icon");
+    spvStatusIcon->setText( GUIUtil::fontAwesomeRegular("\uf48b") );
+    spvStatusIcon->setToolTip(tr("Operating in SPV mode (simple payment verification)"));
+    frameBlocksLayout->addWidget(spvStatusIcon);
+    spvStatusIcon->setVisible(false);
+
     connectionsControl = new GUIUtil::ClickableLabel();
     labelBlocksIcon = new GUIUtil::ClickableLabel();
     if(enableWallet && enableFullUI)
@@ -667,6 +675,9 @@ void GUI::setClientModel(ClientModel *_clientModel)
         if(walletFrame)
             walletFrame->setClientModel(_clientModel);
         #endif
+
+        if (fSPV)
+            spvStatusIcon->setVisible(true);
     }
     else
     {
